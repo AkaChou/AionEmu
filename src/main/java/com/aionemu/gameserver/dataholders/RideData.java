@@ -51,7 +51,7 @@ public class RideData {
 	 * @return 坐骑信息，不存在则为 null / ride info or null
 	 */
 	public RideInfo getRideInfo(int npcId) {
-		return (RideInfo) rideInfos.get(npcId);
+		return rideInfos.get(npcId);
 	}
 
 	/**

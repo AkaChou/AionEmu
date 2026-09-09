@@ -15,9 +15,9 @@ public class AbyssRankingResult {
 	@Getter
 	private int playerAbyssRank;
 	@Getter
-	private int oldRankPos;
+	private final int oldRankPos;
 	@Getter
-	private int rankPos;
+	private final int rankPos;
 	private int ap;
 	private int gp;
 	private int title;
@@ -29,7 +29,7 @@ public class AbyssRankingResult {
 	private int playerId;
 
 	@Getter
-	private String legionName;
+	private final String legionName;
 	private long cp;
 	@Getter
 	private int legionId;

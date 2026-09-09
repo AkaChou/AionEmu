@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 佐尔希夫挖掘舰活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
  * @author Rinzler (Encom)
  * @param <ZL> 挖掘舰地点类型 / dredgion location type
  */
+@RequiredArgsConstructor
 public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / bound location
+	 */
+	@Getter
 	private final ZL zorshivDredgionLocation;
 	private final AtomicBoolean peace = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startZorshivDredgion();
-
-	/**
-	 * 绑定挖掘舰地点。
-	 * Binds the dredgion location.
-	 *
-	 * @param zorshivDredgionLocation 挖掘舰地点 / dredgion location
-	 */
-	public ZorshivDredgion(ZL zorshivDredgionLocation) {
-		this.zorshivDredgionLocation = zorshivDredgionLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 */
 	public boolean isPeace() {
 		return peace.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
-	 */
-	public ZL getZorshivDredgionLocation() {
-		return zorshivDredgionLocation;
 	}
 
 	/**

@@ -5,18 +5,20 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.world.World;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端播放物品使用动画的服务端包。
  * Server packet that plays an item usage animation on the client.
  */
+@AllArgsConstructor
 public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
-	private int playerObjId;
-	private int targetObjId;
-	private int itemObjId;
-	private int itemId;
-	private int time;
-	private int end;
+	private final int playerObjId;
+	private final int targetObjId;
+	private final int itemObjId;
+	private final int itemId;
+	private final int time;
+	private final int end;
 	private int unk;
 
 	/**
@@ -70,29 +72,6 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int itemObjId, int itemId, int time, int end, int unk) {
 		this.playerObjId = playerObjId;
 		this.targetObjId = playerObjId;
-		this.itemObjId = itemObjId;
-		this.itemId = itemId;
-		this.time = time;
-		this.end = end;
-		this.unk = unk;
-	}
-
-	/**
-	 * 构造完整物品使用动画包（可指定目标）。
-	 * Creates a full item usage animation packet with an explicit target.
-	 *
-	 * @param playerObjId 使用者对象 ID / caster object id
-	 * target object id
-	 * item object id
-	 * item template id
-	 * @param time 读条时长（毫秒） / cast duration in milliseconds
-	 * @param end 结束标志 / end flag
-	 * @param unk 附加未知标志 / extra unknown flag
-	 */
-	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int targetObjId, int itemObjId, int itemId, int time, int end,
-			int unk) {
-		this.playerObjId = playerObjId;
-		this.targetObjId = targetObjId;
 		this.itemObjId = itemObjId;
 		this.itemId = itemId;
 		this.time = time;

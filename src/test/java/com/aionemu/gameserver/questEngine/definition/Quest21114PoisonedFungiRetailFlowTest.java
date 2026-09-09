@@ -104,9 +104,9 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		QuestTransition eligibility = definition.transitions().stream()
 			.filter(transition -> "s2".equals(transition.sourceNode()))
 			.filter(transition -> "s2".equals(transition.targetNode()))
-			.filter(transition -> transition.event() instanceof QuestEvent.CanAct canAct
-				&& canAct.templateId() == FUNGIE_PATCH_ID
-				&& "ACTION_ITEM_USE".equals(canAct.actionType()))
+			.filter(transition -> transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType)
+				&& templateId == FUNGIE_PATCH_ID
+				&& "ACTION_ITEM_USE".equals(actionType))
 			.findFirst().orElseThrow();
 		assertEquals(List.of(), eligibility.conditions());
 		assertEquals(List.of(), eligibility.actions());

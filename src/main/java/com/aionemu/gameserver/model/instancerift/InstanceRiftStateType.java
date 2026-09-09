@@ -9,5 +9,5 @@ package com.aionemu.gameserver.model.instancerift;
 
 public enum InstanceRiftStateType {
 	/** 打开 / Open. */
-	OPEN, CLOSED;
+	OPEN, CLOSED
 }

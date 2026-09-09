@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * BuildingCapabilities 模板（静态数据/XML）。
@@ -20,6 +21,8 @@ public class BuildingCapabilities {
 	@XmlAttribute(required = true)
 	protected boolean addon;
 
+	/** 返回徽章 ID / Returns the emblem id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int emblemId;
 
@@ -38,11 +41,6 @@ public class BuildingCapabilities {
 	/** 是否支持扩建 / Whether have addon */
 	public boolean canHaveAddon() {
 		return addon;
-	}
-
-	/** 返回徽章 ID / Returns the emblem id */
-	public int getEmblemId() {
-		return emblemId;
 	}
 
 	/**

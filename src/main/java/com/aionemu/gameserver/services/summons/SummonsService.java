@@ -38,7 +38,7 @@ public class SummonsService {
 	 */
 	public static final void createSummon(Player master, int npcId, int skillId, int skillLevel, int time) {
 		if (master.getSummon() != null) {
-			PacketSendUtility.sendPacket(master, new SM_SYSTEM_MESSAGE(1300072, new Object[0]));
+			PacketSendUtility.sendPacket(master, new SM_SYSTEM_MESSAGE(1300072));
 			return;
 		}
 		Summon summon = VisibleObjectSpawner.spawnSummon(master, npcId, skillId, skillLevel, time);
@@ -266,11 +266,11 @@ public class SummonsService {
 	 * Delayed release task: delete entity, clear master reference, and transfer hate by reason.
 	 */
 	public static class ReleaseSummonTask implements Runnable {
-		private Summon owner;
-		private UnsummonType unsummonType;
-		private Player master;
-		private VisibleObject target;
-		private boolean isAttacked;
+		private final Summon owner;
+		private final UnsummonType unsummonType;
+		private final Player master;
+		private final VisibleObject target;
+		private final boolean isAttacked;
 
 		/**
 		 * 构造延迟释放任务。
@@ -304,8 +304,7 @@ public class SummonsService {
 				PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMONED(owner.getNameId()));
 				PacketSendUtility.sendPacket(master, new SM_SUMMON_OWNER_REMOVE(owner.getObjectId()));
 				PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL_REMOVE());
-				if (target instanceof Creature) {
-					final Creature lastAttacker = (Creature) target;
+				if (target instanceof Creature lastAttacker) {
 					if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
 							&& isAttacked) {
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

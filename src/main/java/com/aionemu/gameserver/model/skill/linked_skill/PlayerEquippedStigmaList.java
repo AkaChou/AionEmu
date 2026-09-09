@@ -22,8 +22,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 
-	private Map<Integer, EquippedStigmasEntry> itemList;
-	private List<EquippedStigmasEntry> deletedItems;
+	private final Map<Integer, EquippedStigmasEntry> itemList;
+	private final List<EquippedStigmasEntry> deletedItems;
 
 	public PlayerEquippedStigmaList() {
 		this.itemList = new HashMap<Integer, EquippedStigmasEntry>(0);

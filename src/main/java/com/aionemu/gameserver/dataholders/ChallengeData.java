@@ -27,9 +27,9 @@ public class ChallengeData {
 	@XmlTransient
 	protected Map<Integer, ChallengeTaskTemplate> tasksById = new HashMap<Integer, ChallengeTaskTemplate>();
 	@XmlTransient
-	private Map<Integer, ChallengeTaskTemplate> tasksByQuestId = new HashMap<Integer, ChallengeTaskTemplate>();
+	private final Map<Integer, ChallengeTaskTemplate> tasksByQuestId = new HashMap<Integer, ChallengeTaskTemplate>();
 	@XmlTransient
-	private Map<Integer, ChallengeQuestTemplate> questsById = new HashMap<Integer, ChallengeQuestTemplate>();
+	private final Map<Integer, ChallengeQuestTemplate> questsById = new HashMap<Integer, ChallengeQuestTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，建立任务/任务链多路索引并释放列表。

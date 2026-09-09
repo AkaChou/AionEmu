@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 好友条目更新包：刷新好友列表中单个好友的等级、在线、备注等。
@@ -12,16 +13,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ben
  */
 @Slf4j
+@AllArgsConstructor
 public class SM_FRIEND_UPDATE extends AionServerPacket {
 
-	private int friendObjId;
-
-	/**
-	 * @param friendObjId 好友 objectId / friend's object ID
-	 */
-	public SM_FRIEND_UPDATE(int friendObjId) {
-		this.friendObjId = friendObjId;
-	}
+	private final int friendObjId;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

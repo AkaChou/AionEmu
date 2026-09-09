@@ -19,10 +19,10 @@ public class Crazy_ScarAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75) {
-			spawn(281116, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 疯狂伤疤。 / Crazy Scar.
+			spawn(281116, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // 疯狂伤疤。 / Crazy Scar.
 			AI2Actions.deleteOwner(this);
 		}
 	}

@@ -27,11 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 首版端到端工具的核心门禁：客户端 oracle、真实端口、事务顺序、虚拟 tick 和 packet 字段。
@@ -227,8 +223,10 @@ class QuestE2eInfrastructureTest {
 		CompiledQuestDefinition definition = definition(1006);
 		QuestTransition transition = definition.definition().transitions().stream()
 			.filter(candidate -> candidate.afterCommit().stream().anyMatch(action ->
-				action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SetPlayerClass setClass
-					&& setClass.playerClass() == PlayerClass.GLADIATOR))
+				action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SetPlayerClass(
+					PlayerClass playerClass
+				)
+					&& playerClass == PlayerClass.GLADIATOR))
 			.findFirst().orElseThrow();
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
 			runtime.prepare(transition);
@@ -433,7 +431,7 @@ class QuestE2eInfrastructureTest {
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
 		assertEquals("FAST", row.validationMode());
 		assertEquals(QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED, row.transitionMatch(), row::toString);
-		assertFalse(row.status() == QuestE2eStatus.INVALID_DIALOG_PACKET, row::toString);
+		assertNotSame(row.status(), QuestE2eStatus.INVALID_DIALOG_PACKET, row::toString);
 	}
 
 	@Test
@@ -609,8 +607,8 @@ class QuestE2eInfrastructureTest {
 			.filter(transition -> transition.sourceNode() == null)
 			.filter(transition -> transition.event() instanceof QuestEvent.Die)
 			.filter(transition -> transition.conditions().stream().anyMatch(condition ->
-				condition instanceof QuestCondition.AdvancedClassIs playerClass
-					&& playerClass.playerClass() == PlayerClass.GLADIATOR))
+				condition instanceof QuestCondition.AdvancedClassIs(PlayerClass aClass)
+					&& aClass == PlayerClass.GLADIATOR))
 			.findFirst().orElseThrow();
 		assertPreparedTransitionMatches(definition, deathRecovery);
 	}

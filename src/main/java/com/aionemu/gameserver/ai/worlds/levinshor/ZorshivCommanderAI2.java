@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("zorshiv_commander")
 public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -41,7 +41,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -54,7 +54,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(2);
 		super.handleDied();
 	}
-	
+
 	private void announcePublicQuest() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -78,8 +78,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}

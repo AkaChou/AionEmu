@@ -17,8 +17,8 @@ public class MarabataAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		// 死亡时在原地生成两个替身，随后删除自身。 / Spawn two replicas at the death position, then delete self.
-		spawn(247361, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(247361, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(247361, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(247361, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

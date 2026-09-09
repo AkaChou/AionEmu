@@ -9,13 +9,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet for craft progress/result: success/failure values, timing and item name.
  */
 public class SM_CRAFT_UPDATE extends AionServerPacket {
-	private int skillId;
-	private int itemId;
-	private int action;
-	private int success;
-	private int failure;
-	private int nameId;
-	private int executionDelay = 700;
+	private final int skillId;
+	private final int itemId;
+	private final int action;
+	private final int success;
+	private final int failure;
+	private final int nameId;
+	private final int executionDelay = 700;
 	private int executionPeriod = 1200;
 
 	/**

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 响应 Requester 游戏对象。
@@ -10,14 +11,11 @@ import java.util.HashMap;
  * @author Ben
  */
 @Slf4j
+@RequiredArgsConstructor
 public class ResponseRequester {
 
-	private Player player;
-	private HashMap<Integer, RequestResponseHandler> map = new HashMap<Integer, RequestResponseHandler>();
-
-	public ResponseRequester(Player player) {
-		this.player = player;
-	}
+	private final Player player;
+	private final HashMap<Integer, RequestResponseHandler> map = new HashMap<Integer, RequestResponseHandler>();
 
 	/**
 	 * 为此消息 ID 添加处理器，已存在时返回 false。

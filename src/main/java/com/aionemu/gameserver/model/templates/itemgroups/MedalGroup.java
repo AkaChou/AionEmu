@@ -33,6 +33,6 @@ public class MedalGroup extends BonusItemGroup {
 	/** 获取奖励。 / Returns the rewards. */
 	@Override
 	public ItemRaceEntry[] getRewards() {
-		return (ItemRaceEntry[]) getItems().toArray(new ItemRaceEntry[0]);
+		return getItems().toArray(new ItemRaceEntry[0]);
 	}
 }

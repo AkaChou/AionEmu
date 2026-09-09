@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 挑战任务模板（静态数据/XML）。
@@ -20,8 +21,12 @@ import com.aionemu.gameserver.model.Race;
 public class ChallengeTaskTemplate {
 	@XmlElement(required = true)
 	protected List<ChallengeQuestTemplate> quest;
+	/** 返回贡献奖励列表 / Returns the contrib */
+	@Getter
 	protected List<ContributionReward> contrib;
 
+	/** 获取奖励。 / Returns the reward. */
+	@Getter
 	@XmlElement(required = true)
 	protected ChallengeReward reward;
 
@@ -31,40 +36,44 @@ public class ChallengeTaskTemplate {
 	@XmlAttribute(name = "town_residence")
 	protected Boolean townResidence;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute(name = "name_id")
 	protected Integer nameId;
 
+	/** 获取最大等级。 / Returns the max level. */
+	@Getter
 	@XmlAttribute(name = "max_level", required = true)
 	protected int maxLevel;
 
+	/** 获取最小等级。 / Returns the min level. */
+	@Getter
 	@XmlAttribute(name = "min_level", required = true)
 	protected int minLevel;
 
+	/** 返回前置任务 / Returns the prev task */
+	@Getter
 	@XmlAttribute(name = "prev_task")
 	protected Integer prevTask;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(required = true)
 	protected Race race;
 
+	/** 获取类型。 / Returns the type. */
+	@Getter
 	@XmlAttribute(required = true)
 	protected ChallengeType type;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 返回挑战任务列表 / Returns the quests */
 	public List<ChallengeQuestTemplate> getQuests() {
 		return this.quest;
-	}
-
-	/** 返回贡献奖励列表 / Returns the contrib */
-	public List<ContributionReward> getContrib() {
-		return this.contrib;
-	}
-
-	/** 获取奖励。 / Returns the reward. */
-	public ChallengeReward getReward() {
-		return this.reward;
 	}
 
 	/**
@@ -74,7 +83,7 @@ public class ChallengeTaskTemplate {
 	 * @return 可重复时为 {@code true} / {@code true} if repeatable
 	 */
 	public boolean isRepeatable() {
-		return this.repeat != null && this.repeat == true;
+		return this.repeat != null && this.repeat;
 	}
 
 	/**
@@ -84,41 +93,6 @@ public class ChallengeTaskTemplate {
 	 * @return 是城镇居住任务时为 {@code true} / {@code true} if town residence
 	 */
 	public boolean isTownResidence() {
-		return this.townResidence != null && this.townResidence == true;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public Integer getNameId() {
-		return this.nameId;
-	}
-
-	/** 获取最大等级。 / Returns the max level. */
-	public int getMaxLevel() {
-		return this.maxLevel;
-	}
-
-	/** 获取最小等级。 / Returns the min level. */
-	public int getMinLevel() {
-		return this.minLevel;
-	}
-
-	/** 返回前置任务 / Returns the prev task */
-	public Integer getPrevTask() {
-		return this.prevTask;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return this.race;
-	}
-
-	/** 获取类型。 / Returns the type. */
-	public ChallengeType getType() {
-		return this.type;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
+		return this.townResidence != null && this.townResidence;
 	}
 }

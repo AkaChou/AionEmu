@@ -11,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家入队事件（团队2）。
@@ -18,15 +19,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class PlayerEnteredEvent implements Predicate<Player>, TeamEvent {
 
 	private final PlayerGroup group;
 	private final Player enteredPlayer;
-
-	public PlayerEnteredEvent(PlayerGroup group, Player enteredPlayer) {
-		this.group = group;
-		this.enteredPlayer = enteredPlayer;
-	}
 
 	/**
 	 * 入队玩家必须尚未在队伍中。

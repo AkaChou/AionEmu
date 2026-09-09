@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.model.svs.SvsStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 帕内斯特拉（SVS）活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.svs.SvsStateType;
  * @author Rinzler (Encom)
  * @param <PL> SVS 地点类型 / SVS location type
  */
+@RequiredArgsConstructor
 public abstract class Panesterra<PL extends SvsLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / bound location
+	 */
+	@Getter
 	private final PL svsLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startSvs();
-
-	/**
-	 * 绑定 SVS 地点。
-	 * Binds the SVS location.
-	 *
-	 * @param svsLocation SVS 地点 / SVS location
-	 */
-	public Panesterra(PL svsLocation) {
-		this.svsLocation = svsLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
-	 */
-	public PL getSvsLocation() {
-		return svsLocation;
 	}
 
 	/**

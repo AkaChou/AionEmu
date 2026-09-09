@@ -14,6 +14,8 @@ import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 属性函数模型。
@@ -23,6 +25,7 @@ import com.aionemu.gameserver.skillengine.condition.Conditions;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SimpleModifier")
+@NoArgsConstructor
 public class StatFunction implements IStatFunction {
 
 	@XmlAttribute(name = "name")
@@ -31,13 +34,12 @@ public class StatFunction implements IStatFunction {
 	private boolean bonus;
 	@XmlAttribute
 	protected int value;
+	/** 获取职业类型。 / Returns the class type. */
+	@Getter
 	@XmlAttribute(name = "class_type")
 	protected String classType;
 	@XmlElement(name = "conditions")
 	private Conditions conditions;
-
-	public StatFunction() {
-	}
 
 	public StatFunction(StatEnum stat, int value, boolean bonus) {
 		this.stat = stat;
@@ -53,11 +55,6 @@ public class StatFunction implements IStatFunction {
 			return this.hashCode() - o.hashCode();
 		}
 		return result;
-	}
-
-	/** 获取职业类型。 / Returns the class type. */
-	public String getClassType() {
-		return classType;
 	}
 
 	/** 返回所有者 / Returns the owner*/
@@ -93,7 +90,7 @@ public class StatFunction implements IStatFunction {
 	/** 校验。 / Validate. */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
-		return conditions != null ? conditions.validate(stat, statFunction) : true;
+		return conditions == null || conditions.validate(stat, statFunction);
 	}
 
 	/** 应用。 / Apply. */

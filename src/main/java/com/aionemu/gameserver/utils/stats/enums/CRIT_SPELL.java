@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.stats.enums;
 
+import lombok.Getter;
+
 /**
  * 各职业基础法术暴击值枚举。
  * Baseline spell critical values by player class.
@@ -16,19 +18,10 @@ public enum CRIT_SPELL {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	private int value;
+	@Getter
+	private final int value;
 
-	private CRIT_SPELL(int value) {
+	CRIT_SPELL(int value) {
 		this.value = value;
-	}
-
-	/**
-	 * 获取该职业的基础属性值。
-	 * Returns the baseline attribute value for this class.
-	 *
-	 * @return 基础属性值 / baseline attribute value
-	 */
-	public int getValue() {
-		return value;
 	}
 }

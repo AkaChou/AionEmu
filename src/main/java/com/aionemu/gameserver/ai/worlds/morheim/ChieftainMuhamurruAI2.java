@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 {
 	private Future<?> hideTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -37,13 +37,13 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 			startHideTask();
 		}
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (hideTask != null && !hideTask.isDone()) {
 			hideTask.cancel(true);
 		}
 	}
-	
+
 	/**
 	 * 周期性隐藏任务：每隔 14 秒施放隐藏技能并依次触发三次攻击事件。
 	 * Periodic hide task: casts the hide skill every 14 seconds and triggers three attack events in sequence.
@@ -64,7 +64,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 			}
 		}, 14000, 14000);
 	}
-	
+
 	private void startEvent(int time, final int msg, final int skill) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -85,24 +85,24 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 			}
 		}, time);
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
 		sendMsg(1500401);
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		getEffectController().removeEffect(19660);

@@ -37,11 +37,9 @@ public class FireTempleInstance extends GeneralInstanceHandler
 		switch (npc.getObjectTemplate().getTemplateId()) {
             case 212846: //Kromede The Corrupt.
 			    spawnKromedeTreasureChest();
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fire Temple>");
             break;
 			case 214621: //Vile Judge Kromede.
 				spawnKromedeTreasureChest();
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fire Temple>");
             break;
 		}
 	}
@@ -236,24 +234,5 @@ public class FireTempleInstance extends GeneralInstanceHandler
         }
     }
 	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 }

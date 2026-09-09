@@ -1,13 +1,5 @@
 package com.aionemu.gameserver.controllers.movement;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +39,8 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class NpcMoveControllerPathTest {
 
@@ -294,7 +288,7 @@ class NpcMoveControllerPathTest {
 
 		assertSame(projected, NpcMoveController.stableAvoidanceProjection(3, projected));
 		assertEquals(3, projected[2]);
-		assertEquals(null, NpcMoveController.stableAvoidanceProjection(3, new float[] {1, 2, 3.3f}));
+		assertNull(NpcMoveController.stableAvoidanceProjection(3, new float[]{1, 2, 3.3f}));
 	}
 
 	@Test
@@ -480,8 +474,7 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 8));
 		assertEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20),
 				NpcMoveController.attackSlotOffsetDegrees(10, 20));
-		assertFalse(NpcMoveController.attackSlotOffsetDegrees(10, 20)
-				== NpcMoveController.attackSlotOffsetDegrees(11, 20));
+		assertNotEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20), NpcMoveController.attackSlotOffsetDegrees(11, 20));
 
 		float[] slot = NpcMoveController.attackSlotCandidate(10, 0, 0, 0, 5, 1.5f, 0);
 		assertEquals(1.5f, Math.hypot(slot[0], slot[1]), 0.001f);
@@ -518,7 +511,7 @@ class NpcMoveControllerPathTest {
 	void localAvoidanceStepKeepsTheTargetSlope() {
 		assertArrayEquals(new float[] {0.9f, 1.2f, 3},
 				NpcMoveController.localAvoidanceTarget(0, 0, 0, 3, 4, 10, 1.5f), 0.001f);
-		assertEquals(null, NpcMoveController.localAvoidanceTarget(1, 1, 1, 1, 1, 3, 1.5f));
+		assertNull(NpcMoveController.localAvoidanceTarget(1, 1, 1, 1, 1, 3, 1.5f));
 	}
 
 	@Test

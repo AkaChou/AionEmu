@@ -28,6 +28,7 @@ import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.world.RegionUtil;
 import com.aionemu.gameserver.world.WorldMapType;
+import lombok.Getter;
 
 /**
  * 世界地图几何根节点，管理分块、地形、可消隐物体与碰撞查询。
@@ -46,19 +47,20 @@ public class GeoMap extends Node {
 	private static final int NODE_CHUNK_SIZE = 256;
 
 	/** 映射 ID / Map id */
+	@Getter
 	private final int mapId;
 	/** 地形高度/材质数据。 / Terrain height and material data. */
 	private Terrain terrain;
 	/** 按区域 ID 索引的分块节点 / Chunk nodes keyed by region id */
 	private final Map<Integer, Node> chunkById = new HashMap<Integer, Node>();
 	/** 按静态 ID 的可放置对象 / Placeable objects by static id */
-	private Map<Integer, DespawnableNode> despawnables = new LinkedHashMap<Integer, DespawnableNode>();
+	private final Map<Integer, DespawnableNode> despawnables = new LinkedHashMap<Integer, DespawnableNode>();
 	/** 按城镇 ID 索引的城镇对象 / Town objects by town id*/
-	private Map<Integer, List<DespawnableNode>> despawnableTownObjects = new LinkedHashMap<Integer, List<DespawnableNode>>();
+	private final Map<Integer, List<DespawnableNode>> despawnableTownObjects = new LinkedHashMap<Integer, List<DespawnableNode>>();
 	/** 房屋门（地址 → 节点）。 / House doors by address. */
-	private Map<Integer, DespawnableNode> despawnableHouseDoors = new LinkedHashMap<Integer, DespawnableNode>();
+	private final Map<Integer, DespawnableNode> despawnableHouseDoors = new LinkedHashMap<Integer, DespawnableNode>();
 	/** 按门 ID 的门状态对 [关闭, 打开] / Door state pair [closed, open] by door id */
-	private Map<Integer, DespawnableNode[]> despawnableDoors = new LinkedHashMap<Integer, DespawnableNode[]>();
+	private final Map<Integer, DespawnableNode[]> despawnableDoors = new LinkedHashMap<Integer, DespawnableNode[]>();
 
 	/**
 	 * 以地图名与世界尺寸构造 GeoMap。
@@ -87,16 +89,6 @@ public class GeoMap extends Node {
 		} catch (NumberFormatException e) {
 			return 0;
 		}
-	}
-
-	/**
-	 * 返回地图 ID。
-	 * Returns the map id.
-	 *
-	 * @return 地图 ID / map id
-	 */
-	public int getMapId() {
-		return mapId;
 	}
 
 	/**

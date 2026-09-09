@@ -8,15 +8,15 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * roll information to the client.
  */
 public class SM_GROUP_LOOT extends AionServerPacket {
-	private int groupId;
-	private int index;
-	private int unk2;
-	private int itemId;
-	private int unk3;
-	private int lootCorpseId;
-	private int distributionId;
-	private int playerId;
-	private long luck;
+	private final int groupId;
+	private final int index;
+	private final int unk2;
+	private final int itemId;
+	private final int unk3;
+	private final int lootCorpseId;
+	private final int distributionId;
+	private final int playerId;
+	private final long luck;
 
 	/**
 	 * @param groupId 小队 ID；为 0 时启动掷骰选项 / Group ID; 0 starts the roll options

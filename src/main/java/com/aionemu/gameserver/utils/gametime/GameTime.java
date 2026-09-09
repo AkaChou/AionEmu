@@ -30,7 +30,7 @@ public class GameTime implements Cloneable {
 	 * 一年的分钟数（固定月份天数）。
 	 * Minutes in a year (fixed month lengths).
 	 */
-	private static final int MINUTES_IN_YEAR = (31 * 7 + 30 * 4 + 28 * 1) * MINUTES_IN_DAY;
+	private static final int MINUTES_IN_YEAR = (31 * 7 + 30 * 4 + 28) * MINUTES_IN_DAY;
 	/**
 	 * 自 01.01.0000 00:00 起的游戏分钟数。
 	 * Game minutes since 01.01.0000 00:00.
@@ -55,7 +55,7 @@ public class GameTime implements Cloneable {
 		 * 该月天数。
 		 * Days in this month.
 		 */
-		private int _days;
+		private final int _days;
 
 		/**
 		 * @param days 天数 / Day count
@@ -73,7 +73,7 @@ public class GameTime implements Cloneable {
 		public int getDays() {
 			return _days;
 		}
-	};
+	}
 
 	/**
 	 * 以自 01.01.0000 起的分钟数构造游戏时间。

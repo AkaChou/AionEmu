@@ -14,7 +14,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 public class AbyssService {
 	private static final int[] abyssMapList = {
-			//// ***////
+			// 天族领地 / Elyos territories
 			210020000, // Elten.
 			210040000, // Heiron.
 			210050000, // Inggison.
@@ -23,7 +23,7 @@ public class AbyssService {
 			210070000, // Cygnea.
 			210090000, // Idian Depths.
 			210100000, // Iluma.
-			//// ***////
+			// 魔族领地 / Asmodian territories
 			220020000, // Morheim.
 			220040000, // Beluslan.
 			220050000, // Brusthonin.
@@ -32,20 +32,20 @@ public class AbyssService {
 			220080000, // Enshar.
 			220100000, // Idian Depths.
 			220110000, // Norvsvold.
-			//// ***////
+			// 深渊 / The Abyss
 			400010000, // Reshanta.
-			// 帕内斯特拉// / Panesterra//
-			400020000, // Belus.
+			// 帕内斯特拉区域 / Panesterra zones
+			400020000, // 贝洛斯 / Belus.
 			400040000, // Aspida.
 			400050000, // Atanatos.
 			400060000, // Disillon.
-			//// ***////
+			// 中立区域 / Neutral zones
 			600010000, // Silentera Canyon.
 			600110000, // Silentera Canyon [Master Server].
-			//// 4.7////
+			// 4.7 新增地图 / Maps added in 4.7
 			600090000, // Kaldor.
 			600100000, // Levinshor.
-			//// 5.8////
+			// 5.8 新增地图 / Maps added in 5.8
 			600040000, // Tiamaranta's Eye.
 			600041000 }; // Tiamaranta's Eye [Master Server].
 

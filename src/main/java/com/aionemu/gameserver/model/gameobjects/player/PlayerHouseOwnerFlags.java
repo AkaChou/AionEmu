@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.Getter;
+
 /**
  * 玩家房屋 OwnerFlags 枚举。
  * Player House Owner Flags enumeration.
@@ -17,14 +19,11 @@ public enum PlayerHouseOwnerFlags {
 	/** Sold 房屋 / Sold House */
 	SOLD_HOUSE(BIDDING_ALLOWED.getId() | BUY_STUDIO_ALLOWED.getId());
 
-	private byte id;
-
-	private PlayerHouseOwnerFlags(int id) {
-		this.id = (byte) (id & 0xFF);
-	}
-
 	/** 返回 ID / Returns the id */
-	public byte getId() {
-		return id;
+	@Getter
+	private final byte id;
+
+	PlayerHouseOwnerFlags(int id) {
+		this.id = (byte) (id & 0xFF);
 	}
 }

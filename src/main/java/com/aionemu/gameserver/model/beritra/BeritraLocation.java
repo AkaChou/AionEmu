@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.beritra.BeritraTemplate;
 import com.aionemu.gameserver.services.beritraservice.BeritraInvasion;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 布里特拉位置模型。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.beritraservice.BeritraInvasion;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class BeritraLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected BeritraTemplate template;
+	/** 返回 active beritra / Returns the active beritra */
+	@Getter
 	protected BeritraInvasion<BeritraLocation> activeBeritra;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public BeritraLocation() {
-	}
 
 	public BeritraLocation(BeritraTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置 active beritra / Sets the active beritra */
@@ -44,28 +49,8 @@ public class BeritraLocation {
 		this.activeBeritra = beritra;
 	}
 
-	/** 返回 active beritra / Returns the active beritra */
-	public BeritraInvasion<BeritraLocation> getActiveBeritra() {
-		return activeBeritra;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final BeritraTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

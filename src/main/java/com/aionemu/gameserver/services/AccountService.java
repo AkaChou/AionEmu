@@ -45,7 +45,7 @@ public class AccountService {
 
 
 	/** 账号软引用缓存。 / Soft-reference account cache. */
-	private static CacheMap<Integer, Account> accountsMap = CacheMapFactory.createSoftCacheMap("Account", "account");
+	private static final CacheMap<Integer, Account> accountsMap = CacheMapFactory.createSoftCacheMap("Account", "account");
 
 	/**
 	 * 按 ID 获取账号，缓存未命中时从数据库加载，并刷新会话相关字段。

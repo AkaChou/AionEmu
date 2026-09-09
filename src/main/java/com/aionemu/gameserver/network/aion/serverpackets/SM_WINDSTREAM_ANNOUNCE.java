@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 广播风道（Windstream）开启/关闭状态的服务端包。
@@ -9,24 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author LokiReborn
  */
+@AllArgsConstructor
 public class SM_WINDSTREAM_ANNOUNCE extends AionServerPacket {
-	private int bidirectional;
-	private int mapId;
-	private int streamId;
-	private int state;
-
-	/**
-	 * whether bidirectional
-	 * map id
-	 * stream id
-	 * state
-	 */
-	public SM_WINDSTREAM_ANNOUNCE(int bidirectional, int mapId, int streamId, int state) {
-		this.bidirectional = bidirectional;
-		this.mapId = mapId;
-		this.streamId = streamId;
-		this.state = state;
-	}
+	private final int bidirectional;
+	private final int mapId;
+	private final int streamId;
+	private final int state;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

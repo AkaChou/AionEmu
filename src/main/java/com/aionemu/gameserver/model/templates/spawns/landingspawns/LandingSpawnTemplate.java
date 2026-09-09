@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.landing.LandingStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 登陆区域刷新点运行时模板：绑定登陆状态类型。
@@ -11,6 +13,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class LandingSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private LandingStateType landingType;
 
@@ -23,19 +28,9 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回登陆状态类型 / Returns the landing state type */
 	public LandingStateType getEStateType() {
 		return landingType;
-	}
-
-	/** 设置 id / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置登陆状态类型 / Sets the landing state type */

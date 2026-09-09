@@ -9,6 +9,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 房屋刷新模板（静态数据/XML）。
@@ -23,6 +25,9 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 	@XmlElement(name = "spawn", required = true)
 	protected List<HouseSpawn> spawns;
 
+	/** 返回地址 / Returns the address */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "address", required = true)
 	protected int address;
 
@@ -32,16 +37,6 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 			spawns = new ArrayList<HouseSpawn>();
 		}
 		return spawns;
-	}
-
-	/** 返回地址 / Returns the address */
-	public int getAddress() {
-		return address;
-	}
-
-	/** 设置地址 / Sets the address */
-	public void setAddress(int value) {
-		address = value;
 	}
 
 	/** 比较。 / Compares to another instance. */

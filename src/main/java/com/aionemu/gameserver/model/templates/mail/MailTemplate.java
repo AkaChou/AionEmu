@@ -16,6 +16,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 邮件模板（静态数据/XML）。
@@ -31,14 +32,18 @@ public class MailTemplate {
 			@XmlElement(name = "tail", type = Tail.class) })
 	private List<MailPart> mailParts;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race", required = true)
 	protected Race race;
 
 	@XmlTransient
-	private Map<MailPartType, MailPart> mailPartsMap = new HashMap<MailPartType, MailPart>();
+	private final Map<MailPartType, MailPart> mailPartsMap = new HashMap<MailPartType, MailPart>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailPart part : mailParts) {
@@ -71,16 +76,6 @@ public class MailTemplate {
 	/** 返回 tail / Returns the tail */
 	public MailPart getTail() {
 		return mailPartsMap.get(MailPartType.TAIL);
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
 	}
 
 	/** 返回 formatted title / Returns the formatted title */

@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GROUP_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 变更队伍拾取规则事件（团队2）。
@@ -14,15 +15,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class ChangeGroupLootRulesEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
 	private final LootGroupRules lootGroupRules;
-
-	public ChangeGroupLootRulesEvent(PlayerGroup group, LootGroupRules lootGroupRules) {
-		this.group = group;
-		this.lootGroupRules = lootGroupRules;
-	}
 
 	/** 应用。 / Apply. */
 	@Override

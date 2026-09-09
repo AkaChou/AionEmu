@@ -13,21 +13,17 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.GodStone;
 import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 角色信息写入辅助基类，用于选角列表等服务端包。
  * Player info write helper base used by character-list and related server packets.
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class PlayerInfo extends AionServerPacket {
 
-
-	/**
-	 * 子类构造入口。
-	 * Subclass constructor entry.
-	 */
-	protected PlayerInfo() {
-	}
 
 	/**
 	 * 写入单个角色的外观、位置、装备摘要等选角信息。

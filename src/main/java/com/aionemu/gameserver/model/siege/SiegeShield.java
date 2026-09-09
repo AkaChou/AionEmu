@@ -13,6 +13,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 要塞护盾模型。
@@ -23,8 +25,15 @@ import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 public class SiegeShield implements ZoneHandler {
 
 	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
-	private Spatial geometry;
+	/** 获取几何。 / Returns the geometry. */
+	@Getter
+	private final Spatial geometry;
+	/** 返回攻城地点 ID / Returns the siege location id */
+	@Getter
 	private int siegeLocationId;
+	/** 设置启用状态 / Sets the enabled */
+	@Getter
+	@Setter
 	private boolean isEnabled = false;
 
 	public SiegeShield(Spatial geometry) {
@@ -34,18 +43,12 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
-	/** 获取几何。 / Returns the geometry. */
-	public Spatial getGeometry() {
-		return geometry;
-	}
-
 	/** 进入区域时 / On Enter Zone */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
-		if (!(creature instanceof Player)) {
+		if (!(creature instanceof Player player)) {
 			return;
 		}
-		Player player = (Player) creature;
 		if (GeoDataConfig.GEO_SHIELDS_ENABLE && (isEnabled || siegeLocationId == 0)) {
 			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
@@ -64,21 +67,6 @@ public class SiegeShield implements ZoneHandler {
 			creature.getObserveController().removeObserver(actor);
 			observed.remove(creature.getObjectId());
 		}
-	}
-
-	/** 设置启用状态 / Sets the enabled */
-	public void setEnabled(boolean enable) {
-		isEnabled = enable;
-	}
-
-	/** 是否启用。 / Whether Enabled. */
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	/** 返回攻城地点 ID / Returns the siege location id */
-	public int getSiegeLocationId() {
-		return siegeLocationId;
 	}
 
 	/** 设置攻城地点 ID / Sets the siege location id */

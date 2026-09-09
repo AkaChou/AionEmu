@@ -26,10 +26,10 @@ public class Delighted_AdmirerAI2 extends GeneralNpcAI2
         int instanceId = getPosition().getInstanceId();
 		if (dialogId == 10001) {
             switch (getNpcId()) {
-				case 831114: //Crown Prince's Delighted Admirer.
+				case 831114: // 称颂喜悦的皇太子的人 / Crown Prince's Delighted Admirer.
 				    TeleportService2.teleportTo(player, 300560000, instanceId, 347.85843f, 424.8407f, 294.75983f, (byte) 57);
 				break;
-				case 831115: //Empress's Delighted Admirer.
+				case 831115: // 称颂喜悦的皇后的人 / Empress's Delighted Admirer.
 				    TeleportService2.teleportTo(player, 300560000, instanceId, 461.9911f, 109.995865f, 214.7108f, (byte) 68);
 				break;
 			}

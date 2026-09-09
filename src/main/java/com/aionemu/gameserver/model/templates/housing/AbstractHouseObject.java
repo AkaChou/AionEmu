@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
+import lombok.Getter;
 
 /**
  * 抽象房屋对象模板（静态数据/XML）。
@@ -20,12 +21,18 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 @XmlSeeAlso({ PlaceableHouseObject.class })
 public abstract class AbstractHouseObject extends VisibleObjectTemplate {
 
+	/** 返回 talking distance / Returns the talking distance */
+	@Getter
 	@XmlAttribute(name = "talking_distance", required = true)
 	protected float talkingDistance;
 
+	/** 返回 quality / Returns the quality */
+	@Getter
 	@XmlAttribute(required = true)
 	protected ItemQuality quality;
 
+	/** 获取分类。 / Returns the category. */
+	@Getter
 	@XmlAttribute(required = true)
 	protected HousingCategory category;
 
@@ -42,21 +49,6 @@ public abstract class AbstractHouseObject extends VisibleObjectTemplate {
 	@Override
 	public int getTemplateId() {
 		return id;
-	}
-
-	/** 返回 talking distance / Returns the talking distance */
-	public float getTalkingDistance() {
-		return talkingDistance;
-	}
-
-	/** 返回 quality / Returns the quality */
-	public ItemQuality getQuality() {
-		return quality;
-	}
-
-	/** 获取分类。 / Returns the category. */
-	public HousingCategory getCategory() {
-		return category;
 	}
 
 	/** 返回 can dye / Returns the can dye */

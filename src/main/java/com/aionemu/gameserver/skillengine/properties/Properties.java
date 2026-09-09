@@ -167,14 +167,12 @@ public class Properties {
 				return false;
 			}
 		}
-		if (targetSpecies != TargetSpeciesAttribute.ALL && !TargetSpeciesProperty.set(skill, this)) {
-			return false;
-		}
-		return true;
+		return targetSpecies == TargetSpeciesAttribute.ALL || TargetSpeciesProperty.set(skill, this);
 	}
 
 	/**
 	 * 过滤由外部区域预选的目标，跳过技能自身的距离和几何选区。
+	 * Filters targets preselected by an external area, skipping the skill’s own range and geometry selection.
 	 */
 	public boolean validatePreselectedTargets(Skill skill) {
 		skill.setFirstTargetAttribute(firstTarget);
@@ -247,10 +245,7 @@ public class Properties {
 				return false;
 			}
 		}
-		if (targetSpecies != TargetSpeciesAttribute.ALL && !TargetSpeciesProperty.set(skill, this)) {
-			return false;
-		}
-		return true;
+		return targetSpecies == TargetSpeciesAttribute.ALL || TargetSpeciesProperty.set(skill, this);
 	}
 
 	/**

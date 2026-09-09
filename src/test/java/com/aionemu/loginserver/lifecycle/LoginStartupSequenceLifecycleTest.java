@@ -1,11 +1,5 @@
 package com.aionemu.loginserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import java.io.IOException;
@@ -16,6 +10,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class LoginStartupSequenceLifecycleTest {
 
@@ -30,7 +26,7 @@ class LoginStartupSequenceLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(List.of(
             "logger:init",
@@ -117,7 +113,7 @@ class LoginStartupSequenceLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
         assertEquals(List.of(
             "logger:init",
             "cron:init",

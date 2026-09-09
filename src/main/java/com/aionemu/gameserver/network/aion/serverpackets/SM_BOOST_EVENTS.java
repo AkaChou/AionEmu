@@ -1,10 +1,9 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import java.util.Map;
 
-import com.aionemu.gameserver.model.templates.event.BoostEvents;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 同步增益/加成活动状态（buff 编号、加成值与活动起止时间）的服务端包。
@@ -12,29 +11,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author wanke
  */
+@AllArgsConstructor
 public class SM_BOOST_EVENTS extends AionServerPacket {
-	private Map<Integer, BoostEvents> boostEvents;
 
-	private int buffId;
-	private int buffValue;
+	private final int buffId;
+	private final int buffValue;
 	long eventStartTime;
 	long eventEndTime;
-
-	/**
-	 * 构造增益活动同步包。
-	 * Builds a boost-event sync packet.
-	 *
-	 * boost buff id
-	 * boost value
-	 * @param eventStartTime 活动开始时间戳 / event start timestamp
-	 * @param eventEndTime 活动结束时间戳 / event end timestamp
-	 */
-	public SM_BOOST_EVENTS(int buffId, int buffValue, long eventStartTime, long eventEndTime) {
-		this.buffId = buffId;
-		this.buffValue = buffValue;
-		this.eventStartTime = eventStartTime;
-		this.eventEndTime = eventEndTime;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

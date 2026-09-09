@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.assemblednpc;
 import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate.AssembledNpcPartTemplate;
 
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 组装 NPCPart，用于 assemblednpc 相关逻辑。
@@ -10,16 +11,12 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@AllArgsConstructor
 public class AssembledNpcPart {
 
 	@Getter
-	private Integer object;
-	private AssembledNpcPartTemplate template;
-
-	public AssembledNpcPart(Integer object, AssembledNpcPartTemplate template) {
-		this.object = object;
-		this.template = template;
-	}
+	private final Integer object;
+	private final AssembledNpcPartTemplate template;
 
 	/** 返回 assembled npc part template / Returns the assembled npc part template */
 	public AssembledNpcPartTemplate getAssembledNpcPartTemplate() {

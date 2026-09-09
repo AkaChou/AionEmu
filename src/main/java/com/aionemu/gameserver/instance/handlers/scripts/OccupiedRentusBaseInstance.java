@@ -6,7 +6,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -18,9 +17,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -49,14 +46,14 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -146,7 +143,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -161,7 +158,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
             spawnOccupiedDirectFiringGunIDYun();
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -174,7 +171,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		doors.get(54).setOpen(true);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -254,7 +251,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnOccupiedDirectFiringGunIDYun() {
         final int DirectFiringGunIDYun1 = spawnRace == Race.ASMODIANS ? 702677 : 702683;
         final int DirectFiringGunIDYun2 = spawnRace == Race.ASMODIANS ? 702678 : 702684;
@@ -269,9 +266,9 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
         spawn(DirectFiringGunIDYun5, 417.98672f, 450.97131f, 149.8397f, (byte) 0, 202);
         spawn(DirectFiringGunIDYun6, 412.86597f, 459.53128f, 149.8614f, (byte) 0, 204);
     }
-	
+
 	private void reianOccupiedSecureBridge() {
-		Npc ariana5 = (Npc) spawn(799670, 183.736f, 391.392f, 260.571f, (byte) 26); //Ariana.
+		Npc ariana5 = (Npc) spawn(799670, 183.736f, 391.392f, 260.571f, (byte) 26); // 阿里亚娜 / Ariana.
 		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500417, ariana5.getObjectId(), 0, 5000);
 		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500418, ariana5.getObjectId(), 0, 8000);
 		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500419, ariana5.getObjectId(), 0, 11000);
@@ -279,16 +276,16 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 		spawn(800227, 189.40356f, 423.41653f, 260.57162f, (byte) 0); //Reian Warrior.
 		spawn(800228, 195.74078f, 422.42538f, 260.57162f, (byte) 0); //Reian Priest.
 		spawn(800228, 188.83278f, 425.67007f, 260.57153f, (byte) 0); //Reian Priest.
-		spawn(800229, 194.72948f, 424.4182f, 260.5716f, (byte) 0); //Imprisoned Reian.
-		spawn(800229, 190.90623f, 425.9276f, 260.5716f, (byte) 0); //Imprisoned Reian.
-		spawn(800230, 193.46213f, 426.45123f, 260.57156f, (byte) 0); //Imprisoned Reian.
+		spawn(800229, 194.72948f, 424.4182f, 260.5716f, (byte) 0); // 鸢族居民 / Imprisoned Reian.
+		spawn(800229, 190.90623f, 425.9276f, 260.5716f, (byte) 0); // 鸢族居民 / Imprisoned Reian.
+		spawn(800230, 193.46213f, 426.45123f, 260.57156f, (byte) 0); // 鸢族居民 / Imprisoned Reian.
 		spawn(833048, 188.27031f, 414.384f, 260.75488f, (byte) 83); //Rentus Quality Supplies Storage Box.
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -328,19 +325,19 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			break;
 			case 701100: //Old Incense Burner.
 				if (instance.getNpc(799543) == null) {
-					spawn(799543, 506.303f, 613.902f, 158.179f, (byte) 0); //Paudav.
+					spawn(799543, 506.303f, 613.902f, 158.179f, (byte) 0); // 比西奥斯 / Paudav.
 				}
 			break;
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -351,7 +348,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -362,19 +359,13 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
-	private void despawnNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
-			npc.getController().onDelete();
-		}
-	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -397,7 +388,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -423,17 +414,17 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private boolean isDead(Npc npc) {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
-	
+
 	private void boostMorale() {
 		for (Player p: instance.getPlayersInside()) {
 			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(19367); //Boost Morale.

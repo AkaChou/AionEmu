@@ -58,8 +58,8 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** left wing treasure box / left wing treasure box */
-		private List<Npc> leftWingTreasureBox = new ArrayList<Npc>();
-	
+		private final List<Npc> leftWingTreasureBox = new ArrayList<Npc>();
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -71,7 +71,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -132,7 +132,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void StartTimer2() {
         if (!isStartTimer2) {
 			isStartTimer2 = true;
@@ -165,7 +165,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer3() {
 	    if (!isStartTimer3) {
 			isStartTimer3 = true;
@@ -198,7 +198,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer4() {
 	    if (!isStartTimer4) {
 			isStartTimer4 = true;
@@ -231,7 +231,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer5() {
 	    if (!isStartTimer5) {
 			isStartTimer5 = true;
@@ -264,7 +264,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer6() {
 	    if (!isStartTimer6) {
 			isStartTimer6 = true;
@@ -297,7 +297,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer7() {
 	    if (!isStartTimer7) {
 			isStartTimer7 = true;
@@ -330,7 +330,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer8() {
 	    if (!isStartTimer8) {
 			isStartTimer8 = true;
@@ -363,7 +363,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer9() {
 	    if (!isStartTimer9) {
 			isStartTimer9 = true;
@@ -396,7 +396,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer10() {
 	    if (!isStartTimer10) {
 			isStartTimer10 = true;
@@ -429,7 +429,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer11() {
 	    if (!isStartTimer11) {
 			isStartTimer11 = true;
@@ -462,7 +462,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer12() {
 	    if (!isStartTimer12) {
 			isStartTimer12 = true;
@@ -495,7 +495,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -510,13 +510,13 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.

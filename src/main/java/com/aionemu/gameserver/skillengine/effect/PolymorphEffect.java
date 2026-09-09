@@ -26,7 +26,7 @@ public class PolymorphEffect extends TransformEffect {
 	@Override
 	public void startEffect(Effect effect) {
 		if (neutralToNpc && effect.getEffected() instanceof Player) {
-			((Player) effect.getEffected()).setAdminNeutral(1);
+			effect.getEffected().setAdminNeutral(1);
 		}
 		if ((effect.getEffector() instanceof Player)) {
 			if (effect.getEffector().getEffectController().isAbnormalSet(AbnormalState.HIDE)) {
@@ -43,7 +43,7 @@ public class PolymorphEffect extends TransformEffect {
 	@Override
 	public void endEffect(Effect effect) {
 		if (neutralToNpc && effect.getEffected() instanceof Player) {
-			((Player) effect.getEffected()).setAdminNeutral(0);
+			effect.getEffected().setAdminNeutral(0);
 		}
 		super.endEffect(effect, AbnormalState.NOFLY);
 	}

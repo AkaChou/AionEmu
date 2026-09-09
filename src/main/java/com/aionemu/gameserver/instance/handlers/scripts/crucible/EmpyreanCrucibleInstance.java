@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -23,7 +22,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -57,17 +55,17 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	 */
 	private boolean isDoneStage6Round1 = false;
 	/** NPC 列表 / NPC list */
-	private List<Npc> npcs = new ArrayList<Npc>();
+	private final List<Npc> npcs = new ArrayList<Npc>();
 	/** 天界阶段列表 / empyrean stage list */
-	private List<EmpyreanStage> empyreanStage = new ArrayList<EmpyreanStage>();
-	
+	private final List<EmpyreanStage> empyreanStage = new ArrayList<EmpyreanStage>();
+
 	private class EmpyreanStage {
 		private List<Npc> npcs = new ArrayList<Npc>();
-		
+
 		public EmpyreanStage(List<Npc> npcs) {
 			this.npcs = npcs;
 		}
-		
+
 		private boolean containNpc() {
 			for (Npc npc : npcs) {
 				if (instance.getNpcs().contains(npc)) {
@@ -77,7 +75,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -90,11 +88,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		stage = 0;
 		sp(799567, 345.25107f, 349.40176f, 96.09097f, (byte) 0, 10000);
 	}
-	
+
 	private void addItems(Player player) {
-        ItemService.addItem(player, 186000124, 5); //Worthiness Ticket.
+        ItemService.addItem(player, 186000124, 5); // 败者复活券 / Worthiness Ticket.
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -121,7 +119,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward));
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_STAGE_INFO(2, stageType.getId(), stageType.getType()));
 	}
-	
+
 	private void sendPacket(final int points, final int nameId) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -144,7 +142,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		});
 	}
-	
+
 	private void sendEventPacket(final StageType type, final int time) {
 		this.stageType = type;
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -169,7 +167,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -178,9 +176,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		if (npcs.contains(npc)) {
-			npcs.remove(npc);
-		}
+		npcs.remove(npc);
 		EmpyreanStage es = getEmpyreanStage(npc);
 		int point = 0;
 		switch (npc.getNpcId()) {
@@ -280,7 +276,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
             break;
             case 217560: //Scourge.
 			case 217561: //Snakepriest.
-			case 217562: //Sorcerer.
+			case 217562: // 魔道星 / Sorcerer.
 			case 217564: //Elite Drakan Outrider.
 			case 217565: //Elite Drakan Mage.
 			case 217566: //Elite Drakan Healer.
@@ -341,19 +337,19 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 point += 2000;
 			break;
 			// 第 7 阶段【魔族版本 - 阶段结束：约 105000 分】 / STAGE 7 [Asmodians Version - [End Of Stage: ~105,000 Points]
-			case 217578: //Boreas.
-			case 217579: //Jumentis.
-			case 217580: //Charna.
-			case 217581: //Thrasymedes.
-			case 217586: //Miriya.
+			case 217578: // 布雷亚斯 / Boreas.
+			case 217579: // 尤贝恩图斯 / Jumentis.
+			case 217580: // 黑卡泰 / Charna.
+			case 217581: // 特拉希梅德斯 / Thrasymedes.
+			case 217586: // 奥尔佩 / Miriya.
 			    point += 4800;
 			break;
 			// 第 7 阶段【天族版本 - 阶段结束：约 105000 分】 / STAGE 7 [Elyos Version - [End Of Stage: ~105,000 Points]
-			case 217582: //Traufnir.
-			case 217583: //Sigyn.
-			case 217584: //Sif.
-			case 217585: //Freyr.
-			case 217587: //Aud.
+			case 217582: // 特拉乌普尼尔 / Traufnir.
+			case 217583: // 锡金 / Sigyn.
+			case 217584: // 锡普 / Sif.
+			case 217585: // 普莱尔 / Freyr.
+			case 217587: // 阿乌德 / Aud.
                 point += 4800;
 			break;
             // 第 8 阶段【阶段结束：约 141000 分】 / STAGE 8 [End Of Stage: ~141,000 Points]
@@ -416,7 +412,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217750: //Administrator Arminos.
                 point += 4000;
 			break;
-		} if (point != 0) { 
+		} if (point != 0) {
 			sendPacket(point, npc.getObjectTemplate().getNameId());
 		} switch (npc.getNpcId()) {
 		   /**
@@ -1583,7 +1579,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
             break;
 		}
 	}
-	
+
 	private void startBonusStage3() {
 		sp(217740, 360.76f, 349.42f, 96.1f, (byte) 0);
 		sp(217741, 346.27f, 363.35f, 96.1f, (byte) 11);
@@ -1646,7 +1642,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, 30000);
 	}
-	
+
 	private void startBonusStage4() {
 		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 3000);
@@ -1707,7 +1703,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, 102000);
 	}
-	
+
 	private void startStage4Round4_1() {
 		List<Npc> round = new ArrayList<Npc>();
 		round.add(sp(217508, 334.06754f, 339.84393f, 96.09091f, (byte) 0));
@@ -1726,7 +1722,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, 5000);
 	}
-	
+
 	private void startStage4Round3() {
 		sendEventPacket(StageType.START_STAGE_4_ROUND_3, 2000);
 		//第 %0 轮开始！ / Round %0 begins!
@@ -1748,7 +1744,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, 43000);
 	}
-	
+
 	private void startStage2Round2() {
 		sendEventPacket(StageType.START_STAGE_2_ROUND_2, 2000);
 		//第 %0 轮开始！ / Round %0 begins!
@@ -1758,7 +1754,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217507, 329.2849f, 355.2314f, 96.090935f, (byte) 0, 2000);
 		sp(217504, 328.90808f, 351.6184f, 96.09092f, (byte) 0, 2000);
 	}
-	
+
 	private void startStage2Round3() {
 		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
@@ -1772,7 +1768,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
+
 	private void startStage2Round5() {
 		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
@@ -1786,13 +1782,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
-	private void rewardGroup() {
-		for (Player p : instance.getPlayersInside()) {
-			doReward(p);
-		}
-	}
-	
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -1812,7 +1802,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward, InstanceScoreType.END_PROGRESS));
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1823,7 +1813,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		npcs.clear();
 		empyreanStage.clear();
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -1855,7 +1845,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		});
 		return true;
 	}
-	
+
 	private EmpyreanStage getEmpyreanStage(Npc npc) {
 		for (EmpyreanStage es: empyreanStage) {
 			if (es.npcs.contains(npc)) {
@@ -1864,16 +1854,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 		return null;
 	}
-	
-	private boolean isSpawn(List<Integer> round) {
-		for (Npc n: npcs) {
-			if (round.contains(n.getNpcId())) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
+
 	/**
 	 * 副本阶段变更时处理。
 	 * Handle instance stage change.
@@ -2080,7 +2061,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
+
 	private void crucibleTeleport(float x, float y, float z, byte h) {
 		for (Player player: instance.getPlayersInside()) {
 			if (player.isOnline()) {
@@ -2088,11 +2069,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}
 	}
-	
+
 	protected void readyRoomTeleport(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	private void moveToReadyRoom(Player player) {
 		switch (stage) {
 			case 1:
@@ -2121,7 +2102,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -2136,7 +2117,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			reward.setPlayerLeave();
 		}
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -2147,7 +2128,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -2161,14 +2142,14 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		// “玩家名”退出训练并离开了试炼场。 / "Player Name" dropped out of training and left the Crucible.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400962, player.getName()));
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-        storage.decreaseByItemId(186000124, storage.getItemCountByItemId(186000124)); //Worthiness Ticket.
-		storage.decreaseByItemId(186000125, storage.getItemCountByItemId(186000125)); //Worthiness Ticket.
-		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); //Worthiness Ticket.
+        storage.decreaseByItemId(186000124, storage.getItemCountByItemId(186000124)); // 败者复活券 / Worthiness Ticket.
+		storage.decreaseByItemId(186000125, storage.getItemCountByItemId(186000125)); // 败者复活券 / Worthiness Ticket.
+		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); // 败者复活券 / Worthiness Ticket.
 	}
-	
+
 	/**
 	 * 玩家停止训练时处理。
 	 * Handle a player stopping training.
@@ -2179,7 +2160,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	public void onStopTraining(Player player) {
 		doReward(player);
 	}
-	
+
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -2194,7 +2175,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			}
 		}, time);
 	}
-	
+
 	private Npc sp(int npcId ,float x, float y, float z, byte h) {
 		Npc npc = null;
 		if (!isInstanceDestroyed) {
@@ -2203,7 +2184,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 		return npc;
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -2223,7 +2204,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217756: //Worthiness Ticket Box (Fin Stage 1)
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000124, 1)); //Worthiness Ticket.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000124, 1)); // 败者复活券 / Worthiness Ticket.
 					}
 				}
 			break;

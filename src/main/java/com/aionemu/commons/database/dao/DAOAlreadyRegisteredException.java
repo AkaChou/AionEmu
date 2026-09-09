@@ -1,5 +1,7 @@
 package com.aionemu.commons.database.dao;
 
+import lombok.NoArgsConstructor;
+
 /**
  * DAO 已注册异常
  * DAO Already Registered Exception
@@ -11,6 +13,7 @@ package com.aionemu.commons.database.dao;
  * @author SoulKeeper
  * @author Saelya
  */
+@NoArgsConstructor
 public class DAOAlreadyRegisteredException extends DAOException {
 
     /**
@@ -18,13 +21,6 @@ public class DAOAlreadyRegisteredException extends DAOException {
      * Serialization version ID
      */
     private static final long serialVersionUID = -4966845154050833016L;
-
-    /**
-     * 默认构造函数
-     * Default constructor
-     */
-    public DAOAlreadyRegisteredException() {
-    }
 
     /**
      * 使用指定的错误消息构造异常

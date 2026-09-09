@@ -4,14 +4,18 @@ import java.util.List;
 
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.utils.MathUtil;
+import lombok.Getter;
 
 /**
  * 风道路线：按经过毫秒数在航点间线性插值计算飞行位置。
  * Windstream route: computes flight positions by linear interpolation between waypoints over elapsed time.
  */
 public final class WindstreamRoute {
+	@Getter
 	private final int mapId;
+	@Getter
 	private final int id;
+	@Getter
 	private final int durationMillis;
 	private final List<Point3D> points;
 
@@ -20,18 +24,6 @@ public final class WindstreamRoute {
 		this.id = id;
 		this.durationMillis = durationMillis;
 		this.points = List.copyOf(points);
-	}
-
-	public int getMapId() {
-		return mapId;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public int getDurationMillis() {
-		return durationMillis;
 	}
 
 	public int getPointCount() {

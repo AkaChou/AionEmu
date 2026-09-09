@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
  */
 public class BrokerPlayerClassExtraFilter extends BrokerPlayerClassFilter {
 
-	private int mask;
+	private final int mask;
 
 	/**
 	 * @param mask 类别掩码（模板 ID / 100000） / category mask (template id / 100000)

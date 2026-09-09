@@ -1,11 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
@@ -15,6 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameNetworkStartupLifecycleTest {
 
@@ -32,7 +28,7 @@ class GameNetworkStartupLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "startServers", "misc", "shutdownHook"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -71,7 +67,7 @@ class GameNetworkStartupLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "startServers", "section", "startServers", "misc"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -225,21 +221,21 @@ class GameNetworkStartupLifecycleTest {
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "throwingProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                throw exception;
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "throwingProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				throw exception;
+			}
+		);
     }
 
     private static final class ProviderUsedException extends RuntimeException {

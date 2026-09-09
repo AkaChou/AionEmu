@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.NoArgsConstructor;
 
 /**
  * NPC 技能模板数据容器，按 NPC ID 索引 {@link NpcSkillTemplates}。
@@ -25,16 +26,14 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @Slf4j
 @XmlRootElement(name = "npc_skill_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class NpcSkillData {
 
 	@XmlElement(name = "npcskills")
 	private List<NpcSkillTemplates> npcSkills;
 
 	/** 全部 NPC 技能模板映射 / map containing all npc skill templates */
-	private IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
-
-	public NpcSkillData() {
-	}
+	private final IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
 
 	public NpcSkillData(List<NpcSkillTemplates> npcSkills) {
 		this.npcSkills = npcSkills;

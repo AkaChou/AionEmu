@@ -6,13 +6,15 @@ import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.PetitionService;
+import lombok.AllArgsConstructor;
 
 /**
  * 同步客服工单（Petition）状态的服务端包；无工单时写出空结构。
  * Server packet that synchronizes GM petition status; writes an empty structure when none is open.
  */
+@AllArgsConstructor
 public class SM_PETITION extends AionServerPacket {
-	private Petition petition;
+	private final Petition petition;
 
 	/**
 	 * 构造无工单（清空客户端工单 UI）的包。
@@ -20,13 +22,6 @@ public class SM_PETITION extends AionServerPacket {
 	 */
 	public SM_PETITION() {
 		this.petition = null;
-	}
-
-	/**
-	 * active petition
-	 */
-	public SM_PETITION(Petition petition) {
-		this.petition = petition;
 	}
 
 	@Override

@@ -37,6 +37,8 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 生物游戏对象。
@@ -45,27 +47,122 @@ import java.util.Map;
 @Slf4j
 
 public abstract class Creature extends VisibleObject {
+	/** 设置 AI 2 / Sets the ai 2 */
+	@Setter
 	protected AI2 ai2;
+	/** 设置延迟消失 / Sets whether the despawn is delayed */
+	@Setter
 	private boolean isDespawnDelayed = false;
+	/**
+	 * 返回生命属性。
+	 * Returns the life stats.
+	 *
+	 * @return 生命属性 / the lifeStats
+	 */
+	@Getter
+	@Setter
 	private CreatureLifeStats<? extends Creature> lifeStats;
+	/**
+	 * 返回游戏属性。
+	 * Returns the game stats.
+	 *
+	 * @return 游戏属性 / the gameStats
+	 */
+	@Getter
+	@Setter
 	private CreatureGameStats<? extends Creature> gameStats;
+	/**
+	 * 返回效果控制器。
+	 * Returns the effect controller.
+	 *
+	 * @return 效果控制器 / the effectController
+	 */
+	@Getter
+	@Setter
 	private EffectController effectController;
+	/** 返回移动控制器 / Returns the move controller */
+	@Getter
 	protected MoveController moveController;
+	/**
+	 * 返回状态。
+	 * Returns the state.
+	 *
+	 * @return 状态 / state
+	 */
+	@Getter
 	private int state = CreatureState.ACTIVE.getId();
+	/**
+	 * 返回可视状态。
+	 * Returns the visual state.
+	 *
+	 * @return 可视状态 / visualState
+	 */
+	@Getter
 	private int visualState = CreatureVisualState.VISIBLE.getId();
+	/**
+	 * 返回感知状态。
+	 * Returns the see state.
+	 *
+	 * @return 感知状态 / seeState
+	 */
+	@Getter
 	private int seeState = CreatureSeeState.NORMAL.getId();
+	/**
+	 * 返回当前施放技能。
+	 * Returns the current casting skill.
+	 *
+	 * @return 施放技能 / current casting skill
+	 */
+	@Getter
 	private volatile Skill castingSkill;
+	/**
+	 * 返回技能冷却表。
+	 * Returns the skill cooldowns.
+	 *
+	 * @return 技能冷却表 / the skillCoolDowns
+	 */
+	@Getter
 	private Map<Integer, Long> skillCoolDowns;
 	private Map<Integer, Long> skillCoolDownsBase;
-	private ObserveController observeController;
+	/**
+	 * 返回观察控制器。
+	 * Returns the observe controller.
+	 *
+	 * @return 观察控制器 / the observeController
+	 */
+	@Getter
+	private final ObserveController observeController;
+	/**
+	 * 返回变身模型。
+	 * Returns the transform model.
+	 *
+	 * @return 变身模型 / the transformModel
+	 */
+	@Getter
 	private TransformModel transformModel;
 	private final AggroList aggroList;
 	private byte adminFlags = 0;
+	/**
+	 * 设置正在使用的物品。
+	 * Sets the item being used.
+	 *
+	 * @param usingItem 正在使用的物品 / item being used
+	 */
+	@Getter
+	@Setter
 	private Item usingItem;
 	private final transient byte[] zoneTypes = new byte[ZoneType.values().length];
+	/** 返回技能编号 / Returns the skill number */
+	@Getter
+	@Setter
 	private int skillNumber;
+	/** 返回被攻击次数 / Returns the attacked count */
+	@Getter
 	private int attackedCount;
-	private long spawnTime = System.currentTimeMillis();
+	private final long spawnTime = System.currentTimeMillis();
+	/** 返回拉取倍率 / Returns the pulled multi */
+	@Getter
+	@Setter
 	private int PulledMulti = 1;
 	/** 真实 stat ratio，1000 表示 1.0。 / Retail stat ratio, 1000 = 1.0. */
 	private int statRatio = 1000;
@@ -93,11 +190,6 @@ public abstract class Creature extends VisibleObject {
 		this.aggroList = createAggroList();
 	}
 
-	/** 返回移动控制器 / Returns the move controller */
-	public MoveController getMoveController() {
-		return this.moveController;
-	}
-
 	protected AggroList createAggroList() {
 		return new AggroList(this);
 	}
@@ -113,77 +205,12 @@ public abstract class Creature extends VisibleObject {
 		return (CreatureController<?>) super.getController();
 	}
 
-	/**
-	 * 返回生命属性。
-	 * Returns the life stats.
-	 *
-	 * @return 生命属性 / the lifeStats
-	 */
-	public CreatureLifeStats<? extends Creature> getLifeStats() {
-		return lifeStats;
-	}
-
-	/**
-	 * 设置生命属性。
-	 * Sets the life stats.
-	 *
-	 * @param lifeStats 要设置的生命属性 / the lifeStats to set
-	 */
-	public void setLifeStats(CreatureLifeStats<? extends Creature> lifeStats) {
-		this.lifeStats = lifeStats;
-	}
-
-	/**
-	 * 返回游戏属性。
-	 * Returns the game stats.
-	 *
-	 * @return 游戏属性 / the gameStats
-	 */
-	public CreatureGameStats<? extends Creature> getGameStats() {
-		return gameStats;
-	}
-
-	/**
-	 * 设置游戏属性。
-	 * Sets the game stats.
-	 *
-	 * @param gameStats 要设置的游戏属性 / the gameStats to set
-	 */
-	public void setGameStats(CreatureGameStats<? extends Creature> gameStats) {
-		this.gameStats = gameStats;
-	}
-
 	/** 获取等级。 / Returns the level. */
 	public abstract byte getLevel();
-
-	/**
-	 * 返回效果控制器。
-	 * Returns the effect controller.
-	 *
-	 * @return 效果控制器 / the effectController
-	 */
-	public EffectController getEffectController() {
-		return effectController;
-	}
-
-	/**
-	 * 设置效果控制器。
-	 * Sets the effect controller.
-	 *
-	 * @param effectController 要设置的效果控制器 / the effectController to set
-	 */
-	public void setEffectController(EffectController effectController) {
-		this.effectController = effectController;
-	}
 
 	/** 返回 AI 2 / Returns the ai 2 */
 	public AI2 getAi2() {
 		return ai2 != null ? ai2 : GameEngineServices.ai2Engine().setupAI("dummy", this);
-	}
-
-	/** 设置 AI 2 / Sets the ai 2 */
-	public void setAi2(AI2 ai2) {
-		this.ai2 = ai2;
 	}
 
 	/**
@@ -194,11 +221,6 @@ public abstract class Creature extends VisibleObject {
 	  */
 	public boolean isDeleteDelayed() {
 		return isDespawnDelayed;
-	}
-
-	/** 设置延迟消失 / Sets whether the despawn is delayed */
-	public void setDespawnDelayed(boolean delayed) {
-		isDespawnDelayed = delayed;
 	}
 
 	/** 是否旗帜 / Whether flag. */
@@ -255,31 +277,6 @@ public abstract class Creature extends VisibleObject {
 		return castingSkill != null ? castingSkill.getSkillTemplate().getSkillId() : 0;
 	}
 
-	/**
-	 * 返回当前施放技能。
-	 * Returns the current casting skill.
-	 *
-	 * @return 施放技能 / current casting skill
-	 */
-	public Skill getCastingSkill() {
-		return castingSkill;
-	}
-
-	/** 返回技能编号 / Returns the skill number */
-	public int getSkillNumber() {
-		return skillNumber;
-	}
-
-	/** 设置技能编号 / Sets the skill number */
-	public void setSkillNumber(int skillNumber) {
-		this.skillNumber = skillNumber;
-	}
-
-	/** 返回被攻击次数 / Returns the attacked count */
-	public int getAttackedCount() {
-		return this.attackedCount;
-	}
-
 	/** 递增被攻击次数 / Increments the attacked count. */
 	public void incrementAttackedCount() {
 		this.attackedCount++;
@@ -301,16 +298,6 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * 设置正在使用的物品。
-	 * Sets the item being used.
-	 *
-	 * @param usingItem 正在使用的物品 / item being used
-	 */
-	public void setUsingItem(Item usingItem) {
-		this.usingItem = usingItem;
-	}
-
-	/**
 	 * 获取正在使用的物品 ID。
 	 * Gets the id of the item being used.
 	 *
@@ -318,16 +305,6 @@ public abstract class Creature extends VisibleObject {
 	 */
 	public int getUsingItemId() {
 		return usingItem != null ? usingItem.getItemTemplate().getTemplateId() : 0;
-	}
-
-	/**
-	 * 返回正在使用的物品。
-	 * Returns the item being used.
-	 *
-	 * @return 正在使用的物品 / item being used
-	 */
-	public Item getUsingItem() {
-		return usingItem;
 	}
 
 	/**
@@ -373,16 +350,6 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * 返回状态。
-	 * Returns the state.
-	 *
-	 * @return 状态 / state
-	 */
-	public int getState() {
-		return state;
-	}
-
-	/**
 	 * 设置状态。
 	 * Sets the state.
 	 *
@@ -411,20 +378,7 @@ public abstract class Creature extends VisibleObject {
 	public boolean isInState(CreatureState state) {
 		int isState = this.state & state.getId();
 
-		if (isState == state.getId()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * 返回可视状态。
-	 * Returns the visual state.
-	 *
-	 * @return 可视状态 / visualState
-	 */
-	public int getVisualState() {
-		return visualState;
+		return isState == state.getId();
 	}
 
 	/**
@@ -452,20 +406,7 @@ public abstract class Creature extends VisibleObject {
 	public boolean isInVisualState(CreatureVisualState visualState) {
 		int isVisualState = this.visualState & visualState.getId();
 
-		if (isVisualState == visualState.getId()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * 返回感知状态。
-	 * Returns the see state.
-	 *
-	 * @return 感知状态 / seeState
-	 */
-	public int getSeeState() {
-		return seeState;
+		return isVisualState == visualState.getId();
 	}
 
 	/**
@@ -493,20 +434,7 @@ public abstract class Creature extends VisibleObject {
 	public boolean isInSeeState(CreatureSeeState seeState) {
 		int isSeeState = this.seeState & seeState.getId();
 
-		if (isSeeState == seeState.getId()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * 返回变身模型。
-	 * Returns the transform model.
-	 *
-	 * @return 变身模型 / the transformModel
-	 */
-	public TransformModel getTransformModel() {
-		return transformModel;
+		return isSeeState == seeState.getId();
 	}
 
 	/**
@@ -568,16 +496,6 @@ public abstract class Creature extends VisibleObject {
 	 */
 	public final byte getPacketBroadcastMask() {
 		return packetBroadcastMask;
-	}
-
-	/**
-	 * 返回观察控制器。
-	 * Returns the observe controller.
-	 *
-	 * @return 观察控制器 / the observeController
-	 */
-	public ObserveController getObserveController() {
-		return observeController;
 	}
 
 	/**
@@ -770,10 +688,8 @@ public abstract class Creature extends VisibleObject {
 		 */
 		if (skillCoolDownsBase != null && skillCoolDownsBase.get(delayId) != null) {
 			int cooldown = template.scaleCooldownByAttackDelay(template.getCooldown(), getGameStats().getAttackSpeed().getCurrent());
-			if ((template.getDuration() + SkillConfig.scaleCooldown(cooldown) * 100 + skillCoolDownsBase.get(delayId)) < System
-					.currentTimeMillis()) {
-				return false;
-			}
+			return (template.getDuration() + SkillConfig.scaleCooldown(cooldown) * 100L + skillCoolDownsBase.get(delayId)) >= System
+				.currentTimeMillis();
 		}
 		return true;
 	}
@@ -813,16 +729,6 @@ public abstract class Creature extends VisibleObject {
 			skillCoolDowns = new LinkedHashMap<Integer, Long>();
 		}
 		skillCoolDowns.put(delayId, time);
-	}
-
-	/**
-	 * 返回技能冷却表。
-	 * Returns the skill cooldowns.
-	 *
-	 * @return 技能冷却表 / the skillCoolDowns
-	 */
-	public Map<Integer, Long> getSkillCoolDowns() {
-		return skillCoolDowns;
 	}
 
 	/**
@@ -1042,15 +948,5 @@ public abstract class Creature extends VisibleObject {
 	/** 是否新生成 / Whether new spawn. */
 	public boolean isNewSpawn() {
 		return System.currentTimeMillis() - spawnTime < 1500;
-	}
-
-	/** 返回拉取倍率 / Returns the pulled multi */
-	public int getPulledMulti() {
-		return PulledMulti;
-	}
-
-	/** 设置拉取倍率 / Sets the pulled multi */
-	public void setPulledMulti(int pulledMulti) {
-		PulledMulti = pulledMulti;
 	}
 }

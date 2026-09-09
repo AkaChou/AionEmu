@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 技能物理攻击瞬发：立即造成物理技能伤害。
@@ -19,18 +20,20 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlType(name = "SkillAttackInstantEffect")
 public class SkillAttackInstantEffect extends DamageEffect {
 
-	@XmlAttribute
-	protected int rnddmg;
-	@XmlAttribute
-	protected boolean cannotmiss;
-
 	/**
 	 * 返回随机伤害配置值。
 	 * Returns the random-damage configuration value.
 	 */
-	public int getRnddmg() {
-		return rnddmg;
-	}
+	@Getter
+	@XmlAttribute
+	protected int rnddmg;
+	/**
+	 * 是否必定命中。
+	 * Whether the attack cannot miss.
+	 */
+	@Getter
+	@XmlAttribute
+	protected boolean cannotmiss;
 
 	/**
 	 * 返回伤害计算函数模式。
@@ -48,13 +51,5 @@ public class SkillAttackInstantEffect extends DamageEffect {
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, DamageType.PHYSICAL);
-	}
-
-	/**
-	 * 是否必定命中。
-	 * Whether the attack cannot miss.
-	 */
-	public boolean isCannotmiss() {
-		return cannotmiss;
 	}
 }

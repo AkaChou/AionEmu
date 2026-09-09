@@ -20,7 +20,7 @@ public interface CacheMap<K, V> {
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 */
-	public void put(K key, V value);
+	void put(K key, V value);
 
 	/**
 	 * 返回与给定键关联的缓存值。
@@ -29,7 +29,7 @@ public interface CacheMap<K, V> {
 	 * @param key 键 / Key
 	 * @return 缓存值，不存在则为 null / Cached value, or null if absent
 	 */
-	public V get(K key);
+	V get(K key);
 
 	/**
 	 * 是否包含与给定键相关的值。
@@ -38,7 +38,7 @@ public interface CacheMap<K, V> {
 	 * @param key 键 / Key
 	 * 存在则为 true / True if present
 	 */
-	public boolean contains(K key);
+	boolean contains(K key);
 
 	/**
 	 * 移除给定键对应的条目。
@@ -46,5 +46,5 @@ public interface CacheMap<K, V> {
 	 *
 	 * @param key 键 / Key
 	 */
-	public void remove(K key);
+	void remove(K key);
 }

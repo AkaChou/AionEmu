@@ -45,7 +45,7 @@ public class ExchangeService {
 
 
 	/** 玩家对象 ID 到交易会话 / Player objectId to exchange session */
-	private ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
+	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
 
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
 
@@ -562,10 +562,10 @@ public class ExchangeService {
 	 */
 	public static final class ExchangeOpSaveTask implements Runnable {
 
-		private int player1Id;
-		private int player2Id;
-		private List<Item> player1Items;
-		private List<Item> player2Items;
+		private final int player1Id;
+		private final int player2Id;
+		private final List<Item> player1Items;
+		private final List<Item> player2Items;
 
 		/**
 		 * player 1 id

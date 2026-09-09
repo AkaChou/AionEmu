@@ -37,9 +37,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  */
 public class CollisionMaterialActor extends AbstractCollisionObserver implements IActor {
 	/** 材质行为模板 / Material action template */
-	private MaterialTemplate actionTemplate;
+	private final MaterialTemplate actionTemplate;
 	/** 当前生效技能列表 / Currently active skills */
-	private AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
 	/** 不再接触时是否停止 / Whether to stop when no longer touching */
 	private final boolean stopWhenNotTouching;
 	/** 周期任务 / Periodic task */
@@ -91,8 +91,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 * @return 激活技能列表 / active skill list
 	 */
 	private List<MaterialSkill> getSkillsForTarget(Creature creature) {
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (player.isProtectionActive()) {
 				return Collections.emptyList();
 			}
@@ -220,5 +219,5 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 
 	@Override
 	public void setEnabled(boolean enable) {
-	};
+	}
 }

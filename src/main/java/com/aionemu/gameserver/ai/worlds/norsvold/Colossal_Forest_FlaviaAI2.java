@@ -15,7 +15,7 @@ public class Colossal_Forest_FlaviaAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242523, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Dwarf Forest Flavia.
+		spawn(242523, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Dwarf Forest Flavia.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

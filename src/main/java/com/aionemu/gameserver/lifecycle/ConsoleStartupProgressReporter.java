@@ -4,11 +4,14 @@ import java.io.PrintStream;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 控制台启动进度报告器：按分组输出加载进度行。
  * Console startup progress reporter: prints load progress lines per group.
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 
 	/**
@@ -28,18 +31,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	 * Whether progress output is enabled.
 	 */
 	private final boolean enabled;
-
-	/**
-	 * 构造控制台进度报告器。
-	 * Construct a console progress reporter.
-	 *
-	 * @param out 输出流 / Output stream
-	 * @param enabled 是否启用 / Whether enabled
-	 */
-	ConsoleStartupProgressReporter(PrintStream out, boolean enabled) {
-		this.out = out;
-		this.enabled = enabled;
-	}
 
 	/**
 	 * 基于当前控制台与配置创建报告器。

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -116,7 +117,7 @@ class EquipmentTest {
 		slots.clear();
 		snapshot.restore();
 
-		assertEquals(true, ring.isEquipped());
+		assertTrue(ring.isEquipped());
 		assertEquals(ItemSlot.RING_RIGHT.getSlotIdMask(), ring.getEquipmentSlot());
 		assertEquals(7, ring.getItemLocation());
 	}

@@ -31,7 +31,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	protected final Item item;
 
 	/** 已添加 blob 条目列表 / List of added blob entries */
-	private List<ItemBlobEntry> itemBlobEntries = new ArrayList<ItemBlobEntry>();
+	private final List<ItemBlobEntry> itemBlobEntries = new ArrayList<ItemBlobEntry>();
 
 	/**
 	 * 为指定玩家与物品创建 Blob 容器。
@@ -326,7 +326,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 		};
 
 		/** 客户端入口 ID。 / Client entry id. */
-		private int entryId;
+		private final int entryId;
 
 		/**
 		 * 以客户端入口 ID 构造类型。
@@ -334,7 +334,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 		 *
 		 * @param entryId 客户端入口 ID / entry id
 		 */
-		private ItemBlobType(int entryId) {
+		ItemBlobType(int entryId) {
 			this.entryId = entryId;
 		}
 

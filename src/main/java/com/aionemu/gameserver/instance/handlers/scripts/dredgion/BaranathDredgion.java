@@ -29,7 +29,6 @@ import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -105,11 +104,11 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	protected void captureRoom(Race race, int roomId) {
 		dredgionReward.getDredgionRoomById(roomId).captureRoom(race);
 	}
-	
+
 	private void addPlayerToReward(Player player) {
 		dredgionReward.addPlayerReward(new DredgionPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return dredgionReward.containPlayer(object);
 	}
@@ -214,7 +213,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void onDieSurkan(Npc npc, Player mostPlayerDamage, int points) {
         Race race = mostPlayerDamage.getRace();
         captureRoom(race, npc.getNpcId() + 14 - 700498); //Captain's Cabin Power Surkana.
@@ -233,7 +232,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -272,7 +271,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				// 紧急出口已生成核控制室传送器。 / A Nuclear Control Room Teleporter has been created at the Emergency Exit.
 				sendMsgByRace(1400265, Race.PC_ALL, 0);
 				spawn(730187, 398.45651f, 160.15234f, 432.2988f, (byte) 0, 10); //Portside Central Teleporter.
-				spawn(730188, 571.88f, 160.62f, 432.29999f, (byte) 0, 9); //Starboard Central Teleporter. 
+				spawn(730188, 571.88f, 160.62f, 432.29999f, (byte) 0, 9); //Starboard Central Teleporter.
 			}
 		}, 600000));
 		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -285,7 +284,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			}
 		}, 3600000));
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -401,14 +400,14 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
 				sendMsgByRace(1400226, Race.PC_ALL, 0);
 				spawn(700501, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // 生成屏障 / spawn barrier
-	
+
 			break;
 			case 700508: //Starboard Defense Shield Generator.
 				despawnNpc(npc);
 				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
 				spawn(700502, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 16);  // 生成屏障 / spawn barrier
-				
+
 			break;
 		   /**
 	 * 舱壁：哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Baranath Churl when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Technician Sarpa spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Adjutant Kalanadi, a Hero grade Named Monster, will spawn. Adjutant Kalanadi has a chance to drop Fabled and Heroic accessories
@@ -467,7 +466,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
         }
 		updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -482,7 +481,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
         openDoor(17);
         openDoor(18);
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -496,7 +495,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		}
 		sendPacket();
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -517,7 +516,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 *
 	 * @param race 阵营 / race
 	 */
-	
+
 	protected void stopInstance(Race race) {
 		stopInstanceTask();
 		dredgionReward.setWinningRace(race);
@@ -529,7 +528,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
 	 */
-	
+
 	public void doReward() {
 		for (Player player : instance.getPlayersInside()) {
 			InstancePlayerReward playerReward = getPlayerReward(player);
@@ -561,7 +560,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
-	
+
 	private int getTime() {
 		long result = System.currentTimeMillis() - instanceTime;
 		if (result < 60000) {
@@ -571,7 +570,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -588,7 +587,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
         dredgionReward.portToPosition(player);
 		return true;
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -616,23 +615,23 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		updateScore(player, player, -points, false);
 		return true;
 	}
-	
+
 	private MutableInt getPointsByRace(Race race) {
 		return dredgionReward.getPointsByRace(race);
 	}
-	
+
 	private void addPointsByRace(Race race, int points) {
 		dredgionReward.addPointsByRace(race, points);
 	}
-	
+
 	private void addPointToPlayer(Player player, int points) {
 		getPlayerReward(player).addPoints(points);
 	}
-	
+
 	private void addPvPKillToPlayer(Player player) {
 		getPlayerReward(player).addPvPKillToPlayer();
 	}
-	
+
 	private void addBalaurKillToPlayer(Player player) {
 		getPlayerReward(player).addMonsterKillToPlayer();
 	}
@@ -682,12 +681,12 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			loosingGroupMultiplier = 1;
 		} if (pvpKill && points > 0) {
 			addPvPKillToPlayer(player);
-		} else if (target instanceof Npc && ((Npc) target).getRace().equals(Race.DRAKAN)) {
+		} else if (target instanceof Npc && target.getRace().equals(Race.DRAKAN)) {
 			addBalaurKillToPlayer(player);
 		}
 		sendPacket();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -712,7 +711,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			door.setOpen(true);
 		}
 	}
-	
+
 	private void sendPacket() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -842,22 +841,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : baranathTask) {
 			if (task != null) {
@@ -865,7 +849,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -876,7 +860,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return dredgionReward;
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -887,7 +871,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

@@ -2,23 +2,15 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 永风峡谷（Evergale Canyon）状态包：按动作类型写入战场/匹配相关数据。
  * Evergale Canyon status packet: battlefield/match data by action type.
  */
+@AllArgsConstructor
 public class SM_EVERGALE_CANYON extends AionServerPacket {
-	private int action;
-
-	/**
-	 * 按动作类型构造状态包。
-	 * Creates a status packet for the given action type.
-	 *
-	 * @param id 动作类型 / action type
-	 */
-	public SM_EVERGALE_CANYON(int id) {
-		this.action = id;
-	}
+	private final int action;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

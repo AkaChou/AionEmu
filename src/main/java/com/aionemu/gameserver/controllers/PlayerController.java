@@ -65,6 +65,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.Future;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
@@ -77,12 +79,21 @@ import java.util.concurrent.Future;
 @Slf4j
 public class PlayerController extends CreatureController<Player> {
 
+	/**
+	 * 服务器是否处于关闭流程中。
+	 * Whether the server is in shutdown progress.
+	 *
+	 * @return 关闭中则为 true / true if shutting down
+	 */
+	@Getter
+	@Setter
 	private boolean isInShutdownProgress;
 	private long lastAttackMilis = 0;
 	private long lastAttackedMilis = 0;
 	private int stance = 0;
+	@Getter
 	private int stanceType = 0;
-	private Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
 
 	/**
 	 * 玩家看到其他可见对象时同步状态包。
@@ -93,8 +104,7 @@ public class PlayerController extends CreatureController<Player> {
 	@Override
 	public void see(VisibleObject object) {
 		super.see(object);
-		if (object instanceof Player) {
-			Player player = (Player) object;
+		if (object instanceof Player player) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_PLAYER_INFO(player, getOwner().isAggroIconTo(player)));
 			PacketSendUtility.sendPacket(getOwner(), new SM_NOTIFY_VIP_ICON(player));
 			PacketSendUtility.sendPacket(getOwner(), new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
@@ -119,22 +129,19 @@ public class PlayerController extends CreatureController<Player> {
 				PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, player.getMinion().getCommonData()));
 			}
 			player.getEffectController().sendEffectIconsTo(getOwner());
-		} else if (object instanceof Kisk) {
-			Kisk kisk = ((Kisk) object);
+		} else if (object instanceof Kisk kisk) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_NPC_INFO(kisk, getOwner()));
 			if (getOwner().getRace() == kisk.getOwnerRace()) {
 				PacketSendUtility.sendPacket(getOwner(), new SM_KISK_UPDATE(kisk));
 			}
-		} else if (object instanceof Npc) {
-			Npc npc = ((Npc) object);
+		} else if (object instanceof Npc npc) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_NPC_INFO(npc, getOwner()));
 			PacketSendUtility.sendPacket(getOwner(), new SM_EMOTION_NPC(npc, npc.getState(), EmotionType.SELECT_TARGET));
-			PacketSendUtility.sendPacket(getOwner(), new SM_HEADING_UPDATE(object.getObjectId(), (byte) object.getHeading()));
+			PacketSendUtility.sendPacket(getOwner(), new SM_HEADING_UPDATE(object.getObjectId(), object.getHeading()));
 			if (!npc.getEffectController().isEmpty()) {
 				npc.getEffectController().sendEffectIconsTo(getOwner());
 			}
-		} else if (object instanceof Summon) {
-			Summon npc = ((Summon) object);
+		} else if (object instanceof Summon npc) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_NPC_INFO(npc));
 			if (!npc.getEffectController().isEmpty()) {
 				npc.getEffectController().sendEffectIconsTo(getOwner());
@@ -209,7 +216,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * If a player enters zone "Panesterra Fortress" while flying, the system will land the player.
 			 */
 			switch (player.getWorldId()) {
-			case 400020000: // Belus.
+			case 400020000: // 贝洛斯 / Belus.
 			case 400040000: // Aspida.
 			case 400050000: // Atanatos.
 			case 400060000: // Disillon.
@@ -522,19 +529,19 @@ public class PlayerController extends CreatureController<Player> {
 		Player player = this.getOwner();
 		player.getController().cancelCurrentSkill();
 		player.setRebirthRevive(getOwner().haveSelfRezEffect());
-		showPacket = player.hasResurrectBase() ? false : showPacket;
+		showPacket = !player.hasResurrectBase() && showPacket;
 		Creature master = lastAttacker.getMaster();
 		if ((PvPConfig.ENABLE_KILLING_SPREE_SYSTEM) && (getOwner().getRawKillCount() > 0)) {
 			if ((master instanceof Npc)) {
-				PvPSpreeService.cancelSpree(player, (Npc) master, false);
+				PvPSpreeService.cancelSpree(player, master, false);
 			}
 			if (((master instanceof Player)) && (master.getRace() != player.getRace())) {
-				PvPSpreeService.cancelSpree(player, (Player) master, true);
+				PvPSpreeService.cancelSpree(player, master, true);
 			}
 		}
 		if (EventsConfig.ENABLE_CRAZY) {
 			if (((master instanceof Player)) && (master.getRace() != player.getRace())) {
-				GameEventServices.crazyDaevaService().crazyOnDie(player, (Player) master, true);
+				GameEventServices.crazyDaevaService().crazyOnDie(player, master, true);
 			}
 		}
 		AbyssRank ar = player.getAbyssRank();
@@ -732,7 +739,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (!RestrictionsManager.canAttack(getOwner(), target)) {
 			return;
 		}
-		if (!MathUtil.isInAttackRange(getOwner(), target, (float) (getOwner().getGameStats().getAttackRange().getCurrent() / 1000f) + 1)) {
+		if (!MathUtil.isInAttackRange(getOwner(), target, (getOwner().getGameStats().getAttackRange().getCurrent() / 1000f) + 1)) {
 			return;
 		}
 		if (!GameWorldServices.geoService().canSee(getOwner(), target)) {
@@ -964,8 +971,7 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	public void cancelGathering() {
 		Player player = getOwner();
-		if (player.getTarget() instanceof Gatherable) {
-			Gatherable g = (Gatherable) player.getTarget();
+		if (player.getTarget() instanceof Gatherable g) {
 			g.getController().finishGathering(player);
 		}
 	}
@@ -1030,26 +1036,6 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	public boolean isDueling(Player player) {
 		return GameGameplayServices.duelService().isDueling(player.getObjectId(), getOwner().getObjectId());
-	}
-
-	/**
-	 * 服务器是否处于关闭流程中。
-	 * Whether the server is in shutdown progress.
-	 *
-	 * @return 关闭中则为 true / true if shutting down
-	 */
-	public boolean isInShutdownProgress() {
-		return isInShutdownProgress;
-	}
-
-	/**
-	 * 设置关闭流程标志。
-	 * Sets the shutdown-progress flag.
-	 *
-	 * @param isInShutdownProgress 是否关闭中 / whether shutting down
-	 */
-	public void setInShutdownProgress(boolean isInShutdownProgress) {
-		this.isInShutdownProgress = isInShutdownProgress;
 	}
 
 	/**
@@ -1195,8 +1181,8 @@ public class PlayerController extends CreatureController<Player> {
 			TeleportService2.instanceTransformation(getOwner());
 			TeleportService2.archdaevaTransformation(getOwner());
 			getOwner().setVisualState(CreatureVisualState.BLINKING);
-			AttackUtil.cancelCastOn((Creature) getOwner());
-			AttackUtil.removeTargetFrom((Creature) getOwner());
+			AttackUtil.cancelCastOn(getOwner());
+			AttackUtil.removeTargetFrom(getOwner());
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()), true);
 			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -1259,7 +1245,7 @@ public class PlayerController extends CreatureController<Player> {
 					AuditLogger.info(player, "Flypath: " + path.getId() + " bug, time: " + (diff / 1000) + " Fly teleport less than 5 sec; Kick-");
 					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 				}
-				
+
 				player.setCurrentFlypath(null);
 			}
 
@@ -1330,10 +1316,6 @@ public class PlayerController extends CreatureController<Player> {
 		return stance != 0;
 	}
 
-	public int getStanceType() {
-		return stanceType;
-	}
-
 	/**
 	 * 更新灵魂疾病效果。
 	 * Updates soul sickness effect.
@@ -1385,7 +1367,7 @@ public class PlayerController extends CreatureController<Player> {
 	public boolean isNoDeathPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
-			Effect effect = (Effect) iterator.next();
+			Effect effect = iterator.next();
 			if (effect.isNoDeathPenalty()) {
 				return true;
 			}
@@ -1402,7 +1384,7 @@ public class PlayerController extends CreatureController<Player> {
 	public boolean isNoDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
-			Effect effect = (Effect) iterator.next();
+			Effect effect = iterator.next();
 			if (effect.isNoDeathPenaltyReduce()) {
 				return true;
 			}
@@ -1419,7 +1401,7 @@ public class PlayerController extends CreatureController<Player> {
 	public boolean isDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
-			Effect effect = (Effect) iterator.next();
+			Effect effect = iterator.next();
 			if (effect.isDeathPenaltyReduce()) {
 				return true;
 			}
@@ -1436,7 +1418,7 @@ public class PlayerController extends CreatureController<Player> {
 	public boolean isNoResurrectPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
-			Effect effect = (Effect) iterator.next();
+			Effect effect = iterator.next();
 			if (effect.isNoResurrectPenalty()) {
 				return true;
 			}
@@ -1453,7 +1435,7 @@ public class PlayerController extends CreatureController<Player> {
 	public boolean isHiPassInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
-			Effect effect = (Effect) iterator.next();
+			Effect effect = iterator.next();
 			if (effect.isHiPass()) {
 				return true;
 			}

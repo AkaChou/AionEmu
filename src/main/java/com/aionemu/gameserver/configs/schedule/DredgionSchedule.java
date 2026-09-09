@@ -53,7 +53,7 @@ public class DredgionSchedule {
 		DredgionSchedule ds;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/dredgion_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			ds = (DredgionSchedule) JAXBUtil.deserialize(xml, DredgionSchedule.class);
+			ds = JAXBUtil.deserialize(xml, DredgionSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize dredgion", e);
 		}

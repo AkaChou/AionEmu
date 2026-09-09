@@ -49,13 +49,13 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 public class ArtifactAI2 extends NpcAI2
 {
-	private Map<Integer, ItemUseObserver> observers = new HashMap<Integer, ItemUseObserver>();
-	
+	private final Map<Integer, ItemUseObserver> observers = new HashMap<Integer, ItemUseObserver>();
+
 	@Override
 	protected SiegeSpawnTemplate getSpawnTemplate() {
 		return (SiegeSpawnTemplate) super.getSpawnTemplate();
 	}
-	
+
 	@Override
 	protected void handleDialogStart(final Player player) {
 		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
@@ -69,18 +69,17 @@ public class ArtifactAI2 extends NpcAI2
 						    onActivate(responder);
 						} else {
 						    PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ARTIFACT_FAR_FROM_NPC);
-							return;
 						}
 					}
 				}, new DescriptionId(2 * 716570 + 1), GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId()).getTemplate().getActivation().getCount());
 			}
 		}, loc);
 	}
-	
+
 	@Override
 	protected void handleDialogFinish(Player player) {
 	}
-	
+
 	public void onActivate(final Player player) {
 		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		ArtifactActivation activation = loc.getTemplate().getActivation();
@@ -160,27 +159,27 @@ public class ArtifactAI2 extends NpcAI2
 				if (loc.getTemplate().getRepeatCount() == 1)
 					GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
 				else {
-					final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000);
+					final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000L);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							s.cancel(true);
 							loc.setStatus(ArtifactStatus.IDLE);
 						}
-					}, 13000 + (loc.getTemplate().getRepeatInterval() * loc.getTemplate().getRepeatCount() * 1000));
+					}, 13000 + ((long) loc.getTemplate().getRepeatInterval() * loc.getTemplate().getRepeatCount() * 1000));
 				}
 			}
 		}, 10000));
 	}
-	
+
 	class ArtifactUseSkill implements Runnable {
-		private ArtifactLocation artifact;
-		private Player player;
-		private SkillTemplate skill;
+		private final ArtifactLocation artifact;
+		private final Player player;
+		private final SkillTemplate skill;
 		private int runCount = 1;
-		private SM_ABYSS_ARTIFACT_INFO3 pkt;
-		private SM_SYSTEM_MESSAGE message;
-		
+		private final SM_ABYSS_ARTIFACT_INFO3 pkt;
+		private final SM_SYSTEM_MESSAGE message;
+
 		private ArtifactUseSkill(ArtifactLocation artifact, Player activator, SkillTemplate skill) {
 			this.artifact = artifact;
 			this.player = activator;
@@ -188,7 +187,7 @@ public class ArtifactAI2 extends NpcAI2
 			this.pkt = new SM_ABYSS_ARTIFACT_INFO3(artifact.getLocationId());
 			this.message = SM_SYSTEM_MESSAGE.STR_ARTIFACT_FIRE(activator.getRace().getRaceDescriptionId(), player.getName(), new DescriptionId(skill.getNameId()));
 		}
-		
+
 		@Override
 		public void run() {
 			if (artifact.getTemplate().getRepeatCount() < runCount)

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 对 CM_RESTORE_CHARACTER 的应答，返回角色恢复结果。
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_RESTORE_CHARACTER extends AionServerPacket {
 
 	/**
@@ -19,18 +21,6 @@ public class SM_RESTORE_CHARACTER extends AionServerPacket {
 	 * 若为真则玩家曾 restored。 / True if player was restored
 	 */
 	private final boolean success;
-
-	/**
-	 * 使用给定参数构造 SM_RESTORE_CHARACTER 包。
-	 * Constructs new <tt>SM_RESTORE_CHARACTER </tt> packet
-	 *
-	 * character object id
-	 * success flag
-	 */
-	public SM_RESTORE_CHARACTER(int chaOid, boolean success) {
-		this.chaOid = chaOid;
-		this.success = success;
-	}
 
 	/**
 	 * {@inheritDoc}

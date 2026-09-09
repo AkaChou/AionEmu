@@ -17,6 +17,9 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 包围球，以中心与半径包容一组顶点。
@@ -31,19 +34,15 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id: BoundingSphere.java,v 1.59 2007/08/17 10:34:26 rherlitz Exp $
  */
 @Slf4j
+@NoArgsConstructor
 public class BoundingSphere extends BoundingVolume {
 
 	/** 球半径。 / Sphere radius. */
+	@Getter
+	@Setter
 	float radius;
 	/** 半径浮点误差容差系数。 / Floating-point radius epsilon factor. */
 	private static final float RADIUS_EPSILON = 1f + 0.00001f;
-
-	/**
-	 * 默认构造，创建一个空包围球。
-	 * Default constructor instantiating a new BoundingSphere.
-	 */
-	public BoundingSphere() {
-	}
 
 	/**
 	 * 以指定半径与中心构造包围球。
@@ -66,26 +65,6 @@ public class BoundingSphere extends BoundingVolume {
 	@Override
 	public Type getType() {
 		return Type.Sphere;
-	}
-
-	/**
-	 * 获取包围球半径。
-	 * Returns the radius of the bounding sphere.
-	 *
-	 * @return 球半径 / radius of the bounding sphere
-	 */
-	public float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * 设置包围球半径。
-	 * Sets the radius of this bounding sphere.
-	 *
-	 * @param radius 新球半径 / new radius of the bounding sphere
-	 */
-	public void setRadius(float radius) {
-		this.radius = radius;
 	}
 
 	/**
@@ -596,7 +575,7 @@ public class BoundingSphere extends BoundingVolume {
 			rVal.checkPlane = checkPlane;
 			return rVal;
 		}
-		return new BoundingSphere(radius, (center != null ? (Vector3f) center.clone() : null));
+		return new BoundingSphere(radius, (center != null ? center.clone() : null));
 	}
 
 	/**
@@ -652,12 +631,9 @@ public class BoundingSphere extends BoundingVolume {
 	public boolean intersectsBoundingBox(BoundingBox bb) {
 		assert Vector3f.isValidVector(center) && Vector3f.isValidVector(bb.center);
 
-		if (FastMath.abs(bb.center.x - center.x) < getRadius() + bb.xExtent
-				&& FastMath.abs(bb.center.y - center.y) < getRadius() + bb.yExtent
-				&& FastMath.abs(bb.center.z - center.z) < getRadius() + bb.zExtent) {
-			return true;
-		}
-		return false;
+		return FastMath.abs(bb.center.x - center.x) < getRadius() + bb.xExtent
+			&& FastMath.abs(bb.center.y - center.y) < getRadius() + bb.yExtent
+			&& FastMath.abs(bb.center.z - center.z) < getRadius() + bb.zExtent;
 	}
 
 	/*
@@ -770,8 +746,7 @@ public class BoundingSphere extends BoundingVolume {
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
-		if (other instanceof Ray) {
-			Ray ray = (Ray) other;
+		if (other instanceof Ray ray) {
 			return collideWithRay(ray, results);
 		} else {
 			throw new UnsupportedCollisionException();

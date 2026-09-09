@@ -2,6 +2,7 @@ package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 变身类型：玩家、化身及多种形态。
@@ -28,18 +29,15 @@ public enum TransformType {
 	/** 形态 5 / Form 5 */
 	FORM5(7);
 
-	private int id;
-
-	private TransformType(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	TransformType(int id) {
+		this.id = id;
 	}
 }

@@ -31,7 +31,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Named_Spawn_Fail02);
         }
     }
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000247, 1)) { //Spirit of Miren's Pendant.
@@ -42,7 +42,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
-							spawn(883662, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Miren.
+							spawn(883662, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
 						}
 					}, 1800000); //30 Minutes.
 				break;
@@ -52,7 +52,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
-							spawn(884028, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Miren.
+							spawn(884028, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
 						}
 					}, 1800000); //30 Minutes.
 				break;
@@ -65,7 +65,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 		AI2Actions.scheduleRespawn(this);
 		return true;
 	}
-	
+
 	private void announceSpiritOfMirenAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -79,7 +79,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void announceSpiritOfMiren30Min() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

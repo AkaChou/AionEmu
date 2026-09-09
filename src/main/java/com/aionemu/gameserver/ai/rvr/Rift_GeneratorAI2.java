@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("rift_generator")
 public class Rift_GeneratorAI2 extends NpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -29,13 +29,13 @@ public class Rift_GeneratorAI2 extends NpcAI2
 			announceRiftGeneratorUnderAttack();
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
         announceRiftGeneratorDie();
 		super.handleDied();
 	}
-	
+
 	private void announceRiftGeneratorUnderAttack() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

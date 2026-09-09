@@ -18,7 +18,7 @@ import lombok.Getter;
  */
 public class BannedMacManager {
 
-    private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
+    private final BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
 
     /**
      * 当前封禁 MAC 映射。

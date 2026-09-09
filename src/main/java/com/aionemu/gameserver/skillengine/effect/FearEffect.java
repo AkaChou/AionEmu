@@ -124,7 +124,7 @@ public class FearEffect extends EffectTemplate {
 			effect.getEffected().getMoveController().abortMove();
 		}
 		if (effect.getEffected() instanceof Npc) {
-			((NpcAI2) effect.getEffected().getAi2()).onCreatureEvent(AIEventType.ATTACK, effect.getEffector());
+			effect.getEffected().getAi2().onCreatureEvent(AIEventType.ATTACK, effect.getEffector());
 		}
 		PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(),
 				new SM_TARGET_IMMOBILIZE(effect.getEffected()));
@@ -139,8 +139,8 @@ public class FearEffect extends EffectTemplate {
 
 	class FearTask implements Runnable {
 
-		private Creature effector;
-		private Creature effected;
+		private final Creature effector;
+		private final Creature effected;
 
 		FearTask(Creature effector, Creature effected) {
 			this.effector = effector;

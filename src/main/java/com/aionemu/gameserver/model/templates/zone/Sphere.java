@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 球体模板（静态数据/XML）。
@@ -13,44 +15,30 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Sphere")
+@NoArgsConstructor
 public class Sphere {
 
+	/** 返回 x / Returns the x */
+	@Getter
 	@XmlAttribute
 	protected Float x;
+	/** 返回 y / Returns the y */
+	@Getter
 	@XmlAttribute
 	protected Float y;
+	/** 返回 z / Returns the z */
+	@Getter
 	@XmlAttribute
 	protected Float z;
+	/** 返回 r / Returns the r */
+	@Getter
 	@XmlAttribute
 	protected Float r;
-
-	public Sphere() {
-	}
 
 	public Sphere(float x, float y, float z, float radius) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.r = radius;
-	}
-
-	/** 返回 x / Returns the x */
-	public Float getX() {
-		return x;
-	}
-
-	/** 返回 y / Returns the y */
-	public Float getY() {
-		return y;
-	}
-
-	/** 返回 z / Returns the z */
-	public Float getZ() {
-		return z;
-	}
-
-	/** 返回 r / Returns the r */
-	public Float getR() {
-		return r;
 	}
 }

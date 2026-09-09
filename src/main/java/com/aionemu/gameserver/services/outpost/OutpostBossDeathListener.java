@@ -40,13 +40,11 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
 		AionObject winner = outpost.getBoss().getAggroList().getMostDamage();
-		if (winner instanceof Creature) {
-			final Creature kill = (Creature) winner;
+		if (winner instanceof Creature kill) {
 			if (kill.getRace().isPlayerRace()) {
 				outpost.setRace(kill.getRace());
 			}
-		} else if (winner instanceof TemporaryPlayerTeam) {
-			final TemporaryPlayerTeam team = (TemporaryPlayerTeam) winner;
+		} else if (winner instanceof TemporaryPlayerTeam team) {
 			if (team.getRace().isPlayerRace()) {
 				outpost.setRace(team.getRace());
 			}

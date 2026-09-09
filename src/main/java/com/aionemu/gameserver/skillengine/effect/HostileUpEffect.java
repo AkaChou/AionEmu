@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.NpcObjectType;
 import com.aionemu.gameserver.model.gameobjects.Servant;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 仇恨提升效果：立即增加目标对施法者的仇恨值。
@@ -20,30 +21,18 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HostileUpEffect")
 public class HostileUpEffect extends EffectTemplate {
+	@Getter
 	@XmlAttribute(name = "timed_delta")
 	private int timedDelta;
+	@Getter
 	@XmlAttribute(name = "timed_value")
 	private int timedValue;
+	@Getter
 	@XmlAttribute(name = "timed_duration")
 	private int timedDuration;
+	@Getter
 	@XmlAttribute(name = "split_totem_hate")
 	private boolean splitTotemHate;
-
-	public int getTimedDelta() {
-		return timedDelta;
-	}
-
-	public int getTimedValue() {
-		return timedValue;
-	}
-
-	public int getTimedDuration() {
-		return timedDuration;
-	}
-
-	public boolean isSplitTotemHate() {
-		return splitTotemHate;
-	}
 
 	/**
 	 * 提升目标对施法者的仇恨。

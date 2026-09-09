@@ -3,6 +3,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 向客户端同步军团属性变更（等级、权限、公告、解散等）的服务端包。
@@ -10,22 +11,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Simple
  */
+@RequiredArgsConstructor
 public class SM_LEGION_EDIT extends AionServerPacket {
 
-	private int type;
+	private final int type;
 	private Legion legion;
 	private int unixTime;
 	private String announcement;
-
-	/**
-	 * 仅按变更类型构造（如恢复军团、刷新公告等无附加数据的操作）。
-	 * Creates a packet for type-only changes (e.g. recover legion, refresh announcement) with no extra payload.
-	 *
-	 * @param type 变更类型 / edit type
-	 */
-	public SM_LEGION_EDIT(int type) {
-		this.type = type;
-	}
 
 	/**
 	 * 按变更类型与军团数据构造（等级、军阶、权限、贡献、仓库、描述、加入方式、最低等级等）。

@@ -15,7 +15,7 @@ public class Hugehorn_WendigoAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242103, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Hugehorn Runt.
+		spawn(242103, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Hugehorn Runt.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

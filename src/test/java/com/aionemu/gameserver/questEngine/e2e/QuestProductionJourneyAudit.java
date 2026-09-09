@@ -36,7 +36,7 @@ public final class QuestProductionJourneyAudit {
 	 * 参数依次为任务 ID 或 {@code all}、客户端映射目录和报告文件。
 	 * Arguments are quest id or {@code all}, client-mapping directory, and report file.
 	 */
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		Logger questRuntimeLogger = (Logger) LoggerFactory.getLogger("QUEST_RUNTIME");
 		Level previousLevel = questRuntimeLogger.getLevel();
 		questRuntimeLogger.setLevel(Level.ERROR);

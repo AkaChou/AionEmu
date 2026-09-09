@@ -27,13 +27,13 @@ public class FollowSummonTaskAI implements Runnable {
 	private static final float DEFAULT_TARGET_RANGE = 2f;
 	private static final float SKILL_RANGE_PADDING = 2f;
 
-	private Creature target;
-	private Summon summon;
-	private Player master;
+	private final Creature target;
+	private final Summon summon;
+	private final Player master;
 	private float targetX;
 	private float targetY;
 	private float targetZ;
-	private Future<?> task;
+	private final Future<?> task;
 
 	/**
 	 * 创建召唤物跟随任务，绑定目标、召唤物与主人，并记录目标坐标。

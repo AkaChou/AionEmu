@@ -28,10 +28,10 @@ public class ItemEnchantData {
 	protected List<ItemEnchantTemplate> enchantTemplates;
 
 	@XmlTransient
-	private IntObjectHashMap<ItemEnchantTemplate> enchants = new IntObjectHashMap<ItemEnchantTemplate>();
+	private final IntObjectHashMap<ItemEnchantTemplate> enchants = new IntObjectHashMap<ItemEnchantTemplate>();
 
 	@XmlTransient
-	private IntObjectHashMap<ItemEnchantTemplate> authorizes = new IntObjectHashMap<ItemEnchantTemplate>();
+	private final IntObjectHashMap<ItemEnchantTemplate> authorizes = new IntObjectHashMap<ItemEnchantTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按强化类型将模板写入对应映射。

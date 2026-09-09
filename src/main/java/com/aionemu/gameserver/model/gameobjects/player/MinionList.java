@@ -47,7 +47,7 @@ public class MinionList {
 
 	/** 返回 minions / Returns the minions */
 	public Collection<MinionCommonData> getMinions() {
-		return (Collection<MinionCommonData>) minions.values();
+		return minions.values();
 	}
 
 	/** 更新守护灵列表 / Update minions list */

@@ -13,6 +13,8 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 交易列表。
@@ -20,21 +22,38 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *
  * @author ATracer modified by Wakizashi
  */
+@NoArgsConstructor
 public class TradeList {
 
+	/**
+	 * @return the npcId
+	 */
+	@Getter
 	private int sellerObjId;
 
-	private List<TradeItem> tradeItems = new ArrayList<TradeItem>();
+	/**
+	 * @return the tradeItems
+	 */
+	@Getter
+	private final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
 
+	/**
+	 * @return the requiredKinah
+	 */
+	@Getter
 	private long requiredKinah;
 
+	/**
+	 * @return the requiredAp
+	 */
+	@Getter
 	private int requiredAp;
 
-	private Map<Integer, Long> requiredItems = new HashMap<Integer, Long>();
-
-	public TradeList() {
-
-	}
+	/**
+	 * @return the requiredItems
+	 */
+	@Getter
+	private final Map<Integer, Long> requiredItems = new HashMap<Integer, Long>();
 
 	public TradeList(int sellerObjId) {
 		this.sellerObjId = sellerObjId;
@@ -109,14 +128,14 @@ public class TradeList {
 					continue;
 				}
 				requiredAp = Math.addExact(requiredAp,
-						Math.multiplyExact((long) aquisition.getRequiredAp(), tradeItem.getCount()));
+						Math.multiplyExact(aquisition.getRequiredAp(), tradeItem.getCount()));
 
 				int abysItemId = aquisition.getItemId();
 				if (abysItemId == 0) {// 无欧比斯必需物品（勋章等）/ no abyss required item (medals, etc))
 					continue;
 				}
 				requiredItems.merge(abysItemId,
-						Math.multiplyExact((long) aquisition.getItemCount(), tradeItem.getCount()), Math::addExact);
+						Math.multiplyExact(aquisition.getItemCount(), tradeItem.getCount()), Math::addExact);
 			}
 		} catch (ArithmeticException e) {
 			this.requiredAp = 0;
@@ -160,7 +179,7 @@ public class TradeList {
 				}
 				int itemId = aquisition.getItemId();
 				requiredItems.merge(itemId,
-						Math.multiplyExact((long) aquisition.getItemCount(), tradeItem.getCount()), Math::addExact);
+						Math.multiplyExact(aquisition.getItemCount(), tradeItem.getCount()), Math::addExact);
 			}
 		} catch (ArithmeticException e) {
 			requiredItems.clear();
@@ -176,43 +195,8 @@ public class TradeList {
 		return true;
 	}
 
-	/**
-	 * @return the tradeItems
-	 */
-	public List<TradeItem> getTradeItems() {
-		return tradeItems;
-	}
-
 	/** 大小 / size. */
 	public int size() {
 		return tradeItems.size();
-	}
-
-	/**
-	 * @return the npcId
-	 */
-	public int getSellerObjId() {
-		return sellerObjId;
-	}
-
-	/**
-	 * @return the requiredAp
-	 */
-	public int getRequiredAp() {
-		return requiredAp;
-	}
-
-	/**
-	 * @return the requiredKinah
-	 */
-	public long getRequiredKinah() {
-		return requiredKinah;
-	}
-
-	/**
-	 * @return the requiredItems
-	 */
-	public Map<Integer, Long> getRequiredItems() {
-		return requiredItems;
 	}
 }

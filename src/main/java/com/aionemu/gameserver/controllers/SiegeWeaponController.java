@@ -15,7 +15,7 @@ import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 public class SiegeWeaponController extends SummonController {
 
 	/** NPC 技能模板攻城武器 / NPC skill templates for this siege weapon */
-	private NpcSkillTemplates skills;
+	private final NpcSkillTemplates skills;
 
 	/**
 	 * 根据 NPC 模板 ID 构造攻城兵器控制器。

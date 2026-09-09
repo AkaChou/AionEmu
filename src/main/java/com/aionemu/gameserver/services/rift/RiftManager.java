@@ -37,8 +37,8 @@ import java.util.List;
 public class RiftManager {
 
 	private static volatile ObjectProvider<RiftManager> instanceProvider;
-	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>();
-	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
+	private static final List<Npc> rifts = new CopyOnWriteArrayList<Npc>();
+	private static final Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
 
 	/**
 	 * 登记裂隙生成组模板（按锚点名索引）。

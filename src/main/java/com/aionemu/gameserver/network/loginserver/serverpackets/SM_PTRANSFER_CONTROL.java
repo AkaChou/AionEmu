@@ -48,7 +48,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	public static final byte ERROR = 2;
 	public static final byte OK = 3;
 	public static final byte TASK_STOP = 4;
-	private byte type;
+	private final byte type;
 	private Player player;
 	private String result;
 	private int taskId;
@@ -301,8 +301,8 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 				writeC(motion.isActive() ? 1 : 0);
 			}
 			MacroList macro = player.getMacroList();
-			writeD(macro.getMacrosses().size());
-			for (Entry<Integer, String> m : macro.getMacrosses().entrySet()) {
+			writeD(macro.macrosses().size());
+			for (Entry<Integer, String> m : macro.macrosses().entrySet()) {
 				writeD(m.getKey());
 				writeS(m.getValue());
 			}

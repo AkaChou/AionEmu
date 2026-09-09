@@ -15,7 +15,7 @@ public class Mysterious_Moonlight_BraxAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242343, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Miniature Moonlight Brax.
+		spawn(242343, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Miniature Moonlight Brax.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

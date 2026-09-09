@@ -42,7 +42,7 @@ public class SummonTotemEffect extends SummonServantEffect {
 			if (effect.getEffector().getTarget() == null) {
 				effect.getEffector().setTarget(effect.getEffector());
 			}
-			double radian = Math.toRadians(MathUtil.convertHeadingToDegree((byte) effect.getEffector().getHeading()));
+			double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effect.getEffector().getHeading()));
 			float x = effect.getX();
 			float y = effect.getY();
 			float z = effect.getZ();
@@ -63,7 +63,7 @@ public class SummonTotemEffect extends SummonServantEffect {
 				public void run() {
 					servant.getController().delete();
 				}
-			}, time * 1000);
+			}, time * 1000L);
 			servant.getController().addTask(TaskId.DESPAWN, task);
 			return;
 		default:

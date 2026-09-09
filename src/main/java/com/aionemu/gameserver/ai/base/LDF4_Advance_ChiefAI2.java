@@ -26,15 +26,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("ldf4_advance_chief")
 public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleDied() {
 		addGpPlayer();
 		sendAdventurersBase2();
 		super.handleDied();
 	}
-	
+
 	private void sendAdventurersBase2() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -55,7 +55,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -142,7 +142,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void checkForSupport(Creature creature) {
 		for (VisibleObject object: getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc && isInRange(object, 30)) {
@@ -150,7 +150,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceBattleV01() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -159,7 +159,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV02() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -168,7 +168,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV03() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -177,7 +177,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV04() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -186,7 +186,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV05() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -195,7 +195,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV06() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -204,7 +204,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV07() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -213,7 +213,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV08() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -222,7 +222,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV09() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -231,7 +231,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV10() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -240,7 +240,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV11() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -249,7 +249,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV12() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -258,7 +258,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceBattleV13() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

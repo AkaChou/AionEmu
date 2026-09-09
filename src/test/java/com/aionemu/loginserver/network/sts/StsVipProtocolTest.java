@@ -1,11 +1,5 @@
 package com.aionemu.loginserver.network.sts;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +8,8 @@ import java.util.Base64;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class StsVipProtocolTest {
 
@@ -45,7 +41,7 @@ class StsVipProtocolTest {
         assertTrue(StsVipProtocol.isLevelGetLevel(level));
         assertEquals("32", level.sequence());
         assertFalse(level.body().contains("UserId"));
-        assertEquals(null, StsVipProtocol.readRequest(input));
+		assertNull(StsVipProtocol.readRequest(input));
     }
 
     @Test
@@ -146,10 +142,10 @@ class StsVipProtocolTest {
         StsVipServer.rememberAuthenticatedAccount("192.168.1.20", 8, now + 1);
 
         assertEquals(8, StsVipServer.authenticatedAccountId("192.168.1.20", now + 2));
-        assertEquals(null, StsVipServer.authenticatedAccountId(
-            "192.168.1.20",
-            now + 1 + StsVipServer.ACCOUNT_BINDING_TTL_MILLIS
-        ));
+		assertNull(StsVipServer.authenticatedAccountId(
+			"192.168.1.20",
+			now + 1 + StsVipServer.ACCOUNT_BINDING_TTL_MILLIS
+		));
     }
 
     private static byte[] gameDllVerify(byte[] publicBlob, byte[] signatureLe) {

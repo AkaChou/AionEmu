@@ -68,7 +68,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	 * 广播模式：每位掩码对应一种待发送更新。
 	 * Broadcast mode: each mask bit corresponds to one pending update.
 	 */
-	public static enum BroadcastMode {
+	public enum BroadcastMode {
 
 		/**
 		 * 更新基础属性包。
@@ -164,7 +164,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		 * 按枚举序数生成位掩码。
 		 * Build the bit mask from the enum ordinal.
 		 */
-		private BroadcastMode() {
+		BroadcastMode() {
 			MASK = (byte) (1 << ordinal());
 		}
 

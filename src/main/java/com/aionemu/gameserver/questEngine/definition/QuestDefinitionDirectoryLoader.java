@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 扫描所有打包的任务定义以执行编译与一致性检查。
  * Scans every packaged quest definition for compile and consistency checks.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestDefinitionDirectoryLoader {
 	private static final String QUEST_DIRECTORY =
 		"aion/data/static_data/quest_definition/quests";
-
-	private QuestDefinitionDirectoryLoader() {
-	}
 
 	/**
 	 * 扫描并校验每个 {@code quests/<numericQuestId>.xml} 资源。没有节点和转换的定义

@@ -323,7 +323,7 @@ public class PlayerAllianceService {
 		@Override
 		public boolean apply(PlayerAllianceMember member) {
 			int kickDelay = currentAlliance.getTeamType().isAutoTeam() ? 60 : GroupConfig.ALLIANCE_REMOVE_TIME;
-			if (!member.isOnline() && TimeUtil.isExpired(member.getLastOnlineTime() + kickDelay * 1000)) {
+			if (!member.isOnline() && TimeUtil.isExpired(member.getLastOnlineTime() + kickDelay * 1000L)) {
 				if (currentAlliance.getTeamType().isOffence()) {
 					GameLocationBootstrapServices.vortexService().removeInvaderPlayer(member.getObject());
 				}

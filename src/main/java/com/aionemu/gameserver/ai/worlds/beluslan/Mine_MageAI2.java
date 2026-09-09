@@ -31,6 +31,6 @@ public class Mine_MageAI2 extends AggressiveNpcAI2
 	 * Spawns Archmage Megran at the death position.
 	 */
 	private void spawnArchmageMegran() {
-		spawn(213716, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Archmage Megran.
+		spawn(213716, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Archmage Megran.
 	}
 }

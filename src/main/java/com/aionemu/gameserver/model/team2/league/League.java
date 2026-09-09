@@ -71,7 +71,7 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
 	public void sendPacket(AionServerPacket packet, Predicate<PlayerAlliance> predicate) {
 		for (PlayerAlliance alliance : getMembers()) {
 			if (predicate.apply(alliance)) {
-				alliance.sendPacket(packet, Predicates.<Player>alwaysTrue());
+				alliance.sendPacket(packet, Predicates.alwaysTrue());
 			}
 		}
 	}

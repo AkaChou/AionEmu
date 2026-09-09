@@ -69,6 +69,7 @@ import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 刷怪数据容器：按地图与活动类型索引 {@link SpawnGroup2}，并支持管理员运行时保存。
@@ -80,34 +81,41 @@ import java.util.Map;
 @Slf4j
 public class SpawnsData2 {
 
+	/**
+	 * 返回 JAXB 原始刷怪地图模板列表。
+	 * Returns the raw JAXB spawn-map template list.
+	 *
+	 * @return 刷怪地图列表 / spawn map list
+	 */
+	@Getter
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
-	private IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<Map<Integer, List<SpawnGroup2>>>();
-	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
+	private final IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private final IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<Map<Integer, List<SpawnGroup2>>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private final IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
 
 	private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId) {
 		Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = allSpawnMaps.get(mapId);
@@ -152,9 +160,7 @@ public class SpawnsData2 {
 				Map<Integer, List<SpawnGroup2>> normalSpawns = normalSpawnVariantsForWorld(mapId);
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
-						if (worldSpawns.containsKey(spawn.getNpcId())) {
-							worldSpawns.remove(spawn.getNpcId());
-						}
+						worldSpawns.remove(spawn.getNpcId());
 						normalSpawns.remove(spawn.getNpcId());
 						customs.put(spawn.getNpcId(), spawn);
 					} else if (customs.containsKey(spawn.getNpcId())) {
@@ -174,9 +180,7 @@ public class SpawnsData2 {
 							}
 							for (Spawn spawn : mod.getSpawns()) {
 								if (spawn.isCustom()) {
-									if (worldSpawns.containsKey(spawn.getNpcId())) {
-										worldSpawns.remove(spawn.getNpcId());
-									}
+									worldSpawns.remove(spawn.getNpcId());
 									customs.put(spawn.getNpcId(), spawn);
 								} else if (customs.containsKey(spawn.getNpcId())) {
 									continue;
@@ -202,9 +206,7 @@ public class SpawnsData2 {
 							}
 							for (Spawn spawn : mod.getSpawns()) {
 								if (spawn.isCustom()) {
-									if (worldSpawns.containsKey(spawn.getNpcId())) {
-										worldSpawns.remove(spawn.getNpcId());
-									}
+									worldSpawns.remove(spawn.getNpcId());
 									customs.put(spawn.getNpcId(), spawn);
 								} else if (customs.containsKey(spawn.getNpcId())) {
 									continue;
@@ -223,9 +225,7 @@ public class SpawnsData2 {
 					for (BaseSpawn.SimpleRaceTemplate simpleRace : BaseSpawn.getBaseRaceTemplates()) {
 						for (Spawn spawn : simpleRace.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -242,9 +242,7 @@ public class SpawnsData2 {
 					for (OutpostSpawn.SimpleRaceTemplate simpleRace : OutpostSpawn.getOutpostRaceTemplates()) {
 						for (Spawn spawn : simpleRace.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -261,9 +259,7 @@ public class SpawnsData2 {
 					List<SpawnGroup2> riftSpawnGroups = spawnGroupsFor(riftSpawnMaps, id);
 					for (Spawn spawn : rift.getSpawns()) {
 						if (spawn.isCustom()) {
-							if (worldSpawns.containsKey(spawn.getNpcId())) {
-								worldSpawns.remove(spawn.getNpcId());
-							}
+							worldSpawns.remove(spawn.getNpcId());
 							customs.put(spawn.getNpcId(), spawn);
 						} else if (customs.containsKey(spawn.getNpcId())) {
 							continue;
@@ -282,9 +278,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -303,9 +297,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -324,9 +316,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -345,9 +335,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -366,9 +354,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -387,9 +373,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -408,9 +392,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -429,9 +411,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -450,9 +430,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -471,9 +449,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -493,9 +469,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -514,9 +488,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -536,9 +508,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -557,9 +527,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -578,9 +546,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -599,9 +565,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -621,9 +585,7 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (worldSpawns.containsKey(spawn.getNpcId())) {
-									worldSpawns.remove(spawn.getNpcId());
-								}
+								worldSpawns.remove(spawn.getNpcId());
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
@@ -1049,8 +1011,7 @@ public class SpawnsData2 {
 		boolean changeY = visibleObject.getY() != spawn.getY();
 		boolean changeZ = visibleObject.getZ() != spawn.getZ();
 		boolean changeH = visibleObject.getHeading() != spawn.getHeading();
-		if (changeH && visibleObject instanceof Npc) {
-			Npc npc = (Npc) visibleObject;
+		if (changeH && visibleObject instanceof Npc npc) {
 			if (!npc.isAtSpawnLocation() || !npc.isInState(CreatureState.NPC_IDLE) || changeX || changeY || changeZ) {
 				// 若 H 改变，XSD 校验失败，因其可能为负；因此重置。 / if H changed, XSD validation fails, because it may be negative; thus, reset
 				// 把它还回 / it back
@@ -1237,15 +1198,5 @@ public class SpawnsData2 {
 				allSpawnMaps.get(visObj.getWorldId()).remove(entry);
 			}
 		}
-	}
-
-	/**
-	 * 返回 JAXB 原始刷怪地图模板列表。
-	 * Returns the raw JAXB spawn-map template list.
-	 *
-	 * @return 刷怪地图列表 / spawn map list
-	 */
-	public List<SpawnMap> getTemplates() {
-		return templates;
 	}
 }

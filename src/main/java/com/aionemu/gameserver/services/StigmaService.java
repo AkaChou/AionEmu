@@ -385,54 +385,40 @@ public class StigmaService {
 			int stigmaCount = getPossibleStigmaCount(player);
 			if (stigmaCount > 0) {
 				if (stigmaCount == 1) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask();
 				} else if (stigmaCount == 2) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask();
 				} else if (stigmaCount == 3) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask();
 				} else if (stigmaCount == 4) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask();
 				} else if (stigmaCount == 5) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask();
 				} else if (stigmaCount == 6) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA6.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA6.getSlotIdMask();
 				} else if (stigmaCount == 7) {
-					if (itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA6.getSlotIdMask()
-							|| itemSlotToEquip == ItemSlot.STIGMA_SPECIAL.getSlotIdMask()) {
-						return true;
-					}
+					return itemSlotToEquip == ItemSlot.STIGMA1.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA2.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA3.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA4.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA5.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA6.getSlotIdMask()
+						|| itemSlotToEquip == ItemSlot.STIGMA_SPECIAL.getSlotIdMask();
 				}
 			}
 		}

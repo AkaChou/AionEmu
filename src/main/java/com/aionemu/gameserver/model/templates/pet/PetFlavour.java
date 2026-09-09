@@ -13,6 +13,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.toypet.PetFeedCalculator;
 import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
+import lombok.Getter;
 
 /**
  * 宠物口味模板（静态数据/XML）。
@@ -27,12 +28,18 @@ public class PetFlavour {
 	@XmlElement(required = true)
 	protected List<PetRewards> food;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 返回饱食次数 / Returns the full count */
+	@Getter
 	@XmlAttribute(name = "full_count")
 	protected int fullCount = 1;
 
+	/** 返回喜爱的食物上限 / Returns the loved food limit */
+	@Getter
 	@XmlAttribute(name = "loved_limit")
 	protected int lovedFoodLimit = 0;
 
@@ -125,21 +132,6 @@ public class PetFlavour {
 			return false;
 		}
 		return rewardGroup.isLoved();
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回饱食次数 / Returns the full count */
-	public int getFullCount() {
-		return fullCount;
-	}
-
-	/** 返回喜爱的食物上限 / Returns the loved food limit */
-	public int getLovedFoodLimit() {
-		return lovedFoodLimit;
 	}
 
 	/** 返回冷却时间 / Returns the cooldown */

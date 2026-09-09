@@ -15,7 +15,7 @@ public class Masquerading_Desert_GehkrosAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(241983, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Desert Gihlos Hatchling.
+		spawn(241983, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Desert Gihlos Hatchling.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.ObjectProvider;
 public class AionPacketHandlerFactory {
 
 	private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
-	private AionPacketHandler handler;
+	private final AionPacketHandler handler;
 
 	/**
 	 * 获取工厂单例（优先 Spring Provider）。

@@ -4,12 +4,12 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.services.QuestService;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 类型化任务动作拥有的资源的生产生命周期清理。 / Production lifecycle cleanup for resources owned by typed quest actions. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestRuntimeResources {
-	private QuestRuntimeResources() {
-	}
-
 	public static void cleanupQuest(int playerId, int questId) {
 		delete(QuestSpawnRegistry.global().cleanup(playerId, questId));
 		QuestService.cleanupQuestTimers(playerId, questId);

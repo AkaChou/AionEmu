@@ -20,16 +20,16 @@ class Quest14112LogoutPersistenceTest {
 		var definition = load().definition();
 
 		QuestTransition kill = definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc event
-				&& event.npcId() == 210318)
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
+				&& npcId == 210318)
 			.findFirst().orElseThrow();
 		assertEquals("started", kill.sourceNode());
 		assertEquals("k1", kill.targetNode());
 		assertTrue(kill.afterCommit().stream().anyMatch(action ->
-			action instanceof AfterCommitAction.SpawnNpc spawn
-				&& spawn.slot().equals("kato")
-				&& spawn.templateId() == 203195
-				&& spawn.location() instanceof QuestSpawnLocation.PlayerPosition));
+			action instanceof AfterCommitAction.SpawnNpc(String slot, int templateId, QuestSpawnLocation location)
+				&& slot.equals("kato")
+				&& templateId == 203195
+				&& location instanceof QuestSpawnLocation.PlayerPosition));
 
 		assertFalse(definition.transitions().stream().anyMatch(transition ->
 			transition.sourceNode().equals("k1")
@@ -52,10 +52,10 @@ class Quest14112LogoutPersistenceTest {
 					&& transition.event() instanceof QuestEvent.EnterWorld)
 				.findFirst().orElseThrow();
 			assertTrue(enterWorld.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.SpawnNpc spawn
-					&& spawn.slot().equals("kato")
-					&& spawn.templateId() == 203195
-					&& spawn.location() instanceof QuestSpawnLocation.PlayerPosition));
+				action instanceof AfterCommitAction.SpawnNpc(String slot, int templateId, QuestSpawnLocation location)
+					&& slot.equals("kato")
+					&& templateId == 203195
+					&& location instanceof QuestSpawnLocation.PlayerPosition));
 		}
 	}
 

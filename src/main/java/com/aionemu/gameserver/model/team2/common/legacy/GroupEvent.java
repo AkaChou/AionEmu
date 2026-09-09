@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.team2.common.legacy;
 
+import lombok.Getter;
+
 /**
  * 队伍活动枚举。
  * Group Event enumeration.
@@ -13,14 +15,11 @@ public enum GroupEvent {
 	/** Unk 53 / Unk 53 */
 	UNK_53(65);
 
-	private int id;
-
-	private GroupEvent(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
+	@Getter
+	private final int id;
+
+	GroupEvent(int id) {
+		this.id = id;
 	}
 }

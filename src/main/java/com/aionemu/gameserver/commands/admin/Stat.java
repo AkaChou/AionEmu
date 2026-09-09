@@ -43,8 +43,7 @@ public class Stat extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "No target selected");
 				return;
 			}
-			if (target instanceof Creature) {
-				Creature creature = (Creature) target;
+			if (target instanceof Creature creature) {
 
 				TreeSet<IStatFunction> stats = creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0]));
 
@@ -73,13 +72,11 @@ public class Stat extends AdminCommand {
 	private String collectDetails(IStatFunction stat) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(stat.toString() + "\n");
-		if(stat instanceof StatFunctionProxy){
-			StatFunctionProxy proxy = (StatFunctionProxy) stat;
+		if(stat instanceof StatFunctionProxy proxy){
 			sb.append(" -- " + proxy.getProxiedFunction().toString());
 		}
 		StatOwner owner = stat.getOwner();
-		if(owner instanceof Effect){
-			Effect effect = (Effect) owner;
+		if(owner instanceof Effect effect){
 			sb.append("\n -- skillId: " + effect.getSkillId());
 			sb.append("\n -- skillName: " + effect.getSkillName());
 		}

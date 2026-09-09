@@ -51,7 +51,7 @@ public class SiegeSchedule {
 		SiegeSchedule ss;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/siege_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			ss = (SiegeSchedule) JAXBUtil.deserialize(xml, SiegeSchedule.class);
+			ss = JAXBUtil.deserialize(xml, SiegeSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize sieges", e);
 		}

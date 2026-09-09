@@ -12,19 +12,19 @@ public class SM_CS_PLAYER_AUTH extends CsServerPacket {
 	 * 玩家对象 ID。
 	 * Player object id.
 	 */
-	private int playerId;
+	private final int playerId;
 
 	/**
 	 * 玩家账号登录名。
 	 * Player account login name.
 	 */
-	private String playerLogin;
+	private final String playerLogin;
 
 	/**
 	 * 玩家角色昵称。
 	 * Player character nick name.
 	 */
-	private String nick;
+	private final String nick;
 
 	/**
 	 * 构造玩家认证请求包。

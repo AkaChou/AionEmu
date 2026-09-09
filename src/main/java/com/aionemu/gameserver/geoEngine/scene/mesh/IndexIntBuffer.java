@@ -2,6 +2,7 @@ package com.aionemu.gameserver.geoEngine.scene.mesh;
 
 import java.nio.Buffer;
 import java.nio.IntBuffer;
+import lombok.AllArgsConstructor;
 
 /**
  * 基于 {@link IntBuffer} 的整数索引缓冲实现。
@@ -9,20 +10,11 @@ import java.nio.IntBuffer;
  *
  * @author lex
  */
+@AllArgsConstructor
 public class IndexIntBuffer extends IndexBuffer {
 
 	/** 底层整型缓冲。 / Underlying int buffer. */
-	private IntBuffer buf;
-
-	/**
-	 * 使用给定整型缓冲构造索引缓冲。
-	 * Constructs an index buffer over the given int buffer.
-	 *
-	 * @param buffer 整型缓冲 / int buffer
-	 */
-	public IndexIntBuffer(IntBuffer buffer) {
-		this.buf = buffer;
-	}
+	private final IntBuffer buf;
 
 	/**
 	 * 读取整数索引。

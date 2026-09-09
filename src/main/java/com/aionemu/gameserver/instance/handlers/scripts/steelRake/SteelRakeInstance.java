@@ -15,8 +15,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.Set;
 
@@ -246,10 +244,10 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			break;
 		} switch (Rnd.get(1, 2)) {
 			case 1:
-				spawn(798375, 516.83344f, 453.87836f, 951.70465f, (byte) 44); //Sommelikinerk.
+				spawn(798375, 516.83344f, 453.87836f, 951.70465f, (byte) 44); // 斯姆里金 / Sommelikinerk.
 			break;
 			case 2:
-				spawn(798376, 236.48676f, 515.11304f, 948.6737f, (byte) 103); //Pegureronerk.
+				spawn(798376, 236.48676f, 515.11304f, 948.6737f, (byte) 103); // 佩古尔隆 / Pegureronerk.
 			break;
 		} switch (Rnd.get(1, 6)) { //Special Delivery.
 			case 1:
@@ -347,20 +345,6 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 		isInstanceDestroyed = true;
     }
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 延迟后向指定阵营广播系统消息。
 	 * Broadcast a system message to the given race after a delay.

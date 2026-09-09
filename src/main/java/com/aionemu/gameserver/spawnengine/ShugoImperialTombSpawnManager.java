@@ -173,37 +173,37 @@ public class ShugoImperialTombSpawnManager {
 		 * NPC 模板 ID。
 		 * NPC template id.
 		 */
-		private int npc_id;
+		private final int npc_id;
 
 		/**
 		 * 世界 ID。
 		 * World id.
 		 */
-		private int worldId;
+		private final int worldId;
 
 		/**
 		 * X 坐标。
 		 * X coordinate.
 		 */
-		private float x;
+		private final float x;
 
 		/**
 		 * Y 坐标。
 		 * Y coordinate.
 		 */
-		private float y;
+		private final float y;
 
 		/**
 		 * Z 坐标。
 		 * Z coordinate.
 		 */
-		private float z;
+		private final float z;
 
 		/**
 		 * 朝向。
 		 * Heading.
 		 */
-		private byte h;
+		private final byte h;
 
 		/**
 		 * 构造裂隙刷怪点。
@@ -216,7 +216,7 @@ public class ShugoImperialTombSpawnManager {
 		 * @param z Z 坐标 / Z
 		 * @param heading 朝向 / heading
 		 */
-		private RiftEnum(int npc_id, int worldId, float x, float y, float z, byte heading) {
+		RiftEnum(int npc_id, int worldId, float x, float y, float z, byte heading) {
 			this.npc_id = npc_id;
 			this.worldId = worldId;
 			this.x = x;

@@ -23,7 +23,7 @@ import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 public class BGService {
 	private static volatile ObjectProvider<BGService> instanceProvider;
 	private static final int DELAY = 60 * 100;
-	private List<ScheduledFuture<?>> futures = new ArrayList<ScheduledFuture<?>>();
+	private final List<ScheduledFuture<?>> futures = new ArrayList<ScheduledFuture<?>>();
 
 	public BGService() {
 		register(DELAY);

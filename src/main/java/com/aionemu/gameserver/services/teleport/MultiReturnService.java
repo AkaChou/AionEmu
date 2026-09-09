@@ -60,7 +60,7 @@ public class MultiReturnService {
 			return 2100700;
 		case 210100000: // Iluma.
 			return 2101010;
-		case 700010000: // Oriel.
+		case 700010000: // 奥雷内 / Oriel.
 			return 7000101;
 		// 魔族 / Asmodians
 		case 120010000: // Pandaemonium.

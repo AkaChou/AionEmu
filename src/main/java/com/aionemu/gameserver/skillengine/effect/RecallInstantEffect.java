@@ -71,10 +71,9 @@ public class RecallInstantEffect extends EffectTemplate {
 	public void calculate(Effect effect) {
 		final Creature effector = effect.getEffector();
 
-		if (!(effect.getEffected() instanceof Player)) {
+		if (!(effect.getEffected() instanceof Player effected)) {
 			return;
 		}
-		Player effected = (Player) effect.getEffected();
 
 		if (effected.getController().isInCombat()) {
 			return;

@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 技能效果集合：JAXB 绑定所有效果子类型，并缓存效果类型列表。
@@ -199,6 +200,13 @@ public class Effects {
 			@XmlElement(name = "temperingprotection", type = TemperingProtectionEffect.class) })
 
 	protected List<EffectTemplate> effects;
+	/**
+	 * 获取已缓存的效果类型列表。
+	 * Returns the cached effect type list.
+	 *
+	 * @return 效果类型列表，可能为 null / effect types, may be null
+	 */
+	@Getter
 	@XmlTransient
 	protected List<EffectType> effectTypes;
 
@@ -213,16 +221,6 @@ public class Effects {
 			effects = new ArrayList<EffectTemplate>();
 		}
 		return this.effects;
-	}
-
-	/**
-	 * 获取已缓存的效果类型列表。
-	 * Returns the cached effect type list.
-	 *
-	 * @return 效果类型列表，可能为 null / effect types, may be null
-	 */
-	public List<EffectType> getEffectTypes() {
-		return effectTypes;
 	}
 
 	/**

@@ -5,17 +5,12 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.services.instance.InstanceService;
-
 
 /*
  * Author: MATTY
@@ -28,9 +23,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
  * Portal/teleporter AI: Dredgion Teleporter (@AIName "dredgion_teleporter"), extends ActionItemNpcAI2.
  */
 public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
-
-    private static final byte TELEPORT_HEADING = (byte) 25;
-    private static final TeleportAnimation TELEPORT_ANIMATION = TeleportAnimation.BEAM_ANIMATION;
 
     // 天族传送坐标。 / Elyos teleport coordinates.
     private static final float ELYOS_TELEPORT_X = 414f;

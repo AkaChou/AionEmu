@@ -102,7 +102,7 @@ public class Invasion extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidVortexLocationId(Player player, int vortexId) {
-		if (!GameLocationBootstrapServices.vortexService().getVortexLocations().keySet().contains(vortexId)) {
+		if (!GameLocationBootstrapServices.vortexService().getVortexLocations().containsKey(vortexId)) {
 			PacketSendUtility.sendMessage(player, "Id " + vortexId + " is invalid");
 			return false;
 		}

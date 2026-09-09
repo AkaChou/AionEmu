@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.instance;
 
+import lombok.Getter;
+
 /**
  * Stage 类型枚举。
  * Stage Type enumeration.
@@ -67,21 +69,15 @@ public enum StageType {
 	/** PvP 阶段 3。 / PvP Stage 3. */
 	PVP_STAGE_3(3, 0), PVP_STAGE_4(4, 0), PVP_STAGE_5(5, 0), PVP_STAGE_6(6, 0), PVP_STAGE_OVER(0, 0);
 
-	private int id;
-	private int type;
+	/** 返回 ID。 / Returns the id. */
+	@Getter
+	private final int id;
+	/** 获取类型。 / Returns the type. */
+	@Getter
+	private final int type;
 
-	private StageType(int id, int type) {
+	StageType(int id, int type) {
 		this.id = id;
 		this.type = type;
-	}
-
-	/** 返回 ID。 / Returns the id. */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取类型。 / Returns the type. */
-	public int getType() {
-		return type;
 	}
 }

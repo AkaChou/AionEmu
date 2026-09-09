@@ -11,8 +11,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet synchronizing the skill list (basic/linked/stigma or new skill) to the client.
  */
 public class SM_SKILL_LIST extends AionServerPacket {
-	private PlayerSkillEntry[] skillList;
-	private int messageId;
+	private final PlayerSkillEntry[] skillList;
+	private final int messageId;
 	private int skillNameId;
 	private String skillLvl;
 	public static final int YOU_LEARNED_SKILL = 1300050;

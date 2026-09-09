@@ -14,17 +14,17 @@ import com.aionemu.gameserver.skillengine.model.Skill;
  * Server packet synchronizing skill cast results (hit effects, cooldown, chain, dash status, etc.).
  */
 public class SM_CASTSPELL_RESULT extends AionServerPacket {
-	private Creature effector;
-	private Creature target;
-	private Skill skill;
+	private final Creature effector;
+	private final Creature target;
+	private final Skill skill;
 	private int cooldown;
-	private int hitTime;
-	private List<Effect> effects;
-	private int spellStatus;
-	private int dashStatus;
+	private final int hitTime;
+	private final List<Effect> effects;
+	private final int spellStatus;
+	private final int dashStatus;
 	private int targetType;
-	private boolean chainSuccess;
-	private int skinId;
+	private final boolean chainSuccess;
+	private final int skinId;
 
 	/**
 	 * 构造技能施放结果包（默认目标类型 0）。

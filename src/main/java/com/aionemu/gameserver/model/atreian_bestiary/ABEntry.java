@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.atreian_bestiary;
 
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * AB 条目，用于艾特里亚图鉴相关逻辑。
@@ -9,21 +10,15 @@ import lombok.Getter;
  * @author Ranastic
  */
 
+@AllArgsConstructor
 public class ABEntry {
 	@Getter
-	private int id;
+	private final int id;
 	@Getter
-	private int killCount;
+	private final int killCount;
 	@Getter
-	private int level;
-	private int claimReward;
-
-	public ABEntry(int id, int killCount, int level, int claimReward) {
-		this.id = id;
-		this.killCount = killCount;
-		this.level = level;
-		this.claimReward = claimReward;
-	}
+	private final int level;
+	private final int claimReward;
 
 	/** Claim Reward Level / Claim Reward Level */
 	public int claimRewardLevel() {

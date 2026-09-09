@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 物品仓库模型。
@@ -16,9 +17,11 @@ import java.util.Map;
 public class ItemStorage {
 	public static final long FIRST_AVAILABLE_SLOT = 65535L;
 
-	private Map<Integer, Item> items;
+	private final Map<Integer, Item> items;
+	/** 获取限制。 / Returns the limit. */
+	@Getter
 	private int limit;
-	private int specialLimit;
+	private final int specialLimit;
 	public ItemStorage(StorageType storageType) {
 		this.limit = storageType.getLimit();
 		this.specialLimit = storageType.getSpecialLimit();
@@ -30,11 +33,6 @@ public class ItemStorage {
 		List<Item> temp = new ArrayList<>();
 		temp.addAll(items.values());
 		return temp;
-	}
-
-	/** 获取限制。 / Returns the limit. */
-	public int getLimit() {
-		return this.limit;
 	}
 
 	/** 设置限制。 / Sets the limit. */

@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ALLIANCE_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 联盟拾取规则变更事件。
@@ -14,15 +15,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class ChangeAllianceLootRulesEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerAlliance alliance;
 	private final LootGroupRules lootGroupRules;
-
-	public ChangeAllianceLootRulesEvent(PlayerAlliance alliance, LootGroupRules lootGroupRules) {
-		this.alliance = alliance;
-		this.lootGroupRules = lootGroupRules;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

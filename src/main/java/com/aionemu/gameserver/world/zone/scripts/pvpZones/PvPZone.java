@@ -54,10 +54,9 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 	 */
 	@Override
 	public boolean onDie(final Creature lastAttacker, Creature target, final ZoneInstance zone) {
-		if (!(target instanceof Player)) {
+		if (!(target instanceof Player player)) {
 			return false;
 		}
-		final Player player = (Player) target;
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);
 		if (zone instanceof SiegeZoneInstance) {
 			((SiegeZoneInstance) zone).doOnAllPlayers(new Visitor<Player>() {

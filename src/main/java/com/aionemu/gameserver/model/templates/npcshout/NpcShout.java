@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import lombok.Getter;
 
 /**
  * NPC 喊话条目模板（静态数据/XML）。
@@ -17,15 +18,38 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 @XmlType(name = "NpcShout")
 public class NpcShout {
 
+	/**
+	 * 获取 stringId 属性值。
+	 * Gets the value of the stringId property
+	 */
+	@Getter
 	@XmlAttribute(name = "string_id", required = true)
 	protected int stringId;
 
+	/**
+	 * 获取 when 属性值。
+	 * Gets the value of the when property
+	 * @return 可能的对象类型 / possible object is {@link ShoutEventType }
+	 */
+	@Getter
 	@XmlAttribute(name = "when", required = true)
 	protected ShoutEventType when;
 
+	/**
+	 * 获取 pattern 属性值。
+	 * Gets the value of the pattern property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
+	@Getter
 	@XmlAttribute(name = "pattern")
 	protected String pattern;
 
+	/**
+	 * 获取 param 属性值。
+	 * Gets the value of the param property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
+	@Getter
 	@XmlAttribute(name = "param")
 	protected String param;
 
@@ -37,41 +61,6 @@ public class NpcShout {
 
 	@XmlAttribute(name = "poll_delay")
 	protected Integer pollDelay;
-
-	/**
-	 * 获取 stringId 属性值。
-	 * Gets the value of the stringId property
-	 */
-	public int getStringId() {
-		return stringId;
-	}
-
-	/**
-	 * 获取 when 属性值。
-	 * Gets the value of the when property
-	 * @return 可能的对象类型 / possible object is {@link ShoutEventType }
-	 */
-	public ShoutEventType getWhen() {
-		return when;
-	}
-
-	/**
-	 * 获取 pattern 属性值。
-	 * Gets the value of the pattern property
-	 * @return 可能的对象类型 / possible object is {@link String }
-	 */
-	public String getPattern() {
-		return pattern;
-	}
-
-	/**
-	 * 获取 param 属性值。
-	 * Gets the value of the param property
-	 * @return 可能的对象类型 / possible object is {@link String }
-	 */
-	public String getParam() {
-		return param;
-	}
 
 	/**
 	 * 获取 type 属性值。

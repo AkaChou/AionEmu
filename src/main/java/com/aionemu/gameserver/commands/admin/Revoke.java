@@ -34,10 +34,10 @@ public class Revoke extends AdminCommand {
 		}
 
 		int type = 0;
-		if (params[1].toLowerCase().equals("accesslevel")) {
+		if (params[1].equalsIgnoreCase("accesslevel")) {
 			type = 1;
 		}
-		else if (params[1].toLowerCase().equals("membership")) {
+		else if (params[1].equalsIgnoreCase("membership")) {
 			type = 2;
 		}
 		else {

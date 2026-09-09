@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 响应黑名单相关请求的服务端包（拉黑/解黑结果等）。
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Ben
  */
+@AllArgsConstructor
 public class SM_BLOCK_RESPONSE extends AionServerPacket {
 
 	/**
@@ -37,20 +39,8 @@ public class SM_BLOCK_RESPONSE extends AionServerPacket {
 	 */
 	public static final int CANT_BLOCK_SELF = 4;
 
-	private int code;
-	private String playerName;
-
-	/**
-	 * 构造黑名单请求响应包。
-	 * Constructs a new block request response packet.
-	 *
-	 * @param code 消息代码，参见类常量 / message code — see class constants
-	 * @param playerName 插入消息的参数，通常为目标玩家名 / parameters inserted into the message, usually the target player's name
-	 */
-	public SM_BLOCK_RESPONSE(int code, String playerName) {
-		this.code = code;
-		this.playerName = playerName;
-	}
+	private final int code;
+	private final String playerName;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

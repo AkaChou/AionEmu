@@ -6,8 +6,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 
 /**
  * 战场联盟报名的客户端包（要塞攻城期间）。
@@ -17,7 +15,6 @@ import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
  */
 public class CM_BATTLEFIELD_UNION_REGISTER extends AionClientPacket {
 	private int requestId;
-	private int fortressId;
 
 	public CM_BATTLEFIELD_UNION_REGISTER(int opcode, AionConnection.State state, AionConnection.State... restStates) {
 		super(opcode, state, restStates);

@@ -24,7 +24,7 @@ public class Brave_Templarerk_SoulAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		PlayerEffectController effectController = player.getEffectController();
@@ -34,14 +34,14 @@ public class Brave_Templarerk_SoulAI2 extends NpcAI2
 				    if (player.getCommonData().getRace() == Race.ELYOS) {
 				        effectController.removeEffect(21830);
 				        effectController.removeEffect(21831);
-					    GameEngineServices.skillEngine().applyEffectDirectly(21829, player, player, 1200000 * 1); //Brave Templarerk's Soul.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21829, player, player, 1200000); //Brave Templarerk's Soul.
 					}
 			    break;
 				case 833494: //Brave Templarerk's Soul.
 				    if (player.getCommonData().getRace() == Race.ASMODIANS) {
 						effectController.removeEffect(21833);
 				        effectController.removeEffect(21834);
-					    GameEngineServices.skillEngine().applyEffectDirectly(21832, player, player, 1200000 * 1); //Brave Templarerk's Soul.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21832, player, player, 1200000); //Brave Templarerk's Soul.
 					}
 			    break;
 			}

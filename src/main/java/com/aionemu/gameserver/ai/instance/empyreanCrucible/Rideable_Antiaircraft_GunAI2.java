@@ -19,13 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("rideable_antiaircraft_gun")
 public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 {
-	private AtomicBoolean canUse = new AtomicBoolean(true);
-	
+	private final AtomicBoolean canUse = new AtomicBoolean(true);
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		super.handleDialogStart(player);
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
@@ -34,7 +34,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 			AI2Actions.deleteOwner(this);
 		}
 	}
-	
+
 	private int getMorphSkill() {
 		switch (getNpcId()) {
 			case 701199: // 骑乘型对空炮 / Rideable Antiaircraft Gun
@@ -42,7 +42,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import com.aionemu.gameserver.model.beritra.BeritraStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 贝尔特拉入侵活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.beritra.BeritraStateType;
  * @author Rinzler (Encom)
  * @param <BL> 入侵位置类型 / invasion location type
  */
+@RequiredArgsConstructor
 public abstract class BeritraInvasion<BL extends BeritraLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定的入侵地点。
+	 * Returns the bound invasion location.
+	 *
+	 * @return 绑定的入侵地点 / invasion location
+	 */
+	@Getter
 	private final BL beritraLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * Concrete start logic (implemented by subclasses).
 	 */
 	protected abstract void startBeritraInvasion();
-
-	/**
-	 * 绑定入侵地点。
-	 * Binds the invasion location.
-	 *
-	 * @param beritraLocation 入侵地点 / invasion location
-	 */
-	public BeritraInvasion(BL beritraLocation) {
-		this.beritraLocation = beritraLocation;
-	}
 
 	/**
 	 * 启动入侵（幂等，重复调用会被忽略）。
@@ -99,16 +99,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定的入侵地点。
-	 * Returns the bound invasion location.
-	 *
-	 * @return 绑定的入侵地点 / invasion location
-	 */
-	public BL getBeritraLocation() {
-		return beritraLocation;
 	}
 
 	/**

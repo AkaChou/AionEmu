@@ -4,20 +4,15 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.Set;
 
@@ -67,7 +62,6 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 //		Player player = npc.getAggroList().getMostPlayerDamage();
 //		switch (npc.getObjectTemplate().getTemplateId()) {
 //			case 256689: // 诺克萨纳卫兵。 / Nochsana Guard.
-//				despawnNpc(npc);
 //				sendMsg("<Nochsana General> appear"); // Появился Лорд Насана
 //				spawn(256693, 331.097f, 269.36f, 384.553f, (byte) 25); // 诺克萨纳将军。 / Nochsana General.
 //			break;
@@ -124,9 +118,4 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 		});
 	}
 	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
 }

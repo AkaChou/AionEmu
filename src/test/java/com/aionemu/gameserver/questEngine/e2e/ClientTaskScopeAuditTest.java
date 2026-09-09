@@ -51,8 +51,8 @@ class ClientTaskScopeAuditTest {
 		// 1198 在 NPC 点击（USE_OBJECT，始终可达）后显示 SELECT2(1352)，而该任务 html 无此段落。
 		QuestTransition route = definition.definition().transitions().stream()
 			.filter(candidate -> candidate.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.ShowQuestDialog show
-					&& show.dialogId() == QuestDialogPage.SELECT2.id()))
+				action instanceof AfterCommitAction.ShowQuestDialog(int dialogId)
+					&& dialogId == QuestDialogPage.SELECT2.id()))
 			.findFirst().orElseThrow();
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, route, oracle);
 		assertEquals(QuestE2eStatus.PAGE_NOT_IN_TASK_HTML, row.status(), row.reason());
@@ -77,8 +77,10 @@ class ClientTaskScopeAuditTest {
 		QuestTransition route = definition.definition().transitions().stream()
 			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT1_1.id()
-				&& candidate.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog show
-					&& show.dialogId() == QuestDialogPage.SELECT1_1.id()))
+				&& candidate.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog(
+				int dialogId
+			)
+					&& dialogId == QuestDialogPage.SELECT1_1.id()))
 			.findFirst().orElseThrow();
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, route, oracle);
 		assertNotEquals(QuestE2eStatus.PAGE_NOT_IN_TASK_HTML, row.status(), row.reason());

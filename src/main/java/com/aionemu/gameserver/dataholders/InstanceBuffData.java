@@ -28,7 +28,7 @@ public class InstanceBuffData {
 	@XmlElement(name = "instance_bonusattr")
 	protected List<InstanceBonusAttr> instanceBonusattr;
 	@XmlTransient
-	private IntObjectHashMap<InstanceBonusAttr> templates = new IntObjectHashMap<InstanceBonusAttr>();
+	private final IntObjectHashMap<InstanceBonusAttr> templates = new IntObjectHashMap<InstanceBonusAttr>();
 
 	/**
 	 * JAXB 反序列化完成后，按 Buff ID 建立索引并释放列表。

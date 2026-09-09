@@ -26,42 +26,41 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	private int stage = 0;
 	private boolean isStart = false;
 	private Future<?> enrageTask;
-	
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 		wakeUp();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 		wakeUp();
 	}
-	
+
 	private void wakeUp() {
 		isStart = true;
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90 && stage < 1) {
 			stage1();
 			stage = 1;
 		}
 	}
-	
+
 	private void stage1() {
 		int delay = 50000;
 		if (isAlreadyDead() || !isStart) {
-			return;
 		} else {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式。 / Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
 		}
 	}
-	
+
 	private void ShebanMysticalTyrhund() {
 	    if (!isAlreadyDead()) {
 		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -74,10 +73,9 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
-			return;
 		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -87,7 +85,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 			}, delay);
 		}
 	}
-	
+
 	private void despawnNpcs(int npcId) {
 		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
 		for (Npc npc: npcs) {
@@ -96,7 +94,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
@@ -104,7 +102,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 		isStart = false;
 		stage = 0;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

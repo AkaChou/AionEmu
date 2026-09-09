@@ -250,8 +250,10 @@ class QuestProductionDispatcherTest {
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()),
 			noOpActions(), noOpState(), (action, snapshot, plan) -> {
-				if (action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog dialog) {
-					pages.add(dialog.dialogId());
+				if (action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog(
+					int dialogId
+				)) {
+					pages.add(dialogId);
 				}
 			}, () -> {
 				connections.incrementAndGet();

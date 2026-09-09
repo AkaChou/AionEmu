@@ -13,11 +13,11 @@ public enum SellLimit {
 	/** Limit 66 83 / Limit 66 83 */
 	LIMIT_66_83(66, 83, 392000047L);
 
-	private int playerMinLevel;
-	private int playerMaxLevel;
-	private long limit;
+	private final int playerMinLevel;
+	private final int playerMaxLevel;
+	private final long limit;
 
-	private SellLimit(int playerMinLevel, int playerMaxLevel, long limit) {
+	SellLimit(int playerMinLevel, int playerMaxLevel, long limit) {
 		this.playerMinLevel = playerMinLevel;
 		this.playerMaxLevel = playerMaxLevel;
 		this.limit = limit;

@@ -15,7 +15,7 @@ public class Frostgullet_KirrinAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(235918, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Frostshard Kirrin.
+		spawn(235918, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Frostshard Kirrin.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class NetworkController {
 
-	private static NetworkController instance = new NetworkController();
+	private static final NetworkController instance = new NetworkController();
 	private static volatile ObjectProvider<NetworkController> instanceProvider;
 
 	/**

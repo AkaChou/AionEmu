@@ -24,21 +24,20 @@ public class Blood_WingAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-			final Player player = (Player) creature;
-        	if (MathUtil.isIn3dRange(getOwner(), creature, 15)) {
+        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
+			if (MathUtil.isIn3dRange(getOwner(), creature, 15)) {
 				startBloodWing();
         	}
         }
     }
-	
+
 	private void startBloodWing() {
 		AI2Actions.deleteOwner(Blood_WingAI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -54,14 +53,14 @@ public class Blood_WingAI2 extends NpcAI2
 			}
 		}, 2500);
 	}
-	
+
 	private void attackBloodWing(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

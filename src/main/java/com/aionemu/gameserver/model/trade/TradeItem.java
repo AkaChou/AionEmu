@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 public class TradeItem {
 
-	private int itemId;
+	private final int itemId;
 	private long count;
 	@Setter
 	private ItemTemplate itemTemplate;

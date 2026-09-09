@@ -20,10 +20,10 @@ public class Aide_IranatiAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
-			spawn(218555, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 辅助官伊拉纳提 / Aide Iranati.
+			spawn(218555, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // 辅助官伊拉纳提 / Aide Iranati.
 			AI2Actions.deleteOwner(this);
 		}
 	}

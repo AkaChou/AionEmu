@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("telepathycontroller")
 public class TelepathyControllerAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isStart50Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart10Event = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isStart50Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart10Event = new AtomicBoolean(false);
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
 			if (isStart50Event.compareAndSet(false, true)) {
@@ -30,14 +30,14 @@ public class TelepathyControllerAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isStart50Event.set(false);
 		isStart10Event.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void helper() {
 		if (getPosition().isSpawned() && !isAlreadyDead()) {
 			for (int i = 0; i < 1; i++) {
@@ -55,14 +55,14 @@ public class TelepathyControllerAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
 		float y1 = (float) (Math.sin(Math.PI * direction) * distance);
 		spawn(npcId, getPosition().getX() + x1, getPosition().getY() + y1, getPosition().getZ(), (byte) 0);
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);

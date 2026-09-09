@@ -29,7 +29,7 @@ public class Anoha_SwordAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
         }
     }
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000215, 1)) { // 阿诺哈封印石 / Anoha Sealing Stone.
@@ -37,12 +37,12 @@ public class Anoha_SwordAI2 extends NpcAI2
 		        case 804576: // 阿诺哈之剑 [天族] / Anoha Sword [Elyos]
 			    case 804577: // 阿诺哈之剑 [魔族] / Anoha Sword [Asmodians]
 					announceBerserkAnoha30Min();
-					spawn(702644, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+					spawn(702644, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							announceReleaseAnoha();
-							spawn(855263, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 狂暴的阿诺哈 / Berserk Anoha.
+							spawn(855263, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // 狂暴的阿诺哈 / Berserk Anoha.
 						}
 					}, 1800000); // 30 分钟 / 30 Minutes.
 				break;
@@ -55,7 +55,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 		AI2Actions.scheduleRespawn(this);
 		return true;
 	}
-	
+
 	private void announceBerserkAnoha30Min() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -65,7 +65,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void announceReleaseAnoha() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

@@ -9,6 +9,8 @@ import java.util.Calendar;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家单个任务的运行时状态，包含进度变量、状态、完成次数与持久化标记。
@@ -21,20 +23,29 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 public class QuestState {
 
 	/** 任务 ID。 Quest id. */
+	@Getter
 	private final int questId;
 	/** 任务进度变量。 Quest progress variables. */
-	private QuestVars questVars;
+	@Getter
+	private final QuestVars questVars;
 	/** 当前任务状态。 Current quest status. */
+	@Getter
 	private QuestStatus status;
 	/** 完成次数。 Completion count. */
+	@Getter
 	private int completeCount;
 	/** 最近完成时间。 Last completion time. */
+	@Getter
+	@Setter
 	private Timestamp completeTime;
 	/** 下次可重复时间。 Next allowed repeat time. */
+	@Getter
+	@Setter
 	private Timestamp nextRepeatTime;
 	/** 已选奖励索引。 Selected reward index. */
 	private Integer reward;
 	/** 数据库持久化状态。 Database persistent state. */
+	@Getter
 	private PersistentState persistentState;
 
 
@@ -60,16 +71,6 @@ public class QuestState {
 		this.reward = reward;
 		this.completeTime = completeTime;
 		this.persistentState = PersistentState.NEW;
-	}
-
-	/**
-	 * 返回任务变量集合。
-	 * Returns the quest variable set.
-	 *
-	 * @return 任务变量 / Quest vars
-	 */
-	public QuestVars getQuestVars() {
-		return questVars;
 	}
 
 	/**
@@ -107,16 +108,6 @@ public class QuestState {
 	}
 
 	/**
-	 * 返回当前任务状态。
-	 * Returns the current quest status.
-	 *
-	 * @return 任务状态 / Quest status
-	 */
-	public QuestStatus getStatus() {
-		return status;
-	}
-
-	/**
 	 * 设置任务状态；首次进入 COMPLETE 时自动更新完成时间，并标记持久化。
 	 * Sets quest status; auto-updates completion time on first transition to COMPLETE and marks for persistence.
 	 *
@@ -130,41 +121,11 @@ public class QuestState {
 	}
 
 	/**
-	 * 返回最近完成时间。
-	 * Returns the last completion time.
-	 *
-	 * @return 完成时间戳 / Completion timestamp
-	 */
-	public Timestamp getCompleteTime() {
-		return completeTime;
-	}
-
-	/**
-	 * 设置完成时间。
-	 * Sets the completion time.
-	 *
-	 * @param time 完成时间 / Completion time
-	 */
-	public void setCompleteTime(Timestamp time) {
-		completeTime = time;
-	}
-
-	/**
 	 * 将完成时间更新为当前时刻。
 	 * Updates the completion time to now.
 	 */
 	public void updateCompleteTime() {
 		completeTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
-	}
-
-	/**
-	 * 返回任务 ID。
-	 * Returns the quest id.
-	 *
-	 * @return 任务 ID / Quest id
-	 */
-	public int getQuestId() {
-		return questId;
 	}
 
 	/**
@@ -176,36 +137,6 @@ public class QuestState {
 	public void setCompleteCount(int completeCount) {
 		this.completeCount = completeCount;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/**
-	 * 返回完成次数。
-	 * Returns the completion count.
-	 *
-	 * @return 完成计数 / Completion count
-	 */
-	public int getCompleteCount() {
-		return completeCount;
-	}
-
-	/**
-	 * 设置下次可重复时间。
-	 * Sets the next allowed repeat time.
-	 *
-	 * @param nextRepeatTime 下次可重复时间 / Next repeat time
-	 */
-	public void setNextRepeatTime(Timestamp nextRepeatTime) {
-		this.nextRepeatTime = nextRepeatTime;
-	}
-
-	/**
-	 * 返回下次可重复时间。
-	 * Returns the next allowed repeat time.
-	 *
-	 * @return 下次可重复时间 / Next repeat time
-	 */
-	public Timestamp getNextRepeatTime() {
-		return nextRepeatTime;
 	}
 
 	/**
@@ -266,21 +197,9 @@ public class QuestState {
 			|| !metadata.repeatCycles().isEmpty();
 		if (timeBased && nextRepeatTime != null) {
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-			if (currentTime.before(nextRepeatTime)) {
-				return false;
-			}
+			return !currentTime.before(nextRepeatTime);
 		}
 		return true;
-	}
-
-	/**
-	 * 返回数据库持久化状态。
-	 * Returns the database persistent state.
-	 *
-	 * @return 持久化状态 / Persistent state
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/**

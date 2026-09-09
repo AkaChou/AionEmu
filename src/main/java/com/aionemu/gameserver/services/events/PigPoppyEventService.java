@@ -35,25 +35,25 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class PigPoppyEventService {
 
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
-	private static List<float[]> floatArray = new ArrayList<float[]>();
+	private static final List<float[]> floatArray = new ArrayList<float[]>();
 
 	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String PIG_POPPY_EVENT_SCHEDULE = EventsConfig.PIG_POPPY_EVENT_SCHEDULE;
 
 	/** 光之圣地世界 ID / Sanctum world id */
-	private static int WORLD_ELY = 110010000; // 光之圣地 / Sanctum
+	private static final int WORLD_ELY = 110010000; // 光之圣地 / Sanctum
 
 	/** 伏魔殿世界 ID / Pandaemonium world id */
-	private static int WORLD_ASMO = 120010000; // 伏魔殿 / Pandaemonium
+	private static final int WORLD_ASMO = 120010000; // 伏魔殿 / Pandaemonium
 
 	/** 波比 NPC 模板 ID / Poppy NPC template id */
-	private static int NPC_ID = 217385; // 波比 / Poppy
+	private static final int NPC_ID = 217385; // 波比 / Poppy
 
 	/**
 	 * 缓存的奖励物品 ID 列表。
 	 * Cached reward item id list.
 	 */
-	private static int[] rewards = pigReward();// cannot get directly u must call an method
+	private static final int[] rewards = pigReward();// cannot get directly u must call an method
 
 	/**
 	 * 从配置解析奖励物品 ID 列表。
@@ -163,8 +163,7 @@ public class PigPoppyEventService {
 
 			@Override
 			public void attacked(Creature creature) {
-				if (creature instanceof Player) {
-					final Player player = (Player) creature;
+				if (creature instanceof Player player) {
 					final int id = rewards[Rnd.get(rewards.length)];
 					ItemService.addItem(player, id, EventsConfig.PIG_POPPY_EVENT_COUNT_REWARD);
 					PacketSendUtility.sendSys3Message(player, "\uE09B", "Found Insane poppy and got a nice surprise!");

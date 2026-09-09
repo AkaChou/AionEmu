@@ -32,7 +32,7 @@ public class PetitionService {
 
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
-	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
+	private static final SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
 
 	/**
 	 * 获取请愿服务单例（优先 Spring ObjectProvider）。
@@ -97,9 +97,7 @@ public class PetitionService {
 			}
 		}
 		for (Petition p : petitions) {
-			if (registeredPetitions.containsKey(p.getPetitionId())) {
-				registeredPetitions.remove(p.getPetitionId());
-			}
+			registeredPetitions.remove(p.getPetitionId());
 		}
 		DAOManager.getDAO(PetitionDAO.class).deletePetition(playerObjId);
 		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
@@ -201,6 +199,7 @@ public class PetitionService {
 		for (Petition p : registeredPetitions.values()) {
 			if (p.getPlayerObjId() == playerObjId) {
 				result = true;
+				break;
 			}
 		}
 		return result;

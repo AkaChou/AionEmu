@@ -23,12 +23,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 {
 	private Future<?> task;
-	private AtomicBoolean isStart = new AtomicBoolean(false);
-	private AtomicBoolean isStart85Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart65Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart45Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart25Event = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isStart = new AtomicBoolean(false);
+	private final AtomicBoolean isStart85Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart65Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart45Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart25Event = new AtomicBoolean(false);
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -45,7 +45,7 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 85) {
 			if (isStart85Event.compareAndSet(false, true)) {
@@ -65,29 +65,29 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void buff() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelTask();
 		super.handleDied();
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isDone()) {
 			task.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleBackHome() {
 		cancelTask();

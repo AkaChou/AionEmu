@@ -13,5 +13,5 @@ public enum UnsummonType {
 	/** 玩家命令 / Command */
 	COMMAND,
 	/** 未指定 / Unspecified */
-	UNSPECIFIED;
+	UNSPECIFIED
 }

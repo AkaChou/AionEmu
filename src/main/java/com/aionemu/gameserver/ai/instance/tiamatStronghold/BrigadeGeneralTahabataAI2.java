@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 {
 	private int phase = 0;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -36,7 +36,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 90 && phase < 1) {
 			phase = 1;
@@ -55,7 +55,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			sendMsg(1500716);
 		}
 	}
-	
+
 	private void phase1() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -64,7 +64,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void phase2() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -73,7 +73,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void phase3() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -83,15 +83,15 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void startPhase() {
 		AI2Actions.useSkill(this, 20060); //Lava Eruption.
 	}
-	
+
 	private void startParalyze() {
 		AI2Actions.useSkill(this, 20761); //Flame Terror.
 	}
-	
+
 	private void schedule() {
 		if (isAlreadyDead()) {
 			return;
@@ -103,7 +103,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			}
 		}, 10000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -118,7 +118,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -126,7 +126,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}

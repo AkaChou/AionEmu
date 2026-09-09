@@ -11,7 +11,7 @@ public class Matrix3D {
 	/** 单位矩阵 / identity matrix */
 	public static final double[][] IDENTITY = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
-	private double[][] data;
+	private final double[][] data;
 
 	public Matrix3D() {
 		this.data = new double[3][3];

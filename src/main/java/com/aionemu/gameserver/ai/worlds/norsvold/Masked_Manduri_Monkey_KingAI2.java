@@ -15,7 +15,7 @@ public class Masked_Manduri_Monkey_KingAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242187, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Masked Manduri Trickster.
+		spawn(242187, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Masked Manduri Trickster.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

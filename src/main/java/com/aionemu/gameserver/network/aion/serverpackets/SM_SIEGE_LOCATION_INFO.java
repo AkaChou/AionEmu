@@ -25,8 +25,8 @@ import com.aionemu.gameserver.services.SiegeService;
 @Slf4j
 
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
-	private int infoType;
-	private Map<Integer, SiegeLocation> locations;
+	private final int infoType;
+	private final Map<Integer, SiegeLocation> locations;
 
 	/**
 	 * 构造默认的 SM_SIEGE_LOCATION_INFO 包。

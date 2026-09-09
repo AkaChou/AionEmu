@@ -28,6 +28,7 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import lombok.Getter;
 
 /**
  * 生物游戏属性的基类：管理基础值与修正函数计算。
@@ -38,8 +39,12 @@ import java.util.Map.Entry;
 public abstract class CreatureGameStats<T extends Creature> {
 	private static final int ATTACK_MAX_COUNTER = Integer.MAX_VALUE;
 	private long lastGeoUpdate = 0;
-	private Map<StatEnum, TreeSet<IStatFunction>> stats;
+	private final Map<StatEnum, TreeSet<IStatFunction>> stats;
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	/**
+	 * @return the atcount
+	 */
+	@Getter
 	private int attackCounter = 0;
 	protected T owner = null;
 	private Stat2 cachedHPStat;
@@ -48,13 +53,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	protected CreatureGameStats(T owner) {
 		this.owner = owner;
 		this.stats = new LinkedHashMap<StatEnum, TreeSet<IStatFunction>>();
-	}
-
-	/**
-	 * @return the atcount
-	 */
-	public int getAttackCounter() {
-		return attackCounter;
 	}
 
 	/**
@@ -142,31 +140,31 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, int base, CalculationType... calculationTypes) {
-		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner);
+		Stat2 stat = new AdditionStat(statEnum, base, owner);
 		return getStat(statEnum, stat, calculationTypes);
 	}
 
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, float base, CalculationType... calculationTypes) {
-		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner);
+		Stat2 stat = new AdditionStat(statEnum, base, owner);
 		return getStat(statEnum, stat, calculationTypes);
 	}
 
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, int base, float bonusRate, CalculationType... calculationTypes) {
-		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner, bonusRate);
+		Stat2 stat = new AdditionStat(statEnum, base, owner, bonusRate);
 		return getStat(statEnum, stat, calculationTypes);
 	}
 
 	/** 返回 reverse stat / Returns the reverse stat */
 	public Stat2 getReverseStat(StatEnum statEnum, int base) {
-		Stat2 stat = new ReverseStat(statEnum, base, (Creature) owner);
+		Stat2 stat = new ReverseStat(statEnum, base, owner);
 		return getStat(statEnum, stat);
 	}
 
 	/** 返回 reverse stat / Returns the reverse stat */
 	public Stat2 getReverseStat(StatEnum statEnum, int base, float bonusRate) {
-		Stat2 stat = new ReverseStat(statEnum, base, (Creature) owner, bonusRate);
+		Stat2 stat = new ReverseStat(statEnum, base, owner, bonusRate);
 		return getStat(statEnum, stat);
 	}
 
@@ -183,7 +181,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 					func.apply(stat, calculationTypes);
 				}
 			}
-			StatCapUtil.calculateBaseValue(stat, ((Creature) owner).isPlayer());
+			StatCapUtil.calculateBaseValue(stat, owner.isPlayer());
 
 			if (SecurityConfig.STATS_CHECK) {
 				StatCapUtil.dumpWrongStats(owner.getName(), stat);

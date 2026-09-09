@@ -23,7 +23,7 @@ public class Steel_RodsAI2 extends NpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-			    despawnNpc(209479); //Captured Griffon's Claw Legionnary.
+			    despawnNpc(209479); // 俘虏的格里芬之爪军团兵 / Captured Griffon's Claw Legionnary.
 			}
 		}, 3000);
 		super.handleDied();

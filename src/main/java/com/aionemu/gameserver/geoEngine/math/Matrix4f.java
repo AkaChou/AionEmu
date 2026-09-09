@@ -7,12 +7,14 @@ import java.nio.FloatBuffer;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 
 /**
  * 4×4 矩阵，用于仿射/投影变换。
  * 4×4 matrix for affine/projective transforms.
  */
 @Slf4j
+@AllArgsConstructor
 public final class Matrix4f implements Cloneable {
 	/** 第 0 行 0 列元素。 / Element at row 0, column 0. */
 	public float m00;
@@ -55,47 +57,6 @@ public final class Matrix4f implements Cloneable {
 	 */
 	public Matrix4f() {
 		this.loadIdentity();
-	}
-
-	/**
-	 * 按 16 个元素构造矩阵（行优先 m00..m33）。
-	 * Constructs a matrix from 16 elements (row-major m00..m33).
-	 *
-	 * @param m00 第 0 行 0 列 / row 0 col 0
-	 * @param m01 第 0 行 1 列 / row 0 col 1
-	 * @param m02 第 0 行 2 列 / row 0 col 2
-	 * @param m03 第 0 行 3 列 / row 0 col 3
-	 * @param m10 第 1 行 0 列 / row 1 col 0
-	 * @param m11 第 1 行 1 列 / row 1 col 1
-	 * @param m12 第 1 行 2 列 / row 1 col 2
-	 * @param m13 第 1 行 3 列 / row 1 col 3
-	 * @param m20 第 2 行 0 列 / row 2 col 0
-	 * @param m21 第 2 行 1 列 / row 2 col 1
-	 * @param m22 第 2 行 2 列 / row 2 col 2
-	 * @param m23 第 2 行 3 列 / row 2 col 3
-	 * @param m30 第 3 行 0 列 / row 3 col 0
-	 * @param m31 第 3 行 1 列 / row 3 col 1
-	 * @param m32 第 3 行 2 列 / row 3 col 2
-	 * @param m33 第 3 行 3 列 / row 3 col 3
-	 */
-	public Matrix4f(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20,
-			float m21, float m22, float m23, float m30, float m31, float m32, float m33) {
-		this.m00 = m00;
-		this.m01 = m01;
-		this.m02 = m02;
-		this.m03 = m03;
-		this.m10 = m10;
-		this.m11 = m11;
-		this.m12 = m12;
-		this.m13 = m13;
-		this.m20 = m20;
-		this.m21 = m21;
-		this.m22 = m22;
-		this.m23 = m23;
-		this.m30 = m30;
-		this.m31 = m31;
-		this.m32 = m32;
-		this.m33 = m33;
 	}
 
 	/**
@@ -1137,9 +1098,9 @@ public final class Matrix4f implements Cloneable {
 		float vx = vec.x;
 		float vy = vec.y;
 		float vz = vec.z;
-		store.x = this.m00 * vx + this.m10 * vy + this.m20 * vz + this.m30 * 1.0f;
-		store.y = this.m01 * vx + this.m11 * vy + this.m21 * vz + this.m31 * 1.0f;
-		store.z = this.m02 * vx + this.m12 * vy + this.m22 * vz + this.m32 * 1.0f;
+		store.x = this.m00 * vx + this.m10 * vy + this.m20 * vz + this.m30;
+		store.y = this.m01 * vx + this.m11 * vy + this.m21 * vz + this.m31;
+		store.z = this.m02 * vx + this.m12 * vy + this.m22 * vz + this.m32;
 		return store;
 	}
 
@@ -1767,44 +1728,43 @@ public final class Matrix4f implements Cloneable {
 	 * @return 格式化字符串 / formatted string
 	 */
 	public String toString() {
-		StringBuilder result = new StringBuilder("Matrix4f\n[\n");
-		result.append(" ");
-		result.append(this.m00);
-		result.append("  ");
-		result.append(this.m01);
-		result.append("  ");
-		result.append(this.m02);
-		result.append("  ");
-		result.append(this.m03);
-		result.append(" \n");
-		result.append(" ");
-		result.append(this.m10);
-		result.append("  ");
-		result.append(this.m11);
-		result.append("  ");
-		result.append(this.m12);
-		result.append("  ");
-		result.append(this.m13);
-		result.append(" \n");
-		result.append(" ");
-		result.append(this.m20);
-		result.append("  ");
-		result.append(this.m21);
-		result.append("  ");
-		result.append(this.m22);
-		result.append("  ");
-		result.append(this.m23);
-		result.append(" \n");
-		result.append(" ");
-		result.append(this.m30);
-		result.append("  ");
-		result.append(this.m31);
-		result.append("  ");
-		result.append(this.m32);
-		result.append("  ");
-		result.append(this.m33);
-		result.append(" \n]");
-		return result.toString();
+		String result = "Matrix4f\n[\n" + " " +
+			this.m00 +
+			"  " +
+			this.m01 +
+			"  " +
+			this.m02 +
+			"  " +
+			this.m03 +
+			" \n" +
+			" " +
+			this.m10 +
+			"  " +
+			this.m11 +
+			"  " +
+			this.m12 +
+			"  " +
+			this.m13 +
+			" \n" +
+			" " +
+			this.m20 +
+			"  " +
+			this.m21 +
+			"  " +
+			this.m22 +
+			"  " +
+			this.m23 +
+			" \n" +
+			" " +
+			this.m30 +
+			"  " +
+			this.m31 +
+			"  " +
+			this.m32 +
+			"  " +
+			this.m33 +
+			" \n]";
+		return result;
 	}
 
 	/**
@@ -1842,13 +1802,12 @@ public final class Matrix4f implements Cloneable {
 	 * @return 全部元素相等则为 true / true if all elements are equal
 	 */
 	public boolean equals(Object o) {
-		if (!(o instanceof Matrix4f) || o == null) {
+		if (!(o instanceof Matrix4f comp) || o == null) {
 			return false;
 		}
 		if (this == o) {
 			return true;
 		}
-		Matrix4f comp = (Matrix4f) o;
 		if (Float.compare(this.m00, comp.m00) != 0) {
 			return false;
 		}

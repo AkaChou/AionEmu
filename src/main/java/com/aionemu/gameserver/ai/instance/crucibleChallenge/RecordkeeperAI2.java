@@ -27,13 +27,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("recordkeeper")
 public class RecordkeeperAI2 extends NpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
@@ -50,7 +50,7 @@ public class RecordkeeperAI2 extends NpcAI2
 				break;
 				case 205669:
 					instanceHandler.onChangeStage(StageType.START_STAGE_2_ROUND_1);
-				break; 
+				break;
 				case 205675:
 					TeleportService2.teleportTo(player, 300320000, instanceId, 1324.433f, 1738.2279f, 316.476f, (byte) 70);
 					spawn(205684, 1358.4021f, 1758.744f, 319.1873f, (byte) 70);
@@ -106,11 +106,10 @@ public class RecordkeeperAI2 extends NpcAI2
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 30) {
 				if (startedEvent.compareAndSet(false, true)) {
 					switch (getNpcId()) {
@@ -169,7 +168,7 @@ public class RecordkeeperAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

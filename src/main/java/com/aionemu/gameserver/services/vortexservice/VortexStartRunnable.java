@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 次元漩涡入侵启动定时任务。
@@ -11,19 +12,10 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class VortexStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public VortexStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 查找匹配地点并启动入侵。

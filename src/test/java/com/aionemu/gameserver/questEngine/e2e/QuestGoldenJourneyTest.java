@@ -195,7 +195,7 @@ class QuestGoldenJourneyTest {
 			ServerPacketObservation.Type second) {
 		List<ServerPacketObservation.Type> types = step.outcome().packets().stream()
 			.map(ServerPacketObservation::type).toList();
-		assertTrue(types.indexOf(first) >= 0 && types.indexOf(second) > types.indexOf(first), types::toString);
+		assertTrue(types.contains(first) && types.indexOf(second) > types.indexOf(first), types::toString);
 	}
 
 	private static void assertTraceOrder(QuestJourneyRunner.Step step, String firstPhase, String firstDetail,

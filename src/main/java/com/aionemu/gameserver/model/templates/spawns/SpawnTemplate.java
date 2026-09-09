@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 刷新点模板（静态数据/XML）。
@@ -16,22 +18,54 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
  */
 
 public class SpawnTemplate {
+	/** 返回 x 坐标 / Returns the x */
+	@Getter
 	private float x;
+	/** 返回 y 坐标 / Returns the y */
+	@Getter
 	private float y;
+	/** 返回 z 坐标 / Returns the z */
+	@Getter
 	private float z;
-	private byte h;
+	private final byte h;
+	/** 返回实体 ID / Returns the entity id */
+	@Getter
+	@Setter
 	private int entityId;
+	@Getter
 	private boolean resolveZ;
+	@Getter
+	@Setter
 	private volatile float resolvedZ = Float.NaN;
+	/** 返回随机行走 / Returns the random walk */
+	@Getter
+	@Setter
 	private int randomWalk;
+	/** 返回巡游者 ID / Returns the walker id */
+	@Getter
+	@Setter
 	private String walkerId;
 	private int walkerIdx;
+	/** 获取飞行。 / Returns the fly. */
+	@Getter
+	@Setter
 	private int fly;
+	/** 返回锚点 / Returns the anchor */
+	@Getter
 	private String anchor;
+	/** 是否已用 / Whether used*/
+	@Getter
 	private boolean isUsed;
-	private SpawnGroup2 spawnGroup;
+	private final SpawnGroup2 spawnGroup;
+	/** 获取活动模板。 / Returns the event template. */
+	@Getter
+	@Setter
 	private EventTemplate eventTemplate;
+	/** 返回模型 / Returns the model */
+	@Getter
 	private SpawnModel model;
+	/** 获取状态。 / Returns the state. */
+	@Getter
 	private int state;
 	private int astate;
 	private int bstate;
@@ -48,14 +82,29 @@ public class SpawnTemplate {
 	private int zstate;
 	private int iustate;
 	private int opstate;
+	/** 返回 creator id / Returns the creator id */
+	@Getter
+	@Setter
 	private int creatorId;
 	private String alternateIdValues;
 	private String selectprobValues;
+	/** 返回大师名称 / Returns the master name */
+	@Getter
+	@Setter
 	private String masterName = StringUtils.EMPTY;
+	@Getter
+	@Setter
 	private String npcPartyId;
+	@Getter
+	@Setter
 	private Creature master;
 	private TemporarySpawn temporarySpawn;
+	/** 返回可见对象。 / Returns the visible object. */
+	@Getter
+	@Setter
 	private VisibleObject visibleObject;
+	/** 返回 visible objects / Returns the visible objects */
+	@Getter
 	private List<VisibleObject> visibleObjects;
 
 	public SpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {
@@ -111,31 +160,16 @@ public class SpawnTemplate {
 		spawnGroup.addSpawnTemplate(this);
 	}
 
-	/** 返回 x 坐标 / Returns the x */
-	public float getX() {
-		return x;
-	}
-
 	/** 设置 x 坐标 / Sets the x */
 	public void setX(float x) {
 		this.x = x;
 		resolvedZ = Float.NaN;
 	}
 
-	/** 返回 y 坐标 / Returns the y */
-	public float getY() {
-		return y;
-	}
-
 	/** 设置 y 坐标 / Sets the y */
 	public void setY(float y) {
 		this.y = y;
 		resolvedZ = Float.NaN;
-	}
-
-	/** 返回 z 坐标 / Returns the z */
-	public float getZ() {
-		return z;
 	}
 
 	/** 设置 z 坐标 / Sets the z */
@@ -149,36 +183,14 @@ public class SpawnTemplate {
 		return h;
 	}
 
-	/** 返回实体 ID / Returns the entity id */
-	public int getEntityId() {
-		return entityId;
-	}
-
-	/** 设置实体 ID / Sets the entity id */
-	public void setEntityId(int entityId) {
-		this.entityId = entityId;
-	}
-
-	public boolean isResolveZ() {
-		return resolveZ;
-	}
-
 	public void setResolveZ(boolean resolveZ) {
 		this.resolveZ = resolveZ;
 		resolvedZ = Float.NaN;
 	}
 
-	public float getResolvedZ() {
-		return resolvedZ;
-	}
-
 	/** 返回解析后的实际出生高度，尚未解析时回退到配置高度。 / Returns the resolved spawn height, or the configured height before resolution. */
 	public float getEffectiveZ() {
 		return Float.isFinite(resolvedZ) ? resolvedZ : z;
-	}
-
-	public void setResolvedZ(float resolvedZ) {
-		this.resolvedZ = resolvedZ;
 	}
 
 	/** 返回静态 ID / Returns the static id */
@@ -191,26 +203,6 @@ public class SpawnTemplate {
 		this.entityId = staticId;
 	}
 
-	/** 返回随机行走 / Returns the random walk */
-	public int getRandomWalk() {
-		return randomWalk;
-	}
-
-	/** 设置 random walk / Sets the random walk */
-	public void setRandomWalk(int randomWalk) {
-		this.randomWalk = randomWalk;
-	}
-
-	/** 获取飞行。 / Returns the fly. */
-	public int getFly() {
-		return fly;
-	}
-
-	/** 设置飞行。 / Sets the fly. */
-	public void setFly(int fly) {
-		this.fly = fly;
-	}
-
 	/** 是否可以飞行。 / Whether fly. */
 	public boolean canFly() {
 		return fly > 0;
@@ -219,11 +211,6 @@ public class SpawnTemplate {
 	/** 设置使用 / Sets the use*/
 	public void setUse(boolean use) {
 		isUsed = use;
-	}
-
-	/** 是否已用 / Whether used*/
-	public boolean isUsed() {
-		return isUsed;
 	}
 
 	/** 返回 NPC ID / Returns the npc id */
@@ -261,11 +248,6 @@ public class SpawnTemplate {
 		return spawnGroup.getHandlerType();
 	}
 
-	/** 返回锚点 / Returns the anchor */
-	public String getAnchor() {
-		return anchor;
-	}
-
 	/**
 	 * @return Whether random walk
 	 */
@@ -287,16 +269,6 @@ public class SpawnTemplate {
 		return spawnGroup.hasPool();
 	}
 
-	/** 返回巡游者 ID / Returns the walker id */
-	public String getWalkerId() {
-		return walkerId;
-	}
-
-	/** 设置巡游者 ID / Sets the walker id */
-	public void setWalkerId(String walkerId) {
-		this.walkerId = walkerId;
-	}
-
 	/** 返回巡游者索引 / Returns the walker index */
 	public int getWalkerIndex() {
 		return walkerIdx;
@@ -312,26 +284,6 @@ public class SpawnTemplate {
 	/** 是否为活动刷新点。 / Whether event spawn. */
 	public boolean isEventSpawn() {
 		return eventTemplate != null;
-	}
-
-	/** 获取活动模板。 / Returns the event template. */
-	public EventTemplate getEventTemplate() {
-		return eventTemplate;
-	}
-
-	/** 设置活动模板。 / Sets the event template. */
-	public void setEventTemplate(EventTemplate eventTemplate) {
-		this.eventTemplate = eventTemplate;
-	}
-
-	/** 返回模型 / Returns the model */
-	public SpawnModel getModel() {
-		return model;
-	}
-
-	/** 获取状态。 / Returns the state. */
-	public int getState() {
-		return state;
 	}
 
 	/** 返回状态 / Returns the a state */
@@ -438,50 +390,9 @@ public class SpawnTemplate {
 		}
 		else
 		{
-			selectProbs = new int[1];	
+			selectProbs = new int[1];
 		}
 		return selectProbs;
-	}	
-	
-	/** 返回 creator id / Returns the creator id */
-	public int getCreatorId() {
-		return creatorId;
-	}
-
-	/** 设置 creator id / Sets the creator id */
-	public void setCreatorId(int creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	/** 返回大师名称 / Returns the master name */
-	public String getMasterName() {
-		return masterName;
-	}
-
-	/** 设置 master name / Sets the master name */
-	public void setMasterName(String masterName) {
-		this.masterName = masterName;
-	}
-
-	public String getNpcPartyId() {
-		return npcPartyId;
-	}
-
-	public void setNpcPartyId(String npcPartyId) {
-		this.npcPartyId = npcPartyId;
-	}
-
-	public Creature getMaster() {
-		return master;
-	}
-
-	public void setMaster(Creature master) {
-		this.master = master;
-	}
-
-	/** 返回可见对象。 / Returns the visible object. */
-	public VisibleObject getVisibleObject() {
-		return visibleObject;
 	}
 
 	/** 该模板在指定实例中是否有已刷出的对象。 / Whether this template has an object spawned in the given instance. */
@@ -498,16 +409,6 @@ public class SpawnTemplate {
 			}
 		}
 		return false;
-	}
-
-	/** 设置可见对象。 / Sets the visible object. */
-	public void setVisibleObject(VisibleObject visibleObject) {
-		this.visibleObject = visibleObject;
-	}
-
-	/** 返回 visible objects / Returns the visible objects */
-	public List<VisibleObject> getVisibleObjects() {
-		return this.visibleObjects;
 	}
 
 	/** 添加可见对象。 / Adds visible object. */

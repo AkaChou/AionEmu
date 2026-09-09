@@ -20,13 +20,13 @@ public class InstanceWalkerFormations {
 	 * 路径 ID → 待编队的集群 NPC 候选列表。
 	 * Route id to clustered NPC candidates awaiting formation.
 	 */
-	private Map<String, List<ClusteredNpc>> groupedSpawnObjects;
+	private final Map<String, List<ClusteredNpc>> groupedSpawnObjects;
 
 	/**
 	 * 路径 ID → 已组建的巡逻队。
 	 * Route id to formed walker groups.
 	 */
-	private Map<String, WalkerGroup> walkFormations;
+	private final Map<String, WalkerGroup> walkFormations;
 
 	/**
 	 * 创建空的实例巡逻编队容器。

@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("advance_corridor_shield")
 public class Advance_Corridor_ShieldAI2 extends NpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -41,7 +41,7 @@ public class Advance_Corridor_ShieldAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	private void announceBelusAdvance() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -86,7 +86,7 @@ public class Advance_Corridor_ShieldAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

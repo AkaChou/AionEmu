@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
+import lombok.AllArgsConstructor;
 
 /**
  * 聊天命令类加载监听器，将合法的 Admin/Player 命令注册到处理器。
@@ -14,23 +15,14 @@ import com.aionemu.commons.utils.ClassUtils;
  * @author Aquanox
  */
 @Slf4j
+@AllArgsConstructor
 public class ChatCommandsLoader implements ClassListener {
 
 	/**
 	 * 目标命令处理器。
 	 * Target chat processor.
 	 */
-	private ChatProcessor processor;
-
-	/**
-	 * 绑定命令处理器。
-	 * Bind to a chat processor.
-	 *
-	 * @param processor 命令处理器 / Chat processor
-	 */
-	public ChatCommandsLoader(ChatProcessor processor) {
-		this.processor = processor;
-	}
+	private final ChatProcessor processor;
 
 	/**
 	 * 类加载完成后实例化并注册命令。
@@ -44,7 +36,7 @@ public class ChatCommandsLoader implements ClassListener {
 			if (!isValidClass(c)) {
 				continue;
 			}
-			Class<?> tmp = (Class<?>) c;
+			Class<?> tmp = c;
 			if (tmp != null) {
 				try {
 					processor.registerCommand((ChatCommand) tmp.getDeclaredConstructor().newInstance());
@@ -64,7 +56,6 @@ public class ChatCommandsLoader implements ClassListener {
 	 */
 	@Override
 	public void preUnload(Class<?>[] classes) {
-
 	}
 
 	/**
@@ -83,9 +74,6 @@ public class ChatCommandsLoader implements ClassListener {
 		if (!Modifier.isPublic(modifiers)) {
 			return false;
 		}
-		if (!ClassUtils.isSubclass(clazz, AdminCommand.class) && !ClassUtils.isSubclass(clazz, PlayerCommand.class)) {
-			return false;
-		}
-		return true;
+		return ClassUtils.isSubclass(clazz, AdminCommand.class) || ClassUtils.isSubclass(clazz, PlayerCommand.class);
 	}
 }

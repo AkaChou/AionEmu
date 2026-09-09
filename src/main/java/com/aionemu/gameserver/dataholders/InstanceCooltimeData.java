@@ -32,8 +32,8 @@ public class InstanceCooltimeData {
 
 	@XmlElement(name = "instance_cooltime", required = true)
 	protected List<InstanceCooltime> instanceCooltime;
-	private Map<Integer, InstanceCooltime> instanceCooltimes = new LinkedHashMap<Integer, InstanceCooltime>();
-	private HashMap<Integer, Integer> syncIdToMapId = new HashMap<Integer, Integer>();
+	private final Map<Integer, InstanceCooltime> instanceCooltimes = new LinkedHashMap<Integer, InstanceCooltime>();
+	private final HashMap<Integer, Integer> syncIdToMapId = new HashMap<Integer, Integer>();
 
 	/**
 	 * JAXB 反序列化完成后，按世界 ID 与同步 ID 建立索引并释放列表。
@@ -130,7 +130,7 @@ public class InstanceCooltimeData {
 			instanceCoolTime = clt.getEntCoolTime();
 			if (clt.getCoolTimeType().isDaily()) {
 				ZonedDateTime now = ZonedDateTime.now();
-				int hour = (int) (clt.getEntCoolTime() / 100);
+				int hour = clt.getEntCoolTime() / 100;
 				ZonedDateTime repeatDate = now.withHour(hour).withMinute(0).withSecond(0).withNano(0);
 
 				if (now.isAfter(repeatDate)) {
@@ -140,7 +140,7 @@ public class InstanceCooltimeData {
 
 			} else if (clt.getCoolTimeType().isWeekly()) {
 				String[] days = clt.getTypeValue().split(",");
-				int hour = (int) (clt.getEntCoolTime() / 100);
+				int hour = clt.getEntCoolTime() / 100;
 				instanceCoolTime = getUpdateHours(days, hour);
 
 			} else if (clt.getCoolTimeType().isRelative()) {
@@ -163,7 +163,7 @@ public class InstanceCooltimeData {
 					}
 					instanceCoolTime = repeatDate.toInstant().toEpochMilli();
 					// 注意：原版有两种计算，为兼容性保留两者。 / Note: The original had both calculations, keeping both for compatibility
-					instanceCoolTime = System.currentTimeMillis() + (clt.getEntCoolTime() * 60 * 1000);
+					instanceCoolTime = System.currentTimeMillis() + ((long) clt.getEntCoolTime() * 60 * 1000);
 					break;
 				}
 			}

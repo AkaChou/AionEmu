@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 宠物加成属性模板（静态数据/XML）。
@@ -21,9 +23,14 @@ public class PetBonusAttr {
 	@XmlElement(name = "penalty_attr")
 	protected List<PetPenaltyAttr> penaltyAttr;
 
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
+	/** 返回食物数量 / Returns the food count */
+	@Getter
 	@XmlAttribute(name = "food_count", required = true)
 	protected int foodCount;
 
@@ -33,20 +40,5 @@ public class PetBonusAttr {
 			penaltyAttr = new ArrayList<PetPenaltyAttr>();
 		}
 		return this.penaltyAttr;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public int getBuffId() {
-		return buffId;
-	}
-
-	/** 设置增益 ID / Sets the buff id */
-	public void setBuffId(int value) {
-		this.buffId = value;
-	}
-
-	/** 返回食物数量 / Returns the food count */
-	public int getFoodCount() {
-		return foodCount;
 	}
 }

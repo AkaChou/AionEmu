@@ -110,7 +110,6 @@ public class UseSkill extends AdminCommand {
 			}
 			else {
 				onFail(admin, null);
-				return;
 			}
 		}
 		else {

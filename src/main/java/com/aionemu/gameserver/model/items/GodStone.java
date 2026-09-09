@@ -25,6 +25,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 
 /**
  * 神石：镶嵌在武器上的触发式魔法宝石，攻击时按概率激活附带技能，激活次数达到上限后可能碎裂。
@@ -38,6 +39,7 @@ public class GodStone extends ItemStone {
 
 	private final ItemTemplate godstoneItem;
 	private final GodstoneInfo godstoneInfo;
+	@Getter
 	private int activatedCount;
 	private long cooldownExpireTime;
 	private ActionObserver attackObserver;
@@ -147,10 +149,6 @@ public class GodStone extends ItemStone {
 
 	static boolean shouldBreak(int activatedCount, int breakCount, int breakProbability) {
 		return activatedCount > breakCount && roll(breakProbability);
-	}
-
-	public int getActivatedCount() {
-		return activatedCount;
 	}
 
 	private void breakGodstone(Player player, Item weapon) {

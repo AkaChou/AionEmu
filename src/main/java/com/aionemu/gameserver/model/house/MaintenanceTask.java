@@ -80,7 +80,7 @@ public class MaintenanceTask extends AbstractCronTask {
 		if (left < 0) {
 			return 0;
 		}
-		return left * 1000;
+		return left * 1000L;
 	}
 
 	@Override
@@ -144,13 +144,13 @@ public class MaintenanceTask extends AbstractCronTask {
 		if (!HousingConfig.ENABLE_HOUSE_PAY) {
 			return;
 		}
-		
+
 		ZonedDateTime now = ZonedDateTime.now();
 		long periodMillis = getPeriod() * 1000L;
-		
+
 		ZonedDateTime previousRun = now.minusNanos(periodMillis * 1_000_000L);
 		ZonedDateTime beforePreviousRun = previousRun.minusNanos(periodMillis * 1_000_000L);
-		
+
 		for (House house : maintainedHouses) {
 			if (house.isFeePaid()) {
 				continue;
@@ -169,11 +169,11 @@ public class MaintenanceTask extends AbstractCronTask {
 				putHouseToAuction(house, null);
 				continue;
 			}
-			
+
 			long beforePreviousRunMillis = beforePreviousRun.toInstant().toEpochMilli();
 			long previousRunMillis = previousRun.toInstant().toEpochMilli();
 			long nowMillis = now.toInstant().toEpochMilli();
-			
+
 			if (payTime <= beforePreviousRunMillis) {
 				ZonedDateTime plusDay = beforePreviousRun.minusDays(1);
 				if (payTime <= plusDay.toInstant().toEpochMilli()) {
@@ -190,7 +190,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			} else {
 				continue;
 			}
-			
+
 			if (pcd.isOnline()) {
 				if (warnCount == 3) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_SEQUESTRATE);

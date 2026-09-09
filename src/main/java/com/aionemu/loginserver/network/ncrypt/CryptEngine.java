@@ -18,7 +18,7 @@ public class CryptEngine {
     /** 密钥是否已切换到会话密钥 / Whether the session key has been applied */
     private boolean updatedKey = false;
     /** Blowfish 密码器 / Blowfish cipher */
-    private BlowfishCipher cipher;
+    private final BlowfishCipher cipher;
 
     /**
      * 使用静态初始密钥构造，以便加密发给客户端的首包。

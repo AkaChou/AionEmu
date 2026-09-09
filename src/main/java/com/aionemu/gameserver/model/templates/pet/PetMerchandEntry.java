@@ -4,6 +4,9 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 宠物商品条目模板（静态数据/XML）。
@@ -14,28 +17,16 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(name = "merch")
 @XmlAccessorType(XmlAccessType.NONE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class PetMerchandEntry {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
+	/** 获取比率价格。 / Returns the rate price. */
+	@Getter
 	@XmlAttribute(name = "rate_price")
 	private int ratePrice;
-
-	public PetMerchandEntry() {
-	}
-
-	public PetMerchandEntry(int id, int ratePrice) {
-		this.id = id;
-		this.ratePrice = ratePrice;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取比率价格。 / Returns the rate price. */
-	public int getRatePrice() {
-		return ratePrice;
-	}
 }

@@ -1,16 +1,12 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameEventRuntimeLifecycleTest {
 
@@ -55,7 +51,7 @@ class GameEventRuntimeLifecycleTest {
             "temporarySpawn"
         ), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -116,7 +112,7 @@ class GameEventRuntimeLifecycleTest {
             "packetBroadcaster",
             "temporarySpawn"
         ), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     private static GameEventRuntimeLifecycle newLifecycle(

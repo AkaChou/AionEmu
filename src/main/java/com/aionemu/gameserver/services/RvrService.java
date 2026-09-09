@@ -55,10 +55,10 @@ public class RvrService {
 	// 旅团将军的紧急命令 4.9.1 / Brigade General's Urgent Order 4.9.1
 	private final ConcurrentMap<Integer, Rvrlf3df3<?>> activeRvr = new ConcurrentHashMap<Integer, Rvrlf3df3<?>>();
 	// 重装特特兰/凯诺维坎 5.6 / Heavy Tetran/Kenovikan 5.6
-	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
-	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
-	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 
 	/**
 	 * 初始化 RvR 地点并按和平状态刷怪。
@@ -128,7 +128,7 @@ public class RvrService {
 				public void run() {
 					stopRvr(id);
 				}
-			}, CustomConfig.RVR_DURATION * 3600 * 1000);
+			}, (long) CustomConfig.RVR_DURATION * 3600 * 1000);
 		}
 	}
 

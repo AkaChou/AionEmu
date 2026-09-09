@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * IG 分类模板（静态数据/XML）。
@@ -21,9 +22,13 @@ public class IGCategory {
 	@XmlElement(name = "sub_category")
 	protected List<IGSubCategory> subCategories;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(required = true)
 	protected String name;
 
@@ -33,15 +38,5 @@ public class IGCategory {
 			subCategories = new ArrayList<IGSubCategory>();
 		}
 		return subCategories;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
 	}
 }

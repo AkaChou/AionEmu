@@ -122,7 +122,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 				if (Rnd.get(0, 100) < rate) {
 					player.setCaptchaWord(CAPTCHAUtil.getRandomWord());
 					player.setCaptchaImage(CAPTCHAUtil.createCAPTCHA(player.getCaptchaWord()).array());
-					PunishmentService.setIsNotGatherable(player, 0, true, SecurityConfig.CAPTCHA_EXTRACTION_BAN_TIME * 1000);
+					PunishmentService.setIsNotGatherable(player, 0, true, SecurityConfig.CAPTCHA_EXTRACTION_BAN_TIME * 1000L);
 					// 采集中中毒，暂时无法采集（剩余时间：10 分钟）。 / You were poisoned during extraction and cannot extract for (Time remaining: 10Min)
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CAPTCHA_RESTRICTED("10"));
 					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 600));

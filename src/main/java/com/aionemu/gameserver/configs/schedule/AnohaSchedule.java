@@ -53,7 +53,7 @@ public class AnohaSchedule {
 		AnohaSchedule as;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/anoha_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			as = (AnohaSchedule) JAXBUtil.deserialize(xml, AnohaSchedule.class);
+			as = JAXBUtil.deserialize(xml, AnohaSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize anoha", e);
 		}

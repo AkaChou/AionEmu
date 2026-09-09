@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 仇恨信息：记录攻击者对本单位的仇恨值与累计伤害。
@@ -11,36 +14,18 @@ import com.aionemu.gameserver.model.gameobjects.AionObject;
  *
  * @author ATracer, Sarynth
  */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class AggroInfo {
 
 	/** 攻击者 / Attacker */
-	private AionObject attacker;
+	@Getter
+	private final AionObject attacker;
 	/** 仇恨值 / Hate value */
 	private int hate;
 	/** 累计伤害 / Accumulated damage */
 	private int damage;
 	private long volatileHateSequence;
 	private final Map<Long, Integer> volatileHate = new HashMap<>();
-
-	/**
-	 * 以指定攻击者创建仇恨条目。
-	 * Creates an aggro entry for the given attacker.
-	 *
-	 * @param attacker 攻击者 / attacker
-	 */
-	AggroInfo(AionObject attacker) {
-		this.attacker = attacker;
-	}
-
-	/**
-	 * 返回该条目对应的攻击者。
-	 * Returns the attacker associated with this entry.
-	 *
-	 * @return 攻击者 / attacker
-	 */
-	public AionObject getAttacker() {
-		return attacker;
-	}
 
 	/**
 	 * 累加伤害，结果不会低于 0。

@@ -107,7 +107,7 @@ public class MinionService {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, player.getMinionSkillPoints(),
 				player.getCommonData().isMinionSkillPointsAutoCharge()));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
-		
+
 		if (lastUsedMinionId != 0 && player.getMinion() == null) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -359,13 +359,13 @@ public class MinionService {
 			log.warn(I18n.get("log.9dcf7dbcf415", minionObjId));
 			return;
 		}
-		
+
 		MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionCommonData.getMinionId());
 		if (minionTemplate == null) {
 			log.warn(I18n.get("log.9c4fbbb87d87", minionCommonData.getMinionId()));
 			return;
 		}
-		
+
 		if (player.getMinion() != null) {
 			if (player.getMinion().getObjectId() == minionObjId) {
 				return;
@@ -393,9 +393,9 @@ public class MinionService {
 		player.getMinionList().setLastUsed(minionObjId);
 		player.setVar(MinionList.LAST_USED_VAR, minionObjId, true);
 		minionbuff.apply(player, minionCommonData.getMinionId());
-		
+
 		((MinionController) minion.getController()).startFollowing(player);
-		
+
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(5, minionCommonData));
 	}
 
@@ -423,14 +423,14 @@ public class MinionService {
 				log.debug("Removed skill {} from player {}", skillId, player.getName());
 			}
 		}
-		
+
 		minionCommonData.setIsLooting(false);
 		minionCommonData.setIsBuffing(false);
-		
+
 		((MinionController) minion.getController()).stopFollowing(player);
 		minion.getController().delete();
 		player.setMinion(null);
-		
+
 		minionbuff.end(player);
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(6, minionCommonData));
 	}
@@ -1088,10 +1088,10 @@ public class MinionService {
 		int rnd = 0;
 		if (level > 0) {
 			rnd = Rnd.get(0, 200) + ((point / level) / 1000) + (level / 4);
-		} else { 
+		} else {
 			log.debug("CRITICAL ERROR: Level is zero!  Setting rnd to 0.");
 		}
-		
+
 		log.debug("Rnd: " + rnd);
 
 		boolean result;
@@ -1147,7 +1147,7 @@ public class MinionService {
 			return;
 		}
 		if (!player.getInventory().tryDecreaseKinah(50000)) {
-			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404348, new Object[0]));
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404348));
 			return;
 		}
 		if (player.getAccessLevel() > 5) {
@@ -1157,7 +1157,7 @@ public class MinionService {
 		grade = minionTemplate.getGrade();
 		levelNewMinion = minionTemplate.getLevel();
 		name = minionTemplate.getName();
-		
+
 		log.info(I18n.get("log.7c43b9b99db4", minionId, name, grade, levelNewMinion));
 		List<MinionCommonData> consumedMinions = minionObjIds.stream()
 				.map(player.getMinionList()::getMinion).toList();

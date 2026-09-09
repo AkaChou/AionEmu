@@ -23,6 +23,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 裂隙 / 旋涡（Rift/Vortex）控制器，处理入口确认、传送与通行人数同步。
@@ -31,31 +32,41 @@ import java.util.Map;
 public class RVController extends NpcController {
 
 	/** 是否为裂隙主端（可接受通行）。 / Whether this is the master side of the rift. */
+	@Getter
 	private boolean isMaster = false;
 	/** 是否为入侵旋涡。 / Whether this is an invasion vortex. */
+	@Getter
 	private boolean isVortex = false;
 	/** 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex. */
+	@Getter
 	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<Integer, Player>();
 	/** 从端（出口）生成模板。 / Slave (exit) spawn template. */
 	private SpawnTemplate slaveSpawnTemplate;
 	/** 从属 NPC / Slave NPC */
+	@Getter
 	private Npc slave;
 	/** 最低可进入等级。 / Minimum entry level. */
-	private Integer minLevel;
+	@Getter
+	private final Integer minLevel;
 	/** 最高可进入等级。 / Maximum entry level. */
-	private Integer maxLevel;
+	@Getter
+	private final Integer maxLevel;
 	/** 预计消失时间（秒级时间戳）。 / Expected despawn time as epoch seconds. */
-	private int deSpawnedTime;
+	private final int deSpawnedTime;
 	/** 最大可通行人数。 / Maximum number of entries. */
-	private Integer maxEntries;
+	@Getter
+	private final Integer maxEntries;
 	/** 消耗的欧比斯点数。 / Abyss points cost. */
-	private Integer abyssPoint;
+	@Getter
+	private final Integer abyssPoint;
 	/** 当前是否接受通行。 / Whether entries are currently accepted. */
 	private boolean isAccepting;
 	/** 已使用的通行次数。 / Number of used entries. */
+	@Getter
 	private int usedEntries = 0;
 	/** 裂隙模板枚举。 / Rift template enum. */
-	private RiftEnum riftTemplate;
+	@Getter
+	private final RiftEnum riftTemplate;
 
 	/**
 	 * 根据从端 NPC 与裂隙模板构造控制器。
@@ -213,96 +224,6 @@ public class RVController extends NpcController {
 	}
 
 	/**
-	 * 是否为主端。
-	 * Whether this is the master side.
-	 *
-	 * @return 若 master 则为 true / true if master
-	 */
-	public boolean isMaster() {
-		return isMaster;
-	}
-
-	/**
-	 * 是否为旋涡。
-	 * Whether this is a vortex.
-	 *
-	 * @return 若 vortex 则为 true / true if vortex
-	 */
-	public boolean isVortex() {
-		return isVortex;
-	}
-
-	/**
-	 * 获取最大通行人数。
-	 * Gets the maximum entry count.
-	 *
-	 * @return 最大通行人数 / max entries
-	 */
-	public Integer getMaxEntries() {
-		return maxEntries;
-	}
-
-	/**
-	 * 获取欧比斯点消耗。
-	 * Gets the abyss point cost.
-	 *
-	 * @return 欧比斯点数 / abyss points
-	 */
-	public Integer getAbyssPoint() {
-		return abyssPoint;
-	}
-
-	/**
-	 * 获取最低等级限制。
-	 * Gets the minimum level limit.
-	 *
-	 * @return 最低等级限制 / min level
-	 */
-	public Integer getMinLevel() {
-		return minLevel;
-	}
-
-	/**
-	 * 获取最高等级限制。
-	 * Gets the maximum level limit.
-	 *
-	 * @return 最高等级限制 / max level
-	 */
-	public Integer getMaxLevel() {
-		return maxLevel;
-	}
-
-	/**
-	 * 获取裂隙模板。
-	 * Gets the rift template.
-	 *
-	 * @return 裂隙模板 / rift template
-	 */
-	public RiftEnum getRiftTemplate() {
-		return riftTemplate;
-	}
-
-	/**
-	 * 获取从端 NPC。
-	 * Gets the slave NPC.
-	 *
-	 * @return 从端 NPC / slave NPC
-	 */
-	public Npc getSlave() {
-		return slave;
-	}
-
-	/**
-	 * 获取已使用通行次数。
-	 * Gets the used entry count.
-	 *
-	 * @return 已使用通行次数 / used entries
-	 */
-	public int getUsedEntries() {
-		return usedEntries;
-	}
-
-	/**
 	 * 获取剩余存活秒数。
 	 * Gets remaining lifetime in seconds.
 	 *
@@ -310,16 +231,6 @@ public class RVController extends NpcController {
 	 */
 	public int getRemainTime() {
 		return deSpawnedTime - (int) (System.currentTimeMillis() / 1000);
-	}
-
-	/**
-	 * 获取已通过旋涡的玩家映射。
-	 * Gets the map of players who passed the vortex.
-	 *
-	 * @return 已通过玩家 / passed players
-	 */
-	public Map<Integer, Player> getPassedPlayers() {
-		return passedPlayers;
 	}
 
 	/**

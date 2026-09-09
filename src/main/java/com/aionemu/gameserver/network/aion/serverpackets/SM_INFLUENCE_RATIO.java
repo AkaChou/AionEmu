@@ -22,12 +22,12 @@ public class SM_INFLUENCE_RATIO extends AionServerPacket {
 		writeF(inf.getGlobalAsmodiansInfluence());
 		writeF(inf.getGlobalBalaursInfluence());
 		writeH(2);
-		// ========[欧比斯]======== / ========[ABYSS]========
+		// 欧比斯 / ABYSS
 		writeD(400010000);
 		writeF(inf.getAbyssElyosInfluence());
 		writeF(inf.getAbyssAsmodiansInfluence());
 		writeF(inf.getAbyssBalaursInfluence());
-		// ======[卡尔多]========= / ======[KALDOR]=========
+		// 卡尔多 / KALDOR
 		writeD(600090000);
 		writeF(inf.getKaldorElyosInfluence());
 		writeF(inf.getKaldorAsmodiansInfluence());

@@ -23,8 +23,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 {
 	private Race MsgRace;
 	private Race KysisRace;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
     protected void handleSpawned() {
 		switch (getNpcId()) {
@@ -43,7 +43,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		}
 		super.handleSpawned();
     }
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -72,7 +72,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -107,7 +107,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void announce1stAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -152,7 +152,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void announceOccupied1st() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -197,7 +197,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void announceTalked01() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -242,24 +242,24 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void spawn1stAppears() {
 		final int kysisControlTower01 = KysisRace == Race.ASMODIANS ? 884070 : 884069;
-		spawn(kysisControlTower01, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(kysisControlTower01, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 	}
 	private void spawn2ndAppears() {
 		final int kysisControlTower02 = KysisRace == Race.ASMODIANS ? 884073 : 884072;
-		spawn(kysisControlTower02, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(kysisControlTower02, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 	}
 	private void spawn3rdAppears() {
 		final int kysisControlTower03 = KysisRace == Race.ASMODIANS ? 884076 : 884075;
-		spawn(kysisControlTower03, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(kysisControlTower03, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 	}
 	private void spawn4thAppears() {
 		final int kysisControlTower04 = KysisRace == Race.ASMODIANS ? 884079 : 884078;
-		spawn(kysisControlTower04, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(kysisControlTower04, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 	}
-	
+
 	private void announce1stBalaurAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -268,7 +268,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_Spawn_01_Dr, 0);
 				// 龙族占领了第 1 基西斯控制塔。 / The Balaur have occupied the 1st Kysis Control Tower.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_100th_01_Dr, 10000);
-				
+
 			}
 		});
 	}

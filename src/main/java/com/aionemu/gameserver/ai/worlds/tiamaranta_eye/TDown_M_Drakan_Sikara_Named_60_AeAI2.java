@@ -20,10 +20,10 @@ public class TDown_M_Drakan_Sikara_Named_60_AeAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
-			spawn(249102, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // TDown_M_Drakan_Sikara_Named_60_Ae 精英 / TDown_M_Drakan_Sikara_Named_60_Ae.
+			spawn(249102, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // TDown_M_Drakan_Sikara_Named_60_Ae 精英 / TDown_M_Drakan_Sikara_Named_60_Ae.
 			AI2Actions.deleteOwner(this);
 		}
 	}

@@ -45,7 +45,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 		 * 永不主动剔除；若父节点被剔除仍会连带剔除。
 		 * Never cull this from view. Note it is still culled if the parent is culled.
 		 */
-		Never;
+		Never
 	}
 
 	/**
@@ -237,10 +237,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 			return false;
 		}
 
-		if (nameRegex != null && (name == null || !name.matches(nameRegex))) {
-			return false;
-		}
-		return true;
+		return nameRegex == null || (name != null && name.matches(nameRegex));
 	}
 
 	/**

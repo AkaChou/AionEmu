@@ -28,7 +28,7 @@ public class ZorshivDredgionData {
 	private List<ZorshivDredgionTemplate> zorshivDredgionTemplates;
 
 	@XmlTransient
-	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgionLocation>();
+	private final Map<Integer, ZorshivDredgionLocation> zorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgionLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 建索引。

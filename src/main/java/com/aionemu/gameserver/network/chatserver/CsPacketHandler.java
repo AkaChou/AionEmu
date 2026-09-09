@@ -18,7 +18,7 @@ public class CsPacketHandler {
 	 * 按状态分组的操作码 → 包原型映射。
 	 * Opcode-to-prototype map grouped by connection state.
 	 */
-	private Map<State, Map<Integer, CsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, CsClientPacket>>();
+	private final Map<State, Map<Integer, CsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, CsClientPacket>>();
 
 	/**
 	 * 从缓冲中读取操作码并构造对应入站包。

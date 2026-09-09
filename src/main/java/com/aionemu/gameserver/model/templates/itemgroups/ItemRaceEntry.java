@@ -10,6 +10,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
+import lombok.Getter;
 
 /**
  * 物品种族条目：物品 ID 与允许种族，并按模板校验种族。
@@ -21,21 +22,15 @@ import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 @XmlSeeAlso({ IdLevelReward.class })
 public class ItemRaceEntry {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
 
 	/** 检查种族。 / Check race. */
 	public boolean checkRace(Race playerRace) {

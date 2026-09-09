@@ -1,12 +1,20 @@
 package com.aionemu.gameserver.services.conquerors;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * 征服者（Serial Killer）运行时状态，绑定玩家及其击杀等级。
  * Conqueror (serial killer) runtime state bound to a player with killer rank.
  */
 public class Conqueror {
+	/**
+	 * 获取所属玩家。
+	 * Returns the owning player.
+	 *
+	 * owner
+	 */
+	@Getter
 	private Player owner;
 	private int killerRank;
 	public int victims;
@@ -29,16 +37,6 @@ public class Conqueror {
 	 */
 	public void refreshOwner(Player player) {
 		owner = player;
-	}
-
-	/**
-	 * 获取所属玩家。
-	 * Returns the owning player.
-	 *
-	 * owner
-	 */
-	public Player getOwner() {
-		return owner;
 	}
 
 	/**

@@ -11,6 +11,7 @@ import java.util.List;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import lombok.Getter;
 
 /**
  * 任务 NPC 模板（静态数据/XML）。
@@ -21,14 +22,30 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 @Slf4j
 public class QuestNpc {
 
+	/** 返回任务开始事件列表 / Returns the on-quest-start events. */
+	@Getter
 	private final List<Integer> onQuestStart;
+	/** 返回击杀事件列表 / Returns the on-kill events */
+	@Getter
 	private final List<Integer> onKillEvent;
+	/** 返回对话事件列表 / Returns the on-talk events */
+	@Getter
 	private final List<Integer> onTalkEvent;
+	/** 返回攻击事件列表 / Returns the on-attack events. */
+	@Getter
 	private final List<Integer> onAttackEvent;
+	/** 返回丢失目标事件列表 / Returns the on-lost-target events */
+	@Getter
 	private final List<Integer> onLostTargetEvent;
+	/** 返回到达目标事件列表 / Returns the on-reach-target events */
+	@Getter
 	private final List<Integer> onReachTargetEvent;
+	/** 返回入仇恨列表事件列表 / Returns the on-add-aggro-list events */
+	@Getter
 	private final List<Integer> onAddAggroListEvent;
 	private final List<Integer> onAtDistanceEvent;
+	/** 返回 NPC ID / Returns the npc id */
+	@Getter
 	private final int npcId;
 
 	public QuestNpc(int npcId) {
@@ -62,21 +79,11 @@ public class QuestNpc {
 		}
 	}
 
-	/** 返回任务开始事件列表 / Returns the on-quest-start events. */
-	public List<Integer> getOnQuestStart() {
-		return onQuestStart;
-	}
-
 	/** 添加攻击事件 / Adds an on-attack event */
 	public void addOnAttackEvent(int questId) {
 		if (!onAttackEvent.contains(questId)) {
 			onAttackEvent.add(questId);
 		}
-	}
-
-	/** 返回攻击事件列表 / Returns the on-attack events. */
-	public List<Integer> getOnAttackEvent() {
-		return onAttackEvent;
 	}
 
 	/** 添加击杀事件 / Adds an on-kill event */
@@ -87,22 +94,12 @@ public class QuestNpc {
 		}
 	}
 
-	/** 返回击杀事件列表 / Returns the on-kill events */
-	public List<Integer> getOnKillEvent() {
-		return onKillEvent;
-	}
-
 	/** 添加对话事件 / Adds an on-talk event */
 	public void addOnTalkEvent(int questId) {
 		if (!onTalkEvent.contains(questId)) {
 			onTalkEvent.add(questId);
 			registerCanAct(questId, npcId);
 		}
-	}
-
-	/** 返回对话事件列表 / Returns the on-talk events */
-	public List<Integer> getOnTalkEvent() {
-		return onTalkEvent;
 	}
 
 	/** 添加到达目标事件 / Adds an on-reach-target event */
@@ -112,21 +109,11 @@ public class QuestNpc {
 		}
 	}
 
-	/** 返回到达目标事件列表 / Returns the on-reach-target events */
-	public List<Integer> getOnReachTargetEvent() {
-		return onReachTargetEvent;
-	}
-
 	/** 添加丢失目标事件 / Adds an on-lost-target event */
 	public void addOnLostTargetEvent(int questId) {
 		if (!onLostTargetEvent.contains(questId)) {
 			onLostTargetEvent.add(questId);
 		}
-	}
-
-	/** 返回丢失目标事件列表 / Returns the on-lost-target events */
-	public List<Integer> getOnLostTargetEvent() {
-		return onLostTargetEvent;
 	}
 
 	/** 添加入仇恨列表事件 / Adds an on-add-aggro-list event */
@@ -135,11 +122,6 @@ public class QuestNpc {
 			onAddAggroListEvent.add(questId);
 			registerCanAct(questId, npcId);
 		}
-	}
-
-	/** 返回入仇恨列表事件列表 / Returns the on-add-aggro-list events */
-	public List<Integer> getOnAddAggroListEvent() {
-		return onAddAggroListEvent;
 	}
 
 	/** 添加距离触发事件 / Adds an on-at-distance event */
@@ -153,10 +135,5 @@ public class QuestNpc {
 	/** 返回距离触发事件列表 / Returns the on-distance events */
 	public List<Integer> getOnDistanceEvent() {
 		return onAtDistanceEvent;
-	}
-
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return npcId;
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 好友事件通知包：好友上线/下线/删除等事件。
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Ben
  */
+@AllArgsConstructor
 public class SM_FRIEND_NOTIFY extends AionServerPacket {
 
 	/** 好友上线（或变为可见） / friend logged in (or became visible) */
@@ -20,15 +22,6 @@ public class SM_FRIEND_NOTIFY extends AionServerPacket {
 
 	private final int code;
 	private final String name;
-
-	/**
-	 * @param code 事件码 / event code
-	 * @param name 好友名称 / friend name
-	 */
-	public SM_FRIEND_NOTIFY(int code, String name) {
-		this.code = code;
-		this.name = name;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

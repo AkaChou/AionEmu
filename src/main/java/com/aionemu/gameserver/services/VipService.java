@@ -2,14 +2,14 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 应用独立的中国区 VIP 福利（来自 service_bonusattr 数据）。 / Applies independent China VIP benefits from service_bonusattr data. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VipService {
 
 	private static final int[] BUFF_BASE_IDS = { 1000000, 1000006, 1000012 };
-
-	private VipService() {
-	}
 
 	public static void applyBenefits(Player player) {
 		for (int buffId : benefitBuffIds(player.getPlayerAccount().getVipLevel())) {

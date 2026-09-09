@@ -53,7 +53,7 @@ public class RvrSchedule {
 		RvrSchedule rs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/rvr_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			rs = (RvrSchedule) JAXBUtil.deserialize(xml, RvrSchedule.class);
+			rs = JAXBUtil.deserialize(xml, RvrSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize rvr", e);
 		}

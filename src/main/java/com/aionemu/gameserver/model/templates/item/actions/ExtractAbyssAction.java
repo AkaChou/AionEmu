@@ -12,6 +12,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * Extract 欧比斯动作模板（静态数据/XML）。
@@ -20,19 +24,16 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ExtractAbyssAction")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExtractAbyssAction extends AbstractItemAction {
 	@XmlAttribute(name = "apextractionrate")
 	protected Integer apextractionrate;
 
+	/** 获取物品分类。 / Returns the item category. */
+	@Getter
+	@Setter
 	protected String itemCategory;
-
-	public ExtractAbyssAction() {
-	}
-
-	public ExtractAbyssAction(Integer apextractionrate, String itemCategory) {
-		this.apextractionrate = apextractionrate;
-		this.itemCategory = itemCategory;
-	}
 
 	/** 获取比率。 / Returns the rate. */
 	public Integer getRate() {
@@ -42,16 +43,6 @@ public class ExtractAbyssAction extends AbstractItemAction {
 	/** 设置比率。 / Sets the rate. */
 	public void setRate(Integer apextractionrate) {
 		this.apextractionrate = apextractionrate;
-	}
-
-	/** 获取物品分类。 / Returns the item category. */
-	public String getItemCategory() {
-		return itemCategory;
-	}
-
-	/** 设置物品分类。 / Sets the item category. */
-	public void setItemCategory(String itemCategory) {
-		this.itemCategory = itemCategory;
 	}
 
 	/**

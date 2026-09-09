@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 月华传送价格模板（静态数据/XML）。
@@ -13,11 +14,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaTeleportPrice")
 public class LunaTeleportPrice {
+	/** 返回物品 ID / Returns the item id */
+	@Getter
 	@XmlAttribute(name = "itemid")
 	protected int itemId;
-
-	/** 返回物品 ID / Returns the item id */
-	public int getItemId() {
-		return itemId;
-	}
 }

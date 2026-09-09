@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.nightmarecircus.NightmareCircusTemplate;
 import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 梦魇马戏团位置，用于 nightmarecircus 相关逻辑。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class NightmareCircusLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected NightmareCircusTemplate template;
+	/** 返回激活的梦魇马戏团实例。 / Returns the active nightmare circus. */
+	@Getter
 	protected CircusInstance<NightmareCircusLocation> activeNightmareCircus;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public NightmareCircusLocation() {
-	}
 
 	public NightmareCircusLocation(NightmareCircusTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置激活的梦魇马戏团实例。 / Sets the active nightmare circus. */
@@ -44,28 +49,8 @@ public class NightmareCircusLocation {
 		this.activeNightmareCircus = nightmareCircus;
 	}
 
-	/** 返回激活的梦魇马戏团实例。 / Returns the active nightmare circus. */
-	public CircusInstance<NightmareCircusLocation> getActiveNightmareCircus() {
-		return activeNightmareCircus;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final NightmareCircusTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

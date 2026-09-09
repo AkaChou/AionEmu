@@ -129,9 +129,7 @@ public class DropService {
 		Map<Integer, DropNpc> dropRegmap = dropRegistrationService().getDropRegistrationMap();
 		dropRegistrationService().getCurrentDropMap().remove(npcObjId);
 
-		if (dropRegmap.containsKey(npcObjId)) {
-			dropRegmap.remove(npcObjId);
-		}
+		dropRegmap.remove(npcObjId);
 	}
 
 	/**
@@ -170,8 +168,7 @@ public class DropService {
 		}
 		dropNpc.setLootingPlayer(player);
 		VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
-		if (visObj instanceof Npc) {
-			Npc npc = ((Npc) visObj);
+		if (visObj instanceof Npc npc) {
 			ScheduledFuture<?> decayTask = (ScheduledFuture<?>) npc.getController().cancelTask(TaskId.DECAY);
 			if (decayTask != null) {
 				long reamingDecayTime = decayTask.getDelay(TimeUnit.MILLISECONDS);

@@ -167,7 +167,7 @@ class QuestStartEligibilityContractTest {
 			for (QuestTransition transition : definition.definition().transitions()) {
 				boolean startsFromNone = transition.sourceNode() == null
 					? transition.conditions().stream().anyMatch(condition ->
-						condition instanceof QuestCondition.StatusIs status && status.status() == QuestStatus.NONE)
+						condition instanceof QuestCondition.StatusIs(QuestStatus status1) && status1 == QuestStatus.NONE)
 					: statuses.get(transition.sourceNode()) == QuestStatus.NONE;
 				QuestStatus targetStatus = statuses.get(transition.targetNode());
 				if (startsFromNone && targetStatus != null && targetStatus != QuestStatus.NONE

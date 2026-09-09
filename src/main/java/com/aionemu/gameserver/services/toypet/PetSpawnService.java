@@ -84,7 +84,7 @@ public class PetSpawnService {
 	public static void reschedulePeriodicSaveTask(Player player) {
 		player.getController().addTask(TaskId.PET_UPDATE,
 				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
-						PeriodicSaveConfig.PLAYER_PETS * 1000, PeriodicSaveConfig.PLAYER_PETS * 1000));
+						PeriodicSaveConfig.PLAYER_PETS * 1000L, PeriodicSaveConfig.PLAYER_PETS * 1000L));
 	}
 
 	/**

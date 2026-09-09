@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 静态门数据容器，按世界地图 ID 索引门模板。
@@ -22,11 +23,18 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StaticDoorData {
 
+	/**
+	 * 返回 JAXB 加载的静态门世界列表。
+	 * Returns the JAXB-loaded list of static-door worlds.
+	 *
+	 * @return 静态门世界列表 / static-door world list
+	 */
+	@Getter
 	@XmlElement(name = "world")
 	private List<StaticDoorWorld> staticDorWorlds;
 
 	/** 门模板映射。 / Map of all door templates. */
-	private IntObjectHashMap<StaticDoorWorld> staticDoorData = new IntObjectHashMap<StaticDoorWorld>();
+	private final IntObjectHashMap<StaticDoorWorld> staticDoorData = new IntObjectHashMap<StaticDoorWorld>();
 
 	/**
 	 * JAXB 反序列化完成后，按世界 ID 重建门模板索引。
@@ -62,16 +70,6 @@ public class StaticDoorData {
 	 */
 	public StaticDoorWorld getStaticDoorWorlds(int world) {
 		return staticDoorData.get(world);
-	}
-
-	/**
-	 * 返回 JAXB 加载的静态门世界列表。
-	 * Returns the JAXB-loaded list of static-door worlds.
-	 *
-	 * @return 静态门世界列表 / static-door world list
-	 */
-	public List<StaticDoorWorld> getStaticDorWorlds() {
-		return staticDorWorlds;
 	}
 
 	/**

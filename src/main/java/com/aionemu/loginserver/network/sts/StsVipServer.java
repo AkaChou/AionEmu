@@ -256,7 +256,7 @@ public final class StsVipServer {
             if (vip == null || !vip.isActive(now)) {
                 return 0L;
             }
-            return StsVipProtocol.resolveScore(vip.getLevel(), vip.getExperience());
+            return StsVipProtocol.resolveScore(vip.level(), vip.experience());
         } catch (RuntimeException e) {
             log.warn(I18n.get("log.eab3b20d42d7", accountId), e);
             return 0L;

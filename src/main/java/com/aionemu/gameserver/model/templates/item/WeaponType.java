@@ -50,10 +50,10 @@ public enum WeaponType
 	/** 钥锤 2H / Keyhammer 2H */
 	KEYHAMMER_2H(new int[] {}, 2);
 
-	private int slots;
-	private int[] requiredSkill;
+	private final int slots;
+	private final int[] requiredSkill;
 
-	private WeaponType(int[] requiredSkills, int slots) {
+	WeaponType(int[] requiredSkills, int slots) {
 		this.requiredSkill = requiredSkills;
 		this.slots = slots;
 	}

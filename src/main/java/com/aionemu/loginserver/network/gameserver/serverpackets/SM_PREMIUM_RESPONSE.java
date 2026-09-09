@@ -2,6 +2,7 @@ package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：高级/付费相关操作结果响应（请求 ID、结果码、点数与露娜币）。
@@ -9,44 +10,29 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author KID
  */
+@AllArgsConstructor
 public class SM_PREMIUM_RESPONSE extends GsServerPacket {
 
     /**
      * 请求 ID。
      * Request id.
      */
-    private int requestId;
+    private final int requestId;
     /**
      * 结果码。
      * Result code.
      */
-    private int result;
+    private final int result;
     /**
      * 点数余额。
      * Point balance.
      */
-    private long points;
+    private final long points;
     /**
      * 露娜币余额。
      * Luna balance.
      */
-    private long luna;
-
-    /**
-     * 构造高级操作结果响应包。
-     * Constructs a premium operation result response packet.
-     *
-     * @param requestId 请求 ID / request id
-     * @param result 结果代码 / result code
-     * @param points 分数 / points
-     * @param luna 露娜 / luna
-     */
-    public SM_PREMIUM_RESPONSE(int requestId, int result, long points, long luna) {
-        this.requestId = requestId;
-        this.result = result;
-        this.points = points;
-        this.luna = luna;
-    }
+    private final long luna;
 
     /**
      * {@inheritDoc}

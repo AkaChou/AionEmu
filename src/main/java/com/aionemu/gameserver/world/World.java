@@ -165,8 +165,7 @@ public class World {
 	 * @return 是否写入本地索引 / whether a local index was updated
 	 */
 	private boolean addLocalObject(VisibleObject object) {
-		if (object instanceof SiegeNpc) {
-			SiegeNpc siegeNpc = (SiegeNpc) object;
+		if (object instanceof SiegeNpc siegeNpc) {
 			synchronized (localSiegeNpcs) {
 				Collection<SiegeNpc> npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
 				if (npcs == null) {
@@ -176,8 +175,7 @@ public class World {
 				npcs.add(siegeNpc);
 			}
 			return true;
-		} else if (object instanceof BaseNpc) {
-			BaseNpc baseNpc = (BaseNpc) object;
+		} else if (object instanceof BaseNpc baseNpc) {
 			synchronized (localBaseNpcs) {
 				Collection<BaseNpc> npcs = localBaseNpcs.get(baseNpc.getBaseId());
 				if (npcs == null) {
@@ -187,8 +185,7 @@ public class World {
 				npcs.add(baseNpc);
 			}
 			return true;
-		} else if (object instanceof OutpostNpc) {
-			OutpostNpc outpostNpc = (OutpostNpc) object;
+		} else if (object instanceof OutpostNpc outpostNpc) {
 			synchronized (localOutpostNpcs) {
 				Collection<OutpostNpc> npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
 				if (npcs == null) {
@@ -226,24 +223,21 @@ public class World {
 	 * @param object 可见对象 / the visible object
 	 */
 	private void removeLocalObject(VisibleObject object) {
-		if (object instanceof SiegeNpc) {
-			SiegeNpc siegeNpc = (SiegeNpc) object;
+		if (object instanceof SiegeNpc siegeNpc) {
 			synchronized (localSiegeNpcs) {
 				Collection<SiegeNpc> locSpawn = localSiegeNpcs.get(siegeNpc.getSiegeId());
 				if (!GenericValidator.isBlankOrNull(locSpawn)) {
 					locSpawn.remove(siegeNpc);
 				}
 			}
-		} else if (object instanceof BaseNpc) {
-			BaseNpc baseNpc = (BaseNpc) object;
+		} else if (object instanceof BaseNpc baseNpc) {
 			synchronized (localBaseNpcs) {
 				Collection<BaseNpc> locSpawn = localBaseNpcs.get(baseNpc.getBaseId());
 				if (!GenericValidator.isBlankOrNull(locSpawn)) {
 					locSpawn.remove(baseNpc);
 				}
 			}
-		} else if (object instanceof OutpostNpc) {
-			OutpostNpc outpostNpc = (OutpostNpc) object;
+		} else if (object instanceof OutpostNpc outpostNpc) {
 			synchronized (localOutpostNpcs) {
 				Collection<OutpostNpc> locSpawn = localOutpostNpcs.get(outpostNpc.getOutpostId());
 				if (!GenericValidator.isBlankOrNull(locSpawn)) {
@@ -273,7 +267,7 @@ public class World {
 	public Collection<SiegeNpc> getLocalSiegeNpcs(int locationId) {
 		synchronized (localSiegeNpcs) {
 			Collection<SiegeNpc> result = localSiegeNpcs.get(locationId);
-			return result != null ? new ArrayList<SiegeNpc>(result) : Collections.<SiegeNpc>emptySet();
+			return result != null ? new ArrayList<SiegeNpc>(result) : Collections.emptySet();
 		}
 	}
 
@@ -287,7 +281,7 @@ public class World {
 	public Collection<BaseNpc> getLocalBaseNpcs(int locationId) {
 		synchronized (localBaseNpcs) {
 			Collection<BaseNpc> result = localBaseNpcs.get(locationId);
-			return result != null ? new ArrayList<BaseNpc>(result) : Collections.<BaseNpc>emptySet();
+			return result != null ? new ArrayList<BaseNpc>(result) : Collections.emptySet();
 		}
 	}
 
@@ -301,7 +295,7 @@ public class World {
 	public Collection<OutpostNpc> getLocalOutpostNpcs(int locationId) {
 		synchronized (localOutpostNpcs) {
 			Collection<OutpostNpc> result = localOutpostNpcs.get(locationId);
-			return result != null ? new ArrayList<OutpostNpc>(result) : Collections.<OutpostNpc>emptySet();
+			return result != null ? new ArrayList<OutpostNpc>(result) : Collections.emptySet();
 		}
 	}
 
@@ -417,8 +411,7 @@ public class World {
 			if (object instanceof Creature) {
 				((Creature) object).getMoveController().abortMove();
 			}
-			if (object instanceof Player) {
-				Player player = (Player) object;
+			if (object instanceof Player player) {
 				float x, y, z;
 				int worldId;
 				byte h = 0;

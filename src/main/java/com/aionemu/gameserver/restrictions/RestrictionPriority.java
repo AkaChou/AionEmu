@@ -21,7 +21,7 @@ public @interface RestrictionPriority {
 	 * 默认优先级。
 	 * Default priority.
 	 */
-	public static final double DEFAULT_PRIORITY = 0.0;
+	double DEFAULT_PRIORITY = 0.0;
 
 	/**
 	 * 优先级值。

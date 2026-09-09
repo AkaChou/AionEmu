@@ -39,7 +39,6 @@ public class SeasonRankingService {
 		} else if (tableid == 541) {
 			loadArenaOfTenacityScore(player);
 		} else {
-			return;
 		}
 	}
 

@@ -7,5 +7,5 @@ package com.aionemu.gameserver.model.vortex;
 
 public enum VortexStateType {
 	/** 入侵 / Invasion. */
-	INVASION, PEACE;
+	INVASION, PEACE
 }

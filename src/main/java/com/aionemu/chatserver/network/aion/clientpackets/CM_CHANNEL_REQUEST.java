@@ -13,6 +13,7 @@ import com.aionemu.chatserver.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 客户端加入/请求聊天频道包。
@@ -25,7 +26,7 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
 
     private int channelIndex;
     private byte[] channelIdentifier;
-    private ChatService chatService;
+    private final ChatService chatService;
 
     /**
      * 构造频道请求客户端包。
@@ -61,14 +62,10 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
      */
     @Override
     protected void runImpl() {
-        try {
-            if (Config.LOG_CHANNEL_REQUEST) {
-                log.info(I18n.get("log.97c4098f2607", new String(channelIdentifier, "UTF-16le")));
-            }
-        } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.6c1460337508", e));
-        }
-        ChatClient chatClient = clientChannelHandler.getChatClient();
+		if (Config.LOG_CHANNEL_REQUEST) {
+			log.info(I18n.get("log.97c4098f2607", new String(channelIdentifier, StandardCharsets.UTF_16LE)));
+		}
+		ChatClient chatClient = clientChannelHandler.getChatClient();
         Channel channel = chatService.registerPlayerWithChannel(chatClient, channelIndex, channelIdentifier);
         if (channel != null) {
             clientChannelHandler.sendPacket(new SM_CHANNEL_RESPONSE(channel, channelIndex));

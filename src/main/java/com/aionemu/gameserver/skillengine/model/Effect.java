@@ -43,6 +43,8 @@ import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicAction;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 运行时效果实例：绑定施法者/目标，驱动效果初始化、应用、周期与结束。
@@ -53,96 +55,505 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class Effect implements StatOwner {
 
 	private Skill skill;
-	private SkillTemplate skillTemplate;
-	private int skillLevel;
+	private final SkillTemplate skillTemplate;
+	/**
+	 * 获取技能等级。
+	 * Gets skill level.
+	 *
+	 */
+	@Getter
+	private final int skillLevel;
+	/**
+	 * 获取持续时间。
+	 * Gets duration.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int duration;
+	/**
+	 * 获取结束时间戳。
+	 * Gets end timestamp.
+	 *
+	 */
+	@Getter
 	private long endTime;
-	private PeriodicActions periodicActions;
+	private final PeriodicActions periodicActions;
+	/**
+	 * 获取技能位移类型。
+	 * Gets skill move type.
+	 *
+	 */
+	@Getter
+	@Setter
 	private SkillMoveType skillMoveType = SkillMoveType.DEFAULT;
-	private Creature effected;
-	private Creature effector;
+	/**
+	 * 获取受影响者。
+	 * Gets the effected creature.
+	 *
+	 */
+	@Getter
+	private final Creature effected;
+	/**
+	 * 获取施法者。
+	 * Gets the effector.
+	 *
+	 */
+	@Getter
+	private final Creature effector;
+	/**
+	 * 设置主任务。
+	 * Sets main task.
+	 *
+	 */
+	@Setter
 	private Future<?> task = null;
 	private Future<?>[] periodicTasks = null;
 	private Future<?> periodicActionsTask = null;
+	/**
+	 * 是否隐身效果。
+	 * Whether hide effect.
+	 *
+	 */
+	@Getter
 	private boolean isHideEffect = false;
+	/**
+	 * 是否麻痹效果。
+	 * Whether paralyze effect.
+	 *
+	 */
+	@Getter
 	private boolean isParalyzeEffect = false;
+	/**
+	 * 是否庇护效果。
+	 * Whether sanctuary effect.
+	 *
+	 */
+	@Getter
 	private boolean isSanctuaryEffect = false;
+	/**
+	 * 获取目标 X。
+	 * Gets target X.
+	 *
+	 * @return X
+	 */
+	@Getter
 	private float targetX = 0;
+	/**
+	 * 获取目标 Y。
+	 * Gets target Y.
+	 *
+	 * @return Y
+	 */
+	@Getter
 	private float targetY = 0;
+	/**
+	 * 获取目标 Z。
+	 * Gets target Z.
+	 *
+	 * @return Z
+	 */
+	@Getter
 	private float targetZ = 0;
+	/**
+	 * 获取 MP 护盾值。
+	 * Gets MP shield value.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int mpShield = 0;
 	private int reserved1;
 	private final IdentityHashMap<EffectTemplate, Integer> reserved1ByEffect = new IdentityHashMap<>();
 	private EffectTemplate currentEffectTemplate;
+	/**
+	 * 获取保留值 2。
+	 * Gets reserved value 2.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reserved2;
+	/**
+	 * 获取保留值 3。
+	 * Gets reserved value 3.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reserved3;
+	/**
+	 * 获取保留值 4。
+	 * Gets reserved value 4.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reserved4;
+	/**
+	 * 获取保留值 5。
+	 * Gets reserved value 5.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reserved5;
 	private int[] reservedInts;
+	/**
+	 * 获取法术状态。
+	 * Gets spell status.
+	 *
+	 */
+	@Getter
+	@Setter
 	private SpellStatus spellStatus = SpellStatus.NONE;
+	/**
+	 * 获取冲刺状态。
+	 * Gets dash status.
+	 *
+	 */
+	@Getter
+	@Setter
 	private DashStatus dashStatus = DashStatus.NONE;
+	/**
+	 * 获取攻击状态。
+	 * Gets attack status.
+	 *
+	 */
+	@Getter
+	@Setter
 	private AttackStatus attackStatus = AttackStatus.NORMALHIT;
 	private AttackStatus[] periodicAttackStatuses;
+	/**
+	 * 获取护盾防御值。
+	 * Gets shield defense value.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int shieldDefense;
+	/**
+	 * 获取反射伤害。
+	 * Gets reflected damage.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reflectedDamage = 0;
+	/**
+	 * 获取反射技能 ID。
+	 * Gets reflected skill id.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int reflectedSkillId = 0;
+	/**
+	 * 获取保护技能 ID。
+	 * Gets protected skill id.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int protectedSkillId = 0;
+	/**
+	 * 获取被保护伤害。
+	 * Gets protected damage.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int protectedDamage = 0;
+	/**
+	 * 获取保护者 ID。
+	 * Gets protector id.
+	 *
+	 * @return ID
+	 */
+	@Getter
+	@Setter
 	private int protectorId = 0;
 	private boolean addedToController;
 	private AttackCalcObserver[] attackStatusObserver;
 	private AttackCalcObserver[] attackShieldObserver;
+	/**
+	 * 是否触发子效果。
+	 * Whether to launch sub-effect.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean launchSubEffect = true;
+	/**
+	 * 获取子效果。
+	 * Gets sub-effect.
+	 *
+	 */
+	@Getter
+	@Setter
 	private Effect subEffect;
+	@Getter
 	private volatile boolean isStopped;
 	private int startedTemplateCount;
 	private ActionObserver equipmentObserver;
 	private ActionObserver attackedObserver;
 	private ActionObserver dotAttackedObserver;
+	/**
+	 * 是否延迟伤害。
+	 * Whether delayed damage.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isDelayedDamage;
+	/**
+	 * 是否伤害效果。
+	 * Whether damage effect.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isDamageEffect;
+	/**
+	 * 是否宠物指令。
+	 * Whether pet order.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isPetOrder;
+	/**
+	 * 是否召唤中。
+	 * Whether summoning.
+	 *
+	 */
+	@Getter
 	private boolean isSummoning;
 	// 经验加成。 / Xp Boost.
+	/**
+	 * 设置经验加成标记。
+	 * Sets XP boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isXpBoost;
 	// AP 加成。 / Ap Boost.
+	/**
+	 * 设置 AP 加成标记。
+	 * Sets AP boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isApBoost;
 	// Dr 加成。 / Dr Boost.
+	/**
+	 * 设置掉落加成标记。
+	 * Sets drop boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isDrBoost;
 	// Bdr 加成。 / Bdr Boost.
+	/**
+	 * 设置 BDR 加成标记。
+	 * Sets BDR boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isBdrBoost;
 	// 授权加成。 / Authorize Boost.
+	/**
+	 * 设置鉴定加成标记。
+	 * Sets authorize boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isAuthorizeBoost;
 	// 强化加成。 / Enchant Boost.
+	/**
+	 * 设置附魔加成标记。
+	 * Sets enchant boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isEnchantBoost;
 	// 强化选项加成。 / Enchant Option Boost.
+	/**
+	 * 设置附魔词条加成标记。
+	 * Sets enchant option boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isEnchantOptionBoost;
 	// 伊顿掉落加成。 / Idun Drop Boost.
+	/**
+	 * 设置伊顿掉落加成标记。
+	 * Sets Idun drop boost flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isIdunDropBoost;
 	// 新效果 / New Effect
+	/**
+	 * 设置冲刺飞行值消耗减免标记。
+	 * Sets sprint FP reduce flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isSprintFpReduce;
+	/**
+	 * 设置回城冷却减免标记。
+	 * Sets return cooldown reduce flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isReturnCoolReduce;
+	/**
+	 * 设置死亡惩罚降低标记。
+	 * Sets death penalty reduce flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isDeathPenaltyReduce;
+	/**
+	 * 设置奥德拉恢复提升标记。
+	 * Sets Odella recover increase flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isOdellaRecoverIncrease;
+	/**
+	 * 设置受伤取消标记。
+	 * Sets cancel-on-damage flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isCancelOnDmg;
+	/**
+	 * 子效果是否因条件中止。
+	 * Whether sub-effect aborted by conditions.
+	 *
+	 */
+	@Getter
 	private boolean subEffectAbortedBySubConditions;
+	/**
+	 * 获取关联物品模板。
+	 * Gets related item template.
+	 *
+	 */
+	@Getter
 	private ItemTemplate itemTemplate;
+	/**
+	 * 设置 HiPass 标记。
+	 * Sets HiPass flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isHiPass;
+	/**
+	 * 设置无死亡惩罚标记。
+	 * Sets no-death-penalty flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isNoDeathPenalty;
+	/**
+	 * 设置死亡惩罚减免标记。
+	 * Sets no-death-penalty-reduce flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isNoDeathPenaltyReduce;
+	/**
+	 * 设置无复活惩罚标记。
+	 * Sets no-resurrect-penalty flag.
+	 *
+	 */
+	@Getter
+	@Setter
 	private boolean isNoResurrectPenalty;
+	/**
+	 * 获取嘲讽仇恨。
+	 * Gets taunt hate.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int tauntHate;
+	/**
+	 * 获取效果仇恨。
+	 * Gets effect hate.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int effectHate;
-	private List<EffectTemplate> successEffects = new ArrayList<EffectTemplate>();
+	private final List<EffectTemplate> successEffects = new ArrayList<EffectTemplate>();
+	/**
+	 * 获取刻印数量。
+	 * Gets carved signet count.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int carvedSignet = 0;
+	/**
+	 * 获取印记爆发数量。
+	 * Gets signet burst count.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int signetBurstedCount = 0;
+	/**
+	 * 获取异常状态掩码。
+	 * Gets abnormal state mask.
+	 *
+	 */
+	@Getter
 	protected int abnormals;
 	private ActionObserver[] actionObserver;
 	float x, y, z;
 	int worldId, instanceId;
+	/**
+	 * 设置强制持续标记。
+	 * Sets forced duration flag.
+	 *
+	 */
+	@Setter
 	private boolean forcedDuration = false;
 	private boolean isForcedEffect = false;
+	/**
+	 * 获取强度。
+	 * Gets power.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int power = 10;
+	/**
+	 * 设置命中修正加成。
+	 * Sets accuracy mod boost.
+	 *
+	 */
+	@Getter
+	@Setter
 	private int accModBoost = 0;
 	private EffectResult effectResult = EffectResult.NORMAL;
 	private final AtomicBoolean allowGodstoneActivation = new AtomicBoolean(true);
@@ -167,15 +578,6 @@ public class Effect implements StatOwner {
 	 */
 	public void setAbnormal(int mask) {
 		abnormals |= mask;
-	}
-
-	/**
-	 * 获取异常状态掩码。
-	 * Gets abnormal state mask.
-	 *
-	 */
-	public int getAbnormals() {
-		return abnormals;
 	}
 
 	/**
@@ -319,15 +721,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取技能等级。
-	 * Gets skill level.
-	 *
-	 */
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	/**
 	 * 获取技能堆叠等级。
 	 * Gets skill stack level.
 	 *
@@ -346,57 +739,12 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取持续时间。
-	 * Gets duration.
-	 *
-	 */
-	public int getDuration() {
-		return duration;
-	}
-
-	/**
-	 * 设置持续时间。
-	 * Sets duration.
-	 *
-	 */
-	public void setDuration(int newDuration) {
-		this.duration = newDuration;
-	}
-
-	/**
-	 * 获取受影响者。
-	 * Gets the effected creature.
-	 *
-	 */
-	public Creature getEffected() {
-		return effected;
-	}
-
-	/**
-	 * 获取施法者。
-	 * Gets the effector.
-	 *
-	 */
-	public Creature getEffector() {
-		return effector;
-	}
-
-	/**
 	 * 是否被动。
 	 * Whether passive.
 	 *
 	 */
 	public boolean isPassive() {
 		return skillTemplate.isPassive();
-	}
-
-	/**
-	 * 设置主任务。
-	 * Sets main task.
-	 *
-	 */
-	public void setTask(Future<?> task) {
-		this.task = task;
 	}
 
 	/**
@@ -443,96 +791,6 @@ public class Effect implements StatOwner {
 		if (currentEffectTemplate != null) {
 			reserved1ByEffect.put(currentEffectTemplate, reserved1);
 		}
-	}
-
-	/**
-	 * 获取保留值 2。
-	 * Gets reserved value 2.
-	 *
-	 */
-	public int getReserved2() {
-		return reserved2;
-	}
-
-	/**
-	 * 设置保留值 2。
-	 * Sets reserved value 2.
-	 *
-	 */
-	public void setReserved2(int reserved2) {
-		this.reserved2 = reserved2;
-	}
-
-	/**
-	 * 获取保留值 3。
-	 * Gets reserved value 3.
-	 *
-	 */
-	public int getReserved3() {
-		return reserved3;
-	}
-
-	/**
-	 * 设置保留值 3。
-	 * Sets reserved value 3.
-	 *
-	 */
-	public void setReserved3(int reserved3) {
-		this.reserved3 = reserved3;
-	}
-
-	/**
-	 * 获取保留值 4。
-	 * Gets reserved value 4.
-	 *
-	 */
-	public int getReserved4() {
-		return reserved4;
-	}
-
-	/**
-	 * 设置保留值 4。
-	 * Sets reserved value 4.
-	 *
-	 */
-	public void setReserved4(int reserved4) {
-		this.reserved4 = reserved4;
-	}
-
-	/**
-	 * 获取保留值 5。
-	 * Gets reserved value 5.
-	 *
-	 */
-	public int getReserved5() {
-		return reserved5;
-	}
-
-	/**
-	 * 设置保留值 5。
-	 * Sets reserved value 5.
-	 *
-	 */
-	public void setReserved5(int reserved5) {
-		this.reserved5 = reserved5;
-	}
-
-	/**
-	 * 获取攻击状态。
-	 * Gets attack status.
-	 *
-	 */
-	public AttackStatus getAttackStatus() {
-		return attackStatus;
-	}
-
-	/**
-	 * 设置攻击状态。
-	 * Sets attack status.
-	 *
-	 */
-	public void setAttackStatus(AttackStatus attackStatus) {
-		this.attackStatus = attackStatus;
 	}
 
 	public AttackStatus getPeriodicAttackStatus(int position) {
@@ -600,13 +858,13 @@ public class Effect implements StatOwner {
 	public boolean isRangerBuff() {
 		int skillId = skillTemplate.getSkillId();
 		switch (skillId) {
-		case 796: // Strong Shots.
-		case 809: // Dodging.
-		case 813: // Focused Shots.
-		case 888: // Hunter's Might.
-		case 889: // Bestial Fury.
-		case 1053: // Aiming.
-		case 1099: // Hunter's Eye.
+		case 796: // 强化之眼 I / Strong Shots.
+		case 809: // 警戒之眼 I / Dodging.
+		case 813: // 攻击之眼 I / Focused Shots.
+		case 888: // 猎人的决心 I / Hunter's Might.
+		case 889: // 速射之眼 I / Bestial Fury.
+		case 1053: // 集中之眼 I / Aiming.
+		case 1099: // 透视之眼 I / Hunter's Eye.
 			return true;
 		default:
 			return false;
@@ -723,194 +981,6 @@ public class Effect implements StatOwner {
 		this.reservedInts[i - 1] = value;
 	}
 	/**
-	 * 是否触发子效果。
-	 * Whether to launch sub-effect.
-	 *
-	 */
-	public boolean isLaunchSubEffect() {
-		return launchSubEffect;
-	}
-	/**
-	 * 设置是否触发子效果。
-	 * Sets launch sub-effect flag.
-	 *
-	 */
-	public void setLaunchSubEffect(boolean launchSubEffect) {
-		this.launchSubEffect = launchSubEffect;
-	}
-	/**
-	 * 获取护盾防御值。
-	 * Gets shield defense value.
-	 *
-	 */
-	public int getShieldDefense() {
-		return shieldDefense;
-	}
-	/**
-	 * 设置护盾防御值。
-	 * Sets shield defense value.
-	 *
-	 */
-	public void setShieldDefense(int shieldDefense) {
-		this.shieldDefense = shieldDefense;
-	}
-	/**
-	 * 获取反射伤害。
-	 * Gets reflected damage.
-	 *
-	 */
-	public int getReflectedDamage() {
-		return this.reflectedDamage;
-	}
-
-	/**
-	 * 设置反射伤害。
-	 * Sets reflected damage.
-	 *
-	 */
-	public void setReflectedDamage(int value) {
-		this.reflectedDamage = value;
-	}
-
-	/**
-	 * 获取反射技能 ID。
-	 * Gets reflected skill id.
-	 *
-	 */
-	public int getReflectedSkillId() {
-		return this.reflectedSkillId;
-	}
-
-	/**
-	 * 设置反射技能 ID。
-	 * Sets reflected skill id.
-	 *
-	 */
-	public void setReflectedSkillId(int value) {
-		this.reflectedSkillId = value;
-	}
-
-	/**
-	 * 获取保护技能 ID。
-	 * Gets protected skill id.
-	 *
-	 */
-	public int getProtectedSkillId() {
-		return this.protectedSkillId;
-	}
-
-	/**
-	 * 设置保护技能 ID。
-	 * Sets protected skill id.
-	 *
-	 */
-	public void setProtectedSkillId(int skillId) {
-		this.protectedSkillId = skillId;
-	}
-
-	/**
-	 * 获取被保护伤害。
-	 * Gets protected damage.
-	 *
-	 */
-	public int getProtectedDamage() {
-		return this.protectedDamage;
-	}
-
-	/**
-	 * 设置被保护伤害。
-	 * Sets protected damage.
-	 *
-	 */
-	public void setProtectedDamage(int protectedDamage) {
-		this.protectedDamage = protectedDamage;
-	}
-
-	/**
-	 * 获取保护者 ID。
-	 * Gets protector id.
-	 *
-	 * @return ID
-	 */
-	public int getProtectorId() {
-		return this.protectorId;
-	}
-
-	/**
-	 * 设置保护者 ID。
-	 * Sets protector id.
-	 *
-	 * @param protectorId ID
-	 */
-	public void setProtectorId(int protectorId) {
-		this.protectorId = protectorId;
-	}
-	/**
-	 * 获取法术状态。
-	 * Gets spell status.
-	 *
-	 */
-	public SpellStatus getSpellStatus() {
-		return spellStatus;
-	}
-	/**
-	 * 设置法术状态。
-	 * Sets spell status.
-	 *
-	 */
-	public void setSpellStatus(SpellStatus spellStatus) {
-		this.spellStatus = spellStatus;
-	}
-	/**
-	 * 获取冲刺状态。
-	 * Gets dash status.
-	 *
-	 */
-	public DashStatus getDashStatus() {
-		return dashStatus;
-	}
-	/**
-	 * 设置冲刺状态。
-	 * Sets dash status.
-	 *
-	 */
-	public void setDashStatus(DashStatus dashStatus) {
-		this.dashStatus = dashStatus;
-	}
-	/**
-	 * 获取刻印数量。
-	 * Gets carved signet count.
-	 *
-	 */
-	public int getCarvedSignet() {
-		return this.carvedSignet;
-	}
-
-	/**
-	 * 设置刻印数量。
-	 * Sets carved signet count.
-	 *
-	 */
-	public void setCarvedSignet(int value) {
-		this.carvedSignet = value;
-	}
-	/**
-	 * 获取子效果。
-	 * Gets sub-effect.
-	 *
-	 */
-	public Effect getSubEffect() {
-		return subEffect;
-	}
-	/**
-	 * 设置子效果。
-	 * Sets sub-effect.
-	 *
-	 */
-	public void setSubEffect(Effect subEffect) {
-		this.subEffect = subEffect;
-	}
-	/**
 	 * 是否包含指定效果 ID。
 	 * Whether contains effect id.
 	 *
@@ -936,15 +1006,6 @@ public class Effect implements StatOwner {
 			}
 		}
 		return TransformType.NONE;
-	}
-
-	/**
-	 * 设置强制持续标记。
-	 * Sets forced duration flag.
-	 *
-	 */
-	public void setForcedDuration(boolean forcedDuration) {
-		this.forcedDuration = forcedDuration;
 	}
 
 	/**
@@ -1183,8 +1244,7 @@ public class Effect implements StatOwner {
 		}
 		try {
 			// 若效果为姿态，则从玩家移除姿态 / If effect is a stance, remove stance from player
-			if (effector instanceof Player) {
-				Player player = (Player) effector;
+			if (effector instanceof Player player) {
 				if (player.getController().getStanceSkillId() == getSkillId()) {
 					PacketSendUtility.sendPacket(player, new SM_PLAYER_STANCE(player, 0));
 					player.getController().startStance(0);
@@ -1240,9 +1300,6 @@ public class Effect implements StatOwner {
 		return failure;
 	}
 
-	public boolean isStopped() {
-		return isStopped;
-	}
 	/**
 	 * 停止相关任务。
 	 * Stops related tasks.
@@ -1277,14 +1334,6 @@ public class Effect implements StatOwner {
 		return remainingTime > 0 ? remainingTime : -1;
 	}
 	/**
-	 * 获取结束时间戳。
-	 * Gets end timestamp.
-	 *
-	 */
-	public long getEndTime() {
-		return endTime;
-	}
-	/**
 	 * 获取 PvP 伤害系数。
 	 * Gets PvP damage factor.
 	 *
@@ -1294,14 +1343,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取关联物品模板。
-	 * Gets related item template.
-	 *
-	 */
-	public ItemTemplate getItemTemplate() {
-		return itemTemplate;
-	}
-	/**
 	 * 加入受影响者控制器。
 	 * Adds to effected controller.
 	 *
@@ -1310,38 +1351,6 @@ public class Effect implements StatOwner {
 		if ((!addedToController) && (effected.getLifeStats() != null) && (!effected.getLifeStats().isAlreadyDead())) {
 			addedToController = effected.getEffectController().addEffect(this);
 		}
-	}
-	/**
-	 * 获取效果仇恨。
-	 * Gets effect hate.
-	 *
-	 */
-	public int getEffectHate() {
-		return effectHate;
-	}
-	/**
-	 * 设置效果仇恨。
-	 * Sets effect hate.
-	 *
-	 */
-	public void setEffectHate(int effectHate) {
-		this.effectHate = effectHate;
-	}
-	/**
-	 * 获取嘲讽仇恨。
-	 * Gets taunt hate.
-	 *
-	 */
-	public int getTauntHate() {
-		return tauntHate;
-	}
-	/**
-	 * 设置嘲讽仇恨。
-	 * Sets taunt hate.
-	 *
-	 */
-	public void setTauntHate(int tauntHate) {
-		this.tauntHate = tauntHate;
 	}
 	/**
 	 * 获取动作观察者。
@@ -1538,50 +1547,6 @@ public class Effect implements StatOwner {
 		return instanceId;
 	}
 	/**
-	 * 获取技能位移类型。
-	 * Gets skill move type.
-	 *
-	 */
-	public SkillMoveType getSkillMoveType() {
-		return skillMoveType;
-	}
-	/**
-	 * 设置技能位移类型。
-	 * Sets skill move type.
-	 *
-	 */
-	public void setSkillMoveType(SkillMoveType skillMoveType) {
-		this.skillMoveType = skillMoveType;
-	}
-	/**
-	 * 获取目标 X。
-	 * Gets target X.
-	 *
-	 * @return X
-	 */
-	public float getTargetX() {
-		return targetX;
-	}
-	/**
-	 * 获取目标 Y。
-	 * Gets target Y.
-	 *
-	 * @return Y
-	 */
-	public float getTargetY() {
-		return targetY;
-	}
-	/**
-	 * 获取目标 Z。
-	 * Gets target Z.
-	 *
-	 * @return Z
-	 */
-	public float getTargetZ() {
-		return targetZ;
-	}
-
-	/**
 	 * 设置目标位置（历史拼写）。
 	 * Sets target location (legacy spelling).
 	 *
@@ -1605,303 +1570,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 子效果是否因条件中止。
-	 * Whether sub-effect aborted by conditions.
-	 *
-	 */
-	public boolean isSubEffectAbortedBySubConditions() {
-		return this.subEffectAbortedBySubConditions;
-	}
-
-	/**
-	 * 设置经验加成标记。
-	 * Sets XP boost flag.
-	 *
-	 */
-	public void setXpBoost(boolean value) {
-		this.isXpBoost = value;
-	}
-
-	/**
-	 * 是否经验加成。
-	 * Whether XP boost.
-	 *
-	 */
-	public boolean isXpBoost() {
-		return this.isXpBoost;
-	}
-
-	/**
-	 * 设置 AP 加成标记。
-	 * Sets AP boost flag.
-	 *
-	 */
-	public void setApBoost(boolean value) {
-		this.isApBoost = value;
-	}
-
-	/**
-	 * 是否 AP 加成。
-	 * Whether AP boost.
-	 *
-	 */
-	public boolean isApBoost() {
-		return this.isApBoost;
-	}
-
-	/**
-	 * 设置掉落加成标记。
-	 * Sets drop boost flag.
-	 *
-	 */
-	public void setDrBoost(boolean value) {
-		this.isDrBoost = value;
-	}
-
-	/**
-	 * 是否掉落加成。
-	 * Whether drop boost.
-	 *
-	 */
-	public boolean isDrBoost() {
-		return this.isDrBoost;
-	}
-
-	/**
-	 * 设置 BDR 加成标记。
-	 * Sets BDR boost flag.
-	 *
-	 */
-	public void setBdrBoost(boolean value) {
-		this.isBdrBoost = value;
-	}
-
-	/**
-	 * 是否 BDR 加成。
-	 * Whether BDR boost.
-	 *
-	 */
-	public boolean isBdrBoost() {
-		return this.isBdrBoost;
-	}
-
-	/**
-	 * 设置鉴定加成标记。
-	 * Sets authorize boost flag.
-	 *
-	 */
-	public void setAuthorizeBoost(boolean value) {
-		this.isAuthorizeBoost = value;
-	}
-
-	/**
-	 * 是否鉴定加成。
-	 * Whether authorize boost.
-	 *
-	 */
-	public boolean isAuthorizeBoost() {
-		return this.isAuthorizeBoost;
-	}
-
-	/**
-	 * 设置附魔加成标记。
-	 * Sets enchant boost flag.
-	 *
-	 */
-	public void setEnchantBoost(boolean value) {
-		this.isEnchantBoost = value;
-	}
-
-	/**
-	 * 是否附魔加成。
-	 * Whether enchant boost.
-	 *
-	 */
-	public boolean isEnchantBoost() {
-		return this.isEnchantBoost;
-	}
-
-	/**
-	 * 设置附魔词条加成标记。
-	 * Sets enchant option boost flag.
-	 *
-	 */
-	public void setEnchantOptionBoost(boolean value) {
-		this.isEnchantOptionBoost = value;
-	}
-
-	/**
-	 * 是否附魔词条加成。
-	 * Whether enchant option boost.
-	 *
-	 */
-	public boolean isEnchantOptionBoost() {
-		return this.isEnchantOptionBoost;
-	}
-
-	/**
-	 * 设置伊顿掉落加成标记。
-	 * Sets Idun drop boost flag.
-	 *
-	 */
-	public void setIdunDropBoost(boolean value) {
-		this.isIdunDropBoost = value;
-	}
-
-	/**
-	 * 是否伊顿掉落加成。
-	 * Whether Idun drop boost.
-	 *
-	 */
-	public boolean isIdunDropBoost() {
-		return this.isIdunDropBoost;
-	}
-
-	/**
-	 * 设置死亡惩罚减免标记。
-	 * Sets no-death-penalty-reduce flag.
-	 *
-	 */
-	public void setNoDeathPenaltyReduce(boolean value) {
-		this.isNoDeathPenaltyReduce = value;
-	}
-
-	/**
-	 * 是否死亡惩罚减免。
-	 * Whether no death penalty reduce.
-	 *
-	 */
-	public boolean isNoDeathPenaltyReduce() {
-		return this.isNoDeathPenaltyReduce;
-	}
-
-	/**
-	 * 设置无死亡惩罚标记。
-	 * Sets no-death-penalty flag.
-	 *
-	 */
-	public void setNoDeathPenalty(boolean value) {
-		this.isNoDeathPenalty = value;
-	}
-
-	/**
-	 * 是否无死亡惩罚。
-	 * Whether no death penalty.
-	 *
-	 */
-	public boolean isNoDeathPenalty() {
-		return this.isNoDeathPenalty;
-	}
-
-	/**
-	 * 设置无复活惩罚标记。
-	 * Sets no-resurrect-penalty flag.
-	 *
-	 */
-	public void setNoResurrectPenalty(boolean value) {
-		this.isNoResurrectPenalty = value;
-	}
-
-	/**
-	 * 是否无复活惩罚。
-	 * Whether no resurrect penalty.
-	 *
-	 */
-	public boolean isNoResurrectPenalty() {
-		return this.isNoResurrectPenalty;
-	}
-
-	/**
-	 * 设置 HiPass 标记。
-	 * Sets HiPass flag.
-	 *
-	 */
-	public void setHiPass(boolean value) {
-		this.isHiPass = value;
-	}
-
-	/**
-	 * 是否 HiPass。
-	 * Whether HiPass.
-	 *
-	 */
-	public boolean isHiPass() {
-		return this.isHiPass;
-	}
-
-	/**
-	 * 设置回城冷却减免标记。
-	 * Sets return cooldown reduce flag.
-	 *
-	 */
-	public void setReturnCoolReduce(boolean value) {
-		this.isReturnCoolReduce = value;
-	}
-
-	/**
-	 * 是否回城冷却减免。
-	 * Whether return cooldown reduce.
-	 *
-	 */
-	public boolean isReturnCoolReduce() {
-		return this.isReturnCoolReduce;
-	}
-
-	/**
-	 * 设置奥德拉恢复提升标记。
-	 * Sets Odella recover increase flag.
-	 *
-	 */
-	public void setOdellaRecoverIncrease(boolean value) {
-		this.isOdellaRecoverIncrease = value;
-	}
-
-	/**
-	 * 是否奥德拉恢复提升。
-	 * Whether Odella recover increase.
-	 *
-	 */
-	public boolean isOdellaRecoverIncrease() {
-		return this.isOdellaRecoverIncrease;
-	}
-
-	/**
-	 * 设置冲刺飞行值消耗减免标记。
-	 * Sets sprint FP reduce flag.
-	 *
-	 */
-	public void setSprintFpReduce(boolean value) {
-		this.isSprintFpReduce = value;
-	}
-
-	/**
-	 * 是否冲刺飞行值消耗减免。
-	 * Whether sprint FP reduce.
-	 *
-	 */
-	public boolean isSprintFpReduce() {
-		return this.isSprintFpReduce;
-	}
-
-	/**
-	 * 设置死亡惩罚降低标记。
-	 * Sets death penalty reduce flag.
-	 *
-	 */
-	public void setDeathPenaltyReduce(boolean value) {
-		this.isDeathPenaltyReduce = value;
-	}
-
-	/**
-	 * 是否死亡惩罚降低。
-	 * Whether death penalty reduce.
-	 *
-	 */
-	public boolean isDeathPenaltyReduce() {
-		return this.isDeathPenaltyReduce;
-	}
-
-	/**
 	 * 检查全部在用装备条件。
 	 * Check all in-use equipment conditions.
 	 *
@@ -1909,7 +1577,7 @@ public class Effect implements StatOwner {
 	 */
 	private boolean useEquipmentConditionsCheck() {
 		Conditions useEquipConditions = skillTemplate.getUseEquipmentconditions();
-		return useEquipConditions != null ? useEquipConditions.validate(this) : true;
+		return useEquipConditions == null || useEquipConditions.validate(this);
 	}
 
 	/**
@@ -1977,24 +1645,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 设置受伤取消标记。
-	 * Sets cancel-on-damage flag.
-	 *
-	 */
-	public void setCancelOnDmg(boolean value) {
-		this.isCancelOnDmg = value;
-	}
-
-	/**
-	 * 是否受伤取消。
-	 * Whether cancel on damage.
-	 *
-	 */
-	public boolean isCancelOnDmg() {
-		return this.isCancelOnDmg;
-	}
-
-	/**
 	 * 结束全部效果模板。
 	 * Ends all effect templates.
 	 *
@@ -2020,51 +1670,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 是否延迟伤害。
-	 * Whether delayed damage.
-	 *
-	 */
-	public boolean isDelayedDamage() {
-		return this.isDelayedDamage;
-	}
-
-	/**
-	 * 设置延迟伤害标记。
-	 * Sets delayed damage flag.
-	 *
-	 */
-	public void setDelayedDamage(boolean value) {
-		this.isDelayedDamage = value;
-	}
-
-	/**
-	 * 是否宠物指令。
-	 * Whether pet order.
-	 *
-	 */
-	public boolean isPetOrder() {
-		return this.isPetOrder;
-	}
-
-	/**
-	 * 设置宠物指令标记。
-	 * Sets pet order flag.
-	 *
-	 */
-	public void setPetOrder(boolean value) {
-		this.isPetOrder = value;
-	}
-
-	/**
-	 * 是否召唤中。
-	 * Whether summoning.
-	 *
-	 */
-	public boolean isSummoning() {
-		return this.isSummoning;
-	}
-
-	/**
 	 * 设置召唤中标记（历史拼写）。
 	 * Sets summoning flag (legacy spelling).
 	 *
@@ -2077,23 +1682,6 @@ public class Effect implements StatOwner {
 		return skill.getReqDispelCount();
 	}
 	/**
-	 * 获取强度。
-	 * Gets power.
-	 *
-	 */
-	public int getPower() {
-		return power;
-	}
-	/**
-	 * 设置强度。
-	 * Sets power.
-	 *
-	 */
-	public void setPower(int power) {
-		this.power = power;
-	}
-
-	/**
 	 * 削减强度。
 	 * Removes power amount.
 	 *
@@ -2101,83 +1689,6 @@ public class Effect implements StatOwner {
 	public int removePower(int power) {
 		this.power -= power;
 		return this.power;
-	}
-
-	/**
-	 * 设置命中修正加成。
-	 * Sets accuracy mod boost.
-	 *
-	 */
-	public void setAccModBoost(int accModBoost) {
-		this.accModBoost = accModBoost;
-	}
-
-	/**
-	 * 获取命中修正加成。
-	 * Gets accuracy mod boost.
-	 *
-	 */
-	public int getAccModBoost() {
-		return this.accModBoost;
-	}
-
-	/**
-	 * 是否隐身效果。
-	 * Whether hide effect.
-	 *
-	 */
-	public boolean isHideEffect() {
-		return isHideEffect;
-	}
-
-	/**
-	 * 是否麻痹效果。
-	 * Whether paralyze effect.
-	 *
-	 */
-	public boolean isParalyzeEffect() {
-		return isParalyzeEffect;
-	}
-
-	/**
-	 * 是否庇护效果。
-	 * Whether sanctuary effect.
-	 *
-	 */
-	public boolean isSanctuaryEffect() {
-		return isSanctuaryEffect;
-	}
-	/**
-	 * 是否伤害效果。
-	 * Whether damage effect.
-	 *
-	 */
-	public boolean isDamageEffect() {
-		return isDamageEffect;
-	}
-	/**
-	 * 设置伤害效果标记。
-	 * Sets damage effect flag.
-	 *
-	 */
-	public void setDamageEffect(boolean isDamageEffect) {
-		this.isDamageEffect = isDamageEffect;
-	}
-	/**
-	 * 获取印记爆发数量。
-	 * Gets signet burst count.
-	 *
-	 */
-	public int getSignetBurstedCount() {
-		return signetBurstedCount;
-	}
-	/**
-	 * 设置印记爆发数量。
-	 * Sets signet burst count.
-	 *
-	 */
-	public void setSignetBurstedCount(int signetBurstedCount) {
-		this.signetBurstedCount = signetBurstedCount;
 	}
 
 	/**
@@ -2199,34 +1710,19 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取 MP 护盾值。
-	 * Gets MP shield value.
-	 *
-	 */
-	public int getMpShield() {
-		return this.mpShield;
-	}
-
-	/**
-	 * 设置 MP 护盾值。
-	 * Sets MP shield value.
-	 *
-	 */
-	public void setMpShield(int mpShield) {
-		this.mpShield = mpShield;
-	}
-
-	private boolean isPhysicalState = false;
-	private boolean isMagicalState = false;
-
-	/**
 	 * 是否物理控制状态。
 	 * Whether physical state.
 	 *
 	 */
-	public boolean isPhysicalState() {
-		return isPhysicalState;
-	}
+	@Getter
+	private boolean isPhysicalState = false;
+	/**
+	 * 是否魔法控制状态。
+	 * Whether magical state.
+	 *
+	 */
+	@Getter
+	private boolean isMagicalState = false;
 
 	/**
 	 * 设置物理控制状态标记。
@@ -2235,15 +1731,6 @@ public class Effect implements StatOwner {
 	 */
 	public void setIsPhysicalState(boolean isPhysicalState) {
 		this.isPhysicalState = isPhysicalState;
-	}
-
-	/**
-	 * 是否魔法控制状态。
-	 * Whether magical state.
-	 *
-	 */
-	public boolean isMagicalState() {
-		return isMagicalState;
 	}
 
 	/**

@@ -94,7 +94,7 @@ public class PvPRewardService {
 			}
 		} else {
 			List<Integer> abyssItemsList = getAdvancedReward(winner);
-			itemId = ((Integer) abyssItemsList.get(Rnd.get(abyssItemsList.size()))).intValue();
+			itemId = abyssItemsList.get(Rnd.get(abyssItemsList.size())).intValue();
 		}
 		return itemId;
 	}

@@ -53,7 +53,7 @@ public class CircusSchedule {
 		CircusSchedule cs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/circus_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			cs = (CircusSchedule) JAXBUtil.deserialize(xml, CircusSchedule.class);
+			cs = JAXBUtil.deserialize(xml, CircusSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize circus", e);
 		}

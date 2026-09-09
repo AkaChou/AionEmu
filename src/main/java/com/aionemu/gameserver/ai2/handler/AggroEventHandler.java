@@ -59,8 +59,7 @@ public class AggroEventHandler {
 	public static boolean onCreatureNeedsSupport(NpcAI2 npcAI, Creature notMyTarget) {
 		Npc owner = npcAI.getOwner();
 		VisibleObject myTarget = notMyTarget.getTarget();
-		if (myTarget instanceof Creature) {
-			Creature targetCreature = (Creature) myTarget;
+		if (myTarget instanceof Creature targetCreature) {
 			if (canReceiveSupport(owner, notMyTarget, targetCreature, owner.getAggroRange(),
 					GameWorldServices.geoService()::canSee)) {
 				if (npcAI.poll(AIQuestion.CAN_SHOUT)) {
@@ -110,8 +109,7 @@ public class AggroEventHandler {
 			return false;
 		}
 		VisibleObject target = attacker.getTarget();
-		if (target != null && target instanceof Player) {
-			Player playerTarget = (Player) target;
+		if (target != null && target instanceof Player playerTarget) {
 			if (!owner.isEnemy(playerTarget) && owner.isEnemy(attacker)
 					&& MathUtil.isInRange(owner, playerTarget, owner.getAggroRange())
 					&& GameWorldServices.geoService().canSee(owner, attacker)) {
@@ -130,7 +128,7 @@ public class AggroEventHandler {
 
 		private Npc aggressive;
 		private Creature target;
-		private boolean broadcast;
+		private final boolean broadcast;
 
 		/**
 		 * 构造延迟仇恨通知任务。

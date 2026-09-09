@@ -20,6 +20,8 @@ import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 宠物公共数据。
@@ -30,23 +32,60 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	private int decoration;
 	private String name;
 	private final int petId;
+	/** 设置 birthday / Sets the birthday */
+	@Setter
 	private Timestamp birthday;
+	/** 返回 feed progress / Returns the feed progress */
+	@Getter
 	PetFeedProgress feedProgress = null;
+	/** 返回 doping bag / Returns the doping bag */
+	@Getter
 	PetDopingBag dopingBag = null;
+	/** 设置 cancel feed / Sets the cancel feed */
+	@Setter
 	private volatile boolean cancelFeed = false;
+	/**
+	 * @return 是否处于喂食时间 / Whether feeding time
+	 */
+	@Getter
+	@Setter
 	private boolean feedingTime = true;
+	/** 返回 curent time / Returns the curent time */
+	@Getter
+	@Setter
 	private long curentTime;
 	private final int petObjectId;
+	/** 返回 master object id / Returns the master object id */
+	@Getter
 	private final int masterObjectId;
 	private long startMoodTime;
 	private int shuggleCounter;
 	private int lastSentPoints;
+	/** 返回 mood cd started / Returns the mood cd started */
+	@Getter
+	@Setter
 	private long moodCdStarted;
+	/** 返回 gift cd started / Returns the gift cd started */
+	@Getter
+	@Setter
 	private long giftCdStarted;
-	private int expireTime;
+	private final int expireTime;
+	/** 返回消失时间 / Returns the despawn time*/
+	@Getter
+	@Setter
 	private Timestamp despawnTime;
+	/**
+	 * @return 是否正在拾取 / Whether looting
+	 */
+	@Getter
 	private boolean isLooting = false;
+	/**
+	 * @return 是否正在施放增益 / Whether buffing
+	 */
+	@Getter
 	private boolean isBuffing = false;
+	/** 是否出售 / Whether selling */
+	@Getter
 	private boolean isSelling = false;
 
 	public PetCommonData(int petId, int masterObjectId, int expireTime) {
@@ -104,46 +143,14 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		return birthday;
 	}
 
-	/** 设置 birthday / Sets the birthday */
-	public void setBirthday(Timestamp birthday) {
-		this.birthday = birthday;
-	}
-
-	/** 返回 curent time / Returns the curent time */
-	public long getCurentTime() {
-		return curentTime;
-	}
-
-	/** 设置 curent time / Sets the curent time */
-	public void setCurentTime(long curentTime) {
-		this.curentTime = curentTime;
-	}
-
 	/** 设置 is feeding time / Sets the is feeding time */
 	public void setIsFeedingTime(boolean food) {
 		this.feedingTime = food;
 	}
 
-	/**
-	 * @return 是否处于喂食时间 / Whether feeding time
-	 */
-	public boolean isFeedingTime() {
-		return feedingTime;
-	}
-
 	/** 返回 cancel feed / Returns the cancel feed */
 	public boolean getCancelFeed() {
 		return cancelFeed;
-	}
-
-	/** 设置 cancel feed / Sets the cancel feed */
-	public void setCancelFeed(boolean cancelFeed) {
-		this.cancelFeed = cancelFeed;
-	}
-
-	/** 设置 feeding time / Sets the feeding time */
-	public void setFeedingTime(boolean feedingTime) {
-		this.feedingTime = feedingTime;
 	}
 
 	/** 设置 re food time / Sets the re food time */
@@ -173,11 +180,6 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	/** 返回对象 ID / Returns the object id */
 	public int getObjectId() {
 		return petObjectId;
-	}
-
-	/** 返回 master object id / Returns the master object id */
-	public int getMasterObjectId() {
-		return masterObjectId;
 	}
 
 	/** 返回模板 ID / Returns the template id */
@@ -250,16 +252,6 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		this.startMoodTime = startMoodTime;
 	}
 
-	/** 返回 mood cd started / Returns the mood cd started */
-	public long getMoodCdStarted() {
-		return moodCdStarted;
-	}
-
-	/** 设置 mood cd started / Sets the mood cd started */
-	public void setMoodCdStarted(long moodCdStarted) {
-		this.moodCdStarted = moodCdStarted;
-	}
-
 	/** 返回 mood remaining time / Returns the mood remaining time */
 	public int getMoodRemainingTime() {
 		long stop = moodCdStarted + 600000;
@@ -269,16 +261,6 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 			return 0;
 		}
 		return (int) (remains / 1000);
-	}
-
-	/** 返回 gift cd started / Returns the gift cd started */
-	public long getGiftCdStarted() {
-		return giftCdStarted;
-	}
-
-	/** 设置 gift cd started / Sets the gift cd started */
-	public void setGiftCdStarted(long giftCdStarted) {
-		this.giftCdStarted = giftCdStarted;
 	}
 
 	/** 返回 gift remaining time / Returns the gift remaining time */
@@ -292,16 +274,6 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		return (int) (remains / 1000);
 	}
 
-	/** 返回消失时间 / Returns the despawn time*/
-	public Timestamp getDespawnTime() {
-		return despawnTime;
-	}
-
-	/** 设置 despawn time / Sets the despawn time */
-	public void setDespawnTime(Timestamp despawnTime) {
-		this.despawnTime = despawnTime;
-	}
-
 	/**
 	 * 保存宠物心情数据。
 	 * Save pet mood data
@@ -310,26 +282,9 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(this);
 	}
 
-	/** 返回 feed progress / Returns the feed progress */
-	public PetFeedProgress getFeedProgress() {
-		return feedProgress;
-	}
-
 	/** 设置 is looting / Sets the is looting */
 	public void setIsLooting(boolean isLooting) {
 		this.isLooting = isLooting;
-	}
-
-	/**
-	 * @return 是否正在拾取 / Whether looting
-	 */
-	public boolean isLooting() {
-		return this.isLooting;
-	}
-
-	/** 返回 doping bag / Returns the doping bag */
-	public PetDopingBag getDopingBag() {
-		return dopingBag;
 	}
 
 	/** 设置 is buffing / Sets the is buffing */
@@ -337,21 +292,9 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		this.isBuffing = isBuffing;
 	}
 
-	/**
-	 * @return 是否正在施放增益 / Whether buffing
-	 */
-	public boolean isBuffing() {
-		return this.isBuffing;
-	}
-
 	/** 设置 is selling / Sets the is selling */
 	public void setIsSelling(boolean isSelling) {
 		this.isSelling = isSelling;
-	}
-
-	/** 是否出售 / Whether selling */
-	public boolean isSelling() {
-		return this.isSelling;
 	}
 
 	/** 获取过期时间。 / Returns the expire time. */

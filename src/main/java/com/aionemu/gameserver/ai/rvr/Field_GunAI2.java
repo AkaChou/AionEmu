@@ -30,14 +30,14 @@ public class Field_GunAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
-	private AtomicBoolean canUse = new AtomicBoolean(true);
-	
+
+	private final AtomicBoolean canUse = new AtomicBoolean(true);
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -66,7 +66,7 @@ public class Field_GunAI2 extends NpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
 			int morphSkill = getMorphSkill();
@@ -75,23 +75,23 @@ public class Field_GunAI2 extends NpcAI2
 			AI2Actions.scheduleRespawn(this);
 		}
 	}
-	
+
 	private int getMorphSkill() {
 		switch (getNpcId()) {
-			case 209472: //Baltasar Hill Field Gun.
-			case 831339: //Asmodians Field Gun.
+			case 209472: // 可以搭乘的贝达扎尔村大炮 / Baltasar Hill Field Gun.
+			case 831339: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
 				return 0x4F8D3C;
-			case 209471: //Jamanok Inn Field Gun.
-			case 831338: //Elyos Field Gun.
+			case 209471: // 可以搭乘的扎马努克旅馆大炮 / Jamanok Inn Field Gun.
+			case 831338: // 可以搭乘的天族大炮 / Elyos Field Gun.
 				return 0x4F8C3C;
 		}
 		return 0;
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

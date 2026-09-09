@@ -20,5 +20,5 @@ public enum AttackType {
 	/** 魔法技能 / Magical skill */
 	MAGICAL_SKILL,
 	/** 全部技能 / All skills */
-	ALL_SKILL;
+	ALL_SKILL
 }

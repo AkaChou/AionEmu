@@ -1,11 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.model.GameEngine;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameEnginesLifecycleTest {
 
@@ -58,7 +54,7 @@ class GameEnginesLifecycleTest {
         assertEquals(4, submittedTasks.size());
         assertEquals(List.of("quest", "instance", "ai", "chat"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -129,7 +125,7 @@ class GameEnginesLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("engine", "engine"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -195,53 +191,37 @@ class GameEnginesLifecycleTest {
         }
     }
 
-    private static final class RecordingEngine implements GameEngine {
+	private record RecordingEngine(String name, List<String> events) implements GameEngine {
 
-        private final String name;
-        private final List<String> events;
+		@Override
+		public void load(CountDownLatch progressLatch) {
+			events.add(name);
+			progressLatch.countDown();
+		}
 
-        private RecordingEngine(String name, List<String> events) {
-            this.name = name;
-            this.events = events;
-        }
+		@Override
+		public void shutdown() {
+		}
+	}
 
-        @Override
-        public void load(CountDownLatch progressLatch) {
-            events.add(name);
-            progressLatch.countDown();
-        }
-
-        @Override
-        public void shutdown() {
-        }
-    }
-
-    private static final class BlockingEngine implements GameEngine {
-
-        private final CountDownLatch allStarted;
-        private final CountDownLatch release;
-
-        private BlockingEngine(CountDownLatch allStarted, CountDownLatch release) {
-            this.allStarted = allStarted;
-            this.release = release;
-        }
+    private record BlockingEngine(CountDownLatch allStarted, CountDownLatch release) implements GameEngine {
 
         @Override
-        public void load(CountDownLatch progressLatch) {
-            allStarted.countDown();
-            try {
-                release.await();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } finally {
-                progressLatch.countDown();
+            public void load(CountDownLatch progressLatch) {
+                allStarted.countDown();
+                try {
+                    release.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    progressLatch.countDown();
+                }
+            }
+
+            @Override
+            public void shutdown() {
             }
         }
-
-        @Override
-        public void shutdown() {
-        }
-    }
 
     private static final class FailingOnceEngine implements GameEngine {
 

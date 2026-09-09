@@ -28,7 +28,7 @@ public enum PetFunctionType {
 	/** 翅膀。 / Wing. */
 	WING(-2);
 
-	private short id;
+	private final short id;
 	private boolean isPlayerFunc = false;
 
 	PetFunctionType(int id, boolean isPlayerFunc) {

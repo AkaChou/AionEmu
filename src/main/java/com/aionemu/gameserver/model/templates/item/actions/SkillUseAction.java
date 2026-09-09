@@ -27,6 +27,7 @@ import com.aionemu.gameserver.skillengine.effect.SummonEffect;
 import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 技能 Use 动作模板（静态数据/XML）。
@@ -38,29 +39,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlType(name = "SkillUseAction")
 public class SkillUseAction extends AbstractItemAction {
 
+	/**
+	 * 获取 skillid 属性值。
+	 * Gets the value of the skillid property
+	 */
+	@Getter
 	@XmlAttribute
 	protected int skillid;
+	/**
+	 * 获取 level 属性值。
+	 * Gets the value of the level property
+	 */
+	@Getter
 	@XmlAttribute
 	protected int level;
 	@XmlAttribute(required = false)
 	private Integer mapid;
 	boolean teleportBack = false;
-
-	 /**
-	  * 获取 skillid 属性值。
-	  * Gets the value of the skillid property
-	  */
-	public int getSkillid() {
-		return skillid;
-	}
-
-	 /**
-	  * 获取 level 属性值。
-	  * Gets the value of the level property
-	  */
-	public int getLevel() {
-		return level;
-	}
 
 	/**
 	 * @return 是否允许执行。 / Whether act
@@ -140,7 +135,6 @@ public class SkillUseAction extends AbstractItemAction {
 
 						skill.setItemObjectId(parentItem.getObjectId());
 						skill.useSkill();
-
 					}
 
 					/** 拒绝请求 / Deny Request */
@@ -169,7 +163,6 @@ public class SkillUseAction extends AbstractItemAction {
 							new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_ROUND_RETURN_ITEM_ACCEPT_MOVE_DONT_RETURN,
 									parentItem.getObjectId(), 0, new DescriptionId(parentItem.getNameId())));
 				}
-
 			} else {
 				player.getController().cancelUseItem();
 				player.setUsingItem(parentItem);

@@ -15,8 +15,8 @@ import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 
 public class BrokerRecipeFilter extends BrokerFilter {
 
-	private int craftSkillId;
-	private int[] masks;
+	private final int craftSkillId;
+	private final int[] masks;
 
 	/**
 	 * @param craftSkillId 生活技能 ID / craft skill id

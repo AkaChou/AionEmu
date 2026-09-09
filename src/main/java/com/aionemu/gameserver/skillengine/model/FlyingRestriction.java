@@ -18,5 +18,5 @@ public enum FlyingRestriction {
 	/** 仅飞行 / Fly only */
 	FLY,
 	/** 仅地面 / Ground only */
-	GROUND;
+	GROUND
 }

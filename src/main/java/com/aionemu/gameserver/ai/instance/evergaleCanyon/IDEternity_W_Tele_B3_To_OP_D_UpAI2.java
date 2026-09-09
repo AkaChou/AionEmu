@@ -26,28 +26,27 @@ public class IDEternity_W_Tele_B3_To_OP_D_UpAI2 extends ActionItemNpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-			final Player player = (Player) creature;
-        	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
+        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
+			if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
         		if (player.getCommonData().getRace() == Race.ELYOS) {
 					IDEternity_W_Tele_B3_To_OP_L_Up();
 				}
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
@@ -56,7 +55,7 @@ public class IDEternity_W_Tele_B3_To_OP_D_UpAI2 extends ActionItemNpcAI2
 			break;
         }
 	}
-	
+
 	private void IDEternity_W_Tele_B3_To_OP_L_Up() {
 		despawnNpc(835290);
 		despawnNpc(835454);
@@ -64,7 +63,7 @@ public class IDEternity_W_Tele_B3_To_OP_D_UpAI2 extends ActionItemNpcAI2
 		spawn(835278, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 257);
 		spawn(835453, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 323);
     }
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
@@ -73,7 +72,7 @@ public class IDEternity_W_Tele_B3_To_OP_D_UpAI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

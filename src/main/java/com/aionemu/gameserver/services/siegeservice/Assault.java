@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
+import lombok.Getter;
 
 /**
  * 攻城突击基类，定义突击开始/结束流程。
@@ -15,6 +16,13 @@ public abstract class Assault<siege extends Siege<?>> {
 	protected final SiegeLocation siegeLocation;
 	protected final int locationId;
 	protected final SiegeNpc boss;
+	/**
+	 * 返回本次突击所在世界 ID。
+	 * Returns the world id of this assault.
+	 *
+	 * @return 世界 ID / world id
+	 */
+	@Getter
 	protected final int worldId;
 	protected Future<?> dredgionTask;
 	protected Future<?> spawnTask;
@@ -24,16 +32,6 @@ public abstract class Assault<siege extends Siege<?>> {
 		this.boss = siege.getBoss();
 		this.locationId = siege.getSiegeLocationId();
 		this.worldId = siege.getSiegeLocation().getWorldId();
-	}
-
-	/**
-	 * 返回本次突击所在世界 ID。
-	 * Returns the world id of this assault.
-	 *
-	 * @return 世界 ID / world id
-	 */
-	public int getWorldId() {
-		return worldId;
 	}
 
 	/**

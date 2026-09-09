@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 风道模板（静态数据/XML）。
@@ -16,33 +18,25 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WindFlight")
+@NoArgsConstructor
 public class WindstreamTemplate {
+	/**
+	 * 获取 locations 属性值。
+	 * Gets the value of the locations property
+	 */
+	@Getter
 	@XmlElement(required = true)
 	protected StreamLocations locations;
+	/**
+	 * 获取 mapid 属性值。
+	 * Gets the value of the mapid property
+	 */
+	@Getter
 	@XmlAttribute
 	protected int mapid;
-
-	public WindstreamTemplate() {
-	}
 
 	public WindstreamTemplate(int mapId, List<Location2D> locations) {
 		this.mapid = mapId;
 		this.locations = new StreamLocations(locations);
-	}
-
-	 /**
-	  * 获取 locations 属性值。
-	  * Gets the value of the locations property
-	  */
-	public StreamLocations getLocations() {
-		return locations;
-	}
-
-	 /**
-	  * 获取 mapid 属性值。
-	  * Gets the value of the mapid property
-	  */
-	public int getMapid() {
-		return mapid;
 	}
 }

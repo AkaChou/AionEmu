@@ -12,6 +12,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
+import lombok.Getter;
 
 /**
  * HarmonyArena 奖励，用于副本相关逻辑。
@@ -19,7 +20,9 @@ import java.util.ArrayList;
  */
 
 public class HarmonyArenaReward extends PvPArenaReward {
-	private List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
+	/** 返回组 / Returns the groups*/
+	@Getter
+	private final List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
 
 	public HarmonyArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId, instance);
@@ -64,11 +67,6 @@ public class HarmonyArenaReward extends PvPArenaReward {
 	/** 添加 harmony group / Adds harmony group */
 	public void addHarmonyGroup(HarmonyGroupReward reward) {
 		groups.add(reward);
-	}
-
-	/** 返回组 / Returns the groups*/
-	public List<HarmonyGroupReward> getGroups() {
-		return groups;
 	}
 
 	/** 发送数据包。 / Send packet. */

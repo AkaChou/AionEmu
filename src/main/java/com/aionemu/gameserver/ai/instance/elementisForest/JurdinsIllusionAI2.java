@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("jurdins_illusion")
 public class JurdinsIllusionAI2 extends GeneralNpcAI2 {
 
-	private AtomicBoolean isSpawned = new AtomicBoolean(false);
+	private final AtomicBoolean isSpawned = new AtomicBoolean(false);
 
 	@Override
 	protected void handleDialogStart(Player player) {

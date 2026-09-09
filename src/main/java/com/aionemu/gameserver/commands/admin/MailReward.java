@@ -37,7 +37,8 @@ public class MailReward extends AdminCommand
             PacketSendUtility.sendMessage(admin, "Parameter must be an integer, or cancel.");
             return;
         }
-        GameFeatureServices.systemMailService().sendTemplateRewardMail(param, admin.getCommonData());
+		GameFeatureServices.systemMailService();
+	    SystemMailService.sendTemplateRewardMail(param, admin.getCommonData());
     }
 
     /**

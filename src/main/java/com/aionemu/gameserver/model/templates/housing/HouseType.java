@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.housing;
 
+import lombok.Getter;
+
 /**
  * 房屋类型枚举。
  * House Type enumeration.
@@ -18,29 +20,23 @@ public enum HouseType {
 	/** 宫殿 / Palace. */
 	PALACE(4, 4, "s");
 
-	private HouseType(int index, int id, String abbrev) {
+	HouseType(int index, int id, String abbrev) {
 		this.abbrev = abbrev;
 		this.limitTypeIndex = index;
 		this.id = id;
 	}
 
-	private String abbrev;
-	private int limitTypeIndex;
-	private int id;
+	private final String abbrev;
+	/** 返回 limit type index / Returns the limit type index */
+	@Getter
+	private final int limitTypeIndex;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
 
 	/** 返回 abbreviation / Returns the abbreviation */
 	public String getAbbreviation() {
 		return abbrev;
-	}
-
-	/** 返回 limit type index / Returns the limit type index */
-	public int getLimitTypeIndex() {
-		return limitTypeIndex;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 
 	/** 值。 / Value. */

@@ -16,5 +16,5 @@ public enum ProvokeType {
 	/** 攻击时 / On attack */
 	ATTACK,
 	/** 被攻击时 / When attacked */
-	ATTACKED;
+	ATTACKED
 }

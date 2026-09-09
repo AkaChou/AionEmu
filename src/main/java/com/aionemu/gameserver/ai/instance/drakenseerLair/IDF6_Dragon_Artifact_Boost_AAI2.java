@@ -28,8 +28,8 @@ public class IDF6_Dragon_Artifact_Boost_AAI2 extends NpcAI2
 	private Npc IDF6DragonGate;
 	private boolean canThink = true;
 	private int artifactBoostPhase = 0;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -39,7 +39,7 @@ public class IDF6_Dragon_Artifact_Boost_AAI2 extends NpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 99 && artifactBoostPhase < 1) {
 			artifactBoostPhase = 1;
@@ -58,7 +58,7 @@ public class IDF6_Dragon_Artifact_Boost_AAI2 extends NpcAI2
 			startIDF6DragonRaidA1();
 		}
 	}
-	
+
    /**
 	 * 发起龙族突袭 A 阶段。
 	 * Dragon Raid A
@@ -79,19 +79,19 @@ public class IDF6_Dragon_Artifact_Boost_AAI2 extends NpcAI2
 		dragonRaid((Npc)spawn(220435, 243.8898f, 288.99213f, 318.18826f, (byte) 115), 272.1099f, 271.96097f, 318.85516f, false);
 		dragonRaid((Npc)spawn(220438, 243.8898f, 288.99213f, 318.18826f, (byte) 115), 272.1099f, 271.96097f, 318.85516f, false);
 	}
-	
+
 	private void dragonRaid(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

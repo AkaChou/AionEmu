@@ -10,6 +10,7 @@ import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatus;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatusObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 一次性技能暴击加成：在有限次数内强制/提升攻击暴击判定。
@@ -23,6 +24,11 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 
 	@XmlAttribute
 	private int count;
+	/**
+	 * 是否为百分比暴击加成。
+	 * Whether the critical boost is percent-based.
+	 */
+	@Getter
 	@XmlAttribute
 	private boolean percent;
 
@@ -72,13 +78,5 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 
 		AttackCalcObserver observer = effect.getAttackStatusObserver(position);
 		effect.getEffected().getObserveController().removeAttackCalcObserver(observer);
-	}
-
-	/**
-	 * 是否为百分比暴击加成。
-	 * Whether the critical boost is percent-based.
-	 */
-	public boolean isPercent() {
-		return percent;
 	}
 }

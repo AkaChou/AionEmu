@@ -27,7 +27,7 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
 		switch (getNpcId()) {
-		    case 702660: //Activated Balaur Teleporter.
+		    case 702660: // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
 		        switch (player.getWorldId()) {
 		            case 300240000: //Aturam Sky Fortress.
 				        if (dialogId == 10000) {
@@ -68,7 +68,7 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 				    break;
 			    }
 			break;
-			case 702664: //Activated Balaur Teleporter.
+			case 702664: // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
 		        switch (player.getWorldId()) {
 		            case 300240000: //Aturam Sky Fortress.
 				        if (dialogId == 10000) {
@@ -95,7 +95,7 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 				    break;
 			    }
 			break;
-			case 730392: //Activated Balaur Teleporter.
+			case 730392: // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
 		        switch (player.getWorldId()) {
 		            case 300240000: //Aturam Sky Fortress.
 				        if (dialogId == 10000) {

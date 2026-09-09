@@ -9,6 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_GROUP_MEMBER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家重连事件（团队2）。
@@ -16,15 +17,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
 	private final Player player;
-
-	public PlayerConnectedEvent(PlayerGroup group, Player player) {
-		this.group = group;
-		this.player = player;
-	}
 
 	/** 处理事件。 / Handle event. */
 	@Override

@@ -9,5 +9,5 @@ public enum TowerOfEternityStateType {
 	/** 打开 / Open. */
 	OPEN,
 	/** 关闭 / Closed. */
-	CLOSED;
+	CLOSED
 }

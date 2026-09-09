@@ -230,7 +230,7 @@ class Quest1112ProductionFlowTest {
 		setField(AionObject.class, player, "objectId", PLAYER_ID);
 		QuestStateList states = new QuestStateList();
 		QuestState state = new QuestState(QUEST_ID, status, packedVariables, 0,
-			(Timestamp) null, null, null);
+			null, null, null);
 		state.setPersistentState(PersistentState.UPDATED);
 		states.addQuest(QUEST_ID, state);
 		setField(Player.class, player, "questStateList", states);
@@ -465,26 +465,21 @@ class Quest1112ProductionFlowTest {
 		}
 	}
 
-	private static final class RecordingInventoryPort implements QuestInventoryPort {
-		private final List<String> calls;
+    private record RecordingInventoryPort(List<String> calls) implements QuestInventoryPort {
 
-		private RecordingInventoryPort(List<String> calls) {
-			this.calls = calls;
-		}
+        @Override
+        public void preflight(Connection connection, QuestSnapshot snapshot,
+                              List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
+            calls.add("inventory.preflight");
+        }
 
-		@Override
-		public void preflight(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
-			calls.add("inventory.preflight");
-		}
-
-		@Override
-		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
-			calls.add("inventory.apply");
-			return QuestTransactionParticipant.none();
-		}
-	}
+        @Override
+        public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+                                                 List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
+            calls.add("inventory.apply");
+            return QuestTransactionParticipant.none();
+        }
+    }
 
 	private static final class RecordingCurrencyPort implements QuestCurrencyPort {
 		private final List<String> calls;

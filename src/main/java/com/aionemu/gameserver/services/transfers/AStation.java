@@ -10,10 +10,11 @@ import lombok.Getter;
  */
 public class AStation {
 	@Getter
-	private int serverId;
+	private final int serverId;
 	@Getter
-	private int iconSet;
-	private int minlevel, maxlevel;
+	private final int iconSet;
+	private final int minlevel;
+	private final int maxlevel;
 
 	/**
 	 * 构造跨服站点配置。

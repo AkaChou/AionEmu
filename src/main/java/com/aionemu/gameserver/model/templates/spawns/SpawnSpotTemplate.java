@@ -6,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 刷新点 Spot 模板（静态数据/XML）。
@@ -14,6 +17,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnSpotTemplate")
+@NoArgsConstructor
 public class SpawnSpotTemplate {
 	@XmlAttribute(name = "state")
 	private Integer state = 0;
@@ -66,6 +70,8 @@ public class SpawnSpotTemplate {
 	@XmlAttribute(name = "opstate")
 	private Integer opstate = 0;
 
+	/** 返回锚点 / Returns the anchor */
+	@Getter
 	@XmlAttribute(name = "anchor")
 	private String anchor;
 
@@ -75,6 +81,9 @@ public class SpawnSpotTemplate {
 	@XmlAttribute(name = "walker_index")
 	private Integer walkerIdx;
 
+	/** 返回巡游者 ID / Returns the walker id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "walker_id")
 	private String walkerId;
 
@@ -96,24 +105,29 @@ public class SpawnSpotTemplate {
 	@XmlAttribute(name = "h", required = true)
 	private byte h;
 
+	/** 返回 z 坐标 / Returns the z */
+	@Getter
 	@XmlAttribute(name = "z", required = true)
 	private float z;
 
+	/** 返回 y 坐标 / Returns the y */
+	@Getter
 	@XmlAttribute(name = "y", required = true)
 	private float y;
 
+	/** 返回 x 坐标 / Returns the x */
+	@Getter
 	@XmlAttribute(name = "x", required = true)
 	private float x;
 
 	@XmlElement(name = "temporary_spawn")
 	private TemporarySpawn temporaySpawn;
 
+	/** 返回模型 / Returns the model */
+	@Getter
 	@XmlElement(name = "model")
 	private SpawnModel model;
 	private static final Integer ZERO = Integer.valueOf(0);
-
-	public SpawnSpotTemplate() {
-	}
 
 	void beforeMarshal(Marshaller marshaller) {
 		if (ZERO.equals(entityId)) {
@@ -265,21 +279,6 @@ public class SpawnSpotTemplate {
 		this.walkerIdx = walkerIndex;
 	}
 
-	/** 返回 x 坐标 / Returns the x */
-	public float getX() {
-		return x;
-	}
-
-	/** 返回 y 坐标 / Returns the y */
-	public float getY() {
-		return y;
-	}
-
-	/** 返回 z 坐标 / Returns the z */
-	public float getZ() {
-		return z;
-	}
-
 	/** 返回 heading / Returns the heading */
 	public byte getHeading() {
 		return h;
@@ -299,16 +298,6 @@ public class SpawnSpotTemplate {
 		this.entityId = entityId;
 	}
 
-	/** 返回巡游者 ID / Returns the walker id */
-	public String getWalkerId() {
-		return walkerId;
-	}
-
-	/** 设置巡游者 ID / Sets the walker id */
-	public void setWalkerId(String walkerId) {
-		this.walkerId = walkerId;
-	}
-
 	/** 返回巡游者索引 / Returns the walker index */
 	public int getWalkerIndex() {
 		if (walkerIdx == null) {
@@ -325,16 +314,6 @@ public class SpawnSpotTemplate {
 	/** 获取飞行。 / Returns the fly. */
 	public int getFly() {
 		return fly;
-	}
-
-	/** 返回锚点 / Returns the anchor */
-	public String getAnchor() {
-		return anchor;
-	}
-
-	/** 返回模型 / Returns the model */
-	public SpawnModel getModel() {
-		return model;
 	}
 
 	/** 获取状态。 / Returns the state. */

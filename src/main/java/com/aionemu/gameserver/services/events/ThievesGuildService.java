@@ -143,7 +143,7 @@ public class ThievesGuildService {
 			thievesPlayer.setRevengeCount(revengeCount + 1);
 			thievesMessage(player, "Вы наказали вора " + target.getName() + " и вернули " + kinahResult + " кинар.", 0);
 		}
-		thievesTarget.setLastThievesKinah(0l);
+		thievesTarget.setLastThievesKinah(0L);
 		thievesTarget.setRevengeName("Нет");
 		thievesTarget.setRevengeDate(new Timestamp(System.currentTimeMillis()));
 		DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thievesPlayer);
@@ -201,19 +201,19 @@ public class ThievesGuildService {
 				long kinah = 0;
 				switch (ThievesType.getThievesType(thieves.getRankId())) {
 				case SILVER:
-					kinah = 1000 * thieves.getRankId();
+					kinah = 1000L * thieves.getRankId();
 					break;
 				case GOLD:
-					kinah = 2000 * thieves.getRankId();
+					kinah = 2000L * thieves.getRankId();
 					break;
 				case PLATINUM:
-					kinah = 3000 * thieves.getRankId();
+					kinah = 3000L * thieves.getRankId();
 					break;
 				case MITHRIL:
-					kinah = 4000 * thieves.getRankId();
+					kinah = 4000L * thieves.getRankId();
 					break;
 				case SERAMIUM:
-					kinah = 5000 * thieves.getRankId();
+					kinah = 5000L * thieves.getRankId();
 					break;
 				default:
 					kinah = 600;

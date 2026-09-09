@@ -16,9 +16,9 @@ public enum AbyssSiegeLevel {
 	/** 老兵士兵 / Veteran soldier. */
 	VETERAN_SOLDIER(4);
 
-	private int value;
+	private final int value;
 
-	private AbyssSiegeLevel(int value) {
+	AbyssSiegeLevel(int value) {
 		this.value = value;
 	}
 

@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 物品强化加成模板：按等级附加属性修正。
@@ -15,22 +17,14 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantBouns")
+@NoArgsConstructor
 public class ItemEnchantBonus {
+	/** 获取修正器。 / Returns the modifiers. */
+	@Getter
 	@XmlElement(name = "modifiers", required = false)
 	private ModifiersTemplate modifiers;
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
-
-	public ItemEnchantBonus() {
-	}
-
-	/** 获取修正器。 / Returns the modifiers. */
-	public ModifiersTemplate getModifiers() {
-		return modifiers;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
-	}
 }

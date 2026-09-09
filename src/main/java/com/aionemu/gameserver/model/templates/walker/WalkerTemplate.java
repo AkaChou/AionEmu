@@ -13,6 +13,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.spawnengine.WalkerGroupType;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 巡逻模板（静态数据/XML）。
@@ -22,6 +25,7 @@ import com.aionemu.gameserver.spawnengine.WalkerGroupType;
  */
 @XmlRootElement(name = "walker_template")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class WalkerTemplate {
 
 	/** 是否反转路线 / Whether the route is reversed */
@@ -29,10 +33,13 @@ public class WalkerTemplate {
 	private Boolean isReversed = false;
 
 	/** 巡逻池人数 / Walker pool size */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "pool", required = true)
 	private int pool = 1;
 
 	/** 路线 ID / Route id */
+	@Getter
 	@XmlAttribute(name = "route_id", required = true)
 	private String routeId;
 
@@ -57,6 +64,7 @@ public class WalkerTemplate {
 	private List<RouteStep> routeStepList;
 
 	/** 解析后的行配置 / Parsed row values */
+	@Getter
 	@XmlTransient
 	private int[] rows;
 
@@ -67,9 +75,6 @@ public class WalkerTemplate {
 	/** 解析后的 Y 偏移量 / Parsed Y offsets */
 	@XmlTransient
 	private int[] offsetsy;
-
-	public WalkerTemplate() {
-	}
 
 	public WalkerTemplate(String routeId) {
 		this.routeId = routeId;
@@ -152,21 +157,6 @@ public class WalkerTemplate {
 		return routeStepList.get(value - 1);
 	}
 
-	/** 返回路线 ID / Returns the route id */
-	public String getRouteId() {
-		return routeId;
-	}
-
-	/** 返回巡逻池人数 / Returns the pool */
-	public int getPool() {
-		return pool;
-	}
-
-	/** 设置巡逻池人数 / Sets the pool */
-	public void setPool(int pool) {
-		this.pool = pool;
-	}
-
 	/** 设置路线步骤列表 / Sets the route steps */
 	public void setRouteSteps(ArrayList<RouteStep> newSteps) {
 		routeStepList = newSteps;
@@ -190,16 +180,6 @@ public class WalkerTemplate {
 	/** 获取队形类型 / Returns the formation type. */
 	public WalkerGroupType getType() {
 		return formation;
-	}
-
-	/**
-	 * 返回解析后的行配置。
-	 * Returns the parsed row values.
-	 *
-	 * @return 行配置 / the rows
-	 */
-	public int[] getRows() {
-		return rows;
 	}
 
 	/** 获取 X 偏移量 / Gets the X offsets */

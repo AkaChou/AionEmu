@@ -19,7 +19,7 @@ public class BattlegroundEvent extends Event {
 	 * 进行中的战场 ID 列表。
 	 * Live battleground ids.
 	 */
-	private List<Integer> battlegrounds = new ArrayList<Integer>();
+	private final List<Integer> battlegrounds = new ArrayList<Integer>();
 
 	/**
 	 * 创建普通战场。

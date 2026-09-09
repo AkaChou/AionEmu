@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RestoredHetgolemAI2 extends AggressiveNpcAI2 {
 
 	private Future<?> lifeTask;
-	private AtomicBoolean isStartEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isStartEvent = new AtomicBoolean(false);
 
 	@Override
 	public boolean canThink() {

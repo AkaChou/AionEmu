@@ -554,14 +554,14 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			definition.definition().progressLayout().unpack(beforePackedVariables));
 		Set<String> actionTouchedFields = new HashSet<>();
 		for (QuestAction action : transition.actions()) {
-			if (action instanceof QuestAction.SetStatus setStatus) {
-				expectedStatus = setStatus.status();
-			} else if (action instanceof QuestAction.SetVariable set) {
-				expectedVariables.put(set.field(), set.value());
-				actionTouchedFields.add(set.field());
-			} else if (action instanceof QuestAction.IncrementVariable increment) {
-				expectedVariables.merge(increment.field(), increment.delta(), Integer::sum);
-				actionTouchedFields.add(increment.field());
+			if (action instanceof QuestAction.SetStatus(QuestStatus status1)) {
+				expectedStatus = status1;
+			} else if (action instanceof QuestAction.SetVariable(String field1, int value)) {
+				expectedVariables.put(field1, value);
+				actionTouchedFields.add(field1);
+			} else if (action instanceof QuestAction.IncrementVariable(String field, int delta)) {
+				expectedVariables.merge(field, delta, Integer::sum);
+				actionTouchedFields.add(field);
 			}
 		}
 		projection.variables().forEach((field, value) -> {
@@ -656,17 +656,19 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	private void executeAfterCommit(TypedQuestAfterCommitPort afterCommit, AfterCommitAction action,
 			QuestSnapshot snapshot, QuestMutationPlan plan) {
 		trace.add("AFTER_COMMIT", action.getClass().getSimpleName());
-		if (action instanceof AfterCommitAction.PlayMovieRandom random && !random.movieIds().isEmpty()) {
-			afterCommit.execute(new AfterCommitAction.PlayMovie(random.movieIds().getFirst(),
+		if (action instanceof AfterCommitAction.PlayMovieRandom(List<Integer> movieIds) && !movieIds.isEmpty()) {
+			afterCommit.execute(new AfterCommitAction.PlayMovie(movieIds.getFirst(),
 				com.aionemu.gameserver.questEngine.definition.QuestMovieType.CUTSCENE), snapshot, plan);
 			return;
 		}
-		if (action instanceof AfterCommitAction.TeleportPlayer teleport
-			&& teleport.instanceTarget() instanceof QuestInstanceTarget.NextAvailable) {
+		if (action instanceof AfterCommitAction.TeleportPlayer(
+			QuestInstanceTarget instanceTarget, int worldId, float x, float y, float z, byte heading
+		)
+			&& instanceTarget instanceof QuestInstanceTarget.NextAvailable) {
 			// 副本分配依赖真实 InstanceService；内存世界用固定的当前夹具实例保持确定性。
 			// Instance allocation depends on the real InstanceService; the in-memory world uses its deterministic fixture instance.
 			action = new AfterCommitAction.TeleportPlayer(QuestInstanceTarget.fixed(state.instanceId()),
-				teleport.worldId(), teleport.x(), teleport.y(), teleport.z(), teleport.heading());
+				worldId, x, y, z, heading);
 		}
 		afterCommit.execute(action, snapshot, plan);
 	}
@@ -885,17 +887,17 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	}
 
 	private void seedAfterCommit(AfterCommitAction action) {
-		if (action instanceof AfterCommitAction.StartFollow follow) world.seedSlot(follow.slot(), 204830);
-		if (action instanceof AfterCommitAction.StopFollow follow) world.seedSlot(follow.slot(), 204830);
-		if (action instanceof AfterCommitAction.AttackTarget attack) world.seedSlot(attack.slot(), 204830);
-		if (action instanceof AfterCommitAction.AttackNpcTemplate attack) {
-			world.seedSlot(attack.slot(), 204830);
-			world.seedInteractionNpc(attack.templateId(), 910_000 + attack.templateId());
+		if (action instanceof AfterCommitAction.StartFollow(String slot3)) world.seedSlot(slot3, 204830);
+		if (action instanceof AfterCommitAction.StopFollow(String slot2)) world.seedSlot(slot2, 204830);
+		if (action instanceof AfterCommitAction.AttackTarget(String slot1)) world.seedSlot(slot1, 204830);
+		if (action instanceof AfterCommitAction.AttackNpcTemplate(String slot, int templateId)) {
+			world.seedSlot(slot, 204830);
+			world.seedInteractionNpc(templateId, 910_000 + templateId);
 		}
-		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToNpc follow) {
-			world.seedWorldNpc(follow.npcId());
+		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToNpc(int npcId)) {
+			world.seedWorldNpc(npcId);
 		}
-		if (action instanceof AfterCommitAction.RemoveEffect remove) world.seedEffect(remove.effectId());
+		if (action instanceof AfterCommitAction.RemoveEffect(int effectId)) world.seedEffect(effectId);
 	}
 
 	private void seedNpcFaction(QuestStatus sourceStatus) {

@@ -40,7 +40,7 @@ public class MpCondition extends Condition {
 		}
 		int valueWithDelta = value + delta * skill.getSkillLevel();
 		if (ratio) {
-			valueWithDelta = (int) ((skill.getEffector().getLifeStats().getMaxMp() * valueWithDelta) / 100);
+			valueWithDelta = (skill.getEffector().getLifeStats().getMaxMp() * valueWithDelta) / 100;
 		}
 		return skill.getEffector().getLifeStats().getCurrentMp() > valueWithDelta;
 	}

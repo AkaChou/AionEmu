@@ -13,5 +13,5 @@ public enum HouseStatus {
 	/** 等待出售 / Waiting for sale */
 	SELL_WAIT,
 	/** 不销售 / Not for sale */
-	NOSALE;
+	NOSALE
 }

@@ -43,8 +43,8 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		/** dramata 任务 / dramata task */
 		private Future<?> dramataTask;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -72,7 +72,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			}
 		});
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -88,7 +88,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			GameEngineServices.skillEngine().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
 		}
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -160,7 +160,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -222,7 +222,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	private void startPadmarashkaTimer() {
         // 帕德玛拉什卡施放防御魔法。2 小时后将离开其洞穴。 / Padmarashka has cast defensive magic. You will be removed from Padmarashka's Cave in 2 hours.
 		sendMsg(1400506);
@@ -257,13 +257,13 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
             }
         }, 7200000);
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -278,7 +278,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -302,7 +302,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -328,14 +328,14 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
             movies.add(movie);
             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -349,7 +349,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			sendMovie(player, 488);
 	    }
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

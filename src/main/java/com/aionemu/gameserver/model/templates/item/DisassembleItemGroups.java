@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * 分解物品组模板：按等级、职业与种族过滤产出条目。
@@ -18,10 +19,15 @@ import java.util.List;
 @XmlRootElement(name = "itemGroup")
 public class DisassembleItemGroups
 {
+	@Getter
 	@XmlAttribute(name = "gProb")
 	private int GroupProb;
+	/** 获取最小等级。 / Returns the min level. */
+	@Getter
 	@XmlAttribute(name = "minLevel")
 	private int MinLevel;
+	/** 获取最大等级。 / Returns the max level. */
+	@Getter
 	@XmlAttribute(name = "maxLevel")
 	private int MaxLevel;
 	@XmlList
@@ -29,25 +35,11 @@ public class DisassembleItemGroups
 	private List<PlayerClass> OnlyClass;
 	@XmlAttribute(name = "race")
 	private Race PlayerRace = Race.PC_ALL;
+	/** 获取队伍物品。 / Returns the group items. */
+	@Getter
 	@XmlElement(name = "item")
 	private List<DisassembleItems> GroupItems;
 
-	public int getGroupProb()
-	{
-		return GroupProb;
-	}
-
-	/** 获取最小等级。 / Returns the min level. */
-	public int getMinLevel()
-	{
-		return MinLevel;
-	}
-
-	/** 获取最大等级。 / Returns the max level. */
-	public int getMaxLevel()
-	{
-		return MaxLevel;
-	}
 	/** 获取种族。 / Returns the race. */
 	public Race getRace()
 	{
@@ -57,11 +49,5 @@ public class DisassembleItemGroups
 	public List<PlayerClass> getPlayerClassList()
 	{
 		return OnlyClass;
-	}
-
-	/** 获取队伍物品。 / Returns the group items. */
-	public List<DisassembleItems> getGroupItems()
-	{
-		return GroupItems;
 	}
 }

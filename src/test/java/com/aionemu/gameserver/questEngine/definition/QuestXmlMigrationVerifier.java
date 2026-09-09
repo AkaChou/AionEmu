@@ -39,7 +39,7 @@ public final class QuestXmlMigrationVerifier {
 	private QuestXmlMigrationVerifier() {
 	}
 
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		String argsFile = null;
 		String outputFile = null;
 		String beforeDir = null;

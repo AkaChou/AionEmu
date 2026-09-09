@@ -13,8 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RetailAreaEngineTest {
 
@@ -51,13 +50,13 @@ class RetailAreaEngineTest {
 			new PolyArea(ZoneName.createOrGet("LimitArea"), 123,
 				List.of(new Point2D(0, 0), new Point2D(0, 10), new Point2D(10, 0)), 0, 10));
 
-		assertEquals(false, RetailAreaEngine.isNoPark(List.of(area), Map.of(), 0, 30, 1, 1, 1));
-		assertEquals(true, RetailAreaEngine.isNoPark(List.of(area), Map.of(), 0, 31, 1, 1, 1));
-		assertEquals(false, RetailAreaEngine.isNoPark(List.of(area), Map.of("limitarea", false), 0, 31, 1, 1, 1));
-		assertEquals(true, RetailAreaEngine.isNoPark(List.of(area), Map.of("limitarea", true), 1, 31, 1, 1, 1));
+		assertFalse(RetailAreaEngine.isNoPark(List.of(area), Map.of(), 0, 30, 1, 1, 1));
+		assertTrue(RetailAreaEngine.isNoPark(List.of(area), Map.of(), 0, 31, 1, 1, 1));
+		assertFalse(RetailAreaEngine.isNoPark(List.of(area), Map.of("limitarea", false), 0, 31, 1, 1, 1));
+		assertTrue(RetailAreaEngine.isNoPark(List.of(area), Map.of("limitarea", true), 1, 31, 1, 1, 1));
 		var lightOnly = new LimitArea("LightOnly", true, "None", false, "Light", 0, false, false, 16, area.area());
-		assertEquals(false, RetailAreaEngine.isNoPark(List.of(lightOnly), Map.of("lightonly", true), 1, 1, 1, 1, 1));
-		assertEquals(true, RetailAreaEngine.isNoRecall(List.of(area), Map.of(), 1, 1, 1));
-		assertEquals(false, RetailAreaEngine.isNoRecall(List.of(area), Map.of("limitarea", false), 1, 1, 1));
+		assertFalse(RetailAreaEngine.isNoPark(List.of(lightOnly), Map.of("lightonly", true), 1, 1, 1, 1, 1));
+		assertTrue(RetailAreaEngine.isNoRecall(List.of(area), Map.of(), 1, 1, 1));
+		assertFalse(RetailAreaEngine.isNoRecall(List.of(area), Map.of("limitarea", false), 1, 1, 1));
 	}
 }

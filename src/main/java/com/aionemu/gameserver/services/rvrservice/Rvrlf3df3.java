@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.model.rvr.RvrStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 种族对抗（RVR）活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.rvr.RvrStateType;
  * @author Rinzler (Encom)
  * @param <RL> RVR 地点类型 / RVR location type
  */
+@RequiredArgsConstructor
 public abstract class Rvrlf3df3<RL extends RvrLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / the bound location
+	 */
+	@Getter
 	private final RL rvrLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startRvr();
-
-	/**
-	 * 绑定 RVR 地点。
-	 * Binds the RVR location.
-	 *
-	 * @param rvrLocation 地点 / location
-	 */
-	public Rvrlf3df3(RL rvrLocation) {
-		this.rvrLocation = rvrLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / the bound location
-	 */
-	public RL getRvrLocation() {
-		return rvrLocation;
 	}
 
 	/**

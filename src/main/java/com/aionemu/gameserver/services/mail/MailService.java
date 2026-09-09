@@ -558,10 +558,7 @@ public class MailService {
 
 		int finalMailPrice = 10 + itemMailCommission + kinahMailCommission;
 
-		if (sender.getInventory().getKinah() >= finalMailPrice) {
-			return true;
-		}
-		return false;
+		return sender.getInventory().getKinah() >= finalMailPrice;
 	}
 
 	private record ItemSnapshot(Item item, long count, int location, PersistentState state) {}
@@ -641,7 +638,7 @@ public class MailService {
 	private class MailLoadTask implements Runnable {
 
 		/** 目标玩家。 / Target player. */
-		private Player player;
+		private final Player player;
 
 		/**
 		 * 创建邮件加载任务。

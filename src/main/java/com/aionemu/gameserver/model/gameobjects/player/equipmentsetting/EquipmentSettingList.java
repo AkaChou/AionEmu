@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 装备 Setting 列表。
@@ -16,6 +18,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public class EquipmentSettingList {
 
 	private final Map<Integer, EquipmentSetting> equipmentSetting = new HashMap<Integer, EquipmentSetting>();
+	/** 返回所有者。 / Returns the owner. */
+	@Getter
+	@Setter
 	private Player owner;
 
 	public EquipmentSettingList(Player owner) {
@@ -48,15 +53,5 @@ public class EquipmentSettingList {
 	/** 返回全部装备方案。 / Returns the equipment settings. */
 	public Collection<EquipmentSetting> getEquipmentSetting() {
 		return Collections.unmodifiableCollection(equipmentSetting.values());
-	}
-
-	/** 返回所有者。 / Returns the owner. */
-	public Player getOwner() {
-		return owner;
-	}
-
-	/** 设置所有者。 / Sets the owner. */
-	public void setOwner(Player owner) {
-		this.owner = owner;
 	}
 }

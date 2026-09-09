@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.function.ToIntFunction;
 
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 奖励 Collections，用于副本相关逻辑。
  * Reward Collections for instance logic.
  */
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class RewardCollections {
-	private RewardCollections() {
-	}
-
 	static <T> List<T> sortedByScoreDescending(Collection<T> rewards, final ToIntFunction<T> scoreFunction) {
 		List<T> sorted = new ArrayList<T>(rewards);
 		Collections.sort(sorted, new Comparator<T>() {

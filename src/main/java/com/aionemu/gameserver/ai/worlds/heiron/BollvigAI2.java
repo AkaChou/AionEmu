@@ -32,7 +32,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	private Future<?> secondTask;
 	private Future<?> thirdTask;
 	private Future<?> lastTask;
-	
+
 	@Override
 	protected void handleSpawned() {
 		addPercent();
@@ -41,7 +41,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		if (npc != null)
 			npc.getController().onDelete();
 	}
-	
+
 	@Override
 	protected void handleRespawned() {
 		addPercent();
@@ -50,13 +50,13 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		if (npc != null)
 			npc.getController().onDelete();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 按血量百分比（75%/50%/25%）触发技能链与召唤物生成。
 	 * Triggers skill chains and summon spawns by HP percentage (75%/50%/25%).
@@ -82,7 +82,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			}
 		}
 	}
-	
+
 	private void useFirstSkillTree() {
 		useSkill(17861);
 		rndSpawnInRange(280802);
@@ -91,7 +91,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		rndSpawnInRange(280803);
 		firstSkill();
 	}
-	
+
 	private void firstSkill() {
 		int hpPercent = getLifeStats().getHpPercentage();
 		if (50 >= hpPercent && hpPercent > 25) {
@@ -112,7 +112,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			}
 		}, 31000);
 	}
-	
+
 	private void skillThree() {
 		useSkill(17899);
 		thirdTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -137,7 +137,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void cancelTask() {
 		if (firstTask != null && !firstTask.isDone())
 			firstTask.cancel(true);
@@ -148,30 +148,30 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		else if (lastTask != null && !lastTask.isDone())
 			lastTask.cancel(true);
 	}
-	
+
 	private void rndSpawnInRange(int npcId) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x = (float) (Math.cos(Math.PI * direction) * 10);
 		float y = (float) (Math.sin(Math.PI * direction) * 10);
 		spawn(npcId,  1001 + x,  2828 + y,  235.66f, (byte) 0);
 	}
-	
+
 	private void useSkill(int skillId) {
 		GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 50, getTarget()).useSkill();
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{75, 50, 25});
+		Collections.addAll(percents, 75, 50, 25);
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
 		cancelTask();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		percents.clear();
@@ -184,7 +184,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			spawn(204655, 1001f, 2828f, 235.66f, (byte) 0);
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		percents.clear();
@@ -197,7 +197,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			spawn(204655, 1001f, 2828f, 235.66f, (byte) 0);
 		}
 	}
-	
+
 	private void deleteSummons(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
@@ -206,11 +206,9 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			}
 		}
 	}
-	
+
 	private boolean checkNpc() {
 		WorldMapInstance map = getPosition().getWorldMapInstance();
-		if (map.getNpc(204655) == null && (map.getNpc(212314) == null || map.getNpc(212314).getLifeStats().isAlreadyDead()))
-			return true;
-		return false;
+		return map.getNpc(204655) == null && (map.getNpc(212314) == null || map.getNpc(212314).getLifeStats().isAlreadyDead());
 	}
 }

@@ -19,7 +19,7 @@ public class Will implements StatOwner {
 
 	private static volatile ObjectProvider<Will> instanceProvider;
 
-	private List<IStatFunction> will = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> will = new ArrayList<IStatFunction>();
 
 	/**
 	 * 属性变更时重算。

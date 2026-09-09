@@ -18,6 +18,8 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.MapRegion;
 
 import java.util.LinkedHashMap;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 可见对象已知列表：维护“已知”与“可见”两套对象/玩家集合，并负责发现、遗忘与遍历。
@@ -27,6 +29,7 @@ import java.util.LinkedHashMap;
  * @modified kosyachok
  */
 @Slf4j
+@RequiredArgsConstructor
 public class KnownList {
 
 	/**
@@ -39,6 +42,7 @@ public class KnownList {
 	 * 所有者已知的对象映射（objectId → 对象）。
 	 * Objects known by the owner (objectId → object).
 	 */
+	@Getter
 	protected final Map<Integer, VisibleObject> knownObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
@@ -63,17 +67,7 @@ public class KnownList {
 	 * 更新锁，串行化 {@link #doUpdate()}。
 	 * Update lock serializing {@link #doUpdate()}.
 	 */
-	private ReentrantLock lock = new ReentrantLock();
-
-	/**
-	 * 创建指定所有者的已知列表。
-	 * Creates a known list for the given owner.
-	 *
-	 * @param owner 列表所有者 / list owner
-	 */
-	public KnownList(VisibleObject owner) {
-		this.owner = owner;
-	}
+	private final ReentrantLock lock = new ReentrantLock();
 
 	/**
 	 * 执行已知列表更新：先遗忘超距对象，再发现可见对象。
@@ -396,16 +390,6 @@ public class KnownList {
 		} catch (Exception ex) {
 			log.error(I18n.get("log.e15440de12ca", ex));
 		}
-	}
-
-	/**
-	 * 返回已知对象映射（实时视图）。
-	 * Returns the known-objects map (live view).
-	 *
-	 * @return 已知对象映射 / known objects map
-	 */
-	public Map<Integer, VisibleObject> getKnownObjects() {
-		return knownObjects;
 	}
 
 	/**

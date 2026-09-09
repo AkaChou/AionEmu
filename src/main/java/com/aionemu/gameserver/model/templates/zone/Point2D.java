@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 点2D 模板（静态数据/XML）。
@@ -15,8 +16,16 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "Point2D")
 public class Point2D {
 
+	/**
+	 * @return the y
+	 */
+	@Getter
 	@XmlAttribute(name = "y")
 	protected float y;
+	/**
+	 * @return the x
+	 */
+	@Getter
 	@XmlAttribute(name = "x")
 	protected float x;
 
@@ -31,19 +40,5 @@ public class Point2D {
 
 	public Point2D() {
 		super();
-	}
-
-	/**
-	 * @return the y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * @return the x
-	 */
-	public float getX() {
-		return x;
 	}
 }

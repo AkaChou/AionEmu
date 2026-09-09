@@ -32,13 +32,13 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 {
 	private Future<?> hungerTask;
 	private boolean canThink = true;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleCustomEvent(int eventId, Object... args) {
 		if (eventId == 1 && args != null) {
@@ -54,15 +54,14 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 		}
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		super.handleMoveArrived();
 		if (!canThink) {
 			VisibleObject target = getTarget();
 			getMoveController().abortMove();
-			if (target != null && target.isSpawned() && target instanceof Npc) {
-				Npc npc = (Npc) target;
+			if (target != null && target.isSpawned() && target instanceof Npc npc) {
 				int npcId = npc.getNpcId();
 				if (npcId == 281128 || npcId == 281129) {
 					startFeedTime(npc);
@@ -70,7 +69,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	/**
 	 * 走到装置后延迟 6 秒进食/饮水，移除对应负面效果并恢复战斗。
 	 * 6 seconds after reaching the device, feed/drink, remove the corresponding debuff and resume fighting.
@@ -111,7 +110,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 			}
 		}, 6000);
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -119,13 +118,13 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 			doSchedule();
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelHungerTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelHungerTask();
@@ -135,7 +134,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelHungerTask();
@@ -145,7 +144,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 		isHome.set(true);
 		super.handleBackHome();
 	}
-	
+
 	/**
 	 * 首次受击后启动定时任务，每隔一段时间随机施加饥饿或口渴效果。
 	 * On first hit, start a periodic task that randomly applies the hunger or thirst effect.
@@ -168,7 +167,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 			}
 		}, 10000, 30000);
 	}
-	
+
 	private void cancelHungerTask() {
 		if (hungerTask != null && !hungerTask.isDone()) {
 			hungerTask.cancel(true);

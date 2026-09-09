@@ -20,5 +20,5 @@ public enum HealType {
 	/** 神圣力 / Divine points */
 	DP,
 	/** 飞行值 / Flight points */
-	FP;
+	FP
 }

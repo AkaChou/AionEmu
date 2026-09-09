@@ -32,7 +32,7 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	/** 检测类型（接触/穿越） / Check type (touch/pass) */
 	private final CheckType checkType;
 	/** 异步检测是否正在运行 / Whether async check is running */
-	private AtomicBoolean isRunning = new AtomicBoolean();
+	private final AtomicBoolean isRunning = new AtomicBoolean();
 
 	/**
 	 * 默认 PASS 检测类型构造。

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.siegeservice;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -22,7 +21,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -66,11 +64,10 @@ public class FortressAssault extends Assault<FortressSiege> {
 					@Override
 					public void run() {
 						spawnAttackers();
-						// GameCoreGameplayServices.balaurAssaultService().spawnDredgion(getSpawnIdByFortressId());
 					}
-				}, Rnd.get(240, 300) * 1000);
+				}, Rnd.get(240, 300) * 1000L);
 			}
-		}, delay * 1000);
+		}, delay * 1000L);
 	}
 
 	/**
@@ -113,7 +110,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 		byte heading = boss.getSpawn().getHeading();
 		int radius1 = isBalaurea ? 5 : Rnd.get(7, 13);
 		int radius2 = isBalaurea ? 9 : Rnd.get(15, 20);
-		int amount = isBalaurea ? Rnd.get(10, 15) : Rnd.get(10, 15);
+		int amount = Rnd.get(10, 15);
 		int templateId;
 		SiegeSpawnTemplate spawn;
 		float minAngle = MathUtil.convertHeadingToDegree(heading) - 90;
@@ -196,39 +193,6 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 *
 	 * @return 组装 NPC 模板 ID / assembled NPC template id
 	 */
-	private int getSpawnIdByFortressId() {
-		switch (locationId) {
-		// 雷珊塔： / RESHANTA:
-		case 1011: // Divine Fortress.
-			return 10;
-		case 1131: // Siel's Western Fortress.
-			return 10;
-		case 1132: // Siel's Eastern Fortress.
-			return 10;
-		case 1141: // Sulfur Fortress.
-			return 10;
-		case 1221: // Krotan Refuge.
-			return 10;
-		case 1231: // Kysis Fortress.
-			return 10;
-		case 1241: // Miren Fortress.
-			return 10;
-		// 卡尔多： / KALDOR:
-		case 7011: // Wealhtheow's Keep.
-			return 10;
-		// 帕内斯特拉： / PANESTERRA:
-		case 10111: // Arcadian Fortress.
-			return 10;
-		case 10211: // Umbral Fortress.
-			return 10;
-		case 10311: // Eternum Fortress.
-			return 10;
-		case 10411: // Skyclash Fortress.
-			return 10;
-		default:
-			return 1;
-		}
-	}
 
 	/**
 	 * 按要塞 ID 返回突击部队 NPC 模板列表。

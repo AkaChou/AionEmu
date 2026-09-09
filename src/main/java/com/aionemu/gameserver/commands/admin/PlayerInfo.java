@@ -113,7 +113,7 @@ public class PlayerInfo extends AdminCommand
 			}
 		} else if (params[1].equals("skill")) {
 			StringBuilder strbld = new StringBuilder("-list of skills:\n");
-			PlayerSkillEntry sle[] = target.getSkillList().getAllSkills();
+			PlayerSkillEntry[] sle = target.getSkillList().getAllSkills();
 			for (int i = 0; i < sle.length; i++)
 			strbld.append("    level " + sle[i].getSkillLevel() + " of " + sle[i].getSkillName() + "\n");
 			showAllLines(admin, strbld.toString());
@@ -132,7 +132,7 @@ public class PlayerInfo extends AdminCommand
 				strbld.append("-legion info:\n  name: " + legion.getLegionName() + ", level: " + legion.getLegionLevel() + "\n  members(online):\n");
 				while (it.hasNext()) {
 					LegionMemberEx act = it.next();
-					strbld.append("    " + act.getName() + "(" + ((act.isOnline() == true) ? "online" : "offline") + ")" + act.getRank().toString() + "\n");
+					strbld.append("    " + act.getName() + "(" + ((act.isOnline()) ? "online" : "offline") + ")" + act.getRank().toString() + "\n");
 				}
 			}
 			showAllLines(admin, strbld.toString());
@@ -170,7 +170,7 @@ public class PlayerInfo extends AdminCommand
 			} else if (params[2].equals("remove")) {
 				int objId = Integer.parseInt(params[3]);
 				VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
-				if (obj != null && target.getKnownList().getKnownObjects().containsKey(objId)) {
+				if (obj != null) {
 					target.getKnownList().getKnownObjects().remove(objId);
 				}
 			}

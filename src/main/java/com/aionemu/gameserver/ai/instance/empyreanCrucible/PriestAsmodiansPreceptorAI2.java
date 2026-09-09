@@ -29,9 +29,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("priest_asmodians_preceptor")
 public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 
-	private AtomicBoolean is75EventStarted = new AtomicBoolean(false);
-	private AtomicBoolean is25EventStarted = new AtomicBoolean(false);
-	
+	private final AtomicBoolean is75EventStarted = new AtomicBoolean(false);
+	private final AtomicBoolean is25EventStarted = new AtomicBoolean(false);
+
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
@@ -42,13 +42,13 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 			}
 		}, 1000);
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int percentage) {
 		if (percentage <= 75) {
 			if (is75EventStarted.compareAndSet(false, true)) {
@@ -60,7 +60,7 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 			}
 		}
 	}
-	
+
 	private void startEvent() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19610, 46, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -87,7 +87,7 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 			}
 		}, 2000);
 	}
-	
+
 	private Player getTargetPlayer() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
@@ -97,7 +97,7 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 		}
 		return players.get(Rnd.get(players.size()));
 	}
-	
+
 	private void applySoulSickness(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -119,20 +119,20 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 		despawnNpcs();
 		super.handleDied();
 	}
-	
+
 	private void despawnNpcs() {
 		despawnNpc(getPosition().getWorldMapInstance().getNpc(282369)); // 特拉乌普尼尔 / Traufnir
 		despawnNpc(getPosition().getWorldMapInstance().getNpc(282370)); // 锡金 / Sigyn
 		despawnNpc(getPosition().getWorldMapInstance().getNpc(282371)); // 锡普 / Sif
 	}
-		
+
     @Override
 	protected void handleBackHome() {
 		is75EventStarted.set(false);
 		is25EventStarted.set(false);
 		super.handleDied();
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

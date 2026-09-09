@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 追踪弹游戏对象。
@@ -16,9 +18,19 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class Homing extends SummonedObject<Creature> {
+	/** 设置攻击数量 / Sets the attack count. */
+	@Getter
+	@Setter
 	private int attackCount;
-	private int skillId;
+	/** 返回技能 ID / Returns the skill id */
+	@Getter
+	private final int skillId;
+	/** 返回当前技能 ID / Returns the active skill id */
+	@Getter
+	@Setter
 	private int activeSkillId;
+	@Getter
+	@Setter
 	private int homingId;
 
 	public Homing(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate,
@@ -31,16 +43,6 @@ public class Homing extends SummonedObject<Creature> {
 	protected void setupStatContainers(byte level) {
 		setGameStats(new HomingGameStats(this));
 		setLifeStats(new NpcLifeStats(this));
-	}
-
-	/** 设置攻击数量 / Sets the attack count. */
-	public void setAttackCount(int attackCount) {
-		this.attackCount = attackCount;
-	}
-
-	/** 返回攻击数量 / Returns the attack count. */
-	public int getAttackCount() {
-		return attackCount;
 	}
 
 	/** 是否敌对。 / Whether Enemy. */
@@ -58,7 +60,7 @@ public class Homing extends SummonedObject<Creature> {
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
-		return getCreator() != null ? getCreator().isEnemyFrom(player) : false;
+		return getCreator() != null && getCreator().isEnemyFrom(player);
 	}
 
 	/** 返回 NPC 对象类型 / Returns the npc object type */
@@ -80,28 +82,5 @@ public class Homing extends SummonedObject<Creature> {
 			return ItemAttackType.MAGICAL_WIND;
 		}
 		return ItemAttackType.PHYSICAL;
-	}
-
-	/** 返回技能 ID / Returns the skill id */
-	public int getSkillId() {
-		return skillId;
-	}
-
-	/** 返回当前技能 ID / Returns the active skill id */
-	public int getActiveSkillId() {
-		return activeSkillId;
-	}
-
-	/** 设置当前技能 ID / Sets the active skill id */
-	public void setActiveSkillId(int activeSkillId) {
-		this.activeSkillId = activeSkillId;
-	}
-
-	public int getHomingId() {
-		return homingId;
-	}
-
-	public void setHomingId(int homingId) {
-		this.homingId = homingId;
 	}
 }

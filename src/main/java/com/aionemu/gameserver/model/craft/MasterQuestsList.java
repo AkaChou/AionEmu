@@ -37,11 +37,11 @@ public enum MasterQuestsList {
 	/** 魔族木工 / Menuisier Asmodians */
 	MENUISIER_ASMODIANS(new int[] { 29058, 29057 }, Race.ASMODIANS, 40010);
 
-	private int[] skillsIds;
-	private Race race;
-	private int craftSkillId;
+	private final int[] skillsIds;
+	private final Race race;
+	private final int craftSkillId;
 
-	private MasterQuestsList(int[] skillsIds, Race race, int craftSkillId) {
+	MasterQuestsList(int[] skillsIds, Race race, int craftSkillId) {
 		this.skillsIds = skillsIds;
 		this.race = race;
 		this.craftSkillId = craftSkillId;

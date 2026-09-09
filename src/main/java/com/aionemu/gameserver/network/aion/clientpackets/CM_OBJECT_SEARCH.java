@@ -235,6 +235,6 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 			&& Math.abs(z - spot.getZ()) < 0.01f;
 	}
 
-	static record SearchTarget(SpawnSearchResult location, Npc npc) {
+	record SearchTarget(SpawnSearchResult location, Npc npc) {
 	}
 }

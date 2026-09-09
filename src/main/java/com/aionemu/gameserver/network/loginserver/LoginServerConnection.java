@@ -29,7 +29,7 @@ public class LoginServerConnection extends AConnection {
 	 * 登录服连接可能的状态。
 	 * Possible states of a LoginServer connection.
 	 */
-	public static enum State {
+	public enum State {
 		/**
 		 * 已连接但尚未认证。
 		 * Connected but not yet authenticated.

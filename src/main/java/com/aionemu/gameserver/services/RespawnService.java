@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Set;
@@ -76,7 +77,7 @@ public class RespawnService {
 		final int interval = visibleObject.getSpawn().getRespawnTime();
 		SpawnTemplate spawnTemplate = visibleObject.getSpawn();
 		int instanceId = visibleObject.getInstanceId();
-		return GameThreadPoolServices.threadPoolManager().schedule(new RespawnTask(spawnTemplate, instanceId), interval * 1000);
+		return GameThreadPoolServices.threadPoolManager().schedule(new RespawnTask(spawnTemplate, instanceId), interval * 1000L);
 	}
 
 	/**
@@ -108,44 +109,30 @@ public class RespawnService {
 	 * 尸体消散任务，到时删除对应可见对象。
 	 * Decay task that deletes the corresponding visible object when due.
 	 */
-	private static class DecayTask implements Runnable {
-
-		private final int npcId;
-
-		DecayTask(int npcId) {
-			this.npcId = npcId;
-		}
+		private record DecayTask(int npcId) implements Runnable {
 
 		@Override
-		public void run() {
-			VisibleObject visibleObject = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
-			if (visibleObject != null) {
-				visibleObject.getController().onDelete();
+			public void run() {
+				VisibleObject visibleObject = GameWorldBootstrapServices.world().findVisibleObject(npcId);
+				if (visibleObject != null) {
+					visibleObject.getController().onDelete();
+				}
 			}
 		}
-	}
 
-	/**
-	 * 重生任务，取消旧 RESPAWN 任务后按模板重生。
-	 * Respawn task that cancels the old RESPAWN task then respawns from the template.
-	 */
-	private static class RespawnTask implements Runnable {
+    /**
+     * 重生任务，取消旧 RESPAWN 任务后按模板重生。
+     * Respawn task that cancels the old RESPAWN task then respawns from the template.
+     */
+    private record RespawnTask(SpawnTemplate spawn, int instanceId) implements Runnable {
 
-		private final SpawnTemplate spawn;
-		private final int instanceId;
-
-		RespawnTask(SpawnTemplate spawn, int instanceId) {
-			this.spawn = spawn;
-			this.instanceId = instanceId;
-		}
-
-		@Override
-		public void run() {
-			VisibleObject visibleObject = spawn.getVisibleObject();
-			if (visibleObject != null && visibleObject instanceof Npc) {
-				((Npc) visibleObject).getController().cancelTask(TaskId.RESPAWN);
-			}
-			respawn(spawn, instanceId);
-		}
-	}
+        @Override
+        public void run() {
+            VisibleObject visibleObject = spawn.getVisibleObject();
+            if (visibleObject != null && visibleObject instanceof Npc) {
+                ((Npc) visibleObject).getController().cancelTask(TaskId.RESPAWN);
+            }
+            respawn(spawn, instanceId);
+        }
+    }
 }

@@ -6,18 +6,20 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 生物情绪/动作状态包：跳跃、飞行、攻击模式、表情等，按 EmotionType 写入附加字段。
  * Creature emotion/action packet (jump, fly, attack mode, emote, …) with type-specific fields.
  */
+@RequiredArgsConstructor
 public class SM_EMOTION extends AionServerPacket {
-	private int senderObjectId;
-	private EmotionType emotionType;
+	private final int senderObjectId;
+	private final EmotionType emotionType;
 	private int emotion;
 	private int targetObjectId;
 	private float speed;
-	private int state;
+	private final int state;
 	private int baseAttackSpeed;
 	private int currentAttackSpeed;
 	private float x;
@@ -47,16 +49,6 @@ public class SM_EMOTION extends AionServerPacket {
 		this.baseAttackSpeed = aSpeed.getBase();
 		this.currentAttackSpeed = aSpeed.getCurrent();
 		this.speed = creature.getGameStats().getMovementSpeedFloat();
-	}
-
-	/**
-	 * 按对象 ID 与状态写入的简化情绪包。
-	 * Simplified emotion by object id and state.
-	 */
-	public SM_EMOTION(int Objid, EmotionType emotionType, int state) {
-		this.senderObjectId = Objid;
-		this.emotionType = emotionType;
-		this.state = state;
 	}
 
 	/**

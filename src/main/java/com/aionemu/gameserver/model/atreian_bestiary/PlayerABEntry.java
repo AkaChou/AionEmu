@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.atreian_bestiary;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
 
 /**
  * 玩家 AB 条目，用于艾特里亚图鉴相关逻辑。
@@ -10,16 +11,13 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 
 public class PlayerABEntry extends ABEntry {
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
 
 	public PlayerABEntry(int id, int killCount, int level, int claimReward, PersistentState persistentState) {
 		super(id, killCount, level, claimReward);
 		this.persistentState = persistentState;
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/** 设置持久化状态。 / Sets the persistent state. */

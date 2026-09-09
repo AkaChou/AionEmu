@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.team2.common.legacy;
 
+import lombok.Getter;
+
 /**
  * 玩家联盟活动枚举。
  * Player Alliance Event enumeration.
@@ -14,14 +16,11 @@ public enum PlayerAllianceEvent {
 	/** Appoint Captain / Appoint Captain */
 	APPOINT_CAPTAIN(13);
 
-	private int id;
-
-	private PlayerAllianceEvent(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
+	@Getter
+	private final int id;
+
+	PlayerAllianceEvent(int id) {
+		this.id = id;
 	}
 }

@@ -53,7 +53,7 @@ public class MoltenusSchedule {
 		MoltenusSchedule ms;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/moltenus_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			ms = (MoltenusSchedule) JAXBUtil.deserialize(xml, MoltenusSchedule.class);
+			ms = JAXBUtil.deserialize(xml, MoltenusSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize moltenus", e);
 		}

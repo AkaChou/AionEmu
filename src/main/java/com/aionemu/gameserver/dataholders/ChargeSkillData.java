@@ -27,10 +27,10 @@ public class ChargeSkillData {
 	@XmlElement(name = "charge_skill")
 	private List<ChargeSkillTemplate> chargeSkills;
 
-	private IntObjectHashMap<ChargeSkillTemplate> ids = new IntObjectHashMap<ChargeSkillTemplate>();
+	private final IntObjectHashMap<ChargeSkillTemplate> ids = new IntObjectHashMap<ChargeSkillTemplate>();
 	private final Map<String, ChargeSkillTemplate> setName = new LinkedHashMap<String, ChargeSkillTemplate>();
-	private IntObjectHashMap<ChargeSkillTemplate> firstTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
-	private IntObjectHashMap<ChargeSkillTemplate> totalTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
+	private final IntObjectHashMap<ChargeSkillTemplate> firstTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
+	private final IntObjectHashMap<ChargeSkillTemplate> totalTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按 ID、套装名与各阶段技能 ID 建立多路索引。

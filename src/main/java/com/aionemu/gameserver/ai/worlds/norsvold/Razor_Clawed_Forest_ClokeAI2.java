@@ -15,7 +15,7 @@ public class Razor_Clawed_Forest_ClokeAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242283, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Pygmy Forest Cloke.
+		spawn(242283, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Pygmy Forest Cloke.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -26,7 +25,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -45,28 +43,27 @@ import java.util.concurrent.Future;
 public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 
     /** 排名 / rank */
-    private int rank;
     /** 开始时间 / start time */
     private long startTime;
         /** 准备计时器 / timer prepare */
         private Future<?> timerPrepare;
         /** 副本计时器 / timer instance */
         private Future<?> timerInstance;
-    
+
         /** kill counters / kill counters */
-        private int[] killCounters = new int[10];
-    
+        private final int[] killCounters = new int[10];
+
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed;
     /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
     /** 副本奖励对象 / instance reward object */
     private FissureOfOblivionReward instanceReward;
-    
+
         /** 准备计时秒数 / prepare timer seconds */
-        private int prepareTimerSeconds = 60000;
+        private final int prepareTimerSeconds = 60000;
         /** 副本计时秒数 / instance timer seconds */
-        private int instanceTimerSeconds = 1800000;
+        private final int instanceTimerSeconds = 1800000;
         /** oblivion 任务 / oblivion task */
         private final List<Future<?>> oblivionTask = new ArrayList<Future<?>>();
 
@@ -78,21 +75,21 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         byte heading;
         int delay;
         String walkerId;
-        
+
         SpawnPoint(float x, float y, float z, byte heading) {
             this(x, y, z, heading, 0, null);
         }
-        
+
         SpawnPoint(float x, float y, float z, byte heading, int delay) {
             this(x, y, z, heading, delay, null);
         }
-        
+
         SpawnPoint(float x, float y, float z, byte heading, int delay, String walkerId) {
             this.x = x; this.y = y; this.z = z; this.heading = heading;
             this.delay = delay; this.walkerId = walkerId;
         }
     }
-    
+
         /** npc ids / npc ids */
         private static final int[][] NPC_IDS = {
         {244470, 244471, 244472, 244473},
@@ -104,9 +101,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244716, 244717, 244718, 244719},
         {244757, 244758, 244759, 244760},
         {244798, 244799, 244800, 244801},
-        {244839, 244840, 244841, 244842} 
+        {244839, 244840, 244841, 244842}
     };
-    
+
         /** npc ids vritra / npc ids vritra */
         private static final int[][] NPC_IDS_VRITRA = {
         {244474, 244475, 244476, 244477},
@@ -118,9 +115,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244720, 244721, 244722, 244723},
         {244761, 244762, 244763, 244764},
         {244802, 244803, 244804, 244805},
-        {244843, 244844, 244845, 244846} 
+        {244843, 244844, 244845, 244846}
     };
-    
+
         /** npc ids tiamat / npc ids tiamat */
         private static final int[][] NPC_IDS_TIAMAT = {
         {244478, 244479, 244480, 244481},
@@ -132,9 +129,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244724, 244725, 244726, 244727},
         {244765, 244766, 244767, 244768},
         {244806, 244807, 244808, 244809},
-        {244847, 244848, 244849, 244850} 
+        {244847, 244848, 244849, 244850}
     };
-    
+
         /** npc ids eresh guard / npc ids eresh guard */
         private static final int[][] NPC_IDS_ERESH_GUARD = {
         {244458, 244459, 244460, 244461},
@@ -146,9 +143,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244704, 244705, 244706, 244707},
         {244745, 244746, 244747, 244748},
         {244786, 244787, 244788, 244789},
-        {244827, 244828, 244829, 244830} 
+        {244827, 244828, 244829, 244830}
     };
-    
+
         /** npc ids vritra guard / npc ids vritra guard */
         private static final int[][] NPC_IDS_VRITRA_GUARD = {
         {244462, 244463, 244464, 244465},
@@ -160,9 +157,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244708, 244709, 244710, 244711},
         {244749, 244750, 244751, 244752},
         {244790, 244791, 244792, 244793},
-        {244831, 244832, 244833, 244834} 
+        {244831, 244832, 244833, 244834}
     };
-    
+
         /** npc ids tiamat guard / npc ids tiamat guard */
         private static final int[][] NPC_IDS_TIAMAT_GUARD = {
         {244466, 244467, 244468, 244469},
@@ -174,9 +171,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244712, 244713, 244714, 244715},
         {244753, 244754, 244755, 244756},
         {244794, 244795, 244796, 244797},
-        {244835, 244836, 244837, 244838} 
+        {244835, 244836, 244837, 244838}
     };
-    
+
         /** npc ids deva guard / npc ids deva guard */
         private static final int[][] NPC_IDS_DEVA_GUARD = {
         {244485, 244486, 244487, 244488},
@@ -188,9 +185,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {244731, 244732, 244733, 244734},
         {244772, 244773, 244774, 244775},
         {244813, 244814, 244815, 244816},
-        {244854, 244855, 244856, 244857} 
+        {244854, 244855, 244856, 244857}
     };
-    
+
         /** npc ids eresh stumble / npc ids eresh stumble */
         private static final int[][] NPC_IDS_ERESH_STUMBLE = {
         {244864, 244865, 244866, 244867},
@@ -202,9 +199,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245050, 245051, 245052, 245053},
         {245081, 245082, 245083, 245084},
         {245112, 245113, 245114, 245115},
-        {245143, 245144, 245145, 245146} 
+        {245143, 245144, 245145, 245146}
     };
-    
+
         /** npc ids vritra stumble / npc ids vritra stumble */
         private static final int[][] NPC_IDS_VRITRA_STUMBLE = {
         {244868, 244869, 244870, 244871},
@@ -216,9 +213,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245054, 245055, 245056, 245057},
         {245085, 245086, 245087, 245088},
         {245116, 245117, 245118, 245119},
-        {245147, 245148, 245149, 245150} 
+        {245147, 245148, 245149, 245150}
     };
-    
+
         /** npc ids tiamat stumble / npc ids tiamat stumble */
         private static final int[][] NPC_IDS_TIAMAT_STUMBLE = {
         {244872, 244873, 244874, 244875},
@@ -230,9 +227,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245058, 245059, 245060, 245061},
         {245089, 245090, 245091, 245092},
         {245120, 245121, 245122, 245123},
-        {245151, 245152, 245153, 245154} 
+        {245151, 245152, 245153, 245154}
     };
-    
+
         /** npc ids deva stumble / npc ids deva stumble */
         private static final int[][] NPC_IDS_DEVA_STUMBLE = {
         {244876, 244877, 244878, 244879},
@@ -244,9 +241,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245062, 245063, 245064, 245065},
         {245093, 245094, 245095, 245096},
         {245124, 245125, 245126, 245127},
-        {245155, 245156, 245157, 245158} 
+        {245155, 245156, 245157, 245158}
     };
-    
+
         /** npc ids eresh ra / npc ids eresh ra */
         private static final int[][] NPC_IDS_ERESH_RA = {
         {245697, 245698, 245699},
@@ -258,9 +255,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245733, 245734, 245735},
         {245739, 245740, 245741},
         {245745, 245746, 245747},
-        {245751, 245752, 245753} 
+        {245751, 245752, 245753}
     };
-    
+
         /** npcids 掉落 dragon / npc ids drop dragon */
         private static final int[][] NPC_IDS_DROP_DRAGON = {
         {244892, 244893, 244894},
@@ -272,9 +269,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245078, 245079, 245080},
         {245109, 245110, 245111},
         {245140, 245141, 245142},
-        {245171, 245172, 245173} 
+        {245171, 245172, 245173}
     };
-    
+
         /** npc ids bonus monster / npc ids bonus monster */
         private static final int[] NPC_IDS_BONUS_MONSTER = {
         246200, 246201, 246202, 246203,
@@ -286,9 +283,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         246224, 246225, 246226, 246227,
         246228, 246229, 246230, 246231,
         246232, 246233, 246234, 246235,
-        246236, 246237, 246238, 246239 
+        246236, 246237, 246238, 246239
     };
-    
+
         /** npc ids warp / npc ids warp */
         private static final int[][] NPC_IDS_WARP = {
         {245577, 245578, 245579, 245580, 245581, 245582, 245583, 245584, 245585, 245586, 245587, 245588},
@@ -300,9 +297,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245649, 245650, 245651, 245652, 245653, 245654, 245655, 245656, 245657, 245658, 245659, 245660},
         {245661, 245662, 245663, 245664, 245665, 245666, 245667, 245668, 245669, 245670, 245671, 245672},
         {245673, 245674, 245675, 245676, 245677, 245678, 245679, 245680, 245681, 245682, 245683, 245684},
-        {245685, 245686, 245687, 245688, 245689, 245690, 245691, 245692, 245693, 245694, 245695, 245696} 
+        {245685, 245686, 245687, 245688, 245689, 245690, 245691, 245692, 245693, 245694, 245695, 245696}
     };
-    
+
         /** spawn high main / spawn high main */
         private static final SpawnPoint[] SPAWN_HIGH_MAIN = {
         new SpawnPoint(587.9679f, 620.0452f, 331.7278f, (byte)15),
@@ -323,7 +320,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(467.57324f, 477.38986f, 345.70047f, (byte)84),
         new SpawnPoint(482.65543f, 498.34192f, 342.22174f, (byte)87)
     };
-    
+
         /** spawn guard main / spawn guard main */
         private static final SpawnPoint[] SPAWN_GUARD_MAIN = {
         new SpawnPoint(796.0f, 502.0f, 340.625f, (byte)0),
@@ -368,7 +365,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(791.39966f, 518.47125f, 339.42496f, (byte)0),
         new SpawnPoint(641.4397f, 520.0093f, 339.61542f, (byte)119)
     };
-    
+
         /** spawn deva guard / spawn deva guard */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD = {
         new SpawnPoint(543.9115f, 491.4599f, 322.04422f, (byte)91),
@@ -379,7 +376,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(499.82422f, 585.81537f, 322.02252f, (byte)92),
         new SpawnPoint(501.61078f, 555.0141f, 321.84106f, (byte)12)
     };
-    
+
         /** spawn deva guard as / spawn deva guard as */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_AS = {
         new SpawnPoint(855.63855f, 484.74774f, 349.08722f, (byte)45),
@@ -408,7 +405,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(527.7633f, 502.87167f, 321.6398f, (byte)91),
         new SpawnPoint(885.5619f, 456.29126f, 351.02737f, (byte)55)
     };
-    
+
         /** spawn deva guard wi / spawn deva guard wi */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_WI = {
         new SpawnPoint(513.0236f, 593.86285f, 322.56216f, (byte)90),
@@ -422,7 +419,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(538.00024f, 495.57394f, 322.0f, (byte)90),
         new SpawnPoint(526.9178f, 486.92227f, 321.87527f, (byte)85)
     };
-    
+
         /** spawn deva guard ra / spawn deva guard ra */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_RA = {
         new SpawnPoint(529.87f, 545.5564f, 321.85876f, (byte)95),
@@ -433,14 +430,14 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(495.259f, 586.9457f, 322.0659f, (byte)81),
         new SpawnPoint(505.0709f, 552.7453f, 322.0f, (byte)28)
     };
-    
+
         /** spawn stumble main / spawn stumble main */
         private static final SpawnPoint[] SPAWN_STUMBLE_MAIN = {
         new SpawnPoint(856.45654f, 530.1012f, 346.1631f, (byte)86),
         new SpawnPoint(504.76083f, 513.9777f, 339.63126f, (byte)61),
         new SpawnPoint(809.2487f, 476.4447f, 340.87885f, (byte)29)
     };
-    
+
         /** spawn deva stumble / spawn deva stumble */
         private static final SpawnPoint[] SPAWN_DEVA_STUMBLE = {
         new SpawnPoint(677.0f, 516.0f, 338.24844f, (byte)43),
@@ -454,20 +451,20 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(531.7686f, 642.5042f, 317.08282f, (byte)112),
         new SpawnPoint(522.0014f, 648.79095f, 317.08282f, (byte)55)
     };
-    
+
         /** spawn 掉落 dragon / spawn drop dragon */
         private static final SpawnPoint[] SPAWN_DROP_DRAGON = {
         new SpawnPoint(622.6814f, 551.9144f, 346.06897f, (byte)105),
         new SpawnPoint(607.8992f, 674.06934f, 352.29062f, (byte)90)
     };
-    
+
         /** spawn bonus monster / spawn bonus monster */
         private static final SpawnPoint[] SPAWN_BONUS_MONSTER = {
         new SpawnPoint(761.54095f, 562.17f, 341.0512f, (byte)90),
         new SpawnPoint(476.94467f, 549.22363f, 345.6048f, (byte)90),
         new SpawnPoint(609.2811f, 707.6352f, 355.10846f, (byte)93)
     };
-    
+
         /** spawn 弓星 / spawn ranger */
         private static final SpawnPoint[] SPAWN_RANGER = {
         new SpawnPoint(543.0933f, 557.8653f, 322.0f, (byte)70),
@@ -505,7 +502,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(514.6148f, 641.9673f, 317.10098f, (byte)33),
         new SpawnPoint(539.03076f, 536.819f, 322.0f, (byte)30)
     };
-    
+
         /** spawn warp / spawn warp */
         private static final SpawnPoint[] SPAWN_WARP = {
         new SpawnPoint(725.0f, 515.0f, 338.24844f, (byte)1, 0),
@@ -528,11 +525,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         new SpawnPoint(671.0f, 512.0f, 338.24844f, (byte)2, 2000),
         new SpawnPoint(667.2f, 510.0f, 338.24844f, (byte)1, 2000)
     };
- 
-    private int getLevelIndex(Player player) {
-        return player.getLevel() - 66;
-    }
-    
+
     private void spawnGroup(int[][] npcIds, SpawnPoint[] points, int level, int classIndex) {
         int idx = getLevelIndexByLevel(level);
         int npcId = npcIds[idx][classIndex];
@@ -544,7 +537,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     private void spawnGroup(int[] npcIds, SpawnPoint[] points, int level, int offset) {
         int idx = getLevelIndexByLevel(level);
         int npcId = npcIds[idx * 4 + offset];
@@ -552,7 +545,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             spawn(npcId, point.x, point.y, point.z, point.heading);
         }
     }
-    
+
     private int getLevelIndexByLevel(int level) {
         return level - 66;
     }
@@ -560,15 +553,15 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     protected FissureOfOblivionPlayerReward getPlayerReward(Integer object) {
         return (FissureOfOblivionPlayerReward) instanceReward.getPlayerReward(object);
     }
-    
+
     protected void addPlayerReward(Player player) {
         instanceReward.addPlayerReward(new FissureOfOblivionPlayerReward(player.getObjectId()));
     }
-    
+
     private boolean containPlayer(Integer object) {
         return instanceReward.containPlayer(object);
     }
-    
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -585,7 +578,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
      *
      * @param npc NPC / npc
      */
-    
+
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
@@ -619,7 +612,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -631,7 +624,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         int points = 0;
         int npcId = npc.getNpcId();
         Player player = npc.getAggroList().getMostPlayerDamage();
-          
+
         final int monsterLevel;
         if (npcId >= 244454 && npcId <= 244457) monsterLevel = 66;
         else if (npcId >= 244495 && npcId <= 244498) monsterLevel = 67;
@@ -644,11 +637,11 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         else if (npcId >= 244782 && npcId <= 244785) monsterLevel = 74;
         else if (npcId >= 244823 && npcId <= 244826) monsterLevel = 75;
         else monsterLevel = 0;
-          
+
         if (monsterLevel > 0) {
              final int idx = getLevelIndexByLevel(monsterLevel);
              killCounters[idx]++;
-               
+
              if (killCounters[idx] == 4) {
                   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                        /**
@@ -700,7 +693,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              points = 250;
              despawnNpc(npc);
         }
-          
+
         if ((npcId >= 244470 && npcId <= 244481) ||
              (npcId >= 244511 && npcId <= 244522) ||
              (npcId >= 244552 && npcId <= 244563) ||
@@ -715,7 +708,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              points = 250;
              despawnNpc(npc);
         }
-          
+
         if ((npcId >= 244482 && npcId <= 244484) || (npcId >= 244523 && npcId <= 244525) ||
              (npcId >= 244564 && npcId <= 244566) || (npcId >= 244605 && npcId <= 244607) ||
              (npcId >= 244646 && npcId <= 244648) || (npcId >= 244687 && npcId <= 244689) ||
@@ -730,7 +723,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              despawnNpc(npc);
              doors.get(183).setOpen(true);
         }
-          
+
         if ((npcId >= 244490 && npcId <= 244494) || (npcId >= 244531 && npcId <= 244535) ||
              (npcId >= 244572 && npcId <= 244576) || (npcId >= 244613 && npcId <= 244617) ||
              (npcId >= 244654 && npcId <= 244658) || (npcId >= 244695 && npcId <= 244699) ||
@@ -761,19 +754,19 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                   }
              }, 3000);
         }
-          
+
         if (instanceReward.getInstanceScoreType().isStartProgress()) {
              instanceReward.addNpcKill();
              instanceReward.addPoints(points);
              sendPacket(npc.getObjectTemplate().getNameId(), points);
         }
     }
-    
+
     private int getTime() {
         long result = (int) (System.currentTimeMillis() - startTime);
         return instanceTimerSeconds - (int) result;
     }
-    
+
     private void sendPacket(final int nameId, final int point) {
         instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -791,7 +784,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         });
     }
-    
+
     private int checkRank(int totalPoints) {
         if (totalPoints >= 23550) { //Rank S
             return 1;
@@ -807,7 +800,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             return 6;
         }
     }
-    
+
     protected void startInstanceTask() {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -831,7 +824,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }, 1800000));
     }
-    
+
     /**
      * 玩家打开门时处理。
      * Handle a player opening a door.
@@ -850,7 +843,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -871,9 +864,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
            spawnByPlayerLevel(player);
            spawned = true;
         }
-        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000 * 1);
+        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000);
     }
-    
+
     private void startPrepareTimer() {
         if (timerPrepare == null) {
             timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -900,7 +893,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         });
     }
-    
+
     private void startMainInstanceTimer() {
         if (!timerPrepare.isDone()) {
             timerPrepare.cancel(false);
@@ -909,7 +902,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
         sendPacket(0, 0);
     }
-    
+
     protected void stopInstance(Player player) {
         stopInstanceTask();
         instanceReward.setRank(6);
@@ -918,7 +911,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         doReward(player);
         sendPacket(0, 0);
     }
-    
+
     /**
      * 结算并发放奖励。
      * Settle and grant rewards.
@@ -945,7 +938,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -959,11 +952,11 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
         doors = instance.getDoors();
     }
-    
+
      private void spawnByPlayerLevel(Player player) {
           int level = player.getLevel();
           if (level < 66 || level > 75) return;
-          
+
           int idx = getLevelIndexByLevel(level);
 
           int raType = Rnd.get(1, 3);
@@ -971,76 +964,76 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
           for (SpawnPoint point : SPAWN_RANGER) {
                spawn(raNpcId, point.x, point.y, point.z, point.heading);
           }
-          
+
           int dragonType = Rnd.get(1, 3);
           for (SpawnPoint point : SPAWN_DROP_DRAGON) {
                spawn(NPC_IDS_DROP_DRAGON[idx][dragonType - 1], point.x, point.y, point.z, point.heading);
           }
-          
+
           int bonusType = Rnd.get(1, 4);
           int bonusNpcId = NPC_IDS_BONUS_MONSTER[idx * 4 + (bonusType - 1)];
           for (SpawnPoint point : SPAWN_BONUS_MONSTER) {
                spawn(bonusNpcId, point.x, point.y, point.z, point.heading);
           }
-          
+
           for (SpawnPoint point : SPAWN_DEVA_GUARD) {
                spawn(NPC_IDS_DEVA_GUARD[idx][0], point.x, point.y, point.z, point.heading);
           }
-          
+
           for (SpawnPoint point : SPAWN_DEVA_GUARD_AS) {
                spawn(NPC_IDS_DEVA_GUARD[idx][1], point.x, point.y, point.z, point.heading);
           }
-          
+
           for (SpawnPoint point : SPAWN_DEVA_GUARD_WI) {
                spawn(NPC_IDS_DEVA_GUARD[idx][2], point.x, point.y, point.z, point.heading);
           }
-          
+
           for (SpawnPoint point : SPAWN_DEVA_GUARD_RA) {
                spawn(NPC_IDS_DEVA_GUARD[idx][3], point.x, point.y, point.z, point.heading);
           }
-          
+
           int stumbleType = Rnd.get(1, 3);
           int stumbleClass = Rnd.get(0, 3);
           int[] selectedStumble = null;
           if (stumbleType == 1) selectedStumble = NPC_IDS_ERESH_STUMBLE[idx];
           else if (stumbleType == 2) selectedStumble = NPC_IDS_VRITRA_STUMBLE[idx];
           else selectedStumble = NPC_IDS_TIAMAT_STUMBLE[idx];
-          
+
           for (SpawnPoint point : SPAWN_STUMBLE_MAIN) {
                spawn(selectedStumble[stumbleClass], point.x, point.y, point.z, point.heading);
           }
-          
+
           int devaStumbleClass = Rnd.get(1, 4);
           for (SpawnPoint point : SPAWN_DEVA_STUMBLE) {
                spawn(NPC_IDS_DEVA_STUMBLE[idx][devaStumbleClass - 1], point.x, point.y, point.z, point.heading);
           }
-          
+
           int highType = Rnd.get(1, 3);
           int highClass = Rnd.get(1, 4);
           int[] selectedHigh = null;
           if (highType == 1) selectedHigh = NPC_IDS[idx];
           else if (highType == 2) selectedHigh = NPC_IDS_VRITRA[idx];
           else selectedHigh = NPC_IDS_TIAMAT[idx];
-          
+
           for (SpawnPoint point : SPAWN_HIGH_MAIN) {
                spawn(selectedHigh[highClass - 1], point.x, point.y, point.z, point.heading);
           }
-          
+
           int guardType = Rnd.get(1, 3);
           int guardClass = Rnd.get(1, 4);
           int[] selectedGuard = null;
           if (guardType == 1) selectedGuard = NPC_IDS_ERESH_GUARD[idx];
           else if (guardType == 2) selectedGuard = NPC_IDS_VRITRA_GUARD[idx];
           else selectedGuard = NPC_IDS_TIAMAT_GUARD[idx];
-          
+
           for (SpawnPoint point : SPAWN_GUARD_MAIN) {
                spawn(selectedGuard[guardClass - 1], point.x, point.y, point.z, point.heading);
           }
-          
+
           int doorMobType = Rnd.get(1, 3);
           spawn(NPC_IDS_DEVA_GUARD[idx][doorMobType], 510.39917f, 458.81943f, 322.0f, (byte)21);
      }
-    
+
     private void IDTransformEreshWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][Rnd.get(0, 3)];
@@ -1048,7 +1041,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             sp(npcId, point.x, point.y, point.z, point.heading, point.delay);
         }
     }
-    
+
     private void IDTransformVritraWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][4 + Rnd.get(0, 3)];
@@ -1056,7 +1049,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             sp(npcId, point.x, point.y, point.z, point.heading, point.delay);
         }
     }
-    
+
     private void IDTransformTiamatWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][8 + Rnd.get(0, 3)];
@@ -1064,7 +1057,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             sp(npcId, point.x, point.y, point.z, point.heading, point.delay);
         }
     }
-    
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -1082,7 +1075,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         instanceReward.clear();
         doors.clear();
     }
-    
+
     private void stopInstanceTask() {
         for (Future<?> task : oblivionTask) {
 			if (task != null) {
@@ -1090,13 +1083,13 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 			}
         }
     }
-    
+
     protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-    
+
     /**
      * 删除当前实例中指定模板的全部 NPC，包括同模板的成对空气墙控制实体。
      * Deletes every NPC with the given template, including paired air-wall controllers.
@@ -1111,20 +1104,20 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-    
+
     protected List<Npc> getNpcs(int npcId) {
         if (!isInstanceDestroyed) {
             return instance.getNpcs(npcId);
         }
         return null;
     }
-    
+
     /**
      * 玩家从该副本登出时处理。
      * Handle a player logging out from this instance.
@@ -1135,7 +1128,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     public void onPlayerLogOut(Player player) {
         removeEffects(player);
     }
-    
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -1146,7 +1139,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     public void onLeaveInstance(Player player) {
         removeEffects(player);
     }
-    
+
     private void removeEffects(Player player) {
         PlayerEffectController effectController = player.getEffectController();
         effectController.removeEffect(4808);
@@ -1158,15 +1151,15 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         effectController.removeEffect(4835);
         effectController.removeEffect(4836);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1184,7 +1177,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }, time));
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1201,22 +1194,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
             }
         }, time));
     }
-    
-    private void sendMsg(final String str) {
-        instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-            }
-        });
-    }
-    
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**

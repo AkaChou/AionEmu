@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
@@ -15,19 +16,10 @@ import com.aionemu.gameserver.model.beritra.BeritraLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class BeritraStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public BeritraStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行分阶段启动流程。

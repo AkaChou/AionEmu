@@ -23,6 +23,8 @@ import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.stats.KiskStatsTemplate;
 import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * NPC 模板（静态数据/XML）。
@@ -37,22 +39,38 @@ public class NpcTemplate extends VisibleObjectTemplate {
 
 	private int npcId;
 	private int abnormalImmunity;
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	@XmlAttribute(name = "level", required = true)
 	private byte level;
 	@XmlAttribute(name = "name_id", required = true)
 	private int nameId;
+	/** 返回标题 ID / Returns the title id */
+	@Getter
 	@XmlAttribute(name = "title_id")
 	private int titleId;
 	@XmlAttribute(name = "name")
 	private String name;
+	/** 返回 height / Returns the height */
+	@Getter
 	@XmlAttribute(name = "height")
 	private float height = 1;
+	/** 返回 npc type / Returns the npc type */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "npc_type", required = true)
 	private NpcType npcType;
+	/** 获取属性模板。 / Returns the stats template. */
+	@Getter
+	@Setter
 	@XmlElement(name = "stats")
 	private NpcStatsTemplate statsTemplate;
+	/** 获取装备。 / Returns the equipment. */
+	@Getter
 	@XmlElement(name = "equipment")
 	private NpcEquippedGear equipment;
+	/** 获取归还之石属性模板。 / Returns the kisk stats template. */
+	@Getter
 	@XmlElement(name = "kisk_stats")
 	private KiskStatsTemplate kiskStatsTemplate;
 	@SuppressWarnings("unused")
@@ -64,18 +82,30 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	private NpcRating rating;
 	@XmlAttribute(name = "sensory_range")
 	private int aggrorange;
+	/** 返回攻击范围 / Returns the attack range*/
+	@Getter
 	@XmlAttribute(name = "attack_range")
 	private int attackRange;
+	/** 返回 attack rate / Returns the attack rate */
+	@Getter
 	@XmlAttribute(name = "attack_rate")
 	private int attackRate;
+	/** 返回攻击延迟 / Returns the attack delay*/
+	@Getter
 	@XmlAttribute(name = "attack_delay")
 	private int attackDelay;
+	/** 返回 hp gauge level / Returns the hp gauge level */
+	@Getter
 	@XmlAttribute(name = "hpgauge_level")
 	private int hpGaugeLevel;
+	/** 获取部落。 / Returns the tribe. */
+	@Getter
 	@XmlAttribute(name = "tribe")
 	private TribeClass tribe;
 	@XmlAttribute(name = "ai")
 	private String ai = AiNames.DUMMY_NPC.getName();
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute
 	private Race race = Race.NONE;
 	@XmlAttribute
@@ -92,11 +122,17 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	private AbyssNpcType abyssNpcType;
 	@XmlElement(name = "talk_info")
 	private TalkInfo talkInfo;
+	/** 返回 namedesc / Returns the namedesc */
+	@Getter
 	@XmlAttribute(name = "name_desc")
 	private String namedesc;
+	/** 设置 npc drop / Sets the npc drop */
+	@Setter
 	@XmlTransient
 	private NpcDrop npcDrop;
 	// 大量拾取 4.7 / Massive Looting 4.7
+	/** 返回 massive looting / Returns the massive looting */
+	@Getter
 	@XmlElement(name = "massive_looting")
 	private MassiveLooting massiveLooting;
 
@@ -112,60 +148,10 @@ public class NpcTemplate extends VisibleObjectTemplate {
 		return nameId;
 	}
 
-	/** 返回标题 ID / Returns the title id */
-	public int getTitleId() {
-		return titleId;
-	}
-
 	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	/** 返回 height / Returns the height */
-	public float getHeight() {
-		return height;
-	}
-
-	/** 返回 npc type / Returns the npc type */
-	public NpcType getNpcType() {
-		return npcType;
-	}
-
-	/** 设置 NPC 类型 / Sets the npc type */
-	public void setNpcType(NpcType newType) {
-		npcType = newType;
-	}
-
-	/** 获取装备。 / Returns the equipment. */
-	public NpcEquippedGear getEquipment() {
-		return equipment;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public byte getLevel() {
-		return level;
-	}
-
-	/** 获取属性模板。 / Returns the stats template. */
-	public NpcStatsTemplate getStatsTemplate() {
-		return statsTemplate;
-	}
-
-	/** 设置属性模板。 / Sets the stats template. */
-	public void setStatsTemplate(NpcStatsTemplate statsTemplate) {
-		this.statsTemplate = statsTemplate;
-	}
-
-	/** 获取归还之石属性模板。 / Returns the kisk stats template. */
-	public KiskStatsTemplate getKiskStatsTemplate() {
-		return kiskStatsTemplate;
-	}
-
-	/** 获取部落。 / Returns the tribe. */
-	public TribeClass getTribe() {
-		return tribe;
 	}
 
 	/** 返回 ai / Returns the ai */
@@ -291,31 +277,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 		return aggrorange;
 	}
 
-	/** 返回攻击范围 / Returns the attack range*/
-	public int getAttackRange() {
-		return attackRange;
-	}
-
-	/** 返回 attack rate / Returns the attack rate */
-	public int getAttackRate() {
-		return attackRate;
-	}
-
-	/** 返回攻击延迟 / Returns the attack delay*/
-	public int getAttackDelay() {
-		return attackDelay;
-	}
-
-	/** 返回 hp gauge level / Returns the hp gauge level */
-	public int getHpGaugeLevel() {
-		return hpGaugeLevel;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
 	/** 获取状态。 / Returns the state. */
 	@Override
 	public int getState() {
@@ -362,11 +323,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 		return DataManager.NPC_DROP_DATA == null ? null : DataManager.NPC_DROP_DATA.getDrop(npcId);
 	}
 
-	/** 设置 npc drop / Sets the npc drop */
-	public void setNpcDrop(NpcDrop npcDrop) {
-		this.npcDrop = npcDrop;
-	}
-
 	/**
 	 * 是否可交互（存在对话信息）。
 	 * Whether the NPC can be interacted with.
@@ -403,15 +359,5 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/** 返回 mist spawn condition / Returns the mist spawn condition */
 	public Boolean getMistSpawnCondition() {
 		return onMist;
-	}
-
-	/** 返回 namedesc / Returns the namedesc */
-	public String getNamedesc() {
-		return namedesc;
-	}
-
-	/** 返回 massive looting / Returns the massive looting */
-	public MassiveLooting getMassiveLooting() {
-		return massiveLooting;
 	}
 }

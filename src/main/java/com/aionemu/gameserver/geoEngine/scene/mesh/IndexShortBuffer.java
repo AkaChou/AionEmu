@@ -2,6 +2,7 @@ package com.aionemu.gameserver.geoEngine.scene.mesh;
 
 import java.nio.Buffer;
 import java.nio.ShortBuffer;
+import lombok.AllArgsConstructor;
 
 /**
  * 基于 {@link ShortBuffer} 的无符号 short 索引缓冲实现。
@@ -9,20 +10,11 @@ import java.nio.ShortBuffer;
  *
  * @author lex
  */
+@AllArgsConstructor
 public class IndexShortBuffer extends IndexBuffer {
 
 	/** 底层 short 缓冲 / Underlying short buffer */
-	private ShortBuffer buf;
-
-	/**
-	 * 使用给定 short 缓冲构造索引缓冲。
-	 * Constructs an index buffer over the given short buffer.
-	 *
-	 * @param buffer short 缓冲 / short buffer
-	 */
-	public IndexShortBuffer(ShortBuffer buffer) {
-		this.buf = buffer;
-	}
+	private final ShortBuffer buf;
 
 	/**
 	 * 读取无符号 short 索引（0–65535）。

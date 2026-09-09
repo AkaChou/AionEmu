@@ -12,7 +12,7 @@ public class SM_CS_PLAYER_LOGOUT extends CsServerPacket {
 	 * 玩家对象 ID。
 	 * Player object id.
 	 */
-	private int playerId;
+	private final int playerId;
 
 	/**
 	 * 构造玩家下线通知包。

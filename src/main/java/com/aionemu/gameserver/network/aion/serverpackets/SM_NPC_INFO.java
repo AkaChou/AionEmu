@@ -35,9 +35,9 @@ import com.aionemu.gameserver.services.TownService;
  * Credits To Magenik and to the Cinus
  */
 public class SM_NPC_INFO extends AionServerPacket {
-	private Creature _npc;
-	private NpcTemplate npcTemplate;
-	private int npcId;
+	private final Creature _npc;
+	private final NpcTemplate npcTemplate;
+	private final int npcId;
 	private int creatorId;
 	private String masterName = StringUtils.EMPTY;
 	@SuppressWarnings("unused")

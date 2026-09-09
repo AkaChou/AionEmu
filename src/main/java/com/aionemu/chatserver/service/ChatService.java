@@ -3,6 +3,7 @@ package com.aionemu.chatserver.service;
 
 import com.aionemu.boot.i18n.I18n;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class ChatService {
         return SingletonHolder.INSTANCE;
     }
 
-    private Map<Integer, ChatClient> players = new ConcurrentHashMap<>();
+    private final Map<Integer, ChatClient> players = new ConcurrentHashMap<>();
     private final BroadcastService broadcastService;
 
     /**
@@ -75,7 +76,7 @@ public class ChatService {
     public ChatClient registerPlayer(int playerId, String playerLogin, String nick) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.reset();
-        md.update(playerLogin.getBytes("UTF-8"), 0, playerLogin.length());
+        md.update(playerLogin.getBytes(StandardCharsets.UTF_8), 0, playerLogin.length());
         byte[] accountToken = md.digest();
         byte[] token = generateToken(accountToken);
         ChatClient chatClient = new ChatClient(playerId, token, nick);
@@ -123,7 +124,7 @@ public class ChatService {
 
             if (Arrays.equals(regToken, token)) {
                 String sreal = chatClient.getRealName() + "@" + new String(identifier);
-                chatClient.setIdentifier(sreal.getBytes("utf-16le"));
+                chatClient.setIdentifier(sreal.getBytes(StandardCharsets.UTF_16LE));
                 chatClient.setChannelHandler(channelHandler);
                 channelHandler.sendPacket(new SM_PLAYER_AUTH_RESPONSE());
                 channelHandler.setState(State.AUTHED);

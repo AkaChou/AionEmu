@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -16,10 +15,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -39,15 +35,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Crazed_ModorAI2 extends AggressiveNpcAI2
 {
 	private Future<?> skillTask;
-	private boolean canThink = true;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final boolean canThink = true;
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -56,12 +52,12 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			startSkillTask();
 		}
 	}
-	
+
     private void addPercent() {
         percents.clear();
-        Collections.addAll(percents, new Integer[]{90, 85, 75, 70, 65, 60, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5});
+        Collections.addAll(percents, 90, 85, 75, 70, 65, 60, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5);
     }
-	
+
     private void checkPercentage(int hpPercentage) {
         for (Integer percent : percents) {
             if (hpPercentage <= percent) {
@@ -152,7 +148,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
             }
         }
     }
-	
+
 	private void startSkillTask() {
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -165,13 +161,13 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 4000, 30000);
 	}
-	
+
 	private void cancelTask1() {
 		if (skillTask != null && !skillTask.isCancelled()) {
 			skillTask.cancel(true);
 		}
 	}
-	
+
     private void chooseRandomEvent() {
         switch (Rnd.get(1, 2)) {
             case 1:
@@ -184,7 +180,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
             break;
         }
     }
-	
+
 	private void VengefullOrbEvent() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
@@ -195,13 +191,13 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 11000);
 	}
-	
+
 	private void spawnSorcererQueenModor() {
 		if (!isAlreadyDead()) {
 			spawn(284443, 256.45197f, 257.91986f, 241.78688f, (byte) 90);
 		}
 	}
-	
+
 	private void Teleport() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
@@ -214,14 +210,14 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 		    }
 		}, 2000);
 	}
-	
+
     private void Teleport2() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
         GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run(){
-                float pos1[][] = {
+                float[][] pos1 = {
                     {
                         232.426f, 263.818f, 248.6419f, 115
                     }, {
@@ -230,13 +226,13 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
                         240.130f, 235.219f, 251.1553f, 17
                     }
                 };
-                float pos[] = pos1[Rnd.get(0, 2)];
+                float[] pos = pos1[Rnd.get(0, 2)];
                 com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
     }
-	
+
 	private void Teleport3() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
@@ -248,7 +244,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
 	private void skillfear() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
@@ -265,7 +261,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 3000);
 	}
-	
+
 	private void Teleport4() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
@@ -278,14 +274,14 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
     private void Teleport5() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
         GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
-                float pos1[][] = {
+                float[][] pos1 = {
                     {
                         232.426f, 263.818f, 248.6419f, 115
                     }, {
@@ -294,13 +290,13 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
                         240.130f, 235.219f, 251.1553f, 17
                     }
                 };
-                float pos[] = pos1[Rnd.get(0, 2)];
+                float[] pos = pos1[Rnd.get(0, 2)];
                 com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
     }
-	
+
 	private void Teleport6() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
@@ -313,14 +309,14 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
     private void Teleport7() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
         GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
-                float pos1[][] = {
+                float[][] pos1 = {
                     {
                         232.426f, 263.818f, 248.6419f, 115
                     }, {
@@ -329,13 +325,13 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
                         240.130f, 235.219f, 251.1553f, 17
                     }
                 };
-                float pos[] = pos1[Rnd.get(0, 2)];
+                float[] pos = pos1[Rnd.get(0, 2)];
                 com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
     }
-	
+
 	private void Teleport8() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
@@ -348,7 +344,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
 	private void modorNpc() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
@@ -359,7 +355,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 4000);
 	}
-	
+
 	private void modorNpc2() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
@@ -370,7 +366,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 4000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -384,7 +380,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -392,26 +388,26 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 	}
-	
+
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
         addPercent();
 		eternalGrudge();
     }
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		percents.clear();
 		cancelTask1();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
@@ -419,11 +415,11 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 		isHome.set(true);
 		cancelTask1();
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
-	
+
 	private void announceAnotherDimension() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -435,17 +431,9 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void eternalGrudge() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); // 永恒怨恨 / Eternal Grudge.
 	}
-	
-	private void despawnNpcs(int npcId) {
-		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-		for (Npc npc : npcs) {
-			if (npc != null) {
-				npc.getController().onDelete();
-			}
-		}
-	}
+
 }

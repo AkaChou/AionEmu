@@ -160,17 +160,17 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 	}
 
 	private static ResolvedLocation resolve(QuestSnapshot snapshot, QuestSpawnLocation location) {
-		if (location instanceof QuestSpawnLocation.PlayerPosition playerPosition) {
+		if (location instanceof QuestSpawnLocation.PlayerPosition(byte heading)) {
 			if (snapshot.worldId() <= 0 || snapshot.instanceId() <= 0) {
 				return null;
 			}
 			return new ResolvedLocation(snapshot.worldId(), snapshot.instanceId(), snapshot.x(), snapshot.y(),
-				snapshot.z(), playerPosition.heading());
+				snapshot.z(), heading);
 		}
 		QuestSpawnLocation.Fixed fixed = (QuestSpawnLocation.Fixed) location;
 		int instanceId;
-		if (fixed.instanceTarget() instanceof QuestInstanceTarget.Fixed target) {
-			instanceId = target.instanceId();
+		if (fixed.instanceTarget() instanceof QuestInstanceTarget.Fixed(int id)) {
+			instanceId = id;
 		} else if (snapshot.worldId() > 0 && snapshot.instanceId() > 0) {
 			instanceId = snapshot.worldId() == fixed.worldId() ? snapshot.instanceId() : 1;
 		} else {

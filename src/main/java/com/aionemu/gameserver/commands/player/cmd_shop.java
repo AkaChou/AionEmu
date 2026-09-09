@@ -32,9 +32,6 @@ public class cmd_shop extends PlayerCommand {
 
 		class ItemSetNotFoundException extends Exception {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -5886677962380429895L;
 			final List<String> suggestions;
 
@@ -91,43 +88,21 @@ public class cmd_shop extends PlayerCommand {
 			return cost[len0 - 1];
 		}
 
-		static class Item {
-
-			final int id;
-			final int count;
-
-			public Item(int id, int count) {
-				this.id = id;
-				this.count = count;
-			}
+		record Item(int id, int count) {
 
 			@Override
-			public String toString() {
-				return "Item{" + "id=" + id + ", count=" + count + '}';
-			}
-		}
+					public String toString() {
+						return "Item{" + "id=" + id + ", count=" + count + '}';
+					}
+				}
 
-		static class ItemSet {
+        record ItemSet(List<Item> items, List<Item> trades, String name, String desc, int cost) {
 
-			final List<Item> items;
-			final List<Item> trades;
-			final String name;
-			final String desc;
-			final int cost;
-
-			public ItemSet(List<Item> items, List<Item> trades, String name, String desc, int cost) {
-				this.items = items;
-				this.trades = trades;
-				this.name = name;
-				this.desc = desc;
-				this.cost = cost;
-			}
-
-			@Override
-			public String toString() {
-				return "ItemSet{" + "items=" + items + ", trades=" + trades + ", name='" + name + '\'' + ", desc='" + desc + '\'' + ", cost=" + cost + '}';
-			}
-		}
+            @Override
+            public String toString() {
+                return "ItemSet{" + "items=" + items + ", trades=" + trades + ", name='" + name + '\'' + ", desc='" + desc + '\'' + ", cost=" + cost + '}';
+            }
+        }
 
 		private final String filename;
 		private final HashMap<String, ItemSet> itemSets = new HashMap<String, ItemSet>();

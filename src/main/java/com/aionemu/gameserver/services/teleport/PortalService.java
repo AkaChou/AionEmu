@@ -376,10 +376,7 @@ public class PortalService {
 
 	private static boolean checkSiegeId(Player player, int siegeId) {
 		FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeId);
-		if (loc != null && loc.getRace().getRaceId() != player.getRace().getRaceId()) {
-			return false;
-		}
-		return true;
+		return loc == null || loc.getRace().getRaceId() == player.getRace().getRaceId();
 	}
 
 	private static boolean checkTitle(Player player, int titleId) {

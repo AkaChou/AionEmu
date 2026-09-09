@@ -12,23 +12,15 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import org.apache.commons.lang3.StringUtils;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步房屋状态变更（外观部件、门牌、军团徽记等）的服务端包。
  * Server packet synchronizing house state updates (appearance parts, sign notice, legion emblem, etc.) to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_UPDATE extends AionServerPacket {
-	private House house;
-
-	/**
-	 * 使用指定房屋构造状态更新包。
-	 * Creates an update packet for the given house.
-	 *
-	 * @param house 待同步的房屋 / house to update
-	 */
-	public SM_HOUSE_UPDATE(House house) {
-		this.house = house;
-	}
+	private final House house;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

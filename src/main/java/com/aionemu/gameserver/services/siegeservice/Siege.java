@@ -25,26 +25,76 @@ import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_STATE;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 /**
  * 攻城实例基类，管理攻城生命周期、BOSS 与广播。
  * Siege instance base managing siege lifecycle, boss and broadcasts.
  */
 @Slf4j
 
+@RequiredArgsConstructor
 public abstract class Siege<SL extends SiegeLocation> {
+	/**
+	 * 返回首领死亡监听器。
+	 * Returns the boss death listener.
+	 *
+	 * @return 死亡监听器 / death listener
+	 */
+	@Getter
 	private final SiegeBossDeathListener siegeBossDeathListener = new SiegeBossDeathListener(this);
+	/**
+	 * 返回首领伤害监听器。
+	 * Returns the boss damage listener.
+	 *
+	 * @return 伤害监听器 / damage listener
+	 */
+	@Getter
 	private final SiegeBossDoAddDamageListener siegeBossDoAddDamageListener = new SiegeBossDoAddDamageListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
+	/**
+	 * 返回攻城计数器。
+	 * Returns the siege counter.
+	 *
+	 * @return 攻城计数器 / siege counter
+	 */
+	@Getter
 	private final SiegeCounter siegeCounter = new SiegeCounter();
+	/**
+	 * 返回攻城据点。
+	 * Returns the siege location.
+	 *
+	 * @return 攻城据点 / siege location
+	 */
+	@Getter
 	private final SL siegeLocation;
+	/**
+	 * 返回攻城首领是否已被击杀。
+	 * Returns whether the siege boss has been killed.
+	 *
+	 * @return 是否已击杀首领 / whether boss was killed
+	 */
+	@Getter
+	@Setter
 	private boolean bossKilled;
 	private SiegeNpc boss, flag;
+	/**
+	 * 返回攻城开始时间。
+	 * Returns the siege start time.
+	 *
+	 * @return 开始时间 / start time
+	 */
+	@Getter
 	private Date startTime;
+	/**
+	 * 返回攻城是否已开始。
+	 * Returns whether the siege has started.
+	 *
+	 * @return 是否已开始 / whether started
+	 */
+	@Getter
 	private boolean started;
-
-	public Siege(SL siegeLocation) {
-		this.siegeLocation = siegeLocation;
-	}
 
 	/**
 	 * 开始攻城。
@@ -96,16 +146,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	/**
-	 * 返回攻城据点。
-	 * Returns the siege location.
-	 *
-	 * @return 攻城据点 / siege location
-	 */
-	public SL getSiegeLocation() {
-		return siegeLocation;
-	}
-
-	/**
 	 * 返回攻城据点 ID。
 	 * Returns the siege location id.
 	 *
@@ -113,26 +153,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 */
 	public int getSiegeLocationId() {
 		return siegeLocation.getLocationId();
-	}
-
-	/**
-	 * 返回攻城首领是否已被击杀。
-	 * Returns whether the siege boss has been killed.
-	 *
-	 * @return 是否已击杀首领 / whether boss was killed
-	 */
-	public boolean isBossKilled() {
-		return bossKilled;
-	}
-
-	/**
-	 * setBossKilled 方法。
-	 * setBossKilled method.
-	 *
-	 * @param bossKilled 是否击杀首领 / bossKilled
-	 */
-	public void setBossKilled(boolean bossKilled) {
-		this.bossKilled = bossKilled;
 	}
 
 	/**
@@ -153,36 +173,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 */
 	public void setBoss(SiegeNpc boss) {
 		this.boss = boss;
-	}
-
-	/**
-	 * 返回首领伤害监听器。
-	 * Returns the boss damage listener.
-	 *
-	 * @return 伤害监听器 / damage listener
-	 */
-	public SiegeBossDoAddDamageListener getSiegeBossDoAddDamageListener() {
-		return siegeBossDoAddDamageListener;
-	}
-
-	/**
-	 * 返回首领死亡监听器。
-	 * Returns the boss death listener.
-	 *
-	 * @return 死亡监听器 / death listener
-	 */
-	public SiegeBossDeathListener getSiegeBossDeathListener() {
-		return siegeBossDeathListener;
-	}
-
-	/**
-	 * 返回攻城计数器。
-	 * Returns the siege counter.
-	 *
-	 * @return 攻城计数器 / siege counter
-	 */
-	public SiegeCounter getSiegeCounter() {
-		return siegeCounter;
 	}
 
 	protected abstract void onSiegeStart();
@@ -212,16 +202,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	public abstract void addAbyssPoints(Player player, int abysPoints);
 
 	/**
-	 * 返回攻城是否已开始。
-	 * Returns whether the siege has started.
-	 *
-	 * @return 是否已开始 / whether started
-	 */
-	public boolean isStarted() {
-		return started;
-	}
-
-	/**
 	 * 返回攻城是否已结束。
 	 * Returns whether the siege has finished.
 	 *
@@ -229,16 +209,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 返回攻城开始时间。
-	 * Returns the siege start time.
-	 *
-	 * @return 开始时间 / start time
-	 */
-	public Date getStartTime() {
-		return startTime;
 	}
 
 	/**

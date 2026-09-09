@@ -39,7 +39,7 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 public class ObserveController {
 
 	/** 保护一次性观察者列表的锁。 / Lock protecting the one-shot observer list. */
-	private ReentrantLock lock = new ReentrantLock();
+	private final ReentrantLock lock = new ReentrantLock();
 	/** 常驻行为观察者集合。 / Persistent action observers. */
 	protected Collection<ActionObserver> observers = new CopyOnWriteArrayList<ActionObserver>();
 	/** 一次性行为观察者列表。 / One-shot action observers. */

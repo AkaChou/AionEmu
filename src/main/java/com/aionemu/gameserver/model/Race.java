@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model;
 import jakarta.xml.bind.annotation.XmlEnum;
 
 import org.apache.commons.lang3.NotImplementedException;
+import lombok.Getter;
 
 /**
  * 种族枚举。
@@ -133,21 +134,18 @@ public enum Race {
 	/** 事件万圣节 / Event Halloween*/
 	EVENT_HALLOWEEN(58);
 
-	private int raceId;
-	private DescriptionId descriptionId;
+	/** 返回种族 ID / Returns the race id */
+	@Getter
+	private final int raceId;
+	private final DescriptionId descriptionId;
 
-	private Race(int raceId) {
+	Race(int raceId) {
 		this(raceId, null);
 	}
 
-	private Race(int raceId, DescriptionId descriptionId) {
+	Race(int raceId, DescriptionId descriptionId) {
 		this.raceId = raceId;
 		this.descriptionId = descriptionId;
-	}
-
-	/** 返回种族 ID / Returns the race id */
-	public int getRaceId() {
-		return raceId;
 	}
 
 	/** 是否为玩家种族。 / Whether player race. */

@@ -688,7 +688,7 @@ public class GeoService {
 	 */
 	private static final class SingletonHolder {
 		/** 默认实例。 / Default instance. */
-		protected static final GeoService instance = new GeoService();
+		private static final GeoService instance = new GeoService();
 		private SingletonHolder() {
 		}
 	}

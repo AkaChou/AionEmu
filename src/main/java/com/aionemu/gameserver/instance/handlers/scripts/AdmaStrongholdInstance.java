@@ -41,16 +41,16 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		/** suspiciouspot 任务 / suspicious pot task */
 		private Future<?> suspiciousPotTask;
 		/** suspicious pot / suspicious pot */
-		private List<Npc> suspiciousPot = new ArrayList<Npc>();
+		private final List<Npc> suspiciousPot = new ArrayList<Npc>();
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -119,7 +119,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -138,7 +138,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -158,7 +158,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -188,7 +188,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			}, 180000);
 		}
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -267,7 +267,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000026, storage.getItemCountByItemId(185000026)); //Inner Chamber Key.
@@ -278,13 +278,13 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000031, storage.getItemCountByItemId(185000031)); //Servants Quarters Key.
 		storage.decreaseByItemId(185000032, storage.getItemCountByItemId(185000032)); //Observation Post Passage Key.
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -307,7 +307,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -333,7 +333,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -344,7 +344,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

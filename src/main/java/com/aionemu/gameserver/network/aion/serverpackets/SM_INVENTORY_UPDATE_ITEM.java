@@ -8,11 +8,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步背包中单个物品状态变更的服务端包。
  * Server packet that synchronizes a single inventory item update to the client.
  */
+@AllArgsConstructor
 public class SM_INVENTORY_UPDATE_ITEM extends AionServerPacket {
 	private final Player player;
 	private final Item item;
@@ -27,20 +29,6 @@ public class SM_INVENTORY_UPDATE_ITEM extends AionServerPacket {
 	 */
 	public SM_INVENTORY_UPDATE_ITEM(Player player, Item item) {
 		this(player, item, ItemUpdateType.DEC_ITEM_USE);
-	}
-
-	/**
-	 * 以指定更新类型构造物品更新包。
-	 * Creates an item-update packet with the given update type.
-	 *
-	 * target player
-	 * @param item 待更新物品 / item to update
-	 * @param updateType 物品更新类型 / item update type
-	 */
-	public SM_INVENTORY_UPDATE_ITEM(Player player, Item item, ItemUpdateType updateType) {
-		this.player = player;
-		this.item = item;
-		this.updateType = updateType;
 	}
 
 	@Override

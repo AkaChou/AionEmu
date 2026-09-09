@@ -27,7 +27,7 @@ public class FriendList implements Iterable<Friend> {
 
 	private final Queue<Friend> friends;
 
-	private Player player;
+	private final Player player;
 
 	/**
 	 * 为指定玩家构造空好友列表。
@@ -206,7 +206,7 @@ public class FriendList implements Iterable<Friend> {
 
 		byte value;
 
-		private Status(byte value) {
+		Status(byte value) {
 			this.value = value;
 		}
 

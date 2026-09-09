@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.skillengine.model.HitType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 单次攻击结果，封装伤害、命中状态、命中类型以及护盾/反射/保护等附加效果数据。
@@ -14,27 +16,43 @@ public class AttackResult {
 	private float damage;
 
 	/** 攻击状态 / Attack status */
-	private AttackStatus attackStatus;
+	@Getter
+	private final AttackStatus attackStatus;
 
 	/** 命中类型 / Hit type */
 	private HitType hitType = HitType.EVERYHIT;
 
 	/** 护盾类型位掩码 / Shield type bitmask */
+	@Getter
 	private int shieldType;
 	/** 反射伤害 / Reflected damage */
+	@Getter
+	@Setter
 	private int reflectedDamage = 0;
 	/** 反射技能 ID / Reflected skill id */
+	@Getter
+	@Setter
 	private int reflectedSkillId = 0;
 	/** 保护技能 ID / Protected skill id */
+	@Getter
+	@Setter
 	private int protectedSkillId = 0;
 	/** 被保护减免的伤害 / Damage absorbed by protector */
+	@Getter
+	@Setter
 	private int protectedDamage = 0;
 	/** 保护者对象 ID / Protector object id */
+	@Getter
+	@Setter
 	private int protectorId = 0;
 	/** 护盾消耗的 MP / MP consumed by shield */
+	@Getter
+	@Setter
 	private int shieldMp = 0;
 
 	/** 是否触发子效果 / Whether to launch a sub-effect */
+	@Getter
+	@Setter
 	private boolean launchSubEffect = true;
 
 	/**
@@ -128,16 +146,6 @@ public class AttackResult {
 	}
 
 	/**
-	 * 返回攻击状态。
-	 * Returns the attack status.
-	 *
-	 * @return 攻击状态 / attack status
-	 */
-	public AttackStatus getAttackStatus() {
-		return attackStatus;
-	}
-
-	/**
 	 * 返回命中类型。
 	 * Returns the hit type.
 	 *
@@ -158,16 +166,6 @@ public class AttackResult {
 	}
 
 	/**
-	 * 返回护盾类型位掩码。
-	 * Returns the shield type bitmask.
-	 *
-	 * @return 护盾类型 / shield type
-	 */
-	public int getShieldType() {
-		return shieldType;
-	}
-
-	/**
 	 * 按位或合并护盾类型标志。
 	 * OR-merges a shield type flag into the bitmask.
 	 *
@@ -175,145 +173,5 @@ public class AttackResult {
 	 */
 	public void setShieldType(int shieldType) {
 		this.shieldType |= shieldType;
-	}
-
-	/**
-	 * 返回反射伤害。
-	 * Returns reflected damage.
-	 *
-	 * @return 反射伤害 / reflected damage
-	 */
-	public int getReflectedDamage() {
-		return this.reflectedDamage;
-	}
-
-	/**
-	 * 设置反射伤害。
-	 * Sets reflected damage.
-	 *
-	 * @param reflectedDamage 反射伤害 / reflected damage
-	 */
-	public void setReflectedDamage(int reflectedDamage) {
-		this.reflectedDamage = reflectedDamage;
-	}
-
-	/**
-	 * 返回反射技能 ID。
-	 * Returns the reflected skill id.
-	 *
-	 * @return 反射技能 ID / reflected skill id
-	 */
-	public int getReflectedSkillId() {
-		return this.reflectedSkillId;
-	}
-
-	/**
-	 * 设置反射技能 ID。
-	 * Sets the reflected skill id.
-	 *
-	 * @param skillId 技能 ID / skill id
-	 */
-	public void setReflectedSkillId(int skillId) {
-		this.reflectedSkillId = skillId;
-	}
-
-	/**
-	 * 返回保护技能 ID。
-	 * Returns the protected skill id.
-	 *
-	 * @return 保护技能 ID / protected skill id
-	 */
-	public int getProtectedSkillId() {
-		return this.protectedSkillId;
-	}
-
-	/**
-	 * 设置保护技能 ID。
-	 * Sets the protected skill id.
-	 *
-	 * @param skillId 技能 ID / skill id
-	 */
-	public void setProtectedSkillId(int skillId) {
-		this.protectedSkillId = skillId;
-	}
-
-	/**
-	 * 返回被保护减免的伤害。
-	 * Returns damage absorbed by a protector.
-	 *
-	 * @return 被保护伤害 / protected damage
-	 */
-	public int getProtectedDamage() {
-		return this.protectedDamage;
-	}
-
-	/**
-	 * 设置被保护减免的伤害。
-	 * Sets damage absorbed by a protector.
-	 *
-	 * @param protectedDamage 被保护伤害 / protected damage
-	 */
-	public void setProtectedDamage(int protectedDamage) {
-		this.protectedDamage = protectedDamage;
-	}
-
-	/**
-	 * 返回保护者对象 ID。
-	 * Returns the protector object id.
-	 *
-	 * @return 保护者对象 ID / protector id
-	 */
-	public int getProtectorId() {
-		return this.protectorId;
-	}
-
-	/**
-	 * 设置保护者对象 ID。
-	 * Sets the protector object id.
-	 *
-	 * @param protectorId 保护者对象 ID / protector id
-	 */
-	public void setProtectorId(int protectorId) {
-		this.protectorId = protectorId;
-	}
-
-	/**
-	 * 是否触发子效果。
-	 * Returns whether a sub-effect should be launched.
-	 *
-	 * @return 是否触发子效果 / whether to launch sub-effect
-	 */
-	public boolean isLaunchSubEffect() {
-		return launchSubEffect;
-	}
-
-	/**
-	 * 设置是否触发子效果。
-	 * Sets whether a sub-effect should be launched.
-	 *
-	 * @param launchSubEffect 是否触发子效果 / whether to launch
-	 */
-	public void setLaunchSubEffect(boolean launchSubEffect) {
-		this.launchSubEffect = launchSubEffect;
-	}
-
-	/**
-	 * 返回护盾消耗的 MP。
-	 * Returns MP consumed by the shield.
-	 *
-	 * @return 护盾消耗 MP / shield MP
-	 */
-	public int getShieldMp() {
-		return this.shieldMp;
-	}
-
-	/**
-	 * 设置护盾消耗的 MP。
-	 * Sets MP consumed by the shield.
-	 *
-	 * @param shieldMp 护盾消耗 MP / shield MP
-	 */
-	public void setShieldMp(int shieldMp) {
-		this.shieldMp = shieldMp;
 	}
 }

@@ -19,9 +19,9 @@ import lombok.Getter;
 public class ChallengeTask {
 	private final int taskId;
 	private final int ownerId;
-	private Map<Integer, ChallengeQuest> quests;
-	private Timestamp completeTime;
-	private ChallengeTaskTemplate template;
+	private final Map<Integer, ChallengeQuest> quests;
+	private final Timestamp completeTime;
+	private final ChallengeTaskTemplate template;
 
 	/**
 	 * 用于从 DAO 加载任务。 / Used for loading tasks from DAO.

@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -55,13 +56,11 @@ public class BannedIP {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BannedIP)) {
+        if (!(o instanceof BannedIP bannedIP)) {
             return false;
         }
 
-        BannedIP bannedIP = (BannedIP) o;
-
-        return !(mask != null ? !mask.equals(bannedIP.mask) : bannedIP.mask != null);
+		return !(!Objects.equals(mask, bannedIP.mask));
     }
 
     /**

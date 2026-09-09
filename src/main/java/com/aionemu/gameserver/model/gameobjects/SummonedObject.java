@@ -18,7 +18,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 public class SummonedObject<T extends VisibleObject> extends Npc {
 
-	private byte level;
+	private final byte level;
 
 	/**
 	 * 本召唤对象的创建者。

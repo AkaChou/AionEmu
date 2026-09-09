@@ -12,6 +12,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.pet.PetDopingEntry;
 
 import com.aionemu.commons.utils.collections.ShortObjectHashMap;
+import lombok.NoArgsConstructor;
 
 /**
  * 宠物药剂（doping）数据容器，按 short ID 索引条目。
@@ -19,16 +20,14 @@ import com.aionemu.commons.utils.collections.ShortObjectHashMap;
  */
 @XmlRootElement(name = "dopings")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class PetDopingData {
 
 	@XmlElement(name = "doping")
 	private List<PetDopingEntry> list;
 
 	@XmlTransient
-	private ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
-
-	public PetDopingData() {
-	}
+	private final ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
 
 	public PetDopingData(List<PetDopingEntry> entries) {
 		for (PetDopingEntry entry : entries) {

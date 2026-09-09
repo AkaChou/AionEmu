@@ -270,20 +270,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(164000531, storage.getItemCountByItemId(164000531));
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

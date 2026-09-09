@@ -53,7 +53,7 @@ public class SvsSchedule {
 		SvsSchedule ss;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/svs_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			ss = (SvsSchedule) JAXBUtil.deserialize(xml, SvsSchedule.class);
+			ss = JAXBUtil.deserialize(xml, SvsSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize svs", e);
 		}

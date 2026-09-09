@@ -113,9 +113,9 @@ public enum EmotionType {
 	/** 宠物表情4 / Pet Emotion 4 */
 	PET_EMOTION_4(123);
 
-	private int id;
+	private final int id;
 
-	private EmotionType(int id) {
+	EmotionType(int id) {
 		this.id = id;
 	}
 

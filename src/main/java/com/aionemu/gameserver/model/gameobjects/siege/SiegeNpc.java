@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.siegespawns.SiegeSpawnTemplate;
+import lombok.Getter;
 
 /**
  * 要塞 NPC 游戏对象。
@@ -15,8 +16,12 @@ import com.aionemu.gameserver.model.templates.spawns.siegespawns.SiegeSpawnTempl
  */
 public class SiegeNpc extends Npc {
 
-	private int siegeId;
-	private SiegeRace siegeRace;
+	/** 返回攻城 ID / Returns the siege id */
+	@Getter
+	private final int siegeId;
+	/** 获取要塞种族。 / Returns the siege race. */
+	@Getter
+	private final SiegeRace siegeRace;
 
 	/**
 	 * 创建要塞 NPC。
@@ -31,16 +36,6 @@ public class SiegeNpc extends Npc {
 		super(objId, controller, spawnTemplate, objectTemplate);
 		this.siegeId = spawnTemplate.getSiegeId();
 		this.siegeRace = spawnTemplate.getSiegeRace();
-	}
-
-	/** 获取要塞种族。 / Returns the siege race. */
-	public SiegeRace getSiegeRace() {
-		return siegeRace;
-	}
-
-	/** 返回攻城 ID / Returns the siege id */
-	public int getSiegeId() {
-		return siegeId;
 	}
 
 	/** 获取刷新点。 / Returns the spawn. */

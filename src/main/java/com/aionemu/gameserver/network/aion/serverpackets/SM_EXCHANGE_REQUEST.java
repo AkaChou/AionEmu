@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 交易请求包：向目标展示发起交易的玩家名。
@@ -9,19 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Avol-
  */
+@AllArgsConstructor
 public class SM_EXCHANGE_REQUEST extends AionServerPacket {
 
-	private String receiver;
-
-	/**
-	 * 按发起者名称构造交易请求包。
-	 * Creates an exchange request packet for the given requester name.
-	 *
-	 * @param receiver 发起交易玩家名 / name of the requesting player
-	 */
-	public SM_EXCHANGE_REQUEST(String receiver) {
-		this.receiver = receiver;
-	}
+	private final String receiver;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

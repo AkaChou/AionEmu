@@ -27,9 +27,9 @@ import com.aionemu.gameserver.world.World;
 @Slf4j
 public class SM_TELEPORT_MAP extends AionServerPacket {
 
-	private int targetObjectId;
-	private Player player;
-	private TeleporterTemplate teleport;
+	private final int targetObjectId;
+	private final Player player;
+	private final TeleporterTemplate teleport;
 	public Npc npc;
 	private static final List<Integer> disableTeleportNpcs = new ArrayList<Integer>();
 

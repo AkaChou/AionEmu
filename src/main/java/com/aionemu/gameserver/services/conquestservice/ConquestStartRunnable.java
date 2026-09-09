@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 征服/供奉活动启动定时任务。
@@ -14,19 +15,10 @@ import com.aionemu.gameserver.model.conquest.ConquestLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class ConquestStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public ConquestStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 启用对应地点。

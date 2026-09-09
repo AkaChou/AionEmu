@@ -13,12 +13,15 @@ import java.nio.ByteOrder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * Netty 入站处理器，桥接通道与 {@link AConnection}，负责帧解析与写出。
  * Netty inbound handler bridging channel and {@link AConnection} for framing and writes.
  */
 @Slf4j
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class NettyConnectionHandler extends ChannelInboundHandlerAdapter implements ConnectionTransport {
 
     private final NettyConnectionFactory connectionFactory;
@@ -48,20 +51,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
         this(connectionFactory, disconnectionExecutor, ServiceContext.current());
-    }
-
-    /**
-     * 完整构造。
-     * Full constructor.
-     *
-     * @param connectionFactory 连接工厂 / Connection factory
-     * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
-     * @param serviceContext 服务上下文 / Service context
-     */
-    NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor, String serviceContext) {
-        this.connectionFactory = connectionFactory;
-        this.disconnectionExecutor = disconnectionExecutor;
-        this.serviceContext = serviceContext;
     }
 
     /**
@@ -292,7 +281,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
                 return false;
             }
             int payloadSize = size - Short.BYTES;
-            ByteBuffer packetBuffer = (ByteBuffer) buffer.slice().limit(payloadSize);
+            ByteBuffer packetBuffer = buffer.slice().limit(payloadSize);
             packetBuffer.order(ByteOrder.LITTLE_ENDIAN);
             buffer.position(buffer.position() + payloadSize);
             return connection.processData(packetBuffer);

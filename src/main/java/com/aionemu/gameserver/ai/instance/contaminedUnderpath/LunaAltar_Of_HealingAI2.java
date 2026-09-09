@@ -22,10 +22,9 @@ public class LunaAltar_Of_HealingAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-	if (creature instanceof Player) {
-			final Player player = (Player) creature;
+	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // 对玩家使用技能 Bless of Guardian Spring / Use skill Bless of Guardian Spring on the player
-		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useWithoutPropSkill(); // 使用技能 Bless of Guardian Spring / Use skill Bless of Guardian Spring
+		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, creature).useWithoutPropSkill(); // 使用技能 Bless of Guardian Spring / Use skill Bless of Guardian Spring
 			}
 	}
     }

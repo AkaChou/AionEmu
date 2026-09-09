@@ -21,20 +21,12 @@ public class StatCapUtil {
 	static final int LOWER_CAP = Short.MIN_VALUE;
 	static final int UPPER_CAP = Short.MAX_VALUE;
 
-	static class StatLimits {
-		public final int lowerCap;
-		public final int upperCap;
+    record StatLimits(int lowerCap, int upperCap) {
+        public StatLimits() {
+            this(LOWER_CAP, UPPER_CAP);
+        }
 
-		public StatLimits() {
-			this.lowerCap = LOWER_CAP;
-			this.upperCap = UPPER_CAP;
-		}
-
-		public StatLimits(int lowerCap, int upperCap) {
-			this.lowerCap = lowerCap;
-			this.upperCap = upperCap;
-		}
-	}
+    }
 
 	static HashMap<StatEnum, Integer> minValues = new HashMap<StatEnum, Integer>();
 	static HashMap<StatEnum, Integer> maxValues = new HashMap<StatEnum, Integer>();
@@ -194,7 +186,7 @@ public class StatCapUtil {
 			stat2.setBonus(lowerCap - stat2.getBase());
 		}
 	}
-	
+
 		/** 输出错误属性 / Dump Wrong Stats */
 		public static void dumpWrongStats(String ownerInfo, Stat2... stats) {
 		List<Stat2> wrongStats = null;

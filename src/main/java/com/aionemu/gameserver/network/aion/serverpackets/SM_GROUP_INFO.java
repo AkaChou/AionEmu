@@ -14,11 +14,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_GROUP_INFO extends AionServerPacket {
 
-	private LootGroupRules lootRules;
-	private int groupId;
-	private int leaderId;
-	private int groupmapid;
-	private TeamType type;
+	private final LootGroupRules lootRules;
+	private final int groupId;
+	private final int leaderId;
+	private final int groupmapid;
+	private final TeamType type;
 
 	/**
 	 * @param group 玩家小队 / Player group

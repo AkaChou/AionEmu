@@ -33,10 +33,10 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 
 public class DropLists {
 
-	private static List<Element> listgroups = new ArrayList<Element>();
-	private static List<Element> drops = new ArrayList<Element>();
-	private static List<Element> allnpcs = new ArrayList<Element>();
-	private static List<Integer> npcids = new ArrayList<Integer>();
+	private static final List<Element> listgroups = new ArrayList<Element>();
+	private static final List<Element> drops = new ArrayList<Element>();
+	private static final List<Element> allnpcs = new ArrayList<Element>();
+	private static final List<Integer> npcids = new ArrayList<Integer>();
 
 	/** XML 导出主入口 / XML export main entry. */
 	public static void Xmlmian(int min, int max) {
@@ -141,7 +141,6 @@ public class DropLists {
 			log.info(I18n.get("log.88c280779a61", file.getAbsolutePath()));
 		} catch (Exception e) {
 			log.error(I18n.get("log.d81d6a6f69bf", e));
-		} finally {
 		}
 	}
 }

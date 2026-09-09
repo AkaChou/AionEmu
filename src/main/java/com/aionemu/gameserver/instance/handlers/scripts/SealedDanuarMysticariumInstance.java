@@ -59,27 +59,27 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	protected boolean isInstanceDestroyed = false;
 	// 小游戏 1 / Mini Game 1
 		/** ancient box1 / ancient box1 */
-		private List<Npc> AncientBox1 = new ArrayList<Npc>();
+		private final List<Npc> AncientBox1 = new ArrayList<Npc>();
 		/** ancient box2 / ancient box2 */
-		private List<Npc> AncientBox2 = new ArrayList<Npc>();
+		private final List<Npc> AncientBox2 = new ArrayList<Npc>();
 	// 小游戏 2 / Mini Game 2
 		/** test subject48012c / test subject48012c */
-		private List<Npc> TestSubject48012C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48012C = new ArrayList<Npc>();
 		/** test subject48013c / test subject48013c */
-		private List<Npc> TestSubject48013C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48013C = new ArrayList<Npc>();
 		/** test subject48015c / test subject48015c */
-		private List<Npc> TestSubject48015C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48015C = new ArrayList<Npc>();
 		/** test subject48023b / test subject48023b */
-		private List<Npc> TestSubject48023B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48023B = new ArrayList<Npc>();
 		/** test subject48027b / test subject48027b */
-		private List<Npc> TestSubject48027B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48027B = new ArrayList<Npc>();
 		/** test subject48025b / test subject48025b */
-		private List<Npc> TestSubject48025B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48025B = new ArrayList<Npc>();
 		/** test subject48039a / test subject48039a */
-		private List<Npc> TestSubject48039A = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48039A = new ArrayList<Npc>();
 		/** test subject48123a / test subject48123a */
-		private List<Npc> TestSubject48123A = new ArrayList<Npc>();
-	
+		private final List<Npc> TestSubject48123A = new ArrayList<Npc>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -97,7 +97,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -138,14 +138,14 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void SpawnSealedMysticariumRace() {
 		final int soloSet = spawnRace == Race.ASMODIANS ? 731584 : 731583;
         final int soloGuide = spawnRace == Race.ASMODIANS ? 805220 : 805219;
 		spawn(soloSet, 167.55927f, 122.991554f, 231.67175f, (byte) 118);
 		spawn(soloGuide, 171.01581f, 128.56917f, 231.66145f, (byte) 107);
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -160,7 +160,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			SpawnSealedMysticariumRace();
 		}
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -189,7 +189,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
             break;
 		}
     }
-	
+
 	private void startAncientBoxTimer() {
 		// 找到监狱��匙以击败内部怪物。 / Locate the prison keys to defeat the monsters inside.
 		sendMsgByRace(1402801, Race.PC_ALL, 0);
@@ -236,7 +236,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			}
 		}, 300000); //5 Minute.
     }
-	
+
 	private void startTestSubjectPrisonTimer() {
 		// 抓住藏在欧比斯裂隙中的罪犯。 / Catch the criminals hiding in the Abyss Rift.
 		sendMsgByRace(1402811, Race.PC_ALL, 0);
@@ -269,7 +269,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			}
 		}, 300000); //5 Minute.
     }
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -285,7 +285,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 				 * Start Mini Game 3
 				 */
 				// 在增援到达前，保护古代达努阿尔神器免受贝里特拉部队攻击。 / Protect the ancient Danuar artifacts from Beritra's troops until reinforcements arrive.
-				sendMsgByRace(1402821, Race.PC_ALL, 0); 
+				sendMsgByRace(1402821, Race.PC_ALL, 0);
 				// 怪物即将进攻。 / Monsters will attack in a moment.
 				sendMsgByRace(1402830, Race.PC_ALL, 3000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -548,7 +548,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -644,7 +644,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			TestSubject48123A.add((Npc) spawn(219978, 345.93323f, 512.3764f, 148.18051f, (byte) 66));
 		}
     }
-	
+
 	private void raidMysticarium(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -665,7 +665,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	/**
 	 * 参考视频来源。 / Source: https://www.youtube.com/watch?v=ppgwb2p_iA0 https://www.youtube.com/watch?v=D6jy0R-BOnI
 	 */
@@ -828,7 +828,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	public void startMysticariumBoss() {
 		raidMysticarium((Npc)spawn(219987, 494.27405f, 491.4183f, 100.36539f, (byte) 106));
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -851,7 +851,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -877,7 +877,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -893,13 +893,13 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();

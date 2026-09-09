@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsLocation;
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 伊迪安深渊活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
  * @author Rinzler (Encom)
  * @param <IL> 伊迪安深渊地点类型 / Idian Depths location type
  */
+@RequiredArgsConstructor
 public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / bound location
+	 */
+	@Getter
 	private final IL idianDepthsLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * Concrete open logic.
 	 */
 	protected abstract void startIdianDepths();
-
-	/**
-	 * 绑定伊迪安深渊地点。
-	 * Binds the Idian Depths location.
-	 *
-	 * @param idianDepthsLocation 伊迪安深渊地点 / Idian Depths location
-	 */
-	public IdianDepths(IL idianDepthsLocation) {
-		this.idianDepthsLocation = idianDepthsLocation;
-	}
 
 	/**
 	 * 开启活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 */
 	public boolean isClosed() {
 		return closed.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
-	 */
-	public IL getIdianDepthsLocation() {
-		return idianDepthsLocation;
 	}
 
 	/**

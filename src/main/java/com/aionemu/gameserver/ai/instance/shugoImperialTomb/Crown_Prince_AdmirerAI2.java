@@ -34,14 +34,14 @@ public class Crown_Prince_AdmirerAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 831110: //Crown Prince's Admirer.
+				case 831110: // 称颂皇太子的人 / Crown Prince's Admirer.
 					startTombWaveA1();
 					despawnNpc(831095); //Shugo Warrior Transformation Device.
 					// 掠夺者来袭。守卫皇太子纪念碑！ / Pillagers incoming. Guard the Crown Prince's Monument!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401582));
-					spawn(831130, 174.11159f, 226.21033f, 536.16974f, (byte) 20); //Crown Prince's Monument.
-					spawn(831250, 184.92825f, 229.44f, 536.16974f, (byte) 54); //Imperial Obelisk.
-					spawn(831251, 170.58969f, 237.13005f, 536.16974f, (byte) 108); //Imperial Obelisk.
+					spawn(831130, 174.11159f, 226.21033f, 536.16974f, (byte) 20); // 皇太子的石碑 / Crown Prince's Monument.
+					spawn(831250, 184.92825f, 229.44f, 536.16974f, (byte) 54); // 皇陵石塔 / Imperial Obelisk.
+					spawn(831251, 170.58969f, 237.13005f, 536.16974f, (byte) 108); // 皇陵石塔 / Imperial Obelisk.
 				break;
 			}
 		}

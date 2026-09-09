@@ -49,9 +49,9 @@ public class PlayerTeamDistributionService {
 		}
 		long expReward;
 		if (filteredStats.players.size() + filteredStats.mentorCount == 1) {
-			expReward = (long) (StatFunctions.calculateSoloExperienceReward(filteredStats.players.get(0), owner));
+			expReward = StatFunctions.calculateSoloExperienceReward(filteredStats.players.get(0), owner);
 		} else {
-			expReward = (long) (StatFunctions.calculateGroupExperienceReward(filteredStats.highestLevel, owner));
+			expReward = StatFunctions.calculateGroupExperienceReward(filteredStats.highestLevel, owner);
 		}
 		// 小队加成：2 人 10% / Party Bonus: 2 Members 10%
 		int size = filteredStats.players.size();
@@ -79,7 +79,7 @@ public class PlayerTeamDistributionService {
 			if (owner.getLevel() >= 66) {
 				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
 			}
-			long rewardXp = (long) (expReward * bonus * member.getLevel()) / (filteredStats.partyLvlSum * 100);
+			long rewardXp = (expReward * bonus * member.getLevel()) / (filteredStats.partyLvlSum * 100L);
 			int rewardDp = StatFunctions.calculateGroupDPReward(member, owner);
 			float rewardAp = 1;
 			// 比最高成员低 10 级以上的玩家奖励为 0。 / Players 10 levels below highest member get 0 reward.
@@ -87,7 +87,7 @@ public class PlayerTeamDistributionService {
 				rewardXp = 0;
 				rewardDp = 0;
 			} else if (filteredStats.mentorCount > 0) {
-				int cape = XPCape.values()[(int) member.getLevel()].value();
+				int cape = XPCape.values()[member.getLevel()].value();
 				if (cape < rewardXp) {
 					rewardXp = cape;
 				}
@@ -126,8 +126,8 @@ public class PlayerTeamDistributionService {
 			case 300630000: // Anguished Dragon Lord's Refuge.
 			case 300700000: // The Hexway.
 			case 300800000: // Infinity Shard.
-			case 301140000: // Seized Danuar Sanctuary.
-			case 301380000: // Danuar Sanctuary.
+			case 301140000: // 符文安息处魔族回廊 / Seized Danuar Sanctuary.
+			case 301380000: // 符文安息处天族回廊 / Danuar Sanctuary.
 			case 301390000: // Drakenspire Depths.
 			case 310110000: // Theobomos Lab.
 			case 320100000: // Fire Temple.

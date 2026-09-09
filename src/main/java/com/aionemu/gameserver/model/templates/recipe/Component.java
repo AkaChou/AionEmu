@@ -22,6 +22,6 @@ public class Component {
 
 	/** 返回组件列表 / Returns the components */
 	public Collection<ComponentElement> getComponents() {
-		return component != null ? component : Collections.<ComponentElement>emptyList();
+		return component != null ? component : Collections.emptyList();
 	}
 }

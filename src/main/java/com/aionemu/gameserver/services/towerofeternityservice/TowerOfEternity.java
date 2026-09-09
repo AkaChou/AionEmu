@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 永恒之塔活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
  * @author Wnkrz
  * @param <TE> 永恒之塔地点类型 / tower location type
  */
+@RequiredArgsConstructor
 public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / location
+	 */
+	@Getter
 	private final TE towerOfEternityLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * Concrete open logic.
 	 */
 	protected abstract void startTowerOfEternity();
-
-	/**
-	 * 绑定永恒之塔地点。
-	 * Binds the tower location.
-	 *
-	 * @param towerOfEternityLocation 永恒之塔地点 / tower location
-	 */
-	public TowerOfEternity(TE towerOfEternityLocation) {
-		this.towerOfEternityLocation = towerOfEternityLocation;
-	}
 
 	/**
 	 * 开启活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 */
 	public boolean isClosed() {
 		return closed.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / location
-	 */
-	public TE getTowerOfEternityLocation() {
-		return towerOfEternityLocation;
 	}
 
 	/**

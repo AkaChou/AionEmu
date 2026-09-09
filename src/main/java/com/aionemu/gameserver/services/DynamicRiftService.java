@@ -135,7 +135,7 @@ public class DynamicRiftService {
 			public void run() {
 				stopDynamicRift(id);
 			}
-		}, CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

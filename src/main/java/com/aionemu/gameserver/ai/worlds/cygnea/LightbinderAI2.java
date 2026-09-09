@@ -22,11 +22,10 @@ public class LightbinderAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-	if (creature instanceof Player) {
-			final Player player = (Player) creature;
+	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(20664)) { //Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useWithoutPropSkill(); //Conqueror's Passion.
+		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, creature).useWithoutPropSkill(); //Conqueror's Passion.
 				}
 			}
 	}

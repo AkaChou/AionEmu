@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -12,7 +11,6 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -20,11 +18,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -57,7 +53,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 	/** sanctum 任务 / sanctum task */
 		private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
 	/**
@@ -66,7 +62,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -75,7 +71,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -170,31 +166,31 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 220716: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-			    sp(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105, 0); //Jucleas.
-				sp(220916, 1418.0f, 1670.0f, 572.88416f, (byte) 105, 0); //Sibylla.
-				sp(220917, 1412.0f, 1664.0f, 572.88416f, (byte) 105, 0); //Aithra.
-				sp(220918, 1422.0f, 1667.0f, 572.88416f, (byte) 105, 0); //Macus.
-				sp(220919, 1414.8833f, 1661.1019f, 572.88416f, (byte) 105, 0); //Eumelos.
+			    sp(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105, 0); // 尤克雷阿斯 / Jucleas.
+				sp(220916, 1418.0f, 1670.0f, 572.88416f, (byte) 105, 0); // 西比拉 / Sibylla.
+				sp(220917, 1412.0f, 1664.0f, 572.88416f, (byte) 105, 0); // 艾特拉 / Aithra.
+				sp(220918, 1422.0f, 1667.0f, 572.88416f, (byte) 105, 0); // 马库斯 / Macus.
+				sp(220919, 1414.8833f, 1661.1019f, 572.88416f, (byte) 105, 0); // 埃乌梅洛斯 / Eumelos.
 				sp(220920, 1427.3644f, 1660.996f, 572.88416f, (byte) 27, 0); //Brynner.
 				sp(220921, 1411.9657f, 1652.8064f, 573.23083f, (byte) 3, 0); //Mayu.
 			break;
 			case 220717: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-				sp(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9, 0); //Fasimedes.
-				sp(220923, 1352.814f, 1394.9077f, 573.20856f, (byte) 9, 0); //Jupion.
-				sp(220924, 1357.7458f, 1385.9131f, 573.20856f, (byte) 9, 0); //Likesan.
-				sp(220925, 1354.6298f, 1400.8014f, 573.38635f, (byte) 8, 0); //Jumentis.
-				sp(220926, 1362.8323f, 1382.5488f, 573.38635f, (byte) 7, 0); //Charna.
-				sp(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8, 0); //Thrasymedes.
+				sp(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9, 0); // 帕西美达斯 / Fasimedes.
+				sp(220923, 1352.814f, 1394.9077f, 573.20856f, (byte) 9, 0); // 尤皮温 / Jupion.
+				sp(220924, 1357.7458f, 1385.9131f, 573.20856f, (byte) 9, 0); // 里卡萨斯 / Likesan.
+				sp(220925, 1354.6298f, 1400.8014f, 573.38635f, (byte) 8, 0); // 尤贝恩图斯 / Jumentis.
+				sp(220926, 1362.8323f, 1382.5488f, 573.38635f, (byte) 7, 0); // 黑卡泰 / Charna.
+				sp(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8, 0); // 特拉希梅德斯 / Thrasymedes.
 				sp(220928, 1362.214f, 1390.118f, 573.0446f, (byte) 9, 0); //Oakley.
 			break;
 			case 220718: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-				sp(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0, 0); //Lavirintos.
-				sp(220930, 1853.6035f, 1519.6f, 590.00854f, (byte) 0, 0); //Boreas.
+				sp(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0, 0); // 拉比临托斯 / Lavirintos.
+				sp(220930, 1853.6035f, 1519.6f, 590.00854f, (byte) 0, 0); // 布雷亚斯 / Boreas.
 				sp(220931, 1852.1235f, 1516.9996f, 591.55231f, (byte) 0, 0); //Miragent Guardian.
 				sp(220931, 1851.8687f, 1506.1539f, 591.55231f, (byte) 0, 0); //Miragent Guardian.
-				sp(220932, 1853.995f, 1502.2582f, 590.00854f, (byte) 0, 0); //Dion.
-				sp(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117, 0); //Bellia.
-				sp(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5, 0); //Hygea.
+				sp(220932, 1853.995f, 1502.2582f, 590.00854f, (byte) 0, 0); // 迪温 / Dion.
+				sp(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117, 0); // 贝尔丽亚 / Bellia.
+				sp(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5, 0); // 希凯雅 / Hygea.
 			break;
 			// 战舰主模块。 / Dredgion Main Module.
 			case 220768:
@@ -356,12 +352,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(221007, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 3.
 			break;
-			case 220915: //Jucleas.
+			case 220915: // 尤克雷阿斯 / Jucleas.
 			    despawnNpc(npc);
-				deleteNpc(220916); //Sibylla.
-				deleteNpc(220917); //Aithra.
-				deleteNpc(220918); //Macus.
-				deleteNpc(220919); //Eumelos.
+				deleteNpc(220916); // 西比拉 / Sibylla.
+				deleteNpc(220917); // 艾特拉 / Aithra.
+				deleteNpc(220918); // 马库斯 / Macus.
+				deleteNpc(220919); // 埃乌梅洛斯 / Eumelos.
 				deleteNpc(220920); //Brynner.
 				deleteNpc(220921); //Mayu.
 				deleteNpc(220716); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
@@ -374,24 +370,24 @@ public class SanctumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105); //Jucleas.
-						spawn(220916, 1418.0f, 1670.0f, 572.88416f, (byte) 105); //Sibylla.
-						spawn(220917, 1412.0f, 1664.0f, 572.88416f, (byte) 105); //Aithra.
-						spawn(220918, 1422.0f, 1667.0f, 572.88416f, (byte) 105); //Macus.
-						spawn(220919, 1414.8833f, 1661.1019f, 572.88416f, (byte) 105); //Eumelos.
+						spawn(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105); // 尤克雷阿斯 / Jucleas.
+						spawn(220916, 1418.0f, 1670.0f, 572.88416f, (byte) 105); // 西比拉 / Sibylla.
+						spawn(220917, 1412.0f, 1664.0f, 572.88416f, (byte) 105); // 艾特拉 / Aithra.
+						spawn(220918, 1422.0f, 1667.0f, 572.88416f, (byte) 105); // 马库斯 / Macus.
+						spawn(220919, 1414.8833f, 1661.1019f, 572.88416f, (byte) 105); // 埃乌梅洛斯 / Eumelos.
 						spawn(220920, 1427.3644f, 1660.996f, 572.88416f, (byte) 27); //Brynner.
 						spawn(220921, 1411.9657f, 1652.8064f, 573.23083f, (byte) 3); //Mayu.
 						spawn(220716, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
-			case 220922: //Fasimedes.
+			case 220922: // 帕西美达斯 / Fasimedes.
 			    despawnNpc(npc);
-				deleteNpc(220923); //Jupion.
-				deleteNpc(220924); //Likesan.
-				deleteNpc(220925); //Jumentis.
-				deleteNpc(220926); //Charna.
-				deleteNpc(220927); //Thrasymedes.
+				deleteNpc(220923); // 尤皮温 / Jupion.
+				deleteNpc(220924); // 里卡萨斯 / Likesan.
+				deleteNpc(220925); // 尤贝恩图斯 / Jumentis.
+				deleteNpc(220926); // 黑卡泰 / Charna.
+				deleteNpc(220927); // 特拉希梅德斯 / Thrasymedes.
 				deleteNpc(220928); //Oakley.
 				deleteNpc(220717); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 圣所繁荣大厅被弗里吉达军团摧毁。 / The Hall of Prosperity in Sanctum has been destroyed by the Frigida Fregida Legion.
@@ -403,25 +399,25 @@ public class SanctumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9); //Fasimedes.
-						spawn(220923, 1352.814f, 1394.9077f, 573.20856f, (byte) 9); //Jupion.
-						spawn(220924, 1357.7458f, 1385.9131f, 573.20856f, (byte) 9); //Likesan.
-						spawn(220925, 1354.6298f, 1400.8014f, 573.38635f, (byte) 8); //Jumentis.
-						spawn(220926, 1362.8323f, 1382.5488f, 573.38635f, (byte) 7); //Charna.
-						spawn(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8); //Thrasymedes.
+						spawn(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9); // 帕西美达斯 / Fasimedes.
+						spawn(220923, 1352.814f, 1394.9077f, 573.20856f, (byte) 9); // 尤皮温 / Jupion.
+						spawn(220924, 1357.7458f, 1385.9131f, 573.20856f, (byte) 9); // 里卡萨斯 / Likesan.
+						spawn(220925, 1354.6298f, 1400.8014f, 573.38635f, (byte) 8); // 尤贝恩图斯 / Jumentis.
+						spawn(220926, 1362.8323f, 1382.5488f, 573.38635f, (byte) 7); // 黑卡泰 / Charna.
+						spawn(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8); // 特拉希梅德斯 / Thrasymedes.
 						spawn(220928, 1362.214f, 1390.118f, 573.0446f, (byte) 9); //Oakley.
 						spawn(220717, 1387.8679f, 1405.131f, 573.30664f, (byte) 8); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
-			case 220929: //Lavirintos.
+			case 220929: // 拉比临托斯 / Lavirintos.
 			    despawnNpc(npc);
-				deleteNpc(220930); //Boreas.
+				deleteNpc(220930); // 布雷亚斯 / Boreas.
 				deleteNpc(220931); //Miragent Guardian.
 				deleteNpc(220931); //Miragent Guardian.
-				deleteNpc(220932); //Dion.
-				deleteNpc(220933); //Bellia.
-				deleteNpc(220934); //Hygea.
+				deleteNpc(220932); // 迪温 / Dion.
+				deleteNpc(220933); // 贝尔丽亚 / Bellia.
+				deleteNpc(220934); // 希凯雅 / Hygea.
 				deleteNpc(220718); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 圣所的守护者之厅被弗里吉达军团摧毁。 / The Protector's Hall in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403782, Race.PC_ALL, 0);
@@ -432,20 +428,20 @@ public class SanctumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0); //Lavirintos.
-						spawn(220930, 1853.6035f, 1519.6f, 590.00854f, (byte) 0); //Boreas.
+						spawn(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0); // 拉比临托斯 / Lavirintos.
+						spawn(220930, 1853.6035f, 1519.6f, 590.00854f, (byte) 0); // 布雷亚斯 / Boreas.
 						spawn(220931, 1852.1235f, 1516.9996f, 591.55231f, (byte) 0); //Miragent Guardian.
 						spawn(220931, 1851.8687f, 1506.1539f, 591.55231f, (byte) 0); //Miragent Guardian.
-						spawn(220932, 1853.995f, 1502.2582f, 590.00854f, (byte) 0); //Dion.
-						spawn(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117); //Bellia.
-						spawn(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5); //Hygea.
+						spawn(220932, 1853.995f, 1502.2582f, 590.00854f, (byte) 0); // 迪温 / Dion.
+						spawn(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117); // 贝尔丽亚 / Bellia.
+						spawn(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5); // 希凯雅 / Hygea.
 						spawn(220718, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -566,7 +562,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void dredgionMainModule1() {
 		Npc mainModule1 = instance.getNpc(220866); //Dredgion Main Module.
 		if (mainModule1 != null) {
@@ -576,7 +572,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	private void dredgionMainModule2() {
 		Npc mainModule2 = instance.getNpc(220867); //Dredgion Main Module.
 		if (mainModule2 != null) {
@@ -586,11 +582,11 @@ public class SanctumInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	protected void invadeIDLC1Dredgion(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	protected void startInstanceTask() {
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -710,8 +706,8 @@ public class SanctumInstance extends GeneralInstanceHandler
 	 */
 				// 防御炮塔处有资源。护送运输车前往收集。 / Resources available at the defense turret. Escort the transport there to collect them.
 				sendMsgByRace(1403708, Race.PC_ALL, 0);
-				spawn(834305, 1380.8705f, 1689.9844f, 573.12286f, (byte) 0); //Koirinerk.
-				spawn(834306, 1382.1947f, 1687.0924f, 573.12286f, (byte) 9); //Soirunerk.
+				spawn(834305, 1380.8705f, 1689.9844f, 573.12286f, (byte) 0); // 克伊琳 / Koirinerk.
+				spawn(834306, 1382.1947f, 1687.0924f, 573.12286f, (byte) 9); // 索依隆隆 / Soirunerk.
 				spawn(703410, 1382.1947f, 1687.0924f, 573.12286f, (byte) 9); //Sanctum Tank [Flag].
 				spawn(834504, 1609.6289f, 1383.5377f, 563.48401f, (byte) 0, 542); //Turret Core 1.
 				spawn(834505, 1544.2443f, 1383.5377f, 563.49438f, (byte) 0, 541); //Turret Core 2.
@@ -730,8 +726,8 @@ public class SanctumInstance extends GeneralInstanceHandler
 	 * 5. 指挥官泽达斯：30 分钟后出现在天族广场；其死亡或再过 5 分钟结算最终军阶。 / 5. Commander Zedas: After 30min, Commander Zedas will appear in the "Elyos Square" The final rank is calculated when Commander Zedas is dead or 5 min have passed
 	 */
 				deleteNpc(221522); //Gerion.
-				deleteNpc(221523); //Mysteris.
-				deleteNpc(221524); //Eremitia.
+				deleteNpc(221523); // 希拉鲁斯 / Mysteris.
+				deleteNpc(221524); // 艾尔米提亚 / Eremitia.
 				// 弗里吉达军团突击队长已出现。 / The Assault Leader of the Frigida Legion has appeared.
 				sendMsgByRace(1403706, Race.PC_ALL, 0);
 				// 弗里吉达军团指挥官泽达斯已出现。 / Commander Zedas of the Frigida Legion has appeared.
@@ -800,13 +796,12 @@ public class SanctumInstance extends GeneralInstanceHandler
             }
         }, 2100000)); //35 Min.
     }
-	
+
 	protected void stopInstance(Player player) {
         stopInstanceTask();
 		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Dredgion Defense: Sanctum>");
 	}
-	
+
    /**
 	 * 奖励：高级弗里吉达军团战利品箱等。
 	 * Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
@@ -866,7 +861,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -878,7 +873,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		startInstanceTask();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -889,7 +884,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 		movies.clear();
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : sanctumTask) {
 			if (task != null) {
@@ -897,15 +892,15 @@ public class SanctumInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -923,7 +918,7 @@ public class SanctumInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -940,36 +935,36 @@ public class SanctumInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	private boolean isDead(Npc npc) {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -981,7 +976,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		removeEffects(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -993,7 +988,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		removeEffects(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1006,35 +1001,20 @@ public class SanctumInstance extends GeneralInstanceHandler
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(18290); //? .
 		effectController.removeEffect(18300); //? .
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1060,7 +1040,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void magicWardEnergy() {
 		for (Player p: instance.getPlayersInside()) {
 			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(18309); //Magic Ward Energy.
@@ -1069,7 +1049,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			e.applyEffect();
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.

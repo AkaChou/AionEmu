@@ -47,7 +47,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	protected boolean isInstanceDestroyed = false;
 		/** drakenseerlair 任务 / drakenseer lair task */
 		private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -92,7 +92,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -110,7 +110,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			GameEngineServices.skillEngine().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
 		}
 	}
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -146,7 +146,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	private void spawnDrakenseerLairRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("DRAKENSEER_LAIR", mapId,
         new Point3D(283.44757, 342.6241, 336.25607),
@@ -158,10 +158,10 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 * 处理 startDrakenseerLairTimer。
 	 * Handle startDrakenseerLairTimer.
 	 */
-	
+
 	protected void startDrakenseerLairTimer() {
 		// 进入龙视者之巢并摧毁护盾导管。 / Enter Drakenseer's Lair and destroy the Shielding Conduits.
-		this.sendMessage(1403375, 1 * 60 * 1000);
+		this.sendMessage(1403375, 60 * 1000);
 		// 你还剩 1 分钟摧毁剩余护盾导管。 / You have one minute left to destroy the remaining Shielding Conduits.
 		this.sendMessage(1403382, 9 * 60 * 1000);
 		drakenseerLairTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -187,7 +187,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
             }
         }, 600000)); //10 Minutes.
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -243,11 +243,11 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopDrakenseerLairTimer(Player player) {
         stopDrakenseerLairTask();
 	}
-	
+
 	private void stopDrakenseerLairTask() {
         for (Future<?> task : drakenseerLairTask) {
 			if (task != null) {
@@ -255,7 +255,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -278,7 +278,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -304,7 +304,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -320,7 +320,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -330,7 +330,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		stopDrakenseerLairTask();
 		isInstanceDestroyed = true;
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -342,11 +342,11 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

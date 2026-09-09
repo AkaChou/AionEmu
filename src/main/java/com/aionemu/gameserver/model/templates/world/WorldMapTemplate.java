@@ -14,6 +14,7 @@ import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.world.WorldDropType;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
+import lombok.Getter;
 
 /**
  * 世界地图模板（静态数据/XML）。
@@ -23,9 +24,13 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 @XmlRootElement(name = "map")
 @XmlAccessorType(XmlAccessType.NONE)
 public class WorldMapTemplate {
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name = "";
 
+	/** 返回映射 ID / Returns the map id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected Integer mapId;
 
@@ -35,12 +40,23 @@ public class WorldMapTemplate {
 	@XmlAttribute(name = "beginner_twin_count")
 	protected int beginnerTwinCount;
 
+	/** 返回最大玩家数 / Returns the max user */
+	@Getter
 	@XmlAttribute(name = "max_user")
 	protected int maxUser;
 
+	/**
+	 * 是否监狱地图。
+	 * Whether this is a prison map.
+	 *
+	 * @return 是否监狱 / whether prison
+	 */
+	@Getter
 	@XmlAttribute(name = "prison")
 	protected boolean prison = false;
 
+	/** 是否副本。 / Whether instance. */
+	@Getter
 	@XmlAttribute(name = "instance")
 	protected boolean instance = false;
 
@@ -50,15 +66,23 @@ public class WorldMapTemplate {
 	@XmlAttribute(name = "water_level", required = true)
 	protected int waterlevel = 16;
 
+	/** 获取世界类型。 / Returns the world type. */
+	@Getter
 	@XmlAttribute(name = "world_type")
 	protected WorldType worldType = WorldType.NONE;
 
+	/** 返回世界大小 / Returns the world size. */
+	@Getter
 	@XmlAttribute(name = "world_size")
 	protected int worldSize;
 
+	/** 返回 AI 信息 / Returns the ai info */
+	@Getter
 	@XmlElement(name = "ai_info")
 	protected AiInfo aiInfo = AiInfo.DEFAULT;
 
+	/** 是否排除增益 / Whether except buff */
+	@Getter
 	@XmlAttribute(name = "except_buff")
 	protected boolean exceptBuff = false;
 
@@ -70,16 +94,6 @@ public class WorldMapTemplate {
 
 	@XmlTransient
 	protected Integer flags;
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回映射 ID / Returns the map id */
-	public Integer getMapId() {
-		return mapId;
-	}
 
 	/** 返回双生副本数 / Returns the twin count */
 	public int getTwinCount() {
@@ -99,26 +113,6 @@ public class WorldMapTemplate {
 		return Math.min(WorldConfig.WORLD_MAX_TWINS_BEGINNER, beginnerTwinCount);
 	}
 
-	/** 返回最大玩家数 / Returns the max user */
-	public int getMaxUser() {
-		return maxUser;
-	}
-
-	/**
-	 * 是否监狱地图。
-	 * Whether this is a prison map.
-	 *
-	 * @return 是否监狱 / whether prison
-	 */
-	public boolean isPrison() {
-		return prison;
-	}
-
-	/** 是否副本。 / Whether instance. */
-	public boolean isInstance() {
-		return instance;
-	}
-
 	/** 返回水位 / Returns the water level. */
 	public int getWaterLevel() {
 		return waterlevel;
@@ -127,16 +121,6 @@ public class WorldMapTemplate {
 	/** 返回死亡高度 / Returns the death level */
 	public int getDeathLevel() {
 		return deathlevel;
-	}
-
-	/** 获取世界类型。 / Returns the world type. */
-	public WorldType getWorldType() {
-		return worldType;
-	}
-
-	/** 返回世界大小 / Returns the world size. */
-	public int getWorldSize() {
-		return worldSize;
 	}
 
 	/** 获取世界掉落类型。 / Returns the world drop type. */
@@ -226,15 +210,5 @@ public class WorldMapTemplate {
 
 	protected void afterUnmarshal(Unmarshaller u, Object parent) {
 		flags = ZoneAttributes.fromList(flagValues);
-	}
-
-	/** 是否排除增益 / Whether except buff */
-	public boolean isExceptBuff() {
-		return exceptBuff;
-	}
-
-	/** 返回 AI 信息 / Returns the ai info */
-	public AiInfo getAiInfo() {
-		return aiInfo;
 	}
 }

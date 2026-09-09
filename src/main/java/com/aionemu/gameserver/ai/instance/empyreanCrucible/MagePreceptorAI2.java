@@ -29,7 +29,7 @@ import java.util.List;
 @AIName("mage_preceptor")
 public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 
-	private List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<Integer>();
 
 	@Override
 	public void handleAttack(Creature creature) {
@@ -109,7 +109,7 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 	}
 	private void addPercents() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[] {75, 50, 25});
+		Collections.addAll(percents, 75, 50, 25);
 	}
 
 	@Override

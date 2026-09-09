@@ -71,8 +71,7 @@ public class ArmorCondition extends Condition {
 	 * @return 是否有效 / whether valid
 	 */
 	private boolean isValidArmor(Creature creature) {
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			return player.getEquipment().isArmorTypeEquipped(armorType);
 		}
 		return false;

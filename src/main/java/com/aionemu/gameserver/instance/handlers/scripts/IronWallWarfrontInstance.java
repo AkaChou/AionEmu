@@ -39,13 +39,10 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 /**
  * 铁壁前线副本事件处理器。
@@ -81,38 +78,32 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         /** 实例 / instance static */
         private static IronWallWarfrontInstance instanceStatic = null;
 
-    private static class SpawnData {
-        final int npcId;
-        final float x, y, z;
-        final byte h;
-        SpawnData(int npcId, float x, float y, float z, byte h) {
-            this.npcId = npcId;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.h = h;
-        }
-    }
+	private record SpawnData(int npcId, float x, float y, float z, byte h) {
+	}
 
-    private static class NpcHandler {
-        final int points;
-        final boolean despawn;
-        final java.util.function.BiConsumer<Npc, Player> onDeath;
-        final Map<Race, List<SpawnData>> spawns;
-        NpcHandler(int points) { this(points, true, null); }
-        NpcHandler(int points, boolean despawn) { this(points, despawn, null); }
-        NpcHandler(int points, java.util.function.BiConsumer<Npc, Player> onDeath) { this(points, true, onDeath); }
-        NpcHandler(int points, boolean despawn, java.util.function.BiConsumer<Npc, Player> onDeath) {
-            this.points = points;
-            this.despawn = despawn;
-            this.onDeath = onDeath;
-            this.spawns = new HashMap<>();
-        }
-        NpcHandler addSpawn(Race race, SpawnData... data) {
-            spawns.put(race, java.util.Arrays.asList(data));
-            return this;
-        }
-    }
+	private record NpcHandler(int points, boolean despawn, BiConsumer<Npc, Player> onDeath,
+							  Map<Race, List<SpawnData>> spawns) {
+		NpcHandler(int points) {
+			this(points, true, null);
+		}
+
+		NpcHandler(int points, boolean despawn) {
+			this(points, despawn, null);
+		}
+
+		NpcHandler(int points, BiConsumer<Npc, Player> onDeath) {
+			this(points, true, onDeath);
+		}
+
+		NpcHandler(int points, boolean despawn, BiConsumer<Npc, Player> onDeath) {
+			this(points, despawn, onDeath, new HashMap<>());
+		}
+
+		NpcHandler addSpawn(Race race, SpawnData... data) {
+			spawns.put(race, Arrays.asList(data));
+			return this;
+		}
+	}
     /** 处理器集合 / handlers */
     private static final Map<Integer, NpcHandler> HANDLERS = new HashMap<>();
 
@@ -124,11 +115,11 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         HANDLERS.put(233543, new NpcHandler(0));
         HANDLERS.put(233549, new NpcHandler(0));
         HANDLERS.put(233561, new NpcHandler(0));
-        
+
         HANDLERS.put(233547, new NpcHandler(100));
         HANDLERS.put(233548, new NpcHandler(100));
         HANDLERS.put(233537, new NpcHandler(250));
-        
+
         int[][] cannons = {
             {233741, 726565, 328077, 254216, 48, 701596, 801960, 701610, 801961},
             {233742, 761632, 381781, 240922, 84, 701596, 801960, 701610, 801961},
@@ -140,7 +131,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             {233748, 670069, 560677, 229349, 113, 701596, 801960, 701610, 801961},
             {233749, 518424, 230842, 231920, 0, 701596, 801960, 701610, 801961}
         };
-        
+
         for (int[] c : cannons) {
             HANDLERS.put(c[0], new NpcHandler(250).addSpawn(Race.ELYOS, new SpawnData(c[5], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4]), new SpawnData(c[6], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4])).addSpawn(Race.ASMODIANS, new SpawnData(c[7], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4]), new SpawnData(c[8], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4])));
         }
@@ -226,20 +217,20 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     * 
+     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
 
     protected IronWallWarfrontPlayerReward getPlayerReward(Player player) {
         ironWallWarfrontReward.regPlayerReward(player);
-        return (IronWallWarfrontPlayerReward) ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+        return ironWallWarfrontReward.getPlayerReward(player.getObjectId());
     }
-    
+
     private boolean containPlayer(Integer object) {
         return ironWallWarfrontReward.containPlayer(object);
     }
-    
+
     /**
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
@@ -270,7 +261,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * 启动副本计时/任务。
      * Start instance timer/tasks.
      */
-    
+
     protected void startInstanceTask() {
         instanceTime = System.currentTimeMillis();
         ironWallWarfrontReward.setInstanceStartTime();
@@ -364,7 +355,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      *
      * @param race 阵营 / race
      */
-    
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         ironWallWarfrontReward.setWinnerRace(race);
@@ -372,7 +363,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         reward();
         ironWallWarfrontReward.sendPacket(5, null);
     }
-    
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -386,7 +377,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         }
         sendEnterPacket(player);
     }
-    
+
     private void sendEnterPacket(final Player player) {
         instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -413,7 +404,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-    
+
     private void startInstancePacket() {
         instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -431,7 +422,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             }
         });
     }
-    
+
     private void sendPacket(boolean isObjects) {
         if (isObjects) {
             instance.doOnAllPlayers(new Visitor<Player>() {
@@ -461,7 +452,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             });
         }
     }
-    
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -481,7 +472,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * 处理 reward。
      * Handle reward.
      */
-    
+
     protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -546,7 +537,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             }
         }, 60000);
     }
-    
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -556,7 +547,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
-    
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -572,7 +563,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         ironWallWarfrontReward.portToPosition(player);
         return true;
     }
-    
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -601,31 +592,31 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         updateScore(player, player, -points, false);
         return true;
     }
-    
+
     private boolean isCommanderKilled(Race PlayerRace) {
         return PlayerRace == RaceKilledCommander;
     }
-    
+
     private MutableInt getPvpKillsByRace(Race race) {
         return ironWallWarfrontReward.getPvpKillsByRace(race);
     }
-    
+
     private MutableInt getPointsByRace(Race race) {
         return ironWallWarfrontReward.getPointsByRace(race);
     }
-    
+
     private void addPointsByRace(Race race, int points) {
         ironWallWarfrontReward.addPointsByRace(race, points);
     }
-    
+
     private void addPvpKillsByRace(Race race, int points) {
         ironWallWarfrontReward.addPvpKillsByRace(race, points);
     }
-    
+
     private void addPointToPlayer(Player player, int points) {
         ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-    
+
     private void addPvPKillToPlayer(Player player) {
         ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
@@ -638,7 +629,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param points 分数 / points
      * @param pvpKill PVP 击杀 / pvpKill
      */
-    
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -685,7 +676,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             stopInstance(ironWallWarfrontReward.getWinnerRaceByScore());
         }
     }
-    
+
     /**
      * 玩家进入区域时处理。
      * Handle a player entering a zone.
@@ -718,7 +709,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         }
         ironWallBaseStatic = ironWallBase;
     }
-    
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -731,15 +722,15 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         if (mostPlayerDamage == null) {
             return;
         }
-        
+
         RaceKilledCommanderStatic = RaceKilledCommander;
         NpcHandler handler = HANDLERS.get(npc.getNpcId());
-        
+
         if (handler != null) {
             if (handler.onDeath != null) {
                 handler.onDeath.accept(npc, mostPlayerDamage);
             }
-            
+
             Race killerRace = mostPlayerDamage.getRace();
             List<SpawnData> spawns = handler.spawns.get(killerRace);
             if (spawns != null) {
@@ -747,17 +738,17 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                     spawn(s.npcId, s.x, s.y, s.z, s.h, 0);
                 }
             }
-            
+
             if (handler.despawn) {
                 despawnNpc(npc);
             }
-            
+
             updateScore(mostPlayerDamage, npc, handler.points, false);
         }
-        
+
         RaceKilledCommander = RaceKilledCommanderStatic;
     }
-    
+
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
@@ -802,27 +793,27 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                 break;
         }
     }
-    
+
     private void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137));
         storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996));
         storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997));
     }
-    
+
     private void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-    
+
     private void deleteNpc(int npcId) {
         Npc npc = getNpc(npcId);
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-    
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -839,7 +830,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * 处理 openFirstDoors。
      * Handle openFirstDoors.
      */
-    
+
     protected void openFirstDoors() {
         openDoor(2);
         openDoor(17);
@@ -852,7 +843,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      *
      * @param doorId 门 ID / doorId
      */
-    
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
@@ -870,7 +861,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param h 朝向 / h
      * @param time 时间 / time
      */
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
@@ -887,7 +878,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
@@ -905,7 +896,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -935,7 +926,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -960,7 +951,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      * @param race 阵营 / race
      * @param time 时间 / time
      */
-    
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -986,7 +977,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             }
         }, time));
     }
-    
+
     private void stopInstanceTask() {
         for (Future<?> task : ironWallTask) {
 			if (task != null) {
@@ -994,7 +985,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 			}
         }
     }
-    
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -1005,7 +996,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     public InstanceReward<?> getInstanceReward() {
         return ironWallWarfrontReward;
     }
-    
+
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
@@ -1016,7 +1007,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-    
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -1030,7 +1021,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         playerReward.endBoostMoraleEffect(player);
         removeItems(player);
     }
-    
+
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.

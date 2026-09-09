@@ -312,8 +312,8 @@ class MigratedQuestRepairDefinitionTest {
 			.contains(new AfterCommitAction.SetPlayerClass(PlayerClass.AETHERTECH))));
 
 		QuestTransition itemPlay = definition.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.ItemPlay item
-				&& item.itemId() == 182200007 && item.animationMillis() == 3000)
+			.filter(transition -> transition.event() instanceof QuestEvent.ItemPlay(int itemId, int animationMillis)
+				&& itemId == 182200007 && animationMillis == 3000)
 			.findFirst().orElseThrow();
 		assertTrue(itemPlay.conditions().contains(new QuestCondition.ZoneIs("CLIONA_LAKE_210010000")));
 		assertTrue(itemPlay.actions().contains(new QuestAction.RemoveItem(182200007, 1)));

@@ -42,9 +42,7 @@ public class CosmeticItemAction extends AbstractItemAction {
 			return false;
 		}
 		if (!template.getGenderPermitted().equals("ALL")) {
-			if (!player.getGender().toString().equals(template.getGenderPermitted())) {
-				return false;
-			}
+			return player.getGender().toString().equals(template.getGenderPermitted());
 		}
 		return true;
 	}

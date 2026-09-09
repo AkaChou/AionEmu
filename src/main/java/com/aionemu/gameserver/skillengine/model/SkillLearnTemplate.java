@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 技能学习模板：职业、种族、等级与是否自动/烙印学习。
@@ -16,77 +17,41 @@ import com.aionemu.gameserver.model.Race;
 @XmlType(name = "skill")
 public class SkillLearnTemplate {
 
-	@XmlAttribute(name = "classId", required = true)
-	private PlayerClass classId = PlayerClass.ALL;
-
-	@XmlAttribute(name = "skillId", required = true)
-	private int skillId;
-
-	@XmlAttribute(name = "skillLevel", required = true)
-	private int skillLevel;
-
-	@XmlAttribute(name = "name", required = true)
-	private String name;
-
-	@XmlAttribute(name = "race", required = true)
-	private Race race;
-
-	@XmlAttribute(name = "minLevel", required = true)
-	private int minLevel;
-
-	@XmlAttribute(name = "skill_group")
-	private String skill_group;
-
-	@XmlAttribute
-	private boolean autoLearn;
-
-	@XmlAttribute
-	private boolean stigma = false;
-
 	/**
 	 * 获取职业。
 	 * Gets player class.
 	 *
 	 */
-	public PlayerClass getClassId() {
-		return classId;
-	}
+	@Getter
+	@XmlAttribute(name = "classId", required = true)
+	private PlayerClass classId = PlayerClass.ALL;
 
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
 	 */
-	public int getSkillId() {
-		return skillId;
-	}
+	@Getter
+	@XmlAttribute(name = "skillId", required = true)
+	private int skillId;
 
 	/**
 	 * 获取技能等级。
 	 * Gets skill level.
 	 *
 	 */
-	public int getSkillLevel() {
-		return skillLevel;
-	}
+	@Getter
+	@XmlAttribute(name = "skillLevel", required = true)
+	private int skillLevel;
 
 	/**
 	 * 获取技能名称。
 	 * Gets skill name.
 	 *
 	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 获取最低学习等级。
-	 * Gets minimum learn level.
-	 *
-	 */
-	public int getMinLevel() {
-		return minLevel;
-	}
+	@Getter
+	@XmlAttribute(name = "name", required = true)
+	private String name;
 
 	/**
 	 * 获取种族限制。
@@ -94,9 +59,39 @@ public class SkillLearnTemplate {
 	 *
 	 * @return 阵营 / race
 	 */
-	public Race getRace() {
-		return race;
-	}
+	@Getter
+	@XmlAttribute(name = "race", required = true)
+	private Race race;
+
+	/**
+	 * 获取最低学习等级。
+	 * Gets minimum learn level.
+	 *
+	 */
+	@Getter
+	@XmlAttribute(name = "minLevel", required = true)
+	private int minLevel;
+
+	@XmlAttribute(name = "skill_group")
+	private String skill_group;
+
+	/**
+	 * 是否自动学习。
+	 * Whether auto-learned.
+	 *
+	 */
+	@Getter
+	@XmlAttribute
+	private boolean autoLearn;
+
+	/**
+	 * 是否烙印技能。
+	 * Whether this is a stigma skill.
+	 *
+	 */
+	@Getter
+	@XmlAttribute
+	private boolean stigma = false;
 
 	/**
 	 * 获取技能分组。
@@ -105,23 +100,5 @@ public class SkillLearnTemplate {
 	 */
 	public String getSkillGroup() {
 		return skill_group;
-	}
-
-	/**
-	 * 是否自动学习。
-	 * Whether auto-learned.
-	 *
-	 */
-	public boolean isAutoLearn() {
-		return autoLearn;
-	}
-
-	/**
-	 * 是否烙印技能。
-	 * Whether this is a stigma skill.
-	 *
-	 */
-	public boolean isStigma() {
-		return stigma;
 	}
 }

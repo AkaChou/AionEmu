@@ -45,46 +45,46 @@ class LoginProcessRuntimeBridgeTest {
     }
 
     private static ObjectProvider<Shutdown> throwingProvider(ProviderUsedException exception) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "throwingProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                throw exception;
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "throwingProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				throw exception;
+			}
+		);
     }
 
     private static ObjectProvider<Shutdown> oneShotProvider(Shutdown shutdown) {
         AtomicBoolean used = new AtomicBoolean();
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "oneShotProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName())) {
-                    if (!used.compareAndSet(false, true)) {
-                        throw new ProviderUsedAfterPreparationException();
-                    }
-                    return shutdown;
-                }
-                throw new UnsupportedOperationException(method.toString());
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "oneShotProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				if ("getIfAvailable".equals(method.getName())) {
+					if (!used.compareAndSet(false, true)) {
+						throw new ProviderUsedAfterPreparationException();
+					}
+					return shutdown;
+				}
+				throw new UnsupportedOperationException(method.toString());
+			}
+		);
     }
 
     private static final class RecordingShutdown extends Shutdown {

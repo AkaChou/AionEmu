@@ -1,12 +1,16 @@
 package com.aionemu.gameserver.geoEngine.collision;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 碰撞忽略属性，按种族与静态物体 id 标记在检测中应忽略的目标。
  * Collision ignore properties keyed by race and static object id for targets
  * that should be skipped during collision tests.
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IgnoreProperties {
 
 	/** 天族预置忽略。 / Prefabricated Elyos ignore. */
@@ -19,21 +23,11 @@ public class IgnoreProperties {
 	public static final IgnoreProperties ANY_RACE = new IgnoreProperties(null, 0);
 
 	/** 忽略的种族；{@code null} 表示无种族过滤 / Race to ignore; {@code null} means no race filter */
+	@Getter
 	private final Race race;
 	/** 忽略的静态物体 id；0 表示不按 id 过滤。 / Static object id to ignore; 0 means no id filter. */
+	@Getter
 	private final int staticId;
-
-	/**
-	 * 私有构造。
-	 * Private constructor.
-	 *
-	 * @param race 阵营 / race
-	 * @param staticId 静态物体 id / static object id
-	 */
-	private IgnoreProperties(Race race, int staticId) {
-		this.race = race;
-		this.staticId = staticId;
-	}
 
 	/**
 	 * 按种族与静态 id 创建；{@code staticId == 0} 时复用预置常量。
@@ -79,26 +73,6 @@ public class IgnoreProperties {
 	 */
 	public static IgnoreProperties of(int staticId) {
 		return of(null, staticId);
-	}
-
-	/**
-	 * 返回忽略的种族。
-	 * Returns the race to ignore.
-	 *
-	 * @return 阵营 / race
-	 */
-	public Race getRace() {
-		return race;
-	}
-
-	/**
-	 * 返回忽略的静态物体 id。
-	 * Returns the static object id to ignore.
-	 *
-	 * @return 静态物体 id / static object id
-	 */
-	public int getStaticId() {
-		return staticId;
 	}
 
 	/**

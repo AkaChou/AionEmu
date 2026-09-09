@@ -16,7 +16,7 @@ public class SM_LOGIN_FAIL extends AionServerPacket {
      * 登录失败原因。
      * Reason why login failed.
      */
-    private AionAuthResponse response;
+    private final AionAuthResponse response;
 
     /**
      * 构造 SM_LOGIN_FAIL 包。

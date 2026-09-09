@@ -26,7 +26,7 @@ public class HotspotLocationData {
 	@XmlElement(name = "hotspot_template")
 	private List<HotspotlocationTemplate> hslist;
 
-	private IntObjectHashMap<HotspotlocationTemplate> lochslistData = new IntObjectHashMap<HotspotlocationTemplate>();
+	private final IntObjectHashMap<HotspotlocationTemplate> lochslistData = new IntObjectHashMap<HotspotlocationTemplate>();
 
 	/**
 	 * 从 compact 定义文件加载热点位置。

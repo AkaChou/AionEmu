@@ -42,7 +42,7 @@ public final class QuestDialogSequenceAudit {
 	private QuestDialogSequenceAudit() {
 	}
 
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			throw new IllegalArgumentException(
 				"usage: QuestDialogSequenceAudit <client-pages.csv> <client-details.csv> <output.csv>");
@@ -89,10 +89,10 @@ public final class QuestDialogSequenceAudit {
 					continue;
 				}
 				for (AfterCommitAction afterCommit : trigger.afterCommit()) {
-					if (!(afterCommit instanceof AfterCommitAction.ShowQuestDialog shown)) {
+					if (!(afterCommit instanceof AfterCommitAction.ShowQuestDialog(int dialogId))) {
 						continue;
 					}
-					QuestDialogOrderAudit.ClientPage page = client.pages().get(shown.dialogId());
+					QuestDialogOrderAudit.ClientPage page = client.pages().get(dialogId);
 					if (page == null) {
 						continue;
 					}
@@ -100,7 +100,7 @@ public final class QuestDialogSequenceAudit {
 					if (prev != null) {
 						String path = trigger.sourceNode() + " + NPC " + ownerNpc(trigger.event()) + " + "
 							+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
-							+ " + page " + shown.dialogId();
+							+ " + page " + dialogId;
 						String pattern;
 						if (prev.pageOrder() > page.pageOrder()) {
 							pattern = CYCLE_PAGES.contains(prev.pageId()) || CYCLE_PAGES.contains(page.pageId())

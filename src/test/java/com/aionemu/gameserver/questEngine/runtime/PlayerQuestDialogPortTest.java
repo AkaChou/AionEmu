@@ -25,10 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Real {@link QuestDialogPort}: after commit the player's quest dialog window is
@@ -52,7 +49,7 @@ class PlayerQuestDialogPortTest {
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 		QuestSnapshot snapshot = snapshot().withInteractionObjectId(204160);
 
-		assertEquals(true, port.closeDialog(snapshot, plan()));
+		assertTrue(port.closeDialog(snapshot, plan()));
 		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
@@ -64,7 +61,7 @@ class PlayerQuestDialogPortTest {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertEquals(true, port.closeDialog(snapshot().withTargetlessDialog(), plan()));
+		assertTrue(port.closeDialog(snapshot().withTargetlessDialog(), plan()));
 		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
@@ -76,7 +73,7 @@ class PlayerQuestDialogPortTest {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertEquals(true, port.closeDialog(snapshot(), plan()));
+		assertTrue(port.closeDialog(snapshot(), plan()));
 		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
@@ -96,7 +93,7 @@ class PlayerQuestDialogPortTest {
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 		QuestSnapshot snapshot = snapshot().withInteractionObjectId(204160);
 
-		assertEquals(true, port.showDialog(snapshot, plan(), 1011));
+		assertTrue(port.showDialog(snapshot, plan(), 1011));
 	}
 
 	@Test
@@ -104,7 +101,7 @@ class PlayerQuestDialogPortTest {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertEquals(true, port.showDialog(snapshot().withTargetlessDialog(), plan(), 4));
+		assertTrue(port.showDialog(snapshot().withTargetlessDialog(), plan(), 4));
 	}
 
 	@Test
@@ -112,7 +109,7 @@ class PlayerQuestDialogPortTest {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertEquals(true, port.showSelectionDialog(snapshot().withTargetlessDialog(), plan(), 10));
+		assertTrue(port.showSelectionDialog(snapshot().withTargetlessDialog(), plan(), 10));
 	}
 
 	@Test
@@ -124,7 +121,7 @@ class PlayerQuestDialogPortTest {
 		// 禁止用 NPC templateId 或玩家 target 猜测。
 		IllegalStateException error = assertThrows(IllegalStateException.class,
 			() -> port.showDialog(snapshot(), plan(), 1011));
-		assertEquals(true, error.getMessage().contains("authoritative interaction objectId"));
+		assertTrue(error.getMessage().contains("authoritative interaction objectId"));
 	}
 
 	@Test
@@ -139,7 +136,7 @@ class PlayerQuestDialogPortTest {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertEquals(true, port.showSelectionDialog(
+		assertTrue(port.showSelectionDialog(
 			snapshot().withInteractionObjectId(204160), plan(), 10));
 	}
 

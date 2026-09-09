@@ -13,6 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.aionemu.gameserver.model.AttendType;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
+import lombok.Getter;
 
 /**
  * 艾特里亚 Passport 模板（静态数据/XML）。
@@ -24,18 +25,28 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AtreianPassport {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	private String name = "";
 
+	/** 返回激活标志 / Returns the active flag */
+	@Getter
 	@XmlAttribute(name = "active", required = true)
 	private int active;
 
+	/** 获取签到类型。 / Returns the attend type. */
+	@Getter
 	@XmlAttribute(name = "attend_type", required = true)
 	private AttendType attendType;
 
+	/** 返回签到次数 / Returns the attend num */
+	@Getter
 	@XmlAttribute(name = "attend_num")
 	private int attendNum;
 
@@ -48,31 +59,6 @@ public class AtreianPassport {
 	protected XMLGregorianCalendar pEnd;
 
 	protected List<AtreianPassportRewards> atreian_passport_reward;
-
-	/** 返回激活标志 / Returns the active flag */
-	public int getActive() {
-		return active;
-	}
-
-	/** 获取签到类型。 / Returns the attend type. */
-	public AttendType getAttendType() {
-		return attendType;
-	}
-
-	/** 返回签到次数 / Returns the attend num */
-	public int getAttendNum() {
-		return attendNum;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
 
 	/** 返回周期开始时间 / Returns the period start */
 	public ZonedDateTime getPeriodStart() {

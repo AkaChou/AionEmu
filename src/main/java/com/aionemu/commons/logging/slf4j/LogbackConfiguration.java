@@ -8,18 +8,18 @@ import java.nio.file.Path;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * Logback 配置加载工具，按系统属性/工作目录/aion.home/classpath 解析配置文件
  * Logback configuration loader that resolves the config file from system property, working dir, aion.home, or classpath
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LogbackConfiguration {
 
 	private static final String CONFIG_FILE_NAME = "logback-spring.xml";
 	private static final String CONFIG_PROPERTY = "aion.logging.config";
-
-	private LogbackConfiguration() {
-	}
 
 	/**
 	 * 使用解析到的配置 URL 初始化 LoggerContext

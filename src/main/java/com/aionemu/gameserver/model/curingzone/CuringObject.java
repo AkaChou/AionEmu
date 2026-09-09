@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.templates.curingzones.CuringTemplate;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
+import lombok.Getter;
 
 /**
  * 治疗对象，用于 curingzone 相关逻辑。
@@ -16,8 +17,12 @@ import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 
 public class CuringObject extends VisibleObject {
 
-	private CuringTemplate template;
-	private float range;
+	/** 获取模板。 / Returns the template. */
+	@Getter
+	private final CuringTemplate template;
+	/** 返回范围 / Returns the range*/
+	@Getter
+	private final float range;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CuringObject(CuringTemplate template, int instanceId) {
@@ -30,19 +35,9 @@ public class CuringObject extends VisibleObject {
 		setKnownlist(new NpcKnownList(this));
 	}
 
-	/** 获取模板。 / Returns the template. */
-	public CuringTemplate getTemplate() {
-		return template;
-	}
-
 	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return "";
-	}
-
-	/** 返回范围 / Returns the range*/
-	public float getRange() {
-		return range;
 	}
 
 	/** 生成。 / Spawn. */

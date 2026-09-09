@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.stats.calc.functions;
 
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import lombok.NoArgsConstructor;
 
 /**
  * 属性 Add 函数模型。
@@ -9,10 +10,8 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  *
  * @author ATracer
  */
+@NoArgsConstructor
 public class StatAddFunction extends StatFunction {
-
-	public StatAddFunction() {
-	}
 
 	public StatAddFunction(StatEnum name, int value, boolean bonus) {
 		super(name, value, bonus);

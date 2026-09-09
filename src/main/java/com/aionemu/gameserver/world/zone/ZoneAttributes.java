@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 区域属性位标志（绑定点、召回、滑翔、飞行、坐骑、PvP、决斗等）。
@@ -39,23 +40,14 @@ public enum ZoneAttributes {
 	DUEL_OTHER_RACE_ENABLED(1 << 8); // Only for Duel type zones
 
 	/** 位标志值 / bit-flag value */
-	private int id;
+	@Getter
+	private final int id;
 
 	/**
 	 * @param id 位标志值 / bit-flag value
 	 */
-	private ZoneAttributes(int id) {
+	ZoneAttributes(int id) {
 		this.id = id;
-	}
-
-	/**
-	 * 返回该属性的位标志值。
-	 * Return the bit-flag value of this attribute.
-	 *
-	 * @return 位标志值 / the bit-flag value
-	 */
-	public int getId() {
-		return id;
 	}
 
 	/**

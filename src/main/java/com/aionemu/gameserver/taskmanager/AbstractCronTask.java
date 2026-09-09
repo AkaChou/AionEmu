@@ -28,13 +28,13 @@ public abstract class AbstractCronTask implements Runnable {
 	 * Cron expression string.
 	 */
 	@Getter
-	private String cronExpressionString;
+	private final String cronExpressionString;
 
 	/**
 	 * 解析后的 Cron 表达式。
 	 * Parsed Cron expression.
 	 */
-	private CronExpression runExpression;
+	private final CronExpression runExpression;
 
 	/**
 	 * 下次运行时间（Unix 秒）。
@@ -48,7 +48,7 @@ public abstract class AbstractCronTask implements Runnable {
 	 * Period between two triggers in milliseconds.
 	 */
 	@Getter
-	private long period;
+	private final long period;
 
 	/**
 	 * 获取距离应运行时刻的延迟（毫秒）；0 表示应立即处理。

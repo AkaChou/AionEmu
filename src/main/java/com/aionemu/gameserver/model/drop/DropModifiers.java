@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.model.drop;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 掉落修正器模型。
@@ -9,44 +11,24 @@ import com.aionemu.gameserver.model.Race;
 
 public class DropModifiers {
 
-	private boolean dropNpcChest;
-	private Race dropRace;
-	private float boostDropRate;
-	private Float reductionDropRate;
-
 	/** 是否掉落 NPC 宝箱 / Whether to drop the NPC chest */
-	public boolean isDropNpcChest() {
-		return dropNpcChest;
-	}
-
-	/** 设置是否掉落 NPC 宝箱 / Sets whether to drop the NPC chest */
-	public void setDropNpcChest(boolean dropNpcChest) {
-		this.dropNpcChest = dropNpcChest;
-	}
-
+	@Getter
+	@Setter
+	private boolean dropNpcChest;
 	/** 获取掉落种族。 / Returns the drop race. */
-	public Race getDropRace() {
-		return dropRace;
-	}
-
-	/** 设置掉落种族。 / Sets the drop race. */
-	public void setDropRace(Race dropRace) {
-		this.dropRace = dropRace;
-	}
-
+	@Getter
+	@Setter
+	private Race dropRace;
 	/** 设置掉落倍率加成 / Sets the boost drop rate */
-	public void setBoostDropRate(float boostDropRate) {
-		this.boostDropRate = boostDropRate;
-	}
+	@Setter
+	private float boostDropRate;
+	/** 设置掉率衰减倍率 / Sets the reduction drop rate */
+	@Setter
+	private Float reductionDropRate;
 
 	/** 返回不小于零的完整普通掉落倍率。 / Returns the complete non-negative ordinary drop multiplier. */
 	public float getPositiveBoostDropRate() {
 		return Float.isFinite(boostDropRate) ? Math.max(0f, boostDropRate) : 0f;
-	}
-
-	/** 设置掉率衰减倍率 / Sets the reduction drop rate */
-	public void setReductionDropRate(Float reductionDropRate) {
-		this.reductionDropRate = reductionDropRate;
 	}
 
 	/** 计算掉落概率 / Calculate drop chance */

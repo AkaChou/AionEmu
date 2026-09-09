@@ -19,10 +19,10 @@ public class Fountless_Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 30) {
-			spawn(236228, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Heatvent Protector.
+			spawn(236228, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Heatvent Protector.
 			AI2Actions.deleteOwner(this);
 			AI2Actions.scheduleRespawn(this);
 		}

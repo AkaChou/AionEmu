@@ -21,9 +21,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 public class SM_ALLIANCE_INFO extends AionServerPacket {
 
 	private LootGroupRules lootRules;
-	private PlayerAlliance alliance;
-	private int leaderid;
-	private int groupid;
+	private final PlayerAlliance alliance;
+	private final int leaderid;
+	private final int groupid;
 	private final int messageId;
 	private final String message;
 	public static final int FORCE_PROMOTE_MANAGER = 1300984;

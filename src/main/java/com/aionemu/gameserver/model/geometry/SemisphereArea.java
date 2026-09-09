@@ -72,9 +72,6 @@ public class SemisphereArea extends SphereArea {
 	/** 矩形相交 / intersects Rectangle. */
 	@Override
 	public boolean intersectsRectangle(RectangleArea area) {
-		if ((area.getMaxZ() >= z || z <= area.getMinZ()) && area.getDistance3D(x, y, z) <= r) {
-			return true;
-		}
-		return false;
+		return (area.getMaxZ() >= z || z <= area.getMinZ()) && area.getDistance3D(x, y, z) <= r;
 	}
 }

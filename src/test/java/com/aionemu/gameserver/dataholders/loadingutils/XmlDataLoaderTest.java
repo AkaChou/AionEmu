@@ -256,15 +256,15 @@ class XmlDataLoaderTest {
 	void mainStaticDataKeepsIndependentSourcesOutOfEntryPoint() throws Exception {
 		String staticData = Files.readString(Path.of("src/main/resources/aion/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
 
-		assertTrue(!staticData.contains("<npc_drops>"));
-		assertTrue(!staticData.contains("file=\"npc_drops/"));
-		assertTrue(!staticData.contains("<item_templates>"));
-		assertTrue(!staticData.contains("file=\"items/item\""));
-		assertTrue(!staticData.contains("<ai_templates>"));
-		assertTrue(!staticData.contains("file=\"ai"));
+		assertFalse(staticData.contains("<npc_drops>"));
+		assertFalse(staticData.contains("file=\"npc_drops/"));
+		assertFalse(staticData.contains("<item_templates>"));
+		assertFalse(staticData.contains("file=\"items/item\""));
+		assertFalse(staticData.contains("<ai_templates>"));
+		assertFalse(staticData.contains("file=\"ai"));
 		// NPC 模板同样走源分片直读 / NPC templates also load directly from source shards
-		assertTrue(!staticData.contains("<npc_templates>"));
-		assertTrue(!staticData.contains("file=\"npcs\""));
+		assertFalse(staticData.contains("<npc_templates>"));
+		assertFalse(staticData.contains("file=\"npcs\""));
 	}
 
 	@Test
@@ -272,7 +272,7 @@ class XmlDataLoaderTest {
 		String previous = System.getProperty("aion.game.definitions.dir");
 		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
 		try {
-			assertTrue(new XmlDataLoader().loadNpcDropData().getDrop(883526) != null);
+			assertNotNull(new XmlDataLoader().loadNpcDropData().getDrop(883526));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

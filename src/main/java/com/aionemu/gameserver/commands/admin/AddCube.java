@@ -54,11 +54,10 @@ public class AddCube extends AdminCommand {
 			}
 			else {
 				PacketSendUtility.sendMessage(admin, "Cube expansion cannot be added to "+receiver.getName()+"!\nReason: player cube already fully expanded.");
-				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * 参数错误时输出 {@code //addcube} 用法。
 	 * Prints {@code //addcube} usage on invalid arguments.

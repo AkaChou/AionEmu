@@ -5,18 +5,16 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.common.events.AlwaysTrueTeamEvent;
 import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent.LeaveReson;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 联盟解散事件。
  * Alliance Disband Event.
  */
 
+@AllArgsConstructor
 public class AllianceDisbandEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 	private final PlayerAlliance alliance;
-
-	public AllianceDisbandEvent(PlayerAlliance alliance) {
-		this.alliance = alliance;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

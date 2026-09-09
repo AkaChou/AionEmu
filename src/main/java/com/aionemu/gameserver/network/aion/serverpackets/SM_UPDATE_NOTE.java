@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.AllArgsConstructor;
 
 /**
  * 更新玩家个性签名/备注的服务端包。
@@ -13,19 +14,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author xavier
  */
 @Slf4j
+@AllArgsConstructor
 public class SM_UPDATE_NOTE extends AionServerPacket {
 
-	private int targetObjId;
-	private String note;
-
-	/**
-	 * target object id
-	 * @param note        新备注内容 / new note text
-	 */
-	public SM_UPDATE_NOTE(int targetObjId, String note) {
-		this.targetObjId = targetObjId;
-		this.note = note;
-	}
+	private final int targetObjId;
+	private final String note;
 
 	/**
 	 * {@inheritDoc}

@@ -45,12 +45,12 @@ public enum ObserverType {
 			| ABNORMALSETTED.observerMask | SUMMONRELEASE.observerMask | LIFE_CHANGED.observerMask);
 
 	/** 观察者位掩码 / Observer bit mask */
-	private int observerMask;
+	private final int observerMask;
 
 	/**
 	 * @param observerMask 位掩码 / bit mask
 	 */
-	private ObserverType(int observerMask) {
+	ObserverType(int observerMask) {
 		this.observerMask = observerMask;
 	}
 

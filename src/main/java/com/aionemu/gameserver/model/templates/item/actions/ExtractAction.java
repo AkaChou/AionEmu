@@ -32,10 +32,7 @@ public class ExtractAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
-		if (player.getInventory().getKinah() < kinah) {
-			return false;
-		}
-		return true;
+		return player.getInventory().getKinah() >= kinah;
 	}
 
 	/** 执行 / act. */

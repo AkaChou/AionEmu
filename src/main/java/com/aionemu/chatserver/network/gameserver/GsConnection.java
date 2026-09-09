@@ -28,7 +28,7 @@ public class GsConnection extends AConnection {
      * 游戏服连接状态。
      * Game-server connection state.
      */
-    public static enum State {
+    public enum State {
 
         /**
          * 已连接但尚未认证。

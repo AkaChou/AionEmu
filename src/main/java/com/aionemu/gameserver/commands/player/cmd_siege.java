@@ -48,7 +48,7 @@ public class cmd_siege extends PlayerCommand {
             giveSiegeWelcomeMsg(player, "tueSiege");
         }else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY){
             //wedSiege(player); Disabled Only One Siege map at moment
-			 monSiege(player); 
+			 monSiege(player);
             giveSiegeWelcomeMsg(player, "wedSiege");
         }else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY){
             //thurSiege(player); Disabled Only One Siege map at moment
@@ -81,11 +81,11 @@ public class cmd_siege extends PlayerCommand {
             goTo(player, WorldMapType.KALDOR.getId(), 1368.6766f, 532.0484f, 276.54712f);
         }
     }
-	
+
       /* Enable This For More Siege Maps on different days!
     private void tueSiege(Player player){
         checkotherEvents(player);
-        if (player.getRace() == Race.ASMODIANS  && player.getWorldId() != 210050000 && !player.isInPrison()) { 
+        if (player.getRace() == Race.ASMODIANS  && player.getWorldId() != 210050000 && !player.isInPrison()) {
             goTo(player, WorldMapType.INGGISON.getId(), 882.2768f,1974.7095f,341.36612f);
         } else if (player.getRace() == Race.ELYOS && player.getWorldId() != 210040000 && !player.isInPrison()) {
             goTo(player, WorldMapType.INGGISON.getId(), 1729.6011f,2231.5864f,328.67572f);
@@ -96,8 +96,7 @@ public class cmd_siege extends PlayerCommand {
     private void checkotherEvents(Player player){
         if (player.isAttackMode()) {
             PacketSendUtility.sendMessage(player, "You cannot use the command inside the Siege Map!");
-            return;
-        }
+		}
     }
     private static void goTo(final Player player, int worldId, float x, float y, float z) {
         WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
@@ -126,7 +125,7 @@ public class cmd_siege extends PlayerCommand {
             if(player.getWorldId() == 600090000){ //Kaldor
                 return;
             }
-			
+
 		  /* Enable This For More Siege Maps on different days!
         }else if(SiegeMap.equalsIgnoreCase("tueSiege")){
             if(player.getWorldId() == 600100000){

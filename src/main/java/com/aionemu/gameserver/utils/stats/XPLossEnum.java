@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.stats;
 
+import lombok.Getter;
+
 /**
  * 按等级定义死亡经验损失系数
  * XP loss coefficients by player level on death
@@ -30,9 +32,11 @@ public enum XPLossEnum {
 	LEVEL_83(83, 0.25);
 
 	/** 等级阈值 / Level threshold */
-	private int level;
+	@Getter
+	private final int level;
 	/** 经验损失系数 / XP loss parameter */
-	private double param;
+	@Getter
+	private final double param;
 
 	/**
 	 * 构造经验损失条目
@@ -41,29 +45,9 @@ public enum XPLossEnum {
 	 * @param level 等级阈值 / Level threshold
 	 * @param param 损失系数 / Loss parameter
 	 */
-	private XPLossEnum(int level, double param) {
+	XPLossEnum(int level, double param) {
 		this.level = level;
 		this.param = param;
-	}
-
-	/**
-	 * 获取等级阈值
-	 * Get level threshold
-	 *
-	 * Level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
-	 * 获取经验损失系数
-	 * Get XP loss parameter
-	 *
-	 * Loss parameter
-	 */
-	public double getParam() {
-		return param;
 	}
 
 	/**

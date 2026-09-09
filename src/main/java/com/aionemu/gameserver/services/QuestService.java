@@ -586,9 +586,7 @@ public final class QuestService {
 			}
 		}
 		if (warn && template.getNpcFactionId() != 0 && !template.isTimeBased()) {
-			if (!player.getNpcFactions().canStartQuest(template)) {
-				return false;
-			}
+			return player.getNpcFactions().canStartQuest(template);
 		}
 		return true;
 	}
@@ -744,9 +742,7 @@ public final class QuestService {
 					break;
 				}
 			}
-			if (!result) {
-				return false;
-			}
+			return result;
 		}
 		return true;
 	}
@@ -971,7 +967,7 @@ public final class QuestService {
 					npc.getController().onDelete();
 				}
 			}
-		}, 60000 * timeInMin);
+		}, 60000L * timeInMin);
 	}
 
 	/**
@@ -1088,7 +1084,7 @@ public final class QuestService {
 		if (qs == null || qs.getStatus() != QuestStatus.START) {
 			return false;
 		}
-		
+
 		// 检查收集步骤是否匹配 / Check if collecting step matches
 		if (drop.collectingStep() != 0) {
 			if (drop.collectingStep() != qs.getQuestVarById(0)) {
@@ -1124,7 +1120,7 @@ public final class QuestService {
 				return false;
 			}
 		}
-		
+
 		// 处理特殊掉落物品 / Handle special drop items
 		if (drop.neededAmount() > 0) {
 			return drop.neededAmount() > player.getInventory().getItemCountByItemId(drop.itemId());
@@ -1141,7 +1137,7 @@ public final class QuestService {
 			if (count > 0) {
 				return false;
 			}
-			
+
 		}
 
 		// 检查是否是任务收集物品 / Check if it's a quest collect item
@@ -1433,7 +1429,7 @@ public final class QuestService {
 			finishAbandon(player, questId);
 			return true;
 		}
- 
+
 		if (metadata.npcFactionId() != 0) {
 			player.getNpcFactions().abortQuest(metadata.npcFactionId());
 		}

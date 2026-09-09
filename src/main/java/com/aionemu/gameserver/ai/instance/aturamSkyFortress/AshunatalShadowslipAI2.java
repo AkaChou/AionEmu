@@ -33,13 +33,13 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 {
 	private boolean isSummoned;
 	private boolean canThink = true;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -49,7 +49,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 80 && !isSummoned) {
 			isSummoned = true;
@@ -57,7 +57,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 			doSchedule();
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isHome.set(true);
@@ -70,7 +70,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 安全：若 Ashunatal 死亡。
 	 * Security: if Ashunatal dies
@@ -80,11 +80,11 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 		super.handleDied();
 		getPosition().getWorldMapInstance().getDoors().get(17).setOpen(true);
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

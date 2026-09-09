@@ -37,7 +37,7 @@ public class BanChar extends AdminCommand {
 			sendInfo(admin, true);
 			return;
 		}
-		
+
 		int playerId = 0;
 		String playerName = Util.convertName(params[0]);
 
@@ -66,10 +66,10 @@ public class BanChar extends AdminCommand {
 			sendInfo(admin, true);
 			return;
 		}
-		
+
 		if(dayCount < 0) {
 			PacketSendUtility.sendMessage(admin, "Second parameter has to be a positive daycount or 0 for infinity");
-			sendInfo(admin, true);;
+			sendInfo(admin, true);
 			return;
 		}
 
@@ -78,7 +78,7 @@ public class BanChar extends AdminCommand {
 			reason += " "+params[itr];
 
 		PacketSendUtility.sendMessage(admin, "Char " + playerName + " is now banned for the next "+dayCount+" days!");
-		
+
 		PunishmentService.banChar(playerId, dayCount, reason);
 	}
 
@@ -91,7 +91,7 @@ public class BanChar extends AdminCommand {
 	public void onFail(Player player, String message) {
 		sendInfo(player, false);
 	}
-	
+
 	/**
 	 * 向管理员发送 {@code //banchar} 语法说明。
 	 * Sends {@code //banchar} syntax help to the admin.

@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -25,7 +24,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -44,7 +42,6 @@ import java.util.concurrent.Future;
 public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandler {
 
     /** 排名 / rank */
-    private int rank;
     /** 开始时间 / start time */
     private long startTime;
     /** 准备计时器 / timer prepare */
@@ -53,19 +50,19 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         private Future<?> timerInstance;
 
     /** kill counters / kill counters */
-        private int[] killCounters = new int[10];
-    
+        private final int[] killCounters = new int[10];
+
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed;
     /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
     /** 副本奖励对象 / instance reward object */
     private FissureOfOblivionReward instanceReward;
-    
+
     /** 准备计时秒数 / prepare timer seconds */
-        private int prepareTimerSeconds = 60000;
+        private final int prepareTimerSeconds = 60000;
     /** 副本计时秒数 / instance timer seconds */
-        private int instanceTimerSeconds = 1800000;
+        private final int instanceTimerSeconds = 1800000;
     /** oblivion 任务 / oblivion task */
         private final List<Future<?>> oblivionTask = new ArrayList<Future<?>>();
 
@@ -85,7 +82,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244798, 244799, 244800, 244801},
         {244839, 244840, 244841, 244842}
     };
-    
+
     /** npc ids high vritra / npc ids high vritra */
         private static final int[][] NPC_IDS_HIGH_VRITRA = {
         {244474, 244475, 244476, 244477},
@@ -99,7 +96,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244802, 244803, 244804, 244805},
         {244843, 244844, 244845, 244846}
     };
-    
+
     /** npc ids high tiamat / npc ids high tiamat */
         private static final int[][] NPC_IDS_HIGH_TIAMAT = {
         {244478, 244479, 244480, 244481},
@@ -113,7 +110,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244806, 244807, 244808, 244809},
         {244847, 244848, 244849, 244850}
     };
-    
+
     /** npc ids guard eresh / npc ids guard eresh */
         private static final int[][] NPC_IDS_GUARD_ERESH = {
         {244458, 244459, 244460, 244461},
@@ -127,7 +124,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244786, 244787, 244788, 244789},
         {244827, 244828, 244829, 244830}
     };
-    
+
     /** npc ids guard vritra / npc ids guard vritra */
         private static final int[][] NPC_IDS_GUARD_VRITRA = {
         {244462, 244463, 244464, 244465},
@@ -141,7 +138,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244790, 244791, 244792, 244793},
         {244831, 244832, 244833, 244834}
     };
-    
+
     /** npc ids guard tiamat / npc ids guard tiamat */
         private static final int[][] NPC_IDS_GUARD_TIAMAT = {
         {244466, 244467, 244468, 244469},
@@ -155,7 +152,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {244794, 244795, 244796, 244797},
         {244835, 244836, 244837, 244838}
     };
-    
+
     /** npc ids deva guard / npc ids deva guard */
         private static final int[][] NPC_IDS_DEVA_GUARD = {
         {244485, 244486, 244487, 244488},
@@ -183,7 +180,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245112, 245113, 245114, 245115},
         {245143, 245144, 245145, 245146}
     };
-    
+
     /** npc ids stumble vritra / npc ids stumble vritra */
         private static final int[][] NPC_IDS_STUMBLE_VRITRA = {
         {244868, 244869, 244870, 244871},
@@ -197,7 +194,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245116, 245117, 245118, 245119},
         {245147, 245148, 245149, 245150}
     };
-    
+
     /** npc ids stumble tiamat / npc ids stumble tiamat */
         private static final int[][] NPC_IDS_STUMBLE_TIAMAT = {
         {244872, 244873, 244874, 244875},
@@ -211,7 +208,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245120, 245121, 245122, 245123},
         {245151, 245152, 245153, 245154}
     };
-    
+
     /** npc ids deva stumble / npc ids deva stumble */
         private static final int[][] NPC_IDS_DEVA_STUMBLE = {
         {244876, 244877, 244878, 244879},
@@ -225,7 +222,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245124, 245125, 245126, 245127},
         {245155, 245156, 245157, 245158}
     };
-    
+
     /** npcids 弓星 / npc ids ranger */
         private static final int[][] NPC_IDS_RANGER = {
         {245697, 245698, 245699},
@@ -239,7 +236,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245745, 245746, 245747},
         {245751, 245752, 245753}
     };
-    
+
     /** npcids 掉落 dragon / npc ids drop dragon */
         private static final int[][] NPC_IDS_DROP_DRAGON = {
         {244892, 244893, 244894},
@@ -253,7 +250,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245140, 245141, 245142},
         {245171, 245172, 245173}
     };
-    
+
     /** npc ids bonus monster / npc ids bonus monster */
         private static final int[][] NPC_IDS_BONUS_MONSTER = {
         {248037, 248038, 248039, 248040},
@@ -267,7 +264,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {248069, 248070, 248071, 248072},
         {248073, 248074, 248075, 248076}
     };
-    
+
     /** npc ids warp / npc ids warp */
         private static final int[][] NPC_IDS_WARP = {
         {245577,245578,245579,245580,245581,245582,245583,245584,245585,245586,245587,245588},
@@ -281,27 +278,27 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         {245673,245674,245675,245676,245677,245678,245679,245680,245681,245682,245683,245684},
         {245685,245686,245687,245688,245689,245690,245691,245692,245693,245694,245695,245696}
     };
-    
+
     private static class SpawnPoint {
         float x, y, z;
         byte heading;
         int delay;
         String walkerId;
-        
+
         SpawnPoint(float x, float y, float z, byte heading) {
             this(x, y, z, heading, 0, null);
         }
-        
+
         SpawnPoint(float x, float y, float z, byte heading, int delay) {
             this(x, y, z, heading, delay, null);
         }
-        
+
         SpawnPoint(float x, float y, float z, byte heading, int delay, String walkerId) {
             this.x = x; this.y = y; this.z = z; this.heading = heading;
             this.delay = delay; this.walkerId = walkerId;
         }
     }
-    
+
     /** spawn high main / spawn high main */
         private static final SpawnPoint[] SPAWN_HIGH_MAIN = {
         new SpawnPoint(587.9679f, 620.0452f, 331.7278f, (byte)15),
@@ -322,7 +319,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(467.57324f, 477.38986f, 345.70047f, (byte)84),
         new SpawnPoint(482.65543f, 498.34192f, 342.22174f, (byte)87)
     };
-    
+
     /** spawn guard main / spawn guard main */
         private static final SpawnPoint[] SPAWN_GUARD_MAIN = {
         new SpawnPoint(796.0f, 502.0f, 340.625f, (byte)0),
@@ -367,7 +364,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(791.39966f, 518.47125f, 339.42496f, (byte)0),
         new SpawnPoint(641.4397f, 520.0093f, 339.61542f, (byte)119)
     };
-    
+
     /** spawn deva guard fi / spawn deva guard fi */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_FI = {
         new SpawnPoint(543.9115f, 491.4599f, 322.04422f, (byte)91),
@@ -378,7 +375,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(499.82422f, 585.81537f, 322.02252f, (byte)92),
         new SpawnPoint(501.61078f, 555.0141f, 321.84106f, (byte)12)
     };
-    
+
     /** spawn deva guard as / spawn deva guard as */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_AS = {
         new SpawnPoint(855.63855f, 484.74774f, 349.08722f, (byte)45),
@@ -407,7 +404,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(527.7633f, 502.87167f, 321.6398f, (byte)91),
         new SpawnPoint(885.5619f, 456.29126f, 351.02737f, (byte)55)
     };
-    
+
     /** spawn deva guard wi / spawn deva guard wi */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_WI = {
         new SpawnPoint(513.0236f, 593.86285f, 322.56216f, (byte)90),
@@ -421,7 +418,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(538.00024f, 495.57394f, 322.0f, (byte)90),
         new SpawnPoint(526.9178f, 486.92227f, 321.87527f, (byte)85)
     };
-    
+
     /** spawn deva guard ra / spawn deva guard ra */
         private static final SpawnPoint[] SPAWN_DEVA_GUARD_RA = {
         new SpawnPoint(529.87f, 545.5564f, 321.85876f, (byte)95),
@@ -432,14 +429,14 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(495.259f, 586.9457f, 322.0659f, (byte)81),
         new SpawnPoint(505.0709f, 552.7453f, 322.0f, (byte)28)
     };
-    
+
     /** spawn stumble main / spawn stumble main */
         private static final SpawnPoint[] SPAWN_STUMBLE_MAIN = {
         new SpawnPoint(856.45654f, 530.1012f, 346.1631f, (byte)86),
         new SpawnPoint(504.76083f, 513.9777f, 339.63126f, (byte)61),
         new SpawnPoint(809.2487f, 476.4447f, 340.87885f, (byte)29)
     };
-    
+
     /** spawn deva stumble / spawn deva stumble */
         private static final SpawnPoint[] SPAWN_DEVA_STUMBLE = {
         new SpawnPoint(677.0f, 516.0f, 338.24844f, (byte)43),
@@ -453,20 +450,20 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(531.7686f, 642.5042f, 317.08282f, (byte)112),
         new SpawnPoint(522.0014f, 648.79095f, 317.08282f, (byte)55)
     };
-    
+
     /** spawn 掉落 dragon / spawn drop dragon */
         private static final SpawnPoint[] SPAWN_DROP_DRAGON = {
         new SpawnPoint(622.6814f, 551.9144f, 346.06897f, (byte)105),
         new SpawnPoint(607.8992f, 674.06934f, 352.29062f, (byte)90)
     };
-    
+
     /** spawn bonus monster / spawn bonus monster */
         private static final SpawnPoint[] SPAWN_BONUS_MONSTER = {
         new SpawnPoint(761.54095f, 562.17f, 341.0512f, (byte)90),
         new SpawnPoint(476.94467f, 549.22363f, 345.6048f, (byte)90),
         new SpawnPoint(609.2811f, 707.6352f, 355.10846f, (byte)93)
     };
-    
+
     /** spawn 弓星 / spawn ranger */
         private static final SpawnPoint[] SPAWN_RANGER = {
         new SpawnPoint(543.0933f, 557.8653f, 322.0f, (byte)70),
@@ -504,7 +501,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(514.6148f, 641.9673f, 317.10098f, (byte)33),
         new SpawnPoint(539.03076f, 536.819f, 322.0f, (byte)30)
     };
-    
+
     /** spawn warp / spawn warp */
         private static final SpawnPoint[] SPAWN_WARP = {
         new SpawnPoint(725.0f, 515.0f, 338.24844f, (byte)1, 0),
@@ -527,35 +524,28 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         new SpawnPoint(671.0f, 512.0f, 338.24844f, (byte)2, 2000),
         new SpawnPoint(667.2f, 510.0f, 338.24844f, (byte)1, 2000)
     };
-    
+
     /** door mob spawn / door mob spawn */
         private static final float[] DOOR_MOB_SPAWN = {510.39917f, 458.81943f, 322.0f};
-    
-    private int getLevelIndex(Player player) {
-        int level = player.getLevel();
-        if (level < 66) level = 66;
-        if (level > 75) level = 75;
-        return level - 66;
-    }
-    
+
     private int getLevelIndexByLevel(int level) {
         if (level < 66) return 0;
         if (level > 75) return 9;
         return level - 66;
     }
-    
+
     protected FissureOfOblivionPlayerReward getPlayerReward(Integer object) {
         return (FissureOfOblivionPlayerReward) instanceReward.getPlayerReward(object);
     }
-    
+
     protected void addPlayerReward(Player player) {
         instanceReward.addPlayerReward(new FissureOfOblivionPlayerReward(player.getObjectId()));
     }
-    
+
     private boolean containPlayer(Integer object) {
         return instanceReward.containPlayer(object);
     }
-    
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -566,7 +556,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     public InstanceReward<?> getInstanceReward() {
         return instanceReward;
     }
-    
+
     /**
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
@@ -577,7 +567,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
-        
+
         boolean isBonusMonster = false;
         for (int level = 0; level < 10; level++) {
             for (int type = 0; type < 4; type++) {
@@ -587,7 +577,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
                 }
             }
         }
-        
+
         if (isBonusMonster) {
             switch (Rnd.get(1, 5)) {
                 case 1: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055607, 1)); break;
@@ -598,7 +588,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }
     }
-    
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -808,12 +798,12 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			 sendPacket(npc.getObjectTemplate().getNameId(), points);
 		}
     }
-    
+
     private int getTime() {
         long result = (int) (System.currentTimeMillis() - startTime);
         return instanceTimerSeconds - (int) result;
     }
-    
+
     private void sendPacket(final int nameId, final int point) {
         instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -831,7 +821,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         });
     }
-    
+
     private int checkRank(int totalPoints) {
         if (totalPoints >= 23550) return 1; // Rank S
         else if (totalPoints >= 21200) return 2; // Rank A
@@ -840,7 +830,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         else if (totalPoints >= 9400) return 5; // Rank D
         else return 6;
     }
-    
+
     protected void startInstanceTask() {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -864,7 +854,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }, 1800000));
     }
-    
+
     /**
      * 玩家打开门时处理。
      * Handle a player opening a door.
@@ -883,7 +873,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }
     }
-    
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -904,9 +894,9 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
            spawnByPlayerLevel(player);
            spawned = true;
         }
-        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000 * 1);
+        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000);
     }
-    
+
     private void startPrepareTimer() {
         if (timerPrepare == null) {
             timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -933,7 +923,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         });
     }
-    
+
     private void startMainInstanceTimer() {
         if (!timerPrepare.isDone()) {
             timerPrepare.cancel(false);
@@ -942,7 +932,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
         sendPacket(0, 0);
     }
-    
+
     protected void stopInstance(Player player) {
         stopInstanceTask();
         instanceReward.setRank(6);
@@ -951,7 +941,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         doReward(player);
         sendPacket(0, 0);
     }
-    
+
     /**
      * 结算并发放奖励。
      * Settle and grant rewards.
@@ -978,7 +968,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }
     }
-    
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -992,7 +982,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
         doors = instance.getDoors();
     }
-    
+
     private void spawnByPlayerLevel(Player player) {
         int level = player.getLevel();
         if (level < 66) level = 66;
@@ -1004,7 +994,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         for (SpawnPoint point : SPAWN_RANGER) {
             spawn(raNpcId, point.x, point.y, point.z, point.heading);
         }
-        
+
         int dragonType = Rnd.get(1, 3);
         for (SpawnPoint point : SPAWN_DROP_DRAGON) {
             spawn(NPC_IDS_DROP_DRAGON[idx][dragonType - 1], point.x, point.y, point.z, point.heading);
@@ -1014,7 +1004,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         for (SpawnPoint point : SPAWN_BONUS_MONSTER) {
             spawn(NPC_IDS_BONUS_MONSTER[idx][bonusType - 1], point.x, point.y, point.z, point.heading);
         }
-        
+
         for (SpawnPoint point : SPAWN_DEVA_GUARD_FI) {
             spawn(NPC_IDS_DEVA_GUARD[idx][0], point.x, point.y, point.z, point.heading);
         }
@@ -1027,49 +1017,49 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         for (SpawnPoint point : SPAWN_DEVA_GUARD_RA) {
             spawn(NPC_IDS_DEVA_GUARD[idx][3], point.x, point.y, point.z, point.heading);
         }
-        
+
         int stumbleType = Rnd.get(1, 3);
         int stumbleClass = Rnd.get(1, 4);
         int[] selectedStumble = null;
         if (stumbleType == 1) selectedStumble = NPC_IDS_STUMBLE_ERESH[idx];
         else if (stumbleType == 2) selectedStumble = NPC_IDS_STUMBLE_VRITRA[idx];
         else selectedStumble = NPC_IDS_STUMBLE_TIAMAT[idx];
-        
+
         for (SpawnPoint point : SPAWN_STUMBLE_MAIN) {
             spawn(selectedStumble[stumbleClass - 1], point.x, point.y, point.z, point.heading);
         }
-        
+
         int devaStumbleClass = Rnd.get(1, 4);
         for (SpawnPoint point : SPAWN_DEVA_STUMBLE) {
             spawn(NPC_IDS_DEVA_STUMBLE[idx][devaStumbleClass - 1], point.x, point.y, point.z, point.heading);
         }
-        
+
         int highType = Rnd.get(1, 3);
         int highClass = Rnd.get(1, 4);
         int[] selectedHigh = null;
         if (highType == 1) selectedHigh = NPC_IDS_HIGH_ERESH[idx];
         else if (highType == 2) selectedHigh = NPC_IDS_HIGH_VRITRA[idx];
         else selectedHigh = NPC_IDS_HIGH_TIAMAT[idx];
-        
+
         for (SpawnPoint point : SPAWN_HIGH_MAIN) {
             spawn(selectedHigh[highClass - 1], point.x, point.y, point.z, point.heading);
         }
-        
+
         int guardType = Rnd.get(1, 3);
         int guardClass = Rnd.get(1, 4);
         int[] selectedGuard = null;
         if (guardType == 1) selectedGuard = NPC_IDS_GUARD_ERESH[idx];
         else if (guardType == 2) selectedGuard = NPC_IDS_GUARD_VRITRA[idx];
         else selectedGuard = NPC_IDS_GUARD_TIAMAT[idx];
-        
+
         for (SpawnPoint point : SPAWN_GUARD_MAIN) {
             spawn(selectedGuard[guardClass - 1], point.x, point.y, point.z, point.heading);
         }
-        
+
         int doorMobType = Rnd.get(1, 3);
         spawn(NPC_IDS_DEVA_GUARD[idx][doorMobType], DOOR_MOB_SPAWN[0], DOOR_MOB_SPAWN[1], DOOR_MOB_SPAWN[2], (byte)21);
     }
-    
+
     private void spawnEreshWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][Rnd.get(0, 3)];
@@ -1077,7 +1067,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             sp(npcId, point.x, point.y, point.z, point.heading, point.delay);
         }
     }
-    
+
     private void spawnVritraWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][4 + Rnd.get(0, 3)];
@@ -1085,7 +1075,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             sp(npcId, point.x, point.y, point.z, point.heading, point.delay);
         }
     }
-    
+
     private void spawnTiamatWarp(int level) {
         int idx = getLevelIndexByLevel(level);
         int npcId = NPC_IDS_WARP[idx][8 + Rnd.get(0, 3)];
@@ -1111,7 +1101,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         instanceReward.clear();
         doors.clear();
     }
-    
+
     private void stopInstanceTask() {
         for (Future<?> task : oblivionTask) {
 			if (task != null) {
@@ -1119,19 +1109,19 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			}
         }
     }
-    
+
     protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-    
+
     private void deleteNpc(int npcId) {
         if (getNpc(npcId) != null) {
             getNpc(npcId).getController().onDelete();
         }
     }
-    
+
     protected void killNpc(List<Npc> npcs) {
         if (npcs == null) return;
         for (Npc npc : npcs) {
@@ -1140,14 +1130,14 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }
     }
-    
+
     protected List<Npc> getNpcs(int npcId) {
         if (!isInstanceDestroyed) {
             return instance.getNpcs(npcId);
         }
         return null;
     }
-    
+
     /**
      * 玩家从该副本登出时处理。
      * Handle a player logging out from this instance.
@@ -1158,7 +1148,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     public void onPlayerLogOut(Player player) {
         removeEffects(player);
     }
-    
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -1169,7 +1159,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     public void onLeaveInstance(Player player) {
         removeEffects(player);
     }
-    
+
     private void removeEffects(Player player) {
         PlayerEffectController effectController = player.getEffectController();
         effectController.removeEffect(4808);
@@ -1181,15 +1171,15 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         effectController.removeEffect(4835);
         effectController.removeEffect(4836);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1207,7 +1197,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }, time));
     }
-    
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1224,22 +1214,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
             }
         }, time));
     }
-    
-    private void sendMsg(final String str) {
-        instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-            }
-        });
-    }
-    
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**

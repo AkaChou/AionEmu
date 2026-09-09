@@ -31,7 +31,7 @@ public class Daeva_Day_CakeAI2 extends NpcAI2
 			"You must have 1 <Aether Flame>", ChatType.BRIGHT_YELLOW_CENTER), true);
         }
     }
-	
+
 	@Override
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		PlayerEffectController effectController = player.getEffectController();
@@ -41,17 +41,17 @@ public class Daeva_Day_CakeAI2 extends NpcAI2
 				case 832181: // 守护者日蛋糕 A / Daeva's Day Cake A
 				    switch (Rnd.get(1, 3)) {
 						case 1:
-							GameEngineServices.skillEngine().applyEffectDirectly(20884, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20884, player, player, 14400000);
 							effectController.removeEffect(20885);
 							effectController.removeEffect(20886);
 						break;
 						case 2:
-							GameEngineServices.skillEngine().applyEffectDirectly(20885, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20885, player, player, 14400000);
 							effectController.removeEffect(20884);
 							effectController.removeEffect(20886);
 						break;
 						case 3:
-							GameEngineServices.skillEngine().applyEffectDirectly(20886, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20886, player, player, 14400000);
 							effectController.removeEffect(20884);
 							effectController.removeEffect(20885);
 						break;

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services.events.thievesguildservice;
 
+import lombok.Getter;
+
 /**
  * 盗贼类型枚举，区分盗贼公会相关业务类型。
  * Thieves type enum classifying thieves-guild related business types.
@@ -17,20 +19,17 @@ public enum ThievesType {
 	MITHRIL(5), // 秘银 / Mithril
 	SERAMIUM(6); // 塞拉镁 / Seramium
 
-	private int id;
-
-	private ThievesType(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 返回类型 ID。
 	 * Returns the type id.
 	 *
 	 * @return 类型 ID / type id
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	ThievesType(int id) {
+		this.id = id;
 	}
 
 	/**

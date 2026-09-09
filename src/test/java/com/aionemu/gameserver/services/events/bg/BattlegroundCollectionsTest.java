@@ -1,13 +1,12 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class BattlegroundCollectionsTest {
 
@@ -16,10 +15,10 @@ class BattlegroundCollectionsTest {
 		TestBattleground battleground = new TestBattleground();
 
 		assertAll(
-			() -> assertTrue(battleground.players() instanceof CopyOnWriteArrayList),
-			() -> assertTrue(battleground.groups() instanceof CopyOnWriteArrayList),
-			() -> assertTrue(battleground.alliances() instanceof CopyOnWriteArrayList),
-			() -> assertTrue(battleground.spectators() instanceof CopyOnWriteArrayList)
+			() -> assertInstanceOf(CopyOnWriteArrayList.class, battleground.players()),
+			() -> assertInstanceOf(CopyOnWriteArrayList.class, battleground.groups()),
+			() -> assertInstanceOf(CopyOnWriteArrayList.class, battleground.alliances()),
+			() -> assertInstanceOf(CopyOnWriteArrayList.class, battleground.spectators())
 		);
 	}
 

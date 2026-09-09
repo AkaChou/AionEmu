@@ -29,12 +29,12 @@ import java.util.List;
  * @author KID
  */
 public class LegionCommand extends AdminCommand {
-	private LegionService service;
+	private final LegionService service;
 	public LegionCommand() {
 		super("legion");
 		service = GameCoreGameplayServices.legionService();
 	}
-	
+
 	/**
 	 * 处理 legion 子命令（disband/setlevel/setpoints/setname/bg/kick/invite/info/territory 等）。
 	 * Handle legion subcommands (disband/setlevel/setpoints/setname/bg/kick/invite/info/territory, etc.).
@@ -44,31 +44,31 @@ public class LegionCommand extends AdminCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		
+
 		if(params[0].equalsIgnoreCase("disband")) {
 			if(!verifyLenght(player, 2, params)) //legion disband NAME
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			service.disbandLegion(legion);
 			PacketSendUtility.sendMessage(player, "legion "+legion.getLegionName()+" was disbanded.");
 		}
 		else if(params[0].equalsIgnoreCase("setlevel")) {
 			if(!verifyLenght(player, 3, params)) //legion setlevel NAME level
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			byte level = -1;
 			try {
 				level = Byte.parseByte(params[2]);
 			} catch(Exception e) { }
-			
+
 			if(level < 1 || level > 8) {
 				PacketSendUtility.sendMessage(player, "1-8 legion level is allowed.");
 				return;
@@ -77,7 +77,7 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "legion "+params[1]+" is already with that level.");
 				return;
 			}
-			
+
 			int old = legion.getLegionLevel();
 			service.changeLevel(legion, level, true);
 			PacketSendUtility.sendMessage(player, "legion "+legion.getLegionName()+" has raised from "+old+" to "+level+" level.");
@@ -85,21 +85,21 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("setpoints")) {
 			if(!verifyLenght(player, 3, params)) //legion setpoints NAME points
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			long points = -1;
 			try {
 				points = Long.parseLong(params[2]);
 			} catch(Exception e) { }
-			
+
 			if(points < 1 || points > Long.MAX_VALUE) {
 				PacketSendUtility.sendMessage(player, "1-2.1bil points allowed.");
 				return;
 			}
-			
+
 			long old = legion.getContributionPoints();
 			service.setContributionPoints(legion, points, true);
 			PacketSendUtility.sendMessage(player, "legion "+legion.getLegionName()+" has raised from "+old+" to "+points+" contributiong points.");
@@ -107,11 +107,11 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("setname")) {
 			if(!verifyLenght(player, 3, params)) //legion setname NAME NEWNAME
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			if (!service.isValidName(params[2])) {
 				PacketSendUtility.sendMessage(player, params[2]+" is incorrect for legion name!");
 				return;
@@ -123,11 +123,11 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("info")) {
 			if(!verifyLenght(player, 2, params)) //legion info NAME
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			List<String> message = new ArrayList<String>();
 			List<String> online = new ArrayList<String>();
 			List<String> offline = new ArrayList<String>();
@@ -137,7 +137,7 @@ public class LegionCommand extends AdminCommand {
 			message.add("id: "+legion.getLegionId());
 			List<Integer> members = legion.getLegionMembers();
 			message.add("members: "+members.size());
-			
+
 			PlayerDAO dao = null;
 			for(int memberId : members) {
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
@@ -146,24 +146,24 @@ public class LegionCommand extends AdminCommand {
 				else {
 					if(dao == null)
 						dao = DAOManager.getDAO(PlayerDAO.class);
-					
+
 					PlayerCommonData pcd = dao.loadPlayerCommonData(memberId);
 					offline.add(pcd.getName()+" (lv"+pcd.getLevel()+") classId "+pcd.getPlayerClass().getClassId());
 				}
 			}
-			
+
 			message.add("--ONLINE-------- "+online.size());
 			message.addAll(online);
 			message.add("--OFFLINE-------- "+offline.size());
 			message.addAll(offline);
-			
+
 			for(String msg : message)
 				PacketSendUtility.sendMessage(player, msg);
 		}
 		else if(params[0].equalsIgnoreCase("kick")) {
 			if(!verifyLenght(player, 2, params)) //legion kick PLAYER
 				return;
-			
+
 			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
@@ -172,7 +172,7 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" is a brigade general. Disband legion!");
 				return;
 			}
-			
+
 			if(service.removePlayerFromLegionAsItself(target))
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" was kicked from legion.");
 			else
@@ -181,22 +181,22 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("invite")) {
 			if(!verifyLenght(player, 3, params)) //legion invite NAME PLAYER
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
 			}
-			
+
 			if(target.isLegionMember()) {
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" is a already member of "+target.getLegion().getLegionName()+"!");
 				return;
 			}
-			
+
 			if(service.directAddPlayer(legion, target)) {
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" was added to "+legion.getLegionName());
 			} else {
@@ -206,22 +206,22 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("bg")) {
 			if(!verifyLenght(player, 3, params)) //legion bg NAME PLAYER
 				return;
-			
+
 			Legion legion = verifyLegionExists(player, params[1]);
 			if(legion == null)
 				return;
-			
+
 			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
 			}
-			
+
 			if(!legion.isMember(target.getObjectId())) {
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" is not a member of "+legion.getLegionName()+", invite them!");
 				return;
 			}
-			
+
 			List<Integer> members = legion.getLegionMembers();
 			Player bgplayer = null;
 			for(int memberId : members) {
@@ -237,7 +237,7 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "You can't assign a new general while old is offline.");
 				return;
 			}
-			
+
 			bgplayer.getLegionMember().setRank(LegionRank.LEGIONARY);
 			PacketSendUtility.broadcastPacketToLegion(target.getLegion(), new SM_LEGION_UPDATE_MEMBER(bgplayer, 0, ""));
 			PacketSendUtility.sendMessage(player, "You have sucessfully demoted " + bgplayer.getName() + " to Legionary rank.");
@@ -251,18 +251,18 @@ public class LegionCommand extends AdminCommand {
 		else if(params[0].equalsIgnoreCase("setrank")) {
 			if(!verifyLenght(player, 3, params)) //legion setrank PLAYER RANK
 				return;
-			
+
 			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
 			}
-			
+
 			if(!target.isLegionMember()) {
 				PacketSendUtility.sendMessage(player, "player "+target.getName()+" is not a member of legion.");
 				return;
 			}
-			
+
 			if(params[2].equalsIgnoreCase("centurion")) {
 				target.getLegionMember().setRank(LegionRank.CENTURION);
 				PacketSendUtility.broadcastPacketToLegion(target.getLegion(), new SM_LEGION_UPDATE_MEMBER(target, 0, ""));
@@ -314,12 +314,12 @@ public class LegionCommand extends AdminCommand {
 		}
 		return legion;
 	}
-	
+
 	private boolean verifyLenght(Player player, int size, String... cmd) {
 		boolean ok = cmd.length >= size;
 		if(!ok)
 			this.onFail(player, size+" parameters required for element //legion "+cmd[0]+".");
-		
+
 		return ok;
 	}
 
@@ -333,7 +333,7 @@ public class LegionCommand extends AdminCommand {
 	public void onFail(Player player, String message) {
 		if(message != null)
 			PacketSendUtility.sendMessage(player, "FailReason: "+message);
-		
+
 		PacketSendUtility.sendMessage(player, "//legion info <legion name> : get list of legion members");
 		PacketSendUtility.sendMessage(player, "//legion bg <legion name> <new bg name> : set a new brigade general to the legion");
 		PacketSendUtility.sendMessage(player, "//legion kick <player name> : kick player to this legion");

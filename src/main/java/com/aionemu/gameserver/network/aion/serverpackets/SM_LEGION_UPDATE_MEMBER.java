@@ -20,7 +20,7 @@ public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
 	private LegionMemberEx LM;
 	private int msgId;
 	private String text;
-	private byte isOnline;
+	private final byte isOnline;
 
 	/**
 	 * 使用在线玩家构造成员更新包。

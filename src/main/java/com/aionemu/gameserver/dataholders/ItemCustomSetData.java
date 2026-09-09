@@ -24,7 +24,7 @@ public class ItemCustomSetData {
 	protected List<ItemCustomSetTeamplate> customTemplates;
 
 	@XmlTransient
-	private IntObjectHashMap<ItemCustomSetTeamplate> custom = new IntObjectHashMap<ItemCustomSetTeamplate>();
+	private final IntObjectHashMap<ItemCustomSetTeamplate> custom = new IntObjectHashMap<ItemCustomSetTeamplate>();
 
 	/**
 	 * 按 ID 获取物品自定义套装模板。

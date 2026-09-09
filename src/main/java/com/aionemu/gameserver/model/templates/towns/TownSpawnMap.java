@@ -9,6 +9,7 @@ import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 城镇刷新点地图模板（静态数据/XML）。
@@ -19,11 +20,15 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "town_spawn_map")
 public class TownSpawnMap {
 
+	/**
+	 * @return the mapId
+	 */
+	@Getter
 	@XmlAttribute(name = "map_id")
 	private int mapId;
 	@XmlElement(name = "town_spawn")
 	private List<TownSpawn> townSpawns;
-	private Map<Integer, TownSpawn> townSpawnsData = new HashMap<Integer, TownSpawn>();
+	private final Map<Integer, TownSpawn> townSpawnsData = new HashMap<Integer, TownSpawn>();
 
 	/**
 	 * 反序列化后将城镇出生列表转为按城镇 ID 索引的映射。
@@ -40,13 +45,6 @@ public class TownSpawnMap {
 		}
 		townSpawns.clear();
 		townSpawns = null;
-	}
-
-	/**
-	 * @return the mapId
-	 */
-	public int getMapId() {
-		return mapId;
 	}
 
 	/** 获取城镇刷新点。 / Returns the town spawn. */

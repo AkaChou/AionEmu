@@ -4,6 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.services.MotionLoggingService;
+import lombok.Getter;
 
 /**
  * 武器类型包装：主/副手组合，用于动作时间查表与比较。
@@ -13,7 +14,19 @@ import com.aionemu.gameserver.services.MotionLoggingService;
  */
 public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 
+	/**
+	 * 获取主手武器类型。
+	 * Gets main-hand weapon type.
+	 *
+	 */
+	@Getter
 	private WeaponType mainHand = null;
+	/**
+	 * 获取副手武器类型。
+	 * Gets off-hand weapon type.
+	 *
+	 */
+	@Getter
 	private WeaponType offHand = null;
 
 	/**
@@ -54,10 +67,7 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 		if (mainHand != other.mainHand) {
 			return false;
 		}
-		if (offHand != other.offHand) {
-			return false;
-		}
-		return true;
+		return offHand == other.offHand;
 	}
 
 	/**
@@ -104,24 +114,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 			return -1;
 		} else
 			return mainHand.toString().compareTo(o.getMainHand().toString());
-	}
-
-	/**
-	 * 获取主手武器类型。
-	 * Gets main-hand weapon type.
-	 *
-	 */
-	public WeaponType getMainHand() {
-		return this.mainHand;
-	}
-
-	/**
-	 * 获取副手武器类型。
-	 * Gets off-hand weapon type.
-	 *
-	 */
-	public WeaponType getOffHand() {
-		return this.offHand;
 	}
 
 	private MotionLoggingService getOuterType() {

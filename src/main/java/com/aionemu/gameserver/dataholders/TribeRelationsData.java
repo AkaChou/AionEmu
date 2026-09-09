@@ -59,7 +59,7 @@ public class TribeRelationsData {
 		if (tribe == null) {
 			return false;
 		}
-		Tribe baseTribe = tribe.isBasic() ? (Tribe) tribeNameMap.get(tribe.getBase()) : null;
+		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
 		return !tribe.getAggressive().isEmpty() || (baseTribe != null && !baseTribe.getAggressive().isEmpty());
 	}
 

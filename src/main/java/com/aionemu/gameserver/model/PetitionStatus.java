@@ -14,9 +14,9 @@ public enum PetitionStatus {
 	/** 已回复 / Replied */
 	REPLIED(2);
 
-	private int element;
+	private final int element;
 
-	private PetitionStatus(int id) {
+	PetitionStatus(int id) {
 		this.element = id;
 	}
 

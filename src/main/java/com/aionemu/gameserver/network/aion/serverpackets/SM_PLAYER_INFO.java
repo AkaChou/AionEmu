@@ -27,6 +27,7 @@ import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.model.account.Account;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步可见玩家完整外观与状态的服务端包（位置、种族显示、装备外观、脸部、军团/战场标识等）。
@@ -37,19 +38,11 @@ import com.aionemu.gameserver.model.account.Account;
  * FFA / PK / enemy conditions so the client
  * paints faction correctly.
  */
+@AllArgsConstructor
 public class SM_PLAYER_INFO extends AionServerPacket {
 
 	private final Player player;
-	private boolean enemy;
-
-	/**
-	 * @param player 被同步的玩家 / player being synchronized
-	 * @param enemy 相对观察者是否视为敌对 / whether the observer treats this player as an enemy
-	 */
-	public SM_PLAYER_INFO(Player player, boolean enemy) {
-		this.player = player;
-		this.enemy = enemy;
-	}
+	private final boolean enemy;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

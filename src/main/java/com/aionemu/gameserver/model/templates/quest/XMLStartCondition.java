@@ -139,10 +139,7 @@ public class XMLStartCondition {
 
 	private boolean checkReward(int questId, int neededReward, int currentReward) {
 		// 在欧比斯入场任务奖励正确前的临时例外任务。 / Temporary exceptions-quests till abyss entry quests work with correct reward
-		if (neededReward != currentReward && questId != 2947 && questId != 1922) {
-			return false;
-		}
-		return true;
+		return neededReward == currentReward || questId == 2947 || questId == 1922;
 	}
 
 	/** 返回已完成任务前置条件 / Returns the finished preconditions */

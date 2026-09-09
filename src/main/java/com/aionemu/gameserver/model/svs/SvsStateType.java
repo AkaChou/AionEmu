@@ -9,5 +9,5 @@ package com.aionemu.gameserver.model.svs;
 
 public enum SvsStateType {
 	/** 势力战。 / Svs. */
-	SVS, PEACE;
+	SVS, PEACE
 }

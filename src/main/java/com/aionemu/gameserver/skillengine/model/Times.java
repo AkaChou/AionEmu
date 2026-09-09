@@ -10,6 +10,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.item.WeaponType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 武器相关动作时间表：按武器类型解析逗号分隔的时间序列。
@@ -19,31 +21,19 @@ import com.aionemu.gameserver.model.templates.item.WeaponType;
 @XmlType(name = "Times")
 public class Times {
 
-	@XmlAttribute(required = true)
-	protected String times;
-
-	@XmlTransient
-	private HashMap<WeaponTypeWrapper, Integer> timeForWeaponType = new HashMap<WeaponTypeWrapper, Integer>();
-
 	/**
 	 * 获取原始时间字符串。
 	 * Gets raw times string.
 	 *
 	 * @return 逗号分隔时间 / comma-separated times
 	 */
-	public String getTimes() {
-		return times;
-	}
+	@Getter
+	@Setter
+	@XmlAttribute(required = true)
+	protected String times;
 
-	/**
-	 * 设置原始时间字符串。
-	 * Sets raw times string.
-	 *
-	 * @param times 逗号分隔时间 / comma-separated times
-	 */
-	public void setTimes(String times) {
-		this.times = times;
-	}
+	@XmlTransient
+	private final HashMap<WeaponTypeWrapper, Integer> timeForWeaponType = new HashMap<WeaponTypeWrapper, Integer>();
 
 	/**
 	 * 按武器包装获取动作时间。

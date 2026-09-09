@@ -16,5 +16,5 @@ public enum ProvokeTarget {
 	/** 自身 / Self */
 	ME,
 	/** 对手 / Opponent */
-	OPPONENT;
+	OPPONENT
 }

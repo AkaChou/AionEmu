@@ -37,9 +37,9 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 {
 	private int stage = 0;
 	private Future<?> basicSkillTask;
-	private AtomicBoolean isStart = new AtomicBoolean(false);
-	private List<Point3D> soulLocations = new ArrayList<Point3D>();
-	
+	private final AtomicBoolean isStart = new AtomicBoolean(false);
+	private final List<Point3D> soulLocations = new ArrayList<Point3D>();
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -50,7 +50,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -61,14 +61,14 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		soulLocations.add(new Point3D(1586.4f, 1567.1f, 304.64f));
 		soulLocations.add(new Point3D(1588.3f, 1566.2f, 304.64f));
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342055, getObjectId(), 0, 0);
 		cancelSkillTask();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342056, getObjectId(), 0, 0);
@@ -77,7 +77,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		cancelSkillTask();
 		stage = 0;
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75 && stage < 1) {
 			stage = 1;
@@ -90,7 +90,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 			stage = 3;
 		}
 	}
-	
+
 	private void startBasicSkillTask() {
 		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -102,13 +102,13 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 			}
 		},0 , 24000);
 	}
-	
+
 	private void cancelSkillTask() {
 		if (basicSkillTask != null && !basicSkillTask.isCancelled()) {
 			basicSkillTask.cancel(true);
 		}
 	}
-	
+
 	private void launchSpecial() {
 		if (isAlreadyDead() || stage == 0)
 			return;
@@ -130,14 +130,14 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		}
 		scheduleSpecial(delay);
 	}
-	
+
 	private void rndSpawn(int npcId, int count) {
 		for (int i = 0; i < count; i++) {
 			SpawnTemplate template = rndSpawnInRange(npcId);
 			SpawnEngine.spawnObject(template, getPosition().getInstanceId());
 		}
 	}
-	
+
 	private void spawnSouls() {
 	    List<Point3D> points = new ArrayList<Point3D>();
 	    points.addAll(soulLocations);
@@ -146,10 +146,10 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 			if (!points.isEmpty()) {
 				Point3D spawn = points.remove(Rnd.get(points.size()));
 				spawn(281645, spawn.getX(), spawn.getY(), spawn.getZ(), (byte) 18);
-			} 
+			}
 		}
 	}
-	
+
 	private Player getTargetPlayer() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
@@ -159,7 +159,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		}
 		return !players.isEmpty() ? players.get(Rnd.get(players.size())) : null;
 	}
-	
+
 	private void scheduleSpecial(int delay) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -168,7 +168,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 			}
 		}, delay);
 	}
-	
+
 	private SpawnTemplate rndSpawnInRange(int npcId) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * 5);

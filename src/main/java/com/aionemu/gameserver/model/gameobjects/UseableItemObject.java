@@ -33,7 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class UseableItemObject extends HouseObject<HousingUseableItem> {
 
 	private volatile boolean mustGiveLastReward = false;
-	private AtomicReference<Player> usingPlayer = new AtomicReference<Player>();
+	private final AtomicReference<Player> usingPlayer = new AtomicReference<Player>();
 	private UseDataWriter entryWriter = null;
 
 	public UseableItemObject(House owner, int objId, int templateId) {
@@ -218,7 +218,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 							} else {
 								Integer cd = myself.getObjectTemplate().getCd();
 								int cooldownSeconds;
-								
+
 								if (cd == null || cd == 0) {
 									// 午夜重置（次日 00:00） / Reset at midnight (next day 00:00)
 									ZonedDateTime now = ZonedDateTime.now();
@@ -227,7 +227,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 								} else {
 									cooldownSeconds = cd;
 								}
-								
+
 								player.getHouseObjectCooldownList().addHouseObjectCooldown(myself.getObjectId(), cooldownSeconds);
 							}
 						} finally {

@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
+import lombok.Getter;
 
 /**
  * 加成物品组抽象基类：加成类型、概率与奖励条目。
@@ -19,16 +20,13 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 		OreGroup.class, GatherGroup.class, EnchantGroup.class, BossGroup.class })
 public abstract class BonusItemGroup {
 
+	/** 获取加成类型。 / Returns the bonus type. */
+	@Getter
 	@XmlAttribute(name = "bonusType", required = true)
 	protected BonusType bonusType;
 
 	@XmlAttribute(name = "chance")
 	protected Float chance;
-
-	/** 获取加成类型。 / Returns the bonus type. */
-	public BonusType getBonusType() {
-		return bonusType;
-	}
 
 	/** 返回概率 / Returns the chance */
 	public float getChance() {

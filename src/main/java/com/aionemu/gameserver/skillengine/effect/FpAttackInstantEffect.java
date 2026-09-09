@@ -40,10 +40,9 @@ public class FpAttackInstantEffect extends EffectTemplate {
 	@Override
 	public void applyEffect(Effect effect) {
 		// 因其他生物无飞行时间而限制仅对玩家 / Restriction to players because lack of FP on other Creatures
-		if (!(effect.getEffected() instanceof Player)) {
+		if (!(effect.getEffected() instanceof Player player)) {
 			return;
 		}
-		Player player = (Player) effect.getEffected();
 		int maxFP = player.getLifeStats().getMaxFp();
 		int newValue = calculateValue(effect.getSkillLevel());
 		// 支持百分比数值 / Support for values in percentage

@@ -225,11 +225,7 @@ public class AbyssLandingService {
 		int totalScore = loc.getArtifactPoints() + loc.getCommanderPoints() + loc.getFacilityPoints()
 				+ loc.getBasePoints() + loc.getMonumentsPoints() + loc.getQuestPoints() + loc.getSiegePoints();
 		loc.setPoints(totalScore);
-		if (win) {
-			checkRedemptionLanding(totalScore, true);
-		} else {
-			checkRedemptionLanding(totalScore, false);
-		}
+		checkRedemptionLanding(totalScore, win);
 		onUpdate();
 	}
 
@@ -323,11 +319,7 @@ public class AbyssLandingService {
 		int totalScore = loc.getArtifactPoints() + loc.getCommanderPoints() + loc.getFacilityPoints()
 				+ loc.getBasePoints() + loc.getMonumentsPoints() + loc.getQuestPoints() + loc.getSiegePoints();
 		loc.setPoints(totalScore);
-		if (win) {
-			checkHarbingerLanding(totalScore, true);
-		} else {
-			checkHarbingerLanding(totalScore, false);
-		}
+		checkHarbingerLanding(totalScore, win);
 		onUpdate();
 	}
 

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * Absolute 属性 Owner 游戏对象。
@@ -14,16 +15,13 @@ public class AbsoluteStatOwner implements StatOwner {
 
 	Player target;
 	ModifiersTemplate template;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	boolean isActive = false;
 
 	public AbsoluteStatOwner(Player player, int templateId) {
 		this.target = player;
 		setTemplate(templateId);
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置模板。 / Sets the template. */

@@ -91,10 +91,6 @@ public class DAOLoader implements ClassListener {
             return false;
         }
 
-        if (clazz.isAnnotationPresent(DisabledDAO.class)) {
-            return false;
-        }
-
-        return true;
-    }
+		return !clazz.isAnnotationPresent(DisabledDAO.class);
+	}
 }

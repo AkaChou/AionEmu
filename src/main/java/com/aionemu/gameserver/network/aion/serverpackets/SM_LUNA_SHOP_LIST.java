@@ -6,6 +6,7 @@ import java.util.List;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 月之商城列表/点数等状态同步的服务端包。
@@ -14,26 +15,16 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Made by Rinzler (Encom)
  */
 @Slf4j
+@RequiredArgsConstructor
 public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 
-	private int actionId;
+	private final int actionId;
 	private long points;
 	private int keys;
 	private int costId;
-	private int entryCount;
 	private int tableId;
 	private List<Integer> idList;
 	private List<Integer> randomDailyCraft;
-
-	/**
-	 * 通用动作构造，仅指定 actionId。
-	 * Generic action constructor with action id only.
-	 *
-	 * action type
-	 */
-	public SM_LUNA_SHOP_LIST(int actionId) {
-		this.actionId = actionId;
-	}
 
 	/**
 	 * 同步月之点数。

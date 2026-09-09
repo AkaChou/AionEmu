@@ -1,15 +1,11 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameSpawnLifecycleTest {
 
@@ -30,7 +26,7 @@ class GameSpawnLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "spawn"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -50,7 +46,7 @@ class GameSpawnLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "spawn", "section", "spawn"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     private static Class<?> fieldType(String name) {

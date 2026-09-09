@@ -41,23 +41,23 @@ import lombok.extern.slf4j.Slf4j;
 public class ProtectorConquerorService {
 	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
 
-	private Map<Integer, Protector> protectors = new ConcurrentHashMap<Integer, Protector>();
-	private Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<Integer, Conqueror>();
+	private final Map<Integer, Protector> protectors = new ConcurrentHashMap<Integer, Protector>();
+	private final Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<Integer, Conqueror>();
 
-	private Map<Integer, Map<Integer, Player>> worldConqueror = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
-	private Map<Integer, Map<Integer, Player>> worldProtectors = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
+	private final Map<Integer, Map<Integer, Player>> worldConqueror = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
+	private final Map<Integer, Map<Integer, Player>> worldProtectors = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
 
 	private static final Map<Integer, WorldType> handledWorlds = new ConcurrentHashMap<Integer, WorldType>();
 	private Future<?> refreshTask;
 	private ProtectorBuffs protectorBuff;
-	private ConquerorBuffs conquerorBuff;;
+	private ConquerorBuffs conquerorBuff;
 
 	/**
 	 * 世界归属类型：魔族/天族/双方。
 	 * Elyos / both.
 	 */
 	public enum WorldType {
-		ASMODIANS, ELYOS, USEALL;
+		ASMODIANS, ELYOS, USEALL
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ProtectorConquerorService {
 				public void run() {
 					decayProtectorConquerorRanks();
 				}
-			}, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000);
+			}, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
 		}
 
 	void decayProtectorConquerorRanks() {

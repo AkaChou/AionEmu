@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 玩家月华 Shop 游戏对象。
@@ -12,11 +15,29 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 
 @Slf4j
+@NoArgsConstructor
 public class PlayerLunaShop {
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
 
+	/**
+	 * @return 是否免费开启地下通道 / Whether free underpath
+	 */
+	@Getter
+	@Setter
 	private boolean FreeUnderpath;
+	/**
+	 * @return 是否免费开启工坊 / Whether free factory
+	 */
+	@Getter
+	@Setter
 	private boolean FreeFactory;
+	/**
+	 * @return 是否免费开启宝箱 / Whether free chest
+	 */
+	@Getter
+	@Setter
 	private boolean FreeChest;
 
 	public PlayerLunaShop(boolean freeUnderpath, boolean freeFactory, boolean freeChest) {
@@ -24,50 +45,6 @@ public class PlayerLunaShop {
 		this.FreeFactory = freeFactory;
 		this.FreeChest = freeChest;
 		this.persistentState = PersistentState.NEW;
-	}
-
-	public PlayerLunaShop() {
-	}
-
-	/**
-	 * @return 是否免费开启地下通道 / Whether free underpath
-	 */
-	public boolean isFreeUnderpath() {
-		return FreeUnderpath;
-	}
-
-	/** 设置 free underpath / Sets the free underpath */
-	public void setFreeUnderpath(boolean free) {
-		this.FreeUnderpath = free;
-	}
-
-	/**
-	 * @return 是否免费开启工坊 / Whether free factory
-	 */
-	public boolean isFreeFactory() {
-		return FreeFactory;
-	}
-
-	/** 设置 free factory / Sets the free factory */
-	public void setFreeFactory(boolean free) {
-		this.FreeFactory = free;
-	}
-
-	/**
-	 * @return 是否免费开启宝箱 / Whether free chest
-	 */
-	public boolean isFreeChest() {
-		return FreeChest;
-	}
-
-	/** 设置 free chest / Sets the free chest */
-	public void setFreeChest(boolean free) {
-		this.FreeChest = free;
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/** 设置 luna shop by obj id / Sets the luna shop by obj id */

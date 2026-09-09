@@ -6,6 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.utils3d.Point3D;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 飞行光环点模板（静态数据/XML）。
@@ -14,33 +16,22 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FlyRingPoint")
+@NoArgsConstructor
 public class FlyRingPoint {
+	/** 返回 x / Returns the x */
+	@Getter
 	@XmlAttribute(name = "x")
 	private float x;
 
+	/** 返回 y / Returns the y */
+	@Getter
 	@XmlAttribute(name = "y")
 	private float y;
 
+	/** 返回 z / Returns the z */
+	@Getter
 	@XmlAttribute(name = "z")
 	private float z;
-
-	/** 返回 x / Returns the x */
-	public float getX() {
-		return x;
-	}
-
-	/** 返回 y / Returns the y */
-	public float getY() {
-		return y;
-	}
-
-	/** 返回 z / Returns the z */
-	public float getZ() {
-		return z;
-	}
-
-	public FlyRingPoint() {
-	}
 
 	public FlyRingPoint(Point3D p) {
 		x = (float) p.x;

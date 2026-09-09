@@ -12,6 +12,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.pet.PetMerchandEntry;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.NoArgsConstructor;
 
 /**
  * 宠物商人数据容器，按 ID 索引 PetMerchandEntry。
@@ -21,15 +22,13 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
  */
 @XmlRootElement(name = "merchands")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class PetMerchandData {
 	@XmlElement(name = "merchand")
 	private List<PetMerchandEntry> list;
 
 	@XmlTransient
-	private IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
-
-	public PetMerchandData() {
-	}
+	private final IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
 
 	public PetMerchandData(List<PetMerchandEntry> entries) {
 		for (PetMerchandEntry entry : entries) {

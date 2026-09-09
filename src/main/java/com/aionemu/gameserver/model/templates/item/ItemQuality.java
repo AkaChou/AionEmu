@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 物品 Quality 枚举。
@@ -26,14 +27,11 @@ public enum ItemQuality {
 	/** 神话 / Mythic. */
 	MYTHIC(6); // Mythic - Purple
 
-	private int qualityId;
-
-	private ItemQuality(int qualityId) {
-		this.qualityId = qualityId;
-	}
-
 	/** 返回品质 ID / Returns the quality id */
-	public int getQualityId() {
-		return qualityId;
+	@Getter
+	private final int qualityId;
+
+	ItemQuality(int qualityId) {
+		this.qualityId = qualityId;
 	}
 }

@@ -4,6 +4,7 @@ import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：游戏服注册认证结果响应（对应 CM_GS_AUTH）。
@@ -11,6 +12,7 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_GS_AUTH_RESPONSE extends GsServerPacket {
 
     /**
@@ -18,16 +20,6 @@ public class SM_GS_AUTH_RESPONSE extends GsServerPacket {
      * Response for gameserver authentication.
      */
     private final GsAuthResponse response;
-
-    /**
-     * 构造游戏服认证结果响应包。
-     * Constructs a game-server authentication response packet.
-     *
-     * @param response 认证应答结果 / authentication response
-     */
-    public SM_GS_AUTH_RESPONSE(GsAuthResponse response) {
-        this.response = response;
-    }
 
     /**
      * {@inheritDoc}

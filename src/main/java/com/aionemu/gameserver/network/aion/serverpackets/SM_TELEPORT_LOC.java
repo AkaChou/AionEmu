@@ -8,14 +8,14 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that teleports the client to a map/instance location.
  */
 public class SM_TELEPORT_LOC extends AionServerPacket {
-	private int portAnimation;
-	private int mapId;
-	private int instanceId;
-	private float x;
-	private float y;
-	private float z;
-	private byte heading;
-	private boolean isInstance;
+	private final int portAnimation;
+	private final int mapId;
+	private final int instanceId;
+	private final float x;
+	private final float y;
+	private final float z;
+	private final byte heading;
+	private final boolean isInstance;
 
 	/**
 	 * @param isInstance    是否为实例 / whether the destination is an instance

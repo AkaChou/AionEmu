@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
 /**
  * 套装部件模板（静态数据/XML）。
@@ -15,13 +16,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemPart {
 
-	@XmlAttribute
-	protected int itemid;
-
 	/**
 	 * @return the itemid
 	 */
-	public int getItemid() {
-		return itemid;
-	}
+	@Getter
+	@XmlAttribute
+	protected int itemid;
 }

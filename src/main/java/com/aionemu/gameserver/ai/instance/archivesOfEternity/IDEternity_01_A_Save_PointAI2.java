@@ -30,12 +30,12 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
 		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
@@ -43,7 +43,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -62,7 +62,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
             break;
         }
 	}
-	
+
 	private void IDEternity01ASavePoint() {
 		if (!activated.compareAndSet(false, true)) {
 			return;
@@ -70,24 +70,24 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 		AI2Actions.deleteOwner(IDEternity_01_A_Save_PointAI2.this);
 		switch (Rnd.get(1, 4)) {
 			case 1:
-				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(731809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //IDEternity_01_Teleporter_01.
+				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(731809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //IDEternity_01_Teleporter_01.
 			break;
 			case 2:
-				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-			    spawn(731810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //IDEternity_01_Teleporter_02.
+				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+			    spawn(731810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //IDEternity_01_Teleporter_02.
 			break;
 			case 3:
-				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(731811, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //IDEternity_01_Teleporter_03.
+				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(731811, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //IDEternity_01_Teleporter_03.
 			break;
 			case 4:
-				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(731812, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //IDEternity_01_Teleporter_04.
+				spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(731812, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //IDEternity_01_Teleporter_04.
 			break;
 		}
     }
-	
+
 	private void announceTeleporter01() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -132,7 +132,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

@@ -20,9 +20,9 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
  */
 public class SM_WAREHOUSE_ADD_ITEM extends AionServerPacket {
 
-	private int warehouseType;
-	private List<Item> items;
-	private Player player;
+	private final int warehouseType;
+	private final List<Item> items;
+	private final Player player;
 	private ItemAddType addType;
 
 	/**

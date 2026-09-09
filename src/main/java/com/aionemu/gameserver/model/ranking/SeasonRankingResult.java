@@ -2,37 +2,28 @@ package com.aionemu.gameserver.model.ranking;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * Season 排行结果，用于排行相关逻辑。
  * Season Ranking Result for ranking logic.
  */
+@AllArgsConstructor
 public class SeasonRankingResult {
 
 	@Getter
-	private String playerName;
+	private final String playerName;
 	@Getter
-	private int oldRank;
+	private final int oldRank;
 	@Getter
-	private int rank;
-	private int pc;
+	private final int rank;
+	private final int pc;
 	@Getter
-	private PlayerClass playerClass;
+	private final PlayerClass playerClass;
 	@Getter
-	private int playerRace;
+	private final int playerRace;
 	@Getter
-	private int playerId;
-
-	public SeasonRankingResult(String playerName, int oldRank, int rank, int pc, PlayerClass playerClass,
-			int playerRace, int playerId) {
-		this.playerName = playerName;
-		this.oldRank = oldRank;
-		this.rank = rank;
-		this.pc = pc;
-		this.playerClass = playerClass;
-		this.playerRace = playerRace;
-		this.playerId = playerId;
-	}
+	private final int playerId;
 
 	/** 获取分数 / Returns the points. */
 	public int getPoints() {

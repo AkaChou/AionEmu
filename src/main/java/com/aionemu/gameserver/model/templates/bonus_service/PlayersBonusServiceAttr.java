@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Players 加成服务 Attr 模板（静态数据/XML）。
@@ -22,6 +24,9 @@ public class PlayersBonusServiceAttr {
 	@XmlElement(name = "apply_bonus")
 	protected List<PlayersBonusPenaltyAttr> playersBonusAttr;
 
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
@@ -31,15 +36,5 @@ public class PlayersBonusServiceAttr {
 			playersBonusAttr = new ArrayList<PlayersBonusPenaltyAttr>();
 		}
 		return playersBonusAttr;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public int getBuffId() {
-		return buffId;
-	}
-
-	/** 设置 buff id / Sets the buff id */
-	public void setBuffId(int value) {
-		buffId = value;
 	}
 }

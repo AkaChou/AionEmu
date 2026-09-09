@@ -1,10 +1,5 @@
 package com.aionemu.gameserver.skillengine.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.nio.file.Path;
 
 import javax.xml.XMLConstants;
@@ -39,6 +34,8 @@ import com.aionemu.gameserver.skillengine.effect.SwitchHostileEffect;
 import jakarta.xml.bind.JAXBContext;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class RetailSkillTemplateFileTest {
 
@@ -96,12 +93,12 @@ class RetailSkillTemplateFileTest {
 			data.getSkillTemplate(1727).getEffects().getEffects().getFirst());
 		assertEquals(220, heal.getValue());
 		assertEquals(14, heal.getDelta());
-		assertEquals(true, data.getSkillTemplate(1727).isHealBoostApplied());
-		assertEquals(false, data.getSkillTemplate(274).isHealBoostApplied());
+		assertTrue(data.getSkillTemplate(1727).isHealBoostApplied());
+		assertFalse(data.getSkillTemplate(274).isHealBoostApplied());
 
 		NoReduceSpellATKInstantEffect noReduce = assertInstanceOf(NoReduceSpellATKInstantEffect.class,
 			data.getSkillTemplate(8700).getEffects().getEffects().getFirst());
-		assertEquals(true, noReduce.isPercent());
+		assertTrue(noReduce.isPercent());
 		assertEquals(25, noReduce.getValue());
 		assertEquals(1_000_000, noReduce.getMaxDamage());
 
@@ -118,15 +115,15 @@ class RetailSkillTemplateFileTest {
 			data.getSkillTemplate(4372).getEffects().getEffects().getFirst());
 		assertEquals(465, mpHeal.getValue());
 		assertEquals(8, mpHeal.getDelta());
-		assertEquals(false, mpHeal.isPercent());
-		assertEquals(true, data.getSkillTemplate(4372).isMpHealBoostApplied());
-		assertEquals(false, data.getSkillTemplate(249).isMpHealBoostApplied());
+		assertFalse(mpHeal.isPercent());
+		assertTrue(data.getSkillTemplate(4372).isMpHealBoostApplied());
+		assertFalse(data.getSkillTemplate(249).isMpHealBoostApplied());
 		MPHealInstantEffect percentMpHeal = data.getSkillTemplate(386).getEffects().getEffects().stream()
 			.filter(MPHealInstantEffect.class::isInstance)
 			.map(MPHealInstantEffect.class::cast)
 			.findFirst()
 			.orElseThrow();
-		assertEquals(true, percentMpHeal.isPercent());
+		assertTrue(percentMpHeal.isPercent());
 		assertEquals(100, percentMpHeal.getValue());
 
 		ParalyzeEffect paralyze = data.getSkillTemplate(2726).getEffects().getEffects().stream()
@@ -226,11 +223,11 @@ class RetailSkillTemplateFileTest {
 		assertEquals(9000, proc.getValue());
 		assertEquals(0, proc.getDelta());
 		assertEquals(100, proc.getWeaponBoost());
-		assertEquals(true, proc.isCheckProtector());
+		assertTrue(proc.isCheckProtector());
 
 		ProcAtkInstantEffect stagger = assertInstanceOf(ProcAtkInstantEffect.class,
 			data.getSkillTemplate(8344).getEffects().getEffects().getFirst());
-		assertEquals(false, stagger.isCheckProtector());
+		assertFalse(stagger.isCheckProtector());
 		assertNotNull(stagger.getSubEffect());
 		assertEquals(8217, stagger.getSubEffect().getSkillId());
 
@@ -241,7 +238,7 @@ class RetailSkillTemplateFileTest {
 		assertEquals(75000, hostileUp.getTimedValue());
 		assertEquals(0, hostileUp.getTimedDelta());
 		assertEquals(2500, hostileUp.getTimedDuration());
-		assertEquals(true, hostileUp.isSplitTotemHate());
+		assertTrue(hostileUp.isSplitTotemHate());
 	}
 
 	private static long countEffects(SkillData data, Class<? extends EffectTemplate> type) {

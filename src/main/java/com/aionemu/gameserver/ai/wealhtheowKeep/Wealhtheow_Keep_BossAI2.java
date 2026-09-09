@@ -31,21 +31,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask; // 阶段任务句柄 / phase task handle
-	private AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已受击 / whether it was attacked
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false); // 阶段事件是否已启动 / whether the phase event started
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已受击 / whether it was attacked
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false); // 阶段事件是否已启动 / whether the phase event started
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		announceWealhtheowKeepBoss();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -53,7 +53,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 按血量百分比阈值（95/75/55/35/15）触发阶段事件。
 	 * Triggers phase events at HP percentage thresholds (95/75/55/35/15).
@@ -81,7 +81,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	/**
 	 * 每 15 秒在存活的玩家附近生成爆炸牺牲品；玩家不足 6 人时每人一个，否则随机 6 至人数上限个。
 	 * Every 15s spawns explosive sacrifices near living players: one per player when fewer than 6, otherwise a random 6 to size count.
@@ -114,7 +114,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	/**
 	 * 在指定玩家位置生成爆炸牺牲品（延迟 3 秒，BOSS 存活时才生成）。
 	 * Spawns an explosive sacrifice at the player's position (3s delay, only while the boss is alive).
@@ -134,7 +134,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	/**
 	 * 收集已知范围内所有存活的玩家。
 	 * Collects all living players in the known list.
@@ -148,13 +148,13 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();
@@ -162,7 +162,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -182,7 +182,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -190,7 +190,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void treasureChest() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -200,7 +200,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceWealhtheowKeepBoss() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

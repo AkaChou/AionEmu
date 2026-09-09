@@ -11,10 +11,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,9 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Armored_Transport_AlphaAI2 extends GeneralNpcAI2
 {
     private boolean canThink = true;
-	private String walkerId = "220110001";
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
 
 	@Override
 	public boolean canThink() {
@@ -56,8 +53,7 @@ public class Armored_Transport_AlphaAI2 extends GeneralNpcAI2
 
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 100) {
 				// 玩家进入 100 米范围时仅触发一次：停止思考、沿行走路线移动并播放表情动画。
 				// Triggers once when a player gets within 100m: stops thinking, walks the route and plays an emote.

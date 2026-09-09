@@ -21,8 +21,8 @@ import com.aionemu.gameserver.skillengine.change.Func;
  */
 
 public class PlayersBonus implements StatOwner {
-	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
-	private PlayersBonusServiceAttr playersServiceBonusattr;
+	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final PlayersBonusServiceAttr playersServiceBonusattr;
 
 	public PlayersBonus(int buffId) {
 		playersServiceBonusattr = DataManager.PLAYERS_BONUS_DATA.getInstanceBonusattr(buffId);

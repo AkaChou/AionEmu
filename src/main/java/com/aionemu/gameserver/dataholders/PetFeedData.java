@@ -27,7 +27,7 @@ public class PetFeedData {
 	protected List<PetFlavour> flavours;
 
 	@XmlTransient
-	private Map<Integer, PetFlavour> petFlavoursById = new HashMap<Integer, PetFlavour>();
+	private final Map<Integer, PetFlavour> petFlavoursById = new HashMap<Integer, PetFlavour>();
 
 	/**
 	 * JAXB 反序列化完成后，将口味写入 ID 索引并释放列表。

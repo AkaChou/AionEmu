@@ -15,11 +15,11 @@ public class AssembledNpc {
 
 	@Getter
 	private List<AssembledNpcPart> assembledParts = new ArrayList<>();
-	private long spawnTime = System.currentTimeMillis();
+	private final long spawnTime = System.currentTimeMillis();
 	@Getter
-	private int routeId;
+	private final int routeId;
 	@Getter
-	private int mapId;
+	private final int mapId;
 
 	public AssembledNpc(int routeId, int mapId, int liveTime, List<AssembledNpcPart> assembledParts) {
 		this.assembledParts = new ArrayList<>(assembledParts);

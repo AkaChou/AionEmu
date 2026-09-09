@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SurveyService {
 
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
-	private ConcurrentMap<Integer, SurveyItem> activeItems;
+	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
 	private Future<?> updateTask;
 
@@ -80,7 +80,7 @@ public class SurveyService {
 			updateTask.cancel(false);
 		}
 		updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
-				SecurityConfig.SURVEY_DELAY * 60000);
+				SecurityConfig.SURVEY_DELAY * 60000L);
 	}
 
 	/**

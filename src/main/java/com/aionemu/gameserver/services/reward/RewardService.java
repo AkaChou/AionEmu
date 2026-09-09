@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 public class RewardService {
-	private RewardServiceDAO dao;
+	private final RewardServiceDAO dao;
 	private static volatile ObjectProvider<RewardService> instanceProvider;
 
 	/**

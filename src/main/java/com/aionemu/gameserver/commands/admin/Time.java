@@ -69,7 +69,7 @@ public class Time extends AdminCommand
 				PacketSendUtility.sendPacket(player, new SM_GAME_TIME());
 			}
 		});
-		PacketSendUtility.sendMessage(admin, "You changed the time to " + params[0].toString() + ".");
+		PacketSendUtility.sendMessage(admin, "You changed the time to " + params[0] + ".");
 	}
 
 	/**

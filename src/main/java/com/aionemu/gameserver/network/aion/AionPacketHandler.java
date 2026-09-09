@@ -22,7 +22,7 @@ import com.aionemu.gameserver.utils.Util;
 public class AionPacketHandler {
 
 	/** 操作码到客户端包原型 / opcode to client packet prototype */
-	private Map<Integer, AionClientPacket> packetsPrototypes = new HashMap<Integer, AionClientPacket>();
+	private final Map<Integer, AionClientPacket> packetsPrototypes = new HashMap<Integer, AionClientPacket>();
 
 	/**
 	 * 从给定 ByteBuffer 读取一个包。

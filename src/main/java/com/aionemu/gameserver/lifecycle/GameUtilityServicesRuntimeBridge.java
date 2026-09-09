@@ -6,6 +6,7 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.gameserver.dao.impl.GameDAOClassProvider;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
@@ -79,7 +80,7 @@ public class GameUtilityServicesRuntimeBridge {
      * Initialize the DAO manager.
      */
     public void initializeDaoManager() {
-        DAOManager.init();
+        DAOManager.init(new GameDAOClassProvider());
     }
 
     /**

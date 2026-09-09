@@ -4,11 +4,11 @@ import java.util.function.Supplier;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class SpawnSurfaceResolver {
-
-	private SpawnSurfaceResolver() {
-	}
 
 	static float resolve(SpawnTemplate spawn, int instanceId) {
 		return resolve(spawn,

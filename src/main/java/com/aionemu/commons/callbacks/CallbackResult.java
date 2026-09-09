@@ -1,6 +1,8 @@
 package com.aionemu.commons.callbacks;
 
 import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 回调结果类，用于控制回调链和目标方法的执行流程
@@ -8,6 +10,7 @@ import lombok.Getter;
  *
  * @param <T> 结果值的类型 / Type of the result value
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CallbackResult<T> {
     /**
      * 继续执行后续回调和目标方法
@@ -51,11 +54,6 @@ public class CallbackResult<T> {
 
     private CallbackResult(int blockPolicy) {
         this(null, blockPolicy);
-    }
-
-    private CallbackResult(T result, int blockPolicy) {
-        this.result = result;
-        this.blockPolicy = blockPolicy;
     }
 
     /**

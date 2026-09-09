@@ -30,7 +30,7 @@ public class OublietteAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 204267: { //Oubliette.
+			case 204267: { // 伊兹文 / Oubliette.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -39,7 +39,7 @@ public class OublietteAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
@@ -51,21 +51,20 @@ public class OublietteAI2 extends GeneralNpcAI2
 		}
         return true;
     }
-	
+
 	@Override
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-			final Player player = (Player) creature;
-        	if (MathUtil.isIn3dRange(getOwner(), creature, 2)) {
+		if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
+			if (MathUtil.isIn3dRange(getOwner(), creature, 2)) {
         		if (player.getRace() == Race.ASMODIANS) {
 					QuestState qs = player.getQuestStateList().getQuestState(2938); //Secret Library Access.
 					if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
@@ -77,11 +76,11 @@ public class OublietteAI2 extends GeneralNpcAI2
         	}
         }
     }
-	
+
 	private void teleportTempleOfKnowledge(Player player) {
 		TeleportService2.teleportTo(player, 120010000, 1403.8525f, 1063.2379f, 206.02371f, (byte) 89);
     }
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

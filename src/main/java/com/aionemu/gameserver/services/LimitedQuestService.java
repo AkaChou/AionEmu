@@ -30,7 +30,7 @@ public final class LimitedQuestService {
 		this.limits = Map.copyOf(limits);
 	}
 
-	/** 在任务状态写入前原子占用一个全服名额。 */
+	/** 在任务状态写入前原子占用一个全服名额。 / Atomically occupies one server-wide slot before the quest state is written. */
 	public static boolean tryAcquire(QuestTemplate template) {
 		return Holder.INSTANCE.acquire(template.getId(), template.getMaxCountLimitedQuest());
 	}

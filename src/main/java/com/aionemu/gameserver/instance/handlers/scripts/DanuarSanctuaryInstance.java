@@ -44,10 +44,10 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -60,7 +60,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		spawnDanuarSanctuaryBoss();
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -96,7 +96,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			SpawnDanuarRace();
 		}
     }
-	
+
 	private void SpawnDanuarRace() {
 		final int danuarGuard1 = spawnRace == Race.ASMODIANS ? 233126 : 233129;
         final int danuarGuard2 = spawnRace == Race.ASMODIANS ? 233127 : 233130;
@@ -122,7 +122,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -190,7 +190,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012581, 2)); //Fire Breath.
 				    break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012582, 2)); //Fire Fragment.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012582, 2)); // 火之碎片 / Fire Fragment.
 					break;
 					case 4:
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012583, 2)); //Fire Source.
@@ -211,7 +211,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012589, 2)); //Wind Source.
 					break;
 					case 10:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012588, 2)); //Wind Fragment.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012588, 2)); // 风之碎片 / Wind Fragment.
 					break;
 					case 11:
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012590, 2)); //Wind Origin.
@@ -223,7 +223,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -258,7 +258,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -289,24 +289,11 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			case 235624: //Warmage Suyaroka.
 			case 235625: //Chief Medic Tagnu.
 			case 235626: //Virulent Ukahim.
-/* 				spawnAbbeyNobleBox(); */
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Danuar Sanctuary>");
 				spawn(701876, 1057.1633f, 557.6902f, 284.73123f, (byte) 30); //Danuar Sanctuary Exit.
 			break;
         }
     }
-	
-	private void spawnAbbeyNobleBox() {
-	    switch (Rnd.get(1, 2)) {
-		    case 1:
-				spawn(702658, 1053.4221f, 565.259f, 282.28778f, (byte) 19); //修道院箱子。 / Abbey Box.
-			break;
-			case 2:
-				spawn(702659, 1060.8652f, 565.46436f, 282.2873f, (byte) 41); //高级修道院箱子。 / Noble Abbey Box.
-			break;
-		}
-	}
-	
+
 	private void spawnDanuarSanctuaryBoss() {
 	    switch (Rnd.get(1, 3)) {
 		    case 1:
@@ -320,7 +307,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnInfernalBoulder() {
 		SpawnTemplate sturdyInfernalBoulder = SpawnEngine.addNewSingleTimeSpawn(301380000, 233187, 906.1991f, 859.88177f, 278.64731f, (byte) 37);
 		sturdyInfernalBoulder.setEntityId(1699);
@@ -332,28 +319,14 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000181, storage.getItemCountByItemId(185000181)); //The Catacombs Key.
 		storage.decreaseByItemId(185000182, storage.getItemCountByItemId(185000182)); //The Crypts Key.
         storage.decreaseByItemId(185000183, storage.getItemCountByItemId(185000183)); //The Charnels Key.
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -362,7 +335,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -388,14 +361,14 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -406,7 +379,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -417,13 +390,13 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

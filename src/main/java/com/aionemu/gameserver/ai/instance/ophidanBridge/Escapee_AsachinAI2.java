@@ -32,14 +32,14 @@ public class Escapee_AsachinAI2 extends GeneralNpcAI2
 {
 	private Future<?> asachinTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -62,7 +62,7 @@ public class Escapee_AsachinAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		super.handleCreatureMoved(creature);
@@ -173,19 +173,19 @@ public class Escapee_AsachinAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void cancelAsachinTask() {
 		if (asachinTask != null && !asachinTask.isDone()) {
 			asachinTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelAsachinTask();
 		super.handleDied();
 	}
-	
+
 	private void despawn() {
     	AI2Actions.deleteOwner(this);
     }

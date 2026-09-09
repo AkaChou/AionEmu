@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.skillengine.model;
 
+import lombok.Getter;
+
 /**
  * 法术状态：绊倒、击退、浮空、格挡、招架、闪避、抵抗等。
  * Spell status: stumble, knockback, aerial, block, parry, dodge, resist, etc.
@@ -34,18 +36,15 @@ public enum SpellStatus {
 	/** 抵抗 / Resist */
 	RESIST(256);
 
-	private int id;
-
-	private SpellStatus(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	SpellStatus(int id) {
+		this.id = id;
 	}
 }

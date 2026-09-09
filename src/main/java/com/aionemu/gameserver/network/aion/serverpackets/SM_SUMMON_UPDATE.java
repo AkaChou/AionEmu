@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步召唤物状态更新。
@@ -11,19 +12,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class SM_SUMMON_UPDATE extends AionServerPacket {
 
-	private Summon summon;
-
-	/**
-	 * 使用给定参数构造 SM_SUMMON_UPDATE 包。
-	 * Creates a SM_SUMMON_UPDATE packet with the given parameters.
-	 *
-	 * summon
-	 */
-	public SM_SUMMON_UPDATE(Summon summon) {
-		this.summon = summon;
-	}
+	private final Summon summon;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

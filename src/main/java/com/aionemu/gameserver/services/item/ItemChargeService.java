@@ -155,7 +155,6 @@ public class ItemChargeService {
 			break;
 		}
 		if (!verifyRecomendRank(player, item)) {
-			return;
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, ItemUpdateType.CHARGE));
 			player.getEquipment().setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -269,10 +268,7 @@ public class ItemChargeService {
 
 	private static boolean verifyRecomendRank(Player player, Item item) {
 		int rank = player.getAbyssRank().getRank().getId();
-		if (!item.getImprovement().verifyRecomendRank(rank)) {
-			return false;
-		}
-		return true;
+		return item.getImprovement().verifyRecomendRank(rank);
 	}
 
 	private static int getNextChargeLevel(Item item) {

@@ -25,5 +25,5 @@ public enum NpcTemplateType {
 	/** 住宅 / Housing */
 	HOUSING,
 	/** 无 / None */
-	NONE;
+	NONE
 }

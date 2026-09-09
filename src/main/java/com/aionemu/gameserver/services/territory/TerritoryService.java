@@ -31,9 +31,9 @@ import com.aionemu.gameserver.world.WorldPosition;
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
-	private Map<Integer, TerritoryBuff> buffs = new HashMap<>();
-	private TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
-	private TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
+	private final Map<Integer, TerritoryBuff> buffs = new HashMap<>();
+	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
+	private final TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
 
 	/**
 	 * 初始化全部领地槽位并从数据库加载军团占领状态。

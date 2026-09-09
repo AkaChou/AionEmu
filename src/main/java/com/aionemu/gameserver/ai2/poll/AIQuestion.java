@@ -31,5 +31,5 @@ public enum AIQuestion {
 	/** 被攻击时可见性判定是否考虑碰撞边界 / Consider bounds in can-see check when attacked */
 	CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKED,
 	/** 攻击时可见性判定是否考虑碰撞边界 / Consider bounds in can-see check when attacking */
-	CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKING;
+	CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKING
 }

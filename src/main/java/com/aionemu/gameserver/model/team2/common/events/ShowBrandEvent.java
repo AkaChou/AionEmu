@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_BRAND;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * ShowBrand 活动，用于团队2相关逻辑。
@@ -13,18 +14,13 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class ShowBrandEvent<T extends TemporaryPlayerTeam<? extends TeamMember<Player>>> extends AlwaysTrueTeamEvent
 		implements Predicate<Player> {
 
 	private final T team;
 	private final int targetObjId;
 	private final int brandId;
-
-	public ShowBrandEvent(T team, int targetObjId, int brandId) {
-		this.team = team;
-		this.targetObjId = targetObjId;
-		this.brandId = brandId;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

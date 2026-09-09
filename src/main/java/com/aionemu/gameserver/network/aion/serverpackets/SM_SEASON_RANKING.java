@@ -14,10 +14,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Wnkrz
  */
 public class SM_SEASON_RANKING extends AionServerPacket {
-	private int tableId;
-	private int server_switch;
-	private List<SeasonRankingResult> data;
-	private int lastUpdate;
+	private final int tableId;
+	private final int server_switch;
+	private final List<SeasonRankingResult> data;
+	private final int lastUpdate;
 
 	/**
 	 * 使用给定参数构造 SM_SEASON_RANKING 包。

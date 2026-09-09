@@ -11,33 +11,18 @@ import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.HousingBidService;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步房屋拍卖出价列表（分页）的服务端包。
  * Server packet that synchronizes the house auction bid list (paginated) to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_BIDS extends AionServerPacket {
-	private boolean isFirst;
-	private boolean isLast;
-	private HouseBidEntry playerBid;
-	private List<HouseBidEntry> houseBids;
-
-	/**
-	 * 构造房屋拍卖出价列表包。
-	 * Creates a house auction bid list packet.
-	 *
-	 * @param isFirstPacket 是否为分页首包 / whether this is the first page packet
-	 * @param isLastPacket 是否为分页末包 / whether this is the last page packet
-	 * @param playerBid 玩家当前出价条目 / player's current bid entry
-	 * @param houseBids 本页房屋出价列表 / house bid entries for this page
-	 */
-	public SM_HOUSE_BIDS(boolean isFirstPacket, boolean isLastPacket, HouseBidEntry playerBid,
-			List<HouseBidEntry> houseBids) {
-		isFirst = isFirstPacket;
-		isLast = isLastPacket;
-		this.playerBid = playerBid;
-		this.houseBids = houseBids;
-	}
+	private final boolean isFirst;
+	private final boolean isLast;
+	private final HouseBidEntry playerBid;
+	private final List<HouseBidEntry> houseBids;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

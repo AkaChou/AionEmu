@@ -17,11 +17,11 @@ public class SM_CASTSPELL extends AionServerPacket {
 	private final int level;
 	private final int targetType;
 	private final int duration;
-	private int targetObjectId;
+	private final int targetObjectId;
 	private float x;
 	private float y;
 	private float z;
-	private int skinId;
+	private final int skinId;
 
 	/**
 	 * 以对象为目标的施法动画包。

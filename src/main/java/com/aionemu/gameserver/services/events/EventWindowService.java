@@ -38,8 +38,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class EventWindowService {
 
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
-	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
-	private ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<Integer, EventsWindow>();
+	private final Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
+	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<Integer, EventsWindow>();
 
 	/**
 	 * 初始化所有活动。
@@ -89,11 +89,11 @@ public class EventWindowService {
 		final int accountId = player.getPlayerAccount().getId();
 		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		ZonedDateTime now = ZonedDateTime.now();
-		
+
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
 			final int elapsed = playerEventsWindowDAO.getElapsed(accountId, eventsWindow.getId());
 			final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventsWindow.getId());
-			
+
 			if (!eventsWindow.getPeriodStart().isBefore(now) || !eventsWindow.getPeriodEnd().isAfter(now)) {
 				continue;
 			}
@@ -125,7 +125,7 @@ public class EventWindowService {
 						PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
 					}
 				}
-			}, (eventsWindow.getRemainingTime() - elapsed) * 60000);
+			}, (eventsWindow.getRemainingTime() - elapsed) * 60000L);
 		}
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW(1, sendActiveEventsForPlayer.size()));
@@ -147,7 +147,7 @@ public class EventWindowService {
 		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventId);
 		ZonedDateTime now = ZonedDateTime.now();
-		
+
 		for (final EventsWindow eventsWindow : sendActiveEventsForPlayer.values()) {
 			if (!eventsWindow.getPeriodStart().isBefore(now) || !eventsWindow.getPeriodEnd().isAfter(now)) {
 				continue;
@@ -172,7 +172,7 @@ public class EventWindowService {
 							restartTimer(player, eventId, sendActiveEventsForPlayer);
 						}
 					}
-				}, eventsWindow.getRemainingTime() * 60000);
+				}, eventsWindow.getRemainingTime() * 60000L);
 			}
 		}
 	}

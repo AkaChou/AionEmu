@@ -27,7 +27,7 @@ public class RiftData {
 	@XmlElement(name = "rift_location")
 	private List<RiftTemplate> riftTemplates;
 	@XmlTransient
-	private Map<Integer, RiftLocation> rift = new LinkedHashMap<Integer, RiftLocation>();
+	private final Map<Integer, RiftLocation> rift = new LinkedHashMap<Integer, RiftLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板包装为裂隙据点并写入索引。

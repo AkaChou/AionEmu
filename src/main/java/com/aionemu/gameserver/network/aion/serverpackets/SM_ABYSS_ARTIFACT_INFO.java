@@ -8,24 +8,16 @@ import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步欧比斯神器/要塞位置基础信息的服务端包。
  * Server packet synchronizing basic Abyss artifact/fortress location info to the client.
  */
+@AllArgsConstructor
 public class SM_ABYSS_ARTIFACT_INFO extends AionServerPacket {
 
-	private Collection<SiegeLocation> locations;
-
-	/**
-	 * 使用围城位置集合构造神器信息包。
-	 * Creates an artifact info packet from a collection of siege locations.
-	 *
-	 * @param collection 围城位置集合 / siege locations
-	 */
-	public SM_ABYSS_ARTIFACT_INFO(Collection<SiegeLocation> collection) {
-		this.locations = collection;
-	}
+	private final Collection<SiegeLocation> locations;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

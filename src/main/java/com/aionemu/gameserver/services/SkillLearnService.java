@@ -137,10 +137,7 @@ public class SkillLearnService {
 		if ((player.havePermission(MembershipConfig.STIGMA_AUTOLEARN) && template.isStigma())) {
 			return true;
 		}
-		if (template.isAutoLearn()) {
-			return true;
-		}
-		return false;
+		return template.isAutoLearn();
 	}
 
 	/**

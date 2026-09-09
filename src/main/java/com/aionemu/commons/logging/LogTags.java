@@ -1,9 +1,13 @@
 package com.aionemu.commons.logging;
 
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
+
 /**
  * 共享日志消息前缀，供专用文件 Appender 与 ConsoleFilter 使用
  * Shared log message prefixes used by dedicated file appenders and ConsoleFilter
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LogTags {
 
     /**
@@ -29,7 +33,4 @@ public final class LogTags {
      * Audit log prefix
      */
     public static final String AUDIT = "[AUDIT]";
-
-    private LogTags() {
-    }
 }

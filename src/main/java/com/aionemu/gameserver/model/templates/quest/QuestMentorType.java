@@ -11,5 +11,5 @@ import jakarta.xml.bind.annotation.XmlEnum;
 @XmlEnum
 public enum QuestMentorType {
 	/** 无 / None. */
-	NONE, MENTOR, MENTE;
+	NONE, MENTOR, MENTE
 }

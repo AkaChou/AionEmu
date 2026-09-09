@@ -3,12 +3,12 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 依据权威玩家倍率解析类型化奖励金额语义。 / Resolves typed reward amount semantics against the authoritative player rates. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class QuestRewardAmounts {
-	private QuestRewardAmounts() {
-	}
-
 	static long resolve(Player player, QuestAction.GrantReward reward) {
 		if (reward.amountMode() == QuestRewardAmountMode.EXACT) {
 			return reward.amount();

@@ -27,7 +27,7 @@ public class FixedInTimeTrigger extends TaskFromDBTrigger {
     public boolean isValidTrigger() {
         if (params.length == 1) {
             try {
-                String time[] = params[0].split(":");
+                String[] time = params[0].split(":");
                 hour = Integer.parseInt(time[0]);
                 minute = Integer.parseInt(time[1]);
                 second = Integer.parseInt(time[2]);

@@ -18,6 +18,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * PvP 竞技场奖励，用于副本相关逻辑。
@@ -25,16 +27,23 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
-	private Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
-	private List<Integer> zones = new ArrayList<Integer>();
+	private final Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
+	private final List<Integer> zones = new ArrayList<Integer>();
+	/** 返回 round / Returns the round */
+	@Getter
+	@Setter
 	private int round = 1;
 	private Integer zone;
-	private int bonusTime;
-	private int capPoints;
+	private final int bonusTime;
+	/** 返回 cap points / Returns the cap points */
+	@Getter
+	private final int capPoints;
 	private long instanceTime;
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
 	private final byte buffId;
 	protected WorldMapInstance instance;
-	private GenerealInstancePosition instancePosition;
+	private final GenerealInstancePosition instancePosition;
 
 	public PvPArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
@@ -80,11 +89,6 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		return mapId == 300550000;
 	}
 
-	/** 返回 cap points / Returns the cap points */
-	public int getCapPoints() {
-		return capPoints;
-	}
-
 	/** 设置 rnd zone / Sets the rnd zone */
 	public final void setRndZone() {
 		int index = Rnd.get(zones.size());
@@ -117,16 +121,6 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	/** 清空坐标。 / Clear position. */
 	public synchronized void clearPosition(int position, Boolean result) {
 		positions.put(position, result);
-	}
-
-	/** 返回 round / Returns the round */
-	public int getRound() {
-		return round;
-	}
-
-	/** 设置 round / Sets the round */
-	public void setRound(int round) {
-		this.round = round;
 	}
 
 	/** Reg 玩家 Reward / Reg Player Reward */
@@ -267,11 +261,6 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), getInstanceReward(), players));
 			}
 		});
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public byte getBuffId() {
-		return buffId;
 	}
 
 	/** 清空。 / Clear. */

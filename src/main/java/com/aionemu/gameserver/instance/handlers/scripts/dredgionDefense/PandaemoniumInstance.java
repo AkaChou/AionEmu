@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -12,7 +11,6 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -20,11 +18,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -57,7 +53,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 	/** pandaemonium 任务 / pandaemonium task */
 		private final List<Future<?>> pandaemoniumTask = new ArrayList<Future<?>>();
 	/**
@@ -66,7 +62,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -75,7 +71,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -178,31 +174,31 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 220716: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-				sp(220935, 1275.4795f, 1169.7278f, 215.21492f, (byte) 29, 0); //Balder.
-				sp(220936, 1279.9949f, 1171.2949f, 215.21492f, (byte) 30, 0); //Narvi.
-				sp(220937, 1271.3483f, 1171.6832f, 215.21492f, (byte) 31, 0); //Bor.
-				sp(220938, 1281.2504f, 1176.6766f, 215.09242f, (byte) 35, 0); //Kalsten.
+				sp(220935, 1275.4795f, 1169.7278f, 215.21492f, (byte) 29, 0); // 巴黛尔 / Balder.
+				sp(220936, 1279.9949f, 1171.2949f, 215.21492f, (byte) 30, 0); // 纳尔比 / Narvi.
+				sp(220937, 1271.3483f, 1171.6832f, 215.21492f, (byte) 31, 0); // 保尔 / Bor.
+				sp(220938, 1281.2504f, 1176.6766f, 215.09242f, (byte) 35, 0); // 卡尔斯坦 / Kalsten.
 				sp(220939, 1270.2383f, 1176.2891f, 215.09242f, (byte) 23, 0); //Ve.
-				sp(220940, 1277.7382f, 1180.3905f, 214.9424f, (byte) 29, 0); //Mejaina.
-				sp(220941, 1274.3058f, 1180.4589f, 214.92348f, (byte) 30, 0); //Godfrid.
+				sp(220940, 1277.7382f, 1180.3905f, 214.9424f, (byte) 29, 0); // 梅扎娜 / Mejaina.
+				sp(220941, 1274.3058f, 1180.4589f, 214.92348f, (byte) 30, 0); // 戈德弗里德 / Godfrid.
 			break;
 			case 220717: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-				sp(220942, 1340.5422f, 1524.6824f, 209.80017f, (byte) 83, 0); //Vidar.
-				sp(220943, 1341.8986f, 1521.3755f, 209.80017f, (byte) 83, 0); //Skadi.
-				sp(220944, 1337.2814f, 1523.199f, 209.80017f, (byte) 83, 0); //Njord.
-				sp(220945, 1333.9862f, 1521.7096f, 209.80017f, (byte) 83, 0); //Traufnir.
-				sp(220946, 1343.4745f, 1518.0729f, 209.80017f, (byte) 83, 0); //Brinhild.
-				sp(220947, 1345.1395f, 1523.0059f, 209.80017f, (byte) 83, 0); //Sif.
-				sp(220948, 1335.7626f, 1526.3031f, 209.80017f, (byte) 83, 0); //Freyr.
+				sp(220942, 1340.5422f, 1524.6824f, 209.80017f, (byte) 83, 0); // 毕达尔 / Vidar.
+				sp(220943, 1341.8986f, 1521.3755f, 209.80017f, (byte) 83, 0); // 斯卡迪 / Skadi.
+				sp(220944, 1337.2814f, 1523.199f, 209.80017f, (byte) 83, 0); // 纽尔德 / Njord.
+				sp(220945, 1333.9862f, 1521.7096f, 209.80017f, (byte) 83, 0); // 特拉乌普尼尔 / Traufnir.
+				sp(220946, 1343.4745f, 1518.0729f, 209.80017f, (byte) 83, 0); // 布林希尔德 / Brinhild.
+				sp(220947, 1345.1395f, 1523.0059f, 209.80017f, (byte) 83, 0); // 锡普 / Sif.
+				sp(220948, 1335.7626f, 1526.3031f, 209.80017f, (byte) 83, 0); // 普莱尔 / Freyr.
 			break;
 			case 220718: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
-				sp(220949, 1468.1849f, 1342.8291f, 177.16087f, (byte) 30, 20000); //Kvasir.
-				sp(220950, 1480.9142f, 1340.9434f, 176.9295f, (byte) 29, 20000); //Fenris's Fangs Elite Soldier.
-				sp(220950, 1454.3527f, 1340.7574f, 176.9295f, (byte) 30, 20000); //Fenris's Fangs Elite Soldier.
-				sp(220951, 1471.2443f, 1344.69f, 176.9295f, (byte) 19, 20000); //Thialfi.
-				sp(220952, 1465.2246f, 1344.8368f, 176.9295f, (byte) 44, 20000); //Lyfjaberga.
-				sp(220953, 1462.4227f, 1346.1808f, 176.9295f, (byte) 45, 20000); //Hadubrand.
-				sp(220954, 1473.009f, 1346.1925f, 176.9295f, (byte) 16, 20000); //Sigyn.
+				sp(220949, 1468.1849f, 1342.8291f, 177.16087f, (byte) 30, 20000); // 克巴西日 / Kvasir.
+				sp(220950, 1480.9142f, 1340.9434f, 176.9295f, (byte) 29, 20000); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+				sp(220950, 1454.3527f, 1340.7574f, 176.9295f, (byte) 30, 20000); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+				sp(220951, 1471.2443f, 1344.69f, 176.9295f, (byte) 19, 20000); // 提阿尔皮 / Thialfi.
+				sp(220952, 1465.2246f, 1344.8368f, 176.9295f, (byte) 44, 20000); // 李帕贝尔加 / Lyfjaberga.
+				sp(220953, 1462.4227f, 1346.1808f, 176.9295f, (byte) 45, 20000); // 哈度布兰特 / Hadubrand.
+				sp(220954, 1473.009f, 1346.1925f, 176.9295f, (byte) 16, 20000); // 锡金 / Sigyn.
 			break;
 			// 战舰主模块。 / Dredgion Main Module.
 			case 220768:
@@ -364,14 +360,14 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(221007, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 3.
 			break;
-			case 220935: //Balder.
+			case 220935: // 巴黛尔 / Balder.
 			    despawnNpc(npc);
-				deleteNpc(220936); //Narvi.
-				deleteNpc(220937); //Bor.
-				deleteNpc(220938); //Kalsten.
+				deleteNpc(220936); // 纳尔比 / Narvi.
+				deleteNpc(220937); // 保尔 / Bor.
+				deleteNpc(220938); // 卡尔斯坦 / Kalsten.
 				deleteNpc(220939); //Ve.
-				deleteNpc(220940); //Mejaina.
-				deleteNpc(220941); //Godfrid.
+				deleteNpc(220940); // 梅扎娜 / Mejaina.
+				deleteNpc(220941); // 戈德弗里德 / Godfrid.
 				deleteNpc(220716); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 国会大厦被弗里吉达军团占领。 / The Capitol Building has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403786, Race.PC_ALL, 0);
@@ -382,25 +378,25 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220935, 1275.4795f, 1169.7278f, 215.21492f, (byte) 29); //Balder.
-						spawn(220936, 1279.9949f, 1171.2949f, 215.21492f, (byte) 30); //Narvi.
-						spawn(220937, 1271.3483f, 1171.6832f, 215.21492f, (byte) 31); //Bor.
-						spawn(220938, 1281.2504f, 1176.6766f, 215.09242f, (byte) 35); //Kalsten.
+						spawn(220935, 1275.4795f, 1169.7278f, 215.21492f, (byte) 29); // 巴黛尔 / Balder.
+						spawn(220936, 1279.9949f, 1171.2949f, 215.21492f, (byte) 30); // 纳尔比 / Narvi.
+						spawn(220937, 1271.3483f, 1171.6832f, 215.21492f, (byte) 31); // 保尔 / Bor.
+						spawn(220938, 1281.2504f, 1176.6766f, 215.09242f, (byte) 35); // 卡尔斯坦 / Kalsten.
 						spawn(220939, 1270.2383f, 1176.2891f, 215.09242f, (byte) 23); //Ve.
-						spawn(220940, 1277.7382f, 1180.3905f, 214.9424f, (byte) 29); //Mejaina.
-						spawn(220941, 1274.3058f, 1180.4589f, 214.92348f, (byte) 30); //Godfrid.
+						spawn(220940, 1277.7382f, 1180.3905f, 214.9424f, (byte) 29); // 梅扎娜 / Mejaina.
+						spawn(220941, 1274.3058f, 1180.4589f, 214.92348f, (byte) 30); // 戈德弗里德 / Godfrid.
 						spawn(220716, 1275.3842f, 1217.536f, 214.07533f, (byte) 89); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
-			case 220942: //Vidar.
+			case 220942: // 毕达尔 / Vidar.
 			    despawnNpc(npc);
-				deleteNpc(220943); //Skadi.
-				deleteNpc(220944); //Njord.
-				deleteNpc(220945); //Traufnir.
-				deleteNpc(220946); //Brinhild.
-				deleteNpc(220947); //Sif.
-				deleteNpc(220948); //Freyr.
+				deleteNpc(220943); // 斯卡迪 / Skadi.
+				deleteNpc(220944); // 纽尔德 / Njord.
+				deleteNpc(220945); // 特拉乌普尼尔 / Traufnir.
+				deleteNpc(220946); // 布林希尔德 / Brinhild.
+				deleteNpc(220947); // 锡普 / Sif.
+				deleteNpc(220948); // 普莱尔 / Freyr.
 				deleteNpc(220717); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 黄金神殿被弗里吉达军团占领。 / The Temple of Gold has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403787, Race.PC_ALL, 0);
@@ -411,25 +407,25 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220942, 1340.5422f, 1524.6824f, 209.80017f, (byte) 83); //Vidar.
-						spawn(220943, 1341.8986f, 1521.3755f, 209.80017f, (byte) 83); //Skadi.
-						spawn(220944, 1337.2814f, 1523.199f, 209.80017f, (byte) 83); //Njord.
-						spawn(220945, 1333.9862f, 1521.7096f, 209.80017f, (byte) 83); //Traufnir.
-						spawn(220946, 1343.4745f, 1518.0729f, 209.80017f, (byte) 83); //Brinhild.
-						spawn(220947, 1345.1395f, 1523.0059f, 209.80017f, (byte) 83); //Sif.
-						spawn(220948, 1335.7626f, 1526.3031f, 209.80017f, (byte) 83); //Freyr.
+						spawn(220942, 1340.5422f, 1524.6824f, 209.80017f, (byte) 83); // 毕达尔 / Vidar.
+						spawn(220943, 1341.8986f, 1521.3755f, 209.80017f, (byte) 83); // 斯卡迪 / Skadi.
+						spawn(220944, 1337.2814f, 1523.199f, 209.80017f, (byte) 83); // 纽尔德 / Njord.
+						spawn(220945, 1333.9862f, 1521.7096f, 209.80017f, (byte) 83); // 特拉乌普尼尔 / Traufnir.
+						spawn(220946, 1343.4745f, 1518.0729f, 209.80017f, (byte) 83); // 布林希尔德 / Brinhild.
+						spawn(220947, 1345.1395f, 1523.0059f, 209.80017f, (byte) 83); // 锡普 / Sif.
+						spawn(220948, 1335.7626f, 1526.3031f, 209.80017f, (byte) 83); // 普莱尔 / Freyr.
 						spawn(220717, 1327.6687f, 1489.3816f, 209.80017f, (byte) 23); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
-			case 220949: //Kvasir.
+			case 220949: // 克巴西日 / Kvasir.
 			    despawnNpc(npc);
-				deleteNpc(220950); //Fenris's Fangs Elite Soldier.
-				deleteNpc(220950); //Fenris's Fangs Elite Soldier.
-				deleteNpc(220951); //Thialfi.
-				deleteNpc(220952); //Lyfjaberga.
-				deleteNpc(220953); //Hadubrand.
-				deleteNpc(220954); //Sigyn.
+				deleteNpc(220950); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+				deleteNpc(220950); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+				deleteNpc(220951); // 提阿尔皮 / Thialfi.
+				deleteNpc(220952); // 李帕贝尔加 / Lyfjaberga.
+				deleteNpc(220953); // 哈度布兰特 / Hadubrand.
+				deleteNpc(220954); // 锡金 / Sigyn.
 				deleteNpc(220718); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 潘达梦宁大神殿被弗里吉达军团占领。 / The Great Temple in Pandaemonium has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403788, Race.PC_ALL, 0);
@@ -440,20 +436,20 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-						spawn(220949, 1468.1849f, 1342.8291f, 177.16087f, (byte) 30); //Kvasir.
-						spawn(220950, 1480.9142f, 1340.9434f, 176.9295f, (byte) 29); //Fenris's Fangs Elite Soldier.
-						spawn(220950, 1454.3527f, 1340.7574f, 176.9295f, (byte) 30); //Fenris's Fangs Elite Soldier.
-						spawn(220951, 1471.2443f, 1344.69f, 176.9295f, (byte) 19); //Thialfi.
-						spawn(220952, 1465.2246f, 1344.8368f, 176.9295f, (byte) 44); //Lyfjaberga.
-						spawn(220953, 1462.4227f, 1346.1808f, 176.9295f, (byte) 45); //Hadubrand.
-						spawn(220954, 1473.009f, 1346.1925f, 176.9295f, (byte) 16); //Sigyn.
+						spawn(220949, 1468.1849f, 1342.8291f, 177.16087f, (byte) 30); // 克巴西日 / Kvasir.
+						spawn(220950, 1480.9142f, 1340.9434f, 176.9295f, (byte) 29); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+						spawn(220950, 1454.3527f, 1340.7574f, 176.9295f, (byte) 30); // 潘利尔的犬牙精锐兵 / Fenris's Fangs Elite Soldier.
+						spawn(220951, 1471.2443f, 1344.69f, 176.9295f, (byte) 19); // 提阿尔皮 / Thialfi.
+						spawn(220952, 1465.2246f, 1344.8368f, 176.9295f, (byte) 44); // 李帕贝尔加 / Lyfjaberga.
+						spawn(220953, 1462.4227f, 1346.1808f, 176.9295f, (byte) 45); // 哈度布兰特 / Hadubrand.
+						spawn(220954, 1473.009f, 1346.1925f, 176.9295f, (byte) 16); // 锡金 / Sigyn.
 						spawn(220718, 1466.8002f, 1375.8978f, 177.06723f, (byte) 90); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -572,7 +568,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void dredgionMainModule1() {
 		Npc mainModule1 = instance.getNpc(220866); //Dredgion Main Module.
 		if (mainModule1 != null) {
@@ -582,7 +578,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	private void dredgionMainModule2() {
 		Npc mainModule2 = instance.getNpc(220867); //Dredgion Main Module.
 		if (mainModule2 != null) {
@@ -592,11 +588,11 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	protected void invadeIDDC1Dredgion(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	protected void startInstanceTask() {
 		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -724,8 +720,8 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 */
 				// 防御炮塔处有资源。护送运输车前往收集。 / Resources available at the defense turret. Escort the transport there to collect them.
 				sendMsgByRace(1403708, Race.PC_ALL, 0);
-				spawn(834255, 1211.1102f, 1502.938f, 213.83618f, (byte) 6); //Koirinerk.
-				spawn(834256, 1219.054f, 1505.9453f, 213.83618f, (byte) 67); //Soirunerk.
+				spawn(834255, 1211.1102f, 1502.938f, 213.83618f, (byte) 6); // 克伊琳 / Koirinerk.
+				spawn(834256, 1219.054f, 1505.9453f, 213.83618f, (byte) 67); // 索依隆隆 / Soirunerk.
 				spawn(703411, 1219.054f, 1505.9453f, 213.83618f, (byte) 67); //Pandaemonium Tank [Flag].
 				spawn(834514, 971.25745f, 1512.7778f, 238.62827f, (byte) 0, 2478); //Turret Core 1.
 				spawn(834515, 1021.9983f, 1563.4001f, 238.72847f, (byte) 0, 2479); //Turret Core 2.
@@ -744,8 +740,8 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 * 5. 指挥官泽达斯：30 分钟后出现在潘达梦宁广场；其死亡或再过 5 分钟结算最终军阶。 / 5. Commander Zedas: After 30min, Commander Zedas will appear in the "Pandaemonium Plaza" The final rank is calculated when Commander Zedas is dead or 5 min have passed
 	 */
 				deleteNpc(221525); //Hezolf.
-				deleteNpc(221526); //Angulof.
-				deleteNpc(221527); //Agehia.
+				deleteNpc(221526); // 盎格鲁普 / Angulof.
+				deleteNpc(221527); // 阿盖希亚 / Agehia.
 				// 弗里吉达军团突击队长已出现。 / The Assault Leader of the Frigida Legion has appeared.
 				sendMsgByRace(1403706, Race.PC_ALL, 0);
 				// 弗里吉达军团指挥官泽达斯已出现。 / Commander Zedas of the Frigida Legion has appeared.
@@ -814,13 +810,12 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
             }
         }, 2100000)); //35 Min.
     }
-	
+
 	protected void stopInstance(Player player) {
         stopInstanceTask();
 		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Dredgion Defense: Pandaemonium>");
 	}
-	
+
    /**
 	 * 奖励：高级弗里吉达军团战利品箱等。
 	 * Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
@@ -880,7 +875,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -892,7 +887,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		startInstanceTask();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -903,7 +898,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 		movies.clear();
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : pandaemoniumTask) {
 			if (task != null) {
@@ -911,15 +906,15 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -937,7 +932,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -954,36 +949,36 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	private boolean isDead(Npc npc) {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -995,7 +990,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		removeEffects(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -1007,7 +1002,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		removeEffects(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1020,35 +1015,20 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(18290); //? .
 		effectController.removeEffect(18300); //? .
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1074,7 +1054,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void magicWardEnergy() {
 		for (Player p: instance.getPlayersInside()) {
 			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(18309); //Magic Ward Energy.
@@ -1083,7 +1063,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			e.applyEffect();
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.

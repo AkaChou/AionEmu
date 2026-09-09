@@ -16,11 +16,11 @@ import java.util.Map;
  * Server packet synchronizing a player's instance cooldown and entrance-count info to the client.
  */
 public class SM_INSTANCE_INFO extends AionServerPacket {
-	private Player player;
-	private boolean isAnswer;
-	private int cooldownId;
-	private int worldId;
-	private TemporaryPlayerTeam<?> playerTeam;
+	private final Player player;
+	private final boolean isAnswer;
+	private final int cooldownId;
+	private final int worldId;
+	private final TemporaryPlayerTeam<?> playerTeam;
 
 	/**
 	 * 构造全量副本冷却同步包（可附带队伍应答上下文）。

@@ -79,8 +79,8 @@ public class PlayerTransferService {
 		protected static final PlayerTransferService instance = new PlayerTransferService();
 	}
 
-	private PlayerDAO dao;
-	private Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
+	private final PlayerDAO dao;
+	private final Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private volatile List<Integer> rsList = List.of();
 
 	/**
@@ -107,7 +107,7 @@ public class PlayerTransferService {
 		log.info(I18n.get("log.195bf15115b2", rsList.size()));
 	}
 
-	private String ptsnameitem = "ptsnameitem";
+	private final String ptsnameitem = "ptsnameitem";
 
 	/**
 	 * 玩家进入世界时处理转移后缀名与改名道具发放。
@@ -172,7 +172,7 @@ public class PlayerTransferService {
 		}
 
 		if (PlayerTransferConfig.REUSE_HOURS > 0 && common.getLastTransferTime()
-				+ PlayerTransferConfig.REUSE_HOURS * 3600000 > System.currentTimeMillis()) {
+				+ PlayerTransferConfig.REUSE_HOURS * 3600000L > System.currentTimeMillis()) {
 			log.warn(I18n.get("log.9a7c79463061", taskId, playerId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 					"cannot transfer that player so often " + playerId));

@@ -238,7 +238,7 @@ public class DDSConverter {
 					mask = j;
 				}
 			}
-			bitmask |= mask << i * 2;
+			bitmask |= (long) mask << i * 2;
 		}
 		return bitmask;
 	}

@@ -13,5 +13,5 @@ public enum WalkerGroupType {
 	/** 方阵/行列 / Square formation */
 	SQUARE,
 	/** 偏移定位 / Offset positioning */
-	OFFSET;
+	OFFSET
 }

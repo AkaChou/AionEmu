@@ -79,7 +79,7 @@ public class ZoneLevelService {
 	 * @return 是否溺水中 / whether drowning
 	 */
 	private static boolean isDrowning(Player player) {
-		return player.getController().getTask(TaskId.DROWN) == null ? false : true;
+		return player.getController().getTask(TaskId.DROWN) != null;
 	}
 
 	/**

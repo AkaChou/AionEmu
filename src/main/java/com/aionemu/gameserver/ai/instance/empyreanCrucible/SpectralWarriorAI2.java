@@ -21,14 +21,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("spectral_warrior")
 public class SpectralWarriorAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isDone = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isDone = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50 && isDone.compareAndSet(false, true)) {
 			getPosition().getWorldMapInstance().getInstanceHandler().onChangeStage(StageType.START_STAGE_6_ROUND_5);
@@ -40,11 +40,10 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 			}, 2000);
 		}
 	}
-	
+
 	private void resurrectAllies() {
 		for (VisibleObject obj : getKnownList().getKnownObjectsSnapshot()) {
-			if (obj instanceof Npc) {
-				Npc npc = (Npc) obj;
+			if (obj instanceof Npc npc) {
 				if (npc == null || NpcActions.isAlreadyDead(npc))
 				continue;
 				switch (npc.getNpcId()) {
@@ -55,7 +54,7 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 					case 205414:
 						spawn(217577, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading());
 						NpcActions.delete(npc);
-					break;		
+					break;
 				}
 			}
 		}

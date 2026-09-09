@@ -28,8 +28,8 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 {
 	private Future<?> task;
 	private Future<?> specialSkillTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -38,7 +38,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 			startTaskEvent();
 		}
 	}
-	
+
 	private void startTaskEvent() {
 		VisibleObject target = getTarget();
 		if (target != null && target instanceof Player) {
@@ -83,37 +83,37 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 20000);
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isDone()) {
 			task.cancel(true);
 		}
 	}
-	
+
 	private void cancelSpecialSkillTask() {
 		if (specialSkillTask != null && !specialSkillTask.isDone()) {
 			specialSkillTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelTask();
 		cancelSpecialSkillTask();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelTask();
 		cancelSpecialSkillTask();
 		super.handleDespawned();
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelTask();

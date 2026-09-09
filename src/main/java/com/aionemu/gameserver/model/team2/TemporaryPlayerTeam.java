@@ -49,7 +49,7 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 	/** 发送数据包。 / Send packet. */
 	@Override
 	public void sendPacket(AionServerPacket packet) {
-		applyOnMembers(new TeamMessageSender(packet, Predicates.<Player>alwaysTrue()));
+		applyOnMembers(new TeamMessageSender(packet, Predicates.alwaysTrue()));
 	}
 
 	/** 发送数据包。 / Send packet. */

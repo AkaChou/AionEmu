@@ -48,13 +48,13 @@ public class LoginServer {
 	 * 等待登录服响应的账号连接表（accountId → AionConnection）。
 	 * Map of accountId to connection for pending LoginServer requests.
 	 */
-	private Map<Integer, AionConnection> loginRequests = new HashMap<Integer, AionConnection>();
+	private final Map<Integer, AionConnection> loginRequests = new HashMap<Integer, AionConnection>();
 
 	/**
 	 * 已登录账号连接表（accountId → AionConnection）。
 	 * Map of accountId to connection for all logged-in accounts.
 	 */
-	private Map<Integer, AionConnection> loggedInAccounts = new HashMap<Integer, AionConnection>();
+	private final Map<Integer, AionConnection> loggedInAccounts = new HashMap<Integer, AionConnection>();
 
 	/**
 	 * 与登录服的当前连接。

@@ -28,7 +28,7 @@ public class AgentData {
 	private List<AgentTemplate> agentTemplates;
 
 	@XmlTransient
-	private Map<Integer, AgentLocation> agent = new LinkedHashMap<Integer, AgentLocation>();
+	private final Map<Integer, AgentLocation> agent = new LinkedHashMap<Integer, AgentLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 索引。

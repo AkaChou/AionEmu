@@ -146,7 +146,7 @@ public class TowerOfEternityService {
 			public void run() {
 				stopTowerOfEternity(id);
 			}
-		}, CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
 	}
 
 	/**

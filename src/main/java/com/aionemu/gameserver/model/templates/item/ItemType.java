@@ -21,5 +21,5 @@ public enum ItemType {
 	/** 圣灵守护者 / Devanion */
 	DEVANION,
 	/** 传颂 / Legend */
-	LEGEND;
+	LEGEND
 }

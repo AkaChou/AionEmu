@@ -19,9 +19,9 @@ import com.aionemu.gameserver.world.WorldType;
 public class RoadObserver extends ActionObserver {
 
 	/** 被观察玩家 / Observed player */
-	private Player player;
+	private final Player player;
 	/** 道路对象 / Road object */
-	private Road road;
+	private final Road road;
 	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
 

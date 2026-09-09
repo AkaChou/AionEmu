@@ -160,9 +160,9 @@ public enum DialogAction {
 	/** Recovery 2 / Recovery 2 */
 	RECOVERY_2(128); // 5.8
 
-	private int id;
+	private final int id;
 
-	private DialogAction(int id) {
+	DialogAction(int id) {
 		this.id = id;
 	}
 

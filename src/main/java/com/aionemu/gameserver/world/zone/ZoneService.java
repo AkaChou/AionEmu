@@ -63,7 +63,7 @@ public final class ZoneService implements GameEngine {
 	/** 可选 Spring 单例提供者 / optional Spring singleton provider */
 	private static volatile ObjectProvider<ZoneService> instanceProvider;
 	/** 按地图 ID 索引的区域信息 / zone info indexed by map id */
-	private IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
+	private final IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	/** 区域名称 → 脚本处理器类 / zone name → script handler class */
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
 	/** 区域名称 → 可碰撞处理器实例 / zone name → collidable handler instance */
@@ -145,7 +145,7 @@ public final class ZoneService implements GameEngine {
 	 *
 	 * @param handler 处理器类 / the handler class
 	 */
-	public final void addZoneHandlerClass(Class<? extends ZoneHandler> handler) {
+	public void addZoneHandlerClass(Class<? extends ZoneHandler> handler) {
 		ZoneNameAnnotation idAnnotation = handler.getAnnotation(ZoneNameAnnotation.class);
 		if (idAnnotation != null) {
 			String[] zoneNames = idAnnotation.value().split(" ");
@@ -170,7 +170,7 @@ public final class ZoneService implements GameEngine {
 	 * @param zoneName 区域名称 / the zone name
 	 * @param handler 处理器类 / the handler class
 	 */
-	public final void addZoneHandlerClass(ZoneName zoneName, Class<? extends ZoneHandler> handler) {
+	public void addZoneHandlerClass(ZoneName zoneName, Class<? extends ZoneHandler> handler) {
 		handlers.put(zoneName, handler);
 	}
 

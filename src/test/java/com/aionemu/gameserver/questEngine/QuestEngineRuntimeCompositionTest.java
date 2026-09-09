@@ -29,12 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QuestEngineRuntimeCompositionTest {
 	private NpcData originalNpcData;
@@ -57,8 +52,8 @@ class QuestEngineRuntimeCompositionTest {
 
 		assertInstanceOf(TypedQuestAfterCommitPort.class, composition.afterCommitPort());
 		assertInstanceOf(PlayerQuestEventPort.class, composition.eventPort());
-		assertTrue(composition.actionPort() != null);
-		assertTrue(composition.statePort() != null);
+		assertNotNull(composition.actionPort());
+		assertNotNull(composition.statePort());
 		assertInstanceOf(PlayerQuestProximityEventPort.class, composition.proximityEventPort());
 		assertInstanceOf(com.aionemu.gameserver.questEngine.runtime.PlayerQuestAiPerceptionEventPort.class,
 			composition.aiPerceptionEventPort());

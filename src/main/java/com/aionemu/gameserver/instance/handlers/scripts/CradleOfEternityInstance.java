@@ -51,8 +51,8 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -67,7 +67,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		switch (npcId) {
 			case 220526: //Insightful Eye.
 			case 220534: //Fallen Sea Jotun.
-			case 220540: //Typhon.
+			case 220540: // 提芬 / Typhon.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
@@ -107,7 +107,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -121,12 +121,11 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		SpawnTemplate IDEternity02Shield1 = SpawnEngine.addNewSingleTimeSpawn(301550000, 834123, 1462.8610f, 774.33978f, 1035.3840f, (byte) 0);
 		IDEternity02Shield1.setEntityId(725);
 		objects.put(834123, SpawnEngine.spawnObject(IDEternity02Shield1, instanceId));
-		//****//
 		SpawnTemplate IDEternity02Shield2 = SpawnEngine.addNewSingleTimeSpawn(301550000, 703026, 307.59805f, 1471.2153f, 919.05554f, (byte) 0);
 		IDEternity02Shield2.setEntityId(272);
 		objects.put(703026, SpawnEngine.spawnObject(IDEternity02Shield2, instanceId));
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -155,7 +154,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			SpawnIDEternity02Race();
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -209,14 +208,13 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 				// 炽热格里康已死，赶快击杀邪恶格里康！ / The Fiery Glycon is dead, quickly kill the Vile Glycon!
 				sendMsgByRace(1403530, Race.PC_ALL, 0);
 			break;
-			case 220540: //Typhon.
+			case 220540: // 提芬 / Typhon.
 			    final int Peregrine_Viola = spawnRace == Race.ASMODIANS ? 806290 : 806285;
 				spawn(Peregrine_Viola, 595.3497f, 540.4742f, 509.43015f, (byte) 22);
 				final int CradleToTrials = spawnRace == Race.ASMODIANS ? 806058 : 806056;
 				spawn(CradleToTrials, 595.58984f, 536.9435f, 509.43015f, (byte) 8);
 				spawn(834005, 601.02045f, 534.01807f, 509.43015f, (byte) 32); //Cradle Exit.
 				spawn(834090, 604.9655f, 536.7014f, 509.43015f, (byte) 24); //密码背包。 / Cryptograph Cube.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Cradle Of Eternity>");
 			break;
 			case 220541: //Vile Typhon.
 				// 邪恶格里康已死，赶快击杀炽热格里康！ / The Vile Glycon is dead, quickly kill the Fiery Glycon!
@@ -231,7 +229,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -296,7 +294,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -346,7 +344,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			sendMsgByRace(1403523, Race.PC_ALL, 10000);
 		}
     }
-	
+
 	private void SpawnIDEternity02Race() {
 		// NPC / Npc
 		final int Jangrike_Venio = spawnRace == Race.ASMODIANS ? 806286 : 806281;
@@ -436,21 +434,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
         spawn(IDEternity02AGuardOffRun, 1121.2787f, 884.2282f, 1034.1548f, (byte) 13);
         spawn(IDEternity02AGuardOffRun, 1242.3444f, 860.0123f, 1028.6128f, (byte) 91);
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -459,7 +443,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -485,7 +469,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -496,7 +480,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
     public void onPlayerLogOut(Player player) {
         removeEffects(player);
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -507,7 +491,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
-	
+
 	private void removeEffects(Player player) {
         PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21340); //Sylfae Queens Blessing.
@@ -515,7 +499,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		// 希尔法女王的力量已消失。 / The Sylfae Queens power has disappeared.
 		sendMsgByRace(1403607, Race.PC_ALL, 0);
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -525,13 +509,13 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 		doors.clear();
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

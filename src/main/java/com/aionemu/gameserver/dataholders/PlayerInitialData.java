@@ -37,7 +37,7 @@ public class PlayerInitialData {
 	@XmlElement(name = "asmodian_spawn_location", required = true)
 	private LocationData asmodianSpawnLocation;
 
-	private Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<PlayerClass, PlayerCreationData>();
+	private final Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<PlayerClass, PlayerCreationData>();
 
 	/**
 	 * JAXB 反序列化完成后，按职业索引创建数据并释放列表。
@@ -161,12 +161,11 @@ public class PlayerInitialData {
 
 			@Override
 			public String toString() {
-				final StringBuilder sb = new StringBuilder();
-				sb.append("ItemType");
-				sb.append("{templateId=").append(templateId);
-				sb.append(", count=").append(count);
-				sb.append('}');
-				return sb.toString();
+				String sb = "ItemType" +
+					"{templateId=" + templateId +
+					", count=" + count +
+					'}';
+				return sb;
 			}
 		}
 		// public static class ShortcutType

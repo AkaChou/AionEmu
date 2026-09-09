@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.tasks;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.TaskFromDBDAO;
+import lombok.Setter;
 
 /**
  * 任务 FromDB 处理器模板（静态数据/XML）。
@@ -11,20 +12,17 @@ import com.aionemu.gameserver.dao.TaskFromDBDAO;
  */
 public abstract class TaskFromDBHandler implements Runnable {
 
-	protected int id;
-	protected String params[];
-
 	/**
 	 * @param id 设置任务 ID / Task's id
 	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+	@Setter
+	protected int id;
+	protected String[] params;
 
 	/**
 	 * 设置任务参数。 / Task's param(s).
 	 */
-	public void setParam(String params[]) {
+	public void setParam(String[] params) {
 		this.params = params;
 	}
 

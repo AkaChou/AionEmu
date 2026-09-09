@@ -21,16 +21,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("broken_barrel")
 public class Broken_BarrelAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					getPosition().getWorldMapInstance().getDoors().get(54).setOpen(true);
@@ -45,7 +44,7 @@ public class Broken_BarrelAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

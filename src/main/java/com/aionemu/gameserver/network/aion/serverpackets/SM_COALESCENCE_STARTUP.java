@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 融合（Coalescence）启动/就绪包。
@@ -9,18 +10,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Ranastic
  */
+@AllArgsConstructor
 public class SM_COALESCENCE_STARTUP extends AionServerPacket {
-	private int unk;
-
-	/**
-	 * 构造融合启动包。
-	 * Creates a coalescence startup packet.
-	 *
-	 * @param unk 未知字段 / unknown field
-	 */
-	public SM_COALESCENCE_STARTUP(int unk) {
-		this.unk = unk;
-	}
+	private final int unk;
 
 	@Override
 	protected void writeImpl(AionConnection client) {

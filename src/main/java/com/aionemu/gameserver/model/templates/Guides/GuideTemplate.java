@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 指南模板（静态数据/XML）。
@@ -24,99 +26,66 @@ import com.aionemu.gameserver.model.Race;
 @XmlType(name = "GuideTemplate")
 public class GuideTemplate {
 
+	/**
+	 * @return the level
+	 */
+	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 	@XmlAttribute(name = "classType")
 	private PlayerClass classType;
+	/**
+	 * @return the title
+	 */
+	@Getter
 	@XmlAttribute(name = "title")
 	private String title;
+	/**
+	 * @return the race
+	 */
+	@Getter
 	@XmlAttribute(name = "race")
 	private Race race;
+	/**
+	 * @return the select
+	 */
+	@Getter
 	@XmlElement(name = "reward_info")
 	private String rewardInfo = StringUtils.EMPTY;
+	/**
+	 * @return the message
+	 */
+	@Getter
 	@XmlElement(name = "message")
 	private String message = StringUtils.EMPTY;
+	/**
+	 * @return the select
+	 */
+	@Getter
 	@XmlElement(name = "select")
 	private String select = StringUtils.EMPTY;
+	/**
+	 * @return the surveys
+	 */
+	@Getter
 	@XmlElement(name = "survey")
 	private List<SurveyTemplate> surveys;
+	/** 获取奖励计数。 / Returns the reward count. */
+	@Getter
 	@XmlAttribute(name = "rewardCount")
 	private int rewardCount;
+	/**
+	 * @return the isActivated
+	 */
+	@Getter
+	@Setter
 	@XmlTransient
 	private boolean isActivated = true;
-
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return this.level;
-	}
 
 	/**
 	 * @return the classId
 	 */
 	public PlayerClass getPlayerClass() {
 		return this.classType;
-	}
-
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return this.title;
-	}
-
-	/**
-	 * @return the race
-	 */
-	public Race getRace() {
-		return this.race;
-	}
-
-	/**
-	 * @return the surveys
-	 */
-	public List<SurveyTemplate> getSurveys() {
-		return this.surveys;
-	}
-
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return this.message;
-	}
-
-	/**
-	 * @return the select
-	 */
-	public String getSelect() {
-		return this.select;
-	}
-
-	/**
-	 * @return the select
-	 */
-	public String getRewardInfo() {
-		return this.rewardInfo;
-	}
-
-	/** 获取奖励计数。 / Returns the reward count. */
-	public int getRewardCount() {
-		return this.rewardCount;
-	}
-
-	/**
-	 * @return the isActivated
-	 */
-	public boolean isActivated() {
-		return isActivated;
-	}
-
-	/**
-	 * @param isActivated the isActivated to set
-	 */
-	public void setActivated(boolean isActivated) {
-		this.isActivated = isActivated;
 	}
 }

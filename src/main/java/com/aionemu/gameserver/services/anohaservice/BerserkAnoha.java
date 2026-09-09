@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
 import com.aionemu.gameserver.model.anoha.AnohaStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 狂暴阿诺哈活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.anoha.AnohaStateType;
  * @author Rinzler (Encom)
  * @param <AL> 阿诺哈地点类型 / Anoha location type
  */
+@RequiredArgsConstructor
 public abstract class BerserkAnoha<AL extends AnohaLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * location
+	 */
+	@Getter
 	private final AL anohaLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startAnoha();
-
-	/**
-	 * 绑定阿诺哈地点。
-	 * Binds the Anoha location.
-	 *
-	 * location
-	 */
-	public BerserkAnoha(AL anohaLocation) {
-		this.anohaLocation = anohaLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * location
-	 */
-	public AL getAnohaLocation() {
-		return anohaLocation;
 	}
 
 	/**

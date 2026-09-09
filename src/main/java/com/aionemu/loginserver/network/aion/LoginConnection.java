@@ -45,7 +45,7 @@ public class LoginConnection extends AConnection {
      * Unique session id of this connection.
      */
     @Getter
-    private int sessionId = hashCode();
+    private final int sessionId = hashCode();
     /**
      * 本连接绑定的账号；状态为 AUTHED_LOGIN 时不为 null。
      * Bound account; non-null when state is AUTHED_LOGIN.
@@ -87,7 +87,7 @@ public class LoginConnection extends AConnection {
      * Aion 连接可能的状态。
      * Possible states of an Aion connection.
      */
-    public static enum State {
+    public enum State {
 
         /**
          * 客户端刚连上。

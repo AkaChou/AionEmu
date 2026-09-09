@@ -10,5 +10,5 @@ public enum EnchantType {
 	/** 觉醒 / Authorize */
 	AUTHORIZE,
 	/** 普通强化 / Enchant */
-	ENCHANT;
+	ENCHANT
 }

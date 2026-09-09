@@ -2,6 +2,7 @@ package com.aionemu.gameserver.geoEngine.scene.mesh;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import lombok.AllArgsConstructor;
 
 /**
  * 基于 {@link ByteBuffer} 的无符号字节索引缓冲实现。
@@ -9,20 +10,11 @@ import java.nio.ByteBuffer;
  *
  * @author lex
  */
+@AllArgsConstructor
 public class IndexByteBuffer extends IndexBuffer {
 
 	/** 底层字节缓冲。 / Underlying byte buffer. */
-	private ByteBuffer buf;
-
-	/**
-	 * 使用给定字节缓冲构造索引缓冲。
-	 * Constructs an index buffer over the given byte buffer.
-	 *
-	 * @param buffer 字节缓冲 / byte buffer
-	 */
-	public IndexByteBuffer(ByteBuffer buffer) {
-		this.buf = buffer;
-	}
+	private final ByteBuffer buf;
 
 	/**
 	 * 读取无符号字节索引（0–255）。

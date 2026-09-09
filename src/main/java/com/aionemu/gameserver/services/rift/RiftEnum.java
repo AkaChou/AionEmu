@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.rift;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 裂隙类型枚举，定义天族/魔族各地图裂隙与次元漩涡的入口、等级与费用参数。
@@ -189,23 +190,86 @@ public enum RiftEnum {
 	/** Norsvold rift G (5.0) / Norsvold rift G (5.0) */
 	NORSVOLD_GM(2207, "NORSVOLD_GM", "ILUMA_AS", 24, 84, 66, 83, Race.ELYOS);
 
-	private int id;
-	private String master;
-	private String slave;
-	private int entries;
-	private int abyssPoint;
-	private int minLevel;
-	private int maxLevel;
-	private Race destination;
-	private boolean vortex;
+	/**
+	 * 返回裂隙 ID。
+	 * Returns the rift id.
+	 *
+	 * @return 裂隙 ID / Rift id
+	 */
+	@Getter
+	private final int id;
+	/**
+	 * 返回主端（入口侧）锚点名。
+	 * Returns the master (entry-side) anchor name.
+	 *
+	 * @return 主端锚点名 / Master anchor
+	 */
+	@Getter
+	private final String master;
+	/**
+	 * 返回从端（出口侧）锚点名。
+	 * Returns the slave (exit-side) anchor name.
+	 *
+	 * @return 从端锚点名 / Slave anchor
+	 */
+	@Getter
+	private final String slave;
+	/**
+	 * 返回允许进入次数。
+	 * Returns allowed entry count.
+	 *
+	 * @return 进入次数 / Entry count
+	 */
+	@Getter
+	private final int entries;
+	/**
+	 * 返回欧比斯点消耗。
+	 * Returns abyss point cost.
+	 *
+	 * @return 欧比斯点消耗 / Abyss points
+	 */
+	@Getter
+	private final int abyssPoint;
+	/**
+	 * 返回最低进入等级。
+	 * Returns minimum enter level.
+	 *
+	 * @return 最低等级 / Min level
+	 */
+	@Getter
+	private final int minLevel;
+	/**
+	 * 返回最高进入等级。
+	 * Returns maximum enter level.
+	 *
+	 * @return 最高等级 / Max level
+	 */
+	@Getter
+	private final int maxLevel;
+	/**
+	 * 返回目标侧种族。
+	 * Returns destination race.
+	 *
+	 * @return 目标种族 / Destination race
+	 */
+	@Getter
+	private final Race destination;
+	/**
+	 * 是否为次元漩涡。
+	 * Whether this is a dimensional vortex.
+	 *
+	 * @return 是否为次元漩涡 / {@code true} if vortex
+	 */
+	@Getter
+	private final boolean vortex;
 
-	private RiftEnum(int id, String master, String slave, int entries, int abyssPoint, int minLevel, int maxLevel,
-			Race destination) {
+	RiftEnum(int id, String master, String slave, int entries, int abyssPoint, int minLevel, int maxLevel,
+			 Race destination) {
 		this(id, master, slave, entries, abyssPoint, minLevel, maxLevel, destination, false);
 	}
 
-	private RiftEnum(int id, String master, String slave, int entries, int abyssPoint, int minLevel, int maxLevel,
-			Race destination, boolean vortex) {
+	RiftEnum(int id, String master, String slave, int entries, int abyssPoint, int minLevel, int maxLevel,
+			 Race destination, boolean vortex) {
 		this.id = id;
 		this.master = master;
 		this.slave = slave;
@@ -249,95 +313,5 @@ public enum RiftEnum {
 			}
 		}
 		throw new IllegalArgumentException("Unsupported vortex race: " + race);
-	}
-
-	/**
-	 * 返回裂隙 ID。
-	 * Returns the rift id.
-	 *
-	 * @return 裂隙 ID / Rift id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * 返回主端（入口侧）锚点名。
-	 * Returns the master (entry-side) anchor name.
-	 *
-	 * @return 主端锚点名 / Master anchor
-	 */
-	public String getMaster() {
-		return master;
-	}
-
-	/**
-	 * 返回从端（出口侧）锚点名。
-	 * Returns the slave (exit-side) anchor name.
-	 *
-	 * @return 从端锚点名 / Slave anchor
-	 */
-	public String getSlave() {
-		return slave;
-	}
-
-	/**
-	 * 返回允许进入次数。
-	 * Returns allowed entry count.
-	 *
-	 * @return 进入次数 / Entry count
-	 */
-	public int getEntries() {
-		return entries;
-	}
-
-	/**
-	 * 返回欧比斯点消耗。
-	 * Returns abyss point cost.
-	 *
-	 * @return 欧比斯点消耗 / Abyss points
-	 */
-	public int getAbyssPoint() {
-		return abyssPoint;
-	}
-
-	/**
-	 * 返回最低进入等级。
-	 * Returns minimum enter level.
-	 *
-	 * @return 最低等级 / Min level
-	 */
-	public int getMinLevel() {
-		return minLevel;
-	}
-
-	/**
-	 * 返回最高进入等级。
-	 * Returns maximum enter level.
-	 *
-	 * @return 最高等级 / Max level
-	 */
-	public int getMaxLevel() {
-		return maxLevel;
-	}
-
-	/**
-	 * 返回目标侧种族。
-	 * Returns destination race.
-	 *
-	 * @return 目标种族 / Destination race
-	 */
-	public Race getDestination() {
-		return destination;
-	}
-
-	/**
-	 * 是否为次元漩涡。
-	 * Whether this is a dimensional vortex.
-	 *
-	 * @return 是否为次元漩涡 / {@code true} if vortex
-	 */
-	public boolean isVortex() {
-		return vortex;
 	}
 }

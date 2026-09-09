@@ -13,7 +13,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_GATHERABLE_INFO extends AionServerPacket {
 
-	private VisibleObject visibleObject;
+	private final VisibleObject visibleObject;
 
 	/**
 	 * @param visibleObject 可采集物或相关可见对象 / Gatherable or related visible object

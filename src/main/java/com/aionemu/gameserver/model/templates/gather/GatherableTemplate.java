@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import lombok.Getter;
 
 /**
  * 可采集物模板（静态数据/XML）。
@@ -18,6 +19,12 @@ import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 @XmlRootElement(name = "gatherable_template")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GatherableTemplate extends VisibleObjectTemplate {
+	/**
+	 * 获取 materials 属性值。
+	 * Gets the value of the materials property
+	 * @return 可能的返回对象 / possible object is {@link Materials }
+	 */
+	@Getter
 	@XmlElement(required = true)
 	protected Materials materials;
 	@XmlElement(required = true)
@@ -28,18 +35,60 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	protected String name;
 	@XmlAttribute
 	protected int nameId;
+	/**
+	 * 获取 sourceType 属性值。
+	 * Gets the value of the sourceType property
+	 * @return 可能的返回对象 / possible object is {@link String }
+	 */
+	@Getter
 	@XmlAttribute
 	protected String sourceType;
+	/**
+	 * 获取 harvestCount 属性值。
+	 * Gets the value of the harvestCount property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int harvestCount;
+	/**
+	 * 获取 skillLevel 属性值。
+	 * Gets the value of the skillLevel property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int skillLevel;
+	/**
+	 * 获取 harvestSkill 属性值。
+	 * Gets the value of the harvestSkill property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int harvestSkill;
+	/**
+	 * 获取 successAdj 属性值。
+	 * Gets the value of the successAdj property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int successAdj;
+	/**
+	 * 获取 failureAdj 属性值。
+	 * Gets the value of the failureAdj property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int failureAdj;
+	/**
+	 * 获取 aerialAdj 属性值。
+	 * Gets the value of the aerialAdj property
+	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute
 	protected int aerialAdj;
 	@XmlAttribute
@@ -50,19 +99,14 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	protected int reqItem;
 	@XmlAttribute
 	protected int reqItemNameId;
+	/** 返回检查类型 / Returns the check type */
+	@Getter
 	@XmlAttribute
 	protected int checkType;
+	/** 返回消除值 / Returns the erase value */
+	@Getter
 	@XmlAttribute
 	protected int eraseValue;
-
-	 /**
-	  * 获取 materials 属性值。
-	  * Gets the value of the materials property
-	  * @return 可能的返回对象 / possible object is {@link Materials }
-	  */
-	public Materials getMaterials() {
-		return materials;
-	}
 
 	/** 返回额外材料 / Returns the extra materials */
 	public ExMaterials getExtraMaterials() {
@@ -76,69 +120,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	@Override
 	public int getTemplateId() {
 		return id;
-	}
-
-	 /**
-	  * 获取 aerialAdj 属性值。
-	  * Gets the value of the aerialAdj property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getAerialAdj() {
-		return aerialAdj;
-	}
-
-	 /**
-	  * 获取 failureAdj 属性值。
-	  * Gets the value of the failureAdj property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getFailureAdj() {
-		return failureAdj;
-	}
-
-	 /**
-	  * 获取 successAdj 属性值。
-	  * Gets the value of the successAdj property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getSuccessAdj() {
-		return successAdj;
-	}
-
-	 /**
-	  * 获取 harvestSkill 属性值。
-	  * Gets the value of the harvestSkill property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getHarvestSkill() {
-		return harvestSkill;
-	}
-
-	 /**
-	  * 获取 skillLevel 属性值。
-	  * Gets the value of the skillLevel property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	 /**
-	  * 获取 harvestCount 属性值。
-	  * Gets the value of the harvestCount property
-	  * @return 可能的返回对象 / possible object is {@link Integer }
-	  */
-	public int getHarvestCount() {
-		return harvestCount;
-	}
-
-	 /**
-	  * 获取 sourceType 属性值。
-	  * Gets the value of the sourceType property
-	  * @return 可能的返回对象 / possible object is {@link String }
-	  */
-	public String getSourceType() {
-		return sourceType;
 	}
 
 	/**
@@ -180,15 +161,5 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	/** 返回所需物品名称 ID / Returns the required item name id */
 	public int getRequiredItemNameId() {
 		return reqItemNameId * 2 + 1;
-	}
-
-	/** 返回检查类型 / Returns the check type */
-	public int getCheckType() {
-		return checkType;
-	}
-
-	/** 返回消除值 / Returns the erase value */
-	public int getEraseValue() {
-		return eraseValue;
 	}
 }

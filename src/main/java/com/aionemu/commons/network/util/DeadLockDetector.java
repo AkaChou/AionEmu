@@ -145,18 +145,17 @@ public class DeadLockDetector extends Thread {
      * @return 格式化锁信息 / Formatted lock information
      */
     private String createShortLockInfo(ThreadInfo threadInfo) {
-        StringBuilder sb = new StringBuilder("\t");
-        sb.append(threadInfo.getThreadName());
-        sb.append(" is waiting to lock ");
-        sb.append(threadInfo.getLockInfo().toString());
-        sb.append(" which is held by ");
-        sb.append(threadInfo.getLockOwnerName());
-        sb.append(". Locked synchronizers:");
-        sb.append(threadInfo.getLockedSynchronizers().length);
-        sb.append(" monitors:");
-        sb.append(threadInfo.getLockedMonitors().length);
-        sb.append("\n");
-        return sb.toString();
+		String sb = "\t" + threadInfo.getThreadName() +
+			" is waiting to lock " +
+			threadInfo.getLockInfo().toString() +
+			" which is held by " +
+			threadInfo.getLockOwnerName() +
+			". Locked synchronizers:" +
+			threadInfo.getLockedSynchronizers().length +
+			" monitors:" +
+			threadInfo.getLockedMonitors().length +
+			"\n";
+        return sb;
     }
 
     /**

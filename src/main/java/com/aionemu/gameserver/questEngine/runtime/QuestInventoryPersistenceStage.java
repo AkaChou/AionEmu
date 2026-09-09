@@ -11,8 +11,11 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /** 跟踪已在单个调用方任务事务内写入的背包行。 / Tracks inventory rows already written inside one caller-owned quest transaction. */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class QuestInventoryPersistenceStage {
 	private static final QuestInventoryPersistenceStage NONE = new QuestInventoryPersistenceStage();
 
@@ -26,14 +29,6 @@ final class QuestInventoryPersistenceStage {
 		this.player = null;
 		this.items = List.of();
 		this.originalStates = Map.of();
-	}
-
-	private QuestInventoryPersistenceStage(InventoryDAO inventoryDao, Player player, List<Item> items,
-			Map<Item, PersistentState> originalStates) {
-		this.inventoryDao = inventoryDao;
-		this.player = player;
-		this.items = items;
-		this.originalStates = originalStates;
 	}
 
 	static QuestInventoryPersistenceStage none() {

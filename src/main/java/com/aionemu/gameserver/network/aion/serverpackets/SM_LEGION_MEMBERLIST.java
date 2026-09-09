@@ -16,9 +16,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 	private static final int OFFLINE = 0x00, ONLINE = 0x01;
-	private boolean isFirst;
-	private boolean result;
-	private List<LegionMemberEx> legionMembers;
+	private final boolean isFirst;
+	private final boolean result;
+	private final List<LegionMemberEx> legionMembers;
 
 	/**
 	 * 构造军团成员列表包。

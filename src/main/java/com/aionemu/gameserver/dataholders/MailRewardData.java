@@ -29,10 +29,10 @@ public class MailRewardData {
 	private List<MailRewardTemplate> RewardMail;
 
 	@XmlTransient
-	private IntObjectHashMap<MailRewardTemplate> templates = new IntObjectHashMap<MailRewardTemplate>();
+	private final IntObjectHashMap<MailRewardTemplate> templates = new IntObjectHashMap<MailRewardTemplate>();
 
 	@XmlTransient
-	private Map<Integer, MailRewardTemplate> templatesMap = new HashMap<Integer, MailRewardTemplate>();
+	private final Map<Integer, MailRewardTemplate> templatesMap = new HashMap<Integer, MailRewardTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按奖励 ID 建立索引并释放列表。

@@ -46,7 +46,7 @@ public class PetService {
 	private static volatile ObjectProvider<PetService> instanceProvider;
 
 	private PetBuff PetBuff;
-	private boolean autoSeel = false;
+	private final boolean autoSeel = false;
 	private boolean autoBuff = false;
 
 	/**
@@ -181,7 +181,7 @@ public class PetService {
 						new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
 				PacketSendUtility.sendPacket(player, new SM_PET(7, action, 0, 0, pet));
 				ItemService.addItem(player, reward.getItem(), 1);
-				commonData.setReFoodTime(flavour.getCooldDown() * 60000);
+				commonData.setReFoodTime(flavour.getCooldDown() * 60000L);
 				commonData.setCurentTime(System.currentTimeMillis());
 				DAOManager.getDAO(PlayerPetsDAO.class).setTime(player, pet.getPetId(), System.currentTimeMillis());
 				progress.reset();
@@ -335,7 +335,7 @@ public class PetService {
 		PetBonusAttr petBuff = DataManager.PET_BUFF_DATA
 				.getPetBonusattr(petTemp.getPetFunction(PetFunctionType.CHEER).getId());
 
-		if (activate && player.getInventory().getItemCountByItemId(182007162) < petBuff.getFoodCount()) {// Aether
+		if (activate && player.getInventory().getItemCountByItemId(182007162) < petBuff.getFoodCount()) {// 奥德 / Aether
 																											// 樱桃 / Cherry
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUFF_PET_USE_STOP_MESSAGE_03);
 			return;

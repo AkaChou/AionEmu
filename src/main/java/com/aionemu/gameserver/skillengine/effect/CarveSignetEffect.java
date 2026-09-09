@@ -92,7 +92,6 @@ public class CarveSignetEffect extends DamageEffect {
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, DamageType.PHYSICAL)) {
-			return;
 		}
 	}
 }

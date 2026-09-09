@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 子效果配置：在主效果成功时按概率触发额外技能。
@@ -15,33 +16,24 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "SubEffect")
 public class SubEffect {
 
-	@XmlAttribute(name = "skill_id", required = true)
-	private int skillId;
-	@XmlAttribute
-	private int chance = 100;
-
-	@XmlAttribute(name = "addeffect")
-	private boolean addEffect = false;
-
 	/**
 	 * 获取子效果技能 ID。
 	 * Returns the sub-effect skill id.
 	 *
 	 * @return 技能 ID / skill id
 	 */
-	public int getSkillId() {
-		return skillId;
-	}
-
+	@Getter
+	@XmlAttribute(name = "skill_id", required = true)
+	private int skillId;
 	/**
 	 * 获取触发概率（0–100）。
 	 * Returns the trigger chance (0–100).
 	 *
 	 * @return 触发概率 / chance
 	 */
-	public int getChance() {
-		return chance;
-	}
+	@Getter
+	@XmlAttribute
+	private int chance = 100;
 
 	/**
 	 * 是否按印记爆发层数作为技能等级。
@@ -49,7 +41,7 @@ public class SubEffect {
 	 *
 	 * @return true 表示使用印记层数 / true if using signet burst count
 	 */
-	public boolean isAddEffect() {
-		return addEffect;
-	}
+	@Getter
+	@XmlAttribute(name = "addeffect")
+	private boolean addEffect = false;
 }

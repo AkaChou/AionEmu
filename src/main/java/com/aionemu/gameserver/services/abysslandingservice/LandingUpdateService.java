@@ -24,20 +24,20 @@ public class LandingUpdateService {
 	final LandingLocation harbingerLanding = GameLocationBootstrapServices.abyssLandingService().harbingerLanding();
 
 	// 任务点数。 / Quest Points.
-	final int redemptionPts = redemptionLanding.getQuestPoints() - redemptionLanding.getQuestPoints();
-	final int harbingerPts = harbingerLanding.getQuestPoints() - harbingerLanding.getQuestPoints();
+	final int redemptionPts = 0;
+	final int harbingerPts = 0;
 
 	// 纪念碑点数。 / Monument Points.
-	final int redemptionPts1 = redemptionLanding.getMonumentsPoints() - redemptionLanding.getMonumentsPoints();
-	final int harbingerPts1 = harbingerLanding.getMonumentsPoints() - harbingerLanding.getMonumentsPoints();
+	final int redemptionPts1 = 0;
+	final int harbingerPts1 = 0;
 
 	// 设施点数。 / Facility Points.
-	final int redemptionPts2 = redemptionLanding.getFacilityPoints() - redemptionLanding.getFacilityPoints();
-	final int harbingerPts2 = harbingerLanding.getFacilityPoints() - harbingerLanding.getFacilityPoints();
+	final int redemptionPts2 = 0;
+	final int harbingerPts2 = 0;
 
 	// 指挥官点数。 / Commander Points.
-	final int redemptionPts3 = redemptionLanding.getCommanderPoints() - redemptionLanding.getCommanderPoints();
-	final int harbingerPts3 = harbingerLanding.getCommanderPoints() - harbingerLanding.getCommanderPoints();
+	final int redemptionPts3 = 0;
+	final int harbingerPts3 = 0;
 
 	/**
 	 * 默认构造。

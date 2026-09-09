@@ -15,6 +15,8 @@ import com.aionemu.gameserver.services.drop.DropDistributionService;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Loot 队伍 Rules，用于团队2相关逻辑。
@@ -24,17 +26,39 @@ import java.util.List;
  */
 public class LootGroupRules {
 
-	private LootRuleType lootRule;
-	private LootDistribution autodistribution;
-	private int common_item_above;
-	private int superior_item_above;
-	private int heroic_item_above;
-	private int fabled_item_above;
-	private int ethernal_item_above;
+	/**
+	 * @return 拾取规则 / The loot rule
+	 */
+	@Getter
+	private final LootRuleType lootRule;
+	/**
+	 * @return 自动分配方式 / The autodistribution
+	 */
+	@Getter
+	private final LootDistribution autodistribution;
+	private final int common_item_above;
+	private final int superior_item_above;
+	private final int heroic_item_above;
+	private final int fabled_item_above;
+	private final int ethernal_item_above;
+	/** 返回 misc / Returns the misc */
+	@Getter
 	private int misc;
+	/**
+	 * @return 杂项分配数量 / The nrMisc
+	 */
+	@Getter
+	@Setter
 	private int nrMisc;
+	/**
+	 * @return 轮转分配次数 / The nrRoundRobin
+	 */
+	@Getter
+	@Setter
 	private int nrRoundRobin;
-	private List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
+	/** 返回 items to be distributed / Returns the items to be distributed */
+	@Getter
+	private final List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
 
 	public LootGroupRules() {
 		lootRule = LootRuleType.ROUNDROBIN;
@@ -98,20 +122,6 @@ public class LootGroupRules {
 	}
 
 	/**
-	 * @return 拾取规则 / The loot rule
-	 */
-	public LootRuleType getLootRule() {
-		return lootRule;
-	}
-
-	/**
-	 * @return 自动分配方式 / The autodistribution
-	 */
-	public LootDistribution getAutodistribution() {
-		return autodistribution;
-	}
-
-	/**
 	 * @return 普通品质分配门槛 / The common item above
 	 */
 	public int getCommonItemAbove() {
@@ -146,20 +156,6 @@ public class LootGroupRules {
 		return ethernal_item_above;
 	}
 
-	/**
-	 * @return 杂项分配数量 / The nrMisc
-	 */
-	public int getNrMisc() {
-		return nrMisc;
-	}
-
-	/**
-	 * @param nrMisc 设置的杂项分配数量 / The nrMisc to set
-	 */
-	public void setNrMisc(int nrMisc) {
-		this.nrMisc = nrMisc;
-	}
-
 	/** 设置 players in roll / Sets the players in roll */
 	public void setPlayersInRoll(final Collection<Player> players, int time, final int index, final int npcId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -189,25 +185,6 @@ public class LootGroupRules {
 		}, time);
 	}
 
-	/**
-	 * @return 轮转分配次数 / The nrRoundRobin
-	 */
-	public int getNrRoundRobin() {
-		return nrRoundRobin;
-	}
-
-	/**
-	 * @param nrRoundRobin 设置的轮转分配次数 / The nrRoundRobin to set
-	 */
-	public void setNrRoundRobin(int nrRoundRobin) {
-		this.nrRoundRobin = nrRoundRobin;
-	}
-
-	/** 返回 misc / Returns the misc */
-	public int getMisc() {
-		return misc;
-	}
-
 	/** 添加 item to be distributed / Adds item to be distributed */
 	public void addItemToBeDistributed(DropItem dropItem) {
 		itemsToBeDistributed.add(dropItem);
@@ -221,10 +198,5 @@ public class LootGroupRules {
 	/** 移除 item to be distributed / Removes item to be distributed */
 	public void removeItemToBeDistributed(DropItem dropItem) {
 		itemsToBeDistributed.remove(dropItem);
-	}
-
-	/** 返回 items to be distributed / Returns the items to be distributed */
-	public List<DropItem> getItemsToBeDistributed() {
-		return itemsToBeDistributed;
 	}
 }

@@ -37,7 +37,7 @@ public class AggroList {
 	/** 列表所属单位 / List owner */
 	protected final Creature owner;
 	/** 对象 ID → 仇恨条目 / object id → aggro entry */
-	private Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
+	private final Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
 
 	/**
 	 * 为指定单位创建仇恨列表。

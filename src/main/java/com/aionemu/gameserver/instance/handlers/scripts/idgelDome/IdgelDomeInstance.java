@@ -30,7 +30,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -67,7 +66,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
         /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** idgel 任务 / idgel task */
@@ -79,16 +78,16 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * @param player 玩家 / player
      * @return 结果 / result
      */
-    
+
     protected IdgelDomePlayerReward getPlayerReward(Player player) {
         idgelDomeReward.regPlayerReward(player);
-        return (IdgelDomePlayerReward) idgelDomeReward.getPlayerReward(player.getObjectId());
+        return idgelDomeReward.getPlayerReward(player.getObjectId());
     }
-	
+
     private boolean containPlayer(Integer object) {
         return idgelDomeReward.containPlayer(object);
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -117,7 +116,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164000314, storage.getItemCountByItemId(164000314)); //Devastation Bomb.
@@ -128,7 +127,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * 启动副本计时/任务。
      * Start instance timer/tasks.
      */
-	
+
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         idgelDomeReward.setInstanceStartTime();
@@ -190,10 +189,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     * 
+     *
      * @param race 阵营 / race
      */
-	
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         idgelDomeReward.setWinnerRace(race);
@@ -201,7 +200,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         reward();
         idgelDomeReward.sendPacket(5, null);
     }
-	
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -222,7 +221,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 		}
         sendEnterPacket(player);
     }
-	
+
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -249,7 +248,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-	
+
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -267,7 +266,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         });
     }
-	
+
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
@@ -297,7 +296,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             });
     	}
     }
-	
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -316,7 +315,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * 处理 reward。
      * Handle reward.
      */
-	
+
     protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -330,9 +329,9 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			int abyssPoint = 3163;
 			int gloryPoint = 150;
 			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
+			playerReward.setRewardAp(abyssPoint);
+            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(idgelDomeReward.getWinnerRace())) {
                 abyssPoint += idgelDomeReward.AbyssReward(true, isKunaxKilled(player.getRace()));
                 gloryPoint += idgelDomeReward.GloryReward(true, isKunaxKilled(player.getRace()));
@@ -359,8 +358,8 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             ItemService.addItem(player, 188053030, 1);
             ItemService.addItem(player, 186000236, 1);
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
+            AbyssPointsService.addAp(player, abyssPoint);
+            AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
         }
         for (Npc npc : instance.getNpcs()) {
@@ -382,7 +381,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
     }
-    
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -392,7 +391,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
         return 0;
     }
-	
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -408,7 +407,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         idgelDomeReward.portToPosition(player);
         return true;
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -437,47 +436,44 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         updateScore(player, player, -points, false);
         return true;
     }
-	
+
 	private boolean isKunaxKilled(Race PlayerRace) {
-    	if (PlayerRace == RaceKilledKunax) {
-    		return true;
-    	}
-    	return false;
-    }
-	
+		return PlayerRace == RaceKilledKunax;
+	}
+
 	private MutableInt getPvpKillsByRace(Race race) {
         return idgelDomeReward.getPvpKillsByRace(race);
     }
-    
+
     private MutableInt getPointsByRace(Race race) {
         return idgelDomeReward.getPointsByRace(race);
     }
-	
+
     private void addPointsByRace(Race race, int points) {
         idgelDomeReward.addPointsByRace(race, points);
     }
-	
+
     private void addPvpKillsByRace(Race race, int points) {
         idgelDomeReward.addPvpKillsByRace(race, points);
     }
-	
+
     private void addPointToPlayer(Player player, int points) {
         idgelDomeReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-	
+
     private void addPvPKillToPlayer(Player player) {
         idgelDomeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
     /**
      * 处理 updateScore。
      * Handle updateScore.
-     * 
+     *
      * @param player 玩家 / player
      * @param target 目标 / target
      * @param points 分数 / points
      * @param pvpKill PVP 击杀 / pvpKill
      */
-	
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -521,7 +517,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             stopInstance(idgelDomeReward.getWinnerRaceByScore());
         }
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -569,7 +565,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
         updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
@@ -600,13 +596,13 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -622,7 +618,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * 处理 openFirstDoors。
      * Handle openFirstDoors.
      */
-	
+
     protected void openFirstDoors() {
         openDoor(1);
 		openDoor(99);
@@ -630,10 +626,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /**
      * 打开指定门。
      * Open the given door.
-     * 
+     *
      * @param doorId 门 ID / doorId
      */
-	
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
@@ -643,7 +639,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -651,14 +647,14 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * @param h 朝向 / h
      * @param time 时间 / time
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -668,14 +664,14 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -686,7 +682,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -707,7 +703,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -716,7 +712,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -736,12 +732,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /**
      * 处理 sendMsgByRace。
      * Handle sendMsgByRace.
-     * 
+     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
      */
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -767,22 +763,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
     private void stopInstanceTask() {
         for (Future<?> task : idgelTask) {
 			if (task != null) {
@@ -790,7 +771,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -801,7 +782,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     public InstanceReward<?> getInstanceReward() {
         return idgelDomeReward;
     }
-	
+
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
@@ -812,7 +793,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -827,7 +808,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
     }
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -838,14 +819,14 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.

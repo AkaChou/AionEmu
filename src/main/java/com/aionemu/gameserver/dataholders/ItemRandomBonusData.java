@@ -32,10 +32,10 @@ public class ItemRandomBonusData {
 	protected List<RandomBonus> randomBonuses;
 
 	@XmlTransient
-	private IntObjectHashMap<RandomBonus> inventoryRandomBonusData = new IntObjectHashMap<RandomBonus>();
+	private final IntObjectHashMap<RandomBonus> inventoryRandomBonusData = new IntObjectHashMap<RandomBonus>();
 
 	@XmlTransient
-	private IntObjectHashMap<RandomBonus> polishRandomBonusData = new IntObjectHashMap<RandomBonus>();
+	private final IntObjectHashMap<RandomBonus> polishRandomBonusData = new IntObjectHashMap<RandomBonus>();
 
 	/**
 	 * JAXB 反序列化完成后，按加成类型建立索引并释放列表。

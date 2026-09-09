@@ -1,5 +1,7 @@
 package com.aionemu.commons.database.dao;
 
+import lombok.NoArgsConstructor;
+
 /**
  * DAO 未找到异常
  * DAO Not Found Exception
@@ -11,6 +13,7 @@ package com.aionemu.commons.database.dao;
  * @author SoulKeeper
  * @author Saelya
  */
+@NoArgsConstructor
 public class DAONotFoundException extends DAOException {
 
     /**
@@ -18,13 +21,6 @@ public class DAONotFoundException extends DAOException {
      * Serialization version ID
      */
     private static final long serialVersionUID = 4241980426435305296L;
-
-    /**
-     * 默认构造函数
-     * Default constructor
-     */
-    public DAONotFoundException() {
-    }
 
     /**
      * 使用指定的错误消息构造异常

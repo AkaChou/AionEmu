@@ -19,6 +19,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.QuestService;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 任务模板数据容器，按任务 ID 索引，并按 NPC 势力分组。
@@ -30,12 +31,19 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlRootElement(name = "quests")
 public class QuestsData {
 
+	/**
+	 * 返回原始任务模板列表。
+	 * Returns the raw quest template list.
+	 *
+	 * @return 任务模板列表 / quest template list
+	 */
+	@Getter
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
 	@XmlTransient
-	private IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
+	private final IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
 	@XmlTransient
-	private IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
+	private final IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
 
 	/**
 	 * JAXB 反序列化完成后，重建任务 ID 索引与势力分组。
@@ -106,16 +114,6 @@ public class QuestsData {
 	 */
 	public int size() {
 		return questData.size();
-	}
-
-	/**
-	 * 返回原始任务模板列表。
-	 * Returns the raw quest template list.
-	 *
-	 * @return 任务模板列表 / quest template list
-	 */
-	public List<QuestTemplate> getQuestsData() {
-		return questsData;
 	}
 
 	/**

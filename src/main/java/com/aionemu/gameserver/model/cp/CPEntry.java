@@ -1,26 +1,19 @@
 package com.aionemu.gameserver.model.cp;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
 /**
  * 创造点条目。
  * CP Entry model.
  */
+@AllArgsConstructor
 public class CPEntry {
 
-	private int slot;
-	private int point;
-
-	public CPEntry(int slot, int point) {
-		this.slot = slot;
-		this.point = point;
-	}
-
 	/** 获取槽位。 / Returns the slot. */
-	public int getSlot() {
-		return slot;
-	}
-
+	@Getter
+	private final int slot;
 	/** 获取点。 / Returns the point. */
-	public int getPoint() {
-		return point;
-	}
+	@Getter
+	private final int point;
 }

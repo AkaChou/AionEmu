@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家宏列表的服务端包。
@@ -12,22 +13,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_MACRO_LIST extends AionServerPacket {
 
-	private Player player;
-	private int packet;
-
-	/**
-	 * 构造指定分片的宏列表包。
-	 * Builds a macro-list packet for the given list part.
-	 *
-	 * target player
-	 * @param packet 宏列表分片序号 / macro list part index
-	 */
-	public SM_MACRO_LIST(Player player, int packet) {
-		this.player = player;
-		this.packet = packet;
-	}
+	private final Player player;
+	private final int packet;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

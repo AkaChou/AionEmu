@@ -8,5 +8,5 @@ package com.aionemu.gameserver.model.broker;
  */
 public enum BrokerRace {
 	/** 天族 / Elyos. */
-	ELYOS, ASMODIAN;
+	ELYOS, ASMODIAN
 }

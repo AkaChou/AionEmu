@@ -6,8 +6,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * 将管理员背包扩展到最大格数的命令（{@code //cube}）。
- * Admin command that expands the inventory cube to maximum ({@code //cube}).
+ * 将管理员背包扩展到最大格数的命令（{@code // 背包 / cube}）。
+ * Admin command that expands the inventory cube to maximum ({@code // 背包 / cube}).
  *
  * @author Kamui
  */

@@ -1,23 +1,24 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
 /**
  * Blocked 玩家游戏对象。
  * Blocked Player game object.
  *
  * @author Ben
  */
+@AllArgsConstructor
 public class BlockedPlayer {
 
 	PlayerCommonData pcd;
+	/** 返回 reason / Returns the reason */
+	@Getter
 	String reason;
 
 	public BlockedPlayer(PlayerCommonData pcd) {
 		this(pcd, "");
-	}
-
-	public BlockedPlayer(PlayerCommonData pcd, String reason) {
-		this.pcd = pcd;
-		this.reason = reason;
 	}
 
 	/** 返回对象 ID / Returns the obj id */
@@ -28,11 +29,6 @@ public class BlockedPlayer {
 	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return pcd.getName();
-	}
-
-	/** 返回 reason / Returns the reason */
-	public String getReason() {
-		return reason;
 	}
 
 	/** 设置 reason / Sets the reason */

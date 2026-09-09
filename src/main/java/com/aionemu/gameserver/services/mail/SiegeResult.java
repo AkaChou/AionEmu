@@ -18,9 +18,9 @@ public enum SiegeResult {
 	/** 失败 / Fail. */
 	FAIL(5);
 
-	private int value;
+	private final int value;
 
-	private SiegeResult(int value) {
+	SiegeResult(int value) {
 		this.value = value;
 	}
 

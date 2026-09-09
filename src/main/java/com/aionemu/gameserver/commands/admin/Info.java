@@ -40,9 +40,8 @@ public class Info extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 		VisibleObject target = admin.getTarget();
-	
-		if (target instanceof Player) {
-			Player player = (Player) target;
+
+		if (target instanceof Player player) {
 			PacketSendUtility.sendMessage(admin, "[Info about " + player.getName() +"]"
 				+ "\nPlayer Id: " + player.getObjectId()
 				+ "\nMap ID: " + player.getWorldId()
@@ -90,15 +89,14 @@ public class Info extends AdminCommand {
 		else if (target instanceof Npc) {
 			Npc npc = (Npc) admin.getTarget();
 			PacketSendUtility.sendMessage(admin,
-				"[Info about target]" 
-					+ "\nName: " + npc.getName() 
+				"[Info about target]"
+					+ "\nName: " + npc.getName()
 					+ "\nId: " + npc.getNpcId() + " / ObjectId: " + admin.getTarget().getObjectId() + " / EntityId: " + npc.getSpawn().getEntityId()
 					+ "\nMap ID: " + admin.getTarget().getWorldId()
 					+ "\nX: " + admin.getTarget().getX() + " / Y: " + admin.getTarget().getY()
 					+ " / Z: " + admin.getTarget().getZ() + " / Heading: " + admin.getTarget().getHeading()
 					+ " / Angle: " + PositionUtil.getAngleToTarget(admin, admin.getTarget()));
-			if (npc instanceof SiegeNpc){
-				SiegeNpc siegeNpc = (SiegeNpc)npc;
+			if (npc instanceof SiegeNpc siegeNpc){
 				PacketSendUtility.sendMessage(admin,
 					"[Siege info]" + "\nSiegeId: "+ siegeNpc.getSiegeId() + "\nSiegeRace: "+ siegeNpc.getSiegeRace());
 			}
@@ -124,8 +122,7 @@ public class Info extends AdminCommand {
 				Creature master = ((Creature) ai.getAttacker()).getMaster();
 				if (master == null)
 					continue;
-				if (master instanceof Player) {
-					Player player = (Player) master;
+				if (master instanceof Player player) {
 					PacketSendUtility.sendMessage(admin, "Name: " + player.getName() + " Dmg: " + ai.getDamage());
 					if (player.getRace() == Race.ASMODIANS)
 						asmoDmg += ai.getDamage();
@@ -142,14 +139,13 @@ public class Info extends AdminCommand {
 						+ template.isReversed() + ")" + "\nRandomWalk: " + npc.getSpawn().getRandomWalk());
 					if (npc.getWalkerGroup() != null) {
 						ClusteredNpc snpc = npc.getWalkerGroup().getClusterData(npc);
-						PacketSendUtility.sendMessage(admin, "[Group]" + "\nType: " + npc.getWalkerGroup().getWalkType() + 
-							" / XDelta: " + snpc.getXDelta() + " / YDelta: " + snpc.getYDelta() + " / Index: " + snpc.getWalkerIndex());						
+						PacketSendUtility.sendMessage(admin, "[Group]" + "\nType: " + npc.getWalkerGroup().getWalkType() +
+							" / XDelta: " + snpc.getXDelta() + " / YDelta: " + snpc.getYDelta() + " / Index: " + snpc.getWalkerIndex());
 					}
 				}
 			}
 		}
-		else if (target instanceof Gatherable) {
-			Gatherable gather = (Gatherable) target;
+		else if (target instanceof Gatherable gather) {
 			PacketSendUtility.sendMessage(admin, "[Info about gather]\n" + "Name: " + gather.getName()
 				+ "\nId: " + gather.getObjectTemplate().getTemplateId() + " / ObjectId: " + admin.getTarget().getObjectId()
 				+ "\nMap ID: " + admin.getTarget().getWorldId()

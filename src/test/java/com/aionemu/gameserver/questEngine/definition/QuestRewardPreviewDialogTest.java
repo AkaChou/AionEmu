@@ -38,7 +38,7 @@ class QuestRewardPreviewDialogTest {
 						&& candidate.npcId() == talk.npcId() && candidate.dialogId() != null
 						&& candidate.dialogId() == 1009
 						&& transition.afterCommit().stream().anyMatch(action ->
-							action instanceof AfterCommitAction.ShowQuestDialog page && page.dialogId() != 1009));
+							action instanceof AfterCommitAction.ShowQuestDialog(int dialogId) && dialogId != 1009));
 				if (!hasSelectRewardPreview) {
 					missingPreview.add(compiled.id() + ":" + rewardNode + " npc=" + talk.npcId());
 				}

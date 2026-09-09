@@ -74,8 +74,8 @@ class QuestExecutionCoordinatorTest {
 		assertFalse(failure.committed());
 		assertInstanceOf(SQLException.class, failure.getCause());
 		assertEquals(List.of("setAutoCommit:false", "rollback"), calls);
-		assertEquals(false, stateApplied[0]);
-		assertEquals(false, afterCommit[0]);
+		assertFalse(stateApplied[0]);
+		assertFalse(afterCommit[0]);
 	}
 
 	@Test
@@ -644,23 +644,18 @@ class QuestExecutionCoordinatorTest {
 				});
 	}
 
-	private static final class RecordingActionPort implements QuestActionPort {
-		private final List<String> calls;
+    private record RecordingActionPort(List<String> calls) implements QuestActionPort {
 
-		private RecordingActionPort(List<String> calls) {
-			this.calls = calls;
-		}
+        @Override
+        public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+            calls.add("preflight:" + actions.size());
+        }
 
-		@Override
-		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
-			calls.add("preflight:" + actions.size());
-		}
-
-		@Override
-		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
-			calls.add("apply:" + actions.size());
-			return QuestTransactionParticipant.of(() -> calls.add("required-commit"),
-				() -> calls.add("required-rollback"));
-		}
-	}
+        @Override
+        public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+            calls.add("apply:" + actions.size());
+            return QuestTransactionParticipant.of(() -> calls.add("required-commit"),
+                    () -> calls.add("required-rollback"));
+        }
+    }
 }

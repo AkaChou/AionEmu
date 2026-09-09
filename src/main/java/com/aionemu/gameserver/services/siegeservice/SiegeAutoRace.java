@@ -28,7 +28,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeAutoRace {
-	private static String[] siegeIds = SiegeConfig.SIEGE_AUTO_LOCID.split(";");
+	private static final String[] siegeIds = SiegeConfig.SIEGE_AUTO_LOCID.split(";");
 
 	/**
 	 * 执行自动种族切换。

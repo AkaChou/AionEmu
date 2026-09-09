@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Retail-anchored structural coverage for the Draupnir Rescue escort. */
 class Quest2634RetailAlignmentTest {
@@ -45,7 +43,7 @@ class Quest2634RetailAlignmentTest {
 			.filter(AfterCommitAction.DeleteInteractionNpc.class::isInstance)
 			.map(AfterCommitAction.DeleteInteractionNpc.class::cast)
 			.findFirst().orElseThrow();
-		assertTrue(!delete.scheduleRespawn());
+		assertFalse(delete.scheduleRespawn());
 		AfterCommitAction.SpawnNpc spawn = escort.afterCommit().stream()
 			.filter(AfterCommitAction.SpawnNpc.class::isInstance)
 			.map(AfterCommitAction.SpawnNpc.class::cast)

@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.templates.chest.ChestTemplate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 宝箱模板数据容器，按 NPC ID 与名称索引宝箱配置。
@@ -25,13 +26,20 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ChestData {
 
+	/**
+	 * 返回原始宝箱模板列表。
+	 * Returns the raw chest template list.
+	 *
+	 * @return 宝箱模板列表 / chest template list
+	 */
+	@Getter
 	@XmlElement(name = "chest")
 	private List<ChestTemplate> chests;
 
 	/** 宝箱模板索引 / chest template index */
-	private IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
-	private IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
-	private Map<String, ChestTemplate> namedChests = new LinkedHashMap<String, ChestTemplate>();
+	private final IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
+	private final IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
+	private final Map<String, ChestTemplate> namedChests = new LinkedHashMap<String, ChestTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后重建索引；保留原始列表以支持热重载。
@@ -69,16 +77,6 @@ public class ChestData {
 	 */
 	public ChestTemplate getChestTemplate(int npcId) {
 		return chestData.get(npcId);
-	}
-
-	/**
-	 * 返回原始宝箱模板列表。
-	 * Returns the raw chest template list.
-	 *
-	 * @return 宝箱模板列表 / chest template list
-	 */
-	public List<ChestTemplate> getChests() {
-		return chests;
 	}
 
 	/**

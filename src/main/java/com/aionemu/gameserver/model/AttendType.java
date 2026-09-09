@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
+import lombok.Getter;
 
 /**
  * 签到类型枚举。
@@ -18,9 +19,11 @@ public enum AttendType {
 	/** 周年签到 / Anniversary */
 	ANNIVERSARY(2);
 
-	private int id;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
 
-	private AttendType(int id) {
+	AttendType(int id) {
 		this.id = id;
 	}
 
@@ -32,10 +35,5 @@ public enum AttendType {
 			}
 		}
 		return AttendType.NONE;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 }

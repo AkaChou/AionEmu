@@ -74,10 +74,10 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	// 准备时间。 / Preparation Time.
 	/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
 	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 1200000; //...20Min
+		private final int instanceTimerSeconds = 1200000; //...20Min
 	/** 副本奖励对象 / instance reward object */
 	private IDEventDefReward instanceReward;
 	/** ideventdef 任务 / idevent def task */
@@ -89,11 +89,11 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param object 玩家对象 ID / player object id
 	 * @return 玩家奖励记录 / player reward record
 	 */
-	
+
 	protected IDEventDefPlayerReward getPlayerReward(Integer object) {
 		return (IDEventDefPlayerReward) instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
@@ -104,11 +104,11 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new IDEventDefPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -119,13 +119,13 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(186000470, storage.getItemCountByItemId(186000470)); //战争点数。 / War Points.
 		storage.decreaseByItemId(186000495, storage.getItemCountByItemId(186000495)); //Key.
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -179,7 +179,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -294,7 +294,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
 		}
 	}
-	
+
 	private void startContaminedUnderPath1() {
 		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -372,7 +372,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
-	
+
 	private void startContaminedUnderPath2() {
 		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -450,7 +450,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
-	
+
 	private void startContaminedUnderPath3() {
 		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -528,7 +528,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
-	
+
 	private void startContaminedUnderPath4() {
 		underpathTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -541,12 +541,12 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
 		return instanceTimerSeconds - (int) result;
 	}
-	
+
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -564,7 +564,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private int checkRank(int totalPoints) {
 		if (totalPoints >= 500000) { //Rank S.
 			rank = 1;
@@ -577,7 +577,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		}
 		return rank;
 	}
-	
+
 	/**
 	 * 3. 安装炮塔：可在指定位置安装各类炮塔。
 	 * 3. Installing The Turret: install various turret types on empty turrets, or upgrade them with the "Aura Of Patience".
@@ -602,7 +602,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -627,7 +627,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
             }
         }, 1200000)); //...20Min
     }
-	
+
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
@@ -653,7 +653,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -674,9 +674,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		ItemService.addItem(player, 186000495, 1); // 监狱钥匙（开门用） / Prison Key (Open Door Prison)
 		// 1. 变身：进入污染地下通道时自动变为传送形态。 / 1. Transformation: entering the passage auto-transforms you.
 		final int IDEventDef = skillRace == Race.ASMODIANS ? 4940 : 4935;
-		GameEngineServices.skillEngine().applyEffectDirectly(IDEventDef, player, player, 1200000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(IDEventDef, player, player, 1200000);
 	}
-	
+
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -703,7 +703,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void startMainInstanceTimer() {
 		if (!timerPrepare.isDone()) {
 			timerPrepare.cancel(false);
@@ -718,7 +718,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
         instanceReward.setRank(6);
@@ -728,7 +728,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		// sendMsg("[成功]：你活下来了！！！"); / sendMsg("[SUCCES]: You survived !!! :) ");
 		sendPacket(0, 0);
 	}
-	
+
 	/**
 	 * 主要补偿/奖励信息：开启 S 级与 A 级宝箱等。
 	 * Major compensation: open the "S Rank" and "A Rank" treasure boxes for rewards.
@@ -759,7 +759,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			AbyssPointsService.addAp(player, playerReward.getScoreAP());
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -773,7 +773,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		doors = instance.getDoors();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -790,7 +790,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : IDEventDefTask) {
 			if (task != null) {
@@ -809,7 +809,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param h 朝向 / h
 	 * @param time 延迟毫秒 / delay millis
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
@@ -826,7 +826,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param msg 消息 ID / message id
 	 * @param race 目标阵营 / target race
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
@@ -844,7 +844,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param msg 消息 ID / message id
 	 * @param race 目标阵营 / target race
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -874,7 +874,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param time 延迟毫秒 / delay millis
 	 * @param walkerId 巡路线 ID / walker id
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -897,13 +897,13 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc 目标 NPC / target NPC
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
@@ -915,7 +915,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 *
 	 * @param npcs NPC 列表 / NPC list
 	 */
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
@@ -928,14 +928,14 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param npcId NPC ID / NPC id
 	 * @return NPC 列表 / NPC list
 	 */
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -947,7 +947,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -959,7 +959,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(4935);
@@ -973,7 +973,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		effectController.removeEffect(4943);
 		effectController.removeEffect(4944);
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -996,7 +996,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒 / delay millis
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

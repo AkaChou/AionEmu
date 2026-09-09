@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 任务 Req 模板（静态数据/XML）。
@@ -15,35 +17,18 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "QuestReq")
 public class QuestReq {
 
+	/** 返回任务 ID / Returns the quest id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "quest_id")
 	protected int questId;
+	/** 返回 quest step / Returns the quest step */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "quest_step")
 	protected int questStep;
+	/** 返回 err quest / Returns the err quest */
+	@Getter
 	@XmlAttribute(name = "err_quest")
 	protected int errQuest;
-
-	/** 返回任务 ID / Returns the quest id */
-	public int getQuestId() {
-		return questId;
-	}
-
-	/** 设置 quest id / Sets the quest id */
-	public void setQuestId(int value) {
-		this.questId = value;
-	}
-
-	/** 返回 quest step / Returns the quest step */
-	public int getQuestStep() {
-		return questStep;
-	}
-
-	/** 设置 quest step / Sets the quest step */
-	public void setQuestStep(int value) {
-		this.questStep = value;
-	}
-
-	/** 返回 err quest / Returns the err quest */
-	public int getErrQuest() {
-		return errQuest;
-	}
 }

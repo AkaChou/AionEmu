@@ -18,7 +18,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 	 * 包元素类型枚举，按单字符编码写入对应二进制字段。
 	 * Packet element types; each code writes the matching binary field.
 	 */
-	public static enum PacketElementType {
+	public enum PacketElementType {
 		D('d') {
 
 			@Override
@@ -85,7 +85,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 
 		private final char code;
 
-		private PacketElementType(char code) {
+		PacketElementType(char code) {
 			this.code = code;
 		}
 
@@ -133,7 +133,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		}
 	}
 
-	private List<PacketElement> elements = new ArrayList<PacketElement>();
+	private final List<PacketElement> elements = new ArrayList<PacketElement>();
 
 	/**
 	 * @param opcode 自定义包操作码 / custom packet opcode

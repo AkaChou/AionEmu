@@ -33,8 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CelestiusAI2 extends AggressiveNpcAI2
 {
 	private Future<?> helpersTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -42,13 +42,13 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 			startHelpersCall();
 		}
 	}
-	
+
 	private void cancelHelpersTask() {
 		if (helpersTask != null && !helpersTask.isDone()) {
 			helpersTask.cancel(true);
 		}
 	}
-	
+
 	private void startHelpersCall() {
 		helpersTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -64,20 +64,20 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 			}
 		}, 1000, 25000);
 	}
-	
+
 	private void rushTalocHollow(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	private void startCelestiusRushEvent() {
 		rushTalocHollow((Npc)spawn(281514, 518f, 813f, 1378f, (byte) 0), 539.357f, 826.74567f, 1376.8346f, false);
 		rushTalocHollow((Npc)spawn(281514, 551f, 795f, 1376f, (byte) 0), 546.886848f, 819.90924f, 1376.3254f, false);
 		rushTalocHollow((Npc)spawn(281514, 574f, 854f, 1375f, (byte) 0), 549.684f, 835.2079f, 1377.119f, false);
 	}
-	
+
 	private void deleteHelpers() {
 		WorldPosition p = getPosition();
 		if (p != null) {
@@ -93,7 +93,7 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelHelpersTask();
@@ -101,14 +101,14 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 		isHome.set(true);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelHelpersTask();
 		deleteHelpers();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelHelpersTask();

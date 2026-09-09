@@ -53,7 +53,7 @@ public class ConquestSchedule {
 		ConquestSchedule cs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/conquest_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			cs = (ConquestSchedule) JAXBUtil.deserialize(xml, ConquestSchedule.class);
+			cs = JAXBUtil.deserialize(xml, ConquestSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize conquest", e);
 		}

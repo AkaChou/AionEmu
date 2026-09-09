@@ -13,11 +13,11 @@ import com.aionemu.gameserver.utils.MathUtil;
 public abstract class DialogObserver extends ActionObserver {
 
 	/** 对话响应玩家 / Dialog responder player */
-	private Player responder;
+	private final Player responder;
 	/** 对话请求方（NPC 等） / Dialog requester (NPC, etc.) */
-	private Creature requester;
+	private final Creature requester;
 	/** 最大允许距离 / Max allowed distance */
-	private int maxDistance;
+	private final int maxDistance;
 
 	/**
 	 * @param requester 对话请求方（NPC 等） / dialog requester (NPC, etc.)

@@ -34,14 +34,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
@@ -65,7 +64,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -77,7 +76,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -89,7 +88,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -120,7 +119,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnKaligaBloodwing(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -136,7 +135,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -146,19 +145,19 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();
@@ -166,7 +165,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -176,7 +175,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -184,7 +183,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

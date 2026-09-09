@@ -28,11 +28,10 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-	if (creature instanceof Player) {
-			final Player player = (Player) creature;
+	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(20664)) { // 征服者之热情 / Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useWithoutPropSkill(); // 征服者之热情 / Conqueror's Passion.
+		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, creature).useWithoutPropSkill(); // 征服者之热情 / Conqueror's Passion.
 				}
 			}
 	}

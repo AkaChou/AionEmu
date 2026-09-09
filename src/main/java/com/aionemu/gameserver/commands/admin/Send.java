@@ -43,7 +43,7 @@ public class Send extends AdminCommand {
 
 	private static final File FOLDER = new File("./data/packets");
 
-	private Unmarshaller unmarshaller;
+	private final Unmarshaller unmarshaller;
 
 	/**
 	 * 执行该管理指令。
@@ -173,12 +173,11 @@ public class Send extends AdminCommand {
 
 		@Override
 		public String toString() {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("Packets");
-			sb.append("{delay=").append(delay);
-			sb.append(", packets=").append(packets);
-			sb.append('}');
-			return sb.toString();
+			String sb = "Packets" +
+				"{delay=" + delay +
+				", packets=" + packets +
+				'}';
+			return sb;
 		}
 	}
 
@@ -209,12 +208,11 @@ public class Send extends AdminCommand {
 
 		@Override
 		public String toString() {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("Packet");
-			sb.append("{opcode=").append(opcode);
-			sb.append(", parts=").append(parts);
-			sb.append('}');
-			return sb.toString();
+			String sb = "Packet" +
+				"{opcode=" + opcode +
+				", parts=" + parts +
+				'}';
+			return sb;
 		}
 	}
 
@@ -245,13 +243,12 @@ public class Send extends AdminCommand {
 
 		@Override
 		public String toString() {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("Part");
-			sb.append("{type='").append(type).append('\'');
-			sb.append(", value='").append(value).append('\'');
-			sb.append(", repeatCount=").append(repeatCount);
-			sb.append('}');
-			return sb.toString();
+			String sb = "Part" +
+				"{type='" + type + '\'' +
+				", value='" + value + '\'' +
+				", repeatCount=" + repeatCount +
+				'}';
+			return sb;
 		}
 	}
 

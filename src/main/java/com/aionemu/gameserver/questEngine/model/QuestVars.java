@@ -1,22 +1,18 @@
 package com.aionemu.gameserver.questEngine.model;
 
+import lombok.NoArgsConstructor;
+
 /**
  * 任务变量集合，将最多 6 个 6-bit 子变量打包为一个整型值存储。
  * Quest variable set packing up to six 6-bit sub-variables into a single integer value.
  *
  * @author MrPoke
  */
+@NoArgsConstructor
 public class QuestVars {
 
 	/** 6 个任务子变量（每个 0–63）。 Six quest sub-variables (each 0–63). */
-	private Integer[] questVars = new Integer[6];
-
-	/**
-	 * 创建空任务变量集合。
-	 * Creates an empty quest variable set.
-	 */
-	public QuestVars() {
-	}
+	private final Integer[] questVars = new Integer[6];
 
 	/**
 	 * 使用打包整型值初始化任务变量。

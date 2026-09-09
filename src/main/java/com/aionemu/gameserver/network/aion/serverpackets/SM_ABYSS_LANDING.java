@@ -14,7 +14,7 @@ import com.aionemu.gameserver.services.AbyssLandingService;
  * @author Ranastic & Lightning (Encom)
  */
 public class SM_ABYSS_LANDING extends AionServerPacket {
-	private Map<Integer, LandingLocation> locations;
+	private final Map<Integer, LandingLocation> locations;
 
 	/**
 	 * 从 {@link AbyssLandingService} 拉取全部着陆点并构造同步包。

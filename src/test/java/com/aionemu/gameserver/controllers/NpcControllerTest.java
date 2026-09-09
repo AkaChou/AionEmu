@@ -60,7 +60,7 @@ class NpcControllerTest {
 		private SpawnTemplate spawn;
 
 		private TestNpc() {
-			super(0, new NpcController(), null, (NpcTemplate) null);
+			super(0, new NpcController(), null, null);
 		}
 
 		@Override

@@ -81,7 +81,7 @@ public class AbyssRank {
 	public enum AbyssRankUpdateType {
 		PLAYER_ELYOS(1), PLAYER_ASMODIANS(2), LEGION_ELYOS(4), LEGION_ASMODIANS(8);
 
-		private int id;
+		private final int id;
 
 		AbyssRankUpdateType(int id) {
 			this.id = id;
@@ -145,42 +145,42 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return 每日欧比斯点数 / The daily <Abyss Point> count
+	 * @return 每日欧比斯点数 / The daily Abyss Point count
 	 */
 	public int getDailyAP() {
 		return dailyAP;
 	}
 
 	/**
-	 * @return 每周欧比斯点数 / The weekly <Abyss Point> count
+	 * @return 每周欧比斯点数 / The weekly Abyss Point count
 	 */
 	public int getWeeklyAP() {
 		return weeklyAP;
 	}
 
 	/**
-	 * @return 历史欧比斯点数 / The all time <Abyss Point> count
+	 * @return 历史欧比斯点数 / The all time Abyss Point count
 	 */
 	public int getAp() {
 		return currentAp;
 	}
 
 	/**
-	 * @return 每日荣耀点数 / The daily <Glory Point> count
+	 * @return 每日荣耀点数 / The daily Glory Point count
 	 */
 	public int getDailyGP() {
 		return dailyGP;
 	}
 
 	/**
-	 * @return 每周荣耀点数 / The weekly <Glory Point> count
+	 * @return 每周荣耀点数 / The weekly Glory Point count
 	 */
 	public int getWeeklyGP() {
 		return weeklyGP;
 	}
 
 	/**
-	 * @return 历史荣耀点数 / The all time <Glory Point> count
+	 * @return 历史荣耀点数 / The all time Glory Point count
 	 */
 	public int getGp() {
 		return currentGp;
@@ -253,14 +253,14 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return 上周欧比斯点数 / The last week <Abyss Point> count
+	 * @return 上周欧比斯点数 / The last week Abyss Point count
 	 */
 	public int getLastAP() {
 		return lastAP;
 	}
 
 	/**
-	 * @return 上周荣耀点数 / The last week <Glory Point> count
+	 * @return 上周荣耀点数 / The last week Glory Point count
 	 */
 	public int getLastGP() {
 		return lastGP;

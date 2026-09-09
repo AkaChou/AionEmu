@@ -78,8 +78,8 @@ public class ConfigurableProcessor {
 
         for(int i$ = 0; i$ < len$; ++i$) {
             Field f = arr$[i$];
-            if ((!Modifier.isStatic(f.getModifiers()) || obj == null) && 
-                (Modifier.isStatic(f.getModifiers()) || obj != null) && 
+            if ((!Modifier.isStatic(f.getModifiers()) || obj == null) &&
+                (Modifier.isStatic(f.getModifiers()) || obj != null) &&
                 f.isAnnotationPresent(Property.class)) {
                 if (Modifier.isFinal(f.getModifiers())) {
                     log.error(I18n.get("log.9ad54acf6b37", f.getName(), clazz.getName()));
@@ -104,8 +104,8 @@ public class ConfigurableProcessor {
         f.setAccessible(true);
 
         try {
-            Property property = (Property)f.getAnnotation(Property.class);
-            if ("DO_NOT_OVERWRITE_INITIALIAZION_VALUE".equals(property.defaultValue()) && 
+            Property property = f.getAnnotation(Property.class);
+            if ("DO_NOT_OVERWRITE_INITIALIAZION_VALUE".equals(property.defaultValue()) &&
                 !isKeyPresent(property.key(), props)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Field " + f.getName() + " of class " + f.getDeclaringClass().getName() + " wasn't modified");
@@ -131,7 +131,7 @@ public class ConfigurableProcessor {
      * @throws TransformationException 如果值转换失败
      */
     private static Object getFieldValue(Field field, Properties[] props) throws TransformationException {
-        Property property = (Property)field.getAnnotation(Property.class);
+        Property property = field.getAnnotation(Property.class);
         String defaultValue = property.defaultValue();
         String key = property.key();
         String value = null;

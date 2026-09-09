@@ -24,14 +24,13 @@ public class GaleCycloneAI2 extends NpcAI2
 	// 是否已失效：死亡或消失后为 true，阻止继续对玩家施放旋风技能。 / Whether defunct: true after death/despawn, blocks further cyclone casts.
     private boolean blocked;
 	// 正在观察的玩家及其移动观察器，用于在玩家移动时触发旋风技能。 / Observed players and their move observers, triggering the cyclone skill on movement.
-	private Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<Integer, GaleCycloneObserver>();
-    
+	private final Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<Integer, GaleCycloneObserver>();
+
 	@Override
 	protected void handleCreatureSee(Creature creature) {
 		if (blocked) {
 			return;
-		} if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		} if (creature instanceof Player player) {
 			final GaleCycloneObserver observer = new GaleCycloneObserver(player, getOwner()) {
 				@Override
 				public void onMove() {
@@ -44,13 +43,12 @@ public class GaleCycloneAI2 extends NpcAI2
 			observed.put(player.getObjectId(), observer);
 		}
 	}
-	
+
 	@Override
 	protected void handleCreatureNotSee(Creature creature) {
 		if (blocked) {
 			return;
-		} if (creature instanceof Player) {
-			Player player = (Player) creature;
+		} if (creature instanceof Player player) {
 			Integer obj = player.getObjectId();
 			GaleCycloneObserver observer = observed.remove(obj);
 			if (observer != null) {
@@ -58,19 +56,19 @@ public class GaleCycloneAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		clear();
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		clear();
 		super.handleDespawned();
 	}
-	
+
 	/**
 	 * 清理所有观察器：置失效标记，并从各玩家观察控制器中移除。
 	 * Clears all observers: sets the defunct flag and detaches every observer from its player.

@@ -23,7 +23,7 @@ public class LsPacketHandler {
 	 * 按连接状态索引的 opcode → 封包原型表。
 	 * Map of connection state to (opcode → packet prototype).
 	 */
-	private static Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, LsClientPacket>>();
+	private static final Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, LsClientPacket>>();
 
 	/**
 	 * 从给定 ByteBuffer 读取并构造一个客户端封包。

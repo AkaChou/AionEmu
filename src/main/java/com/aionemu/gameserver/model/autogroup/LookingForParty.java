@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * LookingForParty，用于 autogroup 相关逻辑。
@@ -13,7 +15,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 
 public class LookingForParty extends AbstractLockManager {
-	private List<SearchInstance> searchInstances = new ArrayList<SearchInstance>();
+	private final List<SearchInstance> searchInstances = new ArrayList<SearchInstance>();
+	/** 获取玩家。 / Returns the player. */
+	@Getter
+	@Setter
 	private Player player;
 	private long startEnterTime;
 	private long penaltyTime;
@@ -93,16 +98,6 @@ public class LookingForParty extends AbstractLockManager {
 		} finally {
 			super.readUnlock();
 		}
-	}
-
-	/** 获取玩家。 / Returns the player. */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/** 设置玩家。 / Sets the player. */
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	/** 设置 penalty time / Sets the penalty time */

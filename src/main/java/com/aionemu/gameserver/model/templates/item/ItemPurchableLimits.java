@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 物品购买限制模板：最低军阶要求。
@@ -15,13 +16,10 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Purchable")
 public class ItemPurchableLimits {
+	/** 返回最小军阶 / Returns the min rank */
+	@Getter
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
-
-	/** 返回最小军阶 / Returns the min rank */
-	public int getMinRank() {
-		return minRank;
-	}
 
 	/** 校验军阶是否达标 / Verify rank */
 	public boolean verifyRank(int rank) {

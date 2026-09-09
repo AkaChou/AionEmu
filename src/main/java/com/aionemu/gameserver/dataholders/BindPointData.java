@@ -26,7 +26,7 @@ public class BindPointData {
 	private List<BindPointTemplate> bplist;
 
 	/** 绑定点模板索引 / bind-point template index */
-	private IntObjectHashMap<BindPointTemplate> bindplistData = new IntObjectHashMap<BindPointTemplate>();
+	private final IntObjectHashMap<BindPointTemplate> bindplistData = new IntObjectHashMap<BindPointTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按 NPC ID 建立索引。

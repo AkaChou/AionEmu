@@ -18,22 +18,22 @@ public class Event_Witch_Flower_AgrintAI2 extends AggressiveNpcAI2
 		switch (getNpcId()) {
 			case 248365: //?  I.
 			case 248366: //?  II.
-				spawn(835678, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(835678, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 			case 248367: //?  I.
 			case 248368: //?  II.
-				spawn(835679, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(835679, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 		}
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	@Override
 	public int modifyOwnerDamage(int damage) {
 		return 1;
 	}
-	
+
 	@Override
 	public int modifyDamage(int damage) {
 		return 1;

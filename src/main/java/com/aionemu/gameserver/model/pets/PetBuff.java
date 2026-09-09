@@ -29,8 +29,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class PetBuff implements StatOwner {
-	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
-	private PetBonusAttr petBonusAttr;
+	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final PetBonusAttr petBonusAttr;
 	private long startTime;
 	private ScheduledFuture<?> task = null;
 
@@ -90,7 +90,7 @@ public class PetBuff implements StatOwner {
 	 * Pet buff task: periodically consumes food and renews the buff effect.
 	 */
 	private class PetBuffTask implements Runnable {
-		private Player player;
+		private final Player player;
 
 		public PetBuffTask(Player player) {
 			this.player = player;

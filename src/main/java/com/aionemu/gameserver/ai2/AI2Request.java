@@ -28,5 +28,5 @@ public abstract class AI2Request {
 	 * @param responder 应答玩家 / responding player
 	 */
 	public void denyRequest(Creature requester, Player responder) {
-	};
+	}
 }

@@ -19,9 +19,9 @@ public enum StateEvents {
 	/** 死亡状态允许的事件 / Events allowed in DIED state */
 	DEAD_EVENTS(AIEventType.DESPAWNED, AIEventType.DROP_REGISTERED);
 
-	private EnumSet<AIEventType> events;
+	private final EnumSet<AIEventType> events;
 
-	private StateEvents(AIEventType... aiEventTypes) {
+	StateEvents(AIEventType... aiEventTypes) {
 		this.events = EnumSet.copyOf(Arrays.asList(aiEventTypes));
 	}
 

@@ -28,7 +28,7 @@ public class TeleporterData {
 	private List<TeleporterTemplate> tlist;
 
 	/** 商店交易列表映射。 / Map of all trade list templates. */
-	private IntObjectHashMap<TeleporterTemplate> npctlistData = new IntObjectHashMap<TeleporterTemplate>();
+	private final IntObjectHashMap<TeleporterTemplate> npctlistData = new IntObjectHashMap<TeleporterTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按传送 ID 索引传送员模板。

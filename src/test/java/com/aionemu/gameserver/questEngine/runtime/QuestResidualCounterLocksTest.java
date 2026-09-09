@@ -98,8 +98,8 @@ class QuestResidualCounterLocksTest {
 			CompiledQuestDefinition definition = load(questId);
 			List<QuestTransition> stageEdges = definition.definition().transitions().stream()
 				.filter(candidate -> candidate.actions().stream()
-					.anyMatch(action -> action instanceof QuestAction.SetVariable set
-						&& "var1".equals(set.field()) && set.value() == 0))
+					.anyMatch(action -> action instanceof QuestAction.SetVariable(String field, int value)
+						&& "var1".equals(field) && value == 0))
 				.toList();
 			assertEquals(4, stageEdges.size(), "quest " + questId + " stage edge count");
 			for (QuestTransition edge : stageEdges) {

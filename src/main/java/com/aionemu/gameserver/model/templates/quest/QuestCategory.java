@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.quest;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 任务分类枚举。
@@ -16,14 +17,11 @@ public enum QuestCategory {
 	/** 挑战任务。 / Challenge Task. */
 	CHALLENGE_TASK(0), PUBLIC(0), LEGION(0), PRIMARY(0);
 
-	private int id;
-
-	private QuestCategory(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	QuestCategory(int id) {
+		this.id = id;
 	}
 }

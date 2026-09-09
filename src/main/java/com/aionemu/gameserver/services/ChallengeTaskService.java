@@ -47,9 +47,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeTaskService {
 	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
 	/** 城镇 ID → 挑战任务映射。 / Town id → challenge task map. */
-	private Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
+	private final Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	/** 军团 ID → 挑战任务映射。 / Legion id → challenge task map. */
-	private Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
+	private final Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
 
 	private static class SingletonHolder {
 		protected static final ChallengeTaskService instance = new ChallengeTaskService();

@@ -5,26 +5,16 @@ import java.util.Collection;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步自身异常状态与效果列表的服务端包。
  * Server packet synchronizing the local player's abnormal state and effect list to the client.
  */
+@AllArgsConstructor
 public class SM_ABNORMAL_STATE extends AionServerPacket {
-	private Collection<Effect> effects;
-	private int abnormals;
-
-	/**
-	 * 使用异常位掩码与效果集合构造同步包。
-	 * Creates a sync packet from an abnormal bit mask and effect collection.
-	 *
-	 * @param effects 需要同步的效果集合 / effects to synchronize
-	 * @param abnormals 异常状态位掩码 / abnormal state bit mask
-	 */
-	public SM_ABNORMAL_STATE(Collection<Effect> effects, int abnormals) {
-		this.effects = effects;
-		this.abnormals = abnormals;
-	}
+	private final Collection<Effect> effects;
+	private final int abnormals;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

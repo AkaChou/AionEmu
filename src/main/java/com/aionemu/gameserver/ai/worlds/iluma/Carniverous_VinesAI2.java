@@ -21,16 +21,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("carniverous_vines")
 public class Carniverous_VinesAI2 extends NpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 谢谢你救了我！ / Thank you for saving me!
@@ -39,7 +38,7 @@ public class Carniverous_VinesAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		spawn(806236, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // Tunes Of Splendor 侦察兵 / Tunes Of Splendor Scout.
@@ -47,12 +46,12 @@ public class Carniverous_VinesAI2 extends NpcAI2
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

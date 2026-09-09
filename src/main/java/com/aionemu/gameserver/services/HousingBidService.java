@@ -486,7 +486,7 @@ public class HousingBidService extends AbstractCronTask {
 	 * minutes left
 	 */
 	public int getMinutesTillAuction() {
-		return (int) (getSecondsTillAuction() / 60);
+		return getSecondsTillAuction() / 60;
 	}
 
 	/**
@@ -497,12 +497,9 @@ public class HousingBidService extends AbstractCronTask {
 	 */
 	public boolean isBiddingAllowed() {
 		ZonedDateTime now = ZonedDateTime.now();
-		ZonedDateTime auctionEnd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(((long) getRunTime() + timeProlonged * 60) * 1000), java.time.ZoneId.systemDefault());
-		
-		if (now.getDayOfWeek() == auctionEnd.getDayOfWeek() && auctionEnd.minusDays(1).isAfter(now)) {
-			return false;
-		}
-		return true;
+		ZonedDateTime auctionEnd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(((long) getRunTime() + timeProlonged * 60L) * 1000), java.time.ZoneId.systemDefault());
+
+		return now.getDayOfWeek() != auctionEnd.getDayOfWeek() || !auctionEnd.minusDays(1).isAfter(now);
 	}
 
 	/**
@@ -514,12 +511,9 @@ public class HousingBidService extends AbstractCronTask {
 	public boolean isRegisteringAllowed() {
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime registerEnd = ZonedDateTime.ofInstant(registerDateExpr.getTimeAfter(java.util.Date.from(now.toInstant())).toInstant(), java.time.ZoneId.systemDefault());
-		ZonedDateTime auctionEnd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(((long) getRunTime() + timeProlonged * 60) * 1000), java.time.ZoneId.systemDefault());
-		
-		if (now.getDayOfWeek() == registerEnd.getDayOfWeek() && now.getHour() >= registerEnd.getHour() || (now.getDayOfWeek() == auctionEnd.getDayOfWeek() && now.getHour() <= auctionEnd.getHour())) {
-			return false;
-		}
-		return true;
+		ZonedDateTime auctionEnd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(((long) getRunTime() + timeProlonged * 60L) * 1000), java.time.ZoneId.systemDefault());
+
+		return (now.getDayOfWeek() != registerEnd.getDayOfWeek() || now.getHour() < registerEnd.getHour()) && (now.getDayOfWeek() != auctionEnd.getDayOfWeek() || now.getHour() > auctionEnd.getHour());
 	}
 
 	private PlayerCommonData getPlayerData(int objectId) {

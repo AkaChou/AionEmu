@@ -7,24 +7,16 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 聊天窗口信息包：展示目标玩家的军团/个人资料，或队伍/联盟成员等级与职业。
  * Server packet for chat-window info: legion/profile of a target, or group/alliance member levels and classes.
  */
+@AllArgsConstructor
 public class SM_CHAT_WINDOW extends AionServerPacket {
-	private Player target;
-	private boolean isGroup;
-
-	/**
-	 * target player
-	 * @param isGroup {@code true} 时写入队伍/联盟信息，否则写个人资料
-	 * when {@code true} writes group/alliance info, else personal profile。
-	 */
-	public SM_CHAT_WINDOW(Player target, boolean isGroup) {
-		this.target = target;
-		this.isGroup = isGroup;
-	}
+	private final Player target;
+	private final boolean isGroup;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

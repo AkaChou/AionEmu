@@ -4,11 +4,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
@@ -20,9 +18,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -92,7 +88,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 	/** illuminary task1 / illuminary task1 */
 		private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
 	/** illuminary task2 / illuminary task2 */
@@ -101,7 +97,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		private final List<Future<?>> illuminaryTask3 = new ArrayList<>();
 	/** illuminary task4 / illuminary task4 */
 		private final List<Future<?>> illuminaryTask4 = new ArrayList<>();
-	
+
    /**
 	 * 奖励：成功捕获 Boss 后有几率获得…… / Reward: After a successful capture of the boss you will get a small chance of obtaining mythical wings, and a variety of items. Boxes are for all the members and the wings only for one person in the group
 	 */
@@ -146,7 +142,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -158,10 +154,10 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
 	}
-	
+
 	private void startIlluminaryTimer() {
 		// 弱化防护盾将在 30 分钟后消失。 / The weakened protective shield will disappear in 30 minutes.
-		this.sendMessage(1402129, 1 * 60 * 1000);
+		this.sendMessage(1402129, 60 * 1000);
 		// 弱化防护盾将在 25 分钟后消失。 / The weakened protective shield will disappear in 25 minutes.
 		this.sendMessage(1402130, 5 * 60 * 1000);
 		// 弱化防护盾将在 20 分钟后消失。 / The weakened protective shield will disappear in 20 minutes.
@@ -179,7 +175,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		// 迪纳图姆摧毁了护盾生成中枢的传送装置。 / The Dynatoum has destroyed the teleport device of the shield generation hub.
 		this.sendMessage(1402212, 31 * 60 * 1000);
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -206,7 +202,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		final int illuminaryVideo = videoRace == Race.ASMODIANS ? 895 : 894;
 		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, illuminaryVideo));
 	}
-	
+
    /**
 	 * 护盾单元：建议在……后开始为护盾充能。 / Shield Units: Its a good idea to start powering the shields once you have 6 ide shield items. Help collect the remaining pieces together in the other bridges. Once you charge a shield with one of the items, a wave of monster will appear, help that person and kill the mobs. Protect the shield units from monsters while you charge them up to the 3rd phase. Once all shields are at the 3rd phase no more monsters will spawn
 	 */
@@ -293,7 +289,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
    /**
 	 * 若“护盾”被摧毁，须从第 1 阶段重新开始。 / If a "Shield" is destroyed, you must start again from the 1st phase You can heal the shield with a restoration skill
 	 */
@@ -474,7 +470,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	//===========================//
 	// === 东部护盾任务 === / === Eastern Shield Task ===//
 	//===========================//
@@ -551,7 +547,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8Min
 	}
-	
+
 	//===========================//
 	// === 西部护盾任务 === / === Western Shield Task ===//
 	//===========================//
@@ -628,7 +624,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8Min
 	}
-	
+
 	//==========================//
 	// == 南部护盾任务 == / == Southern Shield Task ==//
 	//==========================//
@@ -705,7 +701,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8Min
 	}
-	
+
 	//==========================//
 	// == 北部护盾任务 == / == Northern Shield Task ==//
 	//==========================//
@@ -782,7 +778,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8Min
 	}
-	
+
    /**
 	 * 充能阶段越高，刷新的怪物越强。 / The higher the phase of the charge will spawn more difficult monsters, in the 3rd phase elite monsters will spawn. Charging a shield to the 3rd phase continuously can be hard because of all the mobs you will have to handle. A few easy monsters will spawn after a certain time if you leave the shield unit alone. After all units have been charged to the 3rd phase, defeat the remaining monsters. *************************** Eastern Shield Generator * **************************
 	 */
@@ -906,7 +902,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
    /**
 	 * 西部护盾发生器 / ************************* Western Shield Generator
 	 */
@@ -1030,7 +1026,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	/**
 	 * 南部护盾发生器 / ************************ Southern Shield Generator
 	 */
@@ -1154,7 +1150,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	/**
 	 * 北部护盾发生器 / ************************* Northern Shield Generator
 	 */
@@ -1278,7 +1274,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void rushIlluminary(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1299,7 +1295,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
    /**
 	 * 激活封印：当所有护盾单元充能至…… / Activate The Seal: When all shield units have been charged up to the 3rd phase, you can activate the passage to the final boss. When you activate the seal the final boss will appear and the fight will begin
 	 */
@@ -1329,11 +1325,11 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			spawn(730886, 216.97739f, 254.46160f, 295.77353f, (byte) 0);
 		}
 	}
-	
+
 	private void illuminaryToDynatoum(Player player) {
 		teleport(player, 266.04742f, 244.20813f, 455.17575f, (byte) 45);
 	}
-	
+
 	private void teleport(float x, float y, float z, byte h) {
 		for (Player playerInside: instance.getPlayersInside()) {
 			if (playerInside.isOnline()) {
@@ -1341,11 +1337,11 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	protected void teleport(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	protected void stopInstance1(Player player) {
 		shieldControl();
 		stopInstanceTask1();
@@ -1362,7 +1358,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		shieldControl();
 		stopInstanceTask4();
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -1377,7 +1373,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -1393,7 +1389,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1419,14 +1415,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
-	private void sendMovie(Player player, int movie) {
-        if (!movies.contains(movie)) {
-             movies.add(movie);
-             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-        }
-    }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1437,7 +1426,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1454,13 +1443,13 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(164000289, storage.getItemCountByItemId(164000289));
 		storage.decreaseByItemId(164000290, storage.getItemCountByItemId(164000290));
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1475,7 +1464,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		doors.clear();
 		movies.clear();
 	}
-	
+
 	private void stopInstanceTask1() {
 		for (Future<?> task : illuminaryTask1) {
 			if (task != null) {
@@ -1504,25 +1493,25 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
@@ -1535,7 +1524,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}

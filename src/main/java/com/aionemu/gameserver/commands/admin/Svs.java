@@ -79,7 +79,7 @@ public class Svs extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidSvsLocationId(Player player, int svsId) {
-		if (!GameLocationBootstrapServices.svsService().getSvsLocations().keySet().contains(svsId)) {
+		if (!GameLocationBootstrapServices.svsService().getSvsLocations().containsKey(svsId)) {
 			PacketSendUtility.sendMessage(player, "Id " + svsId + " is invalid");
 			return false;
 		}

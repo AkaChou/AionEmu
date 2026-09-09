@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 {
 	private Future<?> dreadgionDrakanATKTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		super.handleDialogStart(player);
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		// 圣所防御炮塔冷却剂。 / Sanctum Defense Turret Coolant.
@@ -44,14 +44,14 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 		// 防御炮塔已冷却到可使用！ / The defense turret is now cool enough to use!
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403951));
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		dreadgionDrakanATK();
 		startDreadgionOverheatTask();
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -63,7 +63,7 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	private void dreadgionDrakanATK() {
 		dreadgionDrakanATKTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -73,7 +73,7 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 			}
 		}, 4000, 10000);
 	}
-	
+
 	private void startDreadgionOverheatTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -84,7 +84,7 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 			}
 		}, 300000);
 	}
-	
+
 	private void announceDefenceSanctumA() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -118,19 +118,19 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		announceDefenceSanctumDieA();
 		super.handleDied();
 	}
-	
+
 	private void cancelATKTask() {
 		if (dreadgionDrakanATKTask != null && !dreadgionDrakanATKTask.isDone()) {
 			dreadgionDrakanATKTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

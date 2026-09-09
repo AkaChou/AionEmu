@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 {
 	private int elderPhase = 0;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -30,7 +30,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 95 && elderPhase < 1) {
 			elderPhase = 1;
@@ -43,7 +43,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 			announceHighElderRoamimFurious();
 		}
 	}
-	
+
 	private void announceHighElderRoamimFurious() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -71,7 +71,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isAggred.set(false);

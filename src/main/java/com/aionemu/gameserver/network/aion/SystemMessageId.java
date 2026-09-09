@@ -184,12 +184,12 @@ public enum SystemMessageId {
 	REDUCES_PHYSICAL_DEFENSE_AND_MAGICAL_RESISTANCE(0x13D969), YOU_DONT_HAVE_ENOUGH_DP_FOR_CONVERSION(0x13D970),
 	YOU_MUST_HAVE_LERNED_SKILL_TO_USE_IT(0x13D971), LEAVE_INSTANCE_NOT_PARTY(0x155CEA), YOU_HAVE_GATHERED_$1(1330016);
 
-	private int _id;
+	private final int _id;
 
 	/**
 	 * @param id 客户端消息 ID / client message id
 	 */
-	private SystemMessageId(int id) {
+	SystemMessageId(int id) {
 		_id = id;
 	}
 

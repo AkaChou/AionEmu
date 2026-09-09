@@ -7,6 +7,7 @@ import java.util.Collection;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 /**
  * 游戏事件抽象基类：支持优先级、冷却、广播与重置。
@@ -27,12 +28,14 @@ public abstract class Event implements Runnable {
 	 * 当前优先级（越大越优先）。
 	 * Current priority (higher runs sooner).
 	 */
+	@Getter
 	private int priority = DEFAULT_PRIORITY;
 
 	/**
 	 * 事件是否已结束。
 	 * Whether the event has finished.
 	 */
+	@Getter
 	private boolean finished = false;
 
 	/**
@@ -92,16 +95,6 @@ public abstract class Event implements Runnable {
 	}
 
 	/**
-	 * 获取优先级。
-	 * Returns the priority.
-	 *
-	 * @return 优先级 / priority
-	 */
-	public int getPriority() {
-		return priority;
-	}
-
-	/**
 	 * 设置优先级，自动钳制在 {@link #MIN_PRIORITY}～{@link #MAX_PRIORITY}。
 	 * Sets priority, clamped to {@link #MIN_PRIORITY}..{@link #MAX_PRIORITY}.
 	 *
@@ -115,16 +108,6 @@ public abstract class Event implements Runnable {
 			priority = MIN_PRIORITY;
 		}
 		this.priority = priority;
-	}
-
-	/**
-	 * 事件是否已结束。
-	 * Whether the event has finished.
-	 *
-	 * @return 完成标记 / finished flag
-	 */
-	public boolean isFinished() {
-		return finished;
 	}
 
 	/**

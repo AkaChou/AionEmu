@@ -26,12 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 对生产 catalog 的全量、快速、隔离内存任务流进行 transition 级审计；不将客户端顺序报告当作期望值。
  * Runs a transition-level full-catalog fast audit in isolated memory flows without treating any client sequence
  * report as the expected value.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestE2eBatchAudit {
 	/** 客户端全局行为动作：不依赖任务页面按钮即会发送，判定任务作用域页面缺失时视为可达。 */
 	private static final Set<Integer> CLIENT_GLOBAL_ACTIONS = Set.of(
@@ -40,9 +43,6 @@ public final class QuestE2eBatchAudit {
 		QuestDialogAction.QUEST_ACCEPT_SIMPLE.id(),
 		QuestDialogAction.QUEST_REFUSE_SIMPLE.id(),
 		QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id());
-
-	private QuestE2eBatchAudit() {
-	}
 
 	/**
 	 * 触发动作可达时，任务 html 缺失页面才会被玩家真正触发加载失败；死动作路由的
@@ -104,16 +104,16 @@ public final class QuestE2eBatchAudit {
 			if (transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null) {
 				routedDialogIds.add(talk.dialogId());
 			}
-			if (transition.event() instanceof QuestEvent.QuestDialog dialog) {
-				routedDialogIds.add(dialog.dialogId());
+			if (transition.event() instanceof QuestEvent.QuestDialog(int dialogId2)) {
+				routedDialogIds.add(dialogId2);
 			}
 			for (AfterCommitAction action : transition.afterCommit()) {
-				if (action instanceof AfterCommitAction.ShowQuestDialog show) {
-					displayedPages.add(show.dialogId());
-				} else if (action instanceof AfterCommitAction.ShowQuestSelectionDialog show) {
-					displayedPages.add(show.dialogId());
-				} else if (action instanceof AfterCommitAction.ShowDialogWindow show) {
-					displayedPages.add(show.dialogId());
+				if (action instanceof AfterCommitAction.ShowQuestDialog(int dialogId1)) {
+					displayedPages.add(dialogId1);
+				} else if (action instanceof AfterCommitAction.ShowQuestSelectionDialog(int id)) {
+					displayedPages.add(id);
+				} else if (action instanceof AfterCommitAction.ShowDialogWindow(int dialogId)) {
+					displayedPages.add(dialogId);
 				}
 			}
 		}

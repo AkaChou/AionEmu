@@ -15,6 +15,7 @@ import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
+import lombok.NoArgsConstructor;
 
 //import com.jme.scene.TriMesh;
 
@@ -30,17 +31,11 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
  * @author Joshua Slack
  * @version $Id: BoundingBox.java,v 1.50 2007/09/22 16:46:35 irrisor Exp $
  */
+@NoArgsConstructor
 public class BoundingBox extends BoundingVolume {
 
 	/** 沿 X 轴半范围 / Half-extent along the X axis */
 	float xExtent, yExtent, zExtent;
-
-	/**
-	 * 默认构造，实例化空包围盒。
-	 * Default constructor instantiating an empty bounding box.
-	 */
-	public BoundingBox() {
-	}
 
 	/**
 	 * 以给定中心与三轴半长构造包围盒。
@@ -552,11 +547,7 @@ public class BoundingBox extends BoundingVolume {
 			return false;
 		} else if (center.y + yExtent < bb.center.y - bb.yExtent || center.y - yExtent > bb.center.y + bb.yExtent) {
 			return false;
-		} else if (center.z + zExtent < bb.center.z - bb.zExtent || center.z - zExtent > bb.center.z + bb.zExtent) {
-			return false;
-		} else {
-			return true;
-		}
+		} else return !(center.z + zExtent < bb.center.z - bb.zExtent) && !(center.z - zExtent > bb.center.z + bb.zExtent);
 	}
 
 	/**
@@ -662,11 +653,9 @@ public class BoundingBox extends BoundingVolume {
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
-		if (other instanceof Ray) {
-			Ray ray = (Ray) other;
+		if (other instanceof Ray ray) {
 			return collideWithRay(ray, results);
-		} else if (other instanceof Triangle) {
-			Triangle t = (Triangle) other;
+		} else if (other instanceof Triangle t) {
 			if (intersects(t.get1(), t.get2(), t.get3())) {
 				CollisionResult r = new CollisionResult();
 				results.addCollision(r);

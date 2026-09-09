@@ -33,9 +33,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -77,16 +74,16 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** warpath 任务 / warpath task */
         private final List<Future<?>> warpathTask = new ArrayList<Future<?>>();
-	
+
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
-        return (EngulfedOphidanBridgePlayerReward) engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
+        return engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
     }
-	
+
     private boolean containPlayer(Integer object) {
         return engulfedOphidanBridgeReward.containPlayer(object);
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -100,12 +97,12 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		switch (npcId) {
         }
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(0, storage.getItemCountByItemId(0));
 	}
-	
+
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         engulfedOphidanBridgeReward.setInstanceStartTime();
@@ -420,7 +417,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             }
         }, 1200000));
     }
-	
+
 	/**
 	 * 天族 / Elyos
 	 */
@@ -499,7 +496,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833951, 480.36932f, 516.76117f, 604.70245f, (byte) 58);
 		spawn(833951, 582.88556f, 481.7509f, 620.74567f, (byte) 84);
 	}
-	
+
 	/**
 	 * 魔族 / Asmodians
 	 */
@@ -578,7 +575,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833961, 480.36932f, 516.76117f, 604.70245f, (byte) 58);
 		spawn(833961, 582.88556f, 481.7509f, 620.74567f, (byte) 84);
 	}
-	
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         engulfedOphidanBridgeReward.setWinnerRace(race);
@@ -586,7 +583,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         reward();
         engulfedOphidanBridgeReward.sendPacket(5, null);
     }
-	
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -600,7 +597,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }
         sendEnterPacket(player);
     }
-	
+
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -627,7 +624,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-	
+
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -645,7 +642,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             }
         });
     }
-	
+
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
@@ -675,7 +672,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             });
     	}
     }
-	
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -690,7 +687,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         doors = instance.getDoors();
         startInstanceTask();
     }
-	
+
 	protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -704,9 +701,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			int abyssPoint = 3163;
 			int gloryPoint = 150;
 			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
+			playerReward.setRewardAp(abyssPoint);
+            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(engulfedOphidanBridgeReward.getWinnerRace())) {
                 abyssPoint += engulfedOphidanBridgeReward.AbyssReward(true, true);
                 gloryPoint += engulfedOphidanBridgeReward.GloryReward(true, true);
@@ -730,8 +727,8 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			ItemService.addItem(player, 188055394, 1);
             ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
+            AbyssPointsService.addAp(player, abyssPoint);
+            AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
         }
         for (Npc npc : instance.getNpcs()) {
@@ -753,7 +750,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
     }
-	
+
     private int getTime2() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -763,7 +760,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }
         return 0;
     }
-	
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -779,7 +776,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         engulfedOphidanBridgeReward.portToPosition(player);
         return true;
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -808,31 +805,31 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         updateScore(player, player, -points, false);
         return true;
     }
-	
+
 	private MutableInt getPvpKillsByRace(Race race) {
         return engulfedOphidanBridgeReward.getPvpKillsByRace(race);
     }
-	
+
     private MutableInt getPointsByRace(Race race) {
         return engulfedOphidanBridgeReward.getPointsByRace(race);
     }
-	
+
     private void addPointsByRace(Race race, int points) {
         engulfedOphidanBridgeReward.addPointsByRace(race, points);
     }
-	
+
     private void addPvpKillsByRace(Race race, int points) {
         engulfedOphidanBridgeReward.addPvpKillsByRace(race, points);
     }
-	
+
     private void addPointToPlayer(Player player, int points) {
         engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-	
+
     private void addPvPKillToPlayer(Player player) {
         engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
-	
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -890,7 +887,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		updateScore(player, npc, points, false);
 		return true;
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -906,7 +903,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			powerGenerator = 2;
 		}
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -931,7 +928,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }
         updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
@@ -943,12 +940,12 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
 		switch (npc.getNpcId()) {
-			case 701947: //Elyos Field Gun.
-			case 701949: //Elyos Field Gun.
+			case 701947: // 可以搭乘的天族大炮 / Elyos Field Gun.
+			case 701949: // 可以搭乘的天族大炮 / Elyos Field Gun.
                 GameEngineServices.skillEngine().getSkill(npc, 21065, 1, player).useNoAnimationSkill();
             break;
-			case 701948: //Asmodians Field Gun.
-			case 701950: //Asmodians Field Gun.
+			case 701948: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
+			case 701950: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
                 GameEngineServices.skillEngine().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
             break;
 			case 833935: //? ? .
@@ -1020,19 +1017,19 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }
 		updateScore(player, npc, point, false);
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -1044,27 +1041,27 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         stopInstanceTask();
         doors.clear();
     }
-	
+
     protected void openFirstDoors() {
         openDoor(176);
 		openDoor(177);
     }
-	
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
             door.setOpen(true);
         }
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1082,7 +1079,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1099,7 +1096,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1125,22 +1122,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
     private void stopInstanceTask() {
         for (Future<?> task : warpathTask) {
 			if (task != null) {
@@ -1148,7 +1130,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -1159,7 +1141,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     public InstanceReward<?> getInstanceReward() {
         return engulfedOphidanBridgeReward;
     }
-	
+
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
@@ -1170,7 +1152,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -1185,7 +1167,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
     }
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1196,7 +1178,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.

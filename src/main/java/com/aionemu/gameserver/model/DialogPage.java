@@ -68,10 +68,10 @@ public enum DialogPage {
 	/** 打开烙印之石强化 / Open stigma enchant */
 	OPEN_STIGMA_ENCHANT(DialogAction.OPEN_STIGMA_ENCHANT, 53);
 
-	private int id;
-	private DialogAction action;
+	private final int id;
+	private final DialogAction action;
 
-	private DialogPage(DialogAction action, int id) {
+	DialogPage(DialogAction action, int id) {
 		this.id = id;
 		this.action = action;
 	}

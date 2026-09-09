@@ -23,21 +23,20 @@ public class District_Group_TeleportAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-        	final Player player = (Player) creature;
+        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
 			if (MathUtil.isIn3dRange(getOwner(), creature, 5)) {
         		sendDistrictGroupRequest(player);
         	}
         }
     }
-	
+
 	public void sendDistrictGroupRequest(final Player player) {
         String message = "Accept use District Group Teleport ?";
         RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
@@ -46,7 +45,7 @@ public class District_Group_TeleportAI2 extends NpcAI2
 				switch (getNpcId()) {
 					case 833268:
 						switch (responder.getWorldId()) {
-						    case 400020000: //Belus.
+						    case 400020000: // 贝洛斯 / Belus.
 							    TeleportService2.teleportTo(responder, 400020000, 240.24854f, 1610.5688f, 1463.8889f, (byte) 86); //[Sylvan District]
 							break;
 							case 400040000: //Aspida.
@@ -62,7 +61,7 @@ public class District_Group_TeleportAI2 extends NpcAI2
 					break;
 					case 833269:
 						switch (responder.getWorldId()) {
-						    case 400020000: //Belus.
+						    case 400020000: // 贝洛斯 / Belus.
 							    TeleportService2.teleportTo(responder, 400020000, 1609.0776f, 1810.1611f, 1463.9395f, (byte) 112); //[Heirloom District]
 							break;
 							case 400040000: //Aspida.
@@ -78,7 +77,7 @@ public class District_Group_TeleportAI2 extends NpcAI2
 					break;
 					case 833270:
 						switch (responder.getWorldId()) {
-							case 400020000: //Belus.
+							case 400020000: // 贝洛斯 / Belus.
 							    TeleportService2.teleportTo(responder, 400020000, 1812.733f, 431.72452f, 1463.8632f, (byte) 85); //[Vernalium District]
 							break;
 							case 400040000: //Aspida.
@@ -94,7 +93,7 @@ public class District_Group_TeleportAI2 extends NpcAI2
 					break;
 					case 833271:
 						switch (responder.getWorldId()) {
-						    case 400020000: //Belus.
+						    case 400020000: // 贝洛斯 / Belus.
 							    TeleportService2.teleportTo(responder, 400020000, 438.7579f, 234.54915f, 1464.1918f, (byte) 58); //[Evergreen District]
 							break;
 							case 400040000: //Aspida.
@@ -119,7 +118,7 @@ public class District_Group_TeleportAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(902247, 0, 0, message));
         }
     }
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

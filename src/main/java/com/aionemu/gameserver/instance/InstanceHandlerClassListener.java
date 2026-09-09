@@ -71,9 +71,6 @@ public class InstanceHandlerClassListener implements ClassListener {
 		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 			return false;
 		}
-		if (!Modifier.isPublic(modifiers)) {
-			return false;
-		}
-		return true;
+		return Modifier.isPublic(modifiers);
 	}
 }

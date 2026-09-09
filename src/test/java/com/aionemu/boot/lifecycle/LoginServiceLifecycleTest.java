@@ -1,8 +1,5 @@
 package com.aionemu.boot.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyLoginConfigOverrides;
 import com.aionemu.boot.config.LegacyLoginProperties;
@@ -18,6 +15,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.DefaultApplicationArguments;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class LoginServiceLifecycleTest {
 
@@ -39,7 +38,7 @@ class LoginServiceLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycleProvider"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "runtimeBridgeProvider"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerRuntimeBridge.class, "processBridgeProvider"));
-        assertEquals(null, findFieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycle"));
+		assertNull(findFieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycle"));
     }
 
     @Test

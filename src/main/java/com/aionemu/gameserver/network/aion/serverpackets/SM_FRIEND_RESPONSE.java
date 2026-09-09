@@ -2,11 +2,13 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 好友操作响应包：添加/拒绝/已满等结果码与目标名。
  * Friend operation response: result code (added, denied, full, …) and target name.
  */
+@AllArgsConstructor
 public class SM_FRIEND_RESPONSE extends AionServerPacket {
 	/** 好友添加成功 / friend successfully added */
 	public static final int TARGET_ADDED = 0x00;
@@ -33,15 +35,6 @@ public class SM_FRIEND_RESPONSE extends AionServerPacket {
 
 	private final String player;
 	private final int code;
-
-	/**
-	 * @param playerName 目标玩家名 / target player name
-	 * @param messageType 结果码 / result code
-	 */
-	public SM_FRIEND_RESPONSE(String playerName, int messageType) {
-		player = playerName;
-		code = messageType;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

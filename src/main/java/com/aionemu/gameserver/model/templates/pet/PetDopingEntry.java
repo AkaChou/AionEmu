@@ -4,6 +4,9 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 宠物兴奋剂条目模板（静态数据/XML）。
@@ -13,8 +16,14 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "dope")
 @XmlAccessorType(XmlAccessType.NONE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class PetDopingEntry {
 
+	/**
+	 * @return 条目 ID / the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 
@@ -26,23 +35,6 @@ public class PetDopingEntry {
 
 	@XmlAttribute(name = "usescroll", required = true)
 	private int usescroll;
-
-	public PetDopingEntry() {
-	}
-
-	public PetDopingEntry(short id, boolean usedrink, boolean usefood, int usescroll) {
-		this.id = id;
-		this.usedrink = usedrink;
-		this.usefood = usefood;
-		this.usescroll = usescroll;
-	}
-
-	/**
-	 * @return 条目 ID / the id
-	 */
-	public short getId() {
-		return id;
-	}
 
 	/**
 	 * @return 是否使用饮品 / the usedrink

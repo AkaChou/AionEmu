@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.model.account;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 账号时间模型。
  * Account Time model.
@@ -12,53 +15,17 @@ public class AccountTime {
 	 * 累计在线时间（毫秒）。
 	 * Accumulated online time in millis
 	 */
+	@Getter
+	@Setter
 	private long accumulatedOnlineTime;
 
 	/**
 	 * 累计休息（离线）时间（毫秒）。
 	 * Accumulated rest(offline) time in millis
 	 */
+	@Getter
+	@Setter
 	private long accumulatedRestTime;
-
-	/**
-	 * 获取 dailyaccumulatedonline 时间 millis。
-	 * get daily accumulated online time in millis
-	 *
-	 * @return 毫秒数 / time in millis
-	 */
-	public long getAccumulatedOnlineTime() {
-		return accumulatedOnlineTime;
-	}
-
-	/**
-	 * 获取 dailyaccumulatedonline 时间 millis。
-	 * get daily accumulated online time in millis
-	 *
-	 * @param accumulatedOnlineTime 累计在线毫秒数 / time in millis
-	 */
-	public void setAccumulatedOnlineTime(long accumulatedOnlineTime) {
-		this.accumulatedOnlineTime = accumulatedOnlineTime;
-	}
-
-	/**
-	 * 获取 dailyaccumulatedrestoffline 时间 sincelogin。
-	 * get daily accumulated rest (offline) time since first login
-	 *
-	 * @return 毫秒数 / time in millis
-	 */
-	public long getAccumulatedRestTime() {
-		return accumulatedRestTime;
-	}
-
-	/**
-	 * 获取 dailyaccumulatedrestoffline 时间 sincelogin。
-	 * get daily accumulated rest (offline) time since first login
-	 *
-	 * @param accumulatedRestTime 累计休息毫秒数 / time in millis
-	 */
-	public void setAccumulatedRestTime(long accumulatedRestTime) {
-		this.accumulatedRestTime = accumulatedRestTime;
-	}
 
 	/**
 	 * 返回小时部分（向下取整），例如 1 小时 32 分钟返回 1 小时。

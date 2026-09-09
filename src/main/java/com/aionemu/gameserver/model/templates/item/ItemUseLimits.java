@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import lombok.Getter;
 
 /**
  * 物品使用限制模板：延迟、性别、军阶与可用区域。
@@ -30,15 +31,21 @@ public class ItemUseLimits {
 	@XmlAttribute
 	private String usearea;
 
+	/** 返回允许性别 / Returns the gender permitted */
+	@Getter
 	@XmlAttribute(name = "gender")
 	private Gender genderPermitted;
 
 	@XmlAttribute(name = "ride_usable")
 	private Boolean rideUsable;
 
+	/** 返回最小军阶 / Returns the min rank */
+	@Getter
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
 
+	/** 返回最大军阶 / Returns the max rank */
+	@Getter
 	@XmlAttribute(name = "rank_max")
 	private int maxRank = AbyssRankEnum.SUPREME_COMMANDER.getId();
 
@@ -78,11 +85,6 @@ public class ItemUseLimits {
 		return ownershipWorldId;
 	}
 
-	/** 返回允许性别 / Returns the gender permitted */
-	public Gender getGenderPermitted() {
-		return genderPermitted;
-	}
-
 	/**
 	 * 骑乘状态下是否可用。
 	 * Whether usable while riding.
@@ -96,18 +98,8 @@ public class ItemUseLimits {
 		return rideUsable;
 	}
 
-	/** 返回最小军阶 / Returns the min rank */
-	public int getMinRank() {
-		return minRank;
-	}
-
-	/** 返回最大军阶 / Returns the max rank */
-	public int getMaxRank() {
-		return maxRank;
-	}
-
 	/** 校验军阶 / Verify Rank */
 	public boolean verifyRank(int rank) {
-		return (minRank <= rank && maxRank >= rank) || rank >= minRank;
+		return rank >= minRank;
 	}
 }

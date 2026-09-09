@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -23,7 +22,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -48,7 +46,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** beshmundir 任务 / beshmundir task */
 		private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
 	/**
@@ -57,7 +55,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -247,7 +245,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -264,7 +262,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			GameEngineServices.skillEngine().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
 		}
     }
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -301,7 +299,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	static boolean canSummonRespondent(QuestState questState, long itemCount) {
 		return questState != null && questState.getStatus() == QuestStatus.START && itemCount > 0;
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000091, storage.getItemCountByItemId(185000091)); //Incinerator Key.
@@ -311,7 +309,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000095, storage.getItemCountByItemId(185000095)); //Supplication Chamber Key.
 		storage.decreaseByItemId(185000096, storage.getItemCountByItemId(185000096)); //Petition Chamber Key.
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -346,7 +344,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
-			
+
 			/**
 			 * Path To Macunbello's Refuge
 			 */
@@ -394,7 +392,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
 			    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			break;
-			
+
 			/**
 			 * Path To Garden Of The Entombed
 			 */
@@ -408,7 +406,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				deleteNpc(281648); //Sorcerer Haskin.
 				deleteNpc(281649); //Chopper.
 			break;
-			
+
 			/**
 			 * Path To The Prison Of Ice
 			 */
@@ -430,27 +428,20 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : beshmundirTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
+
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -462,14 +453,14 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * @param h 朝向 / h
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -479,14 +470,14 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -497,7 +488,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -518,7 +509,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -527,7 +518,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -544,21 +535,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-    private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -567,7 +544,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -593,13 +570,13 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -610,7 +587,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		movies.clear();
 		doors.clear();
     }
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -621,7 +598,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

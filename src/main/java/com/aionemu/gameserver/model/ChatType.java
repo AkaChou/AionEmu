@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * 聊天类型枚举。
  * Chat type enumeration.
@@ -58,7 +60,14 @@ public enum ChatType {
 	BRIGHT_YELLOW_CENTER(0x28, true);
 
 	private final int intValue;
-	private boolean sysMsg;
+	/**
+	 * 是否为全种族可见的系统消息类型。
+	 * Whether this is a system message readable by all races.
+	 *
+	 * @return 是系统消息则为 true / true if system message
+	 */
+	@Getter
+	private final boolean sysMsg;
 
 	/**
 	 * 以客户端整型表示构造聊天类型。
@@ -66,7 +75,7 @@ public enum ChatType {
 	 *
 	 * @param intValue 客户端整型值 / client integer value
 	 */
-	private ChatType(int intValue) {
+	ChatType(int intValue) {
 		this(intValue, false);
 	}
 
@@ -97,18 +106,8 @@ public enum ChatType {
 		throw new IllegalArgumentException("Unsupported chat type: " + integerValue);
 	}
 
-	private ChatType(int intValue, boolean sysMsg) {
+	ChatType(int intValue, boolean sysMsg) {
 		this.intValue = intValue;
 		this.sysMsg = sysMsg;
-	}
-
-	/**
-	 * 是否为全种族可见的系统消息类型。
-	 * Whether this is a system message readable by all races.
-	 *
-	 * @return 是系统消息则为 true / true if system message
-	 */
-	public boolean isSysMsg() {
-		return sysMsg;
 	}
 }

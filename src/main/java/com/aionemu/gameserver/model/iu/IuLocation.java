@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.iu.IuTemplate;
 import com.aionemu.gameserver.services.iuservice.Iu;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * IU 活动位置模型。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.iuservice.Iu;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class IuLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected IuTemplate template;
+	/** 返回激活的 iu / Returns the active iu */
+	@Getter
 	protected Iu<IuLocation> activeIu;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回已生成对象列表 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public IuLocation() {
-	}
 
 	public IuLocation(IuTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置激活的 iu / Sets the active iu */
@@ -44,28 +49,8 @@ public class IuLocation {
 		this.activeIu = iu;
 	}
 
-	/** 返回激活的 iu / Returns the active iu */
-	public Iu<IuLocation> getActiveIu() {
-		return activeIu;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final IuTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回已生成对象列表 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

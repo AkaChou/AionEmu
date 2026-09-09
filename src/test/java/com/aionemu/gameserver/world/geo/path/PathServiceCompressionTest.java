@@ -1,9 +1,5 @@
 package com.aionemu.gameserver.world.geo.path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class PathServiceCompressionTest {
 
@@ -51,8 +49,8 @@ class PathServiceCompressionTest {
 		float[] first = {1, 0, 0};
 		float[] target = {2, 0, 0};
 
-		assertEquals(null, PathService.simplifyPath(start, List.of(first, target),
-				(from, to) -> from == start && to == first));
+		assertNull(PathService.simplifyPath(start, List.of(first, target),
+			(from, to) -> from == start && to == first));
 	}
 
 	@Test
@@ -165,8 +163,8 @@ class PathServiceCompressionTest {
 		assertEquals(40, result[0][0]);
 		assertEquals(80, result[1][0]);
 		assertEquals(120, result[2][0]);
-		assertEquals(null, PathService.directGroundPath(new float[] {0, 0, 0}, new float[] {120, 0, 12},
-				(start, end) -> end[0] <= 40));
+		assertNull(PathService.directGroundPath(new float[]{0, 0, 0}, new float[]{120, 0, 12},
+			(start, end) -> end[0] <= 40));
 	}
 
 	@Test
@@ -174,8 +172,8 @@ class PathServiceCompressionTest {
 		float[] start = {0, 0, 0};
 
 		assertEquals(1, PathService.partialGroundPath(start, new float[] {10, 0, 0}, (from, to) -> true).length);
-		assertEquals(null, PathService.partialGroundPath(start, new float[] {0.05f, 0, 0}, (from, to) -> true));
-		assertEquals(null, PathService.partialGroundPath(start, new float[] {10, 0, 0}, (from, to) -> false));
+		assertNull(PathService.partialGroundPath(start, new float[]{0.05f, 0, 0}, (from, to) -> true));
+		assertNull(PathService.partialGroundPath(start, new float[]{10, 0, 0}, (from, to) -> false));
 	}
 
 	@Test
@@ -237,7 +235,7 @@ class PathServiceCompressionTest {
 		assertEquals(a, b);
 		assertEquals(0, PathService.pathCacheCell(0.4f));
 		assertEquals(1, PathService.pathCacheCell(1.4f));
-		assertFalse(a.equals(c));
+		assertNotEquals(a, c);
 	}
 
 	@Test

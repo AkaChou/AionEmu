@@ -8,5 +8,5 @@ package com.aionemu.gameserver.model.actions;
 public enum PlayerMode {
 
 	/** 骑乘 / Ride. */
-	RIDE, IN_ROLL, WINDSTREAM;
+	RIDE, IN_ROLL, WINDSTREAM
 }

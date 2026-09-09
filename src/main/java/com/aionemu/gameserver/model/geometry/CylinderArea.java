@@ -125,9 +125,6 @@ public class CylinderArea extends AbstractArea {
 		if (area.getMinZ() > getMaxZ() || area.getMaxZ() < getMinZ()) {
 			return false;
 		}
-		if (area.getDistance2D(centerX, centerY) < radius) {
-			return true;
-		}
-		return false;
+		return area.getDistance2D(centerX, centerY) < radius;
 	}
 }

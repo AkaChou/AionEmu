@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 物品改进（强化）模板：充能方式、价格与燃烧加成。
@@ -16,18 +17,34 @@ public class Improvement {
 	@XmlAttribute(name = "way", required = true)
 	private int way;
 
+	/**
+	 * @return 价格 2 / the price2
+	 */
+	@Getter
 	@XmlAttribute(name = "price2")
 	private int price2;
 
+	/**
+	 * @return 价格 1 / the price1
+	 */
+	@Getter
 	@XmlAttribute(name = "price1")
 	private int price1;
 
+	/** 返回 burn defend / Returns the burn defend */
+	@Getter
 	@XmlAttribute(name = "burn_defend")
 	private int burnDefend;
 
+	/** 返回 burn attack / Returns the burn attack */
+	@Getter
 	@XmlAttribute(name = "burn_attack")
 	private int burnAttack;
 
+	/**
+	 * @return 强化等级 / the level
+	 */
+	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 
@@ -35,41 +52,10 @@ public class Improvement {
 	private int recommend_rank;
 
 	/**
-	 * @return 强化等级 / the level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
 	 * @return 充能方式 / the charge way
 	 */
 	public int getChargeWay() {
 		return way;
-	}
-
-	/**
-	 * @return 价格 1 / the price1
-	 */
-	public int getPrice1() {
-		return price1;
-	}
-
-	/**
-	 * @return 价格 2 / the price2
-	 */
-	public int getPrice2() {
-		return price2;
-	}
-
-	/** 返回 burn attack / Returns the burn attack */
-	public int getBurnAttack() {
-		return burnAttack;
-	}
-
-	/** 返回 burn defend / Returns the burn defend */
-	public int getBurnDefend() {
-		return burnDefend;
 	}
 
 	/**

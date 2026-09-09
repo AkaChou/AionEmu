@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.stats.enums;
 
+import lombok.Getter;
+
 /**
  * 各职业基础体质值枚举。
  * Baseline health values by player class.
@@ -17,19 +19,10 @@ public enum HEALTH {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	private int value;
+	@Getter
+	private final int value;
 
-	private HEALTH(int value) {
+	HEALTH(int value) {
 		this.value = value;
-	}
-
-	/**
-	 * 获取该职业的基础属性值。
-	 * Returns the baseline attribute value for this class.
-	 *
-	 * @return 基础属性值 / baseline attribute value
-	 */
-	public int getValue() {
-		return value;
 	}
 }

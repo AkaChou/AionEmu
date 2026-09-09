@@ -2,19 +2,14 @@ package com.aionemu.commons.utils.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.NoArgsConstructor;
 
 /**
  * 基于 {@link ArrayList} 的 int 友好列表。
  * Int-friendly list backed by {@link ArrayList}.
  */
+@NoArgsConstructor
 public class IntArrayList extends ArrayList<Integer> {
-
-    /**
-     * 创建空列表。
-     * Create an empty list.
-     */
-    public IntArrayList() {
-    }
 
     /**
      * 用给定集合初始化。

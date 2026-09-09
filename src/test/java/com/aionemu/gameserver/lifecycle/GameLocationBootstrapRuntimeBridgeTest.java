@@ -206,21 +206,21 @@ class GameLocationBootstrapRuntimeBridgeTest {
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "throwingProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                throw exception;
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "throwingProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				throw exception;
+			}
+		);
     }
 
     private static final class ProviderUsedException extends RuntimeException {

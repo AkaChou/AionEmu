@@ -27,7 +27,7 @@ public class Shadow_Of_Oblivion_66AI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 70) {
 			ShadowOfOblivionType();
@@ -35,7 +35,7 @@ public class Shadow_Of_Oblivion_66AI2 extends AggressiveNpcAI2
 			AI2Actions.deleteOwner(this);
 		}
 	}
-	
+
 	private void announceShadowOfOblivion() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -47,21 +47,21 @@ public class Shadow_Of_Oblivion_66AI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void ShadowOfOblivionType() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 18277, 60, getOwner()).useNoAnimationSkill(); //Oblivion.
 		switch (Rnd.get(1, 4)) {
 			case 1:
-				spawn(244491, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(244491, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 			case 2:
-				spawn(244492, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(244492, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 			case 3:
-				spawn(244493, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(244493, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 			case 4:
-				spawn(244494, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(244494, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			break;
 		}
 	}

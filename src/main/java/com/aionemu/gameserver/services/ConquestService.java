@@ -109,7 +109,7 @@ public class ConquestService {
 			public void run() {
 				stopConquest(id);
 			}
-		}, CustomConfig.CONQUEST_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.CONQUEST_DURATION * 3600 * 1000);
 	}
 
 	/**

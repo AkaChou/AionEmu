@@ -9,6 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 传送门 Use 模板（静态数据/XML）。
@@ -22,8 +24,14 @@ public class PortalUse {
 
 	@XmlElement(name = "portal_path")
 	protected List<PortalPath> portalPath;
+	/** 返回 NPC ID / Returns the npc id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "npc_id")
 	protected int npcId;
+	/** 返回攻城 ID / Returns the siege id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "siege_id")
 	protected int siegeId;
 
@@ -42,25 +50,5 @@ public class PortalUse {
 			}
 		}
 		return null;
-	}
-
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return npcId;
-	}
-
-	/** 设置 npc id / Sets the npc id */
-	public void setNpcId(int value) {
-		this.npcId = value;
-	}
-
-	/** 返回攻城 ID / Returns the siege id */
-	public int getSiegeId() {
-		return siegeId;
-	}
-
-	/** 设置 siege id / Sets the siege id */
-	public void setSiegeId(int value) {
-		this.siegeId = value;
 	}
 }

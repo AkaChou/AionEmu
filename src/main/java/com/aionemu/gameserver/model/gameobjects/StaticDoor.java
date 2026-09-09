@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorState;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 静态 Door 游戏对象。
@@ -20,7 +21,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class StaticDoor extends StaticObject {
 
-	private EnumSet<StaticDoorState> states;
+	/** 返回状态集合 / Returns the states */
+	@Getter
+	private final EnumSet<StaticDoorState> states;
 
 	/**
 	 * 构造静态门。
@@ -45,11 +48,6 @@ public class StaticDoor extends StaticObject {
 	 */
 	public boolean isOpen() {
 		return states.contains(StaticDoorState.OPENED);
-	}
-
-	/** 返回状态集合 / Returns the states */
-	public EnumSet<StaticDoorState> getStates() {
-		return states;
 	}
 
 	/**

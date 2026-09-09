@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.team.legion;
 
+import lombok.Getter;
+
 /**
  * 军团徽章类型枚举。
  * Legion Emblem Type enumeration.
@@ -12,14 +14,11 @@ public enum LegionEmblemType {
 	/** 自定义 / Custom. */
 	CUSTOM(0x80);
 
-	private byte value;
-
-	private LegionEmblemType(int value) {
-		this.value = (byte) value;
-	}
-
 	/** 获取值。 / Returns the value. */
-	public byte getValue() {
-		return value;
+	@Getter
+	private final byte value;
+
+	LegionEmblemType(int value) {
+		this.value = (byte) value;
 	}
 }

@@ -17,6 +17,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 称号列表。
@@ -26,21 +28,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class TitleList {
 
 	private final Map<Integer, Title> titles;
+	/** 设置所有者 / Sets the owner*/
+	@Getter
+	@Setter
 	private Player owner;
 
 	public TitleList() {
 		this.titles = new HashMap<>();
 		this.owner = null;
-	}
-
-	/** 设置所有者 / Sets the owner*/
-	public void setOwner(Player owner) {
-		this.owner = owner;
-	}
-
-	/** 返回所有者 / Returns the owner*/
-	public Player getOwner() {
-		return owner;
 	}
 
 	/** 是否包含。 / Contains. */

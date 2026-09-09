@@ -58,7 +58,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	/** 副本奖励对象 / instance reward object */
 	protected PvPArenaReward instanceReward;
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -74,8 +74,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		ownerReward.applyBoostMoraleEffect(player);
 		sendPacket();
 		if (lastAttacker != null && lastAttacker != player) {
-			if (lastAttacker instanceof Player) {
-				Player winner = (Player) lastAttacker;
+			if (lastAttacker instanceof Player winner) {
 				PvPArenaPlayerReward reward = getPlayerReward(winner.getObjectId());
 				reward.addPvPKillToPlayer();
 				int worldId = winner.getWorldId();
@@ -85,7 +84,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		updatePoints(player);
 		return true;
 	}
-	
+
 	private void updatePoints(Creature victim) {
 		if (!instanceReward.isStartProgress()) {
 			return;
@@ -109,8 +108,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			Creature master = ((Creature) damager.getAttacker()).getMaster();
 			if (master == null) {
 				continue;
-			} if (master instanceof Player) {
-				Player attaker = (Player) master;
+			} if (master instanceof Player attaker) {
 				int rewardPoints = (victim instanceof Player && instanceReward.getRound() == 3 && rank == 0 ? bonus * 3 : bonus) * damager.getDamage() / victim.getAggroList().getTotalDamage();
 				getPlayerReward(attaker.getObjectId()).addPoints(rewardPoints);
 				sendSystemMsg(attaker, victim, rewardPoints);
@@ -129,13 +127,13 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * creature
 	 * rewardPoints
 	 */
-	
+
 	protected void sendSystemMsg(Player player, Creature creature, int rewardPoints) {
 		int nameId = creature.getObjectTemplate().getNameId();
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, nameId == 0 ? creature.getName() : name, rewardPoints));
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -157,7 +155,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			spawnCursedRelics(30000);
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -176,7 +174,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		sendPacket();
 	}
-	
+
 	private void sendPacket(final AionServerPacket packet) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -191,7 +189,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void spawnBlessedRelics(int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -206,7 +204,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void spawnCursedRelics(int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -221,7 +219,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private int getNpcBonus(int npcId) {
 		switch (npcId) {
 			case 243666: //Black Claw Scratcher.
@@ -254,7 +252,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				return 0;
 		}
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -265,7 +263,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -276,7 +274,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		getPlayerReward(player.getObjectId()).updateLogOutTime();
 	}
-	
+
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
@@ -287,7 +285,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public void onPlayerLogin(Player player) {
 		getPlayerReward(player.getObjectId()).updateBonusTime();
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -370,7 +368,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
             }
         }, 120000);
     }
-	
+
 	private boolean canStart() {
 		if (instance.getPlayersInside().size() < 2) {
 			onInstanceDestroy();
@@ -391,7 +389,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * 阵营 / race
 	 * time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -417,7 +415,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -428,7 +426,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	private void openDoors() {
 		for (StaticDoor door : instance.getDoors().values()) {
 			if (door != null) {
@@ -436,7 +434,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
@@ -447,12 +445,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * visible object
 	 * result
 	 */
-	
+
 	protected PvPArenaPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
-		return (PvPArenaPlayerReward) instanceReward.getPlayerReward(object);
+		return instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -470,7 +468,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -490,17 +488,17 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * 向副本内玩家发送数据包。
 	 * Send a packet to players in the instance.
 	 */
-	
+
 	protected void sendPacket() {
 		instanceReward.sendPacket();
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -510,7 +508,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 		instanceReward.clear();
 	}
-	
+
 	private void changeZone() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -530,7 +528,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * 处理 reward。
 	 * Handle reward.
 	 */
-	
+
 	protected void reward() {
 		for (Player player : instance.getPlayersInside()) {
 			if (PlayerActions.isAlreadyDead(player))
@@ -560,7 +558,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				}
 				int mithrilMedal = reward.getMithrilMedal();
 				if (mithrilMedal != 0) {
-					ItemService.addItem(player, 186000147, mithrilMedal); 
+					ItemService.addItem(player, 186000147, mithrilMedal);
 				}
 				int platinumMedal = reward.getPlatinumMedal();
 				if (platinumMedal != 0) {
@@ -603,7 +601,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * 处理 spawnRings。
 	 * Handle spawnRings.
 	 */
-	
+
 	protected void spawnRings() {
 	}
 	/**
@@ -615,7 +613,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * @param z Z 坐标 / Z
 	 * result
 	 */
-	
+
 	protected Npc getNpc(float x, float y, float z) {
 		if (!isInstanceDestroyed) {
 			for (Npc npc : instance.getNpcs()) {
@@ -627,7 +625,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -741,7 +739,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * skill id
 	 * level
 	 */
-	
+
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
 		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}

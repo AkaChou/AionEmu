@@ -28,7 +28,7 @@ public class NightmareCircusData {
 	private List<NightmareCircusTemplate> nightmareCircusTemplates;
 
 	@XmlTransient
-	private Map<Integer, NightmareCircusLocation> nightmareCircus = new LinkedHashMap<Integer, NightmareCircusLocation>();
+	private final Map<Integer, NightmareCircusLocation> nightmareCircus = new LinkedHashMap<Integer, NightmareCircusLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为按 ID 索引的地点映射。

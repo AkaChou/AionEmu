@@ -22,7 +22,7 @@ public class BruteForceProtector {
     class FailedLoginInfo {
 
         private int count;
-        private long time;
+        private final long time;
 
         /**
          * @param count 失败次数 / failure count
@@ -73,7 +73,7 @@ public class BruteForceProtector {
      */
     public boolean addFailedConnect(String ip) {
         FailedLoginInfo failed = failedConnections.get(ip);
-        if (failed == null || System.currentTimeMillis() - failed.getTime() > Config.WRONG_LOGIN_BAN_TIME * 1000 * 60) {
+        if (failed == null || System.currentTimeMillis() - failed.getTime() > (long) Config.WRONG_LOGIN_BAN_TIME * 1000 * 60) {
             failedConnections.put(ip, new FailedLoginInfo(1, System.currentTimeMillis()));
         } else {
             if (failed.getCount() >= Config.LOGIN_TRY_BEFORE_BAN) {

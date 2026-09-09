@@ -27,13 +27,12 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19358, 60, getOwner()).useNoAnimationSkill();
@@ -71,7 +70,7 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

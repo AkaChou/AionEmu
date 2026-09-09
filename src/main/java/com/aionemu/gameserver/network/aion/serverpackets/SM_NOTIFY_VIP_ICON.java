@@ -3,11 +3,14 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 通知客户端显示/刷新玩家的 VIP 图标状态。
  * Notifies the client to show/refresh a player's VIP icon state.
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class SM_NOTIFY_VIP_ICON extends AionServerPacket {
 
 	private final int objectId;
@@ -20,10 +23,6 @@ public class SM_NOTIFY_VIP_ICON extends AionServerPacket {
 	 */
 	public SM_NOTIFY_VIP_ICON(Player player) {
 		this(player.getObjectId());
-	}
-
-	SM_NOTIFY_VIP_ICON(int objectId) {
-		this.objectId = objectId;
 	}
 
 	@Override

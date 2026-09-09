@@ -50,8 +50,8 @@ public class ThreadPoolManager implements Executor {
      * 定时任务线程池执行器。
      * Scheduled task thread-pool executor.
      */
-    private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
-    private ListeningScheduledExecutorService scheduledThreadPool;
+    private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+    private final ListeningScheduledExecutorService scheduledThreadPool;
 
     /**
      * 数据包处理线程池执行器。

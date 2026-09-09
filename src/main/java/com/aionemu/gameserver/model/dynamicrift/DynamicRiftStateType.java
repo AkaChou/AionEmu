@@ -11,5 +11,5 @@ public enum DynamicRiftStateType {
 	/** 打开 / Open. */
 	OPEN,
 	/** 关闭 / Closed */
-	CLOSED;
+	CLOSED
 }

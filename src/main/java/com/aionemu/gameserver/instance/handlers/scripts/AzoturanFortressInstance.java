@@ -37,7 +37,7 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 	
 	private void shadowGuard() {
 		for (Player p: instance.getPlayersInside()) {
-			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(274); //Shadow Guard.
+			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(274); // 影子之保护 / Shadow Guard.
 			Effect e = new Effect(p, p, st, 1, st.getEffectsDuration(9));
 			e.initialize();
 			e.applyEffect();
@@ -46,7 +46,7 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 	
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(274); //Shadow Guard.
+		effectController.removeEffect(274); // 影子之保护 / Shadow Guard.
 	}
 	
 	/**

@@ -39,6 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 
 /**
  * 物品分组奖励数据容器，持有制作 / 魔石 / 食物 / 矿石 / 采集 / 宠物饲料等奖励组。
@@ -57,15 +58,23 @@ import java.util.Set;
 public class ItemGroupsData {
 	static int RECIPE_UPPER = 40;
 
+	/** 制作材料组 / craft 材料 group */
+	@Getter
 	@XmlElement(name = "craft_materials")
 	protected CraftItemGroup craftMaterials;
 
+	/** 制作商店组 / craft shop group */
+	@Getter
 	@XmlElement(name = "craft_shop")
 	protected CraftItemGroup craftShop;
 
+	/** 制作捆包组 / craft 捆包 group */
+	@Getter
 	@XmlElement(name = "craft_bundles")
 	protected CraftRecipeGroup craftBundles;
 
+	/** 制作配方组 / craft recipes group */
+	@Getter
 	@XmlElement(name = "craft_recipes")
 	protected CraftRecipeGroup craftRecipes;
 
@@ -198,14 +207,32 @@ public class ItemGroupsData {
 	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftBundlesBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
 	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftRecipesBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
 
+	/** 全部制作加成组 / all craft bonus groups */
+	@Getter
 	BonusItemGroup[] craftGroups;
+	/** 全部魔石加成组 / all manastone bonus groups */
+	@Getter
 	BonusItemGroup[] manastoneGroups;
+	/** 勋章加成组 / medal bonus groups */
+	@Getter
 	BonusItemGroup[] medalGroups;
+	/** 全部食物加成组 / all food bonus groups */
+	@Getter
 	BonusItemGroup[] foodGroups;
+	/** 全部药品加成组 / all medicine bonus groups */
+	@Getter
 	BonusItemGroup[] medicineGroups;
+	/** 全部矿石加成组 / all ore bonus groups */
+	@Getter
 	BonusItemGroup[] oreGroups;
+	/** 全部采集加成组 / all gather bonus groups */
+	@Getter
 	BonusItemGroup[] gatherGroups;
+	/** 强化加成组 / enchant bonus groups */
+	@Getter
 	BonusItemGroup[] enchantGroups;
+	/** 首领加成组 / boss bonus groups */
+	@Getter
 	BonusItemGroup[] bossGroups;
 	Map<FoodType, Set<Integer>> petFood = new HashMap<FoodType, Set<Integer>>();
 
@@ -268,8 +295,7 @@ public class ItemGroupsData {
 
 	void MapCraftReward(Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder, CraftReward reward) {
 		int lowerBound = 0, upperBound = 0;
-		if (reward instanceof CraftRecipe) {
-			CraftRecipe recipe = (CraftRecipe) reward;
+		if (reward instanceof CraftRecipe recipe) {
 			lowerBound = recipe.getLevel();
 			upperBound = lowerBound + RECIPE_UPPER;
 			if (upperBound / 100 != lowerBound / 100) {
@@ -572,7 +598,7 @@ public class ItemGroupsData {
 		return gatherRare.getChance();
 	}
 
-	/** 唯一采集物 / 唯一采集物 */
+	/** 唯一采集物 / Unique gathering items */
 	public Collection<ItemRaceEntry> getGatherUnique() {
 		return gatherUnique.getItems();
 	}
@@ -622,71 +648,6 @@ public class ItemGroupsData {
 		return boss.getChance();
 	}
 
-	/** 制作材料组 / craft 材料 group */
-	public CraftItemGroup getCraftMaterials() {
-		return craftMaterials;
-	}
-
-	/** 制作商店组 / craft shop group */
-	public CraftItemGroup getCraftShop() {
-		return craftShop;
-	}
-
-	/** 制作捆包组 / craft 捆包 group */
-	public CraftRecipeGroup getCraftBundles() {
-		return craftBundles;
-	}
-
-	/** 制作配方组 / craft recipes group */
-	public CraftRecipeGroup getCraftRecipes() {
-		return craftRecipes;
-	}
-
-	/** 全部制作加成组 / all craft bonus groups */
-	public BonusItemGroup[] getCraftGroups() {
-		return craftGroups;
-	}
-
-	/** 全部魔石加成组 / all manastone bonus groups */
-	public BonusItemGroup[] getManastoneGroups() {
-		return manastoneGroups;
-	}
-
-	/** 勋章加成组 / medal bonus groups */
-	public BonusItemGroup[] getMedalGroups() {
-		return medalGroups;
-	}
-
-	/** 全部食物加成组 / all food bonus groups */
-	public BonusItemGroup[] getFoodGroups() {
-		return foodGroups;
-	}
-
-	/** 全部药品加成组 / all medicine bonus groups */
-	public BonusItemGroup[] getMedicineGroups() {
-		return medicineGroups;
-	}
-
-	/** 全部矿石加成组 / all ore bonus groups */
-	public BonusItemGroup[] getOreGroups() {
-		return oreGroups;
-	}
-
-	/** 全部采集加成组 / all gather bonus groups */
-	public BonusItemGroup[] getGatherGroups() {
-		return gatherGroups;
-	}
-
-	/** 强化加成组 / enchant bonus groups */
-	public BonusItemGroup[] getEnchantGroups() {
-		return enchantGroups;
-	}
-
-	/** 首领加成组 / boss bonus groups */
-	public BonusItemGroup[] getBossGroups() {
-		return bossGroups;
-	}
-
 	/**
 	 * 判断物品是否属于指定宠物饲料类型（排除黑名单与臭食）。
 	 * Returns whether the item is food of the given pet food type (excluding blacklist and stinky items).
@@ -729,10 +690,7 @@ public class ItemGroupsData {
 			return true;
 		}
 		food = petFood.get(FoodType.THORNS);
-		if (food.contains(itemId)) {
-			return true;
-		}
-		return false;
+		return food.contains(itemId);
 	}
 
 	private List<ItemRaceEntry> getPetFood(FoodType foodType) {

@@ -1,15 +1,25 @@
 package com.aionemu.gameserver.model.utils3d;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
 /**
  * 三维点，用于 3D 工具逻辑。
  * Point 3D for utils 3D logic.
  *
  * @author M@xx modified by Wakizashi
  */
+@AllArgsConstructor
 public class Point3D {
 
+	/** 返回 X 坐标 / Returns the x */
+	@Getter
 	public double x;
+	/** 返回 Y 坐标 / Returns the y */
+	@Getter
 	public double y;
+	/** 返回 Z 坐标 / Returns the z */
+	@Getter
 	public double z;
 
 	public Point3D() {
@@ -18,16 +28,10 @@ public class Point3D {
 		this.z = 0.0;
 	}
 
-	public Point3D(double x, double y, double z) {
+	public Point3D(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-
-	public Point3D(float x, float y, float z) {
-		this.x = (double) x;
-		this.y = (double) y;
-		this.z = (double) z;
 	}
 
 	/** 计算与另一点的距离 / distance. */
@@ -42,20 +46,5 @@ public class Point3D {
 	@Override
 	public String toString() {
 		return "x=" + x + ", y=" + y + ", z=" + z;
-	}
-
-	/** 返回 X 坐标 / Returns the x */
-	public double getX() {
-		return x;
-	}
-
-	/** 返回 Y 坐标 / Returns the y */
-	public double getY() {
-		return y;
-	}
-
-	/** 返回 Z 坐标 / Returns the z */
-	public double getZ() {
-		return z;
 	}
 }

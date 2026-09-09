@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.network;
 
 import java.nio.ByteBuffer;
+import lombok.Getter;
 
 /**
  * 客户端/服务端加解密密钥对，基于 baseKey 生成并随包长度滚动更新。
@@ -39,6 +40,7 @@ public class EncryptionKeyPair {
 	 * 用于生成客户端/服务端密钥的基础密钥。
 	 * Base key used to generate client/server keys.
 	 */
+	@Getter
 	private int baseKey = 0;
 
 	/**
@@ -51,7 +53,7 @@ public class EncryptionKeyPair {
 	 * 上次使用密钥的时间戳。
 	 * Timestamp of last key use.
 	 */
-	private long lastUpdate;
+	private final long lastUpdate;
 
 	/**
 	 * 基于 baseKey 初始化客户端/服务端加密密钥。
@@ -69,16 +71,6 @@ public class EncryptionKeyPair {
 		this.keys[CLIENT] = new byte[this.keys[SERVER].length];
 		System.arraycopy(this.keys[SERVER], 0, this.keys[CLIENT], 0, this.keys[SERVER].length);
 		this.lastUpdate = System.currentTimeMillis();
-	}
-
-	/**
-	 * 获取生成密钥对所用的 baseKey。
-	 * Returns the base key used to generate the key pair.
-	 *
-	 * base key
-	 */
-	public int getBaseKey() {
-		return baseKey;
 	}
 
 	/**

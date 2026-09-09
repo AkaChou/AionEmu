@@ -8,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.StaticObject;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 任务事件处理上下文包，携带玩家、目标对象、任务 ID 与对话框 ID 等运行时信息。
@@ -18,14 +20,20 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 public class QuestEnv {
 
 	/** 事件关联的可见目标（NPC/采集物/静态物等）。 Visible target related to the event (NPC/gatherable/static object, etc.). */
+	@Getter
+	@Setter
 	private VisibleObject visibleObject;
 	/** 触发事件的玩家。 Player who triggered the event. */
+	@Getter
+	@Setter
 	private Player player;
 	/** 任务 ID。 Quest id. */
 	private int questId;
 	/** 交互 ID / interaction id */
 	private int dialogId;
 	/** 扩展奖励索引。 Extended reward index. */
+	@Getter
+	@Setter
 	private int extendedRewardIndex;
 
 	/**
@@ -43,46 +51,6 @@ public class QuestEnv {
 		this.player = player;
 		this.questId = questId;
 		this.dialogId = dialogId;
-	}
-
-	/**
-	 * 返回事件目标可见对象。
-	 * Returns the event target visible object.
-	 *
-	 * @return 可见对象 / Visible object
-	 */
-	public VisibleObject getVisibleObject() {
-		return visibleObject;
-	}
-
-	/**
-	 * 设置事件目标可见对象。
-	 * Sets the event target visible object.
-	 *
-	 * @param visibleObject 可见对象 / Visible object
-	 */
-	public void setVisibleObject(VisibleObject visibleObject) {
-		this.visibleObject = visibleObject;
-	}
-
-	/**
-	 * 返回触发事件的玩家。
-	 * Returns the player who triggered the event.
-	 *
-	 * @return 玩家 / Player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
-	 * 设置触发事件的玩家。
-	 * Sets the player who triggered the event.
-	 *
-	 * @param player 玩家 / Player
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	/**
@@ -153,28 +121,8 @@ public class QuestEnv {
 		} else if (visibleObject instanceof Gatherable) {
 			return ((Gatherable) visibleObject).getObjectTemplate().getTemplateId();
 		} else if (visibleObject instanceof StaticObject) {
-			return ((StaticObject) visibleObject).getObjectTemplate().getTemplateId();
+			return visibleObject.getObjectTemplate().getTemplateId();
 		}
 		return 0;
-	}
-
-	/**
-	 * 设置扩展奖励索引。
-	 * Sets the extended reward index.
-	 *
-	 * @param index 奖励索引 / Reward index
-	 */
-	public void setExtendedRewardIndex(int index) {
-		this.extendedRewardIndex = index;
-	}
-
-	/**
-	 * 返回扩展奖励索引。
-	 * Returns the extended reward index.
-	 *
-	 * @return 奖励索引 / Reward index
-	 */
-	public int getExtendedRewardIndex() {
-		return this.extendedRewardIndex;
 	}
 }

@@ -22,5 +22,5 @@ public enum NpcRank {
 	/** 老兵 / Veteran */
 	VETERAN,
 	/** 大师 / Master */
-	MASTER;
+	MASTER
 }

@@ -848,8 +848,7 @@ public class AttackUtil {
 		int damages = 0;
 		int bonus = 0;
 
-		if (func.equals(Func.PERCENT) && effector instanceof Npc) {
-			Npc npc = (Npc) effector;
+		if (func.equals(Func.PERCENT) && effector instanceof Npc npc) {
 			int rolledAttack = npc.getObjectTemplate().getStatsTemplate() != null
 					&& npc.getObjectTemplate().getStatsTemplate().hasRetailDamageRange()
 							? StatFunctions.rollNpcAttackDamage(npc.getObjectTemplate().getStatsTemplate().getMinDamage(),
@@ -1214,7 +1213,7 @@ public class AttackUtil {
 		case 519: // Explosion Of Rage I.
 		case 520: // Explosion Of Rage II.
 		case 521: // Explosion Of Rage III.
-		case 522: // Explosion Of Rage IV.
+		case 522: // 激怒爆炸 IV 效果 / Explosion Of Rage IV.
 		case 523: // Explosion Of Rage V.
 		case 524: // Explosion Of Rage VI.
 		case 525: // Explosion Of Rage VII.
@@ -1380,10 +1379,10 @@ public class AttackUtil {
 		case 3413: // Binding Rune VIII.
 		case 3414: // Binding Rune IX.
 			// 拉拽效果 / Pulled Effect
-		case 326: // Sweeping Hook.
-		case 2967: // Illusion Chains.
+		case 326: // 守护星之擒拿 / Sweeping Hook.
+		case 2967: // 幻影摄捕 I / Illusion Chains.
 		case 4721: // [ArchDaeva] Illusion Chains 5.1
-		case 3071: // Ensnaring Blow.
+		case 3071: // 活捉 I / Ensnaring Blow.
 		case 3123: // Doom Lure.
 		case 3162: // Divine Grasp I.
 		case 3163: // Divine Grasp II.

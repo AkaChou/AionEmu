@@ -16,7 +16,7 @@ public enum UseTarget {
 	/** 全部 / All. */
 	ALL, WING, PLUME, OTHER, ARMOR, WEAPON, BRACELET, ACCESSORY, EQUIPMENT;
 
-	private UseTarget() {
+	UseTarget() {
 	}
 
 	/** 值。 / Value. */

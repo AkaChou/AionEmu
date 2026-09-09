@@ -69,9 +69,9 @@ class QuestInteractionObjectCatalogTest {
 				}
 				boolean eligible = transitions.stream().anyMatch(candidate ->
 					Objects.equals(candidate.sourceNode(), transition.sourceNode())
-						&& candidate.event() instanceof QuestEvent.CanAct canAct
-						&& canAct.templateId() == talk.npcId()
-						&& "ACTION_ITEM_USE".equals(canAct.actionType()));
+						&& candidate.event() instanceof QuestEvent.CanAct(int templateId, String actionType)
+						&& templateId == talk.npcId()
+						&& "ACTION_ITEM_USE".equals(actionType));
 				if (!eligible) {
 					missing.add(definition.id() + ":" + transition.sourceNode() + ":" + talk.npcId());
 				}
@@ -96,9 +96,9 @@ class QuestInteractionObjectCatalogTest {
 					continue;
 				}
 				boolean eligible = transitions.stream().anyMatch(transition -> {
-					if (!(transition.event() instanceof QuestEvent.CanAct canAct)
-							|| canAct.templateId() != drop.npcId()
-							|| !"ACTION_ITEM_USE".equals(canAct.actionType())) {
+					if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
+							|| templateId != drop.npcId()
+							|| !"ACTION_ITEM_USE".equals(actionType)) {
 						return false;
 					}
 					return definition.definition().nodes().stream()
@@ -134,8 +134,8 @@ class QuestInteractionObjectCatalogTest {
 			.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 700106));
 		assertTrue(definition.definition().transitions().stream()
-			.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
-				&& canAct.templateId() == 700106 && "ACTION_ITEM_USE".equals(canAct.actionType())));
+			.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType)
+				&& templateId == 700106 && "ACTION_ITEM_USE".equals(actionType)));
 		assertEquals("quest_use_item", npcAi(700106));
 		assertDoesNotThrow(() -> QuestInteractionObjectValidator.validate(dispatcher,
 			templateId -> templateId == 700106 ? "quest_use_item" : null));

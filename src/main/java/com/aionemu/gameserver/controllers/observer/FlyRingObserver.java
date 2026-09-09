@@ -21,9 +21,9 @@ import com.aionemu.gameserver.utils.MathUtil;
  */
 public class FlyRingObserver extends ActionObserver {
 	/** 被观察玩家 / Observed player */
-	private Player player;
+	private final Player player;
 	/** 飞行环 / Fly ring */
-	private FlyRing ring;
+	private final FlyRing ring;
 	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
 	/** 奥德之翼技能模板 / Wings Of Aether skill template */

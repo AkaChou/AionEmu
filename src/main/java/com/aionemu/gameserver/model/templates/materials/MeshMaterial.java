@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Mesh 材料模板（静态数据/XML）。
@@ -24,11 +25,7 @@ public class MeshMaterial {
 	protected String path;
 
 	/** 区域名称。 / Zone name. */
+	@Getter
 	@XmlAttribute(name = "zone")
 	private String zoneName;
-
-	/** 获取区域名称。 / Returns the zone name. */
-	public String getZoneName() {
-		return zoneName;
-	}
 }

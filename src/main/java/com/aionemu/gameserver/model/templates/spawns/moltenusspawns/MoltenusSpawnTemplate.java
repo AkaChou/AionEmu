@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 熔岩魔刷新点模板（静态数据/XML）。
@@ -13,6 +15,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class MoltenusSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private MoltenusStateType moltenusType;
 
@@ -25,19 +30,9 @@ public class MoltenusSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回 m state type / Returns the m state type */
 	public MoltenusStateType getMStateType() {
 		return moltenusType;
-	}
-
-	/** 设置 id / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置 m state type / Sets the m state type */

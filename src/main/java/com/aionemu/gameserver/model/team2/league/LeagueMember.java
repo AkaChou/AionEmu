@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.team2.league;
 
 import com.aionemu.gameserver.model.team2.TeamMember;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
+import lombok.AllArgsConstructor;
 
 /**
  * 战团成员，用于团队 2 相关逻辑。
@@ -9,14 +10,10 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class LeagueMember implements TeamMember<PlayerAlliance> {
 	private final PlayerAlliance alliance;
-	private int leaguePosition;
-
-	public LeagueMember(PlayerAlliance alliance, int position) {
-		this.alliance = alliance;
-		this.leaguePosition = position;
-	}
+	private final int leaguePosition;
 
 	/** 返回对象 ID / Returns the object id */
 	@Override

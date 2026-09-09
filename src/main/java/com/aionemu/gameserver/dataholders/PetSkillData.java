@@ -28,10 +28,10 @@ public class PetSkillData {
 	private List<PetSkillTemplate> petSkills;
 
 	/** 指令技能 → (宠物 NPC ID → 技能 ID) 映射 / order skill → (pet npc id → skill id) */
-	private IntObjectHashMap<IntIntHashMap> petSkillData = new IntObjectHashMap<IntIntHashMap>();
+	private final IntObjectHashMap<IntIntHashMap> petSkillData = new IntObjectHashMap<IntIntHashMap>();
 
 	/** 宠物 NPC ID → 技能 ID 列表 / pet npc id → skill id list */
-	private IntObjectHashMap<IntArrayList> petSkillsMap = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> petSkillsMap = new IntObjectHashMap<IntArrayList>();
 
 	/**
 	 * JAXB 反序列化完成后，构建指令技能与宠物技能索引。

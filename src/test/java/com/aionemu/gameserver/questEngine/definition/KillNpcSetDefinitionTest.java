@@ -66,8 +66,7 @@ class KillNpcSetDefinitionTest {
 + "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
 + "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-ids=\"2001 2002 2003\"/></event></transition>\n"
 + "  </transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		QuestTransition killTransition = compiled.definition().transitions().stream()
 			.filter(t -> t.event() instanceof QuestEvent.KillNpcSet).findFirst().orElseThrow();
@@ -97,8 +96,7 @@ class KillNpcSetDefinitionTest {
 + "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
 + "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event></transition>\n"
 + "  </transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		QuestTransition killTransition = compiled.definition().transitions().stream()
 			.filter(t -> t.event() instanceof QuestEvent.KillNpc).findFirst().orElseThrow();
@@ -118,8 +116,7 @@ class KillNpcSetDefinitionTest {
 + "    <node label=\"done\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
 + "  </nodes>\n"
 + "  <transitions><transition source=\"start\" target=\"done\"><event><kill-npc npc-id=\"210133\" npc-ids=\"210133 210134\"/></event></transition></transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
 
 		assertEquals("AMBIGUOUS_KILL_NPC_EVENT", failure.code());
 	}

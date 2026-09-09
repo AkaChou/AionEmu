@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 梦魇马戏团活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
  * @author Rinzler (Encom)
  * @param <CL> 马戏团地点类型 / circus location type
  */
+@RequiredArgsConstructor
 public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / Bound location
+	 */
+	@Getter
 	private final CL nightmareCircusLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startNightmareCircus();
-
-	/**
-	 * 绑定梦魇马戏团地点。
-	 * Binds the Nightmare Circus location.
-	 *
-	 * @param nightmareCircusLocation 马戏团地点 / Circus location
-	 */
-	public CircusInstance(CL nightmareCircusLocation) {
-		this.nightmareCircusLocation = nightmareCircusLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 */
 	public boolean isClosed() {
 		return closed.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / Bound location
-	 */
-	public CL getNightmareCircusLocation() {
-		return nightmareCircusLocation;
 	}
 
 	/**

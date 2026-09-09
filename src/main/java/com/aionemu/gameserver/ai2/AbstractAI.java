@@ -30,6 +30,8 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.base.Preconditions;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * AI2 抽象基类：管理状态、事件分发、思考锁、场景与通用钩子。
@@ -39,14 +41,57 @@ import com.google.common.base.Preconditions;
  */
 public abstract class AbstractAI implements AI2 {
 
+	/**
+	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
+	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
+	 *
+	 * @return 所有者 / owner
+	 */
+	@Getter
 	private Creature owner;
 	private AIState currentState;
 	private AISubState currentSubState;
 	private final Lock thinkLock = new ReentrantLock();
+	/**
+	 * 设置调试日志开关。
+	 * Sets the debug logging flag.
+	 *
+	 * @param logging 是否启用 / whether enable
+	 */
+	@Setter
 	private boolean logging = false;
+	/**
+	 * 获取当前技能 ID。
+	 * Returns the current skill id.
+	 *
+	 * @return 技能 ID / skill id
+	 */
+	@Getter
 	protected int skillId;
+	/**
+	 * 获取当前技能等级。
+	 * Returns the current skill level.
+	 *
+	 * @return 技能等级 / skill level
+	 */
+	@Getter
 	protected int skillLevel;
+	/**
+	 * 获取事件日志（调试用）。
+	 * Returns the event log (for debugging).
+	 *
+	 * @return 事件日志 / event log
+	 */
+	@Getter
 	private volatile AIEventLog eventLog;
+	/**
+	 * 获取当前 AI 场景。
+	 * Returns the current AI scenario.
+	 *
+	 * @return 场景 / scenario
+	 */
+	@Getter
+	@Setter
 	private AI2Scenario scenario;
 
 	/**
@@ -60,41 +105,11 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * 获取当前 AI 场景。
-	 * Returns the current AI scenario.
-	 *
-	 * @return 场景 / scenario
-	 */
-	public AI2Scenario getScenario() {
-		return scenario;
-	}
-
-	/**
-	 * 设置 AI 场景。
-	 * Sets the AI scenario.
-	 *
-	 * @param scenario 场景 / scenario
-	 */
-	public void setScenario(AI2Scenario scenario) {
-		this.scenario = scenario;
-	}
-
-	/**
 	 * 清空场景为无场景。
 	 * Clears the scenario to no-scenario.
 	 */
 	public void clearScenario() {
 		this.scenario = AI2Scenarios.NO_SCENARIO;
-	}
-
-	/**
-	 * 获取事件日志（调试用）。
-	 * Returns the event log (for debugging).
-	 *
-	 * @return 事件日志 / event log
-	 */
-	public AIEventLog getEventLog() {
-		return eventLog;
 	}
 
 	/**
@@ -154,26 +169,6 @@ public abstract class AbstractAI implements AI2 {
 			return annotation.value();
 		}
 		return "noname";
-	}
-
-	/**
-	 * 获取当前技能 ID。
-	 * Returns the current skill id.
-	 *
-	 * @return 技能 ID / skill id
-	 */
-	public int getSkillId() {
-		return skillId;
-	}
-
-	/**
-	 * 获取当前技能等级。
-	 * Returns the current skill level.
-	 *
-	 * @return 技能等级 / skill level
-	 */
-	public int getSkillLevel() {
-		return skillLevel;
 	}
 
 	/**
@@ -337,16 +332,6 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
-	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
-	 *
-	 * @return 所有者 / owner
-	 */
-	public Creature getOwner() {
-		return owner;
-	}
-
-	/**
 	 * 获取所有者对象 ID。
 	 * Returns the owner's object id.
 	 *
@@ -423,16 +408,6 @@ public abstract class AbstractAI implements AI2 {
 	@Override
 	public final boolean isLogging() {
 		return logging;
-	}
-
-	/**
-	 * 设置调试日志开关。
-	 * Sets the debug logging flag.
-	 *
-	 * @param logging 是否启用 / whether enable
-	 */
-	public void setLogging(boolean logging) {
-		this.logging = logging;
 	}
 
 	/** 处理激活 / Handle activate */

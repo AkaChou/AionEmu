@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.items.storage;
 
+import lombok.Getter;
+
 /**
  * 仓库类型枚举。
  * Storage Type enumeration.
@@ -48,44 +50,32 @@ public enum StorageType {
 	public static final int HOUSE_WH_MIN = 60;
 	public static final int HOUSE_WH_MAX = 79;
 
-	private int id;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
+	/** 获取限制。 / Returns the limit. */
+	@Getter
 	private int limit;
+	/** 返回 length / Returns the length */
+	@Getter
 	private int length;
+	/** 返回 special limit / Returns the special limit */
+	@Getter
 	private int specialLimit;
 
-	private StorageType(int id, int limit, int length, int specialLimit) {
+	StorageType(int id, int limit, int length, int specialLimit) {
 		this(id, limit, length);
 		this.specialLimit = specialLimit;
 	}
 
-	private StorageType(int id, int limit, int length) {
+	StorageType(int id, int limit, int length) {
 		this(id);
 		this.limit = limit;
 		this.length = length;
 	}
 
-	private StorageType(int id) {
+	StorageType(int id) {
 		this.id = id;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取限制。 / Returns the limit. */
-	public int getLimit() {
-		return limit;
-	}
-
-	/** 返回 length / Returns the length */
-	public int getLength() {
-		return length;
-	}
-
-	/** 返回 special limit / Returns the special limit */
-	public int getSpecialLimit() {
-		return specialLimit;
 	}
 
 	/** 返回按 ID 的仓库类型 / Returns the storage type by id */

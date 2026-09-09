@@ -52,7 +52,7 @@ public class EventScheduler implements Runnable {
 	 * 是否暂停调度。
 	 * Whether scheduling is paused.
 	 */
-	private AtomicBoolean paused = new AtomicBoolean(false);
+	private final AtomicBoolean paused = new AtomicBoolean(false);
 
 	/**
 	 * 构造并启动调度循环。
@@ -119,7 +119,6 @@ public class EventScheduler implements Runnable {
 		GameThreadPoolServices.threadPoolManager().schedule(event, 0);
 		startTime = System.currentTimeMillis();
 		GameThreadPoolServices.threadPoolManager().schedule(new WaitForExecutionRunnable(event), WORKING_DELAY);
-		return;
 	}
 
 	/**

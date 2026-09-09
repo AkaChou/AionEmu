@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.instance;
 
+import lombok.Getter;
+
 /**
  * 副本 Score 类型枚举。
  * Instance Score Type enumeration.
@@ -7,21 +9,18 @@ package com.aionemu.gameserver.model.instance;
 
 public enum InstanceScoreType {
 	/** 准备中 / Preparing. */
-	PREPARING(1 * 1024 * 1024),
+	PREPARING(1024 * 1024),
 	/** 开始进行 / Start progress. */
 	START_PROGRESS(2 * 1024 * 1024),
 	/** 结束进行 / End progress. */
 	END_PROGRESS(3 * 1024 * 1024);
 
-	private int id;
-
-	private InstanceScoreType(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID。 / Returns the id. */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	InstanceScoreType(int id) {
+		this.id = id;
 	}
 
 	/**

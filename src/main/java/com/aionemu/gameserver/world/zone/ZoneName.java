@@ -5,6 +5,8 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 区域名称注册表：按字符串缓存唯一 {@link ZoneName} 实例。
@@ -13,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Rolandas
  */
 @Slf4j
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ZoneName {
 
 
@@ -29,14 +32,7 @@ public final class ZoneName {
 	}
 
 	/** 区域名称字符串 / zone name string */
-	private String _name;
-
-	/**
-	 * @param name 区域名称 / zone name
-	 */
-	private ZoneName(String name) {
-		this._name = name;
-	}
+	private final String _name;
 
 	/**
 	 * 返回区域名称字符串。
@@ -65,7 +61,7 @@ public final class ZoneName {
 	 * @param name 区域名称 / zone name
 	 * @return 区域名称实例 / zone name instance
 	 */
-	public static final ZoneName createOrGet(String name) {
+	public static ZoneName createOrGet(String name) {
 		return zoneNames.computeIfAbsent(name.toUpperCase(), ZoneName::new);
 	}
 
@@ -76,7 +72,7 @@ public final class ZoneName {
 	 * @param name 区域名称 / zone name
 	 * @return 区域 ID / the zone id
 	 */
-	public static final int getId(String name) {
+	public static int getId(String name) {
 		ZoneName zoneName = zoneNames.get(name.toUpperCase());
 		return (zoneName != null ? zoneName : zoneNames.get(NONE)).id();
 	}
@@ -88,7 +84,7 @@ public final class ZoneName {
 	 * @param name 区域名称 / zone name
 	 * @return 区域名称实例 / zone name instance
 	 */
-	public static final ZoneName get(String name) {
+	public static ZoneName get(String name) {
 		name = name.toUpperCase();
 		ZoneName zoneName = zoneNames.get(name);
 		if (zoneName != null) {

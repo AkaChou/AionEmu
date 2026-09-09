@@ -18,8 +18,18 @@ import com.aionemu.gameserver.world.World;
 public class CM_SUMMON_MOVE extends AionClientPacket {
 	private byte type;
 	private byte heading;
-	private float x = 0f, y = 0f, z = 0f, x2 = 0f, y2 = 0f, z2 = 0f, vehicleX = 0f, vehicleY = 0f, vehicleZ = 0f,
-			vectorX = 0f, vectorY = 0f, vectorZ = 0f;
+	private float x = 0f;
+	private float y = 0f;
+	private float z = 0f;
+	private float x2 = 0f;
+	private float y2 = 0f;
+	private float z2 = 0f;
+	private float vehicleX = 0f;
+	private float vehicleY = 0f;
+	private float vehicleZ = 0f;
+	private final float vectorX = 0f;
+	private final float vectorY = 0f;
+	private final float vectorZ = 0f;
 	private byte glideFlag;
 	private int unk1, unk2;
 

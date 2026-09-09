@@ -2,18 +2,16 @@ package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.gameserver.controllers.attack.AggroList.AddDamageValueCallback;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import lombok.AllArgsConstructor;
 
 /**
  * 攻城 BOSS 伤害监听器，累计玩家/种族伤害。
  * Siege boss damage listener accumulating player/race damage.
  */
+@AllArgsConstructor
 public class SiegeBossDoAddDamageListener extends AddDamageValueCallback {
 
 	private final Siege siege;
-
-	public SiegeBossDoAddDamageListener(Siege siege) {
-		this.siege = siege;
-	}
 
 	@Override
 	/**

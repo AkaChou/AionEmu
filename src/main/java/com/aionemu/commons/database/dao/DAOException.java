@@ -1,5 +1,7 @@
 package com.aionemu.commons.database.dao;
 
+import lombok.NoArgsConstructor;
+
 /**
  * DAO 异常基类
  * Base DAO Exception
@@ -12,6 +14,7 @@ package com.aionemu.commons.database.dao;
  * @author SoulKeeper
  * @author Saelya
  */
+@NoArgsConstructor
 public class DAOException extends RuntimeException {
 
     /**
@@ -19,13 +22,6 @@ public class DAOException extends RuntimeException {
      * Serialization version ID
      */
     private static final long serialVersionUID = 7637014806313099318L;
-
-    /**
-     * 默认构造函数
-     * Default constructor
-     */
-    public DAOException() {
-    }
 
     /**
      * 使用指定的错误消息构造异常

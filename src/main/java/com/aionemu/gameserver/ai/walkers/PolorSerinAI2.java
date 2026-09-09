@@ -17,13 +17,12 @@ import org.apache.commons.lang3.ArrayUtils;
 public class PolorSerinAI2 extends WalkGeneralRunnerAI2
 {
 	static final int[] stopAdults = { 203129, 203132 };
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		boolean adultsNear = false;
 		for (VisibleObject object : getOwner().getKnownList().getKnownObjectsSnapshot()) {
-			if (object instanceof Npc) {
-				Npc npc = (Npc)object;
+			if (object instanceof Npc npc) {
 				if (!ArrayUtils.contains(stopAdults, npc.getNpcId()))
 					continue;
 				if (MathUtil.isIn3dRange(npc, getOwner(), getOwner().getAggroRange())) {

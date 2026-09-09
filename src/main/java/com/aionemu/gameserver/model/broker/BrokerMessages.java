@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.broker;
 
+import lombok.Getter;
+
 /**
  * 经纪行 Messages 枚举。
  * Broker Messages enumeration.
@@ -14,14 +16,11 @@ public enum BrokerMessages {
 	/** 基纳不足 / Not Enough Kinah */
 	NO_ENOUGHT_KINAH(5);
 
-	private int id;
-
-	private BrokerMessages(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	BrokerMessages(int id) {
+		this.id = id;
 	}
 }

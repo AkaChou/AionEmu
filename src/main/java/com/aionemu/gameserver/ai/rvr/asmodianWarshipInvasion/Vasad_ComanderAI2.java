@@ -24,12 +24,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Vasad_ComanderAI2 extends AggressiveNpcAI2
 {
 	// 事件是否已启动（玩家靠近 15 米内触发喊话后置位）。 / Whether the event has started (set when a player approaches within 15 meters).
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 卑鄙的家伙！！你们的抵抗终将徒劳。 / Wretches!! Your resistance shall be futile.
@@ -44,14 +43,14 @@ public class Vasad_ComanderAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		GameLocationBootstrapServices.rvrService().stopRvr(3);
 		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //次元漩涡。 / Dimensional Vortex.
 		super.handleDied();
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -13,13 +12,8 @@ import com.aionemu.gameserver.ai2.poll.AIAnswers;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 主动攻击型 NPC AI：在通用 AI 基础上增加仇恨/警戒与出生时按 NPC 模板施加的增益类型。
@@ -28,8 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("aggressive")
 public class AggressiveNpcAI2 extends GeneralNpcAI2
 {
-	private AtomicBoolean isStartEvent = new AtomicBoolean(false);
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle death.
@@ -38,7 +31,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected void handleDied() {
 		DiedEventHandler.onDie(this);
 	}
-	
+
 	/**
 	 * 处理消失事件。
 	 * Handle despawn.
@@ -47,7 +40,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected void handleDespawned() {
 		super.handleDespawned();
 	}
-	
+
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
@@ -57,13 +50,8 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		AttackEventHandler.onAttack(this, creature);
-		/*
-		if (Rnd.get(1, 100) < 10 && !getOwner().isInInstance()) {
-			checkPercentage(getLifeStats().getHpPercentage());
-		}
-		*/
 	}
-	
+
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.
@@ -74,7 +62,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     protected void handleCreatureSee(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
     }
-	
+
     /**
      * 处理生物移动事件。
      * Handle creature-moved.
@@ -85,7 +73,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureMoved(this, creature);
     }
-	
+
 	/**
 	 * 处理对生物产生仇恨。
 	 * Handle aggro toward a creature.
@@ -96,7 +84,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected void handleCreatureAggro(Creature creature) {
 		AggroEventHandler.onAggro(this, creature);
 	}
-	
+
 	/**
 	 * 处理结束攻击事件。
 	 * Handle finish-attack.
@@ -105,7 +93,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected void handleFinishAttack() {
 		AttackEventHandler.onFinishAttack(this);
 	}
-	
+
 	/**
 	 * 处理单次攻击完成事件。
 	 * Handle attack-complete.
@@ -114,7 +102,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected void handleAttackComplete() {
 		AttackEventHandler.onAttackComplete(this);
 	}
-	
+
     /**
      * 处理放弃目标事件。
      * Handle target give-up.
@@ -123,7 +111,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     protected void handleTargetGiveup() {
         TargetEventHandler.onTargetGiveup(this);
     }
-	
+
     /**
      * 处理目标变更事件。
      * Handle target changed.
@@ -134,7 +122,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     protected void handleTargetChanged(Creature creature) {
         TargetEventHandler.onTargetChange(this, creature);
     }
-	
+
 	/**
 	 * 处理守卫反击攻击者。
 	 * Handle guard response against an attacker.
@@ -146,7 +134,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected boolean handleGuardAgainstAttacker(Creature attacker) {
 		return AggroEventHandler.onGuardAgainstAttacker(this, attacker);
 	}
-	
+
 	/**
 	 * 处理盟友需要支援事件。
 	 * Handle ally needs-support.
@@ -158,7 +146,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	protected boolean handleCreatureNeedsSupport(Creature creature) {
 		return AggroEventHandler.onCreatureNeedsSupport(this, creature);
 	}
-	
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -6676,7 +6664,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 			case 214828:
 			case 214829:
 			case 214831:
-			case 214832: 
+			case 214832:
 			case 214834:
 			case 214836:
 			case 214837:
@@ -7240,7 +7228,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 			case 246798:
 			case 246850:
 			case 246851:
-			case 246853:		
+			case 246853:
 			case 246854:
 			case 246855:
 			case 246856:
@@ -7424,7 +7412,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 			break;
 		}
 	}
-	
+
 	private void typeA() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 22987, 1, getOwner()).useNoAnimationSkill(); //Warrior Type.
 	}
@@ -7447,7 +7435,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); //Survival Instinct.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
@@ -7465,7 +7453,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 21181, 1, getOwner()).useNoAnimationSkill(); //Malevolence.
 	}
 	private void exultation() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21236, 1, getOwner()).useNoAnimationSkill(); //Exultation.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21236, 1, getOwner()).useNoAnimationSkill(); // 治愈演奏 I / Exultation.
 	}
 	private void orderPerfectObeisance() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 21844, 1, getOwner()).useNoAnimationSkill(); //Order Perfect Obeisance.
@@ -7497,7 +7485,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	private void IDEternity03Guard() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 17753, 1, getOwner()).useNoAnimationSkill(); //IDEternity_03_Guard_Buff.
 	}
-	
+
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
 		switch (question) {
@@ -7521,20 +7509,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 				return null;
 		}
 	}
-	
-	private void checkPercentage(int hpPercentage) {
-		VisibleObject currentTarget = getTarget();
-		if (hpPercentage <= 30) {
-			if (isStartEvent.compareAndSet(false, true)) {
-				GameEngineServices.skillEngine().applyEffectDirectly(17818, getOwner(), getOwner(), 5000);
-				if (currentTarget instanceof Player) {
-					// %0 正在逃跑。 / %0 is running away.
-            	    PacketSendUtility.sendPacket((Player) currentTarget, SM_SYSTEM_MESSAGE.STR_UI_COMBAT_NPC_FLEE(getOwner().getName()));
-            	}
-			}
-		}
-	}
-	
+
 	/**
 	 * 选择下一次攻击意图（普攻/技能/换目标/结束）。
 	 * Choose the next attack intention (simple/skill/switch/finish).

@@ -32,12 +32,12 @@ public class Castle_GateAI2 extends NpcAI2
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -66,7 +66,7 @@ public class Castle_GateAI2 extends NpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 45) {
 			// 是否要通过城门？ / Do you want to pass through the castle gate ?
@@ -88,7 +88,7 @@ public class Castle_GateAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DOOR_FAR_FROM_NPC);
 		}
 	}
-	
+
 	private void moveToAcross(Player responder) {
 		int worldId = responder.getWorldId();
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(responder.getHeading()));
@@ -100,15 +100,14 @@ public class Castle_GateAI2 extends NpcAI2
 		PacketSendUtility.broadcastPacketAndReceive(responder, new SM_TRANSFORM(responder, responder.getTransformedModelId(), true, responder.getTransformedItemId()));
 		TeleportService2.teleportTo(responder, worldId, responder.getX() + x, responder.getY() + y, responder.getZ(), (byte) 0);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					AI2Actions.deleteOwner(Castle_GateAI2.this);
 					// “种族”的“玩家名”摧毁了城门。 / "Player Name" of the "Race" destroyed the Castle Gate.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301049, kill.getRace().getRaceDescriptionId(), kill.getName()));
@@ -116,11 +115,11 @@ public class Castle_GateAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

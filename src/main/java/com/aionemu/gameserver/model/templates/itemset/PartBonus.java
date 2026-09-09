@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * 套装部件加成模板（静态数据/XML）。
@@ -21,6 +22,10 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PartBonus {
 
+	/**
+	 * @return the count
+	 */
+	@Getter
 	@XmlAttribute
 	protected int count;
 	@XmlElement(name = "modifiers", required = false)
@@ -29,12 +34,5 @@ public class PartBonus {
 	/** 获取修正器。 / Returns the modifiers. */
 	public List<StatFunction> getModifiers() {
 		return modifiers != null ? modifiers.getModifiers() : null;
-	}
-
-	/**
-	 * @return the count
-	 */
-	public int getCount() {
-		return count;
 	}
 }

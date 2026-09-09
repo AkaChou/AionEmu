@@ -48,13 +48,12 @@ public class Outlaw extends AdminCommand {
         }
         VisibleObject visibleObject = admin.getTarget();
 
-        if(visibleObject == null || !(visibleObject instanceof Player)){
+        if(visibleObject == null || !(visibleObject instanceof Player target)){
             PacketSendUtility.sendMessage(admin, "You need to target a player!");
             return;
         }
-        final Player target = (Player) visibleObject;
 
-        if(param[0].equalsIgnoreCase("attackable")){
+		if(param[0].equalsIgnoreCase("attackable")){
 
 
             if(param[1].equalsIgnoreCase("all")){

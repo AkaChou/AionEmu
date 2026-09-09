@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * WeatherTable 模板（静态数据/XML）。
@@ -19,37 +20,25 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherTable", propOrder = { "zoneData" })
 public class WeatherTable {
+	/** 获取区域数据。 / Returns the zone data. */
+	@Getter
 	@XmlElement(name = "table", required = true)
 	protected List<WeatherEntry> zoneData;
 
+	/** 返回天气数量 / Returns the weather count */
+	@Getter
 	@XmlAttribute(name = "weather_count", required = true)
 	protected int weatherCount;
 
+	/** 获取区域计数。 / Returns the zone count. */
+	@Getter
 	@XmlAttribute(name = "zone_count", required = true)
 	protected int zoneCount;
 
+	/** 返回映射 ID / Returns the map id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int mapId;
-
-	/** 获取区域数据。 / Returns the zone data. */
-	public List<WeatherEntry> getZoneData() {
-		return zoneData;
-	}
-
-	/** 返回映射 ID / Returns the map id */
-	public int getMapId() {
-		return mapId;
-	}
-
-	/** 获取区域计数。 / Returns the zone count. */
-	public int getZoneCount() {
-		return zoneCount;
-	}
-
-	/** 返回天气数量 / Returns the weather count */
-	public int getWeatherCount() {
-		return weatherCount;
-	}
 
 	/** 返回下一天气条目 / Returns the weather after */
 	public WeatherEntry getWeatherAfter(WeatherEntry entry) {

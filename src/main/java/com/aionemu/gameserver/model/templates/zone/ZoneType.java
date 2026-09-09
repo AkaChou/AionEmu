@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.zone;
 
+import lombok.Getter;
+
 /**
  * 区域类型枚举。
  * Zone Type enumeration.
@@ -14,19 +16,16 @@ public enum ZoneType {
 	 */
 	FLY(0), DAMAGE(1), WATER(2), SIEGE(3), PVP(4);
 
-	private byte value;
+	/**
+	 * @return the value
+	 */
+	@Getter
+	private final byte value;
 
 	/**
 	 * @param value
 	 */
-	private ZoneType(int value) {
+	ZoneType(int value) {
 		this.value = (byte) value;
-	}
-
-	/**
-	 * @return the value
-	 */
-	public byte getValue() {
-		return value;
 	}
 }

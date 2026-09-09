@@ -9,9 +9,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that syncs a creature's transform model and state.
  */
 public class SM_TRANSFORM extends AionServerPacket {
-	private Creature creature;
-	private int state;
-	private int modelId;
+	private final Creature creature;
+	private final int state;
+	private final int modelId;
 	private int panelId;
 	private int itemId;
 

@@ -7,6 +7,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.network.PacketWriteHelper;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 物品信息 Blob 条目基类，封装详细物品属性的序列化。
@@ -17,6 +19,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * @author -Nemesiss-
  * @modified Rolandas
  */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class ItemBlobEntry extends PacketWriteHelper {
 
 	/** Blob 类型。 / Blob type. */
@@ -27,16 +30,6 @@ public abstract class ItemBlobEntry extends PacketWriteHelper {
 	Item ownerItem;
 	/** 关联属性修正（用于加成条目）。 / Associated stat modifier (for bonus blobs). */
 	IStatFunction modifier;
-
-	/**
-	 * 以指定 Blob 类型构造条目。
-	 * Constructs an entry with the given blob type.
-	 *
-	 * @param type blob 类型 / blob type
-	 */
-	ItemBlobEntry(ItemBlobType type) {
-		this.type = type;
-	}
 
 	/**
 	 * 绑定所属玩家、物品及可选属性修正。
@@ -77,5 +70,4 @@ public abstract class ItemBlobEntry extends PacketWriteHelper {
 	 * @return 负载字节数 / payload size in bytes
 	 */
 	public abstract int getSize();
-
 }

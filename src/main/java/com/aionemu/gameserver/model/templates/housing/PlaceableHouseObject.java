@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Placeable 房屋对象模板（静态数据/XML）。
@@ -25,9 +26,18 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	@XmlAttribute
 	protected LimitType limit;
 
+	/**
+	 * 对象允许如何放置（堆叠、地面、墙面）。
+	 * How the object is allowed to be placed (stacks, ground, wall).
+	 */
+	@Getter
 	@XmlAttribute
 	protected PlaceLocation location;
 
+	/**
+	 * 对象允许放置的环境（室内、室外）。 / Environment where the object is allowed to be placed (interior, exterior).
+	 */
+	@Getter
 	@XmlAttribute
 	protected PlaceArea area;
 
@@ -51,21 +61,6 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 			return LimitType.NONE;
 		}
 		return limit;
-	}
-
-	/**
-	 * 对象允许如何放置（堆叠、地面、墙面）。
-	 * How the object is allowed to be placed (stacks, ground, wall).
-	 */
-	public PlaceLocation getLocation() {
-		return location;
-	}
-
-	/**
-	 * 对象允许放置的环境（室内、室外）。 / Environment where the object is allowed to be placed (interior, exterior).
-	 */
-	public PlaceArea getArea() {
-		return area;
 	}
 
 	/** 返回类型 ID / Returns the type id */

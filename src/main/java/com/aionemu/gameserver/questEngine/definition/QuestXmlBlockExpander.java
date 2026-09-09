@@ -257,10 +257,10 @@ final class QuestXmlBlockExpander {
 		}
 		List<AfterCommitAction> afterCommit = transition.afterCommit();
 		if (afterCommit.size() < 3 || !(afterCommit.get(0) instanceof AfterCommitAction.RefreshPlayerStats)
-				|| !(afterCommit.get(1) instanceof AfterCommitAction.SyncQuestState sync)
-				|| sync.mode() != QuestStateSyncMode.COMPLETION
-				|| !(afterCommit.getLast() instanceof AfterCommitAction.ShowQuestSelectionDialog selection)
-				|| selection.dialogId() != QuestDialogPage.SELECT_QUEST.id()
+				|| !(afterCommit.get(1) instanceof AfterCommitAction.SyncQuestState(QuestStateSyncMode mode))
+				|| mode != QuestStateSyncMode.COMPLETION
+				|| !(afterCommit.getLast() instanceof AfterCommitAction.ShowQuestSelectionDialog(int id))
+				|| id != QuestDialogPage.SELECT_QUEST.id()
 				|| afterCommit.subList(2, afterCommit.size() - 1).stream()
 					.anyMatch(QuestXmlBlockExpander::isDialogResponse)) {
 			fail("REPORTED_REWARD_AFTER_COMMIT_ORDER", context, "transitions", "reported-reward-mode",
@@ -279,9 +279,9 @@ final class QuestXmlBlockExpander {
 	private static void requireNoTargetlessRewardRoutes(Context context, List<QuestTransition> transitions,
 			Set<Integer> dialogIds) {
 		for (QuestTransition transition : transitions) {
-			if (transition.event() instanceof QuestEvent.QuestDialog dialog && dialogIds.contains(dialog.dialogId())) {
+			if (transition.event() instanceof QuestEvent.QuestDialog(int dialogId) && dialogIds.contains(dialogId)) {
 				fail("REPORTED_REWARD_ROUTE_CONFLICT", context, "transitions", "reported-reward-mode",
-					"targetless action " + dialog.dialogId() + " is already declared");
+					"targetless action " + dialogId + " is already declared");
 			}
 		}
 	}

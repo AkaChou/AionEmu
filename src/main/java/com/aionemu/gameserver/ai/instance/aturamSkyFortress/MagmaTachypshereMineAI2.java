@@ -29,7 +29,7 @@ public class MagmaTachypshereMineAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21804, 60, getOwner()).useNoAnimationSkill(); //Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21804, 60, getOwner()).useNoAnimationSkill(); // 爆炸 / Explosion.
 				startLifeTask();
 			}
 		}, 1000);

@@ -27,16 +27,15 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-			final Player player = (Player) creature;
-        	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
+        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
+			if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
         		if (player.getCommonData().getRace() == Race.ELYOS) {
 					IDEternity_W_Tele_B3_To_OP_L_Up();
 					announceTele01E();
@@ -47,13 +46,13 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		announceTele09();
 	}
-	
+
 	private void IDEternity_W_Tele_B3_To_OP_L_Up() {
 		despawnNpc(835290);
 		despawnNpc(835454);
@@ -68,7 +67,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 		spawn(835290, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 257);
 		spawn(835454, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 327);
     }
-	
+
 	private void announceTele09() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -102,7 +101,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
@@ -111,7 +110,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

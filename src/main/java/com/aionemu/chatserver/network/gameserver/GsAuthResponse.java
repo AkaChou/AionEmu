@@ -41,7 +41,7 @@ public enum GsAuthResponse {
      *
      * @param responseId 应答消息 ID / response message id
      */
-    private GsAuthResponse(int responseId) {
+	GsAuthResponse(int responseId) {
         this.responseId = (byte) responseId;
     }
 }

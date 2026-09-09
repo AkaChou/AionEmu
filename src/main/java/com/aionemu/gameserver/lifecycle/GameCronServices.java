@@ -2,11 +2,14 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * Cron 服务门面：初始化、解析与关闭 CronService 单例。
  * Cron services facade: initialize, resolve and shut down the CronService singleton.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GameCronServices {
 
     /**
@@ -14,13 +17,6 @@ public final class GameCronServices {
      * Resolved Cron service instance.
      */
     private static volatile CronService resolvedCronService;
-
-    /**
-     * 工具类禁止实例化。
-     * Utility class; not instantiable.
-     */
-    private GameCronServices() {
-    }
 
     /**
      * 以 {@link ThreadPoolManagerRunnableRunner} 初始化 Cron 单例。

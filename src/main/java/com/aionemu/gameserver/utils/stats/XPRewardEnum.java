@@ -43,10 +43,10 @@ public enum XPRewardEnum {
 	PLUS_4(4, 120);
 
 	/** 经验奖励百分比 / XP reward percent */
-	private int xpRewardPercent;
+	private final int xpRewardPercent;
 
 	/** 等级差 / Level difference */
-	private int levelDifference;
+	private final int levelDifference;
 
 	/**
 	 * 构造经验奖励条目
@@ -55,7 +55,7 @@ public enum XPRewardEnum {
 	 * Level difference
 	 * @param xpRewardPercent 经验百分比 / XP percent
 	 */
-	private XPRewardEnum(int levelDifference, int xpRewardPercent) {
+	XPRewardEnum(int levelDifference, int xpRewardPercent) {
 		this.levelDifference = levelDifference;
 		this.xpRewardPercent = xpRewardPercent;
 	}

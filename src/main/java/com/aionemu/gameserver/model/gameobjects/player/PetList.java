@@ -12,6 +12,7 @@ import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Setter;
 
 /**
  * 宠物列表。
@@ -22,9 +23,11 @@ import java.util.Map;
 public class PetList {
 
 	private final Player player;
+	/** 设置 last used pet id / Sets the last used pet id */
+	@Setter
 	private int lastUsedPetId;
 
-	private Map<Integer, PetCommonData> pets = new LinkedHashMap<Integer, PetCommonData>();
+	private final Map<Integer, PetCommonData> pets = new LinkedHashMap<Integer, PetCommonData>();
 
 	PetList(Player player) {
 		this.player = player;
@@ -69,11 +72,6 @@ public class PetList {
 	/** 返回 last used pet / Returns the last used pet */
 	public PetCommonData getLastUsedPet() {
 		return getPet(lastUsedPetId);
-	}
-
-	/** 设置 last used pet id / Sets the last used pet id */
-	public void setLastUsedPetId(int lastUsedPetId) {
-		this.lastUsedPetId = lastUsedPetId;
 	}
 
 	/**

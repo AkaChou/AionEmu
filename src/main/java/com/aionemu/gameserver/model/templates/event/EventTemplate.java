@@ -34,6 +34,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.world.World;
+import lombok.Getter;
 
 /**
  * 活动模板（静态数据/XML）。
@@ -62,6 +63,8 @@ public class EventTemplate {
 	@XmlElement(name = "surveys", required = false)
 	protected List<String> surveys;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
@@ -81,11 +84,6 @@ public class EventTemplate {
 
 	@XmlTransient
 	private List<Future<?>> invDropTasks = null;
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
 
 	/** 活动掉落。 / Event Drop. */
 	public EventDrops EventDrop() {
@@ -131,19 +129,16 @@ public class EventTemplate {
 		return !isActive();
 	}
 
+	/**
+	 * @return 是否已启动 / whether started
+	 */
+	@Getter
 	@XmlTransient
 	volatile boolean isStarted = false;
 
 	/** 设置已启动标志 / Sets the started flag */
 	public void setStarted() {
 		isStarted = true;
-	}
-
-	/**
-	 * @return 是否已启动 / whether started
-	 */
-	public boolean isStarted() {
-		return isStarted;
 	}
 
 	/** 开始 / Start. */
@@ -180,7 +175,7 @@ public class EventTemplate {
 			for (InventoryDrop inventoryDrop : inventoryDrops) {
 				invDropTasks.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
 					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> dropInventoryItem(player, inventoryDrop)),
-					inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000));
+					inventoryDrop.getInterval() * 60000L, inventoryDrop.getInterval() * 60000L));
 			}
 		}
 		if (surveys != null) {

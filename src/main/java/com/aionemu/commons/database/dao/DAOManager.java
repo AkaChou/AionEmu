@@ -9,7 +9,6 @@ import static com.aionemu.commons.database.DatabaseFactory.getDatabaseName;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.services.ServiceContext;
@@ -40,8 +39,10 @@ public class DAOManager {
     /**
  * 初始化 DAOManager
      * Initializes DAOManager
+     *
+     * @param provider 当前服务上下文的 DAO 类提供器 / DAO class provider for the current service context
      */
-    public static void init() {
+    public static void init(DAOClassProvider provider) {
         String context = ServiceContext.current();
         DaoState state = new DaoState();
         DaoState oldState = states.putIfAbsent(context, state);
@@ -49,7 +50,7 @@ public class DAOManager {
             return;
         }
         try {
-            loadCompiledDaos(context);
+            loadCompiledDaos(context, provider);
         } catch (RuntimeException e) {
             states.remove(context);
             throw new Error(e.getMessage(), e);
@@ -170,24 +171,18 @@ public class DAOManager {
     }
 
     /**
-     * 通过 ServiceLoader 加载当前上下文的编译期 DAO 类
-     * Load compiled DAO classes for the current context via ServiceLoader
+     * 加载当前上下文的编译期 DAO 类
+     * Load compiled DAO classes for the current context
      *
-     * @param context 服务上下文名称 / Service context name
+     * @param context  服务上下文名称 / Service context name
+     * @param provider 该上下文的 DAO 类提供器 / DAO class provider for the context
      */
-    private static void loadCompiledDaos(String context) {
-        DAOLoader loader = new DAOLoader();
-        boolean foundProvider = false;
-        for (DAOClassProvider provider : ServiceLoader.load(DAOClassProvider.class)) {
-            if (!context.equals(provider.contextName())) {
-                continue;
-            }
-            foundProvider = true;
-            loader.postLoad(provider.daoClasses());
+    private static void loadCompiledDaos(String context, DAOClassProvider provider) {
+        if (!context.equals(provider.contextName())) {
+            throw new IllegalStateException("DAO class provider " + provider.getClass().getSimpleName()
+                + " does not serve " + context + " service context");
         }
-        if (!foundProvider) {
-            throw new IllegalStateException("No DAO class provider registered for " + context + " service context");
-        }
+        new DAOLoader().postLoad(provider.daoClasses());
     }
 
     /**

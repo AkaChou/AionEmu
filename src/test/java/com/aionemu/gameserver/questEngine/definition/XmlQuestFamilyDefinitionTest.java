@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Full vertical proof for the current XmlQuest owners 1115 / 1127. */
 class XmlQuestFamilyDefinitionTest {
@@ -37,7 +35,7 @@ class XmlQuestFamilyDefinitionTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)),
 			talk(transitions, "v1", 203058, 1009, "reward").afterCommit());
-		assertTrue(talk(transitions, "unaccepted", 203072, 31, "unaccepted") != null);
+		assertNotNull(talk(transitions, "unaccepted", 203072, 31, "unaccepted"));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
 			talk(transitions, "started", 203072, 31, "started").afterCommit());
 
@@ -121,9 +119,9 @@ class XmlQuestFamilyDefinitionTest {
 		// quest_use_item must pass ACTION_ITEM_USE eligibility before the use-object event can fire.
 		assertTrue(transitions.stream().anyMatch(t -> t.sourceNode().equals("started")
 			&& t.targetNode().equals("started")
-			&& t.event() instanceof QuestEvent.CanAct canAct
-			&& canAct.templateId() == 700001
-			&& "ACTION_ITEM_USE".equals(canAct.actionType())));
+			&& t.event() instanceof QuestEvent.CanAct(int templateId, String actionType)
+			&& templateId == 700001
+			&& "ACTION_ITEM_USE".equals(actionType)));
 
 		// Use-object on 700001 grants the cube and advances to v1.
 		QuestTransition give = talk(transitions, "started", 700001, -1, "v1");

@@ -53,7 +53,7 @@ public class VortexSchedule {
 		VortexSchedule vs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/vortex_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			vs = (VortexSchedule) JAXBUtil.deserialize(xml, VortexSchedule.class);
+			vs = JAXBUtil.deserialize(xml, VortexSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize vortex", e);
 		}

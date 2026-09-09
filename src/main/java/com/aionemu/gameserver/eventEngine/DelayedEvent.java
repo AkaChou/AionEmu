@@ -48,7 +48,7 @@ class DelayedEvent extends Event implements Comparable<DelayedEvent> {
 	@Override
 	public int compareTo(DelayedEvent o) {
 		int delay = (int) (this.getDelay(TimeUnit.MILLISECONDS) - o.getDelay(TimeUnit.MILLISECONDS));
-		if (delay > (0 - Event.MAX_PRIORITY) * 60 * 1000 && delay < MAX_PRIORITY * 60 * 1000) {
+		if (delay > (-Event.MAX_PRIORITY) * 60 * 1000 && delay < MAX_PRIORITY * 60 * 1000) {
 			delay = (int) ((getDelay(TimeUnit.MILLISECONDS) - getEvent().getPriority() * 60 * 1000)
 					- (o.getDelay(TimeUnit.MILLISECONDS) - o.getEvent().getPriority() * 60 * 1000));
 		}

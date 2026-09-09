@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 /**
  * 对象回调帮助类，提供对象级别的回调管理功能
  * Object callback helper class that provides object-level callback management
@@ -24,15 +26,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Supports adding and removing callbacks for enhanced objects, and executing callbacks before and after method calls
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ObjectCallbackHelper {
-    
 
-    /**
-     * 私有构造函数，防止实例化
-     * Private constructor to prevent instantiation
-     */
-    private ObjectCallbackHelper() {
-    }
 
     /**
      * 为增强对象添加回调
@@ -120,7 +116,7 @@ public class ObjectCallbackHelper {
             obj.getCallbackLock().readLock().unlock();
         }
 
-        if (GenericValidator.isBlankOrNull((Collection)list)) {
+        if (GenericValidator.isBlankOrNull(list)) {
             return CallbackResult.newContinue();
         }
 
@@ -166,7 +162,7 @@ public class ObjectCallbackHelper {
             obj.getCallbackLock().readLock().unlock();
         }
 
-        if (GenericValidator.isBlankOrNull((Collection)list)) {
+        if (GenericValidator.isBlankOrNull(list)) {
             return CallbackResult.newContinue();
         }
 

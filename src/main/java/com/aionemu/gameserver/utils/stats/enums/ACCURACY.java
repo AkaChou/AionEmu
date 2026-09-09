@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.stats.enums;
 
+import lombok.Getter;
+
 /**
  * 各职业基础命中值枚举。
  * Baseline accuracy values by player class.
@@ -16,19 +18,10 @@ public enum ACCURACY {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	private int value;
+	@Getter
+	private final int value;
 
-	private ACCURACY(int value) {
+	ACCURACY(int value) {
 		this.value = value;
-	}
-
-	/**
-	 * 获取该职业的基础属性值。
-	 * Returns the baseline attribute value for this class.
-	 *
-	 * @return 基础属性值 / baseline attribute value
-	 */
-	public int getValue() {
-		return value;
 	}
 }

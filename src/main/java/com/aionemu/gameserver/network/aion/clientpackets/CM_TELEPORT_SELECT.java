@@ -46,8 +46,7 @@ public class CM_TELEPORT_SELECT extends AionClientPacket {
 			return;
 		}
 		AionObject obj = player.getKnownList().getObject(targetObjectId);
-		if (obj != null && obj instanceof Npc) {
-			Npc npc = (Npc) obj;
+		if (obj != null && obj instanceof Npc npc) {
 			int npcId = npc.getNpcId();
 			if (!MathUtil.isInRange(npc, player, npc.getObjectTemplate().getTalkDistance() + 2)) {
 				return;

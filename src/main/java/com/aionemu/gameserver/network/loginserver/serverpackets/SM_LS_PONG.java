@@ -11,7 +11,7 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
  * @author KID
  */
 public class SM_LS_PONG extends LsServerPacket {
-	private int pid;
+	private final int pid;
 
 	/**
 	 * 构造登录服 Pong 应答包。

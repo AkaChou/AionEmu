@@ -1,6 +1,7 @@
 package com.aionemu.commons.utils.collections;
 
 import java.util.LinkedHashMap;
+import lombok.NoArgsConstructor;
 
 /**
  * int→对象 哈希映射。
@@ -8,14 +9,8 @@ import java.util.LinkedHashMap;
  *
  * @param <V> 值类型 / Value type
  */
+@NoArgsConstructor
 public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> {
-
-    /**
-     * 创建默认容量映射。
-     * Create a map with default capacity.
-     */
-    public IntObjectHashMap() {
-    }
 
     /**
      * 创建指定初始容量的映射。

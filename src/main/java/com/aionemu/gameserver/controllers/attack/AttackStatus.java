@@ -63,7 +63,7 @@ public enum AttackStatus {
 	 *
 	 * @param type 类型 ID / type id
 	 */
-	private AttackStatus(int type) {
+	AttackStatus(int type) {
 		this(type, false, false);
 	}
 
@@ -75,7 +75,7 @@ public enum AttackStatus {
 	 * @param counterSkill 是否反击技能状态 / whether counter-skill
 	 * @param isCritical 是否暴击 / whether critical
 	 */
-	private AttackStatus(int type, boolean counterSkill, boolean isCritical) {
+	AttackStatus(int type, boolean counterSkill, boolean isCritical) {
 		this.type = type;
 		this.counterSkill = counterSkill;
 		this.isCritical = isCritical;

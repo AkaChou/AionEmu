@@ -16,13 +16,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +142,6 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			break;
 			case 219555: //Durable Yamennes Blindsight.
 			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Unstable Abyssal Splinter>");
 		        spawn(701576, 326.978f, 729.8414f, 197.7078f, (byte) 16); // 创世宝箱 / Genesis Treasure Box
 		        spawn(701576, 326.5296f, 735.13324f, 197.6681f, (byte) 66); // 创世宝箱 / Genesis Treasure Box
 		        spawn(701576, 329.8462f, 738.41095f, 197.7329f, (byte) 3); // 创世宝箱 / Genesis Treasure Box
@@ -153,7 +150,6 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			break;
 			case 219563: //Unstable Yamennes Painflare.
 			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Unstable Abyssal Splinter>");
 		        spawn(701576, 326.978f, 729.8414f, 197.7078f, (byte) 16); // 创世宝箱 / Genesis Treasure Box
 		        spawn(701576, 326.5296f, 735.13324f, 197.6681f, (byte) 66); // 创世宝箱 / Genesis Treasure Box
 		        spawn(701576, 329.8462f, 738.41095f, 197.7329f, (byte) 3); // 创世宝箱 / Genesis Treasure Box
@@ -240,13 +236,6 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		doors.clear();
 	}
 	
-	private void stopInstanceTask() {
-        for (Future<?> task : abyssalSplinterTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -341,20 +330,6 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
         }, time));
     }
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -394,11 +369,6 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
 	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
 	
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

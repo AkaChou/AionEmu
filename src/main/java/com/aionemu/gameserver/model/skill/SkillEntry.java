@@ -4,6 +4,10 @@ import java.sql.Timestamp;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 技能条目。
@@ -11,23 +15,22 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
  *
  * @author ATracer
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class SkillEntry {
 
 	protected final int skillId;
 	protected int skillLevel;
+	/** 设置 skin id / Sets the skin id */
+	@Setter
 	protected int skinId;
 	protected Timestamp activeSkinTime;
 	protected int expireTime;
+	/**
+	 * @return 是否激活 / Whether activated
+	 */
+	@Getter
+	@Setter
 	protected boolean isActivated;
-
-	SkillEntry(int skillId, int skillLevel, int skinId, Timestamp activeSkinTime, int expireTime, boolean isActivated) {
-		this.skillId = skillId;
-		this.skillLevel = skillLevel;
-		this.skinId = skinId;
-		this.activeSkinTime = activeSkinTime;
-		this.expireTime = expireTime;
-		this.isActivated = isActivated;
-	}
 
 	/** 返回技能 ID / Returns the skill id */
 	public final int getSkillId() {
@@ -74,25 +77,8 @@ public abstract class SkillEntry {
 		return DataManager.SKILL_DATA.getSkillTemplate(getSkillId());
 	}
 
-	/** 设置 skin id / Sets the skin id */
-	public void setSkinId(int skinId) {
-		this.skinId = skinId;
-	}
-
 	/** 设置 skin expire time / Sets the skin expire time */
 	public void setSkinExpireTime(int expireTime) {
 		this.expireTime = expireTime;
-	}
-
-	/**
-	 * @return 是否激活 / Whether activated
-	 */
-	public boolean isActivated() {
-		return isActivated;
-	}
-
-	/** 设置 activated / Sets the activated */
-	public void setActivated(boolean activated) {
-		this.isActivated = activated;
 	}
 }

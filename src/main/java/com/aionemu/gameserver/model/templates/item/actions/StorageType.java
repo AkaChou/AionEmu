@@ -7,5 +7,5 @@ package com.aionemu.gameserver.model.templates.item.actions;
 
 enum StorageType {
 	/** 魔立方。 / Cube. */
-	CUBE, WAREHOUSE;
+	CUBE, WAREHOUSE
 }

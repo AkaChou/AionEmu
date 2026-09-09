@@ -89,6 +89,6 @@ public class ShutdownTask extends TaskFromDBHandler {
 			public void run() {
 				GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.SHUTDOWN);
 			}
-		}, warnCountDown * 1000);
+		}, warnCountDown * 1000L);
 	}
 }

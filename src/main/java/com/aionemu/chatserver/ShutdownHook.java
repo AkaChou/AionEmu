@@ -9,6 +9,7 @@ import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.utils.ExitCode;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.ObjectProvider;
+import lombok.NoArgsConstructor;
 
 /**
  * 聊天服务器 JVM 关停钩子：关闭重启服务、Netty、GS 状态与线程池，并可选 halt。
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.ObjectProvider;
  *
  * @author nrg
  */
+@NoArgsConstructor
 public class ShutdownHook extends Thread {
 
     private static final ShutdownHook instance = new ShutdownHook();
@@ -30,13 +32,6 @@ public class ShutdownHook extends Thread {
      * When {@code true}, restart only; otherwise normal shutdown.
      */
     private static boolean restartOnly = false;
-
-    /**
-     * 无参构造：使用默认进程桥，服务延迟解析。
-     * No-arg constructor: default process bridge; services resolved lazily.
-     */
-    public ShutdownHook() {
-    }
 
     /**
      * 直接绑定进程桥与具体服务实例。

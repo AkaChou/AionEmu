@@ -1,14 +1,10 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameChatServerOverrideLifecycleTest {
 
@@ -25,7 +21,7 @@ class GameChatServerOverrideLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("chat:true"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -59,7 +55,7 @@ class GameChatServerOverrideLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("chat:true", "chat:false"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test

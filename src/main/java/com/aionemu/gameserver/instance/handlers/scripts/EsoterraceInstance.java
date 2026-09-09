@@ -16,8 +16,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import com.aionemu.gameserver.world.zone.ZoneInstance;
-import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +37,8 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -51,7 +49,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -69,7 +67,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -106,7 +104,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -124,7 +122,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -185,7 +183,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
             break;
 			case 286930: //Esoterrace Mage.
                 despawnNpc(npc);
-				spawn(799580, 1034.11f, 985.01f, 327.35095f, (byte) 105); //Keening Sirokin.
+				spawn(799580, 1034.11f, 985.01f, 327.35095f, (byte) 105); // 爱哭鬼希罗金 / Keening Sirokin.
 				spawn(701025, 1038.636963f, 987.741455f, 328.356415f, (byte) 0, 725); //Sundries Box.
             break;
 			/**
@@ -228,7 +226,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			 */
 			case 217204: //Kexkra.
 			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
 				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
 				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
 				spawn(701027, 1321.9897f, 1179.5394f, 51.493996f, (byte) 79, 727); //Laboratory Treasure Chest.
@@ -243,40 +240,25 @@ public class EsoterraceInstance extends GeneralInstanceHandler
              * 开战面对“凯克斯克拉原型”；随后典狱长苏拉玛会加入战斗。 / Players will start this encounter facing the "Kexkra Prototype" As the encounter wears on, an event will cause Warden Surama to join the battle. When Warden Surama is defeated, two treasure chests will spawn, one of which has a chance to contain Fabled armor from the Surama series, and the other Fabled weapons from the Surama series
              */
             case 217206: //Warden Surama.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
 				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
 				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
 				spawn(701027, 1321.9897f, 1179.5394f, 51.493996f, (byte) 79, 727); //Laboratory Treasure Chest.
             break;
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
-    private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -285,7 +267,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -311,7 +293,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -322,7 +304,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -333,14 +315,14 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -350,7 +332,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
         doors.clear();
 		movies.clear();
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000111, storage.getItemCountByItemId(185000111)); //Dalia Key.

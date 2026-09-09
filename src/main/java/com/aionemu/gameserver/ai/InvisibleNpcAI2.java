@@ -19,8 +19,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("invisible_npc")
 public class InvisibleNpcAI2 extends AggressiveNpcAI2
 {
-	private boolean canThink = true;
-	
+	private final boolean canThink = true;
+
 	/**
 	 * 是否允许进入思考逻辑。
 	 * Whether this AI is allowed to think.
@@ -29,7 +29,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -229,7 +229,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		getOwner().setVisualState(CreatureVisualState.HIDE1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 	}
-	
+
     /**
      * 处理受到攻击事件。
      * Handle being attacked.
@@ -243,7 +243,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		getOwner().unsetVisualState(CreatureVisualState.HIDE1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
     }
-    
+
 	/**
 	 * 处理放弃目标事件。
 	 * Handle target give-up.
@@ -255,7 +255,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		getOwner().setVisualState(CreatureVisualState.HIDE1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 	}
-	
+
 	private void anuhartBravery() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
@@ -274,7 +274,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle death.

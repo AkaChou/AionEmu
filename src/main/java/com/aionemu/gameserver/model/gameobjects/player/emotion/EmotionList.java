@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 表情列表。
@@ -21,19 +22,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *
  * @author MrPoke
  */
+@RequiredArgsConstructor
 public class EmotionList {
 	private Map<Integer, Emotion> emotions;
-	private Player owner;
-
-	/**
-	 * 构造表情列表。
-	 * Constructs an emotion list.
-	 *
-	 * @param owner 所属玩家 / owning player
-	 */
-	public EmotionList(Player owner) {
-		this.owner = owner;
-	}
+	private final Player owner;
 
 	/** 添加。 / Add. */
 	public void add(int emotionId, int dispearTime, boolean isNew) {

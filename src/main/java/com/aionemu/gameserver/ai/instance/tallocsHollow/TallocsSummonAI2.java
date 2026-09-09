@@ -22,11 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("tallocssummon")
 public class TallocsSummonAI2 extends NpcAI2
 {
-	private AtomicBoolean isTransformed = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isTransformed = new AtomicBoolean(false);
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
-		if (dialogId == 64 && isTransformed.compareAndSet(false, true)) { // 4.3 版 / 4.3
+		if (dialogId == 64 && isTransformed.compareAndSet(false, true)) { // 4.3 版 / version 4.3
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 			if (player.getSummon() != null) {
 				PacketSendUtility.broadcastPacket(player, new SM_MESSAGE(player, "Please dismiss your summon.", ChatType.GROUP_LEADER), true);
@@ -47,7 +47,7 @@ public class TallocsSummonAI2 extends NpcAI2
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (!isTransformed.get()) {

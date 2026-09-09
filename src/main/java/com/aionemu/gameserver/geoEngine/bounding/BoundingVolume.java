@@ -23,7 +23,7 @@ public abstract class BoundingVolume implements Collidable {
 	 */
 	public enum Type {
 
-		Sphere, AABB, OBB, Capsule;
+		Sphere, AABB, OBB, Capsule
 	}
 
 	/** 优先检测的裁剪平面索引。 / Index of the clip plane to check first. */

@@ -100,9 +100,9 @@ class QuestStepNpcSkipGuardTest {
 
 	private static QuestTransition killRoute(CompiledQuestDefinition definition, int npcId) {
 		return definition.definition().transitions().stream()
-			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc single
-				? single.npcId() == npcId
-				: candidate.event() instanceof QuestEvent.KillNpcSet kills && kills.npcIds().contains(npcId))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc(int id)
+				? id == npcId
+				: candidate.event() instanceof QuestEvent.KillNpcSet(java.util.Set<Integer> npcIds) && npcIds.contains(npcId))
 			.findFirst().orElseThrow();
 	}
 

@@ -45,7 +45,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		PlayerCommonData playerCommonData = player.getCommonData();
 		PlayerAppearance playerAppearance = player.getPlayerAppearance();
 		int gender = readD();
-		gender_change = playerCommonData.getGender().getGenderId() == gender ? false : true;
+		gender_change = playerCommonData.getGender().getGenderId() != gender;
 		if (!gender_change) {
 			if (player.getInventory().getItemCountByItemId(169650000) == 0 && // 整形手术门票 / Plastic Surgery Ticket
 					player.getInventory().getItemCountByItemId(169650001) == 0 && // [活动] 整形手术门票 / [Event] Plastic Surgery Ticket

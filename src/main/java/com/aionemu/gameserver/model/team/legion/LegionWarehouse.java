@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import lombok.Getter;
 
 /**
  * 军团仓库，用于团队相关逻辑。
@@ -15,6 +16,8 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
  */
 public class LegionWarehouse extends Storage {
 
+	/** 获取军团。 / Returns the legion. */
+	@Getter
 	private Legion legion;
 	private int curentWhUser;
 
@@ -22,11 +25,6 @@ public class LegionWarehouse extends Storage {
 		super(StorageType.LEGION_WAREHOUSE);
 		this.legion = legion;
 		this.setLimit(legion.getWarehouseSlots());
-	}
-
-	/** 获取军团。 / Returns the legion. */
-	public Legion getLegion() {
-		return this.legion;
 	}
 
 	/** 设置所有者军团。 / Sets the owner legion. */

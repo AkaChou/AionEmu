@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.summons;
 
+import lombok.Getter;
+
 /**
  * 召唤物模式：攻击/守护/休息/释放。
  * Summon mode: attack/guard/rest/release.
@@ -17,15 +19,12 @@ public enum SummonMode {
 	/** 未知 / Unknown */
 	UNK(5);
 
-	private int id;
-
-	private SummonMode(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	SummonMode(int id) {
+		this.id = id;
 	}
 
 	/** 按 ID 返回召唤物模式 / Returns the summon mode by id */

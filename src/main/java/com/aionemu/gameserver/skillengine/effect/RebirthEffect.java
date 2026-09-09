@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 重生效果：挂载后允许以配置百分比与技能进行重生。
@@ -17,9 +18,19 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlType(name = "RebirthEffect")
 public class RebirthEffect extends EffectTemplate {
 
+	/**
+	 * 返回重生恢复生命百分比。
+	 * Returns the rebirth HP restore percent.
+	 */
+	@Getter
 	@XmlAttribute(name = "resurrect_percent", required = true)
 	protected int resurrectPercent;
 
+	/**
+	 * 返回重生关联技能 ID。
+	 * Returns the rebirth-related skill id.
+	 */
+	@Getter
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
@@ -30,21 +41,5 @@ public class RebirthEffect extends EffectTemplate {
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
-	}
-
-	/**
-	 * 返回重生恢复生命百分比。
-	 * Returns the rebirth HP restore percent.
-	 */
-	public int getResurrectPercent() {
-		return resurrectPercent;
-	}
-
-	/**
-	 * 返回重生关联技能 ID。
-	 * Returns the rebirth-related skill id.
-	 */
-	public int getSkillId() {
-		return skillId;
 	}
 }

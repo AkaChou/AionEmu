@@ -195,6 +195,6 @@ public class ItemRemodelService {
 				PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 						player.getEquipment().getEquippedItemsWithoutStigma()), true);
 			}
-		}, duration * 1000);
+		}, duration * 1000L);
 	}
 }

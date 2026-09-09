@@ -20,7 +20,7 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 
-	private Player player;
+	private final Player player;
 	private PlayerAllianceEvent event;
 	private final int allianceId;
 	private final int objectId;

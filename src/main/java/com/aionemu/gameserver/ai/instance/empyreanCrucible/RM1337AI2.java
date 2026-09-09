@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RM1337AI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -42,7 +42,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -66,7 +66,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -98,7 +98,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnSparks(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -114,7 +114,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -124,24 +124,24 @@ public class RM1337AI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelPhaseTask();
 		sendMsg(1500231);
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();
@@ -149,7 +149,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);

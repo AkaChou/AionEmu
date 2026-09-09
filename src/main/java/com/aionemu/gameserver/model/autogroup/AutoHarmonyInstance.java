@@ -21,8 +21,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
  */
 
 public class AutoHarmonyInstance extends AutoInstance {
-	private List<AGPlayer> group1 = new ArrayList<AGPlayer>();
-	private List<AGPlayer> group2 = new ArrayList<AGPlayer>();
+	private final List<AGPlayer> group1 = new ArrayList<AGPlayer>();
+	private final List<AGPlayer> group2 = new ArrayList<AGPlayer>();
 
 	/** 副本创建 / On Instance Create*/
 	@Override
@@ -116,9 +116,7 @@ public class AutoHarmonyInstance extends AutoInstance {
 		if (agp != null) {
 			if (group1.contains(agp)) {
 				group1.remove(agp);
-			} else if (group2.contains(agp)) {
-				group2.remove(agp);
-			}
+			} else group2.remove(agp);
 		}
 		super.unregister(player);
 	}

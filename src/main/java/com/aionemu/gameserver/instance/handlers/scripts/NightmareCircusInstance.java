@@ -24,7 +24,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -48,10 +47,10 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/** 狂乱梦魇击杀数 / frenetic nightmare killed */
 	private int freneticNightmareKilled;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -74,7 +73,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -84,7 +83,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		    break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -97,33 +96,33 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
 					break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
 					break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
 					break;
 				}
 			break;
 		}
 	}
-	
+
 	private void attackEvent(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	private void startNightmareWave() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -354,7 +353,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			}
 		}, 181000);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -383,15 +382,14 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			break;
 			case 233147: //Harlequin Lord Reshka.
 			    despawnNpc(npc);
-				deleteNpc(831348); //Box Of Terrors.
+				deleteNpc(831348); // 马戏团魔术箱 / Box Of Terrors.
 			    // 梦魇领主海拉穆内将在 5 秒后出现！ / Nightmare Lord Heiramune will appear in 5 seconds!
 			    sendMsgByRace(1401798, Race.PC_ALL, 0);
 			    spawn(233161, 552.595f, 567.2736f, 198.79242f, (byte) 68); //Nightmare Lord Heiramune.
 				spawn(233162, 553.6005f, 562.4973f, 198.93172f, (byte) 65); //Nightmare Lord Heiramune.
 			break;
 			case 233161:
-			/*Nightmare Lord Heiramune.
-			<Nightmare Lord>*/
+			/* case 233161：梦魇领主海拉穆内 / case 233161: Nightmare Lord Heiramune */
 			    spawnIUFriendDance();
 				sendMovie(player, 982);
 				deleteNpc(831572); //Bird Cage Chain.
@@ -399,15 +397,13 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				deleteNpc(831573); //IU In The Cage.
 				spawnNightmareCrate();
 				spawnGreaterNightmareCrate();
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Nightmare Circus>");
 				SpawnTemplate OpenCage = SpawnEngine.addNewSingleTimeSpawn(301200000, 831598, 522.39825f, 564.69006f, 199.03371f, (byte) 0);
 				OpenCage.setEntityId(14);
 				objects.put(831598, SpawnEngine.spawnObject(OpenCage, instanceId));
 				spawn(831576, 483.582581f, 567.211487f, 201.734894f, (byte) 0); //Nightmare Circus Exit.
 			break;
 			case 233162:
-			/*Nightmare Lord Heiramune.
-			<Phantom Of Nightmare Lord Heiramune>*/
+			/* case 233162：梦魇领主海拉穆内之幻影 / case 233162: Phantom of Nightmare Lord Heiramune */
 			    despawnNpc(npc);
 			break;
 			case 831572: //Solid Iron Chain.
@@ -427,7 +423,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	private void spawnBoxOfTerrors() {
 	    spawn(831348, 534.0532f, 198.64136f, 556.31506f, (byte) 45);
         spawn(831348, 525.08844f, 552.17865f, 198.75f, (byte) 30);
@@ -461,7 +457,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
         spawn(831745, 520.36786f, 546.94763f, 198.875f, (byte) 25);
         spawn(831745, 518.48267f, 550.7468f, 198.75f, (byte) 25);
 	}
-	
+
 	private void spawnIUFriendDance() {
 		spawn(831559, 517.783997f, 562.049500f, 200.161789f, (byte) 0);
 		spawn(831560, 520.415588f, 563.304688f, 200.161789f, (byte) 0);
@@ -508,7 +504,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		spawn(831661, 515.531921f, 564.972046f, 200.161789f, (byte) 0);
 		spawn(831662, 520.251343f, 569.539368f, 200.161789f, (byte) 0);
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21469);
@@ -516,7 +512,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		effectController.removeEffect(21471);
 		effectController.removeEffect(21472);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -529,14 +525,14 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -547,13 +543,13 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -565,27 +561,13 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void despawnNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			npc.getController().onDelete();
 		}
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -594,7 +576,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -620,7 +602,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -636,20 +618,20 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
 					break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
 					break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
 					break;
 				}
 			break;
@@ -658,7 +640,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_INSTANT_DUNGEON_RESURRECT, 0, 0));
         return TeleportService2.teleportTo(player, mapId, instanceId, 469.65033f, 567.8404f, 201.74283f, (byte) 113);
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

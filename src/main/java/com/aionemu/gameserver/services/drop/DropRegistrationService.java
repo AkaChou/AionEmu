@@ -38,14 +38,12 @@ import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropItem;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalRule;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
-import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
-import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -60,8 +58,8 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
-	private ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
-	private ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
+	private final ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
+	private final ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
 	private volatile Set<Integer> noReductionMaps = Set.of();
 
 	/**
@@ -403,18 +401,6 @@ public class DropRegistrationService {
 		item.setCount(count);
 		item.setIndex(index);
 		return item;
-	}
-
-	private float getRatingModifier(Npc npc) {
-		float ratingModifier = 1f;
-		if (npc.getRating() != null) {
-			if (npc.getRating().equals(NpcRating.NORMAL)) {
-				ratingModifier = 1f;
-			} else if (npc.getRating().equals(NpcRating.ELITE)) {
-				ratingModifier = 1.5f;
-			}
-		}
-		return ratingModifier;
 	}
 
 	/**

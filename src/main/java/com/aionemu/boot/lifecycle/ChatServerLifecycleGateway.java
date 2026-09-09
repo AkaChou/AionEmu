@@ -4,24 +4,19 @@ import com.aionemu.chatserver.ChatServerRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
 /**
  * 聊天服生命周期网关：在可选运行时与运行时桥之间协调启动/停止。
  * Chat-server lifecycle gateway: coordinates start/stop between optional runtime and runtime bridge.
  */
 @Component
+@NoArgsConstructor
 public class ChatServerLifecycleGateway {
 
     private ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider;
     private ObjectProvider<ChatServerRuntimeBridge> runtimeBridgeProvider;
     private ChatServerRuntimeBridge runtimeBridge;
-
-    /**
-     * 默认构造，依赖通过可选 setter 注入。
-     * Default constructor; dependencies are injected via optional setters.
-     */
-    public ChatServerLifecycleGateway() {
-    }
 
     /**
      * 注入可选的聊天服运行时提供者。

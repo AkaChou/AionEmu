@@ -11,6 +11,8 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家队伍，用于团队2相关逻辑。
@@ -18,12 +20,21 @@ import java.util.Map;
  */
 
 public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
-	private TeamType type;
+	private final TeamType type;
+	/** 设置 bg index / Sets the bg index */
+	@Getter
+	@Setter
 	private int bgIndex = -1;
+	/** 设置 kill count / Sets the kill count */
+	@Getter
+	@Setter
 	private int killCount = 0;
+	/** 设置 buff id / Sets the buff id */
+	@Getter
+	@Setter
 	private int buffId = 0;
 	private final PlayerGroupStats playerGroupStats;
-	private Map<Integer, Player> groupMembers = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> groupMembers = new LinkedHashMap<Integer, Player>();
 
 	public PlayerGroup(PlayerGroupMember leader, TeamType type) {
 		super(GameWorldBootstrapServices.idFactory().nextId());
@@ -71,26 +82,6 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 		return type;
 	}
 
-	/** 设置 kill count / Sets the kill count */
-	public void setKillCount(int killCount) {
-		this.killCount = killCount;
-	}
-
-	/** 返回 kill count / Returns the kill count */
-	public int getKillCount() {
-		return killCount;
-	}
-
-	/** 设置 bg index / Sets the bg index */
-	public void setBgIndex(int bgIndex) {
-		this.bgIndex = bgIndex;
-	}
-
-	/** 返回 bg index / Returns the bg index */
-	public int getBgIndex() {
-		return bgIndex;
-	}
-
 	/** 返回 member obj ids / Returns the member obj ids */
 	public Collection<Integer> getMemberObjIds() {
 		return groupMembers.keySet();
@@ -99,15 +90,5 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	/** 返回组 ID / Returns the group id */
 	public int getGroupId() {
 		return this.getObjectId();
-	}
-
-	/** 设置 buff id / Sets the buff id */
-	public void setBuffId(int buffId) {
-		this.buffId = buffId;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public int getBuffId() {
-		return buffId;
 	}
 }

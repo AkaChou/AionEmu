@@ -28,7 +28,7 @@ public class ServiceBuffData {
 	protected List<BonusServiceAttr> serviceBonusattr;
 
 	@XmlTransient
-	private IntObjectHashMap<BonusServiceAttr> templates = new IntObjectHashMap<BonusServiceAttr>();
+	private final IntObjectHashMap<BonusServiceAttr> templates = new IntObjectHashMap<BonusServiceAttr>();
 
 	/**
 	 * JAXB 反序列化完成后，将加成模板写入 buffId 索引并释放列表。

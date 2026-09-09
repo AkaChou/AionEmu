@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 静态门世界模板（静态数据/XML）。
@@ -18,20 +19,17 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "World")
 public class StaticDoorWorld {
 
-	@XmlAttribute(name = "world")
-	protected int world;
-	@XmlElement(name = "staticdoor")
-	protected List<StaticDoorTemplate> staticDoorTemplate;
-
 	/**
 	 * 返回世界 ID。
 	 * Returns the world id.
 	 *
 	 * @return 世界 ID / the world id
 	 */
-	public int getWorld() {
-		return world;
-	}
+	@Getter
+	@XmlAttribute(name = "world")
+	protected int world;
+	@XmlElement(name = "staticdoor")
+	protected List<StaticDoorTemplate> staticDoorTemplate;
 
 	/**
 	 * 返回该世界的静态门模板列表。

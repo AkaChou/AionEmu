@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class Announcements extends AdminCommand {
 
-	private AnnouncementService announceService;
+	private final AnnouncementService announceService;
 
 	/**
 	 * 注册 {@code //announcements} 命令并获取公告服务。

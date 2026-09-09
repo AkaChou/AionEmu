@@ -10,14 +10,16 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 月之商城（Luna Shop）操作结果的服务端包。
  * Server packet for Luna shop operation results.
  */
+@RequiredArgsConstructor
 public class SM_LUNA_SHOP extends AionServerPacket {
 
-	private int actionId;
+	private final int actionId;
 	private int unk1;
 	private int slotSize;
 	private int fail;
@@ -36,16 +38,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	private int itemSize;
 	private boolean success;
 	private long itemCount;
-
-	/**
-	 * 通用动作构造，仅指定 actionId。
-	 * Generic action constructor with action id only.
-	 *
-	 * action type
-	 */
-	public SM_LUNA_SHOP(int actionId) {
-		this.actionId = actionId;
-	}
 
 	/**
 	 * 卡鲁内克工坊（Karunerk's Workshop）制作结果。

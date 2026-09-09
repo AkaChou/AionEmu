@@ -36,9 +36,9 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	private boolean canThink = true;
 	private Future<?> magmaGluttenTask;
 	private Future<?> lavaProtectorTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -58,7 +58,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -68,12 +68,12 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void shareSource() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -85,7 +85,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startMagmaGluttenTask() {
 		magmaGluttenTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -116,7 +116,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnMagmaGlutten(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -132,12 +132,12 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -147,19 +147,19 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelMagmaGluttenTask() {
 		if (magmaGluttenTask != null && !magmaGluttenTask.isDone()) {
 			magmaGluttenTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelLavaProtectorTask() {
 		if (lavaProtectorTask != null && !lavaProtectorTask.isDone()) {
 			lavaProtectorTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
@@ -167,7 +167,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			deleteNpcs(instance.getNpcs(855709));
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelMagmaGluttenTask();
@@ -181,7 +181,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		spawn(833055, 528.0497f, 215.08281f, 1681.8224f, (byte) 105); //Treasure Box.
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -189,14 +189,14 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelMagmaGluttenTask();
 		cancelLavaProtectorTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

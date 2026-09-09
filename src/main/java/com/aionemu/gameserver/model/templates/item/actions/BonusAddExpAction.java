@@ -11,6 +11,9 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 经验加成道具动作模板（静态数据/XML）。
@@ -20,28 +23,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BonusAddExpAction")
+@NoArgsConstructor
 public class BonusAddExpAction extends AbstractItemAction {
 
+	/** 获取比率。 / Returns the rate. */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "rate")
 	protected Integer rate;
 
 	@XmlAttribute()
 	protected boolean isPercent = true;
 
-	public BonusAddExpAction() {
-	}
-
 	public BonusAddExpAction(Integer rate) {
-		this.rate = rate;
-	}
-
-	/** 获取比率。 / Returns the rate. */
-	public Integer getRate() {
-		return rate;
-	}
-
-	/** 设置比率。 / Sets the rate. */
-	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
 

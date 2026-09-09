@@ -11,8 +11,8 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
  */
 public class SM_GS_CHARACTER extends LsServerPacket {
 
-	private int accountId;
-	private int characterCount;
+	private final int accountId;
+	private final int characterCount;
 
 	/**
 	 * 构造角色数量回报包。

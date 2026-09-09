@@ -4,6 +4,7 @@ package com.aionemu.chatserver.network.aion.clientpackets;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
@@ -19,7 +20,7 @@ import com.aionemu.chatserver.service.ChatService;
 @Slf4j
 public class CM_PLAYER_AUTH extends AbstractClientPacket {
 
-    private ChatService chatService;
+    private final ChatService chatService;
     private int playerId;
     private byte[] token;
     private byte[] identifier;
@@ -58,16 +59,12 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
         int tokenLength = readH();
         token = readB(tokenLength);
 
-        try {
-            String realid = new String(identifier, "UTF-16le");
+		String realid = new String(identifier, StandardCharsets.UTF_16LE);
 
-            realName = realid.split("@")[0];
-            String after = realid.split("@")[1];
-            identifier = after.getBytes("UTF-16le");
-        } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.3c04a2cb63c1", playerId, e));
-        }
-    }
+		realName = realid.split("@")[0];
+		String after = realid.split("@")[1];
+		identifier = after.getBytes(StandardCharsets.UTF_16LE);
+	}
 
     /**
      * 向聊天服务注册玩家连接。

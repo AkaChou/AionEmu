@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
 
 /**
  * 描述 ID 模型。
@@ -11,12 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 public final class DescriptionId {
 
 	private int value;
-
-	public DescriptionId(int value) {
-		this.value = value;
-	}
-
 }

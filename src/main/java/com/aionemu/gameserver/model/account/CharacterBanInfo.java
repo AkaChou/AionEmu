@@ -11,10 +11,10 @@ import lombok.Getter;
 @Getter
 public class CharacterBanInfo {
 
-	private int playerId;
-	private long start;
-	private long end;
-	private String reason;
+	private final int playerId;
+	private final long start;
+	private final long end;
+	private final String reason;
 
 	public CharacterBanInfo(int playerId, long start, long duration, String reason) {
 		this.playerId = playerId;

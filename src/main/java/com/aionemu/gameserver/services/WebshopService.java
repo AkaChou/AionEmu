@@ -71,7 +71,6 @@ public class WebshopService {
 						RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
 						List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
 						if (liste.isEmpty()) {
-							return;
 						} else {
 							for (RewardEntryItem item : liste) {
 								deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());

@@ -29,7 +29,7 @@ public class VocolithAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_FNamed_Fail);
         }
     }
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000216, 1)) {
@@ -39,19 +39,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -60,19 +60,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -81,19 +81,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -102,19 +102,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -123,19 +123,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -144,19 +144,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -165,19 +165,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -186,19 +186,19 @@ public class VocolithAI2 extends NpcAI2
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
 						    announceLevinshorBoss();
-							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Arm Cruego.
+							spawn(235217, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Arm Cruego.
 						break;
 						case 2:
 						    announceLevinshorBoss();
-						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cruel Lamia.
+						    spawn(235218, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Cruel Lamia.
 						break;
 						case 3:
 						    announceLevinshorBoss();
-							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Destoyer Feld.
+							spawn(235219, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Destoyer Feld.
 						break;
 						case 4:
 						    announceLevinshorBoss();
-							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Ruthless Tyranicca.
+							spawn(235220, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Ruthless Tyranicca.
 						break;
 					}
 				break;
@@ -210,13 +210,13 @@ public class VocolithAI2 extends NpcAI2
 		AI2Actions.scheduleRespawn(this);
 		return true;
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         announceLevinshorBossReturn();
 		super.handleSpawned();
     }
-	
+
 	private void announceLevinshorBossReturn() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -225,7 +225,7 @@ public class VocolithAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	private void announceLevinshorBoss() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 宝箱模板（静态数据/XML）。
@@ -18,31 +19,22 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "Chest")
 public class ChestTemplate {
 
-	@XmlAttribute(name = "npcid")
-	protected int npcId;
-	@XmlAttribute(name = "name")
-	protected String name;
-	@XmlElement(name = "keyitem")
-	protected List<KeyItem> keyItem;
-
 	/**
 	 * @return NPC ID / the npcId
 	 */
-	public int getNpcId() {
-		return npcId;
-	}
-
+	@Getter
+	@XmlAttribute(name = "npcid")
+	protected int npcId;
 	/**
 	 * @return 名称 / the name
 	 */
-	public String getName() {
-		return name;
-	}
-
+	@Getter
+	@XmlAttribute(name = "name")
+	protected String name;
 	/**
 	 * @return 钥匙物品列表 / the keyItem
 	 */
-	public List<KeyItem> getKeyItem() {
-		return keyItem;
-	}
+	@Getter
+	@XmlElement(name = "keyitem")
+	protected List<KeyItem> keyItem;
 }

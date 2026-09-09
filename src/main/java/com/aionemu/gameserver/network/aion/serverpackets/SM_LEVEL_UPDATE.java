@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步目标等级变化的服务端包。
@@ -9,25 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class SM_LEVEL_UPDATE extends AionServerPacket {
 
-	private int targetObjectId;
-	private int effect;
-	private int level;
-
-	/**
-	 * 使用目标对象、效果与等级构造等级更新包。
-	 * Creates a level-update packet from target, effect and level values.
-	 *
-	 * target object id
-	 * effect value
-	 * new level
-	 */
-	public SM_LEVEL_UPDATE(int targetObjectId, int effect, int level) {
-		this.targetObjectId = targetObjectId;
-		this.effect = effect;
-		this.level = level;
-	}
+	private final int targetObjectId;
+	private final int effect;
+	private final int level;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

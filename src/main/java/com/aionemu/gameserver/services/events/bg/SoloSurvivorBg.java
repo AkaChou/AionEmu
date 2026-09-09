@@ -832,7 +832,7 @@ public class SoloSurvivorBg extends Battleground {
 			public void run() {
 				endSoloSurvivorMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -879,8 +879,7 @@ public class SoloSurvivorBg extends Battleground {
 			lastAttacker = getPlayers().get(player.getBgIndex() == 0 ? 1 : 0);
 		}
 		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player && ((Player) lastAttacker).getObjectId() != player.getObjectId()) {
-			Player killer = (Player) lastAttacker;
+		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			for (Player pl : super.getPlayers()) {
 				scheduleAnnouncement(pl, killer.getName() + " has killed " + player.getName(), 0);
 			}
@@ -941,7 +940,7 @@ public class SoloSurvivorBg extends Battleground {
 			public void run() {
 				endSoloSurvivorMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -1133,7 +1132,7 @@ public class SoloSurvivorBg extends Battleground {
 					}
 					super.scheduleAnnouncement(pl,
 							winner.getName() + " win's the match with " + winner.getTotalKills() + " kill's!", 0);
-					super.scheduleAnnouncement(pl, "You have received rewards" + (is1v1() ? "." : "."), 3000);
+					super.scheduleAnnouncement(pl, "You have received rewards" + ("."), 3000);
 				}
 			}
 			super.specAnnounce(winner.getName() + " win's the match with " + winner.getTotalKills() + " kill's!");

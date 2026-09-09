@@ -18,7 +18,7 @@ import com.aionemu.commons.utils.ClassUtils;
  * - 处理任务的加载和卸载 (Handle task loading and unloading)
  */
 public class ScheduledTaskClassListener implements ClassListener {
-	
+
     /**
      * 处理类加载后的定时任务注册
      * Process scheduled task registration after class loading
@@ -34,7 +34,7 @@ public class ScheduledTaskClassListener implements ClassListener {
 			}
 		}
 	}
-	
+
     /**
      * 处理类卸载前的定时任务注销
      * Process scheduled task deregistration before class unloading
@@ -50,7 +50,7 @@ public class ScheduledTaskClassListener implements ClassListener {
 			}
 		}
 	}
-	
+
     /**
      * 验证类是否为有效的定时任务类
      * Validate if a class is a valid scheduled task class
@@ -59,37 +59,33 @@ public class ScheduledTaskClassListener implements ClassListener {
      * @return 是否为有效的定时任务类 / Whether it's a valid scheduled task class
      */
     public boolean isValidClass(Class<?> clazz) {
-		
+
 		if (!ClassUtils.isSubclass(clazz, Runnable.class)) {
 			return false;
 		}
-		
+
 		final int modifiers = clazz.getModifiers();
-		
+
 		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 			return false;
 		}
-		
+
 		if (!Modifier.isPublic(modifiers)) {
 			return false;
 		}
-		
+
 		if (!clazz.isAnnotationPresent(Scheduled.class)) {
 			return false;
 		}
-		
+
 		Scheduled scheduled = clazz.getAnnotation(Scheduled.class);
 		if (scheduled.disabled()) {
 			return false;
 		}
-		
-		if (scheduled.value().length == 0) {
-			return false;
-		}
-		
-		return true;
+
+		return scheduled.value().length != 0;
 	}
-	
+
     /**
      * 调度定时任务类
      * Schedule a task class
@@ -99,7 +95,7 @@ public class ScheduledTaskClassListener implements ClassListener {
     protected void scheduleClass(Class<? extends Runnable> clazz) {
 		Scheduled metadata = clazz.getAnnotation(Scheduled.class);
 		CronService cronService = getCronService();
-		
+
 		try {
 			if (metadata.instancePerCronExpression()) {
 				for (String s : metadata.value()) {
@@ -115,7 +111,7 @@ public class ScheduledTaskClassListener implements ClassListener {
 			throw new RuntimeException("Failed to schedule runnable " + clazz.getName(), e);
 		}
 	}
-	
+
     /**
      * 取消定时任务类的调度
      * Unschedule a task class
@@ -131,7 +127,7 @@ public class ScheduledTaskClassListener implements ClassListener {
 			}
 		}
 	}
-	
+
     /**
      * 获取 CronService 实例。
      * Get CronService instance.

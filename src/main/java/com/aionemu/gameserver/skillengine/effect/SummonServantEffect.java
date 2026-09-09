@@ -82,7 +82,7 @@ public class SummonServantEffect extends SummonEffect {
 			public void run() {
 				servant.getController().onDelete();
 			}
-		}, time * 1000);
+		}, time * 1000L);
 		servant.getController().addTask(TaskId.DESPAWN, task);
 		servant.getAi2().onCreatureEvent(AIEventType.ATTACK, target != null ? target : effected);
 		return servant;

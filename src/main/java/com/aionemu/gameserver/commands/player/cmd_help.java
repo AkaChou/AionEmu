@@ -37,8 +37,7 @@ public class cmd_help extends PlayerCommand {
 
 
         if (player.getRace() == Race.ASMODIANS ||player.getRace() == Race.ELYOS){
-            PacketSendUtility.sendMessage(player, "" +
-					"\n" +
+            PacketSendUtility.sendMessage(player, "\n" +
                     "==============================\n" +
                     "Available .[dot] Commands for Players!" +
                     "\n==============================\n" +

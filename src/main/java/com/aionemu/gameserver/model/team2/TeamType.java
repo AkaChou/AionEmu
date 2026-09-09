@@ -30,10 +30,10 @@ public enum TeamType {
 	/** 区域目标 4。 / In-area Target 4. */
 	IN_AREA_TARGET_4(0x22, 7);
 
-	private int type;
-	private int subType;
+	private final int type;
+	private final int subType;
 
-	private TeamType(int type, int subType) {
+	TeamType(int type, int subType) {
 		this.type = type;
 		this.subType = subType;
 	}

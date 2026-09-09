@@ -16,6 +16,7 @@ import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.zone.Point2D;
+import lombok.Getter;
 
 /**
  * 巡逻队：按队形排列成员、同步路径步骤并协同行走。
@@ -31,36 +32,37 @@ public class WalkerGroup {
 	 * 编队成员（按 walkerIndex 排序）。
 	 * Formation members (sorted by walkerIndex).
 	 */
-	private List<ClusteredNpc> members;
+	private final List<ClusteredNpc> members;
 
 	/**
 	 * 队形类型。
 	 * Formation type.
 	 */
-	private WalkerGroupType type;
+	private final WalkerGroupType type;
 
 	/**
 	 * 基准点 X。
 	 * Anchor X of the group.
 	 */
-	private float walkerXpos;
+	private final float walkerXpos;
 
 	/**
 	 * 基准点 Y。
 	 * Anchor Y of the group.
 	 */
-	private float walkerYpos;
+	private final float walkerYpos;
 
 	/**
 	 * 各成员当前路径步骤。
 	 * Current route step per member.
 	 */
-	private int[] memberSteps;
+	private final int[] memberSteps;
 
 	/**
 	 * 编队整体当前步骤。
 	 * Current group-wide route step.
 	 */
+	@Getter
 	private volatile int groupStep;
 
 	/**
@@ -113,7 +115,7 @@ public class WalkerGroup {
 					// distance += npc.getObjectTemplate().getBoundRadius().getSide();
 				}
 			} else if (rows.length != 0) {
-				float rowDistances[] = new float[rows.length - 1];
+				float[] rowDistances = new float[rows.length - 1];
 				float coronalDist = 0;
 				for (int i = 0; i < rows.length - 1; i++) {
 					if (rows[i] % 2 != rows[i + 1] % 2) {
@@ -439,12 +441,5 @@ public class WalkerGroup {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * @return 编队当前路径步骤 / current group route step
-	 */
-	public int getGroupStep() {
-		return groupStep;
 	}
 }

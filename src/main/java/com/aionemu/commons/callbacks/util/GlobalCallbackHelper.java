@@ -8,6 +8,8 @@ import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.commons.utils.ClassUtils;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 /**
  * 全局回调帮助类，提供全局级别的回调管理功能
  * Global callback helper class that provides global-level callback management
@@ -19,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Supports adding and removing global callbacks, and executing callbacks before and after method calls
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GlobalCallbackHelper {
     
     
@@ -27,13 +30,6 @@ public class GlobalCallbackHelper {
      * Thread-safe list for storing global callbacks
      */
     private static final CopyOnWriteArrayList<Callback> globalCallbacks = new CopyOnWriteArrayList();
-
-    /**
-     * 私有构造函数，防止实例化
-     * Private constructor to prevent instantiation
-     */
-    private GlobalCallbackHelper() {
-    }
 
     /**
      * 添加全局回调

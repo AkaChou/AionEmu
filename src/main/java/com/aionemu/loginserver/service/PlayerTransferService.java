@@ -45,10 +45,10 @@ public class PlayerTransferService {
     public static PlayerTransferService getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    private Map<Integer, PlayerTransferRequest> transfers = new ConcurrentHashMap<>();
-    private Map<Integer, PlayerTransferTask> tasks = new ConcurrentHashMap<>();
-    private Future<?> veryfyTask;
-    private PlayerTransferDAO dao;
+    private final Map<Integer, PlayerTransferRequest> transfers = new ConcurrentHashMap<>();
+    private final Map<Integer, PlayerTransferTask> tasks = new ConcurrentHashMap<>();
+    private final Future<?> veryfyTask;
+    private final PlayerTransferDAO dao;
 
     /**
      * 构造服务：启动周期校验任务并解析 DAO。

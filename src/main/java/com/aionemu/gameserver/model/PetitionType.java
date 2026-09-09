@@ -22,9 +22,9 @@ public enum PetitionType {
 	/** 咨询 / Inquiry */
 	INQUIRY(65280);
 
-	private int element;
+	private final int element;
 
-	private PetitionType(int id) {
+	PetitionType(int id) {
 		this.element = id;
 	}
 

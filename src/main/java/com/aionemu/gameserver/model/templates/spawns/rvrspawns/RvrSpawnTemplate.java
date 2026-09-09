@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.rvr.RvrStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 阵营战刷新点模板（静态数据/XML）。
@@ -13,6 +15,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class RvrSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private RvrStateType rvrType;
 
@@ -25,19 +30,9 @@ public class RvrSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回 r state type / Returns the r state type */
 	public RvrStateType getRStateType() {
 		return rvrType;
-	}
-
-	/** 设置 id / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置 r state type / Sets the r state type */

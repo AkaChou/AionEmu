@@ -4,6 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 周期调度包装：在固定周期内重新投递事件，并在上一次未完成时尝试取消。
@@ -11,6 +12,7 @@ import java.util.concurrent.ScheduledFuture;
  *
  * @author wanke
  */
+@RequiredArgsConstructor
 class EventScheduleWrapper implements Runnable {
 
 	/**
@@ -36,16 +38,6 @@ class EventScheduleWrapper implements Runnable {
 	 * Last recheck future.
 	 */
 	private ScheduledFuture<?> last_future;
-
-	/**
-	 * 包装指定事件。
-	 * Wraps the given event.
-	 *
-	 * @param event 目标事件 / target event
-	 */
-	public EventScheduleWrapper(Event event) {
-		this.event = event;
-	}
 
 	/**
 	 * 周期触发：若上一次重检未完成则跳过；否则检查并重新投递。

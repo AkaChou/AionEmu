@@ -19,11 +19,11 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  */
 public class SM_PRIVATE_STORE extends AionServerPacket {
 
-	private Player player;
+	private final Player player;
 	/**
 	 * Private store Information *
 	 */
-	private PrivateStore store;
+	private final PrivateStore store;
 
 	/**
 	 * 使用给定参数构造 SM_PRIVATE_STORE 包。

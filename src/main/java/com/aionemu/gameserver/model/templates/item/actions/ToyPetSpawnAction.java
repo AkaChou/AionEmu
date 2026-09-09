@@ -24,6 +24,7 @@ import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * Toy 宠物刷新点动作模板（静态数据/XML）。
@@ -36,17 +37,14 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 	@XmlAttribute
 	protected int npcid;
 
+	/** 返回时间 / Returns the time*/
+	@Getter
 	@XmlAttribute
 	protected int time;
 
 	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcid;
-	}
-
-	/** 返回时间 / Returns the time*/
-	public int getTime() {
-		return time;
 	}
 
 	/**
@@ -63,7 +61,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			return false;
 		}
 		if (GameFeatureServices.kiskService().haveKisk(player.getObjectId())) {
-			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390160, new Object[0]));
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390160));
 			return false;
 		}
 		switch (player.getWorldId()) {
@@ -75,7 +73,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 		case 210010000: // Poeta.
 		case 210080000: // Griffoen.
 		case 210110000: // Tower Of Eternity E.
-		case 700010000: // Oriel.
+		case 700010000: // 奥雷内 / Oriel.
 			// 限制魔族生成 Kisk。 / Restriction Asmodians Spawn Kisk.
 		case 120010000: // Pandaemonium.
 		case 120020000: // Convent Of Marchutan.

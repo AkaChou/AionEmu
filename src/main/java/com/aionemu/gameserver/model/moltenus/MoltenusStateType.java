@@ -11,5 +11,5 @@ public enum MoltenusStateType {
 	/** 战斗 / Fight. */
 	FIGHT,
 	/** 和平 / Peace. */
-	PEACE;
+	PEACE
 }

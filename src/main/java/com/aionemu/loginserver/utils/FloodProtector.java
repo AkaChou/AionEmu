@@ -48,7 +48,7 @@ public class FloodProtector {
             flood.put(ip, System.currentTimeMillis());
             return false;
         }
-        Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
+        Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
         if (!LoginProtectionServices.bannedIpService().isBanned(ip)) {
             log.info(I18n.get("log.63a8519d9835", ip, Config.WRONG_LOGIN_BAN_TIME));
             return LoginProtectionServices.bannedIpService().banIp(ip, newTime);
@@ -83,12 +83,12 @@ public class FloodProtector {
         }
         Long time = flood.get(ip);
         if (time == null) {
-            flood.put(ip, System.currentTimeMillis() + Config.FAST_RECONNECTION_TIME * 1000);
+            flood.put(ip, System.currentTimeMillis() + Config.FAST_RECONNECTION_TIME * 1000L);
             return false;
         } else {
             if (time > System.currentTimeMillis()) {
                 log.info(I18n.get("log.1cb757ad8b6b", ip, Config.WRONG_LOGIN_BAN_TIME));
-                ban.put(ip, System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
+                ban.put(ip, System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
                 return true;
             } else {
                 return false;

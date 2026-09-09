@@ -27,7 +27,7 @@ public class KorunerkAI2 extends NpcAI2
 
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 834305: //Korunerk.
+				case 834305: // 科依伦伦 / Korunerk.
 					spawn(220820, 1390.711f, 1692.9382f, 573.28613f, (byte) 105); //Sanctum Tank A.
 				break;
 			}

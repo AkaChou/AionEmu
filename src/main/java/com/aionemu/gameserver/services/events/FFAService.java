@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events;
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -25,7 +24,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
-import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
@@ -58,11 +56,11 @@ public class FFAService {
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<FFAService> instanceProvider;
 	/** Worldpositionscached 前 enteringFFA / World positions cached before entering FFA */
-	private Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
+	private final Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	/** 当前活跃竞技场实例。 / Currently active arena instance. */
 	private WorldMapInstance activeInstance;
 	/** 可用竞技场地图列表。 / Available arena map list. */
-	private List<ArenaMap> maps = new ArrayList<ArenaMap>();
+	private final List<ArenaMap> maps = new ArrayList<ArenaMap>();
 	/** 当前活跃竞技场地图。 / Currently active arena map. */
 	private ArenaMap activeMap = null;
 	/** 定时任务秒计数器。 / Periodic task second counter. */
@@ -70,10 +68,8 @@ public class FFAService {
 	@SuppressWarnings("unused")
 	/** 当前实例静态门（预留）。 / Current instance static doors (reserved). */
 	private Map<Integer, StaticDoor> doors;
-	private Object UnsummonType;
 	/** 服务是否已启用。 / Whether the service is enabled. */
 	private static boolean isAvailable;
-
 
 	/**
 	 * 初始化 FFA：加载竞技场地图并启动周期调度（人数播报 / 地图轮换 / 全服邀请）。
@@ -85,10 +81,10 @@ public class FFAService {
 			isAvailable = false;
 			return;
 		}
-		
+
 		log.info(I18n.get("log.86a16ce407e0"));
 		isAvailable = true;
-		
+
 		// 诺克萨纳训练营。 / Nochsana Training Camp.
 		maps.add(new ArenaMap(300030000, 99,
 				Arrays.asList(new Float[] { 331f, 272f, 384f }, new Float[] { 314f, 325f, 380f },
@@ -316,7 +312,7 @@ public class FFAService {
 					});
 				}
 			}
-		}, 1 * 1000, 1 * 1000);
+		}, 1000, 1000);
 	}
 
 	/**
@@ -797,12 +793,11 @@ public class FFAService {
 	 */
 	public static class ArenaMap {
 		/** 映射 ID / Map id */
-		private int mapId;
+		private final int mapId;
 		/** 出生点坐标列表。 / Spawn coordinate list. */
-		private List<Float[]> spawns;
+		private final List<Float[]> spawns;
 		/** 单实例人数上限。 / Per-instance player cap. */
-		private int playerCap;
-		private List<Integer> staticDoors = null;
+		private final int playerCap;
 
 		/**
 		 * 构造竞技场地图。

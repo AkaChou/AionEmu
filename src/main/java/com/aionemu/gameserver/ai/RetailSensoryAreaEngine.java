@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 真实感知区域移动事件分发。
  * Retail sensory-area movement event dispatch.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetailSensoryAreaEngine {
 
 	private static final Map<WorldMapInstance, Set<RetailPatternAI2>> BY_INSTANCE = new ConcurrentHashMap<>();
 	private static final Map<Player, Set<RetailPatternAI2>> ACTIVE_BY_PLAYER =
 		Collections.synchronizedMap(new WeakHashMap<>());
-
-	private RetailSensoryAreaEngine() {
-	}
 
 	static void register(WorldMapInstance instance, RetailPatternAI2 ai) {
 		BY_INSTANCE.computeIfAbsent(instance, ignored -> ConcurrentHashMap.newKeySet()).add(ai);

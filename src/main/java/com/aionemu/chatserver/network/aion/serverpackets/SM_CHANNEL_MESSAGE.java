@@ -13,7 +13,7 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
  */
 public class SM_CHANNEL_MESSAGE extends AbstractServerPacket {
 
-    private Message message;
+    private final Message message;
 
     /**
      * 构造频道消息服务端包。

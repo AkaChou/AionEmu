@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class Quest24053PrerequisiteTest {
 	@Test
@@ -54,7 +52,7 @@ class Quest24053PrerequisiteTest {
 			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(204702, 23)))
 			.findFirst().orElseThrow();
 
-		assertTrue(noReward.targetNode().equals("complete"));
+		assertEquals("complete", noReward.targetNode());
 		AfterCommitAction.BroadcastZoneMissionEnd broadcast = noReward.afterCommit().stream()
 			.filter(AfterCommitAction.BroadcastZoneMissionEnd.class::isInstance)
 			.map(AfterCommitAction.BroadcastZoneMissionEnd.class::cast)

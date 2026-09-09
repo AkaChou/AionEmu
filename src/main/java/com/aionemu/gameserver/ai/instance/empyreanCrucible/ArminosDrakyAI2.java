@@ -18,13 +18,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class ArminosDrakyAI2 extends GeneralNpcAI2
 {
     // 漫游路线 ID / walker route id
-    private String walkerId = "300300001";
+    private final String walkerId = "300300001";
     private boolean isStart = true;
-	
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -33,7 +33,7 @@ public class ArminosDrakyAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();

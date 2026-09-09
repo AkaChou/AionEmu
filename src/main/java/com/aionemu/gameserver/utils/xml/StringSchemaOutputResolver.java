@@ -18,7 +18,7 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	 * Schema 内容缓冲。
 	 * Schema content buffer.
 	 */
-	private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 	/**
 	 * 创建指向内存流的输出 Result。

@@ -80,20 +80,22 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 			if (action instanceof QuestAction.LearnRecipe learn) {
 				preflightRecipe(player, snapshot, projectedRecipes, projectedSkills, learn.recipeId());
 				projectedRecipes.add(learn.recipeId());
-			} else if (action instanceof QuestAction.ForgetRecipe forget) {
-				projectedRecipes.remove(forget.recipeId());
-			} else if (action instanceof QuestAction.GrantCraftSkill grant) {
-				int current = projectedSkills.getOrDefault(grant.skillId(), 0);
-				if (!player.getSkillList().isCraftSkill(grant.skillId())) {
-					throw new SQLException("not a crafting skill: " + grant.skillId());
+			} else if (action instanceof QuestAction.ForgetRecipe(int recipeId)) {
+				projectedRecipes.remove(recipeId);
+			} else if (action instanceof QuestAction.GrantCraftSkill(
+				int skillId, int targetLevel, boolean autoLearnRecipes
+			)) {
+				int current = projectedSkills.getOrDefault(skillId, 0);
+				if (!player.getSkillList().isCraftSkill(skillId)) {
+					throw new SQLException("not a crafting skill: " + skillId);
 				}
-				if (current < grant.targetLevel() && !eligibility.canGrant(player, grant.skillId(), grant.targetLevel())) {
-					throw new SQLException("craft skill slot limit prevents " + grant.skillId() + " level "
-						+ grant.targetLevel());
+				if (current < targetLevel && !eligibility.canGrant(player, skillId, targetLevel)) {
+					throw new SQLException("craft skill slot limit prevents " + skillId + " level "
+						+ targetLevel);
 				}
-				projectedSkills.put(grant.skillId(), Math.max(current, grant.targetLevel()));
-				if (grant.autoLearnRecipes()) {
-					projectedRecipes.addAll(autoRecipes.resolve(player, grant.skillId(), grant.targetLevel()));
+				projectedSkills.put(skillId, Math.max(current, targetLevel));
+				if (autoLearnRecipes) {
+					projectedRecipes.addAll(autoRecipes.resolve(player, skillId, targetLevel));
 				}
 			}
 		}
@@ -137,15 +139,17 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 			if (action instanceof QuestAction.LearnRecipe learn) {
 				targetRecipes.add(learn.recipeId());
 				touchedRecipes.add(learn.recipeId());
-			} else if (action instanceof QuestAction.ForgetRecipe forget) {
-				targetRecipes.remove(forget.recipeId());
-				touchedRecipes.add(forget.recipeId());
-			} else if (action instanceof QuestAction.GrantCraftSkill grant) {
-				int current = player.getSkillList().isSkillPresent(grant.skillId())
-					? player.getSkillList().getSkillLevel(grant.skillId()) : 0;
-				targetSkills.merge(grant.skillId(), Math.max(current, grant.targetLevel()), Math::max);
-				if (grant.autoLearnRecipes()) {
-					Set<Integer> learned = autoRecipes.resolve(player, grant.skillId(), grant.targetLevel());
+			} else if (action instanceof QuestAction.ForgetRecipe(int recipeId)) {
+				targetRecipes.remove(recipeId);
+				touchedRecipes.add(recipeId);
+			} else if (action instanceof QuestAction.GrantCraftSkill(
+				int skillId, int targetLevel, boolean autoLearnRecipes
+			)) {
+				int current = player.getSkillList().isSkillPresent(skillId)
+					? player.getSkillList().getSkillLevel(skillId) : 0;
+				targetSkills.merge(skillId, Math.max(current, targetLevel), Math::max);
+				if (autoLearnRecipes) {
+					Set<Integer> learned = autoRecipes.resolve(player, skillId, targetLevel);
 					targetRecipes.addAll(learned);
 					touchedRecipes.addAll(learned);
 				}

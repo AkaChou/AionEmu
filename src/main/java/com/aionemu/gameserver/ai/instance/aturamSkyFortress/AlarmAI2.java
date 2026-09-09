@@ -29,17 +29,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AlarmAI2 extends AggressiveNpcAI2
 {
 	private boolean canThink = true;
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -63,7 +62,7 @@ public class AlarmAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}

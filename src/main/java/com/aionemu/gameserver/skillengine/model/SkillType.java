@@ -18,5 +18,5 @@ public enum SkillType {
 	/** 魔法 / Magical */
 	MAGICAL,
 	/** 全部 / All */
-	ALL;
+	ALL
 }

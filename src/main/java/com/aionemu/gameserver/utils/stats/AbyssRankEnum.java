@@ -58,19 +58,19 @@ public enum AbyssRankEnum {
 	SUPREME_COMMANDER(18, 7099, 2413, 0, 12437, 1, 1802465);
 
 	/** 军衔 ID / Rank id */
-	private int id;
+	private final int id;
 	/** 击杀该军衔获得的点数 / Points gained when killing this rank */
-	private int pointsGained;
+	private final int pointsGained;
 	/** 被击杀时损失的点数 / Points lost when defeated */
-	private int pointsLost;
+	private final int pointsLost;
 	/** 升至该军衔所需 AP / AP required for this rank */
-	private int apRequired;
+	private final int apRequired;
 	/** 升至该军衔所需 GP / GP required for this rank */
-	private int gpRequired;
+	private final int gpRequired;
 	/** 该军衔最大人数配额 / Maximum player quota for this rank */
-	private int quota;
+	private final int quota;
 	/** 描述字符串 ID / Description string id */
-	private int descriptionId;
+	private final int descriptionId;
 
 	/**
 	 * 构造欧比斯军衔
@@ -84,8 +84,8 @@ public enum AbyssRankEnum {
 	 * @param quota 人数配额 / Player quota
 	 * Description id
 	 */
-	private AbyssRankEnum(int id, int pointsGained, int pointsLost, int apRequired, int gpRequired, int quota,
-			int descriptionId) {
+	AbyssRankEnum(int id, int pointsGained, int pointsLost, int apRequired, int gpRequired, int quota,
+				  int descriptionId) {
 		this.id = id;
 		this.pointsGained = pointsGained;
 		this.pointsLost = pointsLost;

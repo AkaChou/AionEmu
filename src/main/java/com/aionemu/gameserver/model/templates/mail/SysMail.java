@@ -14,6 +14,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * Sys 邮件模板（静态数据/XML）。
@@ -27,11 +28,13 @@ public class SysMail {
 	@XmlElement(name = "template", required = true)
 	private List<MailTemplate> templates;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
 	@XmlTransient
-	private Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<String, List<MailTemplate>>();
+	private final Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<String, List<MailTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailTemplate template : templates) {
@@ -59,10 +62,5 @@ public class SysMail {
 			}
 		}
 		return null;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
 	}
 }

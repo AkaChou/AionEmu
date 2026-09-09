@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplat
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeReward;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+import lombok.NoArgsConstructor;
 
 /**
  * Fortress 位置，用于要塞相关逻辑。
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  *
  * @author Source
  */
+@NoArgsConstructor
 public class FortressLocation extends SiegeLocation {
 
 	protected List<SiegeReward> siegeRewards;
@@ -25,9 +27,6 @@ public class FortressLocation extends SiegeLocation {
 	protected boolean isUnderShield;
 	protected boolean isUnderAssault;
 	protected boolean isCanTeleport;
-
-	public FortressLocation() {
-	}
 
 	public FortressLocation(SiegeLocationTemplate template) {
 		super(template);
@@ -119,8 +118,7 @@ public class FortressLocation extends SiegeLocation {
 	/** 清空位置。 / Clear location. */
 	public void clearLocation() {
 		for (Creature creature : getCreaturesSnapshot()) {
-			if ((isEnemy(creature)) && ((creature instanceof Kisk))) {
-				Kisk kisk = (Kisk) creature;
+			if ((isEnemy(creature)) && ((creature instanceof Kisk kisk))) {
 				kisk.getController().die();
 			}
 		}

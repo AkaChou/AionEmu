@@ -63,15 +63,14 @@ public class TargetRelationProperty {
 				Player player = null;
 				if (nextEffected instanceof Player) {
 					player = (Player) nextEffected;
-				} else if (nextEffected instanceof Summon) {
-					Summon playerSummon = (Summon) nextEffected;
+				} else if (nextEffected instanceof Summon playerSummon) {
 					if (playerSummon.getMaster() != null) {
 						player = playerSummon.getMaster();
 					}
 				}
 				if (player != null) {
 					if (effector instanceof Servant) {
-						effector = ((Servant) effector).getMaster();
+						effector = effector.getMaster();
 					}
 					Player playerEffector = (Player) effector;
 					if (playerEffector.isInAlliance2() && player.isInAlliance2()) {

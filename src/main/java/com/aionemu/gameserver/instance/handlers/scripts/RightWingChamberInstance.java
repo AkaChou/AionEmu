@@ -35,8 +35,8 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 		/** ancien treasure box / ancien treasure box */
-		private List<Npc> AncienTreasureBox = new ArrayList<Npc>();
-	
+		private final List<Npc> AncienTreasureBox = new ArrayList<Npc>();
+
 	private void startRightWingChamberTimer() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -74,7 +74,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			}
 		});
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -386,7 +386,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			}, 900000); //15 Minutes.
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -401,7 +401,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
@@ -413,7 +413,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

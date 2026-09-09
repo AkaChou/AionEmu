@@ -259,13 +259,13 @@ public class Plane implements Cloneable {
 	 * 点相对平面的侧别。
 	 * Side of a point relative to the plane.
 	 */
-	public static enum Side {
+	public enum Side {
 		/** 落在平面上。 / Lies on the plane. */
 		None,
 		/** Positive normal side (pseudo-distance &gt; 0) / Positive normal side (pseudo-distance &gt; 0) */
 		Positive,
 		/** Negative normal side (pseudo-distance &lt; 0) / Negative normal side (pseudo-distance &lt; 0) */
-		Negative;
+		Negative
 
 	}
 }

@@ -26,7 +26,7 @@ public class LandingSpecialData {
 	private List<LandingSpecialTemplate> landingSpecialTemplates;
 
 	@XmlTransient
-	private Map<Integer, LandingSpecialLocation> landingSpecial = new LinkedHashMap<Integer, LandingSpecialLocation>();
+	private final Map<Integer, LandingSpecialLocation> landingSpecial = new LinkedHashMap<Integer, LandingSpecialLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为按 ID 索引的地点映射。

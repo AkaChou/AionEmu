@@ -9,6 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ALLIANCE_MEMBER_INFO
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 成员分组变更事件。
@@ -16,6 +17,7 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@RequiredArgsConstructor
 public class ChangeMemberGroupEvent extends AlwaysTrueTeamEvent implements Predicate<PlayerAllianceMember> {
 
 	private final PlayerAlliance alliance;
@@ -24,13 +26,6 @@ public class ChangeMemberGroupEvent extends AlwaysTrueTeamEvent implements Predi
 	private final int allianceGroupId;
 	private PlayerAllianceMember firstMember;
 	private PlayerAllianceMember secondMember;
-
-	public ChangeMemberGroupEvent(PlayerAlliance alliance, int firstMemberId, int secondMemberId, int allianceGroupId) {
-		this.alliance = alliance;
-		this.firstMemberId = firstMemberId;
-		this.secondMemberId = secondMemberId;
-		this.allianceGroupId = allianceGroupId;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

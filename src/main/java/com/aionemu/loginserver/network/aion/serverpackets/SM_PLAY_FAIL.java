@@ -16,7 +16,7 @@ public class SM_PLAY_FAIL extends AionServerPacket {
      * 进入游戏失败原因。
      * Reason why play failed.
      */
-    private AionAuthResponse response;
+    private final AionAuthResponse response;
 
     /**
      * 构造 SM_PLAY_FAIL 包。

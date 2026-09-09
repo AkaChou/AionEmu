@@ -21,6 +21,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 /**
  * 城镇模型。
@@ -28,14 +29,28 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 
 public class Town {
-	private int id;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	private int nameId;
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	private int level;
+	/** 获取点。 / Returns the points. */
+	@Getter
 	private int points;
-	private Timestamp levelUpDate;
-	private Race race;
+	/** 返回等级日期 / Returns the level up date */
+	@Getter
+	private final Timestamp levelUpDate;
+	/** 获取种族。 / Returns the race. */
+	@Getter
+	private final Race race;
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
-	private List<Npc> spawnedNpcs;
+	private final List<Npc> spawnedNpcs;
 
 	public Town(int id, int level, int points, Race race, Timestamp levelUpDate) {
 		this.id = id;
@@ -52,26 +67,6 @@ public class Town {
 	public Town(int id, Race race) {
 		this(id, 1, 0, race, new Timestamp(60000));
 		this.persistentState = PersistentState.NEW;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameId() {
-		return nameId;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
-	}
-
-	/** 获取点。 / Returns the points. */
-	public int getPoints() {
-		return points;
 	}
 
 	/** 增加点。 / Increase points. */
@@ -150,25 +145,9 @@ public class Town {
 		spawnedNpcs.clear();
 	}
 
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return this.race;
-	}
-
-	/** 返回等级日期 / Returns the level up date */
-	public Timestamp getLevelUpDate() {
-		return levelUpDate;
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
 	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState state) {
 		if (this.persistentState == PersistentState.NEW && state == PersistentState.UPDATE_REQUIRED) {
-			return;
 		} else {
 			this.persistentState = state;
 		}

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.ingameshop;
 
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 游戏商城物品。
@@ -9,36 +10,21 @@ import lombok.Getter;
  * @author xTz
  */
 @Getter
+@AllArgsConstructor
 public class IGItem {
 
-	private int objectId;
-	private int itemId;
-	private long itemCount;
-	private long itemPrice;
-	private byte category;
-	private byte subCategory;
-	private int list;
+	private final int objectId;
+	private final int itemId;
+	private final long itemCount;
+	private final long itemPrice;
+	private final byte category;
+	private final byte subCategory;
+	private final int list;
 	private int salesRanking;
-	private byte itemType;
-	private byte gift;
-	private String titleDescription;
-	private String itemDescription;
-
-	public IGItem(int objectId, int itemId, long itemCount, long itemPrice, byte category, byte subCategory, int list,
-			int salesRanking, byte itemType, byte gift, String titleDescription, String itemDescription) {
-		this.objectId = objectId;
-		this.itemId = itemId;
-		this.itemCount = itemCount;
-		this.itemPrice = itemPrice;
-		this.category = category;
-		this.subCategory = subCategory;
-		this.list = list;
-		this.salesRanking = salesRanking;
-		this.itemType = itemType;
-		this.gift = gift;
-		this.titleDescription = titleDescription;
-		this.itemDescription = itemDescription;
-	}
+	private final byte itemType;
+	private final byte gift;
+	private final String titleDescription;
+	private final String itemDescription;
 
 	/** 销量加一。 / Increase sales by one. */
 	public void increaseSales() {

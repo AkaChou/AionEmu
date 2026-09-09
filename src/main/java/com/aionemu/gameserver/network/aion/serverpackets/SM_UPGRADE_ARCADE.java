@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTabItem;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 升级街机（Arcade Upgrade）活动交互的服务端包。
@@ -20,14 +21,15 @@ import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
  *
  * @author Ranastic
  */
+@RequiredArgsConstructor
 public class SM_UPGRADE_ARCADE extends AionServerPacket {
-	private int action;
+	private final int action;
 	private int showicon = 1;
 	private int frenzyPoints = 0;
 	private boolean success = false;
 	private int level;
 	private ArcadeTabItem itemList;
-	private int sessionId = 64519;
+	private final int sessionId = 64519;
 	private Player player;
 	private int frenzyTime;
 	private int frenzyCount;
@@ -54,16 +56,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 		this.action = 1;
 		this.frenzyPoints = frenzyPoints;
 		this.frenzyCount = frenzyCount;
-	}
-
-	/**
-	 * 通用 action。
-	 * Generic action.
-	 *
-	 * action type
-	 */
-	public SM_UPGRADE_ARCADE(int action) {
-		this.action = action;
 	}
 
 	/**

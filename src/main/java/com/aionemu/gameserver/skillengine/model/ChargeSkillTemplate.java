@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 充能技能模板：一至三阶段技能、最小充能与加成类型。
@@ -18,6 +19,12 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "charge_skill")
 public class ChargeSkillTemplate {
 
+	/**
+	 * 获取充能技能 ID。
+	 * Gets charge skill id.
+	 *
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
@@ -36,20 +43,17 @@ public class ChargeSkillTemplate {
 	@XmlAttribute(name = "min_charge")
 	private int min_charge;
 
+	/**
+	 * 获取充能阶段列表。
+	 * Gets charge stage list.
+	 *
+	 */
+	@Getter
 	@XmlElement(name = "charge")
 	private List<ChargeTemplate> charges;
 
 	@XmlAttribute(name = "bonus_type", required = true)
 	protected BonusChargeType type = BonusChargeType.NONE;
-
-	/**
-	 * 获取充能技能 ID。
-	 * Gets charge skill id.
-	 *
-	 */
-	public int getId() {
-		return id;
-	}
 
 	/**
 	 * 获取充能集合名称。
@@ -94,15 +98,6 @@ public class ChargeSkillTemplate {
 	 */
 	public int getMinCharge() {
 		return min_charge;
-	}
-
-	/**
-	 * 获取充能阶段列表。
-	 * Gets charge stage list.
-	 *
-	 */
-	public List<ChargeTemplate> getCharges() {
-		return charges;
 	}
 
 	/**

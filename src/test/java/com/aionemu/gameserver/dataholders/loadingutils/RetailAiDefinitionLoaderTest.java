@@ -268,27 +268,27 @@ class RetailAiDefinitionLoaderTest {
 		assertTrue(data.hasSkillArea(1745));
 		assertFalse(data.hasSkillArea(999999));
 		assertFalse(data.hasArea("ab1_ship_msg"));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(207504)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(218354)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(217893)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(214659)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(214664)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(237107)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(216526)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(230996)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(236727)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(219998)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(857460)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(857462)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(857464)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(231501)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(212648)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(212283)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(212874)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(216264)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(230820)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(282420)));
-		assertEquals(true, RetailPatternAI2.supports(data.getPattern(219358)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(207504)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(218354)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(217893)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(214659)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(214664)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(237107)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(216526)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(230996)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(236727)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(219998)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(857460)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(857462)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(857464)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(231501)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(212648)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(212283)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(212874)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(216264)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(230820)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(282420)));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(219358)));
 	}
 
 	@Test

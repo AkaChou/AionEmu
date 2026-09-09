@@ -88,7 +88,7 @@ public class IdianDepths extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidIdianDepthsLocationId(Player player, int idianDepthsId) {
-		if (!GameLocationBootstrapServices.idianDepthsService().getIdianDepthsLocations().keySet().contains(idianDepthsId)) {
+		if (!GameLocationBootstrapServices.idianDepthsService().getIdianDepthsLocations().containsKey(idianDepthsId)) {
 			PacketSendUtility.sendMessage(player, "Id " + idianDepthsId + " is invalid");
 			return false;
 		}

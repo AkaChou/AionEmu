@@ -52,7 +52,7 @@ public class InGameShopEn {
 	private volatile InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
 	private final List<IGRequest> activeRequests = new ArrayList<>();
-	private static Map<Integer, Long> lastUsage = new HashMap<>();
+	private static final Map<Integer, Long> lastUsage = new HashMap<>();
 
 	/** 获取副本。 / Returns the instance. */
 	public static InGameShopEn getInstance() {
@@ -240,18 +240,18 @@ public class InGameShopEn {
 	/** Finish Request / Finish Request */
 	public void finishRequest(int requestId, int result, long toll, long luna) {
 		IGRequest foundRequest = null;
-		
+
 		for (IGRequest request : activeRequests) {
 			if (request.requestId == requestId) {
 				foundRequest = request;
 				break;
 			}
 		}
-		
+
 		if (foundRequest == null) {
 			return;
 		}
-		
+
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(foundRequest.playerId);
 		if (player != null) {
 			if (result == 1) {
@@ -268,7 +268,7 @@ public class InGameShopEn {
 				if (item == null) {
 					return;
 				}
-				
+
 				if (foundRequest.gift) {
 					GameFeatureServices.systemMailService().sendMail(player.getName(), foundRequest.receiver, "In Game Shop", foundRequest.message, item.getItemId(), item.getItemCount(), 0L, 0L, LetterType.BLACKCLOUD);
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_GIFT_SUCCESS);
@@ -279,7 +279,7 @@ public class InGameShopEn {
 					player.getClientConnection().getAccount().setToll(toll);
 					player.getClientConnection().getAccount().setLuna(luna);
 				}
-				
+
 				item.increaseSales();
 				dao.increaseSales(item.getObjectId(), item.getSalesRanking());
 				PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
@@ -288,7 +288,7 @@ public class InGameShopEn {
 				PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 			}
 		}
-		
+
 		activeRequests.remove(foundRequest);
 	}
 

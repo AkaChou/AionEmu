@@ -36,8 +36,7 @@ public class CreatureEventHandler {
 	 */
 	public static void onCreatureMoved(NpcAI2 npcAI, Creature creature) {
 		checkAggro(npcAI, creature);
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}
@@ -58,8 +57,7 @@ public class CreatureEventHandler {
 			}
 		}
 		checkAggro(npcAI, creature);
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}

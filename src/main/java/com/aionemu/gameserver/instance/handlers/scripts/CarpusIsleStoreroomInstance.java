@@ -37,8 +37,8 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 		/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
-		private List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
-	
+		private final List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -56,7 +56,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -85,7 +85,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnCarpusIsleStoreroomRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("CARPUS_ISLE_STOREROOM", mapId,
         new Point3D(479.24, 572.57, 202.72),
@@ -93,7 +93,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
         new Point3D(477.97, 563.35, 202.12), 10), instanceId);
         f1.spawn();
     }
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -129,7 +129,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -143,7 +143,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
 		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
 	}
-	
+
 	private void startCarpusIsleStoreroomChamberTimer() {
 		carpusIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -160,7 +160,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		}, 900000); //15 Minutes.
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -175,7 +175,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -186,7 +186,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -197,7 +197,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000033, storage.getItemCountByItemId(185000033)); //Golden Abyss Key.

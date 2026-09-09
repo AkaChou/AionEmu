@@ -19,7 +19,7 @@ public class Power implements StatOwner {
 
 	private static volatile ObjectProvider<Power> instanceProvider;
 
-	private List<IStatFunction> power = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> power = new ArrayList<IStatFunction>();
 
 	/**
 	 * 属性变更时重算。

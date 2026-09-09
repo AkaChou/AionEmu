@@ -12,18 +12,18 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 真实 AI 控制的 MovingCollision 与 WindBox 实例状态。
  * Retail AI-controlled instance states for MovingCollision and WindBox.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetailDynamicAreaEngine {
 
 	private static final Map<WorldMapInstance, Map<String, Boolean>> STATES = new ConcurrentHashMap<>();
 	private static final Map<WorldMapInstance, Map<String, Future<?>>> EXPIRIES = new ConcurrentHashMap<>();
-
-	private RetailDynamicAreaEngine() {
-	}
 
 	public static boolean supports(int worldId, String type, int id) {
 		return area(worldId, type, id) != null;

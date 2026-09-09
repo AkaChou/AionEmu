@@ -13,13 +13,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet broadcasting basic-attack results (damage, block/parry/dodge, shield reflection, etc.).
  */
 public class SM_ATTACK extends AionServerPacket {
-	private int attackno;
-	private int time;
-	private int type;
-	private int SimpleAttackType;
-	private List<AttackResult> attackList;
-	private Creature attacker;
-	private Creature target;
+	private final int attackno;
+	private final int time;
+	private final int type;
+	private final int SimpleAttackType;
+	private final List<AttackResult> attackList;
+	private final Creature attacker;
+	private final Creature target;
 
 	/**
 	 * attacker

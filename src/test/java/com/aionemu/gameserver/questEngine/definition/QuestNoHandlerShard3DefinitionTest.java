@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Verdict for the no-handler shard-3 quests 29634 / 30208 / 30565 / 30760. */
 class QuestNoHandlerShard3DefinitionTest {
@@ -185,7 +183,7 @@ class QuestNoHandlerShard3DefinitionTest {
 			.map(a -> (AfterCommitAction.SpawnNpc) a).findFirst().orElseThrow();
 		assertEquals("hakelan", spawn.slot());
 		assertEquals(800458, spawn.templateId());
-		assertTrue(spawn.location() instanceof QuestSpawnLocation.PlayerPosition);
+		assertInstanceOf(QuestSpawnLocation.PlayerPosition.class, spawn.location());
 
 		// Three selectable scroll rewards complete on Hank (804871): dialog 8/9/10 各一条完成路线。
 		List<List<QuestAction>> completions = completionActions(compiled);

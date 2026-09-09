@@ -38,8 +38,7 @@ public class FixH extends AdminCommand {
 		}
 
 		if (admin.getTarget() != null) {
-			if (admin.getTarget() instanceof Npc) {
-				Npc target = (Npc) admin.getTarget();
+			if (admin.getTarget() instanceof Npc target) {
 				final SpawnTemplate temp = target.getSpawn();
 				int respawnTime = 295;
 				boolean permanent = true;

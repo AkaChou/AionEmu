@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.housing.PartType;
+import lombok.Getter;
 
 /**
  * 房屋 Registry 模型。
@@ -22,21 +23,18 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 @Slf4j
 
 public class HouseRegistry {
-	private House owner;
-	private Map<Integer, HouseObject<?>> objects;
-	private Map<Integer, HouseDecoration> customParts;
-	private HouseDecoration[] defaultParts = new HouseDecoration[28];
+	/** 返回所有者 / Returns the owner*/
+	@Getter
+	private final House owner;
+	private final Map<Integer, HouseObject<?>> objects;
+	private final Map<Integer, HouseDecoration> customParts;
+	private final HouseDecoration[] defaultParts = new HouseDecoration[28];
 	private PersistentState persistentState = PersistentState.UPDATED;
 
 	public HouseRegistry(House owner) {
 		this.owner = owner;
 		this.objects = new HashMap<Integer, HouseObject<?>>();
 		this.customParts = new HashMap<Integer, HouseDecoration>();
-	}
-
-	/** 返回所有者 / Returns the owner*/
-	public House getOwner() {
-		return owner;
 	}
 
 	/** 返回对象 / Returns the objects*/

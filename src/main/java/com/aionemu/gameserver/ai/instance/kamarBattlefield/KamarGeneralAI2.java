@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("kamar_general")
 public class KamarGeneralAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已触发首次受袭广播 / whether the first-hit announcement was triggered
+	private final AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已触发首次受袭广播 / whether the first-hit announcement was triggered
 
 	/**
 	 * 首次受击时按 NPC 类型向副本内全体玩家广播对应指挥官的受袭消息。
@@ -46,7 +46,7 @@ public class KamarGeneralAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceIDKamarLightGeneral() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override

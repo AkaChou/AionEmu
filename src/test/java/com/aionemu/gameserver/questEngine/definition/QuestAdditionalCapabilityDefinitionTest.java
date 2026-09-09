@@ -15,11 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QuestAdditionalCapabilityDefinitionTest {
 	@Test
@@ -364,7 +360,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 		QuestTransition wildcard = compiled.definition().transitions().get(1);
-		assertEquals(null, wildcard.sourceNode());
+		assertNull(wildcard.sourceNode());
 		int packed = compiled.definition().progressLayout().pack(Map.of("step", 94));
 		assertTrue(QuestMutationPlanner.plan(compiled,
 			new QuestSnapshot(7, 20044, QuestStatus.START, packed, Map.of()),

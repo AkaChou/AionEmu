@@ -239,12 +239,10 @@ public class Intersection {
 		// e0.cross(e1, normal);
 		Plane p = new Plane();
 		p.setPlanePoints(v1, v2, v3);
-		if (bbox.whichSide(p) == Plane.Side.Negative) {
-			return false;
-		}
+		return bbox.whichSide(p) != Plane.Side.Negative;
 		//
 		// if(!planeBoxOverlap(normal,v0,boxhalfsize)) return false;
-		return true; /* box and triangle overlaps */
+		/* box and triangle overlaps */
 
 	}
 }

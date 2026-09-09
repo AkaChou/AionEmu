@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 宠物 Emote 枚举。
@@ -16,7 +17,7 @@ public enum PetEmote {
 	/** 未知 / Unknown. */
 	UNKNOWN(255);
 
-	private static Map<Integer, PetEmote> petEmotes;
+	private static final Map<Integer, PetEmote> petEmotes;
 
 	static {
 		petEmotes = new HashMap<Integer, PetEmote>();
@@ -25,15 +26,12 @@ public enum PetEmote {
 		}
 	}
 
-	private int emoteId;
-
-	private PetEmote(int emoteId) {
-		this.emoteId = emoteId;
-	}
-
 	/** 返回表情 ID / Returns the emote id */
-	public int getEmoteId() {
-		return emoteId;
+	@Getter
+	private final int emoteId;
+
+	PetEmote(int emoteId) {
+		this.emoteId = emoteId;
 	}
 
 	/** 按 ID 返回表情 / Returns the emote by id */

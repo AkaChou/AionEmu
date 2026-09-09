@@ -35,22 +35,22 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class TreasureAbyssService {
 
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
-	private static List<float[]> floatArray = new ArrayList<float[]>();
+	private static final List<float[]> floatArray = new ArrayList<float[]>();
 
 	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String ABYSS_EVENT_SCHEDULE = EventsConfig.ABYSS_EVENT_SCHEDULE;
 
 	/** 欧比斯世界 ID / Abyss world id */
-	private static int WORLD_ID = 400010000;
+	private static final int WORLD_ID = 400010000;
 
 	/** 宝藏箱 NPC 模板 ID / Treasure chest NPC template id */
-	private static int NPC_ID = 210596;
+	private static final int NPC_ID = 210596;
 
 	/**
 	 * 缓存的奖励物品 ID 列表。
 	 * Cached reward item id list.
 	 */
-	private static int[] rewards = TreasureReward();// cannot get directly u must call an method
+	private static final int[] rewards = TreasureReward();// cannot get directly u must call an method
 
 	/**
 	 * 从配置解析奖励物品 ID 列表。
@@ -142,8 +142,7 @@ public class TreasureAbyssService {
 
 			@Override
 			public void attacked(Creature creature) {
-				if (creature instanceof Player) {
-					final Player player = (Player) creature;
+				if (creature instanceof Player player) {
 					final int id = rewards[Rnd.get(rewards.length)];
 					ItemService.addItem(player, id, 1);
 					PacketSendUtility.sendSys3Message(player, "\uE09B", "Founds the balaur treasure chest!");

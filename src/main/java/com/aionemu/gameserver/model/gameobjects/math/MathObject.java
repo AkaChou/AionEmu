@@ -11,6 +11,8 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 数学对象。
@@ -18,13 +20,33 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
  */
 
 public class MathObject extends VisibleObject {
-	private double minRange;
-	private double maxRange;
+	/** 返回最小范围。 / Returns the min range. */
+	@Getter
+	private final double minRange;
+	/** 返回最大范围。 / Returns the max range. */
+	@Getter
+	private final double maxRange;
+	/** 设置 skill id / Sets the skill id */
+	@Getter
+	@Setter
 	private int skillId;
+	/** 设置 npc id / Sets the npc id */
+	@Getter
+	@Setter
 	private int npcId;
+	/** 返回主人。 / Returns the master. */
+	@Getter
+	@Setter
 	private Npc master;
-	private MathObjectType type;
+	/** 获取类型。 / Returns the type. */
+	@Getter
+	private final MathObjectType type;
+	/** 返回反应类型。 / Returns the reaction. */
+	@Getter
 	private MathObjectReaction reaction = MathObjectReaction.PC;
+	/** 返回时长。 / Returns the duration. */
+	@Getter
+	@Setter
 	private int duration;
 
 	public MathObject(SpawnTemplate spawnTemplate, MathObjectType type, MathObjectReaction reaction, double minRange,
@@ -51,69 +73,9 @@ public class MathObject extends VisibleObject {
 		}
 	}
 
-	/** 设置 skill id / Sets the skill id */
-	public void setSkillId(int skillId) {
-		this.skillId = skillId;
-	}
-
-	/** 设置 npc id / Sets the npc id */
-	public void setNpcId(int npcId) {
-		this.npcId = npcId;
-	}
-
 	/** 返回控制器。 / Returns the controller. */
 	public MathController getController() {
 		return (MathController) super.getController();
-	}
-
-	/** 返回最小范围。 / Returns the min range. */
-	public double getMinRange() {
-		return this.minRange;
-	}
-
-	/** 返回最大范围。 / Returns the max range. */
-	public double getMaxRange() {
-		return this.maxRange;
-	}
-
-	/** 返回技能 ID / Returns the skill id */
-	public int getSkillId() {
-		return this.skillId;
-	}
-
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return this.npcId;
-	}
-
-	/** 返回主人。 / Returns the master. */
-	public Npc getMaster() {
-		return this.master;
-	}
-
-	/** 设置主人。 / Sets the master. */
-	public void setMaster(Npc master) {
-		this.master = master;
-	}
-
-	/** 获取类型。 / Returns the type. */
-	public MathObjectType getType() {
-		return this.type;
-	}
-
-	/** 返回反应类型。 / Returns the reaction. */
-	public MathObjectReaction getReaction() {
-		return this.reaction;
-	}
-
-	/** 返回时长。 / Returns the duration. */
-	public int getDuration() {
-		return this.duration;
-	}
-
-	/** 设置时长。 / Sets the duration. */
-	public void setDuration(int duration) {
-		this.duration = duration;
 	}
 
 	/** 返回可见距离。 / Returns the visibility distance. */

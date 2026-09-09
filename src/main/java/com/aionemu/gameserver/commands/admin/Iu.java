@@ -80,7 +80,7 @@ public class Iu extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidConcertLocationId(Player player, int iuId) {
-		if (!GameLocationBootstrapServices.iuService().getIuLocations().keySet().contains(iuId)) {
+		if (!GameLocationBootstrapServices.iuService().getIuLocations().containsKey(iuId)) {
 			PacketSendUtility.sendMessage(player, "Id " + iuId + " is invalid");
 			return false;
 		}

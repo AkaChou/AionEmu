@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * ComboProduct 模板（静态数据/XML）。
@@ -13,11 +14,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ComboProduct")
 public class ComboProduct {
+	/** 返回物品 ID / Returns the itemid */
+	@Getter
 	@XmlAttribute
 	protected int itemid;
-
-	/** 返回物品 ID / Returns the itemid */
-	public int getItemid() {
-		return itemid;
-	}
 }

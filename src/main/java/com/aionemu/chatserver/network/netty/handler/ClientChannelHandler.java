@@ -140,7 +140,7 @@ public class ClientChannelHandler {
      * 通道处理器可能的状态。
      * Possible states of the channel handler.
      */
-    public static enum State {
+    public enum State {
 
         /**
          * 客户端刚连接。

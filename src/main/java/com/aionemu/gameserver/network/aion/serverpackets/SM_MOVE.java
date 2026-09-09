@@ -5,6 +5,7 @@ import com.aionemu.gameserver.controllers.movement.PlayableMoveController;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 生物移动同步服务端包。
@@ -13,6 +14,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * 可从 {@link Creature} 的移动控制器读取实时数据，也可使用原始坐标/标志构造。
  * Can be built from a {@link Creature}'s move controller or from raw coordinates/flags.
  */
+@RequiredArgsConstructor
 public class SM_MOVE extends AionServerPacket {
 	private final Creature creature;
 	private int _objectId;
@@ -24,16 +26,6 @@ public class SM_MOVE extends AionServerPacket {
 	private float _tZ;
 	private byte _heading;
 	private byte _moveTypeFlag;
-
-	/**
-	 * 从生物当前移动状态构造移动包。
-	 * Builds a move packet from the creature's current movement state.
-	 *
-	 * @param creature 移动中的生物 / moving creature
-	 */
-	public SM_MOVE(Creature creature) {
-		this.creature = creature;
-	}
 
 	/**
 	 * 由原始坐标与移动标志构造移动包（无生物引用）。
@@ -84,8 +76,7 @@ public class SM_MOVE extends AionServerPacket {
 			this.writeF(this.creature.getZ());
 			this.writeC(this.creature.getHeading());
 			this.writeC(moveData.getMovementMask());
-			if (moveData instanceof PlayableMoveController) {
-				PlayableMoveController playermoveData = (PlayableMoveController) moveData;
+			if (moveData instanceof PlayableMoveController playermoveData) {
 				if ((moveData.getMovementMask() & 0xFFFFFFC0) == -64) {
 					if ((moveData.getMovementMask() & 0x20) == 0) {
 						this.writeF(playermoveData.vectorX);

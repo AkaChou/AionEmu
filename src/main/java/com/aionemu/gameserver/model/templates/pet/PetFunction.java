@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
 /**
  * 宠物函数模板（静态数据/XML）。
@@ -17,24 +18,18 @@ public class PetFunction {
 
 	@XmlAttribute(name = "type")
 	private PetFunctionType type;
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
+	/** 返回槽位 / Returns the slots*/
+	@Getter
 	@XmlAttribute(name = "slots")
 	private int slots;
 
 	/** 获取宠物函数类型。 / Returns the pet function type. */
 	public PetFunctionType getPetFunctionType() {
 		return type;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回槽位 / Returns the slots*/
-	public int getSlots() {
-		return slots;
 	}
 
 	/** 创建空对象。 / Creates an empty object. */

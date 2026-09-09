@@ -4,6 +4,7 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 通知客户端军团新增成员的服务端包。
@@ -11,28 +12,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Simple
  */
+@AllArgsConstructor
 public class SM_LEGION_ADD_MEMBER extends AionServerPacket {
 
-	private Player player;
-	private boolean isMember;
-	private int msgId;
-	private String text;
-
-	/**
-	 * 构造军团新增成员通知包。
-	 * Creates a packet announcing a newly added legion member.
-	 *
-	 * @param player 新增的玩家 / the player being added
-	 * @param isMember 是否为新成员标记 / whether flagged as a new member
-	 * message id
-	 * @param text 附加文本 / additional text
-	 */
-	public SM_LEGION_ADD_MEMBER(Player player, boolean isMember, int msgId, String text) {
-		this.player = player;
-		this.isMember = isMember;
-		this.msgId = msgId;
-		this.text = text;
-	}
+	private final Player player;
+	private final boolean isMember;
+	private final int msgId;
+	private final String text;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

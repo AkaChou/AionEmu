@@ -58,7 +58,7 @@ public class CraftCooldownList {
 			craftCooldowns = new HashMap<Integer, Long>();
 		}
 
-		long nextUseTime = System.currentTimeMillis() + (delay * 1000);
+		long nextUseTime = System.currentTimeMillis() + (delay * 1000L);
 		craftCooldowns.put(delayId, nextUseTime);
 	}
 }

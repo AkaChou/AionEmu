@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 数据库操作工具类
@@ -22,10 +24,8 @@ import lombok.extern.slf4j.Slf4j;
  * All database operations obtain connections through DatabaseFactory and ensure proper resource cleanup.
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DB {
-
-    private DB() {
-    }
 
     /**
      * 执行查询操作

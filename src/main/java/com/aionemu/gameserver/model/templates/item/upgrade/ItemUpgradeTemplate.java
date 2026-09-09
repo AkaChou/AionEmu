@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
+import lombok.Getter;
 
 /**
  * 物品升级模板（静态数据/XML）。
@@ -20,21 +21,15 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 @XmlRootElement(name = "ItemUpgrade")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemUpgradeTemplate implements StatOwner {
+	/** 获取升级结果物品。 / Returns the upgrade result item. */
+	@Getter
 	protected List<UpgradeResultItem> upgrade_result_item;
 
+	/** 返回升级基础物品 ID / Returns the upgrade base item id */
+	@Getter
 	@XmlAttribute(name = "upgrade_base_item")
 	private int upgrade_base_item_id;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-	}
-
-	/** 获取升级结果物品。 / Returns the upgrade result item. */
-	public List<UpgradeResultItem> getUpgrade_result_item() {
-		return upgrade_result_item;
-	}
-
-	/** 返回升级基础物品 ID / Returns the upgrade base item id */
-	public int getUpgrade_base_item_id() {
-		return upgrade_base_item_id;
 	}
 }

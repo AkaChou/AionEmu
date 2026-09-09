@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers.observer;
 
+import lombok.Getter;
+
 /**
  * 监听施法者是否开始移动，用于打断需静止的技能。
  * Listens whether the effector started moving; used to interrupt skills that require stillness.
@@ -9,6 +11,7 @@ package com.aionemu.gameserver.controllers.observer;
 public class StartMovingListener extends ActionObserver {
 
 	/** 施法者是否已移动 / Whether the effector has moved */
+	@Getter
 	private boolean effectorMoved = false;
 
 	/**
@@ -17,16 +20,6 @@ public class StartMovingListener extends ActionObserver {
 	 */
 	public StartMovingListener() {
 		super(ObserverType.MOVE);
-	}
-
-	/**
-	 * 施法者是否已移动。
-	 * Whether the effector has moved.
-	 *
-	 * @return 是否已移动 / whether moved
-	 */
-	public boolean isEffectorMoved() {
-		return effectorMoved;
 	}
 
 	@Override

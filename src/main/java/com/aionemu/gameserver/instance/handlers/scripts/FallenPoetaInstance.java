@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -276,7 +275,6 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			break;
 			case 243684: //Artifact Overlord Kroban.
 				despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fallen Poeta>");
 				spawn(703373, npc.getX(), npc.getY(), npc.getZ(), (byte) 0); //Kroban's Treasure Chest.
 				spawn(833852, 1179.0000f, 1223.0000f, 146.00000f, (byte) 0, 223); //Burning Base Exit.
 			break;
@@ -295,7 +293,6 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		// 阿努哈特中尉放弃追击并消失。 / Lieutenant Anuhart has given up the pursuit and has disappeared.
 		sendMsgByRace(1403444, Race.PC_ALL, 0);
 		killNpc(getNpcs(243682)); //Lieutenant Anuhart.
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You managed to escape from <Lieutenant Anuhart> :) ");
 	}
 	
 	/**
@@ -636,20 +633,6 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
         spawn(IDF6LF1NPCRa03, 277.42953f, 962.95776f, 105.60828f, (byte) 21);
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

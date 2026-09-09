@@ -118,7 +118,7 @@ public class HouseScriptData {
 		JAXBContext jc = null;
 		try {
 			schema = sf.newSchema(Config.dataFile("./data/static_data/housing/scripts.xsd"));
-			jc = JAXBContext.newInstance(new Class[] { HouseScriptData.class });
+			jc = JAXBContext.newInstance(HouseScriptData.class);
 			marshaller = jc.createMarshaller();
 			marshaller.setSchema(schema);
 			marshaller.setProperty("jaxb.encoding", "UTF-8");

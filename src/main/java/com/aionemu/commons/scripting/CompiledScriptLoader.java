@@ -12,17 +12,17 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 已编译脚本类加载器，按包扫描 classpath 中的 class 资源
  * Compiled script class loader that scans classpath class resources by package
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CompiledScriptLoader {
 
 	private static final String CLASS_RESOURCE_PATTERN = "classpath*:%s/**/*.class";
-
-	private CompiledScriptLoader() {
-	}
 
 	/**
 	 * 加载指定包下的全部顶层类（排除内部类）

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("deadly_sunayaka")
 public class Deadly_SunayakaAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	@Override
 	protected void handleAttack(Creature creature) {

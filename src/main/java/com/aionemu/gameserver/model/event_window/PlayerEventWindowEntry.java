@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.event_window;
 import java.sql.Timestamp;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
 
 /**
  * 玩家活动窗口条目，用于活动窗口相关逻辑。
@@ -12,16 +13,13 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 public class PlayerEventWindowEntry extends EventWindowEntry {
 
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
 
 	public PlayerEventWindowEntry(int id, Timestamp lastStamp, int elapsed, PersistentState persistentState) {
 		super(id, lastStamp, elapsed);
 		this.persistentState = persistentState;
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/** 设置持久化状态。 / Sets the persistent state. */

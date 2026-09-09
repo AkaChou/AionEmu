@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
 /**
  * 需要基纳模板（静态数据/XML）。
@@ -15,11 +16,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "NeedKinah")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NeedKinah {
+	/** 获取计数。 / Returns the count. */
+	@Getter
 	@XmlAttribute(name = "count")
 	private int count;
-
-	/** 获取计数。 / Returns the count. */
-	public int getCount() {
-		return count;
-	}
 }

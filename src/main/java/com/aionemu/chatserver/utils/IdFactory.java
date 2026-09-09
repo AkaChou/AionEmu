@@ -14,7 +14,7 @@ public class IdFactory {
 
     private final BitSet idList = new BitSet();
     private final ReentrantLock lock = new ReentrantLock();
-    private AtomicInteger nextMinId = new AtomicInteger(1);
+    private final AtomicInteger nextMinId = new AtomicInteger(1);
 
     /**
      * 在锁保护下分配下一个未使用的 ID。

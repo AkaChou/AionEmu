@@ -53,7 +53,7 @@ public class Say extends AdminCommand {
 		}
 		else if (target instanceof Npc) {
 			// 管理员不正确，但能用 / admin is not right, but works
-			PacketSendUtility.broadcastPacket(admin, new SM_MESSAGE(((Npc) target).getObjectId(), ((Npc) target).getName(),
+			PacketSendUtility.broadcastPacket(admin, new SM_MESSAGE(target.getObjectId(), target.getName(),
 				sMessage, ChatType.NORMAL), true);
 		}
 	}

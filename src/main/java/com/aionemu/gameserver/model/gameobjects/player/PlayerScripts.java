@@ -3,6 +3,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -107,7 +109,7 @@ public class PlayerScripts {
 		} else {
 			try {
 				content = CompressUtil.Decompress(compressedXML);
-				byte[] bytes = content.getBytes("UTF-16LE");
+				byte[] bytes = content.getBytes(StandardCharsets.UTF_16LE);
 				if (bytes.length != uncompressedSize) {
 					return false;
 				}

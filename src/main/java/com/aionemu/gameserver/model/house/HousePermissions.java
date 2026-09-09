@@ -17,9 +17,9 @@ public enum HousePermissions {
 	/** 门关闭 / Door closed */
 	DOOR_CLOSED(3 << 8);
 
-	private int value;
+	private final int value;
 
-	private HousePermissions(int value) {
+	HousePermissions(int value) {
 		this.value = value;
 	}
 

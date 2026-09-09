@@ -9,7 +9,8 @@ import java.sql.Timestamp;
  * @author KID
  */
 public class BannedMacEntry {
-	private String mac, details;
+	private final String mac;
+	private String details;
 	private Timestamp timeEnd;
 
 	/**

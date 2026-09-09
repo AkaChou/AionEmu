@@ -23,12 +23,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("nanabel_comander")
 public class Nanabel_ComanderAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 天族必胜，你们的挣扎终是徒劳。 / Victory is a certainty for us Elyos, yet you continue your futile struggles.
@@ -45,14 +44,14 @@ public class Nanabel_ComanderAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		GameLocationBootstrapServices.rvrService().stopRvr(4);
 		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 次元漩涡 / Dimensional Vortex.
 		super.handleDied();
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

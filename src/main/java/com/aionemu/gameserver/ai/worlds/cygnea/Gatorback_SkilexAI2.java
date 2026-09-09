@@ -15,7 +15,7 @@ public class Gatorback_SkilexAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(235830, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Mutated Gatorback Skilex.
+		spawn(235830, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Mutated Gatorback Skilex.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

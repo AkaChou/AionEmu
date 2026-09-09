@@ -128,9 +128,7 @@ public class CubeExpandService {
 	 * @param level 若 valid 则为 true / true if valid
 	 */
 	private static boolean validateNewSize(int level) {
-		if (level < MIN_EXPAND || level > MAX_EXPAND)
-			return false;
-		return true;
+		return level >= MIN_EXPAND && level <= MAX_EXPAND;
 	}
 
 	/**
@@ -142,10 +140,7 @@ public class CubeExpandService {
 	 * @return 若 supported 则为 true / true if supported
 	 */
 	private static boolean npcCanExpandLevel(CubeExpandTemplate clist, int level) {
-		if (!clist.contains(level)) {
-			return false;
-		}
-		return true;
+		return clist.contains(level);
 	}
 
 	/**

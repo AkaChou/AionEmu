@@ -39,8 +39,7 @@ public class Kill extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "No target selected");
 				return;
 			}
-			if (target instanceof Creature) {
-				Creature creature = (Creature) target;
+			if (target instanceof Creature creature) {
 				creature.getController().onAttack(admin, creature.getLifeStats().getMaxHp() + 1, true);
 			}
 		}
@@ -58,8 +57,7 @@ public class Kill extends AdminCommand {
 				}
 			}
 			for (VisibleObject obj : admin.getKnownList().getKnownObjectsSnapshot()) {
-				if (obj instanceof Creature) {
-					Creature creature = (Creature) obj;
+				if (obj instanceof Creature creature) {
 					if (range < 0 || MathUtil.isIn3dRange(admin, obj, range))
 						creature.getController().onAttack(admin, creature.getLifeStats().getMaxHp() + 1, true);
 				}

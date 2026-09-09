@@ -80,14 +80,14 @@ public class AccountController {
      * @param gsConnection 游戏服连接 / GameServer connection
      */
     public synchronized void checkAuth(SessionKey key, GsConnection gsConnection) {
-        LoginConnection con = accountsOnLS.get(key.accountId);
+        LoginConnection con = accountsOnLS.get(key.accountId());
 
         if (con != null && con.getSessionKey().checkSessionKey(key)) {
             /**
              * 账号已在游戏服成功登录，从登录服列表移除。
              * Account successfully logged in on GS; remove it from here.
              */
-            accountsOnLS.remove(key.accountId);
+            accountsOnLS.remove(key.accountId());
 
             GameServerInfo gsi = gsConnection.getGameServerInfo();
             Account acc = con.getAccount();
@@ -106,18 +106,18 @@ public class AccountController {
             Vip vip = new VipService().findByAccountId(acc.getId());
             long now = System.currentTimeMillis() / 1000L;
             boolean vipActive = vip != null && vip.isActive(now);
-            int vipLevel = vipActive ? vip.getLevel() : 0;
-            long vipExp = vipActive ? vip.getExperience() : 0L;
+            int vipLevel = vipActive ? vip.level() : 0;
+            long vipExp = vipActive ? vip.experience() : 0L;
             // keep expire even when permanent (0); zero only when inactive
-            long vipExpire = vipActive ? vip.getExpireTime() : 0L;
+            long vipExpire = vipActive ? vip.expireTime() : 0L;
             /**
              * 向游戏服发送认证结果。
              * Send auth response to GameServer.
              */
-            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, true, acc.getName(), acc.getAccessLevel(),
+            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId(), true, acc.getName(), acc.getAccessLevel(),
                 acc.getMembership(), toll, luna, acc.getReturn(), vipLevel, vipExp, vipExpire));
         } else {
-            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0,
+            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId(), false, null, (byte) 0, (byte) 0,
                 0, 0, (byte) 0, 0, 0, 0));
         }
     }
@@ -129,7 +129,7 @@ public class AccountController {
      * @param acc 重连账号 / Reconnecting account
      */
     public synchronized void addReconnectingAccount(ReconnectingAccount acc) {
-        reconnectingAccounts.put(acc.getAccount().getId(), acc);
+        reconnectingAccounts.put(acc.account().getId(), acc);
     }
 
     /**
@@ -144,8 +144,8 @@ public class AccountController {
     public synchronized void authReconnectingAccount(int accountId, int loginOk, int reconnectKey, LoginConnection client) {
         ReconnectingAccount reconnectingAccount = reconnectingAccounts.remove(accountId);
 
-        if (reconnectingAccount != null && reconnectingAccount.getReconnectionKey() == reconnectKey) {
-            Account acc = reconnectingAccount.getAccount();
+        if (reconnectingAccount != null && reconnectingAccount.reconnectionKey() == reconnectKey) {
+            Account acc = reconnectingAccount.account();
 
             client.setAccount(acc);
             accountsOnLS.put(acc.getId(), client);
@@ -398,9 +398,7 @@ public class AccountController {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
 
         if (characterCount != null) {
-            if (characterCount.size() == GameServerTable.getGameServers().size()) {
-                return true;
-            }
+			return characterCount.size() == GameServerTable.getGameServers().size();
         }
 
         return false;

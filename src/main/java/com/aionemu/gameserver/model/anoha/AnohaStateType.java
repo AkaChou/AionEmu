@@ -9,5 +9,5 @@ package com.aionemu.gameserver.model.anoha;
 
 public enum AnohaStateType {
 	/** 战斗 / Fight. */
-	FIGHT, PEACE;
+	FIGHT, PEACE
 }

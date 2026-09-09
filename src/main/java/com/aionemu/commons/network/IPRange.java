@@ -1,6 +1,7 @@
 package com.aionemu.commons.network;
 
 import java.util.Arrays;
+import lombok.Getter;
 
 /**
  * IPv4 地址范围，支持范围判定与字节/字符串互转。
@@ -24,6 +25,7 @@ public class IPRange {
      * 映射目标地址字节。
      * Mapped target address bytes.
      */
+    @Getter
     private final byte[] address;
 
     /**
@@ -65,16 +67,6 @@ public class IPRange {
     public boolean isInRange(String address) {
         long addr = toLong("address", toByteArray(address));
         return addr >= this.min && addr <= this.max;
-    }
-
-    /**
-     * 获取目标 IP 字节。
-     * Get target IP bytes.
-     *
-     * @return 目标 IP 字节 / Target IP byte array
-     */
-    public byte[] getAddress() {
-        return this.address;
     }
 
     /**
@@ -164,9 +156,8 @@ public class IPRange {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof IPRange)) return false;
-        IPRange ipRange = (IPRange) o;
-        return max == ipRange.max
+        if (!(o instanceof IPRange ipRange)) return false;
+		return max == ipRange.max
             && min == ipRange.min
             && Arrays.equals(address, ipRange.address);
     }

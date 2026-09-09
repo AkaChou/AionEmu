@@ -121,7 +121,7 @@ public class AuraEffect extends EffectTemplate {
 	 * Aura periodic task.
 	 */
 	private class AuraTask implements Runnable {
-		private Effect effect;
+		private final Effect effect;
 
 		public AuraTask(Effect effect) {
 			this.effect = effect;

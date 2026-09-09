@@ -9,23 +9,15 @@ import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.SiegeService;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步要塞护盾特效状态。
  * Server packet synchronizing fortress shield effect state to the client.
  */
+@AllArgsConstructor
 public class SM_SHIELD_EFFECT extends AionServerPacket {
-	private Collection<SiegeLocation> locations;
-
-	/**
-	 * 使用给定参数构造 SM_SHIELD_EFFECT 包。
-	 * Creates a SM_SHIELD_EFFECT packet with the given parameters.
-	 *
-	 * @param locations 攻城地点集合 / siege locations
-	 */
-	public SM_SHIELD_EFFECT(Collection<SiegeLocation> locations) {
-		this.locations = locations;
-	}
+	private final Collection<SiegeLocation> locations;
 
 	/**
 	 * 使用给定参数构造 SM_SHIELD_EFFECT 包。

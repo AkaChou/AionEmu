@@ -6,6 +6,8 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 静态数据加载复现 harness（非服务器进程）：复刻 DataManager 启动加载序列，
@@ -14,9 +16,10 @@ import java.util.concurrent.CountDownLatch;
  * startup load sequence to diagnose the main-thread unmarshal hang; a watchdog
  * periodically dumps all thread stacks.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StaticDataLoadRepro {
 
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		System.setProperty("aion.game.data.dir", "src/main/resources/aion/data");
 		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
 		System.setProperty("aion.game.geo.dir", "src/main/resources/aion/geo");
@@ -98,8 +101,5 @@ public final class StaticDataLoadRepro {
 			}
 		}
 		System.err.println("===== END DUMP =====");
-	}
-
-	private StaticDataLoadRepro() {
 	}
 }

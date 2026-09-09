@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
+import lombok.Getter;
 
 /**
  * 修正器模板（静态数据/XML）。
@@ -26,23 +27,17 @@ public class ModifiersTemplate {
 			@XmlElement(name = "add", type = com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction.class),
 			@XmlElement(name = "rate", type = com.aionemu.gameserver.model.stats.calc.functions.StatRateFunction.class),
 			@XmlElement(name = "set", type = com.aionemu.gameserver.model.stats.calc.functions.StatSetFunction.class) })
+	/** 获取修正器。 / Returns the modifiers. */
+	@Getter
 	private List<StatFunction> modifiers;
 
+	/** 返回概率 / Returns the chance*/
+	@Getter
 	@XmlAttribute
 	private float chance = 100;
 
 	@XmlAttribute
 	private int level;
-
-	/** 获取修正器。 / Returns the modifiers. */
-	public List<StatFunction> getModifiers() {
-		return modifiers;
-	}
-
-	/** 返回概率 / Returns the chance*/
-	public float getChance() {
-		return chance;
-	}
 
 	/** 获取等级。 / Returns the level. */
 	public float getLevel() {

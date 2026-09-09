@@ -23,10 +23,10 @@ public enum ItemAttackType {
 	/** 魔法火 / Magical Fire */
 	MAGICAL_FIRE(true, SkillElement.FIRE);
 
-	private boolean magic;
-	private SkillElement elem;
+	private final boolean magic;
+	private final SkillElement elem;
 
-	private ItemAttackType(boolean magic, SkillElement elem) {
+	ItemAttackType(boolean magic, SkillElement elem) {
 		this.magic = magic;
 		this.elem = elem;
 	}

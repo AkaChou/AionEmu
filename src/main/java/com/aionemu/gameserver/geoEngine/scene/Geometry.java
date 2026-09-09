@@ -7,24 +7,23 @@ import com.aionemu.gameserver.geoEngine.math.Matrix3f;
 import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 场景图中的几何体节点，持有网格数据并参与碰撞检测。
  * Scene-graph geometry node that holds mesh data and participates in collision detection.
  */
+@NoArgsConstructor
 public class Geometry extends Spatial {
 
 	/** 本节点包含的网格。 / The mesh contained herein. */
+	@Getter
+	@Setter
 	protected Mesh mesh;
 	/** 缓存的世界变换矩阵。 / Cached world transform matrix. */
 	protected Matrix4f cachedWorldMat = new Matrix4f();
-
-	/**
-	 * 仅用于序列化的空构造，请勿在业务代码中使用。
-	 * Do not use this constructor. Serialization purposes only.
-	 */
-	public Geometry() {
-	}
 
 	/**
 	 * 创建无网格数据的几何体节点。
@@ -72,27 +71,6 @@ public class Geometry extends Spatial {
 	@Override
 	public int getTriangleCount() {
 		return mesh.getTriangleCount();
-	}
-
-	/**
-	 * 设置网格。
-	 * Sets the mesh.
-	 *
-	 * @param mesh 网格 / mesh
-	 */
-	public void setMesh(Mesh mesh) {
-
-		this.mesh = mesh;
-	}
-
-	/**
-	 * 获取网格。
-	 * Gets the mesh.
-	 *
-	 * @return 网格 / mesh
-	 */
-	public Mesh getMesh() {
-		return mesh;
 	}
 
 	/**

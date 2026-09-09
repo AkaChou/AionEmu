@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 宠物奖励模板（静态数据/XML）。
@@ -22,9 +23,15 @@ public class PetRewards {
 	@XmlElement(name = "result")
 	protected List<PetFeedResult> results;
 
+	/** 获取类型。 / Returns the type. */
+	@Getter
 	@XmlAttribute(name = "group", required = true)
 	protected FoodType type;
 
+	/**
+	 * @return 是否为喜爱食物 / Whether loved
+	 */
+	@Getter
 	@XmlAttribute
 	protected boolean loved = false;
 
@@ -34,17 +41,5 @@ public class PetRewards {
 			results = new ArrayList<PetFeedResult>();
 		}
 		return this.results;
-	}
-
-	/** 获取类型。 / Returns the type. */
-	public FoodType getType() {
-		return type;
-	}
-
-	/**
-	 * @return 是否为喜爱食物 / Whether loved
-	 */
-	public boolean isLoved() {
-		return loved;
 	}
 }

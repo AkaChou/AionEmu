@@ -12,8 +12,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ABYSS_RANK_UPDATE extends AionServerPacket {
 
-	private Player player;
-	private int action;
+	private final Player player;
+	private final int action;
 
 	/**
 	 * 按动作类型构造军衔外观/状态更新包。

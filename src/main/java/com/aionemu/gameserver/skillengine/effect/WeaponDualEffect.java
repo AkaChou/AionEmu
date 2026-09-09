@@ -33,8 +33,7 @@ public class WeaponDualEffect extends BuffEffect {
 
 	@Override
 	public void startEffect(Effect effect) {
-		if (effect.getEffected() instanceof Player) {
-			Player player = (Player) effect.getEffected();
+		if (effect.getEffected() instanceof Player player) {
 			player.setDualEffectValue(value);
 			player.getGameStats().setSkillEfficiency(skillEfficiency / 100f);
 			player.getGameStats().setMaxDamageChance(maxDamageChance + effect.getSkillLevel() * maxDamageDelta);
@@ -56,8 +55,7 @@ public class WeaponDualEffect extends BuffEffect {
 
 	@Override
 	public void endEffect(Effect effect) {
-		if (effect.getEffected() instanceof Player) {
-			Player player = (Player) effect.getEffected();
+		if (effect.getEffected() instanceof Player player) {
 			player.setDualEffectValue(0);
 			player.getGameStats().setSkillEfficiency(0);
 			player.getGameStats().setMaxDamageChance(0);

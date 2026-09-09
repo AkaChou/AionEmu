@@ -1,6 +1,8 @@
 package com.aionemu.loginserver.taskmanager.trigger;
 
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 数据库任务触发器抽象基类：绑定处理器并定义校验/初始化/运行。
@@ -10,7 +12,23 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
  */
 public abstract class TaskFromDBTrigger implements Runnable {
 
+    /**
+     * 获取将被触发的处理器。
+     * Returns the handler to be triggered.
+     *
+     * @return 处理器 / handler
+     */
+    @Getter
+    @Setter
     protected TaskFromDBHandler handlerToTrigger;
+    /**
+     * 获取触发器参数。
+     * Returns the trigger parameters.
+     *
+     * @return 参数 / parameters
+     */
+    @Getter
+    @Setter
     protected String[] params = {""};
 
     /**
@@ -21,46 +39,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
      */
     public int getTaskId() {
         return handlerToTrigger.getTaskId();
-    }
-
-    /**
-     * 获取将被触发的处理器。
-     * Returns the handler to be triggered.
-     *
-     * @return 处理器 / handler
-     */
-    public TaskFromDBHandler getHandlerToTrigger() {
-        return handlerToTrigger;
-    }
-
-    /**
-     * 设置将被触发的处理器。
-     * Sets the handler to be triggered.
-     *
-     * @param handlerToTrigger 处理器 / handler
-     */
-    public void setHandlerToTrigger(TaskFromDBHandler handlerToTrigger) {
-        this.handlerToTrigger = handlerToTrigger;
-    }
-
-    /**
-     * 获取触发器参数。
-     * Returns the trigger parameters.
-     *
-     * @return 参数 / parameters
-     */
-    public String[] getParams() {
-        return params;
-    }
-
-    /**
-     * 设置触发器参数。
-     * Sets the trigger parameters.
-     *
-     * @param params 参数 / parameters
-     */
-    public void setParams(String[] params) {
-        this.params = params;
     }
 
     /**

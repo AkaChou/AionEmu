@@ -35,9 +35,9 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -46,7 +46,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -75,7 +75,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -105,7 +105,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnFaithfulSubordinate(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -121,12 +121,12 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -136,24 +136,24 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
 			deleteNpcs(instance.getNpcs(281258)); // 忠实的部下。 / Faithful Subordinate.
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
@@ -165,7 +165,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -173,13 +173,13 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

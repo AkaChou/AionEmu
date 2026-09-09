@@ -30,10 +30,10 @@ public class SerialGuardData {
 	protected List<GuardTypeRestriction> guardTypeRestriction;
 
 	@XmlTransient
-	private IntObjectHashMap<GuardRankRestriction> templates = new IntObjectHashMap<GuardRankRestriction>();
+	private final IntObjectHashMap<GuardRankRestriction> templates = new IntObjectHashMap<GuardRankRestriction>();
 
 	@XmlTransient
-	private IntObjectHashMap<GuardTypeRestriction> templatesType = new IntObjectHashMap<GuardTypeRestriction>();
+	private final IntObjectHashMap<GuardTypeRestriction> templatesType = new IntObjectHashMap<GuardTypeRestriction>();
 
 	/**
 	 * JAXB 反序列化完成后，分别写入等级/类型索引并释放列表。

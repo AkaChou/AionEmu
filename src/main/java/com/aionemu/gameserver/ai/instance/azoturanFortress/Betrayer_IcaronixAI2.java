@@ -33,7 +33,7 @@ public class Betrayer_IcaronixAI2 extends AggressiveNpcAI2
 		spawnFinalFormOnce();
 		super.handleDied();
 	}
-	
+
 	private void checkForSupport(Creature creature) {
 		for (VisibleObject object: getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc && isInRange(object, 40)) {
@@ -41,7 +41,7 @@ public class Betrayer_IcaronixAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75 && spawnFinalFormOnce()) {
 			AI2Actions.deleteOwner(this);
@@ -53,7 +53,7 @@ public class Betrayer_IcaronixAI2 extends AggressiveNpcAI2
 			return false;
 		}
 		spawn(FINAL_FORM_NPC_ID, getOwner().getX(), getOwner().getY(), getOwner().getZ(),
-			(byte) getOwner().getHeading());
+			getOwner().getHeading());
 		return true;
 	}
 }

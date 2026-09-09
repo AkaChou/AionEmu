@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步飞升任务变身状态的服务端包。
@@ -9,19 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author wylovech
  */
+@AllArgsConstructor
 public class SM_ASCENSION_MORPH extends AionServerPacket {
 
-	private int inascension;
-
-	/**
-	 * 构造飞升变身状态包。
-	 * Creates an ascension morph state packet.
-	 *
-	 * @param inascension 是否处于飞升变身（1=变身） / whether currently morphed for ascension (1 = morph)
-	 */
-	public SM_ASCENSION_MORPH(int inascension) {
-		this.inascension = inascension;
-	}
+	private final int inascension;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

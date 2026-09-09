@@ -85,12 +85,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 					SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_USE_ITEM_DURING_PATH_FLYING(new DescriptionId(2800123)));
 			return false;
 		}
-		if (((target instanceof Player)) && (((Player) target).isTransformed())
-				&& (((Player) target).getTransformModel().getType() == TransformType.AVATAR)
-				&& (skill.getSkillTemplate().getEffects().isEffectTypePresent(EffectType.HIDE))) {
-			return false;
-		}
-		return true;
+		return ((!(target instanceof Player))) || (!((Player) target).isTransformed())
+			|| (((Player) target).getTransformModel().getType() != TransformType.AVATAR)
+			|| (!skill.getSkillTemplate().getEffects().isEffectTypePresent(EffectType.HIDE));
 	}
 
 	/**
@@ -106,11 +103,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_RESTRICTION_NO_FLY);
 			return false;
 		}
-		if ((target != null) && ((target instanceof Player))) {
-			Player playerTarget = (Player) target;
-			if ((playerTarget.isUsingFlyTeleport()) || (playerTarget.isInPlayerMode(PlayerMode.WINDSTREAM))) {
-				return false;
-			}
+		if ((target != null) && ((target instanceof Player playerTarget))) {
+			return (!playerTarget.isUsingFlyTeleport()) && (!playerTarget.isInPlayerMode(PlayerMode.WINDSTREAM));
 		}
 		return true;
 	}
@@ -171,21 +165,17 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (template.hasResurrectEffect()) {
-			if (!(target instanceof Player)) {
+			if (!(target instanceof Player targetPlayer)) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_TARGET_IS_NOT_VALID);
 				return false;
 			}
-			Player targetPlayer = (Player) target;
 			if (!targetPlayer.isInState(CreatureState.DEAD)) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_TARGET_IS_NOT_VALID);
 				return false;
 			}
 		}
-		if ((player.isTransformed()) && (player.getTransformModel().getType() == TransformType.AVATAR)
-				&& (skill.getSkillTemplate().getEffects().isEffectTypePresent(EffectType.HIDE))) {
-			return false;
-		}
-		return true;
+		return (!player.isTransformed()) || (player.getTransformModel().getType() != TransformType.AVATAR)
+			|| (!skill.getSkillTemplate().getEffects().isEffectTypePresent(EffectType.HIDE));
 	}
 
 	/**
@@ -396,10 +386,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		if (!checkFly(player, target)) {
 			return false;
 		}
-		if (!(target instanceof Creature)) {
+		if (!(target instanceof Creature creature)) {
 			return false;
 		}
-		Creature creature = (Creature) target;
 		if (creature.getLifeStats().isAlreadyDead()) {
 			return false;
 		}
@@ -477,10 +466,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 */
 	@Override
 	public boolean canChangeEquip(Player player) {
-		if (player.getEffectController().isAbnormalSet(AbnormalState.CANT_ATTACK_STATE)) {
-			return false;
-		}
-		return true;
+		return !player.getEffectController().isAbnormalSet(AbnormalState.CANT_ATTACK_STATE);
 	}
 
 	/**
@@ -535,7 +521,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 					}
 				}
 				if (!isInFortZone) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300143, new Object[0]));
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300143));
 					return false;
 				}
 			} else if (restriction != null && !player.isInsideZone(restriction)) {

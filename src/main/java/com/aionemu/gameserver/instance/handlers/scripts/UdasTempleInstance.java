@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -27,7 +26,6 @@ import java.util.Set;
  *
  * @author Encom
  */
-
 
 @InstanceID(300150000)
 public class UdasTempleInstance extends GeneralInstanceHandler {
@@ -96,7 +94,6 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215783: //Nexus.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Udas Temple>");
 				spawn(730255, 508.3610f, 362.7170f, 137.0000f, (byte) 31); //Udas Temple Exit.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
@@ -141,14 +138,6 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 		storage.decreaseByItemId(185000085, storage.getItemCountByItemId(185000085)); //Chamber Of Guidance Key.
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.challenge;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 挑战类型枚举。
@@ -16,14 +17,11 @@ public enum ChallengeType {
 	/** 城镇。 / Town. */
 	TOWN(2);
 
-	private int id;
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
-	}
+	@Getter
+	private final int id;
 
-	private ChallengeType(int id) {
+	ChallengeType(int id) {
 		this.id = id;
 	}
 

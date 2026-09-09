@@ -4,29 +4,20 @@ import java.io.PrintStream;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 控制台静态数据加载进度报告器，将各分段进度渲染到启动控制台。
  * Console static-data progress reporter that renders section progress on the startup console.
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ConsoleStaticDataProgressReporter implements StaticDataProgressReporter {
 
 	private static final String SECTION_SEPARATOR = "────────────────────────────────────────────────────────";
 
 	private final PrintStream out;
 	private final boolean enabled;
-
-	/**
-	 * 使用指定输出流与启用开关创建报告器。
-	 * Creates a reporter with the given output stream and enable flag.
-	 *
-	 * @param out 输出流 / output stream
-	 * @param enabled 是否启用 / whether enabled
-	 */
-	ConsoleStaticDataProgressReporter(PrintStream out, boolean enabled) {
-		this.out = out;
-		this.enabled = enabled;
-	}
 
 	/**
 	 * 为当前控制台创建报告器，启用状态取自启动进度配置。

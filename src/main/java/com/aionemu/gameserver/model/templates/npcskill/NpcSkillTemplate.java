@@ -5,6 +5,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * NPC 技能模板（静态数据/XML）。
@@ -14,18 +17,39 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "npcskill")
+@NoArgsConstructor
 public class NpcSkillTemplate {
 
+	/**
+	 * @return the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
+	/**
+	 * @return the skillid
+	 */
+	@Getter
 	@XmlAttribute(name = "skillid")
 	protected int skillid;
 	@XmlAttribute(name = "skilllevel")
 	protected int skilllevel;
+	/**
+	 * @return the probability
+	 */
+	@Getter
 	@XmlAttribute(name = "probability")
 	protected int probability;
+	/**
+	 * @return the minhp
+	 */
+	@Getter
 	@XmlAttribute(name = "minhp")
 	protected int minhp = 0;
+	/**
+	 * @return the maxhp
+	 */
+	@Getter
 	@XmlAttribute(name = "maxhp")
 	protected int maxhp = 0;
 	@XmlAttribute(name = "maxtime")
@@ -34,21 +58,27 @@ public class NpcSkillTemplate {
 	protected int mintime = 0;
 	@XmlAttribute(name = "conjunction")
 	protected ConjunctionType conjunction = ConjunctionType.AND;
+	/**
+	 * @return the cooldown
+	 */
+	@Getter
 	@XmlAttribute(name = "cooldown")
 	protected int cooldown = 0;
 	@XmlAttribute(name = "useinspawned")
 	protected boolean useinspawned = false;
+	@Getter
 	@XmlAttribute(name = "raw_rate")
 	protected int rawRate;
+	@Getter
+	@Setter
 	@XmlAttribute(name = "count")
 	protected int count;
+	@Getter
 	@XmlAttribute(name = "ultra_skill")
 	protected boolean ultraSkill;
+	@Getter
 	@XmlTransient
 	private int sourceIndex = -1;
-
-	public NpcSkillTemplate() {
-	}
 
 	public NpcSkillTemplate(int skillId, int skillLevel, int probability) {
 		this(skillId, skillLevel, probability, 0, 0, false);
@@ -70,45 +100,10 @@ public class NpcSkillTemplate {
 	}
 
 	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @return the skillid
-	 */
-	public int getSkillid() {
-		return skillid;
-	}
-
-	/**
 	 * @return the skilllevel
 	 */
 	public int getSkillLevel() {
 		return skilllevel;
-	}
-
-	/**
-	 * @return the probability
-	 */
-	public int getProbability() {
-		return probability;
-	}
-
-	/**
-	 * @return the minhp
-	 */
-	public int getMinhp() {
-		return minhp;
-	}
-
-	/**
-	 * @return the maxhp
-	 */
-	public int getMaxhp() {
-		return maxhp;
 	}
 
 	/**
@@ -135,37 +130,10 @@ public class NpcSkillTemplate {
 	}
 
 	/**
-	 * @return the cooldown
-	 */
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	/**
 	 * @return the useinspawned
 	 */
 	public boolean getUseInSpawned() {
 		return useinspawned;
-	}
-
-	public int getRawRate() {
-		return rawRate;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public boolean isUltraSkill() {
-		return ultraSkill;
-	}
-
-	public int getSourceIndex() {
-		return sourceIndex;
 	}
 
 	public static NpcSkillTemplate unresolved(int sourceIndex) {

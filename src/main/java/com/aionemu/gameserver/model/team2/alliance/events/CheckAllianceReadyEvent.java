@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.team2.common.events.TeamCommand;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ALLIANCE_READY_CHECK;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 联盟就绪检查事件。
@@ -14,17 +15,12 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class CheckAllianceReadyEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerAlliance alliance;
 	private final Player player;
 	private final TeamCommand eventCode;
-
-	public CheckAllianceReadyEvent(PlayerAlliance alliance, Player player, TeamCommand eventCode) {
-		this.alliance = alliance;
-		this.player = player;
-		this.eventCode = eventCode;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

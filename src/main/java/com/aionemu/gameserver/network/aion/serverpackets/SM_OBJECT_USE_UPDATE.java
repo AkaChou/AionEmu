@@ -16,9 +16,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Payload fields differ by object type (postbox, storage, usable item).
  */
 public class SM_OBJECT_USE_UPDATE extends AionServerPacket {
-	private int usingPlayerId;
-	private int ownerPlayerId;
-	private int useCount;
+	private final int usingPlayerId;
+	private final int ownerPlayerId;
+	private final int useCount;
 	private UseItemAction action = null;
 	HouseObject<?> object;
 

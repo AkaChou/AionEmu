@@ -14,9 +14,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_PLAYER_STATE extends AionServerPacket {
 
-	private int playerObjId;
-	private int visualState;
-	private int seeState;
+	private final int playerObjId;
+	private final int visualState;
+	private final int seeState;
 
 	/**
 	 * @param creature 目标生物（通常为玩家） / target creature (usually a player)

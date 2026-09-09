@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Verifies that resident escort follow resolves the live target NPC in the current world. */
 class PlayerQuestWorldNpcFollowTest {
@@ -51,7 +49,7 @@ class PlayerQuestWorldNpcFollowTest {
 			Map.of(), Map.of()).withInteractionObjectId(escort.getObjectId());
 		assertTrue(port.startFollowCurrentTargetToNpc(snapshot, plan(), 253635));
 		assertEquals(List.of("NPC_INFO", "START_FOLLOW", "TARGET:14042", "REGISTER"), calls);
-		assertTrue(!watcher.isCancelled());
+		assertFalse(watcher.isCancelled());
 	}
 
 	private static QuestMutationPlan plan() {

@@ -28,5 +28,5 @@ public enum SkillTargetSlot {
 	/** 不显示 / No show */
 	NOSHOW,
 	/** 无 / None */
-	NONE;
+	NONE
 }

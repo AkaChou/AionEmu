@@ -26,9 +26,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 {
 	private Future<?> lamiaTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -37,7 +37,7 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -61,7 +61,7 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		lamiaTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -76,24 +76,24 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelPhaseTask();
 		sendMsg(1500231);
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();
@@ -101,7 +101,7 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (lamiaTask != null && !lamiaTask.isDone()) {
 			lamiaTask.cancel(true);

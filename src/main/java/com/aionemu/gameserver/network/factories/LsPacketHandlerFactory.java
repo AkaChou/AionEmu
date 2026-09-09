@@ -25,7 +25,7 @@ import org.springframework.beans.factory.ObjectProvider;
 public class LsPacketHandlerFactory {
 
 	private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
-	private LsPacketHandler handler = new LsPacketHandler();
+	private final LsPacketHandler handler = new LsPacketHandler();
 
 	/**
 	 * 获取工厂单例（优先 Spring Provider）。

@@ -19,10 +19,10 @@ public class Suspicious_BoyAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
-			spawn(214701, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Suspicious Boy.
+			spawn(214701, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Suspicious Boy.
 			AI2Actions.deleteOwner(this);
 		}
 	}

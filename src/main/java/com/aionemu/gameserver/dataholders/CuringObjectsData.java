@@ -26,7 +26,7 @@ public class CuringObjectsData {
 	protected List<CuringTemplate> curingObject;
 
 	@XmlTransient
-	private List<CuringTemplate> curingObjects = new ArrayList<CuringTemplate>();
+	private final List<CuringTemplate> curingObjects = new ArrayList<CuringTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，将列表拷贝到运行时集合。

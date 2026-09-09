@@ -28,11 +28,11 @@ public class AbyssBaseShield implements ZoneHandler {
 		if (actingCreature instanceof Player && !((Player) actingCreature).isGM()) {
 			ZoneName currZone = zone.getZoneTemplate().getName();
 			if (currZone == ZoneName.get("PRIMUM_FORTRESS")) {
-				if (((Player) actingCreature).getRace() == Race.ELYOS) {
+				if (actingCreature.getRace() == Race.ELYOS) {
 					creature.getController().die();
 				}
 			} else if (currZone == ZoneName.get("TERMINON_LANDING")) {
-				if (((Player) actingCreature).getRace() == Race.ASMODIANS) {
+				if (actingCreature.getRace() == Race.ASMODIANS) {
 					creature.getController().die();
 				}
 			}

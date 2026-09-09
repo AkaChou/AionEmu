@@ -117,7 +117,7 @@ public class InstanceRiftService {
 			public void run() {
 				stopInstanceRift(id);
 			}
-		}, CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

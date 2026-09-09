@@ -17,7 +17,7 @@ public enum TradeNpcType {
 
 	private final int index;
 
-	private TradeNpcType(int index) {
+	TradeNpcType(int index) {
 		this.index = index;
 	}
 

@@ -69,24 +69,24 @@ class GameShutdownRequestTest {
     }
 
     private static ObjectProvider<ShutdownHook> provider(ShutdownHook shutdownHook) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "shutdownHookProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
-                    return shutdownHook;
-                }
-                throw new UnsupportedOperationException(method.toString());
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "shutdownHookProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
+					return shutdownHook;
+				}
+				throw new UnsupportedOperationException(method.toString());
+			}
+		);
     }
 
     private static final class RecordingShutdownHook extends ShutdownHook {

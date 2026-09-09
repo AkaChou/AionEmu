@@ -33,13 +33,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PadmarashkaAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -47,7 +47,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -81,7 +81,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -111,7 +111,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void startPadmarashkaEggs() {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401214, 0);
 		spawn(282613, 560.94006f, 157.98532f, 66.83846f, (byte) 55);
@@ -122,7 +122,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
         spawn(282613, 603.01324f, 148.44322f, 66.87395f, (byte) 33);
         spawn(282613, 603.347f, 160.63982f, 67.17431f, (byte) 89);
 	}
-	
+
 	private void startHugePadmarashkaEggs() {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401214, 0);
 		spawn(282614, 560.94006f, 157.98532f, 66.83846f, (byte) 55);
@@ -133,7 +133,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
         spawn(282614, 603.01324f, 148.44322f, 66.87395f, (byte) 33);
         spawn(282614, 603.347f, 160.63982f, 67.17431f, (byte) 89);
 	}
-	
+
 	private void spawnRockslam() {
         GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401215, 0);
 		spawn(283137, 520.99585f, 270.23776f, 66.25f, (byte) 0);
@@ -155,7 +155,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
         spawn(283137, 517.9813f, 220.19554f, 66.86278f, (byte) 0);
         spawn(283137, 533.5666f, 194.63768f, 66.125f, (byte) 0);
     }
-	
+
 	private void spawnVotaic(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -172,7 +172,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -182,13 +182,13 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -205,7 +205,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		final WorldPosition p = getPosition();
@@ -228,7 +228,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		isStartedEvent5.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {

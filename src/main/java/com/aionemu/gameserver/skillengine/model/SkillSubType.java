@@ -30,5 +30,5 @@ public enum SkillSubType {
 	/** 召唤追踪体 / Summon homing */
 	SUMMONHOMING,
 	/** 召唤陷阱 / Summon trap */
-	SUMMONTRAP;
+	SUMMONTRAP
 }

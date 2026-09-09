@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.housing.HousePart;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 房屋 Decoration 游戏对象。
@@ -9,9 +11,16 @@ import com.aionemu.gameserver.model.templates.housing.HousePart;
  */
 
 public class HouseDecoration extends AionObject {
-	private int templateId;
+	private final int templateId;
+	/** 返回楼层 / Returns the floor */
+	@Getter
 	private byte floor;
+	/** 是否已用 / Whether used. */
+	@Getter
 	private boolean isUsed;
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
+	@Setter
 	private PersistentState persistentState;
 
 	public HouseDecoration(int objectId, int templateId) {
@@ -30,25 +39,10 @@ public class HouseDecoration extends AionObject {
 		return DataManager.HOUSE_PARTS_DATA.getPartById(templateId);
 	}
 
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
-	/** 设置持久化状态。 / Sets the persistent state. */
-	public void setPersistentState(PersistentState persistentState) {
-		this.persistentState = persistentState;
-	}
-
 	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return getTemplate().getName();
-	}
-
-	/** 返回楼层 / Returns the floor */
-	public byte getFloor() {
-		return floor;
 	}
 
 	/** 设置楼层 / Sets the floor */
@@ -59,11 +53,6 @@ public class HouseDecoration extends AionObject {
 				persistentState = PersistentState.UPDATE_REQUIRED;
 			}
 		}
-	}
-
-	/** 是否已用 / Whether used. */
-	public boolean isUsed() {
-		return isUsed;
 	}
 
 	/** 设置是否使用 / Sets whether used */

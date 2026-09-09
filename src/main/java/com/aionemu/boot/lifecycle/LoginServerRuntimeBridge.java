@@ -9,6 +9,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 登录服运行时桥：对接 LoginServer 启动动作与进程级关闭/准备钩子。
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Lazy
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class LoginServerRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
@@ -29,21 +32,6 @@ public class LoginServerRuntimeBridge {
      */
     public LoginServerRuntimeBridge() {
         this(LoginServer::start, LoginServer::start);
-    }
-
-    /**
-     * 可替换启动动作的构造（便于测试）。
-     * Constructor with replaceable start actions (for tests).
-     *
-     * @param startAction 无托管序列的启动动作 / start action without managed sequence
-     * @param managedStartAction 带启动序列的启动动作 / start action with startup sequence
-     */
-    LoginServerRuntimeBridge(
-        Consumer<String[]> startAction,
-        BiConsumer<String[], LoginStartupSequenceLifecycle> managedStartAction
-    ) {
-        this.startAction = startAction;
-        this.managedStartAction = managedStartAction;
     }
 
     /**

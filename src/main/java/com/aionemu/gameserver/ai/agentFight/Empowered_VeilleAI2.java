@@ -36,8 +36,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 {
 	private int veillePhase = 0;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -50,7 +50,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 50 && veillePhase < 1) {
 			veillePhase = 1;
@@ -61,7 +61,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 			announceEmpyreanLordAgentHP10();
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -78,7 +78,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		GameFeatureServices.baseService().capture(90, Race.ASMODIANS);
 		super.handleDied();
 	}
-	
+
 	private void sendVeilleGuide() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -99,14 +99,13 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceKilledVeille() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					// “种族”的“玩家名”击杀了凯希内尔代理人维勒。 / "Player Name" of the "Race" has killed Kaisinel's Agent Veille.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400324, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}
@@ -160,7 +159,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	public void applyMastariusEnergy() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -172,7 +171,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

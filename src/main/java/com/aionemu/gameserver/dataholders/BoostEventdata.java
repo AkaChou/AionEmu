@@ -28,10 +28,10 @@ public class BoostEventdata {
 	protected List<BoostEvents> bonusServiceBonusattr;
 
 	@XmlTransient
-	private IntObjectHashMap<BoostEvents> templates = new IntObjectHashMap<BoostEvents>();
+	private final IntObjectHashMap<BoostEvents> templates = new IntObjectHashMap<BoostEvents>();
 
 	@XmlTransient
-	private Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();
+	private final Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();
 
 	/**
 	 * JAXB 反序列化完成后，将列表写入双索引映射并释放列表。

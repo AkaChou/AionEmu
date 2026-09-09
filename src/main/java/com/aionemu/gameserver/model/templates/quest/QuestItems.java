@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 任务物品模板（静态数据/XML）。
@@ -15,8 +16,22 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "QuestItems")
 public class QuestItems {
 
+	/**
+	 * 返回物品 ID。
+	 * Returns the item id.
+	 *
+	 * @return 物品 ID / possible object is {@link Integer}
+	 */
+	@Getter
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
+	/**
+	 * 返回物品数量。
+	 * Returns the item count.
+	 *
+	 * @return 数量 / possible object is {@link Integer}
+	 */
+	@Getter
 	@XmlAttribute
 	protected Integer count;
 
@@ -32,25 +47,5 @@ public class QuestItems {
 		super();
 		this.itemId = itemId;
 		this.count = count;
-	}
-
-	 /**
-	  * 返回物品 ID。
-	  * Returns the item id.
-	  *
-	  * @return 物品 ID / possible object is {@link Integer}
-	  */
-	public Integer getItemId() {
-		return itemId;
-	}
-
-	/**
-	 * 返回物品数量。
-	 * Returns the item count.
-	 *
-	 * @return 数量 / possible object is {@link Integer}
-	 */
-	public Integer getCount() {
-		return count;
 	}
 }

@@ -175,7 +175,7 @@ class CMObjectSearchTest {
 		private StubNpcLifeStats lifeStats;
 
 		private StubNpc() {
-			super(0, (NpcController) null, (SpawnTemplate) null, (NpcTemplate) null);
+			super(0, null, null, null);
 		}
 
 		@Override

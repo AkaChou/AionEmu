@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player.emotion;
 
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 表情游戏对象。
@@ -9,31 +11,17 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  *
  * @author MrPoke
  */
+@AllArgsConstructor
 public class Emotion implements IExpirable {
-	private int id;
-	private int dispearTime;
-
-	/**
-	 * 构造表情对象。
-	 * Constructs an emotion.
-	 *
-	 * @param id 表情 ID / emotion id
-	 * @param dispearTime 过期时间戳（秒，0 表示永不过期） / expire timestamp in seconds (0 = never)
-	 */
-	public Emotion(int id, int dispearTime) {
-		this.id = id;
-		this.dispearTime = dispearTime;
-	}
-
 	/**
 	 * 获取表情 ID。
 	 * Returns the emotion id.
 	 *
 	 * @return 表情 ID / emotion id
 	 */
-	public int getId() {
-		return id;
-	}
+	@Getter
+	private final int id;
+	private final int dispearTime;
 
 	/** 返回剩余时间 / Returns the remaining time */
 	public int getRemainingTime() {

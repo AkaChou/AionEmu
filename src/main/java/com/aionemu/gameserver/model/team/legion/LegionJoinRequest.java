@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 军团加入申请。
@@ -13,6 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class LegionJoinRequest {
 	private int legionId = 0;
 	private int playerId = 0;
@@ -35,9 +37,6 @@ public class LegionJoinRequest {
 		this.level = player.getLevel();
 		this.genderId = player.getGender().getGenderId();
 		this.msg = msg;
-	}
-
-	public LegionJoinRequest() {
 	}
 
 	/** 获取申请时间。 / Returns the request date. */

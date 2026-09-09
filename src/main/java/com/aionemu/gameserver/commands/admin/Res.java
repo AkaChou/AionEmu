@@ -33,12 +33,11 @@ public class Res extends AdminCommand {
 			return;
 		}
 
-		if (!(target instanceof Player)) {
+		if (!(target instanceof Player player)) {
 			PacketSendUtility.sendMessage(admin, "You can only resurrect other players.");
 			return;
 		}
 
-		final Player player = (Player) target;
 		if (!player.getLifeStats().isAlreadyDead()) {
 			PacketSendUtility.sendMessage(admin, "That player is already alive.");
 			return;

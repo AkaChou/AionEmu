@@ -763,18 +763,18 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
 			return expected.itemId() == observed.itemId();
 		}
-		if (definition instanceof CollectItem expected && actual instanceof CollectItem observed) {
-			return expected.itemId() == observed.itemId() && observed.count() >= expected.count();
+		if (definition instanceof CollectItem(int itemId3, int count1) && actual instanceof CollectItem(int itemId2, int count)) {
+			return itemId3 == itemId2 && count >= count1;
 		}
 		if (definition instanceof AttackNpc expected && actual instanceof AttackNpc observed) {
 			return expected.npcId() == observed.npcId();
 		}
-		if (definition instanceof ItemPlay expected && actual instanceof ItemPlay observed) {
-			return expected.itemId() == observed.itemId()
-				&& expected.animationMillis() == observed.animationMillis();
+		if (definition instanceof ItemPlay(int itemId1, int millis) && actual instanceof ItemPlay(int itemId, int animationMillis)) {
+			return itemId1 == itemId
+				&& millis == animationMillis;
 		}
-		if (definition instanceof QuestDialog expected && actual instanceof QuestDialog observed) {
-			return expected.dialogId() == observed.dialogId();
+		if (definition instanceof QuestDialog(int id) && actual instanceof QuestDialog(int dialogId)) {
+			return id == dialogId;
 		}
 		if (definition instanceof KillRanked expected && actual instanceof KillRanked observed) {
 			return observed.rankId() >= expected.rankId();
@@ -782,8 +782,8 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (definition instanceof KillInWorld expected && actual instanceof KillInWorld observed) {
 			return expected.worldId() == 0 || expected.worldId() == observed.worldId();
 		}
-		if (definition instanceof KillNpcSet expected && actual instanceof KillNpc observed) {
-			return expected.npcIds().contains(observed.npcId());
+		if (definition instanceof KillNpcSet(Set<Integer> npcIds) && actual instanceof KillNpc(int npcId)) {
+			return npcIds.contains(npcId);
 		}
 		if (definition instanceof AtDistance expected && actual instanceof AtDistance observed) {
 			return expected.npcId() == observed.npcId();
@@ -833,8 +833,8 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (left instanceof ItemPlay a && right instanceof ItemPlay b) {
 			return a.itemId() == b.itemId();
 		}
-		if (left instanceof QuestDialog a && right instanceof QuestDialog b) {
-			return a.dialogId() == b.dialogId();
+		if (left instanceof QuestDialog(int dialogId1) && right instanceof QuestDialog(int dialogId)) {
+			return dialogId1 == dialogId;
 		}
 		if (left instanceof KillRanked && right instanceof KillRanked) {
 			return true;
@@ -845,14 +845,14 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (left instanceof KillInWorld a && right instanceof KillInWorld b) {
 			return a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
 		}
-		if (left instanceof KillNpcSet a && right instanceof KillNpcSet b) {
-			return !java.util.Collections.disjoint(a.npcIds(), b.npcIds());
+		if (left instanceof KillNpcSet(Set<Integer> npcIds2) && right instanceof KillNpcSet(Set<Integer> npcIds1)) {
+			return !java.util.Collections.disjoint(npcIds2, npcIds1);
 		}
-		if (left instanceof KillNpcSet a && right instanceof KillNpc single) {
-			return a.npcIds().contains(single.npcId());
+		if (left instanceof KillNpcSet(Set<Integer> ids) && right instanceof KillNpc(int id)) {
+			return ids.contains(id);
 		}
-		if (left instanceof KillNpc single && right instanceof KillNpcSet a) {
-			return a.npcIds().contains(single.npcId());
+		if (left instanceof KillNpc(int npcId) && right instanceof KillNpcSet(Set<Integer> npcIds)) {
+			return npcIds.contains(npcId);
 		}
 		return left.equals(right);
 	}

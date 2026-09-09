@@ -10,12 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ranastic
  */
 public class SM_BUTLER_SALUTE extends AionServerPacket {
-	private int playerObjId;
-	private int isInside;
-	private int unk1;
-	private int unk2;
-	private int unk3;
-	private int unk4;
+	private final int playerObjId;
+	private final int isInside;
+	private final int unk1;
+	private final int unk2;
+	private final int unk3;
+	private final int unk4;
 
 	/**
 	 * 构造管家敬礼包。

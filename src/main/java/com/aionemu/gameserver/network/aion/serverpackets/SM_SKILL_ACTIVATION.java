@@ -11,9 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_SKILL_ACTIVATION extends AionServerPacket {
 
-	private boolean isActive;
-	private int unk;
-	private int skillId;
+	private final boolean isActive;
+	private final int unk;
+	private final int skillId;
 
 	/**
 	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。

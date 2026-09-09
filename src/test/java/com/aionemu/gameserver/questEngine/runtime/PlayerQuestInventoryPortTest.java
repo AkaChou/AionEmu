@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -32,10 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.hasItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
@@ -45,6 +40,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Real {@link QuestInventoryPort}: removals run against the live inventory and
@@ -206,8 +202,8 @@ class PlayerQuestInventoryPortTest {
 			}));
 
 		assertEquals(QuestFailureStage.COMMIT, failure.stage());
-		assertEquals(false, failure.committed());
-		assertTrue(failure.getCause() instanceof SQLException);
+		assertFalse(failure.committed());
+		assertInstanceOf(SQLException.class, failure.getCause());
 		assertEquals(List.of("commit", "rollback"), jdbc);
 		assertEquals(5, player.getInventory().getItemCountByItemId(ITEM_A));
 		assertTrue(player.getInventory().getDeletedItems().isEmpty());
@@ -430,15 +426,8 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	private static final class RecordingDao extends InventoryDAO {
-		private static final class Transaction {
-			final Connection connection;
-			final List<Item> items;
-
-			Transaction(Connection connection, List<Item> items) {
-				this.connection = connection;
-				this.items = items;
-			}
-		}
+        private record Transaction(Connection connection, List<Item> items) {
+        }
 
 		private final List<Transaction> transactions = new ArrayList<>();
 

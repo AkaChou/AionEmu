@@ -15,7 +15,7 @@ public class WorldWalkerFormations {
 	 * 实例 ID → 实例巡逻编队。
 	 * Instance id to instance walker formations.
 	 */
-	private Map<Integer, InstanceWalkerFormations> formations;
+	private final Map<Integer, InstanceWalkerFormations> formations;
 
 	/**
 	 * 创建空的世界巡逻编队容器。

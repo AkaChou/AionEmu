@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.Guides.GuideTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 新手引导 HTML 配置数据容器，按职业、种族与等级组合索引引导模板。
@@ -27,6 +28,13 @@ public class GuideHtmlData {
 
 	@XmlElement(name = "guide", type = GuideTemplate.class)
 	private List<GuideTemplate> guideTemplates;
+	/**
+	 * 返回全部引导模板索引。
+	 * Returns the full guide template index.
+	 *
+	 * @return 哈希键到引导模板列表的映射 / map of hash key to guide template list
+	 */
+	@Getter
 	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<ArrayList<GuideTemplate>>();
 	private final int CLASS_ALL = 255;
 
@@ -71,16 +79,6 @@ public class GuideHtmlData {
 	 */
 	public int size() {
 		return templates.size();
-	}
-
-	/**
-	 * 返回全部引导模板索引。
-	 * Returns the full guide template index.
-	 *
-	 * @return 哈希键到引导模板列表的映射 / map of hash key to guide template list
-	 */
-	public IntObjectHashMap<ArrayList<GuideTemplate>> getTemplates() {
-		return templates;
 	}
 
 	/**

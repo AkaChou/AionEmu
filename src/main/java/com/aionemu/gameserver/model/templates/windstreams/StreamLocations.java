@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 风道地点集模板（静态数据/XML）。
@@ -16,16 +18,11 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StreamLocations")
+@NoArgsConstructor
+@AllArgsConstructor
 public class StreamLocations {
 	@XmlElement(required = true)
 	protected List<Location2D> location;
-
-	public StreamLocations() {
-	}
-
-	public StreamLocations(List<Location2D> location) {
-		this.location = location;
-	}
 
 	/** 获取位置。 / Returns the location. */
 	public List<Location2D> getLocation() {

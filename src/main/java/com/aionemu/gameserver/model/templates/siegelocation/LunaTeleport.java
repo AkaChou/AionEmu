@@ -6,6 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 月华传送模板（静态数据/XML）。
@@ -15,76 +17,38 @@ import com.aionemu.gameserver.model.Race;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaTeleport")
 public class LunaTeleport {
+	/** 返回世界 ID / Returns the world id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "world_id")
 	protected int worldId;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race = Race.PC_ALL;
 
+	/** 返回 x / Returns the x */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "x")
 	protected float x;
 
+	/** 返回 y / Returns the y */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "y")
 	protected float y;
 
+	/** 返回 z / Returns the z */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "z")
 	protected float z;
 
+	/** 返回 h / Returns the h */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "h")
 	protected byte h;
-
-	/** 返回世界 ID / Returns the world id */
-	public int getWorldId() {
-		return worldId;
-	}
-
-	/** 设置 world id / Sets the world id */
-	public void setWorldId(int value) {
-		worldId = value;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 返回 x / Returns the x */
-	public float getX() {
-		return x;
-	}
-
-	/** 设置 x / Sets the x */
-	public void setX(float value) {
-		x = value;
-	}
-
-	/** 返回 y / Returns the y */
-	public float getY() {
-		return y;
-	}
-
-	/** 设置 y / Sets the y */
-	public void setY(float value) {
-		y = value;
-	}
-
-	/** 返回 z / Returns the z */
-	public float getZ() {
-		return z;
-	}
-
-	/** 设置 z / Sets the z */
-	public void setZ(float value) {
-		z = value;
-	}
-
-	/** 返回 h / Returns the h */
-	public byte getH() {
-		return h;
-	}
-
-	/** 设置 h / Sets the h */
-	public void setH(byte value) {
-		h = value;
-	}
 }

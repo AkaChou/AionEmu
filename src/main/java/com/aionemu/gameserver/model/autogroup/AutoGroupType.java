@@ -767,21 +767,21 @@ public enum AutoGroupType {
 	};
 
 	@Getter
-	private int instanceMaskId;
+	private final int instanceMaskId;
 	@Getter
-	private int time;
+	private final int time;
 	@Getter
-	private byte playerSize;
+	private final byte playerSize;
 	@Getter
 	private byte spawnPage;
-	private AutoGroup template;
+	private final AutoGroup template;
 
-	private AutoGroupType(int instanceMaskId, int time, int playerSize, int spawnPage) {
+	AutoGroupType(int instanceMaskId, int time, int playerSize, int spawnPage) {
 		this(instanceMaskId, time, playerSize);
 		this.spawnPage = (byte) spawnPage;
 	}
 
-	private AutoGroupType(int instanceMaskId, int time, int playerSize) {
+	AutoGroupType(int instanceMaskId, int time, int playerSize) {
 		this.instanceMaskId = instanceMaskId;
 		this.time = time;
 		this.playerSize = (byte) playerSize;

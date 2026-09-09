@@ -19,10 +19,10 @@ public class Fountless_Lava_ProtectorAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 30) {
-			spawn(236227, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Lava Protector.
+			spawn(236227, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Lava Protector.
 			AI2Actions.deleteOwner(this);
 			AI2Actions.scheduleRespawn(this);
 		}

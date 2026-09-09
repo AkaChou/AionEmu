@@ -76,8 +76,7 @@ public class TemporarySpawnEngine {
 						continue;
 					}
 					for (VisibleObject object : new ArrayList<>(objects)) {
-						if (object instanceof Npc) {
-							Npc npc = (Npc) object;
+						if (object instanceof Npc npc) {
 							if (!npc.getLifeStats().isAlreadyDead() && template.hasPool()) {
 								spawn.setTemplateUse(npc.getInstanceId(), template, false);
 							}

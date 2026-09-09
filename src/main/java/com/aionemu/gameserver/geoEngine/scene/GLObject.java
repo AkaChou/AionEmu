@@ -31,7 +31,7 @@ public abstract class GLObject implements Cloneable {
 	 * GL 对象类型枚举。
 	 * GL object type enumeration.
 	 */
-	public static enum Type {
+	public enum Type {
 
 		/**
 		 * 顶点缓冲，用于描述几何数据及其属性。

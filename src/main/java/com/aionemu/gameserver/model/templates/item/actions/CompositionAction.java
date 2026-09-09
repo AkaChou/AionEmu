@@ -47,9 +47,7 @@ public class CompositionAction extends AbstractItemAction {
 			return false;
 		if (first.getItemCount() < 1 || second.getItemCount() < 1)
 			return false;
-		if (first.getItemTemplate().getLevel() > 95 || second.getItemTemplate().getLevel() > 95)
-			return false;
-		return true;
+		return first.getItemTemplate().getLevel() <= 95 && second.getItemTemplate().getLevel() <= 95;
 	}
 
 	/** 执行 / act. */

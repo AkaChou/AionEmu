@@ -324,7 +324,7 @@ public class StatFunctions {
 	 */
 	public static int calculateHate(Creature creature, int value) {
 		Stat2 stat = new AdditionStat(StatEnum.BOOST_HATE, value, creature, 0.1f);
-		return (int) (creature.getGameStats().getStat(StatEnum.BOOST_HATE, stat).getCurrent());
+		return creature.getGameStats().getStat(StatEnum.BOOST_HATE, stat).getCurrent();
 	}
 
 	/**
@@ -362,8 +362,7 @@ public class StatFunctions {
 			}
 		}
 
-		if (attacker instanceof Player) {
-			Player player = (Player) attacker;
+		if (attacker instanceof Player player) {
 			Equipment equipment = player.getEquipment();
 			Item mainHandWeapon = equipment.getMainHandWeapon();
 			if (mainHandWeapon != null) {
@@ -1171,10 +1170,9 @@ public class StatFunctions {
 	 * @return 修正后属性值 / Modified stat value
 	 */
 	public static float getMovementModifier(Creature creature, StatEnum stat, float value) {
-		if (!(creature instanceof Player) || stat == null) {
+		if (!(creature instanceof Player player) || stat == null) {
 			return value;
 		}
-		Player player = (Player) creature;
 		int h = player.getMoveController().getMovementHeading();
 		if (h < 0) {
 			return value;
@@ -1196,10 +1194,9 @@ public class StatFunctions {
 	}
 
 	private static float movementDamageBonus(Creature creature, float value) {
-		if (!(creature instanceof Player)) {
+		if (!(creature instanceof Player player)) {
 			return value;
 		}
-		Player player = (Player) creature;
 		int h = player.getMoveController().getMovementHeading();
 		if (h < 0) {
 			return value;

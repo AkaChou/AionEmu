@@ -59,7 +59,7 @@ class LuredNpcCheckTaskTest {
 		private NpcController controller;
 
 		private TestNpc() {
-			super(0, null, null, (NpcTemplate) null);
+			super(0, null, null, null);
 		}
 
 		@Override

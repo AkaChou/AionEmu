@@ -6,23 +6,15 @@ import com.aionemu.gameserver.model.gameobjects.UseableItemObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步房屋仓库注册表的服务端包（未生成物品与装饰部件）。
  * Server packet that synchronizes the house registry to the client (unspawned objects and decoration parts).
  */
+@AllArgsConstructor
 public class SM_HOUSE_REGISTRY extends AionServerPacket {
 	int action;
-
-	/**
-	 * 构造房屋仓库注册表包。
-	 * Creates a house registry packet.
-	 *
-	 * @param action 动作类型（1=未生成物品，2=装饰部件） / action type (1=unspawned objects, 2=decoration parts)
-	 */
-	public SM_HOUSE_REGISTRY(int action) {
-		this.action = action;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

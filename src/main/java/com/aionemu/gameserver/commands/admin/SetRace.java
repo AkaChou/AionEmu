@@ -35,12 +35,11 @@ public class SetRace extends AdminCommand {
 
 		VisibleObject visibleobject = admin.getTarget();
 
-		if (visibleobject == null || !(visibleobject instanceof Player)) {
+		if (visibleobject == null || !(visibleobject instanceof Player target)) {
 			PacketSendUtility.sendMessage(admin, "Wrong select target.");
 			return;
 		}
 
-		Player target = (Player) visibleobject;
 		if (params[0].equalsIgnoreCase("elyos")) {
 			target.getCommonData().setRace(Race.ELYOS);
 			TeleportService2.teleportTo(target, WorldMapType.SANCTUM.getId(), 1322, 1511, 568, 0);

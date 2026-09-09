@@ -20,6 +20,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 
 /**
@@ -33,11 +34,13 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 
 	protected WorldMapInstance instance;
 	private long instanceTime;
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
 	private final byte buffId;
 	private Point3D myBattlePosition;
 	private Point3D opponentBattlePosition;
-	private int bonusTime;
-	private GenerealInstancePosition instancePosition;
+	private final int bonusTime;
+	private final GenerealInstancePosition instancePosition;
 
 	public HallOfTenacityReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
@@ -170,11 +173,6 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 			return (int) (1800000 - (result - 90000));
 		}
 		return 0;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public byte getBuffId() {
-		return buffId;
 	}
 
 	/** 设置 instance start time / Sets the instance start time */

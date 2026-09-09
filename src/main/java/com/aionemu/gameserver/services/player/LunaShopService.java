@@ -62,14 +62,14 @@ public class LunaShopService {
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
 	private boolean reciveBonus = false;
-	private List<Integer> DailyCraft = new ArrayList<Integer>();
-	private List<Integer> SpecialCraft = new ArrayList<Integer>();
-	private List<Integer> armors = new ArrayList<Integer>();
-	private List<Integer> pants = new ArrayList<Integer>();
-	private List<Integer> shoes = new ArrayList<Integer>();
-	private List<Integer> gloves = new ArrayList<Integer>();
-	private List<Integer> shoulders = new ArrayList<Integer>();
-	private List<Integer> weapons = new ArrayList<Integer>();
+	private final List<Integer> DailyCraft = new ArrayList<Integer>();
+	private final List<Integer> SpecialCraft = new ArrayList<Integer>();
+	private final List<Integer> armors = new ArrayList<Integer>();
+	private final List<Integer> pants = new ArrayList<Integer>();
+	private final List<Integer> shoes = new ArrayList<Integer>();
+	private final List<Integer> gloves = new ArrayList<Integer>();
+	private final List<Integer> shoulders = new ArrayList<Integer>();
+	private final List<Integer> weapons = new ArrayList<Integer>();
 
 	public void init() {
 		log.info(I18n.get("log.54a853f1dff1"));
@@ -355,11 +355,7 @@ public class LunaShopService {
 		if (recipe.getRate() == 100) {
 			result = true;
 		} else if (recipe.getRate() < 100) {
-			if (random <= recipe.getRate()) {
-				result = true;
-			} else {
-				result = false;
-			}
+			result = random <= recipe.getRate();
 		}
 		return result;
 	}
@@ -586,7 +582,7 @@ public class LunaShopService {
 		hm.put(186000051, (long) 2); // Major Ancient Crown
 		hm.put(188055168, (long) 10); // [Event] Blood Medal Box
 		hm.put(188054283, (long) 30); // Blood Mark Box
-		hm.put(188054463, (long) 1); // [Event] Fabled Godstone Bundle
+		hm.put(188054463, (long) 1); // [扎库隆]唯一神石包袱 / [Event] Fabled Godstone Bundle
 		hm.put(188053002, (long) 1); // [Event] Noble Composite Manastone Bundle
 		hm.put(188100335, (long) 2000); // 强化石粉末 / Enchantment Stone Dust
 		hm.put(164000073, (long) 10); // Greater Courage Scroll
@@ -649,7 +645,7 @@ public class LunaShopService {
 		for (int i = 0; i < 3; i++) {
 			Object[] crunchifyKeys = hm.keySet().toArray();
 			Object key = crunchifyKeys[new Random().nextInt(crunchifyKeys.length)];
-			mt.put((int) key, (long) hm.get(key));
+			mt.put((int) key, hm.get(key));
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 

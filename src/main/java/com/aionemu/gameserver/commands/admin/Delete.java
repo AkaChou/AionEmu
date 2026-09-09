@@ -40,11 +40,10 @@ public class Delete extends AdminCommand {
 	public void execute(Player player, String... params) {
 
 		VisibleObject cre = player.getTarget();
-		if (!(cre instanceof Npc)) {
+		if (!(cre instanceof Npc npc)) {
 			PacketSendUtility.sendMessage(player, "Wrong target");
 			return;
 		}
-		Npc npc = (Npc) cre;
 		SpawnTemplate template = npc.getSpawn();
 		if (template.hasPool()) {
 			PacketSendUtility.sendMessage(player, "Can't delete pooled spawn template");

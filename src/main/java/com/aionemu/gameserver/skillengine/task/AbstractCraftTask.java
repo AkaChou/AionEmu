@@ -67,9 +67,9 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 
 		NONE(0), INSTANT(1), BLUE(2), PURPLE(3);
 
-		private int critId;
+		private final int critId;
 
-		private CraftCritType(int critId) {
+		CraftCritType(int critId) {
 			this.critId = critId;
 		}
 

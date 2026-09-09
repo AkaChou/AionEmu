@@ -15,7 +15,7 @@ class PlayerPendingQuestShareTest {
 	@Test
 	void serverIssuedShareCanBeConsumedOnlyOnce() throws Exception {
 		Player player = new ObjenesisStd().newInstance(Player.class);
-		setField(player, "pendingQuestShares", ConcurrentHashMap.<Integer>newKeySet());
+		setField(player, "pendingQuestShares", ConcurrentHashMap.newKeySet());
 
 		player.addPendingQuestShare(28738);
 

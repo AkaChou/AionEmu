@@ -18,5 +18,5 @@ public enum BonusChargeType {
 	/** 物理 / Physical */
 	PHYSICAL,
 	/** 魔法 / Magical */
-	MAGICAL;
+	MAGICAL
 }

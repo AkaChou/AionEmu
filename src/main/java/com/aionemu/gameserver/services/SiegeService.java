@@ -27,7 +27,6 @@ import org.quartz.Trigger;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule.Fortress;
@@ -39,7 +38,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.siege.ArtifactLocation;
 import com.aionemu.gameserver.model.siege.FortressLocation;
-import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
@@ -64,12 +62,12 @@ import com.aionemu.gameserver.services.siegeservice.SiegeException;
 import com.aionemu.gameserver.services.siegeservice.SiegeStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
 
 /**
  * 攻城战服务，管理要塞/神器攻城、刷怪、计划与状态广播。
@@ -85,7 +83,21 @@ public class SiegeService {
 	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<Integer, Siege<?>>();
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private SiegeSchedule siegeSchedule;
+	/**
+	 * 获取全部神器地点。
+	 * Returns all artifact locations.
+	 *
+	 * artifacts map
+	 */
+	@Getter
 	private Map<Integer, ArtifactLocation> artifacts;
+	/**
+	 * 获取全部要塞地点。
+	 * Returns all fortress locations.
+	 *
+	 * fortresses map
+	 */
+	@Getter
 	private Map<Integer, FortressLocation> fortresses;
 	private Map<Integer, SiegeLocation> locations;
 
@@ -239,7 +251,7 @@ public class SiegeService {
 			public void run() {
 				stopSiege(siegeLocationId);
 			}
-		}, siege.getSiegeLocation().getSiegeDuration() * 1000);
+		}, siege.getSiegeLocation().getSiegeDuration() * 1000L);
 	}
 
 	/**
@@ -277,10 +289,10 @@ public class SiegeService {
 		Map<Integer, List<Trigger>> siegeIdToStartTriggers = Maps.newHashMap();
 		for (Map.Entry<Runnable, JobDetail> entry : siegeStartRunables.entrySet()) {
 			SiegeStartRunnable fssr = (SiegeStartRunnable) entry.getKey();
-			List<Trigger> storage = siegeIdToStartTriggers.get(fssr.getLocationId());
+			List<Trigger> storage = siegeIdToStartTriggers.get(fssr.locationId());
 			if (storage == null) {
 				storage = Lists.newArrayList();
-				siegeIdToStartTriggers.put(fssr.getLocationId(), storage);
+				siegeIdToStartTriggers.put(fssr.locationId(), storage);
 			}
 			storage.addAll(GameCronServices.cronService().getJobTriggers(entry.getValue()));
 		}
@@ -389,16 +401,6 @@ public class SiegeService {
 	}
 
 	/**
-	 * 获取全部要塞地点。
-	 * Returns all fortress locations.
-	 *
-	 * fortresses map
-	 */
-	public Map<Integer, FortressLocation> getFortresses() {
-		return fortresses;
-	}
-
-	/**
 	 * 按 ID 获取要塞地点。
 	 * Returns the fortress location by id.
 	 *
@@ -407,16 +409,6 @@ public class SiegeService {
 	 */
 	public FortressLocation getFortress(int fortressId) {
 		return fortresses.get(fortressId);
-	}
-
-	/**
-	 * 获取全部神器地点。
-	 * Returns all artifact locations.
-	 *
-	 * artifacts map
-	 */
-	public Map<Integer, ArtifactLocation> getArtifacts() {
-		return artifacts;
 	}
 
 	/**

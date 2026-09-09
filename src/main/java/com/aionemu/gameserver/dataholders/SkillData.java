@@ -20,6 +20,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 技能模板数据容器，按技能 ID 与技能组索引 SkillTemplate。
@@ -29,6 +30,13 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SkillData {
 
+	/**
+	 * 返回原始技能模板列表。
+	 * Returns the raw skill template list.
+	 *
+	 * @return 技能模板列表 / skill template list
+	 */
+	@Getter
 	@XmlElement(name = "skill_template")
 	private List<SkillTemplate> skillTemplates;
 
@@ -37,8 +45,15 @@ public class SkillData {
 	@XmlTransient
 	private Set<Integer> persistentCooldownGroups;
 
+	/**
+	 * 返回技能 ID 到模板的映射。
+	 * Returns the skill-id to template map.
+	 *
+	 * @return 技能数据映射 / skill data map
+	 */
+	@Getter
 	@XmlTransient
-	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
+	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 
 	@XmlTransient
 	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<String, SkillTemplate>();
@@ -103,16 +118,6 @@ public class SkillData {
 	}
 
 	/**
-	 * 返回原始技能模板列表。
-	 * Returns the raw skill template list.
-	 *
-	 * @return 技能模板列表 / skill template list
-	 */
-	public List<SkillTemplate> getSkillTemplates() {
-		return skillTemplates;
-	}
-
-	/**
 	 * 设置技能模板列表并立即重建索引。
 	 * Sets the skill template list and rebuilds indexes immediately.
 	 *
@@ -161,16 +166,6 @@ public class SkillData {
 			initializeCooldownGroups();
 		}
 		return persistentCooldownGroups.contains(delayId);
-	}
-
-	/**
-	 * 返回技能 ID 到模板的映射。
-	 * Returns the skill-id to template map.
-	 *
-	 * @return 技能数据映射 / skill data map
-	 */
-	public IntObjectHashMap<SkillTemplate> getSkillData() {
-		return skillData;
 	}
 
 	public void setExclusiveAttributes(Map<String, ExclusiveAttribute> exclusiveAttributes,

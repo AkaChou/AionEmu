@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.protectors;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * 守护者（Serial Guard）运行时状态，绑定玩家及其守护等级与类型。
@@ -8,6 +9,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 public class Protector {
 	public int victims;
+	/**
+	 * 获取所属玩家。
+	 * Returns the owning player.
+	 *
+	 * owner
+	 */
+	@Getter
 	private Player owner;
 	private int guardType;
 	private int guardRank;
@@ -30,16 +38,6 @@ public class Protector {
 	 */
 	public void refreshOwner(Player player) {
 		owner = player;
-	}
-
-	/**
-	 * 获取所属玩家。
-	 * Returns the owning player.
-	 *
-	 * owner
-	 */
-	public Player getOwner() {
-		return owner;
 	}
 
 	/**

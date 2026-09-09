@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.skillengine.effect;
 
+import lombok.Getter;
+
 /**
  * 异常状态位掩码枚举：定义控制/持续负面状态及其组合位。
  * Abnormal state bit-mask enum: control/DoT states and composite masks.
@@ -22,20 +24,17 @@ public enum AbnormalState {
 	DISMOUT_RIDE(SPIN.id | ROOT.id | SLEEP.id | STUMBLE.id | STUN.id | PETRIFICATION.id | STAGGER.id | OPENAERIAL.id | PARALYZE.id
 			| CANNOT_MOVE.id | FEAR.id | SNARE.id | CONFUSE.id);
 
-	private int id;
-
-	private AbnormalState(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取异常状态 ID（位掩码值）。
 	 * Returns the abnormal state id (bit-mask value).
 	 *
 	 * @return 状态 ID / state id
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	AbnormalState(int id) {
+		this.id = id;
 	}
 
 	/**

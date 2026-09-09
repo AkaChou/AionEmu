@@ -89,7 +89,7 @@ public class Moltenus extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidMoltenusLocationId(Player player, int moltenusId) {
-		if (!GameLocationBootstrapServices.moltenusService().getMoltenusLocations().keySet().contains(moltenusId)) {
+		if (!GameLocationBootstrapServices.moltenusService().getMoltenusLocations().containsKey(moltenusId)) {
 			PacketSendUtility.sendMessage(player, "Id " + moltenusId + " is invalid");
 			return false;
 		}

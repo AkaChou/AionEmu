@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
@@ -12,6 +14,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  * @author Rinzler (Encom)
  */
 public class DynamicRiftSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private DynamicRiftStateType dynamicRiftType;
 
@@ -24,19 +29,9 @@ public class DynamicRiftSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回 d state type / Returns the d state type */
 	public DynamicRiftStateType getDStateType() {
 		return dynamicRiftType;
-	}
-
-	/** 设置 id / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置 d state type / Sets the d state type */

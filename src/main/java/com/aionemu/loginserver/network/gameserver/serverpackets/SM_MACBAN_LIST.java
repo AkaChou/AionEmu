@@ -19,7 +19,7 @@ public class SM_MACBAN_LIST extends GsServerPacket {
      * MAC 封禁条目映射。
      * Map of banned MAC entries.
      */
-    private Map<String, BannedMacEntry> bannedList;
+    private final Map<String, BannedMacEntry> bannedList;
 
     /**
      * 构造 MAC 封禁列表同步包（从保护服务快照当前列表）。

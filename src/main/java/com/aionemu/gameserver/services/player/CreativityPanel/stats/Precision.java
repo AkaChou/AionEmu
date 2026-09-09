@@ -19,7 +19,7 @@ public class Precision implements StatOwner {
 
 	private static volatile ObjectProvider<Precision> instanceProvider;
 
-	private List<IStatFunction> accuracy = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> accuracy = new ArrayList<IStatFunction>();
 
 	/**
 	 * 属性变更时重算。

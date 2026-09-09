@@ -90,7 +90,6 @@ public class Bk extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-				return;
 			}
 		else if (params[0].equals("del")) {
 			Connection con = null;
@@ -105,7 +104,6 @@ public class Bk extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-				return;
 			}
 			finally {
 				DatabaseFactory.close(con);
@@ -138,7 +136,6 @@ public class Bk extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-				return;
 			}
 		else if (params[0].equals("list")) {
 			updateInfo(player.getObjectId());
@@ -245,11 +242,11 @@ public class Bk extends AdminCommand {
  */
 class Bookmark {
 
-	private String name;
-	private float x;
-	private float y;
-	private float z;
-	private int world_id;
+	private final String name;
+	private final float x;
+	private final float y;
+	private final float z;
+	private final int world_id;
 
 	/**
 	 * 构造书签。

@@ -1,12 +1,9 @@
 package com.aionemu.gameserver.services.events;
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -34,8 +31,6 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -48,9 +43,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class BanditService {
 	private static volatile ObjectProvider<BanditService> instanceProvider;
-	private Map<Integer, Integer> zergMeters = new HashMap<Integer, Integer>();
-	private Map<Player, Long> outlaws = new HashMap<Player, Long>();
-	private WorldMapInstance activeInstance;
 
 	/**
 	 * 初始化服务。

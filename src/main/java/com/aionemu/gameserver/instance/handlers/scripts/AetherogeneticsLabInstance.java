@@ -5,16 +5,10 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,7 +22,6 @@ import java.util.Set;
 public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 {
     /** 门映射 / door map */
-    private Map<Integer, StaticDoor> doors;
 	
 	/**
 	 * NPC 掉落表注册时处理。
@@ -84,7 +77,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 212211: //RM-78C.
-			    //sendMsg("Congratulation]: you finish <Aetherogenetics Lab>");
 			break;
 		}
     }
@@ -126,18 +118,4 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 		removeItems(player);
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 }

@@ -1136,19 +1136,19 @@ public enum TribeClass {
 	private Race guardRace;
 	private boolean isBasic;
 
-	private TribeClass() {
+	TribeClass() {
 	}
 
-	private TribeClass(Race guardRace) {
+	TribeClass(Race guardRace) {
 		this.guardRace = guardRace;
 	}
 
-	private TribeClass(Race guardRace, boolean isBasic) {
+	TribeClass(Race guardRace, boolean isBasic) {
 		this.guardRace = guardRace;
 		this.isBasic = isBasic;
 	}
 
-	private TribeClass(boolean isBasic) {
+	TribeClass(boolean isBasic) {
 		this.isBasic = isBasic;
 	}
 

@@ -21,7 +21,7 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
  */
 public class immortalOrissanAI2 extends AggressiveNpcAI2 {
 
-	private AtomicBoolean isStartEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isStartEvent = new AtomicBoolean(false);
 
 	@Override
 	protected void handleAttack(Creature creature) {

@@ -1,20 +1,19 @@
 package com.aionemu.gameserver.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.concurrent.ConcurrentMap;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerObservedMapConcurrencyTest {
 
 	@Test
 	void observedMapsUseConcurrentMapsForAsyncVisibilityCallbacks() {
 		assertAll(
-			() -> assertTrue(new ShieldController().observed instanceof ConcurrentMap),
-			() -> assertTrue(new PlaceableObjectController().observed instanceof ConcurrentMap),
-			() -> assertTrue(new FlyRingController().observed instanceof ConcurrentMap),
-			() -> assertTrue(new RoadController().observed instanceof ConcurrentMap)
+			() -> assertInstanceOf(ConcurrentMap.class, new ShieldController().observed),
+			() -> assertInstanceOf(ConcurrentMap.class, new PlaceableObjectController().observed),
+			() -> assertInstanceOf(ConcurrentMap.class, new FlyRingController().observed),
+			() -> assertInstanceOf(ConcurrentMap.class, new RoadController().observed)
 		);
 	}
 }

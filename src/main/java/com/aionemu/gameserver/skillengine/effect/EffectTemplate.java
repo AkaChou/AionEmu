@@ -39,6 +39,7 @@ import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 
 /**
  * 技能效果模板基类：计算、应用、开始/结束效果，并持有 XML 绑定字段。
@@ -72,18 +73,74 @@ public abstract class EffectTemplate {
 			StatEnum.SIMPLE_ROOT_RESISTANCE, StatEnum.SLEEP_RESISTANCE,
 			StatEnum.SLOW_RESISTANCE, StatEnum.SNARE_RESISTANCE);
 
+	/**
+	 * 获取行动修正器集合。
+	 * Returns the action modifiers container.
+	 *
+	 * @return 修正器集合 / modifiers
+	 */
+	@Getter
 	protected ActionModifiers modifiers;
+	/**
+	 * 获取属性变更列表。
+	 * Returns the stat change list.
+	 *
+	 * @return 属性变更列表 / changes
+	 */
+	@Getter
 	protected List<Change> change;
+	/**
+	 * 获取效果 ID。
+	 * Returns the effect id.
+	 *
+	 * @return 效果 ID / effect id
+	 */
+	@Getter
 	@XmlAttribute
 	protected int effectid;
+	/**
+	 * 获取第二时长参数（主持续时长）。
+	 * Returns the primary duration parameter (duration2).
+	 *
+	 * @return 第二时长参数 / duration2
+	 */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int duration2;
+	/**
+	 * 获取第一时长参数。
+	 * Returns the secondary duration parameter (duration1).
+	 *
+	 * @return 第一时长参数 / duration1
+	 */
+	@Getter
 	@XmlAttribute
 	protected int duration1;
+	/**
+	 * 获取随机时间偏移。
+	 * Returns the random time offset.
+	 *
+	 * @return 随机时间偏移 / random time
+	 */
+	@Getter
 	@XmlAttribute(name = "randomtime")
 	protected int randomTime;
+	/**
+	 * 获取效果在技能中的位置序号。
+	 * Returns the effect position index within the skill.
+	 *
+	 * @return 位置序号 / position
+	 */
+	@Getter
 	@XmlAttribute(name = "e")
 	protected int position;
+	/**
+	 * 获取基础等级要求。
+	 * Returns the basic level requirement.
+	 *
+	 * @return 基础等级要求 / basic level
+	 */
+	@Getter
 	@XmlAttribute(name = "basiclvl")
 	protected int basicLvl;
 	@XmlAttribute(name = "hittype", required = false)
@@ -92,12 +149,40 @@ public abstract class EffectTemplate {
 	protected int hitTypeProb = 1000;
 	@XmlAttribute(name = "hittypeprob1", required = false)
 	protected int hitTypeProbDelta;
+	/**
+	 * 获取技能元素属性。
+	 * Returns the skill element.
+	 *
+	 * @return 元素属性 / element
+	 */
+	@Getter
 	@XmlAttribute(name = "element")
 	protected SkillElement element = SkillElement.NONE;
+	/**
+	 * 获取子效果配置。
+	 * Returns the sub-effect configuration.
+	 *
+	 * @return 子效果配置 / sub-effect
+	 */
+	@Getter
 	@XmlElement(name = "subeffect")
 	protected SubEffect subEffect;
+	/**
+	 * 获取效果条件集合。
+	 * Returns the effect conditions.
+	 *
+	 * @return 条件集合 / conditions
+	 */
+	@Getter
 	@XmlElement(name = "conditions")
 	protected Conditions effectConditions;
+	/**
+	 * 获取子效果条件集合。
+	 * Returns the sub-effect conditions.
+	 *
+	 * @return 子效果条件 / sub-effect conditions
+	 */
+	@Getter
 	@XmlElement(name = "subconditions")
 	protected Conditions effectSubConditions;
 	@XmlAttribute(name = "hoptype")
@@ -112,28 +197,80 @@ public abstract class EffectTemplate {
 	protected int accMod1;// accdelta
 	@XmlAttribute(name = "accmod2")
 	protected int accMod2;// accvalue
+	@Getter
 	@XmlAttribute(name = "mrresist")
 	protected boolean mrResist = true;
+	/**
+	 * 获取前置效果位置串（下划线分隔）。
+	 * Returns the pre-effect position string (underscore-separated).
+	 *
+	 * @return 前置效果串 / pre-effect string
+	 */
+	@Getter
 	@XmlAttribute(name = "preeffect")
 	protected String preEffect;
+	/**
+	 * 获取前置效果触发概率（0–100）。
+	 * Returns the pre-effect trigger probability (0–100).
+	 *
+	 * @return 触发概率 / probability
+	 */
+	@Getter
 	@XmlAttribute(name = "preeffect_prob")
 	protected int preEffectProb = 100;
 	@XmlAttribute(name = "preeffect_prob_delta")
 	protected int preEffectProbDelta;
+	/**
+	 * 获取暴击概率修正。
+	 * Returns the critical probability modifier.
+	 *
+	 * @return 暴击概率修正 / crit probability mod
+	 */
+	@Getter
 	@XmlAttribute(name = "critprobmod2")
 	protected int critProbMod2 = 100;
+	@Getter
 	@XmlAttribute(name = "critprobmod1")
 	protected int critProbMod1;
+	/**
+	 * 获取暴击附加伤害 1。
+	 * Returns critical bonus damage 1.
+	 *
+	 * @return 暴击附加伤害 / bonus damage
+	 */
+	@Getter
 	@XmlAttribute(name = "critadddmg1")
 	protected int critAddDmg1 = 0;
+	/**
+	 * 获取暴击附加伤害 2。
+	 * Returns critical bonus damage 2.
+	 *
+	 * @return 暴击附加伤害 / bonus damage
+	 */
+	@Getter
 	@XmlAttribute(name = "critadddmg2")
 	protected int critAddDmg2 = 0;
 	@XmlAttribute
 	protected int value;
+	/**
+	 * 获取每技能等级的数值增量。
+	 * Returns the per-skill-level delta.
+	 *
+	 * @return 每级增量 / level delta
+	 */
+	@Getter
 	@XmlAttribute
 	protected int delta;
+	@Getter
 	@XmlAttribute
 	protected boolean consume = true;
+	/**
+	 * 获取效果类型（反序列化后缓存）。
+	 * Returns the effect type (cached after unmarshalling).
+	 *
+	 * @return 效果类型 / effect type
+	 */
+	@Getter
 	@XmlTransient
 	protected EffectType effectType = null;
 	@XmlTransient
@@ -148,106 +285,8 @@ public abstract class EffectTemplate {
 		return value;
 	}
 
-	public boolean isMrResist() {
-		return mrResist;
-	}
-
-	/**
-	 * 获取每技能等级的数值增量。
-	 * Returns the per-skill-level delta.
-	 *
-	 * @return 每级增量 / level delta
-	 */
-	public int getDelta() {
-		return delta;
-	}
-
 	protected int calculateValue(int skillLevel) {
 		return value + delta * skillLevel;
-	}
-
-	public boolean isConsume() {
-		return consume;
-	}
-
-	/**
-	 * 获取第二时长参数（主持续时长）。
-	 * Returns the primary duration parameter (duration2).
-	 *
-	 * @return 第二时长参数 / duration2
-	 */
-	public int getDuration2() {
-		return duration2;
-	}
-
-	/**
-	 * 获取第一时长参数。
-	 * Returns the secondary duration parameter (duration1).
-	 *
-	 * @return 第一时长参数 / duration1
-	 */
-	public int getDuration1() {
-		return duration1;
-	}
-
-	/**
-	 * 获取随机时间偏移。
-	 * Returns the random time offset.
-	 *
-	 * @return 随机时间偏移 / random time
-	 */
-	public int getRandomTime() {
-		return randomTime;
-	}
-
-	/**
-	 * 获取行动修正器集合。
-	 * Returns the action modifiers container.
-	 *
-	 * @return 修正器集合 / modifiers
-	 */
-	public ActionModifiers getModifiers() {
-		return modifiers;
-	}
-
-	/**
-	 * 获取属性变更列表。
-	 * Returns the stat change list.
-	 *
-	 * @return 属性变更列表 / changes
-	 */
-	public List<Change> getChange() {
-		return change;
-	}
-
-	/**
-	 * 获取效果 ID。
-	 * Returns the effect id.
-	 *
-	 * @return 效果 ID / effect id
-	 */
-	public int getEffectid() {
-		return effectid;
-	}
-
-	/**
-	 * 获取效果在技能中的位置序号。
-	 * Returns the effect position index within the skill.
-	 *
-	 * @return 位置序号 / position
-	 */
-	public int getPosition() {
-		return position;
-	}
-
-	/**
-	 * 获取基础等级要求。
-	 * Returns the basic level requirement.
-	 *
-	 * @return 基础等级要求 / basic level
-	 */
-	public int getBasicLvl() {
-		return basicLvl;
 	}
 
 	/**
@@ -258,100 +297,16 @@ public abstract class EffectTemplate {
 		return hitTypeProb + hitTypeProbDelta * skillLevel;
 	}
 
-	/**
-	 * 获取技能元素属性。
-	 * Returns the skill element.
-	 *
-	 * @return 元素属性 / element
-	 */
-	public SkillElement getElement() {
-		return element;
-	}
-
-	/**
-	 * 获取前置效果位置串（下划线分隔）。
-	 * Returns the pre-effect position string (underscore-separated).
-	 *
-	 * @return 前置效果串 / pre-effect string
-	 */
-	public String getPreEffect() {
-		return preEffect;
-	}
-
-	/**
-	 * 获取前置效果触发概率（0–100）。
-	 * Returns the pre-effect trigger probability (0–100).
-	 *
-	 * @return 触发概率 / probability
-	 */
-	public int getPreEffectProb() {
-		return preEffectProb;
-	}
-
 	int getPreEffectProbability(int skillLevel) {
 		return preEffectProb + preEffectProbDelta * skillLevel;
-	}
-
-	/**
-	 * 获取暴击概率修正。
-	 * Returns the critical probability modifier.
-	 *
-	 * @return 暴击概率修正 / crit probability mod
-	 */
-	public int getCritProbMod2() {
-		return critProbMod2;
-	}
-
-	public int getCritProbMod1() {
-		return critProbMod1;
 	}
 
 	int getCriticalProbability(int skillLevel) {
 		return critProbMod2 + critProbMod1 * skillLevel;
 	}
 
-	/**
-	 * 获取暴击附加伤害 1。
-	 * Returns critical bonus damage 1.
-	 *
-	 * @return 暴击附加伤害 / bonus damage
-	 */
-	public int getCritAddDmg1() {
-		return critAddDmg1;
-	}
-
-	/**
-	 * 获取暴击附加伤害 2。
-	 * Returns critical bonus damage 2.
-	 *
-	 * @return 暴击附加伤害 / bonus damage
-	 */
-	public int getCritAddDmg2() {
-		return critAddDmg2;
-	}
-
 	int getCriticalAdditionalDamage(int skillLevel) {
 		return critAddDmg2 + critAddDmg1 * skillLevel;
-	}
-
-	/**
-	 * 获取效果条件集合。
-	 * Returns the effect conditions.
-	 *
-	 * @return 条件集合 / conditions
-	 */
-	public Conditions getEffectConditions() {
-		return effectConditions;
-	}
-
-	/**
-	 * 获取子效果条件集合。
-	 * Returns the sub-effect conditions.
-	 *
-	 * @return 子效果条件 / sub-effect conditions
-	 */
-	public Conditions getEffectSubConditions() {
-		return effectSubConditions;
 	}
 
 	/**
@@ -372,26 +327,6 @@ public abstract class EffectTemplate {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * 获取效果类型（反序列化后缓存）。
-	 * Returns the effect type (cached after unmarshalling).
-	 *
-	 * @return 效果类型 / effect type
-	 */
-	public EffectType getEffectType() {
-		return effectType;
-	}
-
-	/**
-	 * 获取子效果配置。
-	 * Returns the sub-effect configuration.
-	 *
-	 * @return 子效果配置 / sub-effect
-	 */
-	public SubEffect getSubEffect() {
-		return subEffect;
 	}
 
 	/**
@@ -518,7 +453,7 @@ public abstract class EffectTemplate {
 	 */
 	private boolean effectConditionsCheck(Effect effect) {
 		Conditions effectConditions = getEffectConditions();
-		return effectConditions != null ? effectConditions.validate(effect) : true;
+		return effectConditions == null || effectConditions.validate(effect);
 	}
 
 	private List<Integer> getPreEffects() {
@@ -550,7 +485,7 @@ public abstract class EffectTemplate {
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void startEffect(Effect effect) {
-	};
+	}
 
 	/**
 	 * 计算并初始化子效果。
@@ -594,7 +529,7 @@ public abstract class EffectTemplate {
 	 * Check all sub effect condition statuses for effect
 	 */
 	private boolean effectSubConditionsCheck(Effect effect) {
-		return effectSubConditions != null ? effectSubConditions.validate(effect) : true;
+		return effectSubConditions == null || effectSubConditions.validate(effect);
 	}
 
 	/**
@@ -722,8 +657,7 @@ public abstract class EffectTemplate {
 	private boolean isImuneToAbnormal(Effect effect, StatEnum statEnum) {
 		Creature effected = effect.getEffected();
 		if (effected != effect.getEffector()) {
-			if (effected instanceof Npc) {
-				Npc npc = (Npc) effected;
+			if (effected instanceof Npc npc) {
 				if (npc.getObjectTemplate().isImmuneTo(statEnum) || npc.hasEntity() || npc instanceof Kisk
 						|| npc.getAi2().ask(AIQuestion.CAN_RESIST_ABNORMAL).isPositive()) {
 					return true;
@@ -736,9 +670,7 @@ public abstract class EffectTemplate {
 				}
 			}
 			if (effected.getTransformModel().getType() == TransformType.AVATAR) {
-				if (statEnum == StatEnum.SLOW_RESISTANCE) {
-					return true;
-				}
+				return statEnum == StatEnum.SLOW_RESISTANCE;
 			}
 		}
 		return false;
@@ -819,16 +751,14 @@ public abstract class EffectTemplate {
 	 * 部分效果即使用于物理技能仍属魔法，含护法星/杀星/弓星等眩晕。
 	 * certain effects are magical even when used in physical skills; includes stuns from chanter/sin/ranger etc these effects(effecttemplates) are
 	 * dependent on magical accuracy and magical resist
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isMagicalEffectTemp() {
-		if (this instanceof SilenceEffect || this instanceof SleepEffect || this instanceof RootEffect
-				|| this instanceof SnareEffect || this instanceof StunEffect || this instanceof PoisonEffect
-				|| this instanceof BindEffect || this instanceof BleedEffect || this instanceof BlindEffect
-				|| this instanceof DeboostHealEffect || this instanceof ParalyzeEffect || this instanceof SlowEffect)
-			return true;
-		return false;
+		return this instanceof SilenceEffect || this instanceof SleepEffect || this instanceof RootEffect
+			|| this instanceof SnareEffect || this instanceof StunEffect || this instanceof PoisonEffect
+			|| this instanceof BindEffect || this instanceof BleedEffect || this instanceof BlindEffect
+			|| this instanceof DeboostHealEffect || this instanceof ParalyzeEffect || this instanceof SlowEffect;
 	}
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {

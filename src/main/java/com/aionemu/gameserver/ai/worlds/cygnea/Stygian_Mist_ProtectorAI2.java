@@ -25,16 +25,15 @@ public class Stygian_Mist_ProtectorAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
-					spawn(235914, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+					spawn(235914, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					AI2Actions.deleteOwner(Stygian_Mist_ProtectorAI2.this);
 					AI2Actions.scheduleRespawn(this);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -47,12 +46,12 @@ public class Stygian_Mist_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

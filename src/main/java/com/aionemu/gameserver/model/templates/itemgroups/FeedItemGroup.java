@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 宠物喂食物品组：喂食物品条目与索引。
@@ -18,16 +19,13 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "FeedItemGroup")
 public abstract class FeedItemGroup {
 
+	/** 返回索引 / Returns the index*/
+	@Getter
 	@XmlAttribute(name = "group", required = true)
 	protected ItemGroupIndex index = ItemGroupIndex.NONE;
 
 	@XmlElement(name = "item")
 	private List<ItemRaceEntry> items;
-
-	/** 返回索引 / Returns the index*/
-	public ItemGroupIndex getIndex() {
-		return index;
-	}
 
 	/** 获取物品。 / Returns the items. */
 	public List<ItemRaceEntry> getItems() {

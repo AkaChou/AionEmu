@@ -57,7 +57,7 @@ public class Trap extends SummonedObject<Creature> {
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
-		return getCreator() != null ? getCreator().isEnemyFrom(player) : false;
+		return getCreator() != null && getCreator().isEnemyFrom(player);
 	}
 
 	/**

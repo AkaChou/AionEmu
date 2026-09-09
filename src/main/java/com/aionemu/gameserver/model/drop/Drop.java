@@ -10,6 +10,8 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 掉落模型。
@@ -18,16 +20,25 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "drop")
+@NoArgsConstructor
 public class Drop {
+	/** 返回物品 ID / Returns the item id */
+	@Getter
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
 
+	/** 返回最小数量 / Returns the min amount */
+	@Getter
 	@XmlAttribute(name = "min_amount")
 	protected int minAmount = 1;
 
+	/** 返回最大数量 / Returns the max amount */
+	@Getter
 	@XmlAttribute(name = "max_amount")
 	protected int maxAmount;
 
+	/** 返回概率 / Returns the chance */
+	@Getter
 	@XmlAttribute
 	protected float chance = 100;
 
@@ -40,9 +51,6 @@ public class Drop {
 	protected Boolean aionServerEachMember;
 
 	private ItemTemplate template;
-
-	public Drop() {
-	}
 
 	public Drop(int itemId, int minAmount, int maxAmount, float chance, boolean noReduce, boolean eachMember) {
 		this.itemId = itemId;
@@ -64,26 +72,6 @@ public class Drop {
 	/** 获取物品模板。 / Returns the item template. */
 	public ItemTemplate getItemTemplate() {
 		return template == null ? DataManager.ITEM_DATA.getItemTemplate(itemId) : template;
-	}
-
-	/** 返回物品 ID / Returns the item id */
-	public int getItemId() {
-		return itemId;
-	}
-
-	/** 返回最小数量 / Returns the min amount */
-	public int getMinAmount() {
-		return minAmount;
-	}
-
-	/** 返回最大数量 / Returns the max amount */
-	public int getMaxAmount() {
-		return maxAmount;
-	}
-
-	/** 返回概率 / Returns the chance */
-	public float getChance() {
-		return chance;
 	}
 
 	/**
@@ -108,8 +96,8 @@ public class Drop {
 		drop.chance = buffer.getFloat();
 		drop.minAmount = buffer.getInt();
 		drop.maxAmount = buffer.getInt();
-		drop.noReduce = buffer.get() == 1 ? true : false;
-		drop.eachMember = buffer.get() == 1 ? true : false;
+		drop.noReduce = buffer.get() == 1;
+		drop.eachMember = buffer.get() == 1;
 		return drop;
 	}
 

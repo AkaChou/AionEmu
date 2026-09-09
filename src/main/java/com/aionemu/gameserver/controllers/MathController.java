@@ -64,9 +64,8 @@ public class MathController extends VisibleObjectController<MathObject> {
 								&& !(object instanceof Creature))) {
 			return;
 		}
-		if (isOutOfRange && object instanceof Creature) {
-			Creature creature = (Creature) object;
-			MathObjectObserver observer = this.observers.remove((Object) creature);
+		if (isOutOfRange && object instanceof Creature creature) {
+			MathObjectObserver observer = this.observers.remove(creature);
 			observer.clearShedules();
 			creature.getObserveController().removeObserver(observer);
 		}
@@ -116,12 +115,11 @@ public class MathController extends VisibleObjectController<MathObject> {
 
 			@Override
 			public void visit(VisibleObject object) {
-				if (!(object instanceof Creature)) {
+				if (!(object instanceof Creature creature)) {
 					return;
 				}
-				Creature creature = (Creature) object;
 				MathObjectObserver observer = MathController.this.observers
-						.remove((Object) creature);
+						.remove(creature);
 				if (observer == null) {
 					return;
 				}

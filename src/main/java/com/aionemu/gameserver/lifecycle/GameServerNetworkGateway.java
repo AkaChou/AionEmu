@@ -209,103 +209,95 @@ public class GameServerNetworkGateway {
         return runtimeBridgeProvider.getIfAvailable(GameServerNetworkRuntimeBridge::new);
     }
 
-    /**
-     * 登录服网络对等端适配器。
-     * Adapter peer for the login server.
-     */
-    @RequiredArgsConstructor
-    private static final class LoginServerPeer implements GameServerNetworkLifecycle.NetworkPeer {
+	/**
+	 * 登录服网络对等端适配器。
+	 * Adapter peer for the login server.
+	 *
+	 * @param loginServer 底层登录服连接。
+	 *                    Underlying login-server connection.
+	 */
+	private record LoginServerPeer(LoginServer loginServer) implements GameServerNetworkLifecycle.NetworkPeer {
 
-        /**
-         * 底层登录服连接。
-         * Underlying login-server connection.
-         */
-        private final LoginServer loginServer;
+		/**
+		 * 连接前准备。
+		 * Prepare before connecting.
+		 */
+		@Override
+		public void prepareForConnect() {
+			loginServer.prepareForConnect();
+		}
 
-        /**
-         * 连接前准备。
-         * Prepare before connecting.
-         */
-        @Override
-        public void prepareForConnect() {
-            loginServer.prepareForConnect();
-        }
+		/**
+		 * 同步连接。
+		 * Connect synchronously.
+		 */
+		@Override
+		public void connect() {
+			loginServer.connect();
+		}
 
-        /**
-         * 同步连接。
-         * Connect synchronously.
-         */
-        @Override
-        public void connect() {
-            loginServer.connect();
-        }
+		/**
+		 * 异步连接。
+		 * Connect asynchronously.
+		 */
+		@Override
+		public void connectAsync() {
+			loginServer.connectAsync();
+		}
 
-        /**
-         * 异步连接。
-         * Connect asynchronously.
-         */
-        @Override
-        public void connectAsync() {
-            loginServer.connectAsync();
-        }
-
-        /**
-         * 断开连接。
-         * Disconnect.
-         */
-        @Override
-        public void disconnect() {
-            loginServer.gameServerDisconnected();
-        }
-    }
+		/**
+		 * 断开连接。
+		 * Disconnect.
+		 */
+		@Override
+		public void disconnect() {
+			loginServer.gameServerDisconnected();
+		}
+	}
 
     /**
      * 聊天服网络对等端适配器。
      * Adapter peer for the chat server.
+     *
+     * @param chatServer 底层聊天服连接。
+     *                   Underlying chat-server connection.
      */
-    @RequiredArgsConstructor
-    private static final class ChatServerPeer implements GameServerNetworkLifecycle.NetworkPeer {
+        private record ChatServerPeer(ChatServer chatServer) implements GameServerNetworkLifecycle.NetworkPeer {
 
-        /**
-         * 底层聊天服连接。
-         * Underlying chat-server connection.
-         */
-        private final ChatServer chatServer;
+            /**
+             * 连接前准备。
+             * Prepare before connecting.
+             */
+            @Override
+            public void prepareForConnect() {
+                chatServer.prepareForConnect();
+            }
 
-        /**
-         * 连接前准备。
-         * Prepare before connecting.
-         */
-        @Override
-        public void prepareForConnect() {
-            chatServer.prepareForConnect();
+            /**
+             * 同步连接。
+             * Connect synchronously.
+             */
+            @Override
+            public void connect() {
+                chatServer.connect();
+            }
+
+            /**
+             * 异步连接。
+             * Connect asynchronously.
+             */
+            @Override
+            public void connectAsync() {
+                chatServer.connectAsync();
+            }
+
+            /**
+             * 断开连接。
+             * Disconnect.
+             */
+            @Override
+            public void disconnect() {
+                chatServer.gameServerDisconnected();
+            }
         }
-
-        /**
-         * 同步连接。
-         * Connect synchronously.
-         */
-        @Override
-        public void connect() {
-            chatServer.connect();
-        }
-
-        /**
-         * 异步连接。
-         * Connect asynchronously.
-         */
-        @Override
-        public void connectAsync() {
-            chatServer.connectAsync();
-        }
-
-        /**
-         * 断开连接。
-         * Disconnect.
-         */
-        @Override
-        public void disconnect() {
-            chatServer.gameServerDisconnected();
-        }
-    }
 }

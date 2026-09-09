@@ -23,7 +23,7 @@ public class ChatServerConnection extends AConnection {
 	 * 聊天服连接状态。
 	 * Chat-server connection state.
 	 */
-	public static enum State {
+	public enum State {
 		/**
 		 * 已连接但尚未认证。
 		 * Connected but not yet authenticated.

@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.agent.AgentStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 代理战（Agent Fight）活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.agent.AgentStateType;
  * @author Rinzler (Encom)
  * @param <AL> 代理地点类型 / agent location type
  */
+@RequiredArgsConstructor
 public abstract class AgentFight<AL extends AgentLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 位置 / location
+	 */
+	@Getter
 	private final AL agentLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * Concrete start-fight logic.
 	 */
 	protected abstract void startAgentFight();
-
-	/**
-	 * 绑定代理地点。
-	 * Binds the agent location.
-	 *
-	 * @param agentLocation 位置 / location
-	 */
-	public AgentFight(AL agentLocation) {
-		this.agentLocation = agentLocation;
-	}
 
 	/**
 	 * 启动战斗（幂等）。
@@ -99,16 +99,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 位置 / location
-	 */
-	public AL getAgentLocation() {
-		return agentLocation;
 	}
 
 	/**

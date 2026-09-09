@@ -14,7 +14,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 
-	private int actionId;
+	private final int actionId;
 	private RVController rift;
 	private Map<Integer, Integer> rifts;
 	private int objectId;

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Motion 列表。
@@ -23,14 +24,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 
+@RequiredArgsConstructor
 public class MotionList {
-    private Player owner;
+    private final Player owner;
     private Map<Integer, Motion> activeMotions;
     private Map<Integer, Motion> motions;
-
-    public MotionList(Player owner) {
-        this.owner = owner;
-    }
 
     /** 返回 active motions / Returns the active motions */
     public Map<Integer, Motion> getActiveMotions() {

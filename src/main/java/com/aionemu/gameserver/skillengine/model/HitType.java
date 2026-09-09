@@ -20,5 +20,5 @@ public enum HitType {
 	/** 魔法命中 / Magical hit */
 	MAHIT,
 	/** 物理命中 / Physical hit */
-	PHHIT;
+	PHHIT
 }

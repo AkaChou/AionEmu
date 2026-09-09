@@ -32,13 +32,13 @@ public class Emperor_AdmirerAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 831112: //Emperor's Admirer.
+				case 831112: // 称颂皇帝的人 / Emperor's Admirer.
 					startTombWaveC1();
 					// 掠夺者来袭。守卫皇帝纪念碑！ / Pillagers incoming. Guard the Emperor's Monument!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401584));
-					spawn(831130, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Crown Prince's Monument.
-					spawn(831250, 452.92874f, 85.73192f, 214.3359f, (byte) 75); //Imperial Obelisk.
-					spawn(831251, 435.34854f, 120.64044f, 214.336f, (byte) 62); //Imperial Obelisk.
+					spawn(831130, 452.43765f, 106.14462f, 212.20023f, (byte) 68); // 皇太子的石碑 / Crown Prince's Monument.
+					spawn(831250, 452.92874f, 85.73192f, 214.3359f, (byte) 75); // 皇陵石塔 / Imperial Obelisk.
+					spawn(831251, 435.34854f, 120.64044f, 214.336f, (byte) 62); // 皇陵石塔 / Imperial Obelisk.
 				break;
 			}
 		}

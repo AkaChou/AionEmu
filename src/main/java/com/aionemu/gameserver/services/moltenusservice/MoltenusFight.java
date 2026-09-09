@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 熔岩领主（Moltenus）活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
  * @author Rinzler (Encom)
  * @param <ML> 熔岩领主地点类型 / Moltenus location type
  */
+@RequiredArgsConstructor
 public abstract class MoltenusFight<ML extends MoltenusLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / bound location
+	 */
+	@Getter
 	private final ML moltenusLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startMoltenus();
-
-	/**
-	 * 绑定熔岩领主地点。
-	 * Binds the Moltenus location.
-	 *
-	 * @param moltenusLocation 熔岩领主地点 / Moltenus location
-	 */
-	public MoltenusFight(ML moltenusLocation) {
-		this.moltenusLocation = moltenusLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
-	 */
-	public ML getMoltenusLocation() {
-		return moltenusLocation;
 	}
 
 	/**

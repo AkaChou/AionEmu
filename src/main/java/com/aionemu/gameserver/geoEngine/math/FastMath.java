@@ -1,11 +1,14 @@
 package com.aionemu.gameserver.geoEngine.math;
 
 import java.util.Random;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 快速数学工具类，提供常用数学运算、插值、三角函数与坐标转换。
  * Fast math utility class providing common math operations, interpolation, trig and coordinate conversions.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FastMath {
 	/** Double-precision float epsilon / Double-precision float epsilon */
 	public static final double DBL_EPSILON = 2.220446049250313E-16;
@@ -33,13 +36,6 @@ public final class FastMath {
 	public static final float RAD_TO_DEG = 57.295776f;
 	/** 共享随机数生成器。 / Shared random number generator. */
 	public static final Random rand = new Random(System.currentTimeMillis());
-
-	/**
-	 * 私有构造，禁止实例化。
-	 * Private constructor to prevent instantiation.
-	 */
-	private FastMath() {
-	}
 
 	/**
 	 * 判断给定整数是否为 2 的幂。

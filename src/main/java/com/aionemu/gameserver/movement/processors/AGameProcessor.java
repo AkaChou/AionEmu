@@ -24,7 +24,7 @@ public class AGameProcessor {
 	 * 底层定时线程池。
 	 * Underlying scheduled thread pool.
 	 */
-	private ScheduledThreadPoolExecutor _processorPool;
+	private final ScheduledThreadPoolExecutor _processorPool;
 
 	/**
 	 * 以指定核心线程数创建处理器并预启动全部核心线程。
@@ -34,7 +34,7 @@ public class AGameProcessor {
 	 */
 	protected AGameProcessor(int threadsCount) {
 		this._processorPool = new ScheduledThreadPoolExecutor(threadsCount);
-		this._processorPool.setRejectedExecutionHandler((RejectedExecutionHandler) new AionRejectedExecutionHandler());
+		this._processorPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		this._processorPool.prestartAllCoreThreads();
 	}
 
@@ -57,13 +57,13 @@ public class AGameProcessor {
 	 * @return 调度句柄 / Scheduled future
 	 */
 	public ScheduledFuture<?> schedule(Runnable r, long delay) {
-		r = new RunnableTaskWrapper((Runnable) r);
+		r = new RunnableTaskWrapper(r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			log.warn(I18n.get("log.fb1d6c13ae41", (Object) delay, (Object) validated));
+			log.warn(I18n.get("log.fb1d6c13ae41", delay, validated));
 		}
 		delay = validated;
-		return this._processorPool.schedule((Runnable) r, delay, TimeUnit.MILLISECONDS);
+		return this._processorPool.schedule(r, delay, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -76,13 +76,13 @@ public class AGameProcessor {
 	 * @return 调度句柄 / Scheduled future
 	 */
 	public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
-		r = new RunnableTaskWrapper((Runnable) r);
+		r = new RunnableTaskWrapper(r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			log.warn(I18n.get("log.fb1d6c13ae41", (Object) delay, (Object) validated));
+			log.warn(I18n.get("log.fb1d6c13ae41", delay, validated));
 		}
 		delay = validated;
-		return this._processorPool.scheduleAtFixedRate((Runnable) r, delay, period, TimeUnit.MILLISECONDS);
+		return this._processorPool.scheduleAtFixedRate(r, delay, period, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -95,14 +95,14 @@ public class AGameProcessor {
 	 * @return 调度成功为 true / {@code true} if scheduled
 	 */
 	public boolean schedule(Runnable r, long delay, Task out) {
-		r = new RunnableTaskWrapper((Runnable) r);
+		r = new RunnableTaskWrapper(r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			log.warn(I18n.get("log.832d28ea08bf", (Object) delay, (Object) validated));
+			log.warn(I18n.get("log.832d28ea08bf", delay, validated));
 			return false;
 		}
 		delay = validated;
-		out.setTask(this._processorPool.schedule((Runnable) r, delay, TimeUnit.MILLISECONDS));
+		out.setTask(this._processorPool.schedule(r, delay, TimeUnit.MILLISECONDS));
 		return true;
 	}
 

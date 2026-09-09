@@ -11,14 +11,14 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public interface IExpirable {
 
 	/** 返回过期时间 / Returns the expire time */
-	public int getExpireTime();
+	int getExpireTime();
 
 	/** 到期结束 / expire End */
-	public void expireEnd(Player player);
+	void expireEnd(Player player);
 
 	/** 是否立即过期 / Whether expire now */
-	public boolean canExpireNow();
+	boolean canExpireNow();
 
 	/** 发送到期提示消息 / Send the expire message */
-	public void expireMessage(Player player, int time);
+	void expireMessage(Player player, int time);
 }

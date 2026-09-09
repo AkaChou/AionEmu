@@ -31,19 +31,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class AttackShieldObserver extends AttackCalcObserver {
 
 	/** 单次吸收/反射命中数值 / Per-hit absorb/reflect value */
-	private int hit;
+	private final int hit;
 	/** 总吸收量或反射百分比 / Total absorb amount or reflect percent */
 	private int totalHit;
 	/** 命中是否基于百分比 / Whether hit is percent-based */
-	private boolean hitPercent;
+	private final boolean hitPercent;
 	/** 总命中是否基于百分比 / Whether totalHit is percent-based */
-	private boolean totalHitPercent;
+	private final boolean totalHitPercent;
 	/** 关联技能效果 / Associated skill effect */
-	private Effect effect;
+	private final Effect effect;
 	/** 命中类型过滤 / Hit type filter */
-	private HitType hitType;
+	private final HitType hitType;
 	/** 护盾类型（0 转治疗/1 反射/2 吸收/8 保护） / Shield type (0 convert-heal/1 reflect/2 absorb/8 protect) */
-	private int shieldType;
+	private final int shieldType;
 	/** 触发概率 / Trigger probability */
 	private int probability = 100;
 	/** 反射最小半径 / Reflect min radius */
@@ -53,9 +53,9 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/** 转治疗类型 / Convert-heal type */
 	private HealType healType = null;
 	/** 保护者承伤比例/数值 / Protector damage share percent/value */
-	private int effectorDamage;
+	private final int effectorDamage;
 	/** 吸收时消耗 MP 百分比 / MP cost percent on absorb */
-	private int mpValue;
+	private final int mpValue;
 	/**
 	 * 简化构造：百分比总伤、无半径/治疗/保护/MP。
 	 * Simplified constructor: percent total hit, no radius/heal/protect/MP.

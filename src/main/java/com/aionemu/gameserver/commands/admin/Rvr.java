@@ -16,11 +16,11 @@ public class Rvr extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
 	public Rvr() {
 		super("rvr");
 	}
-	
+
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
@@ -36,7 +36,7 @@ public class Rvr extends AdminCommand
 			handleStartStopRvr(player, params);
 		}
 	}
-	
+
 	protected void handleStartStopRvr(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -62,15 +62,15 @@ public class Rvr extends AdminCommand
 			}
 		}
 	}
-	
+
 	protected boolean isValidRvrLocationId(Player player, int rvrId) {
-		if (!GameLocationBootstrapServices.rvrService().getRvrLocations().keySet().contains(rvrId)) {
+		if (!GameLocationBootstrapServices.rvrService().getRvrLocations().containsKey(rvrId)) {
 			PacketSendUtility.sendMessage(player, "Id " + rvrId + " is invalid");
 			return false;
 		}
 		return true;
 	}
-	
+
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //rvr start|stop <Id>");
 	}

@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 漩涡模板（静态数据/XML）。
@@ -16,6 +17,8 @@ import com.aionemu.gameserver.model.Race;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Vortex")
 public class VortexTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
@@ -33,11 +36,6 @@ public class VortexTemplate {
 
 	@XmlElement(name = "start_point")
 	protected StartPoint start;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
-	}
 
 	/** 返回 defenders race / Returns the defenders race */
 	public Race getDefendersRace() {

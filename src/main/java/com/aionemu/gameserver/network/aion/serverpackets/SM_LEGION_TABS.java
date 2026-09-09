@@ -14,9 +14,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_LEGION_TABS extends AionServerPacket {
 
-	private int page;
-	private Collection<LegionHistory> legionHistory;
-	private int tabId;
+	private final int page;
+	private final Collection<LegionHistory> legionHistory;
+	private final int tabId;
 
 	/**
 	 * 使用历史记录与标签 ID 构造首页数据包。

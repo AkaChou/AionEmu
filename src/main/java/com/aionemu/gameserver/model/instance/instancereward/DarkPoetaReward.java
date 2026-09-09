@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * DarkPoeta 奖励，用于副本相关逻辑。
  * Dark Poeta Reward for instance logic.
@@ -7,9 +10,18 @@ package com.aionemu.gameserver.model.instance.instancereward;
 
 @SuppressWarnings("rawtypes")
 public class DarkPoetaReward extends InstanceReward {
+	/** 获取点。 / Returns the points. */
+	@Getter
 	private int points;
+	/** 设置军阶。 / Sets the rank. */
+	@Getter
+	@Setter
 	private int rank = 7;
+	/** 返回 npc kills / Returns the npc kills */
+	@Getter
 	private int npcKills;
+	/** 返回 gather collections / Returns the gather collections */
+	@Getter
 	private int gatherCollections;
 
 	public DarkPoetaReward(Integer mapId, int instanceId) {
@@ -21,38 +33,13 @@ public class DarkPoetaReward extends InstanceReward {
 		this.points += points;
 	}
 
-	/** 获取点。 / Returns the points. */
-	public int getPoints() {
-		return points;
-	}
-
 	/** 添加 npc kill / Adds npc kill */
 	public void addNpcKill() {
 		npcKills++;
 	}
 
-	/** 返回 npc kills / Returns the npc kills */
-	public int getNpcKills() {
-		return npcKills;
-	}
-
-	/** 设置军阶。 / Sets the rank. */
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
-
-	/** 获取军阶。 / Returns the rank. */
-	public int getRank() {
-		return rank;
-	}
-
 	/** 添加 gather collection / Adds gather collection */
 	public void addGatherCollection() {
 		gatherCollections++;
-	}
-
-	/** 返回 gather collections / Returns the gather collections */
-	public int getGatherCollections() {
-		return gatherCollections;
 	}
 }

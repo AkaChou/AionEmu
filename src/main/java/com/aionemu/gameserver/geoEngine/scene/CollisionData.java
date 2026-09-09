@@ -23,5 +23,5 @@ public interface CollisionData {
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞数量 / number of collisions found
 	 */
-	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results);
+	int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results);
 }

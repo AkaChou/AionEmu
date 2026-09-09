@@ -24,7 +24,7 @@ public class WarehouseExpandData {
 
 	@XmlElement(name = "warehouse_npc")
 	private List<WarehouseExpandTemplate> clist;
-	private IntObjectHashMap<WarehouseExpandTemplate> npctlistData = new IntObjectHashMap<WarehouseExpandTemplate>();
+	private final IntObjectHashMap<WarehouseExpandTemplate> npctlistData = new IntObjectHashMap<WarehouseExpandTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，将扩容模板按 NPC ID 索引。

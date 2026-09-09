@@ -69,7 +69,7 @@ public class CM_REGISTER_HOUSE extends AionClientPacket {
 		GameHousingServices.housingBidService().addHouseToAuction(house, bidKinah);
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_AUCTION_MY_HOUSE(house.getAddress().getId()));
-		((HouseController) house.getController()).updateAppearance();
+		house.getController().updateAppearance();
 		PacketSendUtility.sendPacket(player, new SM_HOUSE_OWNER_INFO(player, house));
 	}
 }

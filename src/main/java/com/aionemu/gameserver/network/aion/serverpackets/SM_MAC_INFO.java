@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 客户端 MAC/硬件信息同步的服务端包。
@@ -9,25 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Ranastic
  */
+@AllArgsConstructor
 public class SM_MAC_INFO extends AionServerPacket {
 
-	private String macAddress;
-	private String hardName;
-	private int localIP;
-
-	/**
-	 * 构造 MAC/硬件信息包。
-	 * Builds a MAC/hardware info packet.
-	 *
-	 * MAC address
-	 * hardware name
-	 * local IP as int
-	 */
-	public SM_MAC_INFO(String macAddress, String hardName, int localIP) {
-		this.macAddress = macAddress;
-		this.hardName = hardName;
-		this.localIP = localIP;
-	}
+	private final String macAddress;
+	private final String hardName;
+	private final int localIP;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

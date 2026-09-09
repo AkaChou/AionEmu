@@ -38,8 +38,7 @@ public class EventCaller extends AdminCommand {
      */
     public void execute(Player player, String...params){
         if(params.length == 0){
-            onFail(player, "" +
-                    "--Syntax--" +
+            onFail(player, "--Syntax--" +
                     "\n//eventcaller show - shows registered players." +
                     "\n//eventcaller start - starts the event to calling to players." +
                     "\n//eventcaller start (number of players want) - if u want a limit write the number there. or just leave it blank for no limit" +

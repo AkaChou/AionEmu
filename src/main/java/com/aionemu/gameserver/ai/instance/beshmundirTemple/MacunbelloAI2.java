@@ -34,20 +34,20 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 {
 	private Future<?> rightHandTask;
 	private Future<?> activeEventTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private Phase phase = Phase.ACTIVE;
 	private boolean canThink = true;
-	
+
 	private enum Phase {
 		ACTIVE,
 		RIGHT_HAND,
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -58,19 +58,19 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 			startMacumbelloRightHandEvent();
 		}
 	}
-	
+
 	private void cancelActiveEventTask() {
 		if (activeEventTask != null && !activeEventTask.isDone()) {
 			activeEventTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelRightHandEventTask() {
 		if (rightHandTask != null && !rightHandTask.isDone()) {
 			rightHandTask.cancel(true);
 		}
 	}
-	
+
 	private void startMacumbelloRightHandEvent() {
 		rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -113,7 +113,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 			}
 		}, 14000);
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc : npcs) {
 			if (npc != null) {
@@ -121,28 +121,28 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void spawnMacumbelloRightHandEvent() {
 		moveToBoss((Npc)spawn(281698, 1007.2226f, 109.83921f, 242.70653f, (byte) 30));
 		moveToBoss((Npc)spawn(281698, 952.07434f, 109.54505f, 242.71020f, (byte) 29));
 		moveToBoss((Npc)spawn(281698, 1004.0906f, 159.85290f, 241.77126f, (byte) 90));
 		moveToBoss((Npc)spawn(281698, 955.58966f, 160.59547f, 241.77678f, (byte) 90));
 	}
-	
+
 	private void moveToBoss(final Npc npc) {
 		if (!isAlreadyDead() && !isHome.get()) {
 			npc.setTarget(getOwner());
 			npc.getMoveController().moveToTargetObject();
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		cancelActiveEventTask();
 		cancelRightHandEventTask();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isHome.set(true);
@@ -151,7 +151,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 		cancelActiveEventTask();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelActiveEventTask();

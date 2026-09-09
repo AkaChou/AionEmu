@@ -9,5 +9,5 @@ package com.aionemu.gameserver.model.agent;
 
 public enum AgentStateType {
 	/** 战斗 / Fight. */
-	FIGHT, PEACE;
+	FIGHT, PEACE
 }

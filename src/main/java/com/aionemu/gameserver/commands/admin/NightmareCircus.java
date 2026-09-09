@@ -89,7 +89,7 @@ public class NightmareCircus extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidNightmareCircusLocationId(Player player, int nightmareId) {
-		if (!GameLocationBootstrapServices.nightmareCircusService().getNightmareCircusLocations().keySet().contains(nightmareId)) {
+		if (!GameLocationBootstrapServices.nightmareCircusService().getNightmareCircusLocations().containsKey(nightmareId)) {
 			PacketSendUtility.sendMessage(player, "Id " + nightmareId + " is invalid");
 			return false;
 		}

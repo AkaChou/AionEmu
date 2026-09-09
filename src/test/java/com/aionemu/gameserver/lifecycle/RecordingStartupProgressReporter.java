@@ -1,14 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class RecordingStartupProgressReporter implements StartupProgressReporter {
 
 	private final List<String> events;
-
-	RecordingStartupProgressReporter(List<String> events) {
-		this.events = events;
-	}
 
 	@Override
 	public void start(String groupName) {

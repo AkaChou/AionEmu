@@ -268,12 +268,12 @@ public enum BrokerItemMask {
 	/** 未知 / Unknown. */
 	UNKNOWN(1, new BrokerContainsFilter(0), null, false);
 
-	private int typeId;
-	private BrokerFilter filter;
-	private BrokerItemMask parent;
-	private boolean childrenExist;
+	private final int typeId;
+	private final BrokerFilter filter;
+	private final BrokerItemMask parent;
+	private final boolean childrenExist;
 
-	private BrokerItemMask(int typeId, BrokerFilter filter, BrokerItemMask parent, boolean childrenExist) {
+	BrokerItemMask(int typeId, BrokerFilter filter, BrokerItemMask parent, boolean childrenExist) {
 		this.typeId = typeId;
 		this.filter = filter;
 		this.parent = parent;

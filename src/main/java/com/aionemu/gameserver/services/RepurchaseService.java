@@ -26,7 +26,7 @@ import com.google.common.collect.Multimap;
 public class RepurchaseService {
 
 	private static volatile ObjectProvider<RepurchaseService> instanceProvider;
-	private Multimap<Integer, Item> repurchaseItems;
+	private final Multimap<Integer, Item> repurchaseItems;
 
 	/**
 	 * 构造服务并初始化回购缓存。
@@ -79,7 +79,7 @@ public class RepurchaseService {
 	 */
 	public Collection<Item> getRepurchaseItems(int playerObjectId) {
 		Collection<Item> items = repurchaseItems.get(playerObjectId);
-		return items != null ? items : Collections.<Item>emptyList();
+		return items != null ? items : Collections.emptyList();
 	}
 
 	/**

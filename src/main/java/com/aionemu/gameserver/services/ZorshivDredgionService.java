@@ -53,10 +53,10 @@ public class ZorshivDredgionService {
 	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<Integer, ZorshivDredgion<?>>();
 
 	// 英吉斯温入侵 / Inggison Invasion
-	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
-	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
-	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 
 	/**
 	 * 初始化无畏舰地点并按和平状态刷怪。
@@ -123,7 +123,7 @@ public class ZorshivDredgionService {
 			public void run() {
 				stopZorshivDredgion(id);
 			}
-		}, CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
 	}
 
 	/**

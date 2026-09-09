@@ -55,9 +55,9 @@ public enum EmotionId {
 	/** 现金表情：你和我（完整） / Cash: You and Me (full) */
 	CASH_U_AND_ME_FULL(134);
 
-	private int id;
+	private final int id;
 
-	private EmotionId(int id) {
+	EmotionId(int id) {
 		this.id = id;
 	}
 

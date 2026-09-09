@@ -17,5 +17,5 @@ public interface IDFactoryAwareDAO extends DAO {
 	 *
 	 * @return 已使用 ID 数组 / array of used IDs
 	 */
-	public int[] getUsedIDs();
+	int[] getUsedIDs();
 }

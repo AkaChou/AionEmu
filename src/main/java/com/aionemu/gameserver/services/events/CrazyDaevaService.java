@@ -94,7 +94,7 @@ public class CrazyDaevaService {
 					if (crazyCount == 1) {
 						TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(),
 								player.getY(), player.getZ(), player.getHeading(), TeleportAnimation.BEAM_ANIMATION);
-						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName() + "");
+						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName());
 						log.info(I18n.get("log.b2c3238d6b52", player.getName()));
 						player.setInCrazy(true);
 						GameCoreGameplayServices.pvpService().doReward(player);
@@ -165,7 +165,7 @@ public class CrazyDaevaService {
 	private void sendEndSpreeMessage(final Player victim, Creature killer, boolean isPvPDeath) {
 		if (killer instanceof Player) {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
-				final String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "Killer";
+				final String spreeEnder = isPvPDeath ? killer.getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
@@ -221,7 +221,7 @@ public class CrazyDaevaService {
 				});
 				log.info(I18n.get("log.f2f29a601942"));
 			}
-		}, EventsConfig.CRAZY_ENDTIME * 60 * 1000); // 活动停止时间 / time stop
+		}, (long) EventsConfig.CRAZY_ENDTIME * 60 * 1000); // 活动停止时间 / time stop
 	}
 
 	/**

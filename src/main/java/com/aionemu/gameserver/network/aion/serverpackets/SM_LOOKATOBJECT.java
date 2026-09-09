@@ -12,9 +12,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_LOOKATOBJECT extends AionServerPacket {
 
-	private VisibleObject visibleObject;
-	private int targetObjectId;
-	private int heading;
+	private final VisibleObject visibleObject;
+	private final int targetObjectId;
+	private final int heading;
 
 	/**
 	 * 根据对象当前目标构造朝向同步包。

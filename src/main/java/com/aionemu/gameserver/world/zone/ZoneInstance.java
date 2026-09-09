@@ -16,6 +16,7 @@ import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 区域运行时实例：跟踪区内生物、派发进入/离开/死亡，并解析区域属性标志。
@@ -26,11 +27,12 @@ import java.util.Map;
 public class ZoneInstance implements Comparable<ZoneInstance> {
 
 	/** 区域模板信息 / zone template info */
-	private ZoneInfo template;
+	private final ZoneInfo template;
 	/** 所属地图 ID / owning map id */
-	private int mapId;
+	private final int mapId;
 	/** 区内生物集合 / creatures inside the zone */
-	private Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
+	@Getter
+	private final Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
 	/** 区域事件处理器列表 / zone event handlers */
 	protected List<ZoneHandler> handlers = new ArrayList<ZoneHandler>();
 
@@ -324,15 +326,5 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public int getTownId() {
 		return template.getZoneTemplate().getTownId();
-	}
-
-	/**
-	 * 返回区内生物集合。
-	 * Return the map of creatures inside the zone.
-	 *
-	 * @return 区内生物集合 / the creature map
-	 */
-	public Map<Integer, Creature> getCreatures() {
-		return creatures;
 	}
 }

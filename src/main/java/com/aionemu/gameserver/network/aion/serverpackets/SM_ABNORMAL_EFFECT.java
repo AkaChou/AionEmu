@@ -13,10 +13,10 @@ import com.aionemu.gameserver.skillengine.model.Effect;
  * Server packet synchronizing a creature's abnormal effect list to the client.
  */
 public class SM_ABNORMAL_EFFECT extends AionServerPacket {
-	private int effectedId;
+	private final int effectedId;
 	private int effectType = 1;
-	private int abnormals;
-	private Collection<Effect> filtered;
+	private final int abnormals;
+	private final Collection<Effect> filtered;
 
 	/**
 	 * 构造异常效果同步包；若目标为玩家则使用玩家效果格式。

@@ -30,8 +30,8 @@ public class OrissanAI2 extends AggressiveNpcAI2
 	private int orissanPhase = 0;
 	private Future<?> crystalTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -39,7 +39,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 95 && orissanPhase < 1) {
 			orissanPhase = 1;
@@ -58,7 +58,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 			spawnFrigidCrystal();
 		}
 	}
-	
+
 	private void spawnFrigidCrystal() {
 		crystalTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -88,7 +88,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnFrigidCrystal(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -104,7 +104,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -114,29 +114,29 @@ public class OrissanAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (crystalTask != null && !crystalTask.isDone()) {
 			crystalTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

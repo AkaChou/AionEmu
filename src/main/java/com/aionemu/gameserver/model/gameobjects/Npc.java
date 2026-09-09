@@ -43,6 +43,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.WorldType;
 import com.google.common.base.Preconditions;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * NPC 游戏对象。
@@ -52,20 +54,54 @@ import com.google.common.base.Preconditions;
  */
 public class Npc extends Creature {
 
+	/** 设置巡逻队伍。 / Sets the walker group. */
+	@Getter
+	@Setter
 	private WalkerGroup walkerGroup;
 	private boolean isQuestBusy = false;
-	private NpcSkillList skillList;
+	/** 获取技能列表。 / Returns the skill list. */
+	@Getter
+	private final NpcSkillList skillList;
+	/** 设置巡逻队伍偏移 / Sets the walker group shift */
+	@Getter
+	@Setter
 	private WalkerGroupShift walkerGroupShift;
 	private long lastShoutedSeconds;
+	/**
+	 * 返回主人名称。
+	 * Returns the name of the master.
+	 *
+	 * @return 主人名称 / name of the master
+	 */
+	@Getter
+	@Setter
 	private String masterName = StringUtils.EMPTY;
+	/**
+	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
+	 * Returns the unique id of the VisibleObject which created this Npc (player or house).
+	 *
+	 * @return 创建者唯一 ID / unique id of the creator
+	 */
+	@Getter
+	@Setter
 	private int creatorId = 0;
-	private Creature master;
+	private final Creature master;
+	@Getter
 	private final String npcPartyId;
+	/** 返回城镇 ID / Returns the town id */
+	@Getter
+	@Setter
 	private int townId;
+	/** 返回欧比斯 ID / Returns the abyss id */
+	@Getter
+	@Setter
 	private int abyssId;
+	/** 返回 NPC 类型 / Returns the npc type */
+	@Getter
+	@Setter
 	private NpcType npcType;
-	private ItemAttackType attacktype = ItemAttackType.PHYSICAL;
-	private int sensoryRange = getObjectTemplate().getAggroRange();
+	private final ItemAttackType attacktype = ItemAttackType.PHYSICAL;
+	private final int sensoryRange = getObjectTemplate().getAggroRange();
 
 	public Npc(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {
 		this(objId, controller, spawnTemplate, objectTemplate, objectTemplate.getLevel());
@@ -136,10 +172,6 @@ public class Npc extends Creature {
 		return getObjectTemplate().getTemplateId();
 	}
 
-	public String getNpcPartyId() {
-		return npcPartyId;
-	}
-
 	/** 获取等级。 / Returns the level. */
 	@Override
 	public byte getLevel() {
@@ -162,11 +194,6 @@ public class Npc extends Creature {
 	@Override
 	public NpcController getController() {
 		return (NpcController) super.getController();
-	}
-
-	/** 获取技能列表。 / Returns the skill list. */
-	public NpcSkillList getSkillList() {
-		return this.skillList;
 	}
 
 	/** 返回攻击类型 / Returns the attack type. */
@@ -227,9 +254,9 @@ public class Npc extends Creature {
 	@Override
 	public boolean isAggressiveTo(Creature creature) {
 		if (creature instanceof Player) {
-			return ((Player) creature).isAggroFrom(this);
+			return creature.isAggroFrom(this);
 		} else if (creature instanceof Summon) {
-			return ((Summon) creature).isAggroFrom(this);
+			return creature.isAggroFrom(this);
 		}
 
 		if (this.getTribe() == TribeClass.XDRAKAN_DGUARD && creature.getTribe() == TribeClass.XDRAKAN_LGUARD
@@ -257,12 +284,9 @@ public class Npc extends Creature {
 				&& DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(npc.getTribe(), TribeClass.PC)) {
 			return true;
 		}
-		if ((getTribe().isDarkGuard() || this.getRace() == Race.ASMODIANS
-				&& this.getObjectTemplate().getNpcTemplateType() == NpcTemplateType.GUARD)
-				&& DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(npc.getTribe(), TribeClass.PC_DARK)) {
-			return true;
-		}
-		return false;
+		return (getTribe().isDarkGuard() || this.getRace() == Race.ASMODIANS
+			&& this.getObjectTemplate().getNpcTemplateType() == NpcTemplateType.GUARD)
+			&& DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(npc.getTribe(), TribeClass.PC_DARK);
 	}
 
 	/**
@@ -412,59 +436,9 @@ public class Npc extends Creature {
 		return getNpcType() == NpcType.ATTACKABLE;
 	}
 
-	/**
-	 * 返回主人名称。
-	 * Returns the name of the master.
-	 *
-	 * @return 主人名称 / name of the master
-	 */
-	public String getMasterName() {
-		return masterName;
-	}
-
-	/** 设置主人名称 / Sets the master name */
-	public void setMasterName(String masterName) {
-		this.masterName = masterName;
-	}
-
-	/**
-	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
-	 * Returns the unique id of the VisibleObject which created this Npc (player or house).
-	 *
-	 * @return 创建者唯一 ID / unique id of the creator
-	 */
-	public int getCreatorId() {
-		return creatorId;
-	}
-
-	/** 设置创建者 ID / Sets the creator id */
-	public void setCreatorId(int creatorId) {
-		this.creatorId = creatorId;
-	}
-
 	@Override
 	public Creature getMaster() {
 		return master == null ? this : master;
-	}
-
-	/** 返回城镇 ID / Returns the town id */
-	public int getTownId() {
-		return townId;
-	}
-
-	/** 设置 town id / Sets the town id */
-	public void setTownId(int townId) {
-		this.townId = townId;
-	}
-
-	/** 返回欧比斯 ID / Returns the abyss id */
-	public int getAbyssId() {
-		return abyssId;
-	}
-
-	/** 设置 abyss id / Sets the abyss id */
-	public void setAbyssId(int abyssId) {
-		this.abyssId = abyssId;
 	}
 
 	/** 返回创建者 / Returns the creator */
@@ -483,26 +457,6 @@ public class Npc extends Creature {
 				PacketSendUtility.broadcastPacket(this, new SM_LOOKATOBJECT(this));
 			}
 		}
-	}
-
-	/** 设置巡逻队伍。 / Sets the walker group. */
-	public void setWalkerGroup(WalkerGroup wg) {
-		this.walkerGroup = wg;
-	}
-
-	/** 获取巡逻队伍。 / Returns the walker group. */
-	public WalkerGroup getWalkerGroup() {
-		return walkerGroup;
-	}
-
-	/** 设置巡逻队伍偏移 / Sets the walker group shift */
-	public void setWalkerGroupShift(WalkerGroupShift shift) {
-		this.walkerGroupShift = shift;
-	}
-
-	/** 返回巡逻队伍偏移 / Returns the walker group shift */
-	public WalkerGroupShift getWalkerGroupShift() {
-		return walkerGroupShift;
 	}
 
 	/** 是否首领 / Whether boss. */
@@ -534,16 +488,6 @@ public class Npc extends Creature {
 	/** 返回 NPC 掉落 / Returns the npc drop */
 	public NpcDrop getNpcDrop() {
 		return getObjectTemplate().getNpcDrop();
-	}
-
-	/** 返回 NPC 类型 / Returns the npc type */
-	public NpcType getNpcType() {
-		return npcType;
-	}
-
-	/** 设置 NPC 类型 / Sets the npc type */
-	public void setNpcType(NpcType newType) {
-		npcType = newType;
 	}
 
 	/** 是否为奖励欧比斯点数。 / Whether reward ap. */
@@ -617,6 +561,6 @@ public class Npc extends Creature {
 					}
 				}
 			}
-		}, delaySeconds * 1000);
+		}, delaySeconds * 1000L);
 	}
 }

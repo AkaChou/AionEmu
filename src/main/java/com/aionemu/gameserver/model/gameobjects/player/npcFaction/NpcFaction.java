@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects.player.npcFaction;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
 
 /**
  * NPC 势力游戏对象。
@@ -11,12 +12,40 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 public class NpcFaction {
 
-	private int id;
+	/**
+	 * @return 势力 ID / Faction ID
+	 */
+	@Getter
+	private final int id;
+	/**
+	 * @return 剩余计时（秒） / Remaining time in seconds
+	 */
+	@Getter
 	private int time;
+	/**
+	 * @return 是否激活 / Whether active
+	 */
+	@Getter
 	private boolean active;
-	private boolean mentor;
+	/**
+	 * @return 是否导师 NPC / Whether mentor
+	 */
+	@Getter
+	private final boolean mentor;
+	/**
+	 * @return 关联任务状态 / Quest state
+	 */
+	@Getter
 	private ENpcFactionQuestState state;
+	/**
+	 * @return 关联任务 ID / Associated quest ID
+	 */
+	@Getter
 	private int questId;
+	/**
+	 * @return 持久化状态 / Persistent state
+	 */
+	@Getter
 	private PersistentState persistentState;
 
 	/**
@@ -37,41 +66,6 @@ public class NpcFaction {
 		this.mentor = DataManager.NPC_FACTIONS_DATA.getNpcFactionById(id).isMentor();
 		this.questId = questId;
 		this.persistentState = PersistentState.NEW;
-	}
-
-	/**
-	 * @return 势力 ID / Faction ID
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @return 剩余计时（秒） / Remaining time in seconds
-	 */
-	public int getTime() {
-		return time;
-	}
-
-	/**
-	 * @return 是否激活 / Whether active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * @return 是否导师 NPC / Whether mentor
-	 */
-	public boolean isMentor() {
-		return mentor;
-	}
-
-	/**
-	 * @return 关联任务状态 / Quest state
-	 */
-	public ENpcFactionQuestState getState() {
-		return state;
 	}
 
 	/**
@@ -99,25 +93,11 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @return 关联任务 ID / Associated quest ID
-	 */
-	public int getQuestId() {
-		return questId;
-	}
-
-	/**
 	 * @param questId 设置的关联任务 ID / Associated quest ID to set
 	 */
 	public void setQuestId(int questId) {
 		this.questId = questId;
 		this.setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/**
-	 * @return 持久化状态 / Persistent state
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/**

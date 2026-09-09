@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList.Status;
 import com.aionemu.gameserver.world.WorldPosition;
+import lombok.Getter;
 
 /**
  * Friend 游戏对象。
@@ -15,6 +16,8 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 public class Friend {
 	private PlayerCommonData pcd;
+	/** 返回 friend note / Returns the friend note */
+	@Getter
 	private String friendNote = "";
 
 	public Friend(PlayerCommonData pcd) {
@@ -85,11 +88,6 @@ public class Friend {
 	/** 是否在线。 / Whether Online. */
 	public boolean isOnline() {
 		return pcd.isOnline();
-	}
-
-	/** 返回 friend note / Returns the friend note */
-	public String getFriendNote() {
-		return friendNote;
 	}
 
 	/** 设置 note / Sets the note */

@@ -32,22 +32,20 @@ import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPor
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
 
 /**
  * NpcFactions 游戏对象。
  * Npc Factions game object.
  */
 
+@RequiredArgsConstructor
 public class NpcFactions {
-	private Player owner;
+	private final Player owner;
 
-	private Map<Integer, NpcFaction> factions = new HashMap<Integer, NpcFaction>();
-	private NpcFaction[] activeNpcFaction = new NpcFaction[2];
-	private int[] timeLimit = new int[] { 0, 0 };
-
-	public NpcFactions(Player owner) {
-		this.owner = owner;
-	}
+	private final Map<Integer, NpcFaction> factions = new HashMap<Integer, NpcFaction>();
+	private final NpcFaction[] activeNpcFaction = new NpcFaction[2];
+	private final int[] timeLimit = new int[] { 0, 0 };
 
 	/** 添加 npc faction / Adds npc faction */
 	public void addNpcFaction(NpcFaction faction) {
@@ -206,7 +204,6 @@ public class NpcFactions {
 							new DescriptionId(activeNpcFactionTemplate.getNameId()),
 							new DescriptionId(npcFactionTemplate.getNameId())));
 		}
-		return;
 	}
 
 	/** 启动任务。 / Start quest. */
@@ -295,6 +292,7 @@ public class NpcFactions {
 				PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> owner,
 					id -> catalog.findMetadata(id).orElse(null));
 				// 真实按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
+				// Faction daily quests are granted by the real weekday bitmask; quests unavailable today stay out of the random pool, and an empty pool is skipped.
 				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 				List<Integer> quests = canonicalDailyQuestCandidates(catalog, faction.getId(),
 					questEngine::isHaveHandler,
@@ -375,9 +373,6 @@ public class NpcFactions {
 	public boolean canStartQuest(boolean mentor) {
 		int type = mentor ? 1 : 0;
 		NpcFaction faction = activeNpcFaction[type];
-		if (faction != null && this.timeLimit[type] < System.currentTimeMillis() / 1000) {
-			return true;
-		}
-		return false;
+		return faction != null && this.timeLimit[type] < System.currentTimeMillis() / 1000;
 	}
 }

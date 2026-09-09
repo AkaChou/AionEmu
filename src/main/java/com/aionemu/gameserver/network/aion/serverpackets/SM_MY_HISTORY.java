@@ -19,7 +19,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_MY_HISTORY extends AionServerPacket {
 
-	private int tableId;
+	private final int tableId;
 	private GoldArenaRank gold;
 	private TowerOfChallengeRank tower;
 	private Arena6V6Ranking arena6v6;
@@ -76,7 +76,7 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	protected void writeImpl(AionConnection paramAionConnection) {
 		writeD(tableId);
 		switch (tableId) {
-		case 1: // Hall Of Tenacity
+		case 1: // 黄金神庙训练所 / Hall Of Tenacity
 			writeD(gold.getRank()); // actual Rank
 			writeD(gold.getPoints()); // current Points
 			writeD(0);
@@ -86,7 +86,7 @@ public class SM_MY_HISTORY extends AionServerPacket {
 			writeD(gold.getLowPoints()); // low points
 			writeD(gold.getHighPoints()); // hight points
 			return;
-		case 541: // Arena Of Discipline
+		case 541: // 孤独竞技场 / Arena Of Discipline
 			writeD(arenaOfTenacity.getRank()); // actual Rank
 			writeD(arenaOfTenacity.getPoints()); // current Points
 			writeD(1);
@@ -125,7 +125,6 @@ public class SM_MY_HISTORY extends AionServerPacket {
 			writeD(0); // last Points
 			writeD(0); // low points
 			writeD(0); // hight points
-			return;
 		}
 	}
 }

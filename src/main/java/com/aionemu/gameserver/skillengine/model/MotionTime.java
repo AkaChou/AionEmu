@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 动作时间表：按种族/性别分组的武器动作时间（am/af/em/ef）。
@@ -16,107 +18,48 @@ import com.aionemu.gameserver.model.Race;
 @XmlType(name = "motion_time", propOrder = { "am", "af", "em", "ef" })
 public class MotionTime {
 
+	/**
+	 * 获取阿斯摩男性时间表。
+	 * Gets Asmodian male times.
+	 *
+	 */
+	@Getter
+	@Setter
 	protected Times am;
+	/**
+	 * 获取阿斯摩女性时间表。
+	 * Gets Asmodian female times.
+	 *
+	 */
+	@Getter
+	@Setter
 	protected Times af;
+	/**
+	 * 获取天族男性时间表。
+	 * Gets Elyos male times.
+	 *
+	 */
+	@Getter
+	@Setter
 	protected Times em;
+	/**
+	 * 获取天族女性时间表。
+	 * Gets Elyos female times.
+	 *
+	 */
+	@Getter
+	@Setter
 	protected Times ef;
-
-	@XmlAttribute(required = true)
-	protected String name;
 
 	/**
 	 * 获取动作名称。
 	 * Gets motion name.
 	 *
 	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 获取阿斯摩男性时间表。
-	 * Gets Asmodian male times.
-	 *
-	 */
-	public Times getAm() {
-		return am;
-	}
-
-	/**
-	 * 设置阿斯摩男性时间表。
-	 * Sets Asmodian male times.
-	 *
-	 * @param am 时间表 / times
-	 */
-	public void setAm(Times am) {
-		this.am = am;
-	}
-
-	/**
-	 * 获取阿斯摩女性时间表。
-	 * Gets Asmodian female times.
-	 *
-	 */
-	public Times getAf() {
-		return af;
-	}
-
-	/**
-	 * 设置阿斯摩女性时间表。
-	 * Sets Asmodian female times.
-	 *
-	 * @param af 时间表 / times
-	 */
-	public void setAf(Times af) {
-		this.af = af;
-	}
-
-	/**
-	 * 获取天族男性时间表。
-	 * Gets Elyos male times.
-	 *
-	 */
-	public Times getEm() {
-		return em;
-	}
-
-	/**
-	 * 设置天族男性时间表。
-	 * Sets Elyos male times.
-	 *
-	 * @param em 时间表 / times
-	 */
-	public void setEm(Times em) {
-		this.em = em;
-	}
-
-	/**
-	 * 获取天族女性时间表。
-	 * Gets Elyos female times.
-	 *
-	 */
-	public Times getEf() {
-		return ef;
-	}
-
-	/**
-	 * 设置天族女性时间表。
-	 * Sets Elyos female times.
-	 *
-	 * @param ef 时间表 / times
-	 */
-	public void setEf(Times ef) {
-		this.ef = ef;
-	}
-
-	/**
-	 * 设置动作名称。
-	 * Sets motion name.
-	 *
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	@Getter
+	@Setter
+	@XmlAttribute(required = true)
+	protected String name;
 
 	/**
 	 * 按种族与性别获取时间表。

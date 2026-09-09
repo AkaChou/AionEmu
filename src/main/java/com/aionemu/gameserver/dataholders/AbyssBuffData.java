@@ -28,7 +28,7 @@ public class AbyssBuffData {
 	protected List<AbyssServiceAttr> abyssBonusattr;
 
 	@XmlTransient
-	private IntObjectHashMap<AbyssServiceAttr> templates = new IntObjectHashMap<AbyssServiceAttr>();
+	private final IntObjectHashMap<AbyssServiceAttr> templates = new IntObjectHashMap<AbyssServiceAttr>();
 
 	/**
 	 * JAXB 反序列化完成后，按 buff ID 建立索引并释放列表。

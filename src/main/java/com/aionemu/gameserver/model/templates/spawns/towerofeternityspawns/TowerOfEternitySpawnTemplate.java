@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 永恒之塔刷新点模板（静态数据/XML）。
@@ -11,6 +13,9 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
  */
 
 public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
+	/** 返回 ID。 / Returns the id. */
+	@Getter
+	@Setter
 	private int id;
 	private TowerOfEternityStateType towerOfEternityType;
 
@@ -23,19 +28,9 @@ public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID。 / Returns the id. */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回状态类型。 / Returns the state type. */
 	public TowerOfEternityStateType getTStateType() {
 		return towerOfEternityType;
-	}
-
-	/** 设置 ID。 / Sets the id. */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置状态类型。 / Sets the state type. */

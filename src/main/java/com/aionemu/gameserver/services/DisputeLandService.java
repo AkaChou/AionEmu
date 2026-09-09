@@ -30,7 +30,7 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 public class DisputeLandService {
 	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
 	private boolean active;
-	private List<Integer> worlds = new ArrayList<>();
+	private final List<Integer> worlds = new ArrayList<>();
 
 	/**
 	 * 默认构造。
@@ -79,7 +79,7 @@ public class DisputeLandService {
 							public void run() {
 								setActive(false);
 							}
-						}, CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
+						}, (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
 					}
 				}
 			}, () -> CustomConfig.DISPUTE_LAND_SCHEDULE);

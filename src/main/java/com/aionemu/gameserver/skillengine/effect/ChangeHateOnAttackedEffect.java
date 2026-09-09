@@ -54,7 +54,7 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 			@Override
 			public void attacked(Creature creature) {
 				if (creature instanceof Npc) {
-					((Npc) creature).getAggroList().addHate(effect.getEffected(), finalValue);
+					creature.getAggroList().addHate(effect.getEffected(), finalValue);
 				}
 			}
 		};

@@ -26,8 +26,7 @@ public class ProcVPHealInstantEffect extends EffectTemplate {
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {
-		if ((effect.getEffected() instanceof Player)) {
-			Player player = (Player) effect.getEffected();
+		if ((effect.getEffected() instanceof Player player)) {
 			PlayerCommonData pcd = player.getCommonData();
 			long cap = pcd.getMaxReposteEnergy() * value2 / 100;
 			if (pcd.getCurrentReposteEnergy() < cap) {

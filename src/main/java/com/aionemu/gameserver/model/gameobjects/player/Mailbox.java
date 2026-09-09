@@ -18,6 +18,8 @@ import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Mailbox 游戏对象。
@@ -26,21 +28,20 @@ import java.util.LinkedHashMap;
  * @author kosyachok
  * @modified Atracer
  */
+@RequiredArgsConstructor
 public class Mailbox {
 
-	private Map<Integer, Letter> mails = new LinkedHashMap<Integer, Letter>();
-	private Map<Integer, Letter> reserveMail = new LinkedHashMap<Integer, Letter>();
-	private Player owner;
+	private final Map<Integer, Letter> mails = new LinkedHashMap<Integer, Letter>();
+	private final Map<Integer, Letter> reserveMail = new LinkedHashMap<Integer, Letter>();
+	/** 返回所有者 / Returns the owner*/
+	@Getter
+	private final Player owner;
 	public boolean isMailListUpdateRequired;
 
 	// 0x00 - 关闭 / 0x00 - closed
 	// 0x01 - 普通 / 0x01 - regular
 	// 0x02 - 快递 / 0x02 - express
 	public byte mailBoxState = 0;
-
-	public Mailbox(Player player) {
-		this.owner = player;
-	}
 
 	/**
 	 * @param letter
@@ -208,10 +209,5 @@ public class Mailbox {
 	/** 发送邮件列表。 / Send mail list. */
 	public void sendMailList(boolean expressOnly) {
 		PacketSendUtility.sendPacket(owner, new SM_MAIL_SERVICE(owner, getLetters(), expressOnly));
-	}
-
-	/** 返回所有者 / Returns the owner*/
-	public Player getOwner() {
-		return owner;
 	}
 }

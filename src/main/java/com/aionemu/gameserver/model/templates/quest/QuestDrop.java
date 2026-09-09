@@ -5,6 +5,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 任务掉落模板（静态数据/XML）。
@@ -14,8 +16,12 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestDrop")
 public class QuestDrop {
+	/** 返回 NPC ID / Returns the npc id */
+	@Getter
 	@XmlAttribute(name = "npc_id")
 	protected Integer npcId;
+	/** 返回物品 ID / Returns the item id */
+	@Getter
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
 	@XmlAttribute
@@ -25,18 +31,11 @@ public class QuestDrop {
 	@XmlAttribute(name = "collecting_step")
 	protected int collecting_step = 0;
 
+	/** 返回任务 ID / Returns the quest id */
+	@Getter
+	@Setter
 	@XmlTransient
 	protected Integer questId;
-
-	/** 返回 NPC ID / Returns the npc id */
-	public Integer getNpcId() {
-		return npcId;
-	}
-
-	/** 返回物品 ID / Returns the item id */
-	public Integer getItemId() {
-		return itemId;
-	}
 
 	/** 返回概率 / Returns the chance. */
 	public int getChance() {
@@ -56,18 +55,8 @@ public class QuestDrop {
 		return dropEachMember == 2;
 	}
 
-	/** 返回任务 ID / Returns the quest id */
-	public Integer getQuestId() {
-		return questId;
-	}
-
 	/** 返回收集步骤 / Returns the collecting step */
 	public int getCollectingStep() {
 		return collecting_step;
-	}
-
-	/** 设置 quest id / Sets the quest id */
-	public void setQuestId(Integer questId) {
-		this.questId = questId;
 	}
 }

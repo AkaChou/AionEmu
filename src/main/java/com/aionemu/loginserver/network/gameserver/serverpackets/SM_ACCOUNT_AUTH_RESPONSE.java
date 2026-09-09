@@ -3,6 +3,7 @@ package com.aionemu.loginserver.network.gameserver.serverpackets;
 import com.aionemu.loginserver.model.AccountTime;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：账号鉴权结果响应（含账号名、在线/休息时间、权限与货币信息）。
@@ -10,6 +11,7 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
 
     /**
@@ -56,34 +58,6 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
     private final long vipExp;
     /** Unix seconds VIP end time. */
     private final long vipExpireTime;
-
-    /**
-     * 构造账号鉴权响应包。
-     * Constructs an account authentication response packet.
-     *
-     * @param accountId 账号 ID / account id
-     * @param ok 是否鉴权通过 / whether authentication succeeded
-     * @param accountName 账号名 / account name
-     * @param accessLevel 访问权限等级 / access level
-     * @param membership 会员等级 / membership level
-     * @param toll 通行点数 / toll points
-     * @param luna 露娜货币 / luna currency
-     * @param isReturn 返回玩家标志 / return-player flag
-     */
-    public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership,
-            long toll, long luna, byte isReturn, int vipLevel, long vipExp, long vipExpireTime) {
-        this.accountId = accountId;
-        this.ok = ok;
-        this.accountName = accountName;
-        this.accessLevel = accessLevel;
-        this.membership = membership;
-        this.toll = toll;
-        this.luna = luna;
-        this.isReturn = isReturn;
-        this.vipLevel = vipLevel;
-        this.vipExp = vipExp;
-        this.vipExpireTime = vipExpireTime;
-    }
 
     /**
      * {@inheritDoc}

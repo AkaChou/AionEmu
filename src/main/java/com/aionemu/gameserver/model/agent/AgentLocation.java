@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.agent.AgentTemplate;
 import com.aionemu.gameserver.services.agentservice.AgentFight;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 代理人位置模型。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.agentservice.AgentFight;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class AgentLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected AgentTemplate template;
+	/** 返回当前战斗 / Returns the active fight */
+	@Getter
 	protected AgentFight<AgentLocation> activeAgent;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回已刷新的对象列表 / Returns the spawned objects */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public AgentLocation() {
-	}
 
 	public AgentLocation(AgentTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置当前战斗 / Sets the active fight */
@@ -44,28 +49,8 @@ public class AgentLocation {
 		this.activeAgent = agent;
 	}
 
-	/** 返回当前战斗 / Returns the active fight */
-	public AgentFight<AgentLocation> getActiveAgent() {
-		return activeAgent;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final AgentTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回已刷新的对象列表 / Returns the spawned objects */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

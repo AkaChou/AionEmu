@@ -59,7 +59,7 @@ public class Weather extends AdminCommand
 			return;
 		}
 		int weatherType = -1;
-		regionName = new String(params[0]);
+		regionName = params[0];
 		if (params.length == 2) {
 			try {
 				weatherType = Integer.parseInt(params[1]);
@@ -73,7 +73,7 @@ public class Weather extends AdminCommand
 		}
 		WorldMapType region = null;
 		for (WorldMapType worldMapType : WorldMapType.values()) {
-			if (worldMapType.name().toLowerCase().equals(regionName.toLowerCase())) {
+			if (worldMapType.name().equalsIgnoreCase(regionName)) {
 				region = worldMapType;
 				break;
 			}
@@ -87,11 +87,9 @@ public class Weather extends AdminCommand
 				GameRuntimeServices.weatherService().changeRegionWeather(region.getId(), weatherType);
 			} else {
 				PacketSendUtility.sendMessage(admin, "Weather type must be between 0 and 12");
-				return;
 			}
 		} else {
 			PacketSendUtility.sendMessage(admin, "Region " + regionName + " not found");
-			return;
 		}
 	}
 

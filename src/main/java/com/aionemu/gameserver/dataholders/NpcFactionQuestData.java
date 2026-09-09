@@ -28,7 +28,7 @@ public class NpcFactionQuestData {
 
 	@XmlElement(name = "npc_faction_quest", required = true)
 	protected List<NpcFactionQuestEntry> npcFactionQuests;
-	private Map<Integer, NpcFactionQuestEntry> questsByQuestId = new HashMap<>();
+	private final Map<Integer, NpcFactionQuestEntry> questsByQuestId = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 quest id 建立索引。

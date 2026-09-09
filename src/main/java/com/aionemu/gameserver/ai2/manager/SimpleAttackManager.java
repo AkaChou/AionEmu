@@ -86,9 +86,9 @@ public class SimpleAttackManager {
     /**
      * 判断目标是否在攻击射程内（含存活、可见与几何范围）。
      * Returns whether the target is in attack range (alive, visible, and within geometric range).
-     * 
+     *
      * @return 攻击 NPC / attacking NPC
-     * 
+     *
      * @param npc
      * @return 在射程内为 {@code true} / {@code true} if in attack range
      */
@@ -101,13 +101,11 @@ public class SimpleAttackManager {
         return false;
     }
 
-    if (!(npc.getTarget() instanceof Creature)) {
+    if (!(npc.getTarget() instanceof Creature target)) {
         return false;
     }
 
-    Creature target = (Creature) npc.getTarget();
-
-    if (!target.isSpawned() || target.getLifeStats() == null || target.getLifeStats().isAlreadyDead()) {
+		if (!target.isSpawned() || target.getLifeStats() == null || target.getLifeStats().isAlreadyDead()) {
         return false;
     }
 
@@ -143,7 +141,7 @@ public class SimpleAttackManager {
     /**
      * 执行实际的攻击动作；目标无效或过远时触发相应 AI 事件。
      * Performs the actual attack action; fires AI events if the target is invalid or too far.
-     * 
+     *
      * @param npcAI NPC AI 实例 / NPC AI instance
      */
     protected static void attackAction(final NpcAI2 npcAI) {

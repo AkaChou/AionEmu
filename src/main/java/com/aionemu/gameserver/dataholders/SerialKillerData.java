@@ -26,7 +26,7 @@ public class SerialKillerData {
 	protected List<RankRestriction> rankRestriction;
 
 	@XmlTransient
-	private IntObjectHashMap<RankRestriction> templates = new IntObjectHashMap<RankRestriction>();
+	private final IntObjectHashMap<RankRestriction> templates = new IntObjectHashMap<RankRestriction>();
 
 	/**
 	 * JAXB 反序列化完成后，将等级限制写入索引并释放列表。

@@ -68,7 +68,7 @@ class PlayerQuestTeleportPortTest {
 		Player player = emptyPlayer();
 		int[] capturedInstance = {0};
 		PlayerQuestTeleportPort port = new PlayerQuestTeleportPort(playerId -> player,
-			(PlayerQuestTeleportPort.TeleportCall) (p, worldId, instanceId, x, y, z, heading) -> {
+			(p, worldId, instanceId, x, y, z, heading) -> {
 				capturedInstance[0] = instanceId;
 				return true;
 			});

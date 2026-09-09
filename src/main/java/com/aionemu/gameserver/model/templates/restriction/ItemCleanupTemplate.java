@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
 /**
  * 物品清理模板（静态数据/XML）。
@@ -15,6 +16,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ItemCleanupTemplate {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 	@XmlAttribute
@@ -51,10 +54,5 @@ public class ItemCleanupTemplate {
 	/** 结果军团仓库 / Result Legion WH */
 	public byte resultLegionWH() {
 		return lwh;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 }

@@ -14,7 +14,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      * 数据包读取器。
      * Packet reader.
      */
-    private PacketReader buf;
+    private final PacketReader buf;
 
     /**
      * 使用读取器与操作码创建客户端包。

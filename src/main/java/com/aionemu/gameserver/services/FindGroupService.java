@@ -40,13 +40,13 @@ public class FindGroupService {
 
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
 	/** 天族招募列表。 / Elyos recruit listings. */
-	private Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
 	/** 天族申请列表。 / Elyos apply listings. */
-	private Map<Integer, FindGroup> elyosApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> elyosApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
 	/** 魔族招募列表。 / Asmodian recruit listings. */
-	private Map<Integer, FindGroup> asmodianRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> asmodianRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
 	/** 魔族申请列表。 / Asmodian apply listings. */
-	private Map<Integer, FindGroup> asmodianApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> asmodianApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
 
 	/**
 	 * 注册组队/联盟变更回调，用于自动维护寻找队伍列表。

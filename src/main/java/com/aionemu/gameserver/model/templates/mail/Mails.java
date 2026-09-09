@@ -28,7 +28,7 @@ public class Mails {
 	private List<SysMail> sysMailTemplates;
 
 	@XmlTransient
-	private Map<String, SysMail> sysMailByName = new HashMap<String, SysMail>();
+	private final Map<String, SysMail> sysMailByName = new HashMap<String, SysMail>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SysMail template : sysMailTemplates) {
@@ -41,7 +41,7 @@ public class Mails {
 
 	/** 获取邮件模板。 / Returns the mail template. */
 	public MailTemplate getMailTemplate(String name, String eventName, Race playerRace) {
-		SysMail template = (SysMail) sysMailByName.get(name.toLowerCase());
+		SysMail template = sysMailByName.get(name.toLowerCase());
 		if (template == null) {
 			return null;
 		}
@@ -50,6 +50,6 @@ public class Mails {
 
 	/** 大小 / size. */
 	public int size() {
-		return sysMailByName.values().size();
+		return sysMailByName.size();
 	}
 }

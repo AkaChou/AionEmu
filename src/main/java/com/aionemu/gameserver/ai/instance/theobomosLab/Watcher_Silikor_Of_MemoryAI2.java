@@ -24,25 +24,25 @@ import java.util.List;
 @AIName("watcher_silikor_of_memory")
 public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 {
-	private boolean canThink = true;
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final boolean canThink = true;
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{50, 25, 10});
+		Collections.addAll(percents, 50, 25, 10);
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent: percents) {
 			if (hpPercentage <= percent) {
@@ -63,7 +63,7 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sp(int npcId) {
 		float direction = Rnd.get(0, 199) / 100f;
 		int distance = Rnd.get(0, 2);
@@ -72,7 +72,7 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 		WorldPosition p = getPosition();
 		spawn(npcId, p.getX() + x1, p.getY() + y1, p.getZ(), p.getHeading());
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -80,7 +80,7 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -90,19 +90,19 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();

@@ -1,24 +1,20 @@
 package com.aionemu.commons.services.cron;
 
+import lombok.NoArgsConstructor;
+
 /**
  * Cron 服务异常类，用于处理定时任务执行过程中的异常情况
  * Exception class for Cron Service, used to handle exceptions during scheduled task execution
  *
  * @author SunAion
  */
+@NoArgsConstructor
 public class CronServiceException extends RuntimeException {
     /**
  * 序列化版本 ID
      * Serialization version ID
      */
     private static final long serialVersionUID = -354186843536711803L;
-
-    /**
-     * 默认构造函数
-     * Default constructor
-     */
-    public CronServiceException() {
-    }
 
     /**
      * 使用指定的错误消息构造异常

@@ -19,7 +19,7 @@ public class Agent extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
 	/**
 	 * 注册 {@code //agent} 命令。
 	 * Registers the {@code //agent} command.
@@ -27,7 +27,7 @@ public class Agent extends AdminCommand
 	public Agent() {
 		super("agent");
 	}
-	
+
 	/**
 	 * 执行代理战控制：解析 start/stop 与地点 ID。
 	 * Executes agent-fight control: parses start/stop and location id.
@@ -42,7 +42,7 @@ public class Agent extends AdminCommand
 			handleStartStopFight(player, params);
 		}
 	}
-	
+
 	/**
 	 * 处理代理战的开始/停止逻辑。
 	 * Handles start/stop logic for an agent fight.
@@ -80,7 +80,7 @@ public class Agent extends AdminCommand
 			}
 		}
 	}
-	
+
 	/**
 	 * 校验代理战地点 ID 是否有效。
 	 * Validates whether the agent location id exists.
@@ -89,13 +89,13 @@ public class Agent extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAgentLocationId(Player player, int agentId) {
-		if (!GameLocationBootstrapServices.agentService().getAgentLocations().keySet().contains(agentId)) {
+		if (!GameLocationBootstrapServices.agentService().getAgentLocations().containsKey(agentId)) {
 			PacketSendUtility.sendMessage(player, "Id " + agentId + " is invalid");
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 向管理员输出 {@code //agent} 用法。
 	 * Sends {@code //agent} usage help to the admin.

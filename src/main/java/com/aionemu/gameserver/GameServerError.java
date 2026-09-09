@@ -1,22 +1,17 @@
 package com.aionemu.gameserver;
 
+import lombok.NoArgsConstructor;
+
 /**
  * 游戏服务器严重错误的超类；用于不可恢复的启动或运行时故障。
  * Superclass of GameServer errors used for non-recoverable startup or runtime failures.
  *
  * @author Aquanox
  */
+@NoArgsConstructor
 public class GameServerError extends Error {
 
 	private static final long serialVersionUID = -7445873741878754767L;
-
-	/**
-	 * 构造无详情消息的错误；原因未初始化，之后可通过 {@link #initCause} 设置。
-	 * Constructs a new error with {@code null} as its detail message. The cause is not initialized
-	 * and may subsequently be initialized by a call to {@link #initCause}.
-	 */
-	public GameServerError() {
-	}
 
 	/**
 	 * 以指定原因为构造参数；详情消息通常取 {@code cause.toString()}。

@@ -45,24 +45,24 @@ class GameAdminPanelShutdownRequestTest {
     }
 
     private static ObjectProvider<AionProcessRuntimeBridge> provider(AionProcessRuntimeBridge runtimeBridge) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "processRuntimeBridgeProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
-                    return runtimeBridge;
-                }
-                throw new UnsupportedOperationException(method.toString());
-            }
-        ));
+        return (ObjectProvider) Proxy.newProxyInstance(
+			ObjectProvider.class.getClassLoader(),
+			new Class<?>[]{ObjectProvider.class},
+			(proxy, method, args) -> {
+				if (method.getDeclaringClass() == Object.class) {
+					return switch (method.getName()) {
+						case "toString" -> "processRuntimeBridgeProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
+				}
+				if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
+					return runtimeBridge;
+				}
+				throw new UnsupportedOperationException(method.toString());
+			}
+		);
     }
 
     private static final class RecordingProcessRuntimeBridge extends AionProcessRuntimeBridge {

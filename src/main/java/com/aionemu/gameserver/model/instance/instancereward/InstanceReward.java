@@ -6,6 +6,8 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 副本奖励模型。
@@ -14,18 +16,22 @@ import java.util.List;
 @Slf4j
 
 public class InstanceReward<T extends InstancePlayerReward> {
+	/** 获取副本奖励。 / Returns the instance rewards. */
+	@Getter
 	protected List<T> instanceRewards = new ArrayList<T>();
+	/** 设置 instance score type / Sets the instance score type */
+	@Getter
+	@Setter
 	private InstanceScoreType instanceScoreType = InstanceScoreType.START_PROGRESS;
+	/** 返回映射 ID / Returns the map id */
+	@Getter
 	protected Integer mapId;
+	/** 返回副本 ID / Returns the instance id */
+	@Getter
 	protected int instanceId;
 	public InstanceReward(Integer mapId, int instanceId) {
 		this.mapId = mapId;
 		this.instanceId = instanceId;
-	}
-
-	/** 获取副本奖励。 / Returns the instance rewards. */
-	public List<T> getInstanceRewards() {
-		return instanceRewards;
 	}
 
 	/** 包含玩家 / Contain Player */
@@ -40,9 +46,7 @@ public class InstanceReward<T extends InstancePlayerReward> {
 
 	/** 移除玩家奖励。 / Removes player reward. */
 	public void removePlayerReward(T reward) {
-		if (instanceRewards.contains(reward)) {
-			instanceRewards.remove(reward);
-		}
+		instanceRewards.remove(reward);
 	}
 
 	/** 获取玩家奖励。 / Returns the player reward. */
@@ -58,26 +62,6 @@ public class InstanceReward<T extends InstancePlayerReward> {
 	/** 添加玩家奖励。 / Adds player reward. */
 	public void addPlayerReward(T reward) {
 		instanceRewards.add(reward);
-	}
-
-	/** 设置 instance score type / Sets the instance score type */
-	public void setInstanceScoreType(InstanceScoreType instanceScoreType) {
-		this.instanceScoreType = instanceScoreType;
-	}
-
-	/** 返回 instance score type / Returns the instance score type */
-	public InstanceScoreType getInstanceScoreType() {
-		return instanceScoreType;
-	}
-
-	/** 返回映射 ID / Returns the map id */
-	public Integer getMapId() {
-		return mapId;
-	}
-
-	/** 返回副本 ID / Returns the instance id */
-	public int getInstanceId() {
-		return instanceId;
 	}
 
 	/**
@@ -119,6 +103,6 @@ public class InstanceReward<T extends InstancePlayerReward> {
 	 * @param log 日志消息 / log message
 	 */
 	public void sendLog(String log) {
-		this.log.info(log);
+		InstanceReward.log.info(log);
 	}
 }

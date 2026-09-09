@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 角色福利包列表：子类型 3 为国服独立的 VIP 分支。
@@ -12,6 +14,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * 游戏内 VIP 包：duration 为 account_vip.expire_time 计算的剩余秒数。
  * In-world VIP packs: duration is remaining seconds from account_vip.expire_time.
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SM_CHAR_BM_PACK_LIST extends AionServerPacket {
 
 	private static final int VIP_SUBTYPE = 3;
@@ -33,12 +36,6 @@ public class SM_CHAR_BM_PACK_LIST extends AionServerPacket {
 	 */
 	public SM_CHAR_BM_PACK_LIST(int subtype) {
 		this(subtype, false, 0);
-	}
-
-	private SM_CHAR_BM_PACK_LIST(int subtype, boolean vipEnabled, int duration) {
-		this.subtype = subtype;
-		this.vipEnabled = vipEnabled;
-		this.duration = duration;
 	}
 
 	/**

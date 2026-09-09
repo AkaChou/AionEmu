@@ -196,20 +196,9 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     }
 
     /**
-     * 从数据库加载的效果快照。
-     * Snapshot of an effect loaded from the database.
-     */
-    private static class SavedEffect {
-        final int skillId;
-        final int skillLvl;
-        final int remainingTime;
-        final long endTime;
-
-        SavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
-            this.skillId = skillId;
-            this.skillLvl = skillLvl;
-            this.remainingTime = remainingTime;
-            this.endTime = endTime;
-        }
+         * 从数据库加载的效果快照。
+         * Snapshot of an effect loaded from the database.
+         */
+        private record SavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
     }
 }

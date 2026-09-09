@@ -17,7 +17,7 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
  */
 public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 	private final List<Item> items;
-	private Player player;
+	private final Player player;
 	private ItemAddType addType;
 
 	/**

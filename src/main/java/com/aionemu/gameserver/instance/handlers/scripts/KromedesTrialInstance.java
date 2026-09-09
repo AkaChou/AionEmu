@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -23,7 +22,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -52,8 +50,8 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -63,11 +61,11 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(Player player) {
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
-		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000);
 		sendMovie(player, 453);
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -93,14 +91,14 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 216967: //Petrahulk Gatekeeper.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000098, 1)); //Temple Vault Door Key.
-			break;	
+			break;
 			case 216968: //Divine Hisen.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000109, 1)); //Relic Key.
 			break;
@@ -352,7 +350,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -371,7 +369,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -383,7 +381,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -395,7 +393,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -413,7 +411,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 				spawnClassTreasure(player, 740.83966f, 535.38837f, 199.12067f, (byte) 89);
             break;
 			case 216982: //Hamam The Torturer.
-				//sendMsg("<Wounded Hamam> appear");
 				spawn(217004, 651.186f, 767.856f, 215.584f, (byte) 59); //Wounded Hamam.
 				spawnClassTreasure(player, 757.48157f, 617.7071f, 197.17694f, (byte) 108);
             break;
@@ -425,19 +422,16 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 				spawnClassTreasure(player, 581.11005f, 775.1529f, 215.53482f, (byte) 112);
             break;
 			case 217000: //Lady Angerr.
-			    //sendMsg("<Distraught Lady Angerr> appear");
 				spawn(217001, 650.679f, 774.197f, 215.584f, (byte) 60); //Distraught Lady Angerr.
 				spawnClassTreasure(player, 512.89886f, 570.039f, 216.89487f, (byte) 31);
             break;
 			case 217002: //Justicetaker Wyr.
-			    //sendMsg("<Injured Justicetaker Wyr> appear");
 				spawn(217003, 651.341f, 780.757f, 215.584f, (byte) 59); //Injured Justicetaker Wyr.
             break;
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
 				if (player != null) {
 					sendMovie(player, 455);
-					// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Kromede's Trial>");
 					ItemService.addItem(player, 188900010, 1); //Secret Remedy Of Growth IV.
 				}
             break;
@@ -479,7 +473,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void announceKaligaTreasury() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -497,7 +491,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		// 克罗梅德变身。 / Kromede Transformation.
@@ -511,7 +505,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000101, storage.getItemCountByItemId(185000101)); //Secret Safe Key.
@@ -528,26 +522,12 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeSilverBladeRotan(Player player) {
         Storage storage = player.getInventory();
 		storage.decreaseByItemId(164000141, storage.getItemCountByItemId(164000141)); //Silver Blade Rotan.
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -556,7 +536,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -582,7 +562,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -601,13 +581,13 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			rageOfKromede();
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -617,14 +597,14 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
         doors.clear();
 		movies.clear();
     }
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	private void rageOfKromede() {
 		for (Player p: instance.getPlayersInside()) {
 			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(19288); //Rage Of Kromede.

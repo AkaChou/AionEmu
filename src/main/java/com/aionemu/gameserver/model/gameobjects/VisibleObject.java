@@ -12,6 +12,8 @@ import com.aionemu.gameserver.world.WorldDropType;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.knownlist.KnownList;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 可见对象。
@@ -21,6 +23,14 @@ import com.aionemu.gameserver.world.knownlist.KnownList;
  */
 public abstract class VisibleObject extends AionObject {
 
+	/**
+	 * 返回对象模板。
+	 * Returns the object template.
+	 *
+	 * @return 对象模板 / the objectTemplate
+	 */
+	@Getter
+	@Setter
 	protected VisibleObjectTemplate objectTemplate;
 
 	// 玩家可见物体的距离 / how far player will see visible object
@@ -48,29 +58,36 @@ public abstract class VisibleObject extends AionObject {
 	  * 对象在世界中的位置。
 	  * Position of object in the world
 	  */
+	@Getter
+	@Setter
 	protected WorldPosition position;
 
 	 /**
 	  * 此 VisibleObject 的 KnownList。
 	  * KnownList of this VisibleObject
 	  */
+	@Setter
 	private KnownList knownlist;
 
 	 /**
 	  * 此 VisibleObject 的控制器。
 	  * Controller of this VisibleObject
 	  */
+	@Getter
 	private final VisibleObjectController<? extends VisibleObject> controller;
 
 	 /**
 	  * 可见对象的目标。
 	  * Visible object's target
 	  */
+	@Setter
 	private VisibleObject target;
 
 	/**
 	 * Spawn template of this visibleObject.
 	 */
+	@Getter
+	@Setter
 	private SpawnTemplate spawn;
 
 	/**
@@ -151,16 +168,6 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * 返回对象位置。
-	 * Return object position.
-	 *
-	 * @return 世界位置 / position
-	 */
-	public WorldPosition getPosition() {
-		return position;
-	}
-
-	/**
 	 * 检查对象是否已生成。
 	 * Checks whether the object is spawned.
 	 *
@@ -210,16 +217,6 @@ public abstract class VisibleObject extends AionObject {
 		return creature != null;
 	}
 
-	/**
-	 * 设置 knownlistvisibleobject。
-	 * Set KnownList to this VisibleObject
-	 *
-	 * @param knownlist
-	 */
-	public void setKnownlist(KnownList knownlist) {
-		this.knownlist = knownlist;
-	}
-
 	 /**
 	  * 返回此对象的 KnownList。
 	  * Returns the KnownList of this VisibleObject.
@@ -228,16 +225,6 @@ public abstract class VisibleObject extends AionObject {
 	  */
 	public KnownList getKnownList() {
 		return knownlist;
-	}
-
-	 /**
-	  * 返回此对象的控制器。
-	  * Returns the controller of this VisibleObject.
-	  *
-	  * @return 控制器 / VisibleObjectController
-	  */
-	public VisibleObjectController<? extends VisibleObject> getController() {
-		return controller;
 	}
 
 	/**
@@ -267,16 +254,6 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * 设置目标对象。
-	 * Sets the target object.
-	 *
-	 * @param creature 目标对象 / target object
-	 */
-	public void setTarget(VisibleObject creature) {
-		target = creature;
-	}
-
-	/**
 	 * 目标是否为指定对象 ID。
 	 * Whether the target has the given object id.
 	 *
@@ -285,51 +262,6 @@ public abstract class VisibleObject extends AionObject {
 	 */
 	public boolean isTargeting(int objectId) {
 		return target != null && target.getObjectId() == objectId;
-	}
-
-	/**
-	 * 返回该对象的生成模板。
-	 * Returns the spawn template of this VisibleObject.
-	 *
-	 * @return 生成模板 / SpawnTemplate
-	 */
-	public SpawnTemplate getSpawn() {
-		return spawn;
-	}
-
-	/** 设置刷新点。 / Sets the spawn. */
-	public void setSpawn(SpawnTemplate spawn) {
-		this.spawn = spawn;
-	}
-
-	/**
-	 * 返回对象模板。
-	 * Returns the object template.
-	 *
-	 * @return 对象模板 / the objectTemplate
-	 */
-	public VisibleObjectTemplate getObjectTemplate() {
-		return objectTemplate;
-	}
-
-	/**
-	 * 设置对象模板。
-	 * Sets the object template.
-	 *
-	 * @param objectTemplate 要设置的对象模板 / the objectTemplate to set
-	 */
-	public void setObjectTemplate(VisibleObjectTemplate objectTemplate) {
-		this.objectTemplate = objectTemplate;
-	}
-
-	/**
-	 * 设置世界位置。
-	 * Sets the world position.
-	 *
-	 * @param position 世界位置 / world position
-	 */
-	public void setPosition(WorldPosition position) {
-		this.position = position;
 	}
 
 	/** 返回可见距离 / Returns the visibility distance */

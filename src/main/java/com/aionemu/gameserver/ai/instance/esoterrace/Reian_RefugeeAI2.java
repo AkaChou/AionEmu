@@ -23,13 +23,13 @@ import com.aionemu.gameserver.utils.*;
 public class Reian_RefugeeAI2 extends NpcAI2
 {
     private int size;
-	
+
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
         spawnReianRefugee();
     }
-	
+
     private void spawnReianRefugee() {
         size++;
         int refugee = 0;
@@ -59,12 +59,11 @@ public class Reian_RefugeeAI2 extends NpcAI2
             GameFeatureServices.npcShoutsService().sendMsg(npc, msg, npc.getObjectId(), 0, 10000);
         }
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
-        if (creature instanceof Npc) {
-            Npc npc = (Npc) creature;
-            int refugee = npc.getNpcId();
+        if (creature instanceof Npc npc) {
+			int refugee = npc.getNpcId();
             if (refugee == 799626 || refugee == 799627) {
                 int point = npc.getMoveController().getCurrentPoint();
                 if (point == 3 && size < 2) {

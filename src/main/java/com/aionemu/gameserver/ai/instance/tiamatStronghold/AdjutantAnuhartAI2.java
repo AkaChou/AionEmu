@@ -5,12 +5,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,11 +24,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("adjutantanuhart")
 public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 {
-	
+
 	private Future<?> bladeStormTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -40,7 +37,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void startBladeStormTask() {
 		bladeStormTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -53,19 +50,19 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 			}
 		}, 5000, 40000);
 	}
-	
+
 	private void startBladeStormEvent() {
 		shield();
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20747, 1, getOwner()).useNoAnimationSkill();
 		spawn(283099, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Blade Storm.
 	}
-	
+
 	private void cancelTask() {
 		if (bladeStormTask != null && !bladeStormTask.isCancelled()) {
 			bladeStormTask.cancel(true);
 		}
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
@@ -97,53 +94,46 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void swiftAttack(int buff) {
 		AI2Actions.targetSelf(this);
 		AI2Actions.useSkill(this, buff);
 	}
-	
+
 	private void shield() {
 		AI2Actions.targetSelf(this);
 		AI2Actions.useSkill(this, 20749);
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{90, 70, 50, 30, 20, 10});
+		Collections.addAll(percents, 90, 70, 50, 30, 20, 10);
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		addPercent();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
 		super.handleBackHome();
 		cancelTask();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		cancelTask();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelTask();
 		percents.clear();
 		super.handleDied();
 	}
-	
-	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
-			if (npc != null) {
-				npc.getController().onDelete();
-			}
-		}
-	}
+
 }

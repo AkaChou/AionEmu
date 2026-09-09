@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.svs.SvsTemplate;
 import com.aionemu.gameserver.services.svsservice.Panesterra;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 势力战位置模型。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.svsservice.Panesterra;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class SvsLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected SvsTemplate template;
+	/** 返回当前势力战 / Returns the active svs */
+	@Getter
 	protected Panesterra<SvsLocation> activeSvs;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回已刷新的对象列表 / Returns the spawned objects */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public SvsLocation() {
-	}
 
 	public SvsLocation(SvsTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置当前势力战 / Sets the active svs */
@@ -44,28 +49,8 @@ public class SvsLocation {
 		this.activeSvs = svs;
 	}
 
-	/** 返回当前势力战 / Returns the active svs */
-	public Panesterra<SvsLocation> getActiveSvs() {
-		return activeSvs;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final SvsTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回已刷新的对象列表 / Returns the spawned objects */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

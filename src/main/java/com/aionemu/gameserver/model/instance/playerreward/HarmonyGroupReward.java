@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import lombok.Getter;
 
 /**
  * Harmony 队伍奖励，用于副本相关逻辑。
@@ -13,8 +14,10 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
  */
 
 public class HarmonyGroupReward extends PvPArenaPlayerReward {
-	private int id;
-	private List<AGPlayer> players;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
+	private final List<AGPlayer> players;
 
 	public HarmonyGroupReward(Integer object, int timeBonus, byte buffId, List<AGPlayer> players) {
 		super(object, timeBonus, buffId);
@@ -45,10 +48,5 @@ public class HarmonyGroupReward extends PvPArenaPlayerReward {
 			}
 		}
 		return null;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 }

@@ -24,9 +24,6 @@ import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactory
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -71,10 +68,10 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	// 准备时间。 / Preparation Time.
 	/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
 	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 3600000; //...1 小时 / ...1Hr
+		private final int instanceTimerSeconds = 3600000; //...1 小时 / ...1Hr
 	/** 副本奖励对象 / instance reward object */
 	private SecretMunitionsFactoryReward instanceReward;
 	/** factory task1 / factory task1 */
@@ -88,11 +85,11 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * @param object 可见对象 / visible object
 	 * @return 奖励记录 / result
 	 */
-	
+
 	protected SecretMunitionsFactoryPlayerReward getPlayerReward(Integer object) {
 		return (SecretMunitionsFactoryPlayerReward) instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
@@ -103,11 +100,11 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new SecretMunitionsFactoryPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -124,7 +121,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -159,13 +156,13 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164000418, storage.getItemCountByItemId(164000418)); // 臭气弹 / Stink Bomb.
 		storage.decreaseByItemId(164002362, storage.getItemCountByItemId(164002362)); // 机械图尔克油桶 / Mechaturerk Oil Cask.
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -286,7 +283,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -317,7 +314,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void startFactoryRaid1() {
 		// 机械图尔克维修士兵。 / Mechaturerk Maintenance Soldier.
 		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -356,7 +353,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
 	}
-	
+
 	private void startFactoryRaid2() {
 		// 近战支援破坏魔像。 / Melee Support Destruction Golem.
 		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -395,7 +392,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
 	}
-	
+
 	private void startFactoryRaid3() {
 		// 青色活体炸弹。 / Azure Living Bomb.
 		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -462,12 +459,12 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 90000);
 	}
-	
+
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
 		return instanceTimerSeconds - (int) result;
 	}
-	
+
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -485,7 +482,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private int checkRank(int totalPoints) {
 		if (totalPoints >= 878600) { // S 级 / Rank S.
 			rank = 1;
@@ -494,7 +491,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		}
 		return rank;
 	}
-	
+
    /**
 	 * 副本实例。 / Raid Instance
 	 */
@@ -507,7 +504,6 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				startFactoryRaid1();
-				//sendMsg("[START]: Wave <1/3>");
             }
         }, 120000)); //...2 分钟 / ...2Min
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -519,7 +515,6 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
             public void run() {
 				startFactoryRaid2();
 				factoryTaskA1.cancel(true);
-				//sendMsg("[START]: Wave <2/3>");
 				// 维修士兵的储物箱已出现在军需工厂内。 / The Maintenance Soldier’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403641, Race.PC_ALL, 3000);
 				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); // 维护士兵的储物箱 / Maintenance Soldier’s Footlocker.
@@ -534,7 +529,6 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
             public void run() {
 				startFactoryRaid3();
 				factoryTaskA2.cancel(true);
-				//sendMsg("[START]: Wave <3/3>");
             }
         }, 360000)); //...6 分钟 / ...6Min
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -560,7 +554,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8 分钟 / ...8Min
 	}
-	
+
    /**
 	 * 副本计时器 / Instance Timer
 	 */
@@ -587,7 +581,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
             }
         }, 3600000)); // 1 小时 / 1 Hour.
     }
-	
+
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
@@ -608,7 +602,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -627,9 +621,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		startPrepareTimer();
 		//spawnLunaDetachment();
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21348 : 21347;
-		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000);
 	}
-	
+
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -656,7 +650,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void startMainInstanceTimer() {
 		if (!timerPrepare.isDone()) {
 			timerPrepare.cancel(false);
@@ -666,7 +660,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		spawnLunaDetachment();
 		sendPacket(0, 0);
 	}
-	
+
 	private void spawnLunaDetachment() {
 		sp(833829, 382.25574f, 283.81686f, 198.50284f, (byte) 7, 5, "NPCPathAlly_NPC_Path2");// 赫雷兹 / Herez.
 		sp(833827, 386.10965f, 282.91656f, 198.24266f, (byte) 11, 5, "NPCPathAlly_NPC_Path3");// 马克 / Mak.
@@ -680,10 +674,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance1(Player player) {
 		stopInstanceTask1();
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You survived !!! :) ");
 	}
 	/**
 	 * 处理 stopInstance2。
@@ -691,17 +684,16 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance2(Player player) {
         stopInstanceTask2();
 		instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Secret Munitions Factory>");
 		sendPacket(0, 0);
 	}
-	
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -738,7 +730,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -752,7 +744,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		doors = instance.getDoors();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -770,7 +762,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
-	
+
 	private void stopInstanceTask1() {
 		for (Future<?> task : factoryTask1) {
 			if (task != null) {
@@ -797,7 +789,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * @param time 时间 / time
 	 * @param walkerId 路径 id / walkerId
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -820,25 +812,20 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
+
 	/**
 	 * 处理 killNpc。
 	 * Handle killNpc.
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
@@ -851,14 +838,14 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * @param npcId NPC id / NPC id
 	 * @return NPC 列表 / result
 	 */
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -870,7 +857,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -882,27 +869,13 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21347);
 		effectController.removeEffect(21348);
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -911,7 +884,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.state;
 
+import lombok.Getter;
+
 /**
  * 生物状态枚举。
  * Creature State enumeration.
@@ -16,16 +18,10 @@ public enum CreatureState {
 	 * 站立、路径飞行、自由飞行、骑乘、坐下、坐椅、死亡、飞行死亡、个人商店、拾取、飞行拾取、默认。 / Standing, path flying, free flying, riding, sitting, sitting on chair, dead, fly dead, private shop, looting, fly looting, default
 	 */
 
-	private int id;
+	@Getter
+	private final int id;
 
-	private CreatureState(int id) {
+	CreatureState(int id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
 	}
 }

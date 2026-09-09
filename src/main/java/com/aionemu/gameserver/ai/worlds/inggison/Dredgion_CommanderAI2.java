@@ -34,14 +34,13 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 		announceKilledBattleship();
 		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(3);
 	}
-	
+
 	private void announceKilledBattleship() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}

@@ -13,9 +13,9 @@ import com.aionemu.gameserver.utils.MathUtil;
 public abstract class GaleCycloneObserver extends ActionObserver {
 
 	/** 被观察玩家 / Observed player */
-	private Player player;
+	private final Player player;
 	/** 旋涡生物 / Cyclone creature */
-	private Creature creature;
+	private final Creature creature;
 	/** 上一次距离 / Previous distance */
 	private double oldRange;
 

@@ -530,59 +530,54 @@ class TypedQuestAfterCommitPortTest {
 		assertEquals(List.of("10:[80030, 80034, 80035, 80036]"), commands);
 	}
 
-	private static final class RecordingAiPort implements QuestAiPort {
-		private final List<String> commands;
+    private record RecordingAiPort(List<String> commands) implements QuestAiPort {
 
-		private RecordingAiPort(List<String> commands) {
-			this.commands = commands;
-		}
+        @Override
+        public boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
+            commands.add("follow:" + slot);
+            return true;
+        }
 
-		@Override
-		public boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
-			commands.add("follow:" + slot);
-			return true;
-		}
+        @Override
+        public boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
+                                                       float x, float y, float z) {
+            commands.add("follow-point:" + x + ":" + y + ":" + z);
+            return true;
+        }
 
-		@Override
-		public boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
-				float x, float y, float z) {
-			commands.add("follow-point:" + x + ":" + y + ":" + z);
-			return true;
-		}
+        @Override
+        public boolean watchFollowCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+                                             float x, float y, float z) {
+            commands.add("watch-point:" + slot + ":" + x + ":" + y + ":" + z);
+            return true;
+        }
 
-		@Override
-		public boolean watchFollowCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
-				float x, float y, float z) {
-			commands.add("watch-point:" + slot + ":" + x + ":" + y + ":" + z);
-			return true;
-		}
+        @Override
+        public boolean stopFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
+            return true;
+        }
 
-		@Override
-		public boolean stopFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
-			return true;
-		}
+        @Override
+        public boolean attackTarget(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
+            return true;
+        }
 
-		@Override
-		public boolean attackTarget(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
-			return true;
-		}
+        @Override
+        public boolean startWalking(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
+            return true;
+        }
 
-		@Override
-		public boolean startWalking(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
-			return true;
-		}
+        @Override
+        public boolean broadcastEmotion(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+                                        QuestNpcEmotion emotion) {
+            return true;
+        }
 
-		@Override
-		public boolean broadcastEmotion(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
-				QuestNpcEmotion emotion) {
-			return true;
-		}
-
-		@Override
-		public boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone) {
-			return true;
-		}
-	}
+        @Override
+        public boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone) {
+            return true;
+        }
+    }
 
 	private static QuestDialogPort dialogPort() {
 		return new QuestDialogPort() {

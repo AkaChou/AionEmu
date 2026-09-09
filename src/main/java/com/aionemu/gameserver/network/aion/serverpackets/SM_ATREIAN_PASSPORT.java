@@ -11,13 +11,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 
-	private int month;
-	private int year;
-	private int day;
-	private int passportId;
-	private int countCollected;
-	private int attendType;
-	private boolean hasCollected;
+	private final int month;
+	private final int year;
+	private final int day;
+	private final int passportId;
+	private final int countCollected;
+	private final int attendType;
+	private final boolean hasCollected;
 
 	/**
 	 * passport template id

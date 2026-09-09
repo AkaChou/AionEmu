@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("explosion_shadows")
 public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
@@ -37,13 +37,13 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 			doSchedule();
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isHome.set(true);
 		super.handleBackHome();
 	}
-	
+
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -64,7 +64,7 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private void check() {
 		getPosition().getWorldMapInstance().getDoors().get(17).setOpen(false);
 		getPosition().getWorldMapInstance().getDoors().get(2).setOpen(false);

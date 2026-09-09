@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.utils.xml;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -42,7 +43,7 @@ public final class CompressUtil {
 		}
 
 		bos.close();
-		return bos.toString("UTF-16LE");
+		return bos.toString(StandardCharsets.UTF_16LE);
 	}
 
 	/**
@@ -56,7 +57,7 @@ public final class CompressUtil {
 	 */
 	public static byte[] Compress(String text) throws Exception {
 		Deflater compressor = new Deflater();
-		byte[] bytes = text.getBytes("UTF-16LE");
+		byte[] bytes = text.getBytes(StandardCharsets.UTF_16LE);
 		compressor.setInput(bytes);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

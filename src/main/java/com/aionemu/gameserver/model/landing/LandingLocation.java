@@ -12,12 +12,16 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.landing.LandingTemplate;
 import com.aionemu.gameserver.services.abysslandingservice.Landing;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 登陆位置模型。
  * Landing Location model.
  */
 
+@NoArgsConstructor
 public class LandingLocation {
 	protected int siege;
 	protected int commander;
@@ -26,29 +30,42 @@ public class LandingLocation {
 	protected int monuments;
 	protected int quest;
 	protected int facility;
+	/** 返回等级日期 / Returns the level up date */
+	@Getter
 	protected Timestamp levelUpDate;
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 设置等级。 / Sets the level. */
+	@Setter
 	protected int level;
+	/** 获取点。 / Returns the points. */
+	@Getter
+	@Setter
 	protected int points;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	protected Race race;
 	protected LandingTemplate template;
+	/** 返回当前登陆点 / Returns the active landing */
+	@Getter
 	protected Landing<LandingLocation> activeLanding;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
-
-	public LandingLocation() {
-	}
 
 	public LandingLocation(LandingTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置 active landing / Sets the active landing */
@@ -57,29 +74,9 @@ public class LandingLocation {
 		this.activeLanding = landing;
 	}
 
-	/** 返回当前登陆点 / Returns the active landing */
-	public Landing<LandingLocation> getActiveLanding() {
-		return activeLanding;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final LandingTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 
 	/** 获取等级。 / Returns the level. */
@@ -89,21 +86,6 @@ public class LandingLocation {
 		} else {
 			return this.level;
 		}
-	}
-
-	/** 设置等级。 / Sets the level. */
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	/** 获取点。 / Returns the points. */
-	public int getPoints() {
-		return this.points;
-	}
-
-	/** 设置点。 / Sets the points. */
-	public void setPoints(int pts) {
-		this.points = pts;
 	}
 
 	/** 获取要塞点。 / Returns the siege points. */
@@ -176,33 +158,17 @@ public class LandingLocation {
 		this.monuments = pts;
 	}
 
-	/** 返回等级日期 / Returns the level up date */
-	public Timestamp getLevelUpDate() {
-		return levelUpDate;
-	}
-
 	/** 设置 level up date / Sets the level up date */
 	public Timestamp setLevelUpDate(Timestamp timestamp) {
 		return levelUpDate = timestamp;
 	}
 
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
 	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState state) {
 		if (this.persistentState == PersistentState.NEW && state == PersistentState.UPDATE_REQUIRED) {
-			return;
 		} else {
 			this.persistentState = state;
 		}
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return this.race;
 	}
 
 	/** 设置种族。 / Sets the race. */

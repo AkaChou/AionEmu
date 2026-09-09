@@ -17,11 +17,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_MESSAGE extends AionServerPacket {
 	private Player player;
-	private int senderObjectId;
-	private String message;
-	private String senderName;
+	private final int senderObjectId;
+	private final String message;
+	private final String senderName;
 	private Race race;
-	private ChatType chatType;
+	private final ChatType chatType;
 	private float x;
 	private float y;
 	private float z;

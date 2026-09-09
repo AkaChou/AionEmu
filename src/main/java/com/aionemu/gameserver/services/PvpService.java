@@ -68,7 +68,7 @@ public class PvpService {
 	}
 
 	/** 玩家击杀记录映射。 / Player kill-list map. */
-	private Map<Integer, KillList> pvpKillLists;
+	private final Map<Integer, KillList> pvpKillLists;
 
 	/**
 	 * 初始化击杀记录表。

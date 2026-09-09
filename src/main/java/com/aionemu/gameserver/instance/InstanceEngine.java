@@ -42,7 +42,7 @@ public class InstanceEngine implements GameEngine {
 	 * 地图 ID → 处理器类 的注册表。
 	 * Registry of map id → handler class.
 	 */
-	private Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<Integer, Class<? extends InstanceHandler>>();
+	private final Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<Integer, Class<? extends InstanceHandler>>();
 
 	/**
 	 * 加载副本脚本处理器。

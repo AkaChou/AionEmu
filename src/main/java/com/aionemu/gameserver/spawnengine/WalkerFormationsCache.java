@@ -2,6 +2,8 @@ package com.aionemu.gameserver.spawnengine;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 按世界与实例缓存巡逻编队数据的静态缓存。
@@ -9,20 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Rolandas
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class WalkerFormationsCache {
 
 	/**
 	 * 世界 ID → 世界级巡逻编队容器。
 	 * World id to world-level walker formation holder.
 	 */
-	private static Map<Integer, WorldWalkerFormations> formations = new ConcurrentHashMap<>();
-
-	/**
-	 * 禁止实例化。
-	 * Prevents instantiation.
-	 */
-	private WalkerFormationsCache() {
-	}
+	private static final Map<Integer, WorldWalkerFormations> formations = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取指定世界与实例的巡逻编队容器；不存在时自动创建。

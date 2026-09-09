@@ -12,6 +12,7 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 目标类型条件：校验技能首目标是否符合配置的目标属性（NPC/PC 等）。
@@ -23,18 +24,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlType(name = "TargetCondition")
 public class TargetCondition extends Condition {
 
-	@XmlAttribute(required = true)
-	protected TargetAttribute value;
-
 	/**
 	 * 获取配置的目标属性。
 	 * Gets the configured target attribute.
 	 *
 	 * @return 目标属性 / target attribute
 	 */
-	public TargetAttribute getValue() {
-		return value;
-	}
+	@Getter
+	@XmlAttribute(required = true)
+	protected TargetAttribute value;
 
 	/**
 	 * 校验技能环境是否满足本条件。

@@ -63,7 +63,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int mailboxLetters;
 	private int soulSickness = 0;
 	private boolean noExp = false;
-	private double expMultiplier = 1.0; // 默认100%经验值
+	private double expMultiplier = 1.0; // 默认 100% 经验值 / 100% exp by default
 	private long reposteCurrent;
 	private long reposteMax;
 	private long salvationPoint;
@@ -91,11 +91,11 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private long auraOfGrowthMax;
 	// 伯丁之星 5.1 / Berdin's Star 5.1
 	private long berdinStar;
-	private long berdinStarMax = 1125000000; // 5.6
+	private final long berdinStarMax = 1125000000; // 5.6
 	private boolean BerdinStarBoost = false;
 	// 欧比斯眷顾 5.3 / Abyss Favor 5.3
 	private long abyssFavor;
-	private long abyssFavorMax = 1000000;
+	private final long abyssFavorMax = 1000000;
 	private boolean AbyssFavorBoost = false;
 	// 挑战之塔 5.6 / Tower Of Challenge 5.6
 	private int floor;
@@ -242,7 +242,7 @@ public double getExpMultiplier() {
 		}
 		long reward = (long) (value * expMultiplier);
 		if ((getPlayer() != null) && (rewardType != null)) {
-			reward = rewardType.calcReward(getPlayer(), reward); 
+			reward = rewardType.calcReward(getPlayer(), reward);
 		}
 		long repose = 0;
 		if ((isReadyForReposteEnergy()) && (getCurrentReposteEnergy() > 0)) {
@@ -575,7 +575,6 @@ public double getExpMultiplier() {
 		if (this.getLevel() < 66) {
 			this.setExp(DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(66), true);
 		} else if (this.getLevel() >= 66) {
-			return;
 		}
 	}
 
@@ -960,7 +959,7 @@ public double getExpMultiplier() {
 			auraOfGrowth = 0;
 			auraOfGrowthMax = 0;
 		} else if (level < 70) {
-			auraOfGrowthMax = (77000000 + 7000000 * (level - 66));
+			auraOfGrowthMax = (77000000 + 7000000L * (level - 66));
 		} else if (level == 70) {
 			this.auraOfGrowthMax = 106000000;
 		} else if (level == 71) {
@@ -1124,13 +1123,13 @@ public double getExpMultiplier() {
 			if ((!BerdinStarBoost) && (percent > 50)) {
 				BerdinStarBoost = true;
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1403399, new Object[] { Integer.valueOf(50) }));
+						new SM_SYSTEM_MESSAGE(1403399, Integer.valueOf(50)));
 			} else if ((BerdinStarBoost) && (percent < 50)) {
 				BerdinStarBoost = false;
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1403400, new Object[] { Integer.valueOf(50) }));
+						new SM_SYSTEM_MESSAGE(1403400, Integer.valueOf(50)));
 			} else if (berdinStar <= 0) {
-				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1403401, new Object[0]));
+				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1403401));
 			}
 		}
 	}
@@ -1184,15 +1183,15 @@ public double getExpMultiplier() {
 				AbyssFavorBoost = true;
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1404029, new Object[] { Integer.valueOf(50) }));
+						new SM_SYSTEM_MESSAGE(1404029, Integer.valueOf(50)));
 			} else if ((AbyssFavorBoost) && (percent < 50)) {
 				AbyssFavorBoost = false;
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1404030, new Object[] { Integer.valueOf(50) }));
+						new SM_SYSTEM_MESSAGE(1404030, Integer.valueOf(50)));
 			} else if (abyssFavor <= 0) {
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
-				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1404031, new Object[0]));
+				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1404031));
 			}
 		}
 	}

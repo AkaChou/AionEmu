@@ -26,8 +26,7 @@ public class TargetClassDamageModifier extends ActionModifier {
 	@Override
 	public int analyze(Effect effect) {
 		Creature effected = effect.getEffected();
-		if (effected instanceof Player) {
-			Player player = (Player) effected;
+		if (effected instanceof Player player) {
 			if (player.getPlayerClass() == skillTargetClass) {
 				return value + effect.getSkillLevel() * delta;
 			}
@@ -38,8 +37,7 @@ public class TargetClassDamageModifier extends ActionModifier {
 	@Override
 	public boolean check(Effect effect) {
 		Creature effected = effect.getEffected();
-		if (effected instanceof Player) {
-			Player player = (Player) effected;
+		if (effected instanceof Player player) {
 			return player.getPlayerClass() == skillTargetClass;
 		}
 		return false;

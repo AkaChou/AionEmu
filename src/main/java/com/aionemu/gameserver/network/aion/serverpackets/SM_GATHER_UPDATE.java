@@ -15,12 +15,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_GATHER_UPDATE extends AionServerPacket {
 
-	private GatherableTemplate template;
-	private int action;
-	private int itemId;
-	private int success;
-	private int failure;
-	private int nameId;
+	private final GatherableTemplate template;
+	private final int action;
+	private final int itemId;
+	private final int success;
+	private final int failure;
+	private final int nameId;
 
 	/**
 	 * @param template 可采集物模板 / Gatherable template

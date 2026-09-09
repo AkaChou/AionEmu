@@ -88,7 +88,7 @@ public class InstanceRift extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidInstanceRiftLocationId(Player player, int instanceRiftId) {
-		if (!GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations().keySet().contains(instanceRiftId)) {
+		if (!GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations().containsKey(instanceRiftId)) {
 			PacketSendUtility.sendMessage(player, "Id " + instanceRiftId + " is invalid");
 			return false;
 		}

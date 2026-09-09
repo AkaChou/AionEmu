@@ -2,15 +2,16 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步账号属性（GM 标记、账号类型、购买类型与时间）的服务端包。
  * Server packet synchronizing account properties (GM flag, account type, purchase type, and time) to the client.
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class SM_ACCOUNT_PROPERTIES extends AionServerPacket {
-	public SM_ACCOUNT_PROPERTIES() {
-	}
-
 	private boolean isGM;
 	private int accountType;
 	private int purchaseType;
@@ -24,22 +25,6 @@ public class SM_ACCOUNT_PROPERTIES extends AionServerPacket {
 	 */
 	public SM_ACCOUNT_PROPERTIES(boolean isGM) {
 		this.isGM = isGM;
-	}
-
-	/**
-	 * 使用完整账号属性构造同步包。
-	 * Creates a sync packet with full account property fields.
-	 *
-	 * whether the account is a GM
-	 * account type
-	 * purchase type
-	 * @param time 相关时间戳 / related timestamp
-	 */
-	public SM_ACCOUNT_PROPERTIES(boolean isGM, int accountType, int purchaseType, int time) {
-		this.isGM = isGM;
-		this.accountType = accountType;
-		this.purchaseType = purchaseType;
-		this.time = time;
 	}
 
 	@Override

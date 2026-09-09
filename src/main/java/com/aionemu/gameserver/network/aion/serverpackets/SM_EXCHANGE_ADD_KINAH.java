@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 交易添加基纳包：同步己方/对方放入的基纳数量。
@@ -9,22 +10,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Avol
  */
+@AllArgsConstructor
 public class SM_EXCHANGE_ADD_KINAH extends AionServerPacket {
 
-	private long itemCount;
-	private int action;
-
-	/**
-	 * 构造交易基纳添加包。
-	 * Creates an exchange add-kinah packet.
-	 *
-	 * @param itemCount 添加的基纳数量 / kinah amount to add
-	 * @param action 0 为己方，1 为对方 / 0 for self, 1 for other
-	 */
-	public SM_EXCHANGE_ADD_KINAH(long itemCount, int action) {
-		this.itemCount = itemCount;
-		this.action = action;
-	}
+	private final long itemCount;
+	private final int action;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

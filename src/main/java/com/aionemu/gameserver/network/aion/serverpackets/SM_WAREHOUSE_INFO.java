@@ -18,11 +18,11 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  */
 public class SM_WAREHOUSE_INFO extends AionServerPacket {
 
-	private int warehouseType;
-	private Collection<Item> itemList;
-	private boolean firstPacket;
-	private int expandLvl;
-	private Player player;
+	private final int warehouseType;
+	private final Collection<Item> itemList;
+	private final boolean firstPacket;
+	private final int expandLvl;
+	private final Player player;
 
 	/**
 	 * @param items         仓库物品集合 / warehouse item collection

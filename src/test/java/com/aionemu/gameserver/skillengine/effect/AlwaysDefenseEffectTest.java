@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.skillengine.effect;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.lang.reflect.Field;
 
@@ -16,7 +17,7 @@ class AlwaysDefenseEffectTest {
 		setField(effect, "consume", false);
 
 		assertEquals(11, effect.calculateValue(4));
-		assertEquals(false, effect.isConsume());
+		assertFalse(effect.isConsume());
 	}
 
 	private static void setField(EffectTemplate target, String name, Object value) throws ReflectiveOperationException {

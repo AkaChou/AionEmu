@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.stats.PetStatsTemplate;
+import lombok.Getter;
 
 /**
  * 宠物模板（静态数据/XML）。
@@ -22,12 +23,18 @@ import com.aionemu.gameserver.model.templates.stats.PetStatsTemplate;
 @XmlRootElement(name = "pet")
 public class PetTemplate {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute(name = "nameid", required = true)
 	private int nameId;
 
@@ -37,26 +44,13 @@ public class PetTemplate {
 	@XmlElement(name = "petfunction")
 	private List<PetFunction> petFunctions;
 
+	/** 获取宠物属性。 / Returns the pet stats. */
+	@Getter
 	@XmlElement(name = "petstats")
 	private PetStatsTemplate petStats;
 
 	@XmlTransient
 	Boolean hasPlayerFuncs = null;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameId() {
-		return nameId;
-	}
 
 	/** 返回宠物函数列表 / Returns the pet functions */
 	public List<PetFunction> getPetFunctions() {
@@ -101,7 +95,6 @@ public class PetTemplate {
 	public boolean ContainsFunction(PetFunctionType type) {
 		if (type.getId() < 0) {
 			return false;
-
 		}
 		for (PetFunction t : getPetFunctions()) {
 			if (t.getPetFunctionType() == type) {
@@ -125,11 +118,6 @@ public class PetTemplate {
 			}
 		}
 		return null;
-	}
-
-	/** 获取宠物属性。 / Returns the pet stats. */
-	public PetStatsTemplate getPetStats() {
-		return petStats;
 	}
 
 	/** 返回条件奖励 / Returns the condition reward */

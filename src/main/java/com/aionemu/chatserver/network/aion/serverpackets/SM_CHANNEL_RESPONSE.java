@@ -13,7 +13,7 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
  */
 public class SM_CHANNEL_RESPONSE extends AbstractServerPacket {
 
-    private Channel channel;
+    private final Channel channel;
     private final int channelIndex;
 
     /**

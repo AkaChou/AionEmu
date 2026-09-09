@@ -59,7 +59,7 @@ public class F2pAction extends AbstractItemAction {
 								parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 1, 0));
 				if (succ) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423,
-							new Object[] { new DescriptionId(parentItem.getItemTemplate().getNameId()) }));
+						new DescriptionId(parentItem.getItemTemplate().getNameId())));
 					GameFeatureServices.f2pService().onAddF2p(player, minutes);
 				}
 			}

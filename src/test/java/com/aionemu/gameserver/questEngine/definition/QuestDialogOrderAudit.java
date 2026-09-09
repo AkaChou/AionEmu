@@ -35,7 +35,7 @@ public final class QuestDialogOrderAudit {
 	private QuestDialogOrderAudit() {
 	}
 
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			throw new IllegalArgumentException(
 				"usage: QuestDialogOrderAudit <client-pages.csv> <client-details.csv> <output.csv>");
@@ -80,13 +80,13 @@ public final class QuestDialogOrderAudit {
 					continue;
 				}
 				for (AfterCommitAction afterCommit : trigger.afterCommit()) {
-					if (!(afterCommit instanceof AfterCommitAction.ShowQuestDialog shown)) {
+					if (!(afterCommit instanceof AfterCommitAction.ShowQuestDialog(int dialogId))) {
 						continue;
 					}
-					shownPages.add(shown.dialogId());
-					ClientPage page = client.pages().get(shown.dialogId());
+					shownPages.add(dialogId);
+					ClientPage page = client.pages().get(dialogId);
 					if (page == null) {
-						if (isKnownGenericPage(shown.dialogId(), taskHtmlPageIds)) {
+						if (isKnownGenericPage(dialogId, taskHtmlPageIds)) {
 							continue;
 						}
 						result.add(new AuditRow(definition.id(), client.sourceFile(),
@@ -94,7 +94,7 @@ public final class QuestDialogOrderAudit {
 							Integer.toString(dialogAction(trigger.event())),
 							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
 								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
-								+ " + page " + shown.dialogId(), Integer.toString(shown.dialogId()), "",
+								+ " + page " + dialogId, Integer.toString(dialogId), "",
 							"shown server page must exist in the active client page index",
 							-1, null,
 							client.sourceFile(), "EVIDENCE_REQUIRED", "EVIDENCE_REQUIRED",
@@ -107,7 +107,7 @@ public final class QuestDialogOrderAudit {
 							Integer.toString(dialogAction(trigger.event())),
 							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
 								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
-								+ " + terminal page " + shown.dialogId(), Integer.toString(shown.dialogId()), "",
+								+ " + terminal page " + dialogId, Integer.toString(dialogId), "",
 							"server response reaches an active client page with no visible action",
 							-1, null,
 							page.evidence(), "TERMINAL_PAGE_REACHED", "NOT_NEEDED", ""));
@@ -119,7 +119,7 @@ public final class QuestDialogOrderAudit {
 							Integer.toString(dialogAction(trigger.event())),
 							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
 								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
-								+ " + page " + shown.dialogId(), Integer.toString(shown.dialogId()), unmapped.getKey(),
+								+ " + page " + dialogId, Integer.toString(dialogId), unmapped.getKey(),
 							"visible client action must map to a HyperLinks.xml protocol id",
 							-1, null,
 							unmapped.getValue(), "EVIDENCE_REQUIRED", "EVIDENCE_REQUIRED",
@@ -130,7 +130,7 @@ public final class QuestDialogOrderAudit {
 							sameDialogOwner(trigger.event(), candidate.event())
 								&& dialogAction(candidate.event()) == action.actionId()
 								&& startsFromNode(candidate, trigger.targetNode(), definition)).toList();
-						result.addAll(rows(definition, client.sourceFile(), trigger, shown.dialogId(),
+						result.addAll(rows(definition, client.sourceFile(), trigger, dialogId,
 							action, candidates));
 						pending.addAll(candidates);
 					}
@@ -346,27 +346,27 @@ public final class QuestDialogOrderAudit {
 	/** Only quest status and packed variables constrain a generic route's source node. */
 	private static Boolean conditionMatchesNode(QuestCondition condition, QuestNode node) {
 		NodeProjection projection = node.projection();
-		if (condition instanceof QuestCondition.StatusIs status) {
-			return projection.status() == status.status();
+		if (condition instanceof QuestCondition.StatusIs(com.aionemu.gameserver.questEngine.model.QuestStatus status1)) {
+			return projection.status() == status1;
 		}
-		if (condition instanceof QuestCondition.QuestVariableIs variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) == variable.value();
+		if (condition instanceof QuestCondition.QuestVariableIs(String field3, int value4)) {
+			return projection.variables().getOrDefault(field3, 0) == value4;
 		}
-		if (condition instanceof QuestCondition.VariableAtLeast variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) >= variable.value();
+		if (condition instanceof QuestCondition.VariableAtLeast(String field2, int value3)) {
+			return projection.variables().getOrDefault(field2, 0) >= value3;
 		}
-		if (condition instanceof QuestCondition.VariableBelow variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) < variable.value();
+		if (condition instanceof QuestCondition.VariableBelow(String field1, int value2)) {
+			return projection.variables().getOrDefault(field1, 0) < value2;
 		}
-		if (condition instanceof QuestCondition.VariableSumIs variable) {
-			int sum = variable.fields().stream()
+		if (condition instanceof QuestCondition.VariableSumIs(List<String> fields1, int value1)) {
+			int sum = fields1.stream()
 				.mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
-			return sum == variable.value();
+			return sum == value1;
 		}
-		if (condition instanceof QuestCondition.VariableSumBelow variable) {
-			int sum = variable.fields().stream()
+		if (condition instanceof QuestCondition.VariableSumBelow(List<String> fields, int value)) {
+			int sum = fields.stream()
 				.mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
-			return sum < variable.value();
+			return sum < value;
 		}
 		return null;
 	}

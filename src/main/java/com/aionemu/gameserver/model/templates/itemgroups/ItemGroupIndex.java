@@ -9,5 +9,5 @@ public enum ItemGroupIndex {
 	/** 无 / None */
 	NONE,
 	/** 垃圾 / Junk */
-	JUNK;
+	JUNK
 }

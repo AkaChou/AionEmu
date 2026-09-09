@@ -88,7 +88,7 @@ public enum PlayerClass {
      * Class identifier.
      */
     @Getter
-    private byte classId;
+    private final byte classId;
 
     /**
      * 构造职业枚举。
@@ -96,7 +96,7 @@ public enum PlayerClass {
      *
      * @param classId 职业 ID / class id
      */
-    private PlayerClass(int classId) {
+	PlayerClass(int classId) {
         this.classId = (byte) classId;
     }
 

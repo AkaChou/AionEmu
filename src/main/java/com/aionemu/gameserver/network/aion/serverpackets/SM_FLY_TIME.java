@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 飞行时间（FP）同步包：当前与最大飞行点数。
@@ -9,22 +10,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Nemiroff
  */
+@AllArgsConstructor
 public class SM_FLY_TIME extends AionServerPacket {
 
-	private int currentFp;
-	private int maxFp;
-
-	/**
-	 * 构造飞行时间同步包。
-	 * Creates a fly time sync packet.
-	 *
-	 * @param currentFp 当前飞行点数 / current fly points
-	 * @param maxFp 最大飞行点数 / max fly points
-	 */
-	public SM_FLY_TIME(int currentFp, int maxFp) {
-		this.currentFp = currentFp;
-		this.maxFp = maxFp;
-	}
+	private final int currentFp;
+	private final int maxFp;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

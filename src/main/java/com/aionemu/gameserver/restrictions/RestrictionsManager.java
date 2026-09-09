@@ -64,7 +64,7 @@ public final class RestrictionsManager {
 		for (RestrictionMode mode : RestrictionMode.VALUES) {
 			Restrictions[] restrictions = RESTRICTIONS[mode.ordinal()];
 			for (int index; (index = ArrayUtils.indexOf(restrictions, restriction)) != -1;) {
-				restrictions = (Restrictions[]) ArrayUtils.remove(restrictions, index);
+				restrictions = ArrayUtils.remove(restrictions, index);
 			}
 			RESTRICTIONS[mode.ordinal()] = restrictions;
 		}
@@ -247,10 +247,7 @@ public final class RestrictionsManager {
 				return false;
 			}
 		}
-		if (player.getLifeStats().isAlreadyDead()) {
-			return false;
-		}
-		return true;
+		return !player.getLifeStats().isAlreadyDead();
 	}
 
 	/**
@@ -290,13 +287,13 @@ public final class RestrictionsManager {
 	 * 限制方法模式：与 {@link Restrictions} 方法一一对应，并按优先级比较实现。
 	 * Restriction method mode: one-to-one with {@link Restrictions} methods; compares implementations by priority.
 	 */
-	private static enum RestrictionMode implements Comparator<Restrictions> {
+	private enum RestrictionMode implements Comparator<Restrictions> {
 		isRestricted, canAttack, canAffectBySkill, canUseSkill, canChat, canInviteToGroup, canInviteToAlliance,
 		canInviteToLeague, canChangeEquip, canTrade, canUseWarehouse, canUseItem;
 
 		private final Method METHOD;
 
-		private RestrictionMode() {
+		RestrictionMode() {
 			for (Method method : Restrictions.class.getMethods()) {
 				if (name().equals(method.getName())) {
 					METHOD = method;

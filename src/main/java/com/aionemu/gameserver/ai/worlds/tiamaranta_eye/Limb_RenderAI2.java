@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Limb_RenderAI2 extends NpcAI2
 {
 	int attackCount;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
     public void handleAttack(Creature creature) {
 		if (isAggred.compareAndSet(false, true)) {
@@ -38,7 +38,7 @@ public class Limb_RenderAI2 extends NpcAI2
         }
 		super.handleAttack(creature);
     }
-	
+
 	@Override
 	protected void handleSpawned() {
   		switch (getNpcId()) {
@@ -51,17 +51,17 @@ public class Limb_RenderAI2 extends NpcAI2
 		}
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	public int modifyOwnerDamage(int damage) {
 		return 1;
 	}
-	
+
 	@Override
 	public int modifyDamage(int damage) {
 		return 1;

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.autogroup;
 
+import lombok.Getter;
+
 /**
  * 条目请求类型枚举。
  * Entry Request Type enumeration.
@@ -12,15 +14,12 @@ public enum EntryRequestType {
 	 */
 	NEW_GROUP_ENTRY((byte) 0), FAST_GROUP_ENTRY((byte) 1), GROUP_ENTRY((byte) 2), SPECIAL_PURPOSE((byte) 3);
 
-	private byte id;
-
-	private EntryRequestType(byte id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public byte getId() {
-		return id;
+	@Getter
+	private final byte id;
+
+	EntryRequestType(byte id) {
+		this.id = id;
 	}
 
 	/** 是否新小队入场 / Whether new group entry */

@@ -507,7 +507,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public boolean hasScheduledTask(TaskId taskId) {
 		Future<?> task = tasks.get(taskId.ordinal());
-		return task != null ? !task.isDone() : false;
+		return task != null && !task.isDone();
 	}
 
 	/**
@@ -729,8 +729,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 		PacketSendUtility.broadcastPacketAndReceive(creature,
 				new SM_SKILL_CANCEL(creature, expectedSkill.getSkillTemplate().getSkillId()));
-		if (getOwner().getAi2() instanceof NpcAI2) {
-			NpcAI2 npcAI = (NpcAI2) getOwner().getAi2();
+		if (getOwner().getAi2() instanceof NpcAI2 npcAI) {
 			npcAI.setSubStateIfNot(AISubState.NONE);
 			npcAI.onGeneralEvent(AIEventType.ATTACK_COMPLETE);
 			if (creature.getSkillNumber() > 0) {
@@ -774,7 +773,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 
 		private Creature target;
 		private Creature creature;
-		private int finalDamage;
+		private final int finalDamage;
 		private final AttackStatus attackStatus;
 
 		public DelayedOnAttack(Creature target, Creature creature, int finalDamage, AttackStatus attackStatus) {

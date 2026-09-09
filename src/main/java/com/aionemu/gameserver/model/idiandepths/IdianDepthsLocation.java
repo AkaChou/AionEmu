@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.idiandepths.IdianDepthsTemplate;
 import com.aionemu.gameserver.services.idiandepthsservice.IdianDepths;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 伊迪安深渊位置，用于 idiandepths 相关逻辑。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.idiandepthsservice.IdianDepths;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class IdianDepthsLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected IdianDepthsTemplate template;
+	/** 返回当前伊迪安深渊 / Returns the active idian depths */
+	@Getter
 	protected IdianDepths<IdianDepthsLocation> activeIdianDepths;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public IdianDepthsLocation() {
-	}
 
 	public IdianDepthsLocation(IdianDepthsTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置当前的伊迪安深渊 / Sets the active idian depths */
@@ -44,28 +49,8 @@ public class IdianDepthsLocation {
 		this.activeIdianDepths = idianDepths;
 	}
 
-	/** 返回当前伊迪安深渊 / Returns the active idian depths */
-	public IdianDepths<IdianDepthsLocation> getActiveIdianDepths() {
-		return activeIdianDepths;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final IdianDepthsTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

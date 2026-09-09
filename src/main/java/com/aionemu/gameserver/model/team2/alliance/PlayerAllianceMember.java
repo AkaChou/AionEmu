@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.team2.alliance;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.PlayerTeamMember;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家联盟 Member，用于团队2相关逻辑。
@@ -11,20 +13,13 @@ import com.aionemu.gameserver.model.team2.PlayerTeamMember;
  */
 public class PlayerAllianceMember extends PlayerTeamMember {
 
+	/** 返回联盟 ID / Returns the alliance id */
+	@Getter
+	@Setter
 	private int allianceId;
 
 	public PlayerAllianceMember(Player player) {
 		super(player);
-	}
-
-	/** 返回联盟 ID / Returns the alliance id */
-	public int getAllianceId() {
-		return allianceId;
-	}
-
-	/** 设置联盟 ID / Sets the alliance id */
-	public void setAllianceId(int allianceId) {
-		this.allianceId = allianceId;
 	}
 
 	/** 获取玩家联盟队伍。 / Returns the player alliance group. */

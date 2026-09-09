@@ -184,8 +184,8 @@ public final class BIHNode {
 	 * @param results 结果收集器 / collision results
 	 * @return 命中数 / hit count
 	 */
-	public final int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
-			CollisionResults results) {
+	public int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
+							  CollisionResults results) {
 
 		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 
@@ -256,8 +256,8 @@ public final class BIHNode {
 	 * @param results 结果收集器 / collision results
 	 * @return 命中数 / hit count
 	 */
-	public final int intersectBrute(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
-			CollisionResults results) {
+	public int intersectBrute(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
+							  CollisionResults results) {
 		float tHit = Float.POSITIVE_INFINITY;
 
 		Vector3f v1 = new Vector3f(), v2 = new Vector3f(), v3 = new Vector3f();
@@ -317,8 +317,8 @@ public final class BIHNode {
 	 * @param results 结果收集器 / collision results
 	 * @return 命中数 / hit count
 	 */
-	public final int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
-			CollisionResults results) {
+	public int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
+							  CollisionResults results) {
 
 		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 

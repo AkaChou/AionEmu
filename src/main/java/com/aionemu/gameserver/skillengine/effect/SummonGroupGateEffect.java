@@ -43,7 +43,7 @@ public class SummonGroupGateEffect extends SummonEffect {
 			public void run() {
 				groupgate.getController().onDelete();
 			}
-		}, time * 1000);
+		}, time * 1000L);
 		groupgate.getController().addTask(TaskId.DESPAWN, task);
 	}
 }

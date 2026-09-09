@@ -28,7 +28,7 @@ public class SvsData {
 	private List<SvsTemplate> svsTemplates;
 
 	@XmlTransient
-	private Map<Integer, SvsLocation> svs = new LinkedHashMap<Integer, SvsLocation>();
+	private final Map<Integer, SvsLocation> svs = new LinkedHashMap<Integer, SvsLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板实例化为 SVS 地点并建立索引。

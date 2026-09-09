@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GROUP_MEMBER_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 队伍成员更新事件（团队2）。
@@ -14,17 +15,12 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class PlayerGroupUpdateEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
 	private final Player player;
 	private final GroupEvent groupEvent;
-
-	public PlayerGroupUpdateEvent(PlayerGroup group, Player player, GroupEvent groupEvent) {
-		this.group = group;
-		this.player = player;
-		this.groupEvent = groupEvent;
-	}
 
 	/** 处理事件。 / Handle event. */
 	@Override

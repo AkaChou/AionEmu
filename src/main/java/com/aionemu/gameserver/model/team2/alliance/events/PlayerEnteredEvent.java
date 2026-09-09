@@ -13,22 +13,19 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_BRAND;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 玩家 Entered 活动，用于团队2相关逻辑。
  * Player Entered Event for team 2 logic.
  */
 
+@RequiredArgsConstructor
 public class PlayerEnteredEvent implements Predicate<PlayerAllianceMember>, TeamEvent {
 
 	private final PlayerAlliance alliance;
 	private final Player invited;
 	private PlayerAllianceMember invitedMember;
-
-	public PlayerEnteredEvent(PlayerAlliance alliance, Player player) {
-		this.alliance = alliance;
-		this.invited = player;
-	}
 
 	/**
 	 * 检查事件条件（玩家尚未在联盟中）。

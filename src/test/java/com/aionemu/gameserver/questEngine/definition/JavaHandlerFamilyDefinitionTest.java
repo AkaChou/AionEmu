@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Full vertical proof for the migrated Poeta Java-handler owners 1122 / 1123 / 1230 / 1231 / 1205. */
 class JavaHandlerFamilyDefinitionTest {
@@ -147,9 +146,9 @@ class JavaHandlerFamilyDefinitionTest {
 
 		List<QuestTransition> transitions = compiled.definition().transitions();
 		// Each step dialog is gated by the matching collect item and removes it.
-		assertTrue(gatedReward(transitions, 10000, 182200218, "reward1") != null);
-		assertTrue(gatedReward(transitions, 10001, 182200219, "reward2") != null);
-		assertTrue(gatedReward(transitions, 10002, 182200220, "reward3") != null);
+		assertNotNull(gatedReward(transitions, 10000, 182200218, "reward1"));
+		assertNotNull(gatedReward(transitions, 10001, 182200219, "reward2"));
+		assertNotNull(gatedReward(transitions, 10002, 182200220, "reward3"));
 		// Every step dialog also has a fallback that reports the missing item.
 		for (int dialog : new int[] {10000, 10001, 10002}) {
 			QuestTransition fallback = transitions.stream()

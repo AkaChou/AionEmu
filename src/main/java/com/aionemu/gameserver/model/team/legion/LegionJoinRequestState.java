@@ -13,5 +13,5 @@ public enum LegionJoinRequestState {
 	/** 无状态 / None. */
 	NONE,
 	/** 已取消 / Cancel. */
-	CANCEL;
+	CANCEL
 }

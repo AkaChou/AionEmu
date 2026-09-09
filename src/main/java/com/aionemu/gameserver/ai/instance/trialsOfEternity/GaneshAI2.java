@@ -31,9 +31,9 @@ public class GaneshAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -41,7 +41,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 按血量百分比（90%/70%/50%/30%/10%）触发阶段事件：首次触发时刷新能量 NPC 并启动周期召唤任务。
 	 * Triggers phase events by HP percentage (90/70/50/30/10%): on first trigger, spawns energy NPCs and starts the periodic summon task.
@@ -73,7 +73,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	/**
 	 * 启动周期任务：每隔一段时间在存活玩家位置附近召唤小怪（人数少时全员召唤）。
 	 * Starts a periodic task that summons adds near living players every interval (summons for all when few players are alive).
@@ -107,7 +107,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnDefBossSum01(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -124,12 +124,12 @@ public class GaneshAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -139,13 +139,13 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
@@ -156,7 +156,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 			deleteNpcs(instance.getNpcs(246424)); //IDEternity_03_Def_Boss_Energy_04.
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
@@ -170,7 +170,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -178,13 +178,13 @@ public class GaneshAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

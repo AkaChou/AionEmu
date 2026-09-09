@@ -103,7 +103,7 @@ class OutpostTest {
 		private NpcController controller;
 
 		private TestOutpostNpc() {
-			super(0, new NpcController(), null, (NpcTemplate) null);
+			super(0, new NpcController(), null, null);
 		}
 
 		@Override

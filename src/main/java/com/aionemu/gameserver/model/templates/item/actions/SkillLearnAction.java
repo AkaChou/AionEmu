@@ -52,10 +52,7 @@ public class SkillLearnAction extends AbstractItemAction {
 			return false;
 		}
 		// 5. 检查该技能是否已学习 / 5. check whether this skill is already learned
-		if (player.getSkillList().isSkillPresent(skillid)) {
-			return false;
-		}
-		return true;
+		return !player.getSkillList().isSkillPresent(skillid);
 	}
 
 	/** 执行 / act. */
@@ -78,11 +75,8 @@ public class SkillLearnAction extends AbstractItemAction {
 	}
 
 	private boolean validateClass(PlayerClass pc) {
-		boolean result = false;
+		boolean result = !pc.isStartingClass() && PlayerClass.getStartingClassFor(pc).ordinal() == playerClass.ordinal();
 		// 2. 检查当前职业是否为二转，且书本是否针对起始职业。 / 2. check if current class is second class and book is for starting class
-		if (!pc.isStartingClass() && PlayerClass.getStartingClassFor(pc).ordinal() == playerClass.ordinal()) {
-			result = true;
-		}
 		// 3. 检查玩家职业与 SkillClass.ALL / 3. check player class and SkillClass.ALL
 		if (pc == playerClass || playerClass == PlayerClass.ALL) {
 			result = true;

@@ -31,17 +31,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 {
 	private boolean canThink = true;
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 13) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -70,7 +69,7 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceBridgeRaised() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -82,11 +81,11 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

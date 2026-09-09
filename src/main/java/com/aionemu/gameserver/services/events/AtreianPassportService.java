@@ -34,8 +34,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class AtreianPassportService {
 
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
-	private Map<Integer, AtreianPassport> basic = new HashMap<Integer, AtreianPassport>(1);
-	private Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
+	private final Map<Integer, AtreianPassport> basic = new HashMap<Integer, AtreianPassport>(1);
+	private final Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<Integer, AtreianPassport>(1);
 
 	/**

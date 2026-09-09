@@ -17,10 +17,10 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  */
 public class SM_VIEW_PLAYER_DETAILS extends AionServerPacket {
 
-	private List<Item> items;
-	private int itemSize;
-	private int targetObjId;
-	private Player player;
+	private final List<Item> items;
+	private final int itemSize;
+	private final int targetObjId;
+	private final Player player;
 
 	/**
 	 * @param items  目标装备列表 / target equipment list

@@ -34,7 +34,7 @@ public class IteratorIterator<V> implements Iterator<V> {
 	 * 外层迭代器。
 	 * Outer-level iterator.
 	 */
-	private Iterator<? extends Iterable<V>> firstLevelIterator;
+	private final Iterator<? extends Iterable<V>> firstLevelIterator;
 
 	/**
 	 * 内层迭代器。

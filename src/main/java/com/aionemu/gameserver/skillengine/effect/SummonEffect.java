@@ -43,8 +43,7 @@ public class SummonEffect extends EffectTemplate {
 	public void applyEffect(Effect effect) {
 		Player effected = (Player) effect.getEffected();
 		SummonsService.createSummon(effected, npcId, effect.getSkillId(), effect.getSkillLevel(), time);
-		if (time > 0 && (effect.getEffected() instanceof Player)) {
-			final Player effector = (Player) effect.getEffected();
+		if (time > 0 && (effect.getEffected() instanceof Player effector)) {
 			final Summon summon = effector.getSummon();
 			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -52,7 +51,7 @@ public class SummonEffect extends EffectTemplate {
 				public void run() {
 					SummonsService.expire(summon);
 				}
-			}, time * 1000);
+			}, time * 1000L);
 			summon.getController().addTask(TaskId.DESPAWN, task);
 		}
 	}

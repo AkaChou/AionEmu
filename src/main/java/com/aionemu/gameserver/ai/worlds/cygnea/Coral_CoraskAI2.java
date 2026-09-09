@@ -15,7 +15,7 @@ public class Coral_CoraskAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(235832, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Aggressive Coral Corask.
+		spawn(235832, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Aggressive Coral Corask.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

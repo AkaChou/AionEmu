@@ -12,12 +12,12 @@ public class Announcement {
 
 	private int id;
 	@Getter
-	private String faction;
+	private final String faction;
 	@Getter
-	private String announce;
-	private String chatType;
+	private final String announce;
+	private final String chatType;
 	@Getter
-	private int delay;
+	private final int delay;
 
 	/**
 	 * 无公告 ID 的构造。

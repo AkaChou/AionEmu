@@ -26,6 +26,7 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Setter;
 
 /**
  * 召唤物控制器，管理模式切换、攻击、技能与与主人的距离解除。
@@ -39,8 +40,9 @@ public class SummonController extends CreatureController<Summon> {
 	/** 上次攻击时间戳（毫秒），用于攻速校验。 / Last attack timestamp in ms, used for attack-speed checks. */
 	private long lastAttackMilis = 0;
 	/** 是否曾被攻击。 / Whether the summon has been attacked. */
-	private boolean isAttacked = false;
+	private final boolean isAttacked = false;
 	/** 使用该技能成功后自动解除召唤；-1 表示不自动解除。 / Skill id after which the summon auto-releases; -1 means none. */
+	@Setter
 	private int releaseAfterSkill = -1;
 
 	/**
@@ -241,16 +243,6 @@ public class SummonController extends CreatureController<Summon> {
 			}
 			setReleaseAfterSkill(-1);
 		}
-	}
-
-	/**
-	 * 设置使用后自动解除的技能 ID（通常为终极技）。
-	 * Sets the skill id after which the summon auto-releases (typically an ultra skill).
-	 *
-	 * @param skillId 技能 ID，-1 表示取消 / skill id, -1 to clear
-	 */
-	public void setReleaseAfterSkill(int skillId) {
-		this.releaseAfterSkill = skillId;
 	}
 
 	/**

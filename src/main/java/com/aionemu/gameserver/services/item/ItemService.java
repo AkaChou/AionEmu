@@ -835,18 +835,17 @@ public class ItemService {
 		}
 		if (item.getItemTemplate().isArmor()) {
 			int at = item.getItemTemplate().getItemSlot();
-			if (at == 1 || /* Main Hand */
-					at == 2 || /* Sub Hand */
-					at == 8 || /* Jacket */
-					at == 16 || /* Gloves */
-					at == 32 || /* Boots */
-					at == 2048 || /* Shoulder */
-					at == 4096 || /* Pants */
-					at == 32768 || /* Wing */
-					at == 131072 || /* Main Off Hand */
-					at == 262144) { /* Sub Off Hand */
-				return true;
-			}
+			/* Sub Off Hand */
+			return at == 1 || /* Main Hand */
+				at == 2 || /* Sub Hand */
+				at == 8 || /* Jacket */
+				at == 16 || /* Gloves */
+				at == 32 || /* Boots */
+				at == 2048 || /* Shoulder */
+				at == 4096 || /* Pants */
+				at == 32768 || /* Wing */
+				at == 131072 || /* Main Off Hand */
+				at == 262144;
 		}
 		return false;
 	}

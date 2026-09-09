@@ -28,7 +28,7 @@ public class BroadcastService {
         return SingletonHolder.INSTANCE;
     }
 
-    private Map<Integer, ChatClient> clients = new ConcurrentHashMap<>();
+    private final Map<Integer, ChatClient> clients = new ConcurrentHashMap<>();
 
     /**
      * 将客户端加入广播集合。

@@ -24,7 +24,7 @@ public enum Race {
      * Race identifier.
      */
     @Getter
-    private int raceId;
+    private final int raceId;
 
     /**
      * 构造种族枚举。
@@ -32,7 +32,7 @@ public enum Race {
      *
      * @param raceId 种族 ID / race id
      */
-    private Race(int raceId) {
+	Race(int raceId) {
         this.raceId = raceId;
     }
 

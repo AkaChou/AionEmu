@@ -17,13 +17,13 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 public class MonolithicAmbusherAI2 extends AggressiveNpcAI2
 {
 	private boolean hasHelped;
-	
+
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
 		hasHelped = false;
 	}
-	
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
@@ -32,11 +32,10 @@ public class MonolithicAmbusherAI2 extends AggressiveNpcAI2
 			help(creature);
 		}
 	}
-	
+
 	private void help(Creature creature) {
 		for (VisibleObject object : getKnownList().getKnownObjectsSnapshot()) {
-			if (object instanceof Npc && isInRange(object, 60)) {
-				Npc npc = (Npc) object;
+			if (object instanceof Npc npc && isInRange(object, 60)) {
 				if (!npc.getLifeStats().isAlreadyDead() && npc.getNpcId() == 216215 && (int) npc.getSpawn().getY() == (int) getSpawnTemplate().getY()) {
 					npc.getAi2().onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
 				}

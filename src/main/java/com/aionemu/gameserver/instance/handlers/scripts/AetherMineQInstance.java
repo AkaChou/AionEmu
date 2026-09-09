@@ -26,8 +26,8 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -48,7 +48,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 			SpawnIDLF6QRace();
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -69,7 +69,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void SpawnIDLF6QRace() {
 		final int npc1 = spawnRace == Race.ASMODIANS ? 806298 : 806293;
 		final int fi75An = spawnRace == Race.ASMODIANS ? 244127 : 244111;
@@ -95,13 +95,13 @@ public class AetherMineQInstance extends GeneralInstanceHandler
         spawn(wi75An, 277.2896f, 202.203f, 241.40765f, (byte) 11);
         spawn(wi75An, 168.0f, 158.0f, 230.86432f, (byte) 97);
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void spawnIDLF6_Q_Advance_Teleporter_Q10529A() {
 		SpawnTemplate advanceTeleporter1 = SpawnEngine.addNewSingleTimeSpawn(301690000, 703317, 163.97794f, 150.90314f, 231.73216f, (byte) 0);
 		advanceTeleporter1.setEntityId(39);

@@ -195,7 +195,7 @@ public class RunnableStatsManager {
      * 统计导出排序字段。
      * Sort fields for statistics export.
      */
-    public static enum SortBy {
+    public enum SortBy {
         /**
          * 平均耗时。
          * Average time.
@@ -234,7 +234,7 @@ public class RunnableStatsManager {
 
         private final String xmlAttributeName;
 
-        private SortBy(String xmlAttributeName) {
+        SortBy(String xmlAttributeName) {
             this.xmlAttributeName = xmlAttributeName;
         }
 

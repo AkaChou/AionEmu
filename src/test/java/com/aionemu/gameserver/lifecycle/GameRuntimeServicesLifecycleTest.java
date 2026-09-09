@@ -1,11 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -15,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameRuntimeServicesLifecycleTest {
 
@@ -115,7 +111,7 @@ class GameRuntimeServicesLifecycleTest {
             "gameTimeClock"
         ), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -136,7 +132,7 @@ class GameRuntimeServicesLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "periodicSave", "admin", "section", "periodicSave", "admin"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     private static List<String> eventNames() {

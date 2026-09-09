@@ -17,7 +17,7 @@ import com.aionemu.gameserver.configs.main.PvPConfig;
 public class KillList {
 
 	/** 受害者 ID → 击杀时间戳列表 / victim id → list of kill timestamps */
-	private Map<Integer, List<Long>> killList;
+	private final Map<Integer, List<Long>> killList;
 
 	/**
 	 * 创建空的击杀记录表。

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.geoEngine.collision;
 
 import java.util.EnumSet;
+import lombok.Getter;
 
 /**
  * 碰撞意图位掩码枚举，用于过滤几何体在射线/包围体检测中是否参与碰撞。
@@ -49,7 +50,8 @@ public enum CollisionIntention {
 			| MOVEABLE.getId() | PHYSICAL_SEE_THROUGH.getId());
 
 	/** 意图位 id / Intention bit id. */
-	private byte id;
+	@Getter
+	private final byte id;
 
 	/**
 	 * 以整型位值构造意图。
@@ -57,18 +59,8 @@ public enum CollisionIntention {
 	 *
 	 * @param id 位值 / bit value
 	 */
-	private CollisionIntention(int id) {
+	CollisionIntention(int id) {
 		this.id = (byte) id;
-	}
-
-	/**
-	 * 返回意图位 id。
-	 * Returns the intention bit id.
-	 *
-	 * @return 意图位 id / bit id
-	 */
-	public byte getId() {
-		return id;
 	}
 
 	/**

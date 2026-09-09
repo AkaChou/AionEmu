@@ -23,9 +23,9 @@ public enum LegionPermissionsMask {
 	/** 守护石 / Guardian Stone. */
 	GUARDIAN_STONE(0x800);
 
-	private int rank;
+	private final int rank;
 
-	private LegionPermissionsMask(int rank) {
+	LegionPermissionsMask(int rank) {
 		this.rank = rank;
 	}
 

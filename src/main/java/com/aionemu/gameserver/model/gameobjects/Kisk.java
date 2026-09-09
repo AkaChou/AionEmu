@@ -18,6 +18,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.HashSet;
+import lombok.Getter;
 
 /**
  * 归还之石游戏对象。
@@ -26,10 +27,12 @@ import java.util.HashSet;
 
 public class Kisk extends SummonedObject<Player> {
 	private final Legion ownerLegion;
+	/** 返回所有者种族 / Returns the owner race. */
+	@Getter
 	private final Race ownerRace;
 	private KiskStatsTemplate kiskStatsTemplate;
 	private int remainingResurrections;
-	private long kiskSpawnTime;
+	private final long kiskSpawnTime;
 	public final int KISK_LIFETIME_IN_SEC = 2 * 60 * 60;
 	private final Set<Integer> kiskMemberIds;
 
@@ -162,10 +165,7 @@ public class Kisk extends SummonedObject<Player> {
 				return false;
 			}
 		}
-		if (this.getCurrentMemberCount() >= getMaxMembers()) {
-			return false;
-		}
-		return true;
+		return this.getCurrentMemberCount() < getMaxMembers();
 	}
 
 	/** 添加玩家。 / Adds player. */
@@ -220,11 +220,6 @@ public class Kisk extends SummonedObject<Player> {
 		if (remainingResurrections <= 0) {
 			this.getController().onDelete();
 		}
-	}
-
-	/** 返回所有者种族 / Returns the owner race. */
-	public Race getOwnerRace() {
-		return this.ownerRace;
 	}
 
 	/** 是否激活。 / Whether active. */

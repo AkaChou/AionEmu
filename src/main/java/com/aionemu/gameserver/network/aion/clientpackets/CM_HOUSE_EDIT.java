@@ -171,7 +171,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			}
 			GameHousingServices.housingService().switchHouseBuilding(house, buildingId);
 			player.setHouseRegistry(house.getRegistry());
-			((HouseController) house.getController()).updateAppearance();
+			house.getController().updateAppearance();
 		}
 	}
 	/**

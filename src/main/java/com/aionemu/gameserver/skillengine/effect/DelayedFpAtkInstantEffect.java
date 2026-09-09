@@ -55,11 +55,10 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	private void calculateAndApplyDamage(Effect effect) {
-		if (!(effect.getEffected() instanceof Player)) {
+		if (!(effect.getEffected() instanceof Player player)) {
 			return;
 		}
 		int valueWithDelta = value + delta * effect.getSkillLevel();
-		Player player = (Player) effect.getEffected();
 		int maxFP = player.getLifeStats().getMaxFp();
 
 		int newValue = valueWithDelta;

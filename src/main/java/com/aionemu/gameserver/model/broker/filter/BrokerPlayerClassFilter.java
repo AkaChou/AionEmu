@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
  */
 public class BrokerPlayerClassFilter extends BrokerFilter {
 
-	private PlayerClass playerClass;
+	private final PlayerClass playerClass;
 
 	/**
 	 * @param playerClass 限制的玩家职业 / restricted player class

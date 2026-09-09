@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.model.broker.BrokerRace;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 经纪行物品游戏对象。
@@ -15,22 +17,61 @@ import com.aionemu.gameserver.model.broker.BrokerRace;
  */
 
 public class BrokerItem implements Comparable<BrokerItem> {
-	private Item item;
-	private int itemId;
+	/** 获取物品。 / Returns the item. */
+	@Getter
+	private final Item item;
+	/** 返回物品 ID / Returns the item id */
+	@Getter
+	private final int itemId;
+	/** 返回物品唯一 ID / Returns the item unique id */
+	@Getter
+	@Setter
 	private int itemUniqueId;
+	/** 获取物品计数。 / Returns the item count. */
+	@Getter
+	@Setter
 	private long itemCount;
+	/** 设置物品制作者 / Sets the item creator */
+	@Setter
 	private String itemCreator;
+	/** 获取价格。 / Returns the price. */
+	@Getter
+	@Setter
 	private long price;
-	private String seller;
-	private int sellerId;
-	private BrokerRace itemBrokerRace;
+	/** 返回卖家 / Returns the seller */
+	@Getter
+	private final String seller;
+	/** 返回卖家 ID / Returns the seller id */
+	@Getter
+	private final int sellerId;
+	/** 获取物品经纪行种族。 / Returns the item broker race. */
+	@Getter
+	private final BrokerRace itemBrokerRace;
 	private boolean isSold, isCanceled;
+	/**
+	 * 是否已结算。
+	 * Whether the sale is settled.
+	 *
+	 * @return 是否已结算 / whether settled
+	 */
+	@Getter
 	private boolean isSettled;
-	private Timestamp expireTime;
+	/** 获取过期时间。 / Returns the expire time. */
+	@Getter
+	private final Timestamp expireTime;
+	/** 返回结算时间 / Returns the settle time */
+	@Getter
 	private Timestamp settleTime;
-	private boolean isSplitSell;
+	/**
+	 * 是否拆分出售。
+	 * Whether the item is sold in split quantities.
+	 *
+	 * @return 是否拆分出售 / whether split sell
+	 */
+	@Getter
+	private final boolean isSplitSell;
 	PersistentState state;
-	private int ExpireTimeinMillis = BrokerConfig.ITEMS_EXPIRE_TIME * 24 * 3600 * 1000;
+	private final int ExpireTimeinMillis = BrokerConfig.ITEMS_EXPIRE_TIME * 24 * 3600 * 1000;
 
 	public BrokerItem(Item item, long price, String seller, int sellerId, BrokerRace itemBrokerRace,
 			boolean isSplitSell) {
@@ -67,7 +108,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		if (item == null) {
 			this.isSold = true;
 			this.isSettled = true;
-
 		} else {
 			this.isSold = isSold;
 			this.isSettled = isSettled;
@@ -83,16 +123,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			return StringUtils.EMPTY;
 		}
 		return itemCreator;
-	}
-
-	/** 设置物品制作者 / Sets the item creator */
-	public void setItemCreator(String itemCreator) {
-		this.itemCreator = itemCreator;
-	}
-
-	/** 获取物品。 / Returns the item. */
-	public Item getItem() {
-		return item;
 	}
 
 	/**
@@ -115,46 +145,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		this.isSold = true;
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
-	}
-
-	/** 返回物品 ID / Returns the item id */
-	public int getItemId() {
-		return itemId;
-	}
-
-	/** 返回物品唯一 ID / Returns the item unique id */
-	public int getItemUniqueId() {
-		return itemUniqueId;
-	}
-
-	/** 获取价格。 / Returns the price. */
-	public long getPrice() {
-		return price;
-	}
-
-	/**
-	 * 是否拆分出售。
-	 * Whether the item is sold in split quantities.
-	 *
-	 * @return 是否拆分出售 / whether split sell
-	 */
-	public boolean isSplitSell() {
-		return this.isSplitSell;
-	}
-
-	/** 返回卖家 / Returns the seller */
-	public String getSeller() {
-		return seller;
-	}
-
-	/** 返回卖家 ID / Returns the seller id */
-	public int getSellerId() {
-		return sellerId;
-	}
-
-	/** 获取物品经纪行种族。 / Returns the item broker race. */
-	public BrokerRace getItemBrokerRace() {
-		return itemBrokerRace;
 	}
 
 	/**
@@ -213,35 +203,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return state;
 	}
 
-	/**
-	 * 是否已结算。
-	 * Whether the sale is settled.
-	 *
-	 * @return 是否已结算 / whether settled
-	 */
-	public boolean isSettled() {
-		return isSettled;
-	}
-
 	/** 标记为已结算 / Marks the sale as settled */
 	public void setSettled() {
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
-	}
-
-	/** 获取过期时间。 / Returns the expire time. */
-	public Timestamp getExpireTime() {
-		return expireTime;
-	}
-
-	/** 返回结算时间 / Returns the settle time */
-	public Timestamp getSettleTime() {
-		return settleTime;
-	}
-
-	/** 获取物品计数。 / Returns the item count. */
-	public long getItemCount() {
-		return itemCount;
 	}
 
 	private int getItemLevel() {
@@ -255,21 +220,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 
 	private String getItemName() {
 		return item.getItemName();
-	}
-
-	/** 设置物品计数。 / Sets the item count. */
-	public void setItemCount(long count) {
-		this.itemCount = count;
-	}
-
-	/** 设置价格。 / Sets the price. */
-	public void setPrice(long ItemPrice) {
-		this.price = ItemPrice;
-	}
-
-	/** 设置物品唯一 ID / Sets the item unique id */
-	public void setItemUniqueId(int newObjId) {
-		itemUniqueId = newObjId;
 	}
 
 	/** 比较。 / Compares to another instance. */

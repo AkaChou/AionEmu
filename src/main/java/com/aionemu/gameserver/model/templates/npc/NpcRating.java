@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.state.CreatureSeeState;
+import lombok.Getter;
 
 /**
  * NpcRating 枚举。
@@ -24,14 +25,11 @@ public enum NpcRating {
 	/** 传颂 / Legendary */
 	LEGENDARY(CreatureSeeState.SEARCH2);
 
+	/** 返回 congenital see state / Returns the congenital see state */
+	@Getter
 	private final CreatureSeeState congenitalSeeState;
 
-	private NpcRating(CreatureSeeState congenitalSeeState) {
+	NpcRating(CreatureSeeState congenitalSeeState) {
 		this.congenitalSeeState = congenitalSeeState;
-	}
-
-	/** 返回 congenital see state / Returns the congenital see state */
-	public CreatureSeeState getCongenitalSeeState() {
-		return congenitalSeeState;
 	}
 }

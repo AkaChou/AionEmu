@@ -29,7 +29,7 @@ public class SkinSkillData {
 	private List<SkinSkillTemplate> tlist;
 
 	@XmlTransient
-	private IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<SkinSkillTemplate>();
+	private final IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<SkinSkillTemplate>();
 
 	private final Map<String, SkinSkillTemplate> string = new LinkedHashMap<String, SkinSkillTemplate>();
 

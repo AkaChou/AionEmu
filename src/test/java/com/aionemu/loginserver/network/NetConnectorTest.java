@@ -61,29 +61,23 @@ class NetConnectorTest {
         }
     }
 
-    private static final class RecordingTransport implements ServerTransport {
-        private final AtomicInteger shutdowns;
-
-        private RecordingTransport() {
-            this(new AtomicInteger());
-        }
-
-        private RecordingTransport(AtomicInteger shutdowns) {
-            this.shutdowns = shutdowns;
-        }
+    private record RecordingTransport(AtomicInteger shutdowns) implements ServerTransport {
+            private RecordingTransport() {
+                this(new AtomicInteger());
+            }
 
         @Override
-        public void connect() {
-        }
+            public void connect() {
+            }
 
-        @Override
-        public void shutdown() {
-            shutdowns.incrementAndGet();
-        }
+            @Override
+            public void shutdown() {
+                shutdowns.incrementAndGet();
+            }
 
-        @Override
-        public int getActiveConnections() {
-            return 0;
+            @Override
+            public int getActiveConnections() {
+                return 0;
+            }
         }
-    }
 }

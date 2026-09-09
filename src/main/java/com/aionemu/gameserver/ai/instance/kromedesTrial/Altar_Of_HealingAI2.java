@@ -22,10 +22,9 @@ public class Altar_Of_HealingAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-	if (creature instanceof Player) {
-			final Player player = (Player) creature;
+	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // 守护之泉的祝福 / Bless Of Guardian Spring.
-		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useWithoutPropSkill(); // 守护之泉的祝福 / Bless Of Guardian Spring.
+		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, creature).useWithoutPropSkill(); // 守护之泉的祝福 / Bless Of Guardian Spring.
 			}
 	}
     }

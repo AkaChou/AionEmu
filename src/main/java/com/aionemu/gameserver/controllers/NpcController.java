@@ -109,19 +109,18 @@ public class NpcController extends CreatureController<Npc> {
 	public void see(VisibleObject object) {
 		super.see(object);
 		Npc owner = getOwner();
-		
+
 		if (object instanceof Creature) {
 			owner.getAi2().onCreatureEvent(AIEventType.CREATURE_SEE, (Creature) object);
 		}
-		
-		if (object instanceof Player) {
-			Player player = (Player) object;
-			
+
+		if (object instanceof Player player) {
+
 			if (owner.getLifeStats().isAlreadyDead()) {
 				if (!owner.isInState(CreatureState.DEAD) && !owner.isInState(CreatureState.FLOATING_CORPSE)) {
 					owner.setState(CreatureState.DEAD);
 				}
-				
+
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
@@ -151,12 +150,12 @@ public class NpcController extends CreatureController<Npc> {
 		} else {
 			owner.setState(CreatureState.NPC_IDLE);
 		}
-		
+
 		owner.getLifeStats().setCurrentHpPercent(100);
 		owner.getLifeStats().setCurrentMpPercent(100);
 		InstanceScaler.onBeforeSpawn(owner);
 		owner.getAi2().onGeneralEvent(AIEventType.RESPAWNED);
-		
+
 		if (owner.getSpawn().canFly()) {
 			owner.setState(CreatureState.FLYING);
 		}
@@ -221,7 +220,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDie(Creature lastAttacker) {
 		Npc owner = getOwner();
-		
+
 		owner.unsetState(CreatureState.ACTIVE);
 		owner.unsetState(CreatureState.FLYING);
 		owner.unsetState(CreatureState.GLIDING);
@@ -230,7 +229,7 @@ public class NpcController extends CreatureController<Npc> {
 		if (killer instanceof Player player) {
 			owner.getKnownList().doOnAllNpcs(observer -> observer.getAi2().onFriendKilledByUser(owner, player));
 		}
-		
+
 		if (owner.getSpawn().hasPool()) {
 			owner.getSpawn().setUse(false);
 		}
@@ -298,10 +297,9 @@ public class NpcController extends CreatureController<Npc> {
 		for (AggroInfo info : finalList) {
 			AionObject attacker = info.getAttacker();
 			// PvE 通行奖励 / PvE Toll Reward
-			if (attacker instanceof Player) {
+			if (attacker instanceof Player player) {
 				if (CustomConfig.ENABLE_PVE_TOLL_REWARD) {
 					if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
-						Player player = (Player) attacker;
 						for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 							if (player.getWorldId() == Integer.parseInt(worldIds)) {
 								GameRuntimeServices.inGameShopEn().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
@@ -325,8 +323,7 @@ public class NpcController extends CreatureController<Npc> {
 				PlayerTeamDistributionService.doReward((TemporaryPlayerTeam<?>) attacker, percentage, getOwner(), winner);
 			} else if (attacker instanceof Player && ((Player) attacker).isInGroup2()) {
 				PlayerTeamDistributionService.doReward(((Player) attacker).getPlayerGroup2(), percentage, getOwner(), winner);
-			} else if (attacker instanceof Player) {
-				Player player = (Player) attacker;
+			} else if (attacker instanceof Player player) {
 				if (!player.getLifeStats().isAlreadyDead()) {
 					long rewardXp = StatFunctions.calculateSoloExperienceReward(player, getOwner());
 					int rewardDp = StatFunctions.calculateSoloDPReward(player, getOwner());
@@ -544,14 +541,12 @@ public class NpcController extends CreatureController<Npc> {
 		for (AggroInfo aggro : getOwner().getAggroList().getFinalDamageList(true)) {
 			float percentage = aggro.getDamage() / totalDamage;
 			List<Player> players = new ArrayList<Player>();
-			if (aggro.getAttacker() instanceof Player) {
-				Player player = (Player) aggro.getAttacker();
+			if (aggro.getAttacker() instanceof Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), GroupConfig.GROUP_MAX_DISTANCE) && !player.getLifeStats().isAlreadyDead()) {
 					int apPlayerReward = Math.round(StatFunctions.calculatePvEApGained(player, getOwner()) * percentage);
 					AbyssPointsService.addAp(player, getOwner(), apPlayerReward);
 				}
-			} else if (aggro.getAttacker() instanceof PlayerGroup) {
-				PlayerGroup group = (PlayerGroup) aggro.getAttacker();
+			} else if (aggro.getAttacker() instanceof PlayerGroup group) {
 				for (Player member : group.getMembers()) {
 					if (MathUtil.isIn3dRange(member, getOwner(), GroupConfig.GROUP_MAX_DISTANCE) && !member.getLifeStats().isAlreadyDead()) {
 						players.add(member);
@@ -568,8 +563,7 @@ public class NpcController extends CreatureController<Npc> {
 						}
 					}
 				}
-			} else if ((aggro.getAttacker() instanceof PlayerAlliance)) {
-				PlayerAlliance alliance = (PlayerAlliance) aggro.getAttacker();
+			} else if ((aggro.getAttacker() instanceof PlayerAlliance alliance)) {
 				players = new ArrayList<Player>();
 				for (Player member : alliance.getMembers()) {
 					if (MathUtil.isIn3dRange(member, getOwner(), GroupConfig.GROUP_MAX_DISTANCE) && !member.getLifeStats().isAlreadyDead()) {

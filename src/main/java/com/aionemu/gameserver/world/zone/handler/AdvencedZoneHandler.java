@@ -20,5 +20,5 @@ public interface AdvencedZoneHandler extends ZoneHandler {
 	 * @param zone 区域实例 / zone instance
 	 * @return 是否已处理该死亡事件 / whether the death event was handled
 	 */
-	public boolean onDie(Creature attacker, Creature target, ZoneInstance zone);
+	boolean onDie(Creature attacker, Creature target, ZoneInstance zone);
 }

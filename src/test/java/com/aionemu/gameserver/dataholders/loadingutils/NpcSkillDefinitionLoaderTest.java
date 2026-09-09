@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -10,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.aionemu.gameserver.dataholders.NpcSkillData;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class NpcSkillDefinitionLoaderTest {
 
@@ -77,6 +76,6 @@ class NpcSkillDefinitionLoaderTest {
 		assertEquals(700, skill.getRawRate());
 		assertEquals(15000, skill.getCooldown());
 		assertEquals(2, skill.getCount());
-		assertEquals(true, skill.isUltraSkill());
+		assertTrue(skill.isUltraSkill());
 	}
 }

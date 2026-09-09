@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -126,18 +127,16 @@ public class Account {
             return true;
         }
 
-        if (!(o instanceof Account)) {
+        if (!(o instanceof Account account)) {
             return false;
         }
 
-        Account account = (Account) o;
-
-        // noinspection SimplifiableIfStatement
-        if (name != null ? !name.equals(account.name) : account.name != null) {
+		// noinspection SimplifiableIfStatement
+        if (!Objects.equals(name, account.name)) {
             return false;
         }
 
-        return !(passwordHash != null ? !passwordHash.equals(account.passwordHash) : account.passwordHash != null);
+        return !(!Objects.equals(passwordHash, account.passwordHash));
 
     }
 

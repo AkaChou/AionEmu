@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 任务跟随 NPC 周期检查任务：监控玩家/NPC 存活与距离，以及是否到达目的地。
@@ -16,24 +18,13 @@ import com.aionemu.gameserver.utils.MathUtil;
  *
  * @author ATracer
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class FollowingNpcCheckTask implements Runnable {
 
 	/** 任务事件环境。 Quest event environment. */
 	private final QuestEnv env;
 	/** 目的地检查器。 Destination checker. */
 	private final DestinationChecker destinationChecker;
-
-	/**
-	 * 构造跟随检查任务。
-	 * Constructs a following check task.
-	 *
-	 * @param env 任务环境 / Quest environment
-	 * @param destinationChecker 目的地检查器 / Destination checker
-	 */
-	FollowingNpcCheckTask(QuestEnv env, DestinationChecker destinationChecker) {
-		this.env = env;
-		this.destinationChecker = destinationChecker;
-	}
 
 	/**
 	 * 执行一次跟随状态检查：死亡/超距失败，到达目的地成功。

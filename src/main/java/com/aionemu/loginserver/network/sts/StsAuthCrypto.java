@@ -17,6 +17,8 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * STS token-auth 加密工具：私钥须与打进 Game.dll 0xE4D270 处的 NC 公钥 blob 匹配（见 scripts/patch_game_dll_sts_auth_key.py）。
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * at 0xE4D270 (see scripts/patch_game_dll_sts_auth_key.py).
  */
 @Slf4j
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StsAuthCrypto {
 
     private static final String PRIVATE_KEY_RESOURCE = "/sts/sts_private.pem";
@@ -34,11 +37,6 @@ public final class StsAuthCrypto {
 
     private final PrivateKey privateKey;
     private final String publicKeyB64;
-
-    private StsAuthCrypto(PrivateKey privateKey, String publicKeyB64) {
-        this.privateKey = privateKey;
-        this.publicKeyB64 = publicKeyB64;
-    }
 
     public static StsAuthCrypto get() {
         StsAuthCrypto local = INSTANCE;

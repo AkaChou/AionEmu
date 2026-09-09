@@ -816,19 +816,19 @@ public final class BufferUtils {
 				bBufsM += b.capacity();
 				bBufs++;
 			} else if (b instanceof FloatBuffer) {
-				totalHeld += b.capacity() * 4;
+				totalHeld += b.capacity() * 4L;
 				fBufsM += b.capacity() * 4;
 				fBufs++;
 			} else if (b instanceof IntBuffer) {
-				totalHeld += b.capacity() * 4;
+				totalHeld += b.capacity() * 4L;
 				iBufsM += b.capacity() * 4;
 				iBufs++;
 			} else if (b instanceof ShortBuffer) {
-				totalHeld += b.capacity() * 2;
+				totalHeld += b.capacity() * 2L;
 				sBufsM += b.capacity() * 2;
 				sBufs++;
 			} else if (b instanceof DoubleBuffer) {
-				totalHeld += b.capacity() * 8;
+				totalHeld += b.capacity() * 8L;
 				dBufsM += b.capacity() * 8;
 				dBufs++;
 			}

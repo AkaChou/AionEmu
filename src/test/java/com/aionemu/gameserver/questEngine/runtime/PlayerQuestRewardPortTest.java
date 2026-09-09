@@ -48,7 +48,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -669,15 +668,8 @@ class PlayerQuestRewardPortTest {
 	}
 
 	private static final class RecordingInventoryDao extends InventoryDAO {
-		private static final class Transaction {
-			final Connection connection;
-			final List<Item> items;
-
-			Transaction(Connection connection, List<Item> items) {
-				this.connection = connection;
-				this.items = items;
-			}
-		}
+        private record Transaction(Connection connection, List<Item> items) {
+        }
 
 		private final List<Transaction> transactions = new ArrayList<>();
 

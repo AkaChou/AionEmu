@@ -25,13 +25,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @AIName("tremorground")
 public class TremoringGroundAI2 extends GeneralNpcAI2 {
-	
-	private AtomicBoolean isUsed = new AtomicBoolean(false);
-	
+
+	private final AtomicBoolean isUsed = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 16) {
 				if (isUsed.compareAndSet(false, true)) {
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -47,7 +46,7 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 			}
 		}
 	}
-	
+
 	@Override
 	public AIAnswer ask(AIQuestion question) {
 		switch (question) {

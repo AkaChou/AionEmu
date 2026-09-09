@@ -9,12 +9,12 @@ import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 
 import java.util.List;
 import java.util.Map;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 纯求值器：不访问任何服务或可变状态。 / Pure evaluator; it has no service or mutable-state access. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestConditionEvaluator {
-	private QuestConditionEvaluator() {
-	}
-
 	public static boolean matches(ProgressLayout layout, QuestSnapshot snapshot,
 			List<QuestCondition> conditions) {
 		return matches(layout, snapshot, null, conditions);

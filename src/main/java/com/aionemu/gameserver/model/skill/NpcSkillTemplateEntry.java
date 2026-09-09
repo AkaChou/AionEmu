@@ -49,11 +49,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 	public boolean hpReady(int hpPercentage) {
 		if (template.getMaxhp() == 0 && template.getMinhp() == 0) {
 			return true;
-		} else if (template.getMaxhp() >= hpPercentage && template.getMinhp() <= hpPercentage) {
-			return true;
-		} else {
-			return false;
-		}
+		} else return template.getMaxhp() >= hpPercentage && template.getMinhp() <= hpPercentage;
 	}
 
 	/** 时间就绪 / time Ready. */
@@ -61,11 +57,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 	public boolean timeReady(long fightingTimeInMSec) {
 		if (template.getMaxTime() == 0 && template.getMinTime() == 0) {
 			return true;
-		} else if (template.getMaxTime() >= fightingTimeInMSec && template.getMinTime() <= fightingTimeInMSec) {
-			return true;
-		} else {
-			return false;
-		}
+		} else return template.getMaxTime() >= fightingTimeInMSec && template.getMinTime() <= fightingTimeInMSec;
 	}
 
 	/** 是否拥有冷却。 / Whether cooldown. */

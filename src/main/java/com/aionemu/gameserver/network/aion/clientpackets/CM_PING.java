@@ -44,7 +44,7 @@ public class CM_PING extends AionClientPacket {
 		if (lastMS > 0 && player != null) {
 			long pingInterval = System.currentTimeMillis() - lastMS;
 			// 心跳间隔应为 3 分钟（180000 毫秒）/ Ping interval should be 3min (180000ms)
-			if (pingInterval < SecurityConfig.PING_INTERVAL * 1000) {// 客户端计时作弊 / client timer cheat
+			if (pingInterval < SecurityConfig.PING_INTERVAL * 1000L) {// 客户端计时作弊 / client timer cheat
 				AuditLogger.info(player, "Possible client timer cheat kicking player: " + pingInterval + ", ip="
 						+ getConnection().getIP());
 				if (SecurityConfig.SECURITY_ENABLE) {

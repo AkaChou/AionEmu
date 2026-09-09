@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 奖励模板（静态数据/XML）。
@@ -23,36 +24,56 @@ public class Rewards {
 	@XmlElement(name = "reward_item")
 	protected List<QuestItems> rewardItem;
 
+	/** 返回基纳 / Returns the gold */
+	@Getter
 	@XmlAttribute
 	protected Integer gold;
 
+	/** 获取经验。 / Returns the exp. */
+	@Getter
 	@XmlAttribute
 	protected Integer exp;
 
+	/** 返回经验加成 / Returns the exp boost. */
+	@Getter
 	@XmlAttribute
 	protected Integer expBoost;
 
+	/** 获取神圣能量。 / Returns the dp. */
+	@Getter
 	@XmlAttribute
 	protected Integer dp;
 
+	/** 获取欧比斯点数。 / Returns the ap. */
+	@Getter
 	@XmlAttribute
 	protected Integer ap;
 
+	/** 返回荣耀点数 / Returns the gp */
+	@Getter
 	@XmlAttribute
 	protected Integer gp;
 
+	/** 返回 Abyss Op / Returns the abyss op */
+	@Getter
 	@XmlAttribute
 	protected Integer abyssOp;
 
 	@XmlAttribute
 	protected Integer cp;
 
+	/** 获取称号。 / Returns the title. */
+	@Getter
 	@XmlAttribute
 	protected Integer title;
 
+	/** 返回扩展背包数量 / Returns the extend inventory */
+	@Getter
 	@XmlAttribute(name = "extend_inventory")
 	protected Integer extendInventory;
 
+	/** 返回扩展烙印之石槽数量 / Returns the extend stigma */
+	@Getter
 	@XmlAttribute(name = "extend_stigma")
 	protected Integer extendStigma;
 
@@ -72,58 +93,8 @@ public class Rewards {
 		return this.rewardItem;
 	}
 
-	/** 返回基纳 / Returns the gold */
-	public Integer getGold() {
-		return gold;
-	}
-
-	/** 获取经验。 / Returns the exp. */
-	public Integer getExp() {
-		return exp;
-	}
-
-	/** 返回经验加成 / Returns the exp boost. */
-	public Integer getExpBoost() {
-		return expBoost;
-	}
-
-	/** 获取神圣能量。 / Returns the dp. */
-	public Integer getDp() {
-		return dp;
-	}
-
-	/** 获取欧比斯点数。 / Returns the ap. */
-	public Integer getAp() {
-		return ap;
-	}
-
-	/** 返回荣耀点数 / Returns the gp */
-	public Integer getGp() {
-		return gp;
-	}
-
 	/** 获取创造点。 / Returns the cp. */
 	public Integer getCP() {
 		return cp;
-	}
-
-	/** 返回 Abyss Op / Returns the abyss op */
-	public Integer getAbyssOp() {
-		return abyssOp;
-	}
-
-	/** 获取称号。 / Returns the title. */
-	public Integer getTitle() {
-		return title;
-	}
-
-	/** 返回扩展背包数量 / Returns the extend inventory */
-	public Integer getExtendInventory() {
-		return extendInventory;
-	}
-
-	/** 返回扩展烙印之石槽数量 / Returns the extend stigma */
-	public Integer getExtendStigma() {
-		return extendStigma;
 	}
 }

@@ -3,6 +3,7 @@ package com.aionemu.loginserver.network.ncrypt;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
+import lombok.Getter;
 
 /**
  * 保存标准 RSA 密钥对，并对模数 N 做网络传输用的简单混淆。
@@ -13,9 +14,11 @@ import java.security.interfaces.RSAPublicKey;
 public class EncryptedRSAKeyPair {
 
     /** 原始 RSA 密钥对 / Original RSA key pair */
-    private KeyPair RSAKeyPair;
+    @Getter
+    private final KeyPair RSAKeyPair;
     /** 混淆后的模数 / Scrambled modulus bytes */
-    private byte[] encryptedModulus;
+    @Getter
+    private final byte[] encryptedModulus;
 
     /**
      * 保存 RSA 密钥对并加密其模数 N。
@@ -67,26 +70,6 @@ public class EncryptedRSAKeyPair {
             encryptedModulus[0x40 + i] = (byte) (encryptedModulus[0x40 + i] ^ encryptedModulus[i]);
         }
 
-        return encryptedModulus;
-    }
-
-    /**
-     * 获取原始 RSA 密钥对。
-     * Get the original RSA key pair.
-     *
-     * RSA key pair
-     */
-    public KeyPair getRSAKeyPair() {
-        return RSAKeyPair;
-    }
-
-    /**
-     * 获取用于网络传输的混淆模数。
-     * Get the scrambled modulus for network transfer.
-     *
-     * encrypted modulus
-     */
-    public byte[] getEncryptedModulus() {
         return encryptedModulus;
     }
 }

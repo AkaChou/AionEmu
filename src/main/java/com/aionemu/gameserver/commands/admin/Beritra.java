@@ -84,7 +84,7 @@ public class Beritra extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidBeritraLocationId(Player player, int beritraId) {
-		if (!GameLocationBootstrapServices.beritraService().getBeritraLocations().keySet().contains(beritraId)) {
+		if (!GameLocationBootstrapServices.beritraService().getBeritraLocations().containsKey(beritraId)) {
 			PacketSendUtility.sendMessage(player, "Id " + beritraId + " is invalid");
 			return false;
 		}

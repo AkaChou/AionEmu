@@ -31,7 +31,7 @@ public class InstanceExitData {
 	@XmlTransient
 	protected List<InstanceExit> instanceExits = new ArrayList<InstanceExit>();
 	@XmlTransient
-	private Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<Integer, List<InstanceExit>>();
+	private final Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<Integer, List<InstanceExit>>();
 
 	/**
 	 * JAXB 反序列化完成后，建立世界 ID 索引并释放原始列表。

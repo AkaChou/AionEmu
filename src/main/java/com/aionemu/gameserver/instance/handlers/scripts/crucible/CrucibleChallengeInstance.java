@@ -72,9 +72,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-        storage.decreaseByItemId(186000124, storage.getItemCountByItemId(186000124)); //Worthiness Ticket.
-		storage.decreaseByItemId(186000125, storage.getItemCountByItemId(186000125)); //Worthiness Ticket.
-		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); //Worthiness Ticket.
+        storage.decreaseByItemId(186000124, storage.getItemCountByItemId(186000124)); // 败者复活券 / Worthiness Ticket.
+		storage.decreaseByItemId(186000125, storage.getItemCountByItemId(186000125)); // 败者复活券 / Worthiness Ticket.
+		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); // 败者复活券 / Worthiness Ticket.
 	}
 	
 	/**
@@ -175,21 +175,21 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217795: //Kaliga The Unjust.
 			    points += 5000;
             break;
-			case 218562: //Genoti.
-			case 218564: //Bustant.
-            case 218565: //Angparinerk.
-			case 217806: //Paepaerunerk.
-            case 217807: //Macus.
-            case 217808: //Eumelos.
-            case 217809: //Bellia.
-            case 217810: //Hygea.
-            case 217811: //Kalsten.
-            case 217812: //Thialfi.
+			case 218562: // 盖诺提 / Genoti.
+			case 218564: // 布斯坦特 / Bustant.
+            case 218565: // 昂帕灵 / Angparinerk.
+			case 217806: // 佩佩隆 / Paepaerunerk.
+            case 217807: // 马库斯 / Macus.
+            case 217808: // 埃乌梅洛斯 / Eumelos.
+            case 217809: // 贝尔丽亚 / Bellia.
+            case 217810: // 希凯雅 / Hygea.
+            case 217811: // 卡尔斯坦 / Kalsten.
+            case 217812: // 提阿尔皮 / Thialfi.
             case 217813: //Ve.
-            case 217814: //Lyfjaberga.
-            case 217815: //Berus.
-            case 217816: //Polyidus.
-			case 217818: //Roskva.
+            case 217814: // 李帕贝尔加 / Lyfjaberga.
+            case 217815: // 佩鲁斯 / Berus.
+            case 217816: // 弗里伊杜斯 / Polyidus.
+			case 217818: // 罗斯科巴 / Roskva.
                 points += 7000;
             break;
 			case 218192: //Rank 5, Elyos Soldier Odos.
@@ -226,7 +226,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
 				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
-				sp(217758, 347.24026f, 1660.2524f, 95.35922f, (byte) 0, 0); //Worthiness Ticket.
+				sp(217758, 347.24026f, 1660.2524f, 95.35922f, (byte) 0, 0); // 败者复活券 / Worthiness Ticket.
 				sp(205674, 345.52954f, 1662.6697f, 95.25f, (byte) 0, 0);
 			break;
 			case 217843:
@@ -989,7 +989,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	 * 交给“熔炉仲裁者”以重新加入战斗并证明自身价值 / Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness
 	 */
 			case 217758: //Worthiness Ticket Box (Fin Stage 1)
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000124, 1)); //Worthiness Ticket.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000124, 1)); // 败者复活券 / Worthiness Ticket.
 			break;
 			case 217833: //Bonus Box (Fin Stage 6 Bonus)
 				switch (Rnd.get(1, 6)) {

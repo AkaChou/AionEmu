@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 class AgilityModifierFunction extends StatFunction {
 
-	private float modifier;
+	private final float modifier;
 
 	AgilityModifierFunction(StatEnum stat, float modifier) {
 		this.stat = stat;

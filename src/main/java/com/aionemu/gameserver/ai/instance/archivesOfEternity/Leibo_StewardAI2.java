@@ -28,13 +28,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Leibo_StewardAI2 extends GeneralNpcAI2
 {
     private boolean canThink = true;
-    private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+    private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
     @Override
     public boolean canThink() {
         return canThink;
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         super.handleCreatureMoved(creature);
@@ -150,11 +150,11 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 	}
         }
     }
-	
+
 	private void despawn() {
 	AI2Actions.deleteOwner(this);
     }
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

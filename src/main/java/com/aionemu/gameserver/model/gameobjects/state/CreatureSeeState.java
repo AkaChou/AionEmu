@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.state;
 
+import lombok.Getter;
+
 /**
  * 生物视野状态枚举。
  * Creature See State enumeration.
@@ -13,16 +15,13 @@ public enum CreatureSeeState {
 	SEARCH5(5), // 未知效果 / no idea :)
 	SEARCH10(10);
 
-	private int id;
-
-	private CreatureSeeState(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * @return the id
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	CreatureSeeState(int id) {
+		this.id = id;
 	}
 }

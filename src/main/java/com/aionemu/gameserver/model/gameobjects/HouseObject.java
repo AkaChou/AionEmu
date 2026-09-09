@@ -16,6 +16,8 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 房屋对象。
@@ -30,13 +32,26 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	private float y;
 	private float z;
 	private byte heading;
+	/** 返回所有者已使用数量 / Returns the owner used count. */
+	@Getter
 	private int ownerUsedCount = 0;
+	/** 返回访客使用次数 / Returns the visitor used count */
+	@Getter
 	private int visitorUsedCount = 0;
+	/** 返回颜色 / Returns the color */
+	@Getter
 	private Integer color = null;
+	/** 返回颜色过期时间 / Returns the color expire end */
+	@Getter
+	@Setter
 	private int colorExpireEnd;
 
-	private House ownerHouse;
+	/** 返回所属房屋 / Returns the owner house */
+	@Getter
+	private final House ownerHouse;
 	// 切勿直接设置！！！请改用 setPersistentState()。 / don't set it directly, ever!!! Use setPersistentState() method instead
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState = PersistentState.NEW;
 
 	public HouseObject(House owner, int objId, int templateId) {
@@ -45,11 +60,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		this.ownerHouse = owner;
 		getController().setOwner(this);
 		setKnownlist(new PlayerAwareKnownList(this));
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/** 设置持久化状态。 / Sets the persistent state. */
@@ -139,7 +149,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
 			if (position != null) {
 				position.setXYZH(x, null, null, null);
-
 			}
 		}
 	}
@@ -241,19 +250,9 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return ((AbstractHouseObject) objectTemplate).getCategory();
 	}
 
-	/** 返回所属房屋 / Returns the owner house */
-	public House getOwnerHouse() {
-		return ownerHouse;
-	}
-
 	/** 返回玩家 ID / Returns the player id */
 	public int getPlayerId() {
 		return ownerHouse.getOwnerId();
-	}
-
-	/** 返回所有者已使用数量 / Returns the owner used count. */
-	public int getOwnerUsedCount() {
-		return ownerUsedCount;
 	}
 
 	/** 递增所有者已用次数 / Increments the owner used count. */
@@ -274,11 +273,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 			this.ownerUsedCount = ownerUsedCount;
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
-	}
-
-	/** 返回访客使用次数 / Returns the visitor used count */
-	public int getVisitorUsedCount() {
-		return visitorUsedCount;
 	}
 
 	/** 设置访客使用次数 / Sets the visitor used count */
@@ -340,12 +334,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 
 	/** 消失时 / on Despawn. */
 	public void onDespawn() {
-
-	}
-
-	/** 返回颜色 / Returns the color */
-	public Integer getColor() {
-		return color;
 	}
 
 	/** 设置颜色 / Sets the color */
@@ -354,15 +342,5 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 			this.color = color;
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
-	}
-
-	/** 返回颜色过期时间 / Returns the color expire end */
-	public int getColorExpireEnd() {
-		return colorExpireEnd;
-	}
-
-	/** 设置颜色过期时间 / Sets the color expire end */
-	public void setColorExpireEnd(int colorExpireEnd) {
-		this.colorExpireEnd = colorExpireEnd;
 	}
 }

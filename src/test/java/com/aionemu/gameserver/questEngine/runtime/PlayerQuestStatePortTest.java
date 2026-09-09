@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerQuestStatePortTest {
 	private static final int PLAYER_ID = 7;
@@ -113,7 +112,7 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan);
 
-		assertEquals(null, player.getQuestStateList().getQuestState(QUEST_ID));
+		assertNull(player.getQuestStateList().getQuestState(QUEST_ID));
 		assertEquals(PersistentState.NEW, dao.stores.get(0).get(0).getPersistentState());
 
 		port.publish(PLAYER_ID, plan);
@@ -193,7 +192,7 @@ class PlayerQuestStatePortTest {
 		Player player = emptyPlayer();
 		QuestStateList states = player.getQuestStateList();
 		states.addQuest(QUEST_ID, new QuestState(QUEST_ID, status, packedVariables, 0,
-				(Timestamp) null, null, null));
+			null, null, null));
 		return player;
 	}
 

@@ -25,6 +25,7 @@ import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.world.World;
+import lombok.Getter;
 
 /**
  * 前哨据点运行时对象，管理归属种族、旗帜/BOSS 与周期性袭击。
@@ -36,11 +37,32 @@ import com.aionemu.gameserver.world.World;
 public class Outpost<OL extends OutpostLocation> {
 	private Npc boss, flag;
 	private boolean started;
+	/**
+	 * 获取前哨位置模板。
+	 * Returns the outpost location template.
+	 *
+	 * @return 位置模板 / location template
+	 */
+	@Getter
 	private final OL outpostLocation;
 	private Future<?> startAssault, stopAssault;
-	private List<Race> list = new ArrayList<Race>();
-	private List<Npc> spawned = new ArrayList<Npc>();
-	private List<Npc> attackers = new ArrayList<Npc>();
+	private final List<Race> list = new ArrayList<Race>();
+	/**
+	 * 获取已生成单位列表。
+	 * Returns the spawned unit list.
+	 *
+	 * @return 已生成单位 / Spawned units
+	 */
+	@Getter
+	private final List<Npc> spawned = new ArrayList<Npc>();
+	/**
+	 * 获取袭击单位列表。
+	 * Returns the attacker list.
+	 *
+	 * @return 袭击单位列表 / attackers
+	 */
+	@Getter
+	private final List<Npc> attackers = new ArrayList<Npc>();
 	private final AtomicBoolean finished = new AtomicBoolean();
 	private final OutpostBossDeathListener baseBossDeathListener = new OutpostBossDeathListener(this);
 
@@ -160,7 +182,7 @@ public class Outpost<OL extends OutpostLocation> {
 			public void run() {
 				chooseAttackersRace();
 			}
-		}, Rnd.get(120, 180) * 60000);
+		}, Rnd.get(120, 180) * 60000L);
 	}
 
 	/**
@@ -295,16 +317,6 @@ public class Outpost<OL extends OutpostLocation> {
 	}
 
 	/**
-	 * 获取前哨位置模板。
-	 * Returns the outpost location template.
-	 *
-	 * @return 位置模板 / location template
-	 */
-	public OL getOutpostLocation() {
-		return outpostLocation;
-	}
-
-	/**
 	 * 获取前哨 ID。
 	 * Returns the outpost id.
 	 *
@@ -332,25 +344,5 @@ public class Outpost<OL extends OutpostLocation> {
 	 */
 	public void setRace(Race race) {
 		outpostLocation.setRace(race);
-	}
-
-	/**
-	 * 获取袭击单位列表。
-	 * Returns the attacker list.
-	 *
-	 * @return 袭击单位列表 / attackers
-	 */
-	public List<Npc> getAttackers() {
-		return attackers;
-	}
-
-	/**
-	 * 获取已生成单位列表。
-	 * Returns the spawned unit list.
-	 *
-	 * @return 已生成单位 / Spawned units
-	 */
-	public List<Npc> getSpawned() {
-		return spawned;
 	}
 }

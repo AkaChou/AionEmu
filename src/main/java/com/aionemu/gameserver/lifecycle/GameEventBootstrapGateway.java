@@ -8,12 +8,15 @@ import com.aionemu.gameserver.services.toypet.MinionService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 事件引导网关：按步骤初始化露娜商店、役从、修勾扫荡、护照与事件窗口。
  * Event-bootstrap gateway: step-wise initialization of Luna shop, minion, Shugo sweep, passport, and event window.
  */
 @Component
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class GameEventBootstrapGateway {
 
     /**
@@ -58,16 +61,6 @@ public class GameEventBootstrapGateway {
      */
     public GameEventBootstrapGateway() {
         this(ConsoleStartupProgressReporter.forCurrentConsole());
-    }
-
-    /**
-     * 使用指定进度报告器构造（包内 / 测试用）。
-     * Construct with the given progress reporter (package-private / test use).
-     *
-     * @param progressReporter 进度报告器 / Progress reporter
-     */
-    GameEventBootstrapGateway(StartupProgressReporter progressReporter) {
-        this.progressReporter = progressReporter;
     }
 
     /**

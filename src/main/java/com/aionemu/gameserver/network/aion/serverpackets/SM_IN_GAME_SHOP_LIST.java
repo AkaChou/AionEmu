@@ -13,30 +13,18 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 向客户端发送商城商品列表或销售排行的服务端包。
  * Server packet that sends an in-game shop item list or sales ranking to the client.
  */
+@RequiredArgsConstructor
 public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
-	private Player player;
-	private int nrList;
-	private int salesRanking;
-	private IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
-
-	/**
-	 * 构造商城列表包。
-	 * Creates an in-game shop list packet.
-	 *
-	 * target player
-	 * list page number
-	 * @param salesRanking 列表模式（1=普通列表，其他=销售排行） / list mode (1=normal list, otherwise sales ranking)
-	 */
-	public SM_IN_GAME_SHOP_LIST(Player player, int nrList, int salesRanking) {
-		this.player = player;
-		this.nrList = nrList;
-		this.salesRanking = salesRanking;
-	}
+	private final Player player;
+	private final int nrList;
+	private final int salesRanking;
+	private final IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
 
 	@Override
 	protected void writeImpl(AionConnection con) {

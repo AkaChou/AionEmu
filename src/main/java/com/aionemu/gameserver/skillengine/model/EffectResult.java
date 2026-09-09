@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.skillengine.model;
 
+import lombok.Getter;
+
 /**
  * 效果结算结果：普通命中、被吸收或冲突覆盖。
  * Effect result: normal hit, absorbed, or conflict override.
@@ -15,18 +17,15 @@ public enum EffectResult {
 	/** 冲突（覆盖） / Conflict (override) */
 	CONFLICT(2);
 
-	private int id;
-
-	private EffectResult(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	EffectResult(int id) {
+		this.id = id;
 	}
 }

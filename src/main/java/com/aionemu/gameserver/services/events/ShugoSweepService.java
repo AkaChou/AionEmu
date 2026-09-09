@@ -178,7 +178,7 @@ public class ShugoSweepService {
 					ItemService.addItem(player, reward.getItemId(), reward.getCount());
 				}
 			}
-		}, move * 1200);
+		}, move * 1200L);
 
 	}
 

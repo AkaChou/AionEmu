@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
+import lombok.Getter;
 
 /**
  * 套装模板（静态数据/XML）。
@@ -21,13 +22,33 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemSetTemplate implements StatOwner {
 
+	/**
+	 * @return the itempart
+	 */
+	@Getter
 	@XmlElement(required = true)
 	protected List<ItemPart> itempart;
+	/**
+	 * @return the partbonus
+	 */
+	@Getter
 	@XmlElement(required = true)
 	protected List<PartBonus> partbonus;
+	/**
+	 * @return the fullbonus
+	 */
+	@Getter
 	protected FullBonus fullbonus;
+	/**
+	 * @return the name
+	 */
+	@Getter
 	@XmlAttribute
 	protected String name;
+	/**
+	 * @return the id
+	 */
+	@Getter
 	@XmlAttribute
 	protected int id;
 
@@ -40,40 +61,5 @@ public class ItemSetTemplate implements StatOwner {
 			// 设置应用完整加成的物品数量 / Set number of items to apply the full bonus
 			fullbonus.setNumberOfItems(itempart.size());
 		}
-	}
-
-	/**
-	 * @return the itempart
-	 */
-	public List<ItemPart> getItempart() {
-		return itempart;
-	}
-
-	/**
-	 * @return the partbonus
-	 */
-	public List<PartBonus> getPartbonus() {
-		return partbonus;
-	}
-
-	/**
-	 * @return the fullbonus
-	 */
-	public FullBonus getFullbonus() {
-		return fullbonus;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
 	}
 }

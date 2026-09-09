@@ -136,23 +136,25 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(dialogPort.closeDialog(snapshot, plan), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.ShowQuestDialog show) {
-			requireSuccess(dialogPort.showDialog(snapshot, plan, show.dialogId()), action, snapshot);
+		if (action instanceof AfterCommitAction.ShowQuestDialog(int dialogId2)) {
+			requireSuccess(dialogPort.showDialog(snapshot, plan, dialogId2), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.ShowQuestSelectionDialog show) {
-			requireSuccess(dialogPort.showSelectionDialog(snapshot, plan, show.dialogId()), action, snapshot);
+		if (action instanceof AfterCommitAction.ShowQuestSelectionDialog(int dialogId1)) {
+			requireSuccess(dialogPort.showSelectionDialog(snapshot, plan, dialogId1), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.ShowDialogWindow show) {
-			requireSuccess(dialogPort.showDialogWindow(snapshot, plan, show.dialogId()), action, snapshot);
+		if (action instanceof AfterCommitAction.ShowDialogWindow(int dialogId)) {
+			requireSuccess(dialogPort.showDialogWindow(snapshot, plan, dialogId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SyncQuestState sync) {
+		if (action instanceof AfterCommitAction.SyncQuestState(
+			com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode mode
+		)) {
 			if (stateSyncPort == null) {
 				throw new IllegalArgumentException("syncQuestState requires a state sync port");
 			}
-			requireSuccess(stateSyncPort.sync(snapshot, plan, sync.mode()), action, snapshot);
+			requireSuccess(stateSyncPort.sync(snapshot, plan, mode), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.RefreshPlayerStats) {
@@ -162,215 +164,241 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(statsPort.refresh(snapshot, plan), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.TeleportPlayer teleport) {
+		if (action instanceof AfterCommitAction.TeleportPlayer(
+			com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget instanceTarget, int worldId, float x3,
+			float y3, float z3, byte heading
+		)) {
 			if (teleportPort == null) {
 				throw new IllegalArgumentException("teleportPlayer requires a teleport port");
 			}
-			requireSuccess(teleportPort.teleportPlayer(snapshot, plan, teleport.instanceTarget(),
-				teleport.worldId(), teleport.x(), teleport.y(), teleport.z(), teleport.heading()), action, snapshot);
+			requireSuccess(teleportPort.teleportPlayer(snapshot, plan, instanceTarget,
+				worldId, x3, y3, z3, heading), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.PlayMovie movie) {
+		if (action instanceof AfterCommitAction.PlayMovie(
+			int movieId, com.aionemu.gameserver.questEngine.definition.QuestMovieType type
+		)) {
 			if (moviePort == null) {
 				throw new IllegalArgumentException("playMovie requires a movie port");
 			}
-			requireSuccess(moviePort.playMovie(snapshot, plan, movie.movieId(), movie.type()), action, snapshot);
+			requireSuccess(moviePort.playMovie(snapshot, plan, movieId, type), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.PlayMovieRandom randomMovie) {
+		if (action instanceof AfterCommitAction.PlayMovieRandom(java.util.List<Integer> movieIds)) {
 			if (moviePort == null) {
 				throw new IllegalArgumentException("playMovieRandom requires a movie port");
 			}
-			requireSuccess(moviePort.playMovie(snapshot, plan, randomMovie.movieIds().get(
-				java.util.concurrent.ThreadLocalRandom.current().nextInt(randomMovie.movieIds().size()))),
+			requireSuccess(moviePort.playMovie(snapshot, plan, movieIds.get(
+				java.util.concurrent.ThreadLocalRandom.current().nextInt(movieIds.size()))),
 				action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SpawnNpc spawnAction) {
+		if (action instanceof AfterCommitAction.SpawnNpc(
+			String slot10, int templateId1, com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation location
+		)) {
 			if (spawnPort == null) {
 				throw new IllegalArgumentException("spawnNpc requires a spawn port");
 			}
-			requireSuccess(spawnPort.spawnNpc(snapshot, plan, spawnAction.slot(), spawnAction.templateId(),
-				spawnAction.location()), action, snapshot);
+			requireSuccess(spawnPort.spawnNpc(snapshot, plan, slot10, templateId1,
+				location), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SpawnNpcRandom spawnAction) {
+		if (action instanceof AfterCommitAction.SpawnNpcRandom(
+			String slot9, java.util.List<com.aionemu.gameserver.questEngine.definition.QuestSpawnVariant> variants,
+			boolean replaceExisting
+		)) {
 			if (spawnPort == null) {
 				throw new IllegalArgumentException("spawnNpcRandom requires a spawn port");
 			}
-			requireSuccess(spawnPort.spawnNpcRandom(snapshot, plan, spawnAction.slot(), spawnAction.variants(),
-				spawnAction.replaceExisting()), action, snapshot);
+			requireSuccess(spawnPort.spawnNpcRandom(snapshot, plan, slot9, variants,
+				replaceExisting), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.DespawnNpc despawnAction) {
+		if (action instanceof AfterCommitAction.DespawnNpc(String slot8)) {
 			if (spawnPort == null) {
 				throw new IllegalArgumentException("despawnNpc requires a spawn port");
 			}
-			requireSuccess(spawnPort.despawnNpc(snapshot, plan, despawnAction.slot()), action, snapshot);
+			requireSuccess(spawnPort.despawnNpc(snapshot, plan, slot8), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartFollow follow) {
+		if (action instanceof AfterCommitAction.StartFollow(String slot7)) {
 			requireAiPort();
-			requireSuccess(aiPort.startFollow(snapshot, plan, follow.slot()), action, snapshot);
+			requireSuccess(aiPort.startFollow(snapshot, plan, slot7), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToPoint follow) {
+		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToPoint(float x2, float y2, float z2)) {
 			requireAiPort();
-			requireSuccess(aiPort.startFollowCurrentTargetToPoint(snapshot, plan, follow.x(), follow.y(), follow.z()),
+			requireSuccess(aiPort.startFollowCurrentTargetToPoint(snapshot, plan, x2, y2, z2),
 				action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToNpc follow) {
+		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToNpc(int npcId)) {
 			requireAiPort();
-			requireSuccess(aiPort.startFollowCurrentTargetToNpc(snapshot, plan, follow.npcId()), action, snapshot);
+			requireSuccess(aiPort.startFollowCurrentTargetToNpc(snapshot, plan, npcId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StopFollow stop) {
+		if (action instanceof AfterCommitAction.StopFollow(String slot6)) {
 			requireAiPort();
-			requireSuccess(aiPort.stopFollow(snapshot, plan, stop.slot()), action, snapshot);
+			requireSuccess(aiPort.stopFollow(snapshot, plan, slot6), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.AttackTarget attack) {
+		if (action instanceof AfterCommitAction.AttackTarget(String slot5)) {
 			requireAiPort();
-			requireSuccess(aiPort.attackTarget(snapshot, plan, attack.slot()), action, snapshot);
+			requireSuccess(aiPort.attackTarget(snapshot, plan, slot5), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.AttackNpcTemplate attack) {
+		if (action instanceof AfterCommitAction.AttackNpcTemplate(String slot4, int templateId)) {
 			requireAiPort();
-			requireSuccess(aiPort.attackNpcTemplate(snapshot, plan, attack.slot(), attack.templateId()), action, snapshot);
+			requireSuccess(aiPort.attackNpcTemplate(snapshot, plan, slot4, templateId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartWalking walking) {
+		if (action instanceof AfterCommitAction.StartWalking(String slot3)) {
 			requireAiPort();
-			requireSuccess(aiPort.startWalking(snapshot, plan, walking.slot()), action, snapshot);
+			requireSuccess(aiPort.startWalking(snapshot, plan, slot3), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.BroadcastNpcEmotion emotion) {
+		if (action instanceof AfterCommitAction.BroadcastNpcEmotion(
+			String slot2, com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion emotion3
+		)) {
 			requireAiPort();
-			requireSuccess(aiPort.broadcastEmotion(snapshot, plan, emotion.slot(), emotion.emotion()), action, snapshot);
+			requireSuccess(aiPort.broadcastEmotion(snapshot, plan, slot2, emotion3), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.BroadcastInteractionNpcEmotion emotion) {
+		if (action instanceof AfterCommitAction.BroadcastInteractionNpcEmotion(
+			com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion emotion2
+		)) {
 			requireAiPort();
-			requireSuccess(aiPort.broadcastInteractionEmotion(snapshot, plan, emotion.emotion()), action, snapshot);
+			requireSuccess(aiPort.broadcastInteractionEmotion(snapshot, plan, emotion2), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.WatchFollowZone followZone) {
+		if (action instanceof AfterCommitAction.WatchFollowZone(String slot1, String zone)) {
 			requireAiPort();
-			requireSuccess(aiPort.watchFollowZone(snapshot, plan, followZone.slot(), followZone.zone()), action, snapshot);
+			requireSuccess(aiPort.watchFollowZone(snapshot, plan, slot1, zone), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.WatchFollowCoordinate followCoordinate) {
+		if (action instanceof AfterCommitAction.WatchFollowCoordinate(String slot, float x1, float y1, float z1)) {
 			requireAiPort();
-			requireSuccess(aiPort.watchFollowCoordinate(snapshot, plan, followCoordinate.slot(),
-				followCoordinate.x(), followCoordinate.y(), followCoordinate.z()), action, snapshot);
+			requireSuccess(aiPort.watchFollowCoordinate(snapshot, plan, slot,
+				x1, y1, z1), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.WatchLuredNpcCoordinate lure) {
+		if (action instanceof AfterCommitAction.WatchLuredNpcCoordinate(
+			float x, float y, float z, float radius,
+			com.aionemu.gameserver.questEngine.definition.QuestLureCompletion completion
+		)) {
 			requireAiPort();
 			requireSuccess(aiPort.watchLuredNpcCoordinate(snapshot, plan,
-				lure.x(), lure.y(), lure.z(), lure.radius(), lure.completion()), action, snapshot);
+				x, y, z, radius, completion), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartQuestTimer timer) {
+		if (action instanceof AfterCommitAction.StartQuestTimer(
+			int seconds1, com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy policy1
+		)) {
 			requireTimerPort();
-			requireSuccess(timerPort.startQuestTimer(snapshot, plan, timer.seconds(), timer.policy()), action, snapshot);
+			requireSuccess(timerPort.startQuestTimer(snapshot, plan, seconds1, policy1), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartInvisibleTimer timer) {
+		if (action instanceof AfterCommitAction.StartInvisibleTimer(
+			int seconds, com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy policy
+		)) {
 			requireTimerPort();
-			requireSuccess(timerPort.startInvisibleTimer(snapshot, plan, timer.seconds(), timer.policy()), action, snapshot);
+			requireSuccess(timerPort.startInvisibleTimer(snapshot, plan, seconds, policy), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.CancelQuestTimer) {
+		if (action instanceof AfterCommitAction.CancelQuestTimer cancel) {
 			requireTimerPort();
-			AfterCommitAction.CancelQuestTimer cancel = (AfterCommitAction.CancelQuestTimer) action;
 			requireSuccess(timerPort.cancelQuestTimer(snapshot, plan, cancel.identity()), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.Morph morph) {
+		if (action instanceof AfterCommitAction.Morph(int ascensionId)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("morph requires an effect port");
 			}
-			requireSuccess(effectPort.morph(snapshot, plan, morph.ascensionId()), action, snapshot);
+			requireSuccess(effectPort.morph(snapshot, plan, ascensionId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SetPlayerClass setClass) {
+		if (action instanceof AfterCommitAction.SetPlayerClass(com.aionemu.gameserver.model.PlayerClass playerClass)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("set-class requires an effect port");
 			}
-			requireSuccess(effectPort.setPlayerClass(snapshot, plan, setClass.playerClass()), action, snapshot);
+			requireSuccess(effectPort.setPlayerClass(snapshot, plan, playerClass), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.StartNpcFactionQuest start) {
+		if (action instanceof AfterCommitAction.StartNpcFactionQuest(int id)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("NPC faction quest start requires an effect port");
 			}
-			requireSuccess(effectPort.startNpcFactionQuest(snapshot, plan, start.npcFactionId()), action, snapshot);
+			requireSuccess(effectPort.startNpcFactionQuest(snapshot, plan, id), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.CompleteNpcFactionQuest complete) {
+		if (action instanceof AfterCommitAction.CompleteNpcFactionQuest(int factionId)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("NPC faction quest completion requires an effect port");
 			}
-			requireSuccess(effectPort.completeNpcFactionQuest(snapshot, plan, complete.npcFactionId()), action, snapshot);
+			requireSuccess(effectPort.completeNpcFactionQuest(snapshot, plan, factionId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.AbortNpcFactionQuest abort) {
+		if (action instanceof AfterCommitAction.AbortNpcFactionQuest(int npcFactionId)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("NPC faction quest abort requires an effect port");
 			}
-			requireSuccess(effectPort.abortNpcFactionQuest(snapshot, plan, abort.npcFactionId()), action, snapshot);
+			requireSuccess(effectPort.abortNpcFactionQuest(snapshot, plan, npcFactionId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.ApplyEffect apply) {
+		if (action instanceof AfterCommitAction.ApplyEffect(int skillId, int durationMillis)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("applyEffect requires an effect port");
 			}
-			requireSuccess(effectPort.applyEffect(snapshot, plan, apply.skillId(), apply.durationMillis()),
+			requireSuccess(effectPort.applyEffect(snapshot, plan, skillId, durationMillis),
 				action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.RemoveEffect remove) {
+		if (action instanceof AfterCommitAction.RemoveEffect(int effectId)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("removeEffect requires an effect port");
 			}
-			requireSuccess(effectPort.removeEffect(snapshot, plan, remove.effectId()), action, snapshot);
+			requireSuccess(effectPort.removeEffect(snapshot, plan, effectId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SendSystemMessage message) {
+		if (action instanceof AfterCommitAction.SendSystemMessage(
+			com.aionemu.gameserver.questEngine.definition.QuestSystemMessage message2
+		)) {
 			if (systemMessagePort == null) {
 				throw new IllegalArgumentException("systemMessage requires a system-message port");
 			}
-			requireSuccess(systemMessagePort.send(snapshot, plan, message.message()), action, snapshot);
+			requireSuccess(systemMessagePort.send(snapshot, plan, message2), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.SendSystemMessagePacket message) {
+		if (action instanceof AfterCommitAction.SendSystemMessagePacket(
+			com.aionemu.gameserver.questEngine.definition.QuestSystemMessagePacket message1
+		)) {
 			if (systemMessagePort == null) {
 				throw new IllegalArgumentException("systemMessage requires a system-message port");
 			}
-			requireSuccess(systemMessagePort.send(snapshot, plan, message.message()), action, snapshot);
+			requireSuccess(systemMessagePort.send(snapshot, plan, message1), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.PlayerEmotion emotion) {
+		if (action instanceof AfterCommitAction.PlayerEmotion(
+			com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion emotion1
+		)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("playerEmotion requires an effect port");
 			}
-			requireSuccess(effectPort.playerEmotion(snapshot, plan, emotion.emotion()), action, snapshot);
+			requireSuccess(effectPort.playerEmotion(snapshot, plan, emotion1), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.FlightTeleport flight) {
+		if (action instanceof AfterCommitAction.FlightTeleport(int flightTeleportId)) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("flightTeleport requires an effect port");
 			}
-			requireSuccess(effectPort.flightTeleport(snapshot, plan, flight.flightTeleportId()), action, snapshot);
+			requireSuccess(effectPort.flightTeleport(snapshot, plan, flightTeleportId), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.DeleteInteractionNpc delete) {
+		if (action instanceof AfterCommitAction.DeleteInteractionNpc(boolean scheduleRespawn)) {
 			if (npcPort == null) {
 				throw new IllegalArgumentException("deleteInteractionNpc requires an npc port");
 			}
-			requireSuccess(npcPort.deleteInteractionNpc(snapshot, plan, delete.scheduleRespawn()), action, snapshot);
+			requireSuccess(npcPort.deleteInteractionNpc(snapshot, plan, scheduleRespawn), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.DeleteWorldNpcs) {
@@ -380,18 +408,18 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(npcPort.deleteWorldNpcs(snapshot, plan), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.AddNpcAggro aggro) {
+		if (action instanceof AfterCommitAction.AddNpcAggro(int npcTemplateId, int damage)) {
 			if (npcPort == null) {
 				throw new IllegalArgumentException("addNpcAggro requires an npc port");
 			}
-			requireSuccess(npcPort.addNpcAggro(snapshot, plan, aggro.npcTemplateId(), aggro.damage()), action, snapshot);
+			requireSuccess(npcPort.addNpcAggro(snapshot, plan, npcTemplateId, damage), action, snapshot);
 			return;
 		}
-		if (action instanceof AfterCommitAction.BroadcastZoneMissionEnd broadcast) {
+		if (action instanceof AfterCommitAction.BroadcastZoneMissionEnd(int[] questIds)) {
 			if (broadcastPort == null) {
 				throw new IllegalArgumentException("broadcastZoneMissionEnd requires a broadcast port");
 			}
-			requireSuccess(broadcastPort.broadcastZoneMissionEnd(snapshot, plan, broadcast.questIds()), action, snapshot);
+			requireSuccess(broadcastPort.broadcastZoneMissionEnd(snapshot, plan, questIds), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.ScheduleEventQuestRefresh refresh) {

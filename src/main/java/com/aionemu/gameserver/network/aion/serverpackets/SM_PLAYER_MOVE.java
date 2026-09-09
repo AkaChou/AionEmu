@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 强制同步玩家坐标与朝向的服务端包。
@@ -9,25 +10,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author cura
  */
+@AllArgsConstructor
 public class SM_PLAYER_MOVE extends AionServerPacket {
 
-	private float x;
-	private float y;
-	private float z;
-	private byte heading;
-
-	/**
-	 * @param x 目标 X 坐标 / destination X
-	 * @param y 目标 Y 坐标 / destination Y
-	 * @param z 目标 Z 坐标 / destination Z
-	 * 朝向 / heading
-	 */
-	public SM_PLAYER_MOVE(float x, float y, float z, byte heading) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.heading = heading;
-	}
+	private final float x;
+	private final float y;
+	private final float z;
+	private final byte heading;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

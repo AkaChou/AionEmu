@@ -45,7 +45,7 @@ public class WalkerData {
 	private List<WalkerTemplate> walkerlist;
 
 	@XmlTransient
-	private Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
+	private final Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，将路线按 ID 索引并跳过重复项，随后释放列表。
@@ -86,7 +86,7 @@ public class WalkerData {
 		return walkerlistData.get(routeId);
 	}
 
-	/** 将另一份完整路径数据合并进当前索引，同名路径以后加载的数据为准。 */
+	/** 将另一份完整路径数据合并进当前索引，同名路径以后加载的数据为准。 / Merges another full path dataset into this index; on duplicate names the later-loaded data wins. */
 	public void merge(WalkerData data) {
 		walkerlistData.putAll(data.walkerlistData);
 	}
@@ -131,7 +131,6 @@ public class WalkerData {
 			marshaller.marshal(this, xml);
 		} catch (JAXBException e) {
 			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()));
-			return;
 		} finally {
 			if (walkerlist != null) {
 				walkerlist.clear();

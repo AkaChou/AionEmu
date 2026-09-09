@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 传送门路径模板（静态数据/XML）。
@@ -18,80 +20,40 @@ import com.aionemu.gameserver.model.Race;
 @XmlType(name = "PortalPath")
 public class PortalPath {
 
+	/** 返回 portal req / Returns the portal req */
+	@Getter
 	@XmlElement(name = "portal_req")
 	protected PortalReq portalReq;
+	/** 获取对话。 / Returns the dialog. */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "dialog")
 	protected int dialog;
+	/** 返回 loc id / Returns the loc id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "loc_id")
 	protected int locId;
+	/** 获取玩家计数。 / Returns the player count. */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "player_count")
 	protected int playerCount;
+	/** 是否副本。 / Whether Instance. */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "instance")
 	protected boolean instance;
+	/** 返回攻城 ID / Returns the siege id */
+	@Getter
 	@XmlAttribute(name = "siege_id")
 	protected int siegeId;
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race = Race.PC_ALL;
+	/** 返回 err group / Returns the err group */
+	@Getter
 	@XmlAttribute(name = "err_group")
 	protected int errGroup;
-
-	/** 返回 portal req / Returns the portal req */
-	public PortalReq getPortalReq() {
-		return portalReq;
-	}
-
-	/** 获取对话。 / Returns the dialog. */
-	public int getDialog() {
-		return dialog;
-	}
-
-	/** 设置对话。 / Sets the dialog. */
-	public void setDialog(int value) {
-		this.dialog = value;
-	}
-
-	/** 返回 loc id / Returns the loc id */
-	public int getLocId() {
-		return locId;
-	}
-
-	/** 设置 loc id / Sets the loc id */
-	public void setLocId(int value) {
-		this.locId = value;
-	}
-
-	/** 获取玩家计数。 / Returns the player count. */
-	public int getPlayerCount() {
-		return playerCount;
-	}
-
-	/** 设置玩家计数。 / Sets the player count. */
-	public void setPlayerCount(int value) {
-		this.playerCount = value;
-	}
-
-	/** 是否副本。 / Whether Instance. */
-	public boolean isInstance() {
-		return instance;
-	}
-
-	/** 设置副本。 / Sets the instance. */
-	public void setInstance(boolean value) {
-		this.instance = value;
-	}
-
-	/** 返回攻城 ID / Returns the siege id */
-	public int getSiegeId() {
-		return siegeId;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 返回 err group / Returns the err group */
-	public int getErrGroup() {
-		return errGroup;
-	}
 }

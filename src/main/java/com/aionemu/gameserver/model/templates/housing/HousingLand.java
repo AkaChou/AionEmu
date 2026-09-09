@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 住房 Land 模板（静态数据/XML）。
@@ -19,10 +21,14 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "Land", propOrder = { "addresses", "buildings", "sale", "fee", "caps" })
 public class HousingLand {
 
+	/** 返回 addresses / Returns the addresses */
+	@Getter
 	@XmlElementWrapper(name = "addresses", required = true)
 	@XmlElement(name = "address")
 	protected List<HouseAddress> addresses;
 
+	/** 返回 buildings / Returns the buildings */
+	@Getter
 	@XmlElementWrapper(name = "buildings", required = true)
 	@XmlElement(name = "building")
 	protected List<Building> buildings;
@@ -39,6 +45,8 @@ public class HousingLand {
 	@XmlAttribute(name = "sign_nosale", required = true)
 	protected int signNosale;
 
+	/** 设置 sign sale / Sets the sign sale */
+	@Setter
 	@XmlAttribute(name = "sign_sale", required = true)
 	protected int signSale;
 
@@ -54,18 +62,10 @@ public class HousingLand {
 	@XmlAttribute(name = "teleport_npc", required = true)
 	protected int teleportNpc;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
-
-	/** 返回 addresses / Returns the addresses */
-	public List<HouseAddress> getAddresses() {
-		return addresses;
-	}
-
-	/** 返回 buildings / Returns the buildings */
-	public List<Building> getBuildings() {
-		return buildings;
-	}
 
 	/** 返回 default building / Returns the default building */
 	public Building getDefaultBuilding() {
@@ -102,11 +102,6 @@ public class HousingLand {
 		return signSale;
 	}
 
-	/** 设置 sign sale / Sets the sign sale */
-	public void setSignSale(int value) {
-		this.signSale = value;
-	}
-
 	/** 返回 waiting sign npc id / Returns the waiting sign npc id */
 	public int getWaitingSignNpcId() {
 		return signWaiting;
@@ -125,11 +120,6 @@ public class HousingLand {
 	/** 返回传送 NPCID / Returns the teleport npc id */
 	public int getTeleportNpcId() {
 		return teleportNpc;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 
 	/** 返回哈希码。 / Returns hash code. */

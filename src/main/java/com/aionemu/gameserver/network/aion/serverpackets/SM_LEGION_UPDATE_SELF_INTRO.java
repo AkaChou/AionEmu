@@ -11,8 +11,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_LEGION_UPDATE_SELF_INTRO extends AionServerPacket {
 
-	private String selfintro;
-	private int playerObjId;
+	private final String selfintro;
+	private final int playerObjId;
 
 	/**
 	 * 使用玩家对象 ID 与自我介绍构造更新包。

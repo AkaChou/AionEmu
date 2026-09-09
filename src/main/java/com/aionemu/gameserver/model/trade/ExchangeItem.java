@@ -13,11 +13,11 @@ import lombok.Setter;
 public class ExchangeItem {
 
 	@Getter
-	private int itemObjId;
+	private final int itemObjId;
 	@Getter
 	private long itemCount;
 	@Getter
-	private int itemDesc;
+	private final int itemDesc;
 	@Getter
 	@Setter
 	private Item item;

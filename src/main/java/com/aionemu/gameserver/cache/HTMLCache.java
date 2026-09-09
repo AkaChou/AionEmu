@@ -95,7 +95,7 @@ public final class HTMLCache {
 	 * 相对路径 → HTML 内容。
 	 * Relative path → HTML content.
 	 */
-	private Map<String, String> cache = new LinkedHashMap<String, String>(16000);
+	private final Map<String, String> cache = new LinkedHashMap<String, String>(16000);
 
 	/**
 	 * 已加载文件数。

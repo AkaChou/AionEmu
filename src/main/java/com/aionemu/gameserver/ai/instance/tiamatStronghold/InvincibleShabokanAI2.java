@@ -36,9 +36,9 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -46,7 +46,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -70,7 +70,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -80,7 +80,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 				} else {
 					sendMsg(1500702);
 					spawn(283081, 1216.7513f, 1069.1871f, 491.32993f, (byte) 59); //Shabokhan EarthQuake.
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); //Tremor.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); // 天罚之印 I / Tremor.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -102,7 +102,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnShabokhanSink(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -118,12 +118,12 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -133,20 +133,20 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
 			deleteNpcs(instance.getNpcs(283083)); //Shabokhan Sink.
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
@@ -157,7 +157,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 		sendMsg(1500703);
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -165,17 +165,17 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

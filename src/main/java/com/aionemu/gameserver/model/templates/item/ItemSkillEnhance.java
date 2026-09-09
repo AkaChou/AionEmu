@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.PlayerClass;
+import lombok.Getter;
 
 /**
  * 物品技能强化模板：按职业绑定技能列表。
@@ -18,19 +19,18 @@ import com.aionemu.gameserver.model.PlayerClass;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemSkillEnhance")
 public class ItemSkillEnhance {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
 	@XmlAttribute(name = "skill_id")
 	protected List<Integer> skillId;
 
+	/** 返回职业 ID / Returns the class id */
+	@Getter
 	@XmlAttribute(name = "player_class")
 	private PlayerClass classId = PlayerClass.ALL;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
-	}
 
 	/** 返回技能 ID / Returns the skill id */
 	public List<Integer> getSkillId() {
@@ -38,10 +38,5 @@ public class ItemSkillEnhance {
 			skillId = new ArrayList<Integer>();
 		}
 		return skillId;
-	}
-
-	/** 返回职业 ID / Returns the class id */
-	public PlayerClass getClassId() {
-		return classId;
 	}
 }

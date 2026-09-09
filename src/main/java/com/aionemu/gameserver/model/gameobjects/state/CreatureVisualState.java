@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.state;
 
+import lombok.Getter;
+
 /**
  * 生物 Visual 状态枚举。
  * Creature Visual State enumeration.
@@ -26,16 +28,13 @@ public enum CreatureVisualState {
 	/** 闪烁 / Blinking. */
 	BLINKING(64); // 进入区域时闪烁 / Blinking when entering to zone
 
-	private int id;
-
-	private CreatureVisualState(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * @return the id
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	CreatureVisualState(int id) {
+		this.id = id;
 	}
 }

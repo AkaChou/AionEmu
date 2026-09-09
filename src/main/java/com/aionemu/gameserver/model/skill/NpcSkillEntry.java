@@ -1,11 +1,15 @@
 package com.aionemu.gameserver.model.skill;
 
+import lombok.Getter;
+
 /**
  * NPC 技能条目，用于技能相关逻辑。
  * Npc Skill Entry for skill logic.
  */
 
 public abstract class NpcSkillEntry extends SkillEntry {
+	/** 返回上次使用时间 / Returns the last time used */
+	@Getter
 	protected long lastTimeUsed = 0;
 	protected int useCount;
 
@@ -30,11 +34,6 @@ public abstract class NpcSkillEntry extends SkillEntry {
 
 	/** 生成时使用 / Use in spawned. */
 	public abstract boolean UseInSpawned();
-
-	/** 返回上次使用时间 / Returns the last time used */
-	public long getLastTimeUsed() {
-		return lastTimeUsed;
-	}
 
 	/** 设置 last time used / Sets the last time used */
 	public void setLastTimeUsed() {

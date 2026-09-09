@@ -8,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家账号数据，用于账号相关逻辑。
@@ -17,13 +19,39 @@ import com.aionemu.gameserver.model.team.legion.LegionMember;
  */
 public class PlayerAccountData {
 
-	private CharacterBanInfo cbi;
+	private final CharacterBanInfo cbi;
+	/**
+	 * @return 角色公共数据 / the playerCommonData
+	 */
+	@Getter
+	@Setter
 	private PlayerCommonData playerCommonData;
-	private PlayerAppearance appereance;
+	/**
+	 * 返回外观。
+	 * Returns the appearance
+	 */
+	@Getter
+	private final PlayerAppearance appereance;
+	/**
+	 * @return 装备列表 / the equipment
+	 */
+	@Getter
+	@Setter
 	private List<Item> equipment;
+	/** 返回 creation date / Returns the creation date */
+	@Getter
+	@Setter
 	private Timestamp creationDate;
+	/**
+	 * 设置 deletiondate。
+	 * Sets deletion date
+	 *
+	 * @param deletionDate
+	 */
+	@Getter
+	@Setter
 	private Timestamp deletionDate;
-	private LegionMember legionMember;
+	private final LegionMember legionMember;
 
 	public PlayerAccountData(PlayerCommonData playerCommonData, CharacterBanInfo cbi, PlayerAppearance appereance, List<Item> equipment, LegionMember legionMember) {
 		this.playerCommonData = playerCommonData;
@@ -38,31 +66,6 @@ public class PlayerAccountData {
 		return cbi;
 	}
 
-	/** 返回 creation date / Returns the creation date */
-	public Timestamp getCreationDate() {
-		return creationDate;
-	}
-
-	/**
-	 * 设置 deletiondate。
-	 * Sets deletion date
-	 *
-	 * @param deletionDate
-	 */
-	public void setDeletionDate(Timestamp deletionDate) {
-		this.deletionDate = deletionDate;
-	}
-
-	/**
-	 * 获取 deletiondate。
-	 * Get deletion date
-	 *
-	 * @return 角色应被删除的时间戳 / Timestamp date when char should be deleted
-	 */
-	public Timestamp getDeletionDate() {
-		return deletionDate;
-	}
-
 	/**
 	 * 获取角色删除时间的 Unix 秒级时间戳。
 	 * Returns the character deletion time as Unix epoch seconds.
@@ -74,35 +77,6 @@ public class PlayerAccountData {
 			return 0;
 		}
 		return (int) (deletionDate.getTime() / 1000L);
-	}
-
-	/**
-	 * @return 角色公共数据 / the playerCommonData
-	 */
-	public PlayerCommonData getPlayerCommonData() {
-		return playerCommonData;
-	}
-
-	/**
-	 * @param playerCommonData the playerCommonData to set
-	 */
-	public void setPlayerCommonData(PlayerCommonData playerCommonData) {
-		this.playerCommonData = playerCommonData;
-	}
-
-	/**
-	 * 返回外观。
-	 * Returns the appearance
-	 */
-	public PlayerAppearance getAppereance() {
-		return appereance;
-	}
-
-	/**
-	 * @param creationDate 创建时间 / creation date
-	 */
-	public void setCreationDate(Timestamp creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	/**
@@ -120,19 +94,5 @@ public class PlayerAccountData {
 	 */
 	public boolean isLegionMember() {
 		return legionMember != null;
-	}
-
-	/**
-	 * @return 装备列表 / the equipment
-	 */
-	public List<Item> getEquipment() {
-		return equipment;
-	}
-
-	/**
-	 * @param equipment the equipment to set
-	 */
-	public void setEquipment(List<Item> equipment) {
-		this.equipment = equipment;
 	}
 }

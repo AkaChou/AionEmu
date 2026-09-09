@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class AssignViceCaptainEvent extends AbstractTeamPlayerEvent<PlayerAlliance> {
-	public static enum AssignType {
+	public enum AssignType {
 		PROMOTE, DEMOTE_CAPTAIN_TO_VICECAPTAIN, DEMOTE
 	}
 

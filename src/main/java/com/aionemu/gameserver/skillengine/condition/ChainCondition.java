@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import lombok.Getter;
 
 /**
  * 连锁技能条件：校验前序/自身连锁类别、次数与时间窗是否允许施放。
@@ -18,14 +19,35 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 @XmlType(name = "ChainCondition")
 public class ChainCondition extends Condition {
 
+	/**
+	 * 获取自身连锁允许次数上限。
+	 * Gets the self-chain allowed count limit.
+	 *
+	 * @return 自身连锁次数 / self chain count
+	 */
+	@Getter
 	@XmlAttribute(name = "selfcount")
 	private int selfCount;
 	@XmlAttribute(name = "precount")
 	private int preCount;
+	/**
+	 * 获取本技能所属连锁类别。
+	 * Gets the chain category this skill belongs to.
+	 *
+	 * @return 连锁类别 / chain category
+	 */
+	@Getter
 	@XmlAttribute(name = "category")
 	private String category;
 	@XmlAttribute(name = "precategory")
 	private String precategory;
+	/**
+	 * 获取连锁时间窗（毫秒）。
+	 * Gets the chain time window in milliseconds.
+	 *
+	 * time window
+	 */
+	@Getter
 	@XmlAttribute(name = "time")
 	private int time;
 
@@ -38,15 +60,10 @@ public class ChainCondition extends Condition {
 	 */
 	@Override
 	public boolean validate(Skill env) {
-		if ((env.getEffector() instanceof Player) && (precategory != null || selfCount > 0)) {
-			Player pl = (Player) env.getEffector();
+		if ((env.getEffector() instanceof Player pl) && (precategory != null || selfCount > 0)) {
 
 			if (selfCount > 0) {
-				boolean canUse = false;
-
-				if (precategory != null && pl.getChainSkills().chainSkillEnabled(precategory, time)) {
-					canUse = true;
-				}
+				boolean canUse = precategory != null && pl.getChainSkills().chainSkillEnabled(precategory, time);
 
 				if (pl.getChainSkills().chainSkillEnabled(category, time)) {
 					canUse = true;
@@ -73,35 +90,5 @@ public class ChainCondition extends Condition {
 		}
 		env.setChainCategory(category);
 		return true;
-	}
-
-	/**
-	 * 获取自身连锁允许次数上限。
-	 * Gets the self-chain allowed count limit.
-	 *
-	 * @return 自身连锁次数 / self chain count
-	 */
-	public int getSelfCount() {
-		return selfCount;
-	}
-
-	/**
-	 * 获取本技能所属连锁类别。
-	 * Gets the chain category this skill belongs to.
-	 *
-	 * @return 连锁类别 / chain category
-	 */
-	public String getCategory() {
-		return category;
-	}
-
-	/**
-	 * 获取连锁时间窗（毫秒）。
-	 * Gets the chain time window in milliseconds.
-	 *
-	 * time window
-	 */
-	public int getTime() {
-		return time;
 	}
 }

@@ -31,7 +31,7 @@ public class AutoBan {
 		int playerId = player.getObjectId();
 		int time = PunishmentConfig.PUNISHMENT_TIME;
 		int minInDay = 1440;
-		int dayCount = (int) (Math.floor((double) (time / minInDay)));
+		int dayCount = (int) (Math.floor(time / minInDay));
 
 		switch (PunishmentConfig.PUNISHMENT_TYPE) {
 		case 1:
@@ -48,7 +48,7 @@ public class AutoBan {
 			break;
 		case 5:
 			player.getClientConnection().closeNow();
-			GameServerNetworkServices.bannedMacManager().banAddress(address, System.currentTimeMillis() + time * 60000, reason);
+			GameServerNetworkServices.bannedMacManager().banAddress(address, System.currentTimeMillis() + time * 60000L, reason);
 			break;
 		}
 	}

@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 军阶限制模板（静态数据/XML）。
@@ -20,6 +22,9 @@ public class RankRestriction {
 	@XmlElement(name = "penalty_attr")
 	protected List<RankPenaltyAttr> penaltyAttr;
 
+	/** 返回军阶编号 / Returns the rank num */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "rank_num", required = true)
 	protected int rankNum;
 
@@ -29,15 +34,5 @@ public class RankRestriction {
 			penaltyAttr = new ArrayList<RankPenaltyAttr>();
 		}
 		return this.penaltyAttr;
-	}
-
-	/** 返回军阶编号 / Returns the rank num */
-	public int getRankNum() {
-		return rankNum;
-	}
-
-	/** 设置军阶编号 / Sets the rank num */
-	public void setRankNum(int value) {
-		this.rankNum = value;
 	}
 }

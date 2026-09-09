@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -37,8 +36,8 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -49,7 +48,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	public void onEnterInstance(Player player) {
 		sendMovie(player, 935);
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -61,7 +60,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -135,7 +134,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				// 通往全知档案的门现已打开。 / The door to the Archive of All Knowledge is now open.
 				sendMsgByRace(1403303, Race.PC_ALL, 0);
 			break;
-			
+
 			/**
 			 * MALE ELYOS
 			 */
@@ -163,7 +162,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 			/**
 			 * FEMALE ELYOS
@@ -192,7 +190,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 			/**
 			 * MALE ASMODIANS
@@ -221,7 +218,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 			/**
 			 * FEMALE ASMODIANS
@@ -250,25 +246,10 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 		}
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -277,7 +258,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -303,26 +284,26 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

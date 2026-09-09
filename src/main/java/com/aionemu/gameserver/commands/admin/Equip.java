@@ -41,7 +41,7 @@ public class Equip extends AdminCommand {
 	public Equip() {
 		super("equip");
 	}
-	
+
 	/**
 	 * 对目标玩家执行镶嵌、附魔、回火或神石操作。
 	 * Runs socket, enchant, tempering or godstone actions on a target player.
@@ -139,7 +139,7 @@ public class Equip extends AdminCommand {
 		}
 		showHelp(admin);
 	}
-	
+
 	private void socket(Player admin, Player player, int manastone, int quant) {
 		if (manastone != 0 && (manastone < 167000226 || manastone > 167010369)) {
 			PacketSendUtility.sendMessage(admin, "You are suposed to give the item id for a" + " Manastone or 0 to remove all manastones.");
@@ -177,7 +177,7 @@ public class Equip extends AdminCommand {
 			}
 		}
 	}
-	
+
 	private void godstone(Player admin, Player player, int godstone) {
 		Item targetItem = player.getEquipment().getMainHandWeapon();
 		if (godstone > 168000028) {
@@ -226,7 +226,7 @@ public class Equip extends AdminCommand {
 			}
 		}
 	}
-	
+
 	private void enchant(Player admin, Player player, int enchant) {
 		for (Item targetItem : player.getEquipment().getEquippedItemsWithoutStigma()) {
 			if (isUpgradable(targetItem)) {
@@ -247,7 +247,7 @@ public class Equip extends AdminCommand {
                    targetItem.setAmplificationSkill(0);
                    targetItem.setAmplification(false);
                 }
-            
+
                 if (enchant >= 20) {
                     targetItem.setAmplification(true);
                     if (targetItem.getAmplificationSkill() == 0) {
@@ -277,7 +277,7 @@ public class Equip extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Admin " + admin.getName() + " enchanted all your equipped items to level " + enchant);
 		}
 	}
-	
+
 	/**
 	 * 按装备部位随机选取增幅技能 ID。
 	 * Picks a random amplification skill id by equipment slot.
@@ -316,7 +316,7 @@ public class Equip extends AdminCommand {
 				return 0;
 		}
 	}
-	
+
 	private static final int[] skills4WeaponShield = {
 		13001, 13002, 13003, 13004, 13005, 13006,
 		13007, 13008, 13009, 13010, 13011, 13012,
@@ -373,7 +373,7 @@ public class Equip extends AdminCommand {
 		13037, 13228, 13229, 13230, 13231, 13232,
 		13233, 13234
 	};
-	
+
 	private void tempering(Player admin, Player player, int tempering) {
 		for (Item targetItem: player.getEquipment().getEquippedItemsWithoutStigma()) {
 			if (isTempering(targetItem)) {
@@ -397,7 +397,7 @@ public class Equip extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Admin " + admin.getName() + " tempering all your equipped items to level " + tempering);
 		}
 	}
-	
+
 	/**
 	 * 判断物品是否可回火。
 	 * Whether the item supports tempering.
@@ -413,28 +413,27 @@ public class Equip extends AdminCommand {
 			return true;
 		} if (item.getItemTemplate().isArmor()) {
 			int pt = item.getItemTemplate().getItemSlot();
-			if (pt == 1 || /* Main Hand */
-			    pt == 2 || /* Sub Hand */
+			/* Bracelet */
+			return pt == 1 || /* Main Hand */
+				pt == 2 || /* Sub Hand */
 				pt == 4 || /* Helmet */
-			    pt == 8 || /* Jacket */
-			    pt == 16 || /* Gloves */
-			    pt == 32 || /* Boots */
+				pt == 8 || /* Jacket */
+				pt == 16 || /* Gloves */
+				pt == 32 || /* Boots */
 				pt == 192 || /* Earring */
 				pt == 768 || /* Rings */
 				pt == 1024 || /* Necklace */
-			    pt == 2048 || /* Shoulder */
-			    pt == 4096 || /* Pants */
+				pt == 2048 || /* Shoulder */
+				pt == 4096 || /* Pants */
 				pt == 65536 || /* Belt */
-			    pt == 131072 || /* Main Off Hand */
-			    pt == 262144 || /* Sub Off Hand */
-			    pt == 524288 || /* Plume */
-				pt == 2097152) { /* Bracelet */
-				return true;
-			}
+				pt == 131072 || /* Main Off Hand */
+				pt == 262144 || /* Sub Off Hand */
+				pt == 524288 || /* Plume */
+				pt == 2097152;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 判断物品是否可附魔升级。
 	 * Whether the item supports enchant upgrades.
@@ -450,22 +449,21 @@ public class Equip extends AdminCommand {
 			return true;
 		} if (item.getItemTemplate().isArmor()) {
 			int at = item.getItemTemplate().getItemSlot();
-			if (at == 1 || /* Main Hand */
-			    at == 2 || /* Sub Hand */
-			    at == 8 || /* Jacket */
-			    at == 16 || /* Gloves */
-			    at == 32 || /* Boots */
-			    at == 2048 || /* Shoulder */
-			    at == 4096 || /* Pants */
+			/* Sub Off Hand */
+			return at == 1 || /* Main Hand */
+				at == 2 || /* Sub Hand */
+				at == 8 || /* Jacket */
+				at == 16 || /* Gloves */
+				at == 32 || /* Boots */
+				at == 2048 || /* Shoulder */
+				at == 4096 || /* Pants */
 				at == 32768 || /* Wing */
-			    at == 131072 || /* Main Off Hand */
-			    at == 262144) { /* Sub Off Hand */
-				return true;
-			}
+				at == 131072 || /* Main Off Hand */
+				at == 262144;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 按品质与物品类型计算最大镶嵌孔数。
 	 * Computes max socket slots from quality and item type.
@@ -503,28 +501,28 @@ public class Equip extends AdminCommand {
 			slots += 2;
 		return slots;
 	}
-	
+
 	private void showHelp(Player admin) {
 		PacketSendUtility.sendMessage(admin, "[Help: Equip Command]\n"
 		+ "  Use //equip help <socket|enchant|tempering|godstone> for more details on the command.\n"
 		+ "  Notice: This command uses smart matching. You may abbreviate most commands.\n"
 		+ "  For example: (//equip so 167000226 5) will match to (//equip socket 167000226 5)");
 	}
-	
+
 	private void showHelpEnchant(Player admin) {
 		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] enchant [EnchantLevel = 0]\n"
 		+ "  This command Enchants all items equipped up to 25.\n"
 		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
 		+ "  Target: Named player, then targeted player, only then self.\n" + "  Default Value: EnchantLevel is 0.");
 	}
-	
+
 	private void showHelpTempering(Player admin) {
 		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] tempering [TemperanceLevel = 0]\n"
 		+ "  This command Tempering all items equipped up to 200.\n"
 		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
 		+ "  Target: Named player, then targeted player, only then self.\n" + "  Default Value: TemperanceLevel is 0.");
 	}
-	
+
 	private void showHelpSocket(Player admin) {
 		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] socket [ManastoneID = 167000226] [Quantity = 0]\n"
 		+ "  This command Sockets all free slots on equipped items, with the given manastone id.\n"
@@ -533,7 +531,7 @@ public class Equip extends AdminCommand {
 		+ "  Target: Named player, then targeted player, only then self.\n"
 		+ "  Default Value: ManastoneID is 167000226, Quantity is 0 meaning fill all slots.");
 	}
-	
+
 	private void showHelpGodstone(Player admin) {
 		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] godstone [rate = 100|GodStoneID]\n"
 		+ "  This command changes the godstone activation rate to the given number(0-100).\n"
@@ -542,7 +540,7 @@ public class Equip extends AdminCommand {
 		+ "  Target: Named player, then targeted player, only then self.\n"
 		+ "  Default Value: Rate is 100 witch is the default action .");
 	}
-	
+
 	/**
 	 * 执行失败时显示帮助。
 	 * Shows help on failure.

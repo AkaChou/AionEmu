@@ -30,9 +30,9 @@ public enum LegionHistoryType {
 	/** 基纳取出 / Kinah Withdraw. */
 	KINAH_WITHDRAW(18); // 参数：名称 / Parameter: name
 
-	private byte historyType;
+	private final byte historyType;
 
-	private LegionHistoryType(int historyType) {
+	LegionHistoryType(int historyType) {
 		this.historyType = (byte) historyType;
 	}
 

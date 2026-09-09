@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 全局掉落区域模板（静态数据/XML）。
@@ -14,11 +15,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropZone")
 public class GlobalDropZone {
+	/** 获取区域。 / Returns the zone. */
+	@Getter
 	@XmlAttribute(name = "zone", required = true)
 	protected String zone;
-
-	/** 获取区域。 / Returns the zone. */
-	public String getZone() {
-		return zone;
-	}
 }

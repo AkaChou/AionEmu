@@ -37,8 +37,8 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -80,7 +80,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -94,7 +94,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 		protectiveShield.setEntityId(27);
 		objects.put(284437, SpawnEngine.spawnObject(protectiveShield, instanceId)); //Protective Shield.
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -131,25 +131,24 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401795, Race.PC_ALL, 0);
             break;
 			case 231073: //Hyperion.
-			    // 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Infinity Shard>");
 				spawn(730842, 124.669853f, 137.840668f, 113.942917f, (byte) 0); //Infinity Shard Exit.
 				spawn(802184, 127.32316f, 131.72421f, 112.17429f, (byte) 25); //Infinity Shard Opportunity Bundle.
 			break;
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -158,21 +157,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -181,7 +166,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

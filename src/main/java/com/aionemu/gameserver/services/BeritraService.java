@@ -52,15 +52,15 @@ public class BeritraService {
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, BeritraLocation> beritra;
 	// 贝里特拉入侵 4.7 / Beritra Invasion 4.7
-	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
-	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
-	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 	// 埃雷什基伽尔入侵 4.9 / Ereshkigal Invasion 4.9
-	private Map<Integer, VisibleObject> adventEreshPortal = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEreshEffect = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
-	private Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEreshPortal = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEreshEffect = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
 
 	private final ConcurrentMap<Integer, BeritraInvasion<?>> activeInvasions = new ConcurrentHashMap<Integer, BeritraInvasion<?>>();
 
@@ -128,7 +128,7 @@ public class BeritraService {
 			public void run() {
 				stopBeritraInvasion(id);
 			}
-		}, CustomConfig.BERITRA_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.BERITRA_DURATION * 3600 * 1000);
 	}
 
 	/**

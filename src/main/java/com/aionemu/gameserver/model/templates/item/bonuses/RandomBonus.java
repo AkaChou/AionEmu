@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * 随机加成模板（静态数据/XML）。
@@ -22,9 +23,18 @@ public class RandomBonus {
 	@XmlElement(required = true)
 	protected List<ModifiersTemplate> modifiers;
 
+	/**
+	 * 获取加成 ID。
+	 * Gets the bonus id.
+	 *
+	 * @return 加成 ID / Bonus id
+	 */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 获取加成类型。 / Returns the bonus type. */
+	@Getter
 	@XmlAttribute(name = "type", required = true)
 	private StatBonusType bonusType;
 
@@ -34,20 +44,5 @@ public class RandomBonus {
 			modifiers = new ArrayList<ModifiersTemplate>();
 		}
 		return this.modifiers;
-	}
-
-	/**
-	 * 获取加成 ID。
-	 * Gets the bonus id.
-	 *
-	 * @return 加成 ID / Bonus id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取加成类型。 / Returns the bonus type. */
-	public StatBonusType getBonusType() {
-		return bonusType;
 	}
 }

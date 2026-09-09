@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.dao.impl;
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -8,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,7 +18,6 @@ import java.util.List;
 @Slf4j
 public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 
-
     /** 查询有战绩玩家的天梯数据 / Select ladder data for players with records */
     private static final String SELECT_PLAYER_DATA = "SELECT player_id, last_update, rating, wins, rank FROM ladder_player " + "WHERE wins > 0 OR losses > 0 OR leaves > 0 ORDER BY rating DESC, wins DESC, player_id ASC";
 
@@ -31,19 +28,15 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     private static final String UPDATE_LAST_RANK = "UPDATE ladder_player SET last_rank = ?, last_update = ? WHERE player_id = ?";
 
     /** 按列查询玩家天梯字段（占位模板） / Select a ladder column by player (placeholder template) */
-    private static final String SELECT_GET_DATA = "SELECT ? FROM ladder_player WHERE player_id = ?";
 
     /** 查询玩家全部天梯数据 / Select all ladder data for a player */
     private static final String SELECT_GET_ALL = "SELECT * FROM ladder_player WHERE player_id = ?";
 
     /** 累加天梯字段（占位模板） / Increment a ladder column (placeholder template) */
-    private static final String UPDATE_ADD_DATA = "UPDATE ladder_player SET ? = ? + ? WHERE player_id = ?";
 
     /** 设置天梯字段（占位模板） / Set a ladder column (placeholder template) */
-    private static final String UPDATE_SET_DATA = "UPDATE ladder_player SET ? = ? WHERE player_id = ?";
 
     /** 插入玩家天梯记录（占位模板） / Insert player ladder row (placeholder template) */
-    private static final String INSERT_PLAYER = "INSERT INTO ladder_player (player_id, ?) VALUES (?, ?)";
 
     /** 查询玩家上次更新时间 / Select player last update timestamp */
     private static final String SELECT_LAST_UPDATE = "SELECT last_update FROM ladder_player WHERE player_id = ?";
@@ -235,11 +228,11 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 
         // 排序玩家 / Sort players
         Collections.sort(players, (o1, o2) -> {
-            int result = Integer.compare(o2.getRating(), o1.getRating());
+            int result = Integer.compare(o2.rating(), o1.rating());
             if (result != 0) return result;
-            result = Integer.compare(o2.getWins(), o1.getWins());
+            result = Integer.compare(o2.wins(), o1.wins());
             if (result != 0) return result;
-            return Integer.compare(o1.getPlayerId(), o2.getPlayerId());
+            return Integer.compare(o1.playerId(), o2.playerId());
         });
 
         if (players.isEmpty()) {
@@ -255,12 +248,12 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 
                 int i = 1;
                 for (PlayerInfo plInfo : players) {
-                    int playerId = plInfo.getPlayerId();
-                    Timestamp update = plInfo.getLastUpdate();
+                    int playerId = plInfo.playerId();
+                    Timestamp update = plInfo.lastUpdate();
 
                     if (update == null || update.getTime() == 0 ||
                         (System.currentTimeMillis() - update.getTime()) > (24 * 60 * 60 * 1000)) {
-                        stmtLast.setInt(1, plInfo.getRank());
+                        stmtLast.setInt(1, plInfo.rank());
                         stmtLast.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
                         stmtLast.setInt(3, playerId);
                         stmtLast.addBatch();
@@ -527,41 +520,60 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
         return databaseName.toLowerCase().contains("mysql") && majorVersion >= 8;
     }
 
-    /**
-     * 排名重算用的玩家临时信息。
-     * Temporary player info used while recalculating ranks.
-     */
-    private static class PlayerInfo {
-        private final int playerId;
-        private final int rating;
-        private final Timestamp lastUpdate;
-        private final int wins;
-        private final int rank;
+	/**
+	 * 排名重算用的玩家临时信息。
+	 * Temporary player info used while recalculating ranks.
+	 */
+	private record PlayerInfo(int playerId, int rating, Timestamp lastUpdate, int wins, int rank) {
+		/**
+		 * player id
+		 * rating
+		 *
+		 * @param lastUpdate 上次更新时间 / last update time
+		 *                   wins
+		 * @param rank       当前名次 / current rank
+		 */
+		private PlayerInfo {
+		}
 
-        /**
-         * player id
-         * rating
-         * @param lastUpdate 上次更新时间 / last update time
-         * wins
-         * @param rank 当前名次 / current rank
-         */
-        public PlayerInfo(int playerId, int rating, Timestamp lastUpdate, int wins, int rank) {
-            this.playerId = playerId;
-            this.rating = rating;
-            this.lastUpdate = lastUpdate;
-            this.wins = wins;
-            this.rank = rank;
-        }
+		/**
+		 * 玩家 ID / player id
+		 */
+		@Override
+		public int playerId() {
+			return playerId;
+		}
 
- /** 玩家 ID / player id */
-        public int getPlayerId() { return playerId; }
-        /** 评分 / rating */
-        public int getRating() { return rating; }
-        /** 上次更新时间 / last update time */
-        public Timestamp getLastUpdate() { return lastUpdate; }
-        /** 胜场 / wins */
-        public int getWins() { return wins; }
-        /** 当前排名 / current rank */
-        public int getRank() { return rank; }
-    }
+		/**
+		 * 评分 / rating
+		 */
+		@Override
+		public int rating() {
+			return rating;
+		}
+
+		/**
+		 * 上次更新时间 / last update time
+		 */
+		@Override
+		public Timestamp lastUpdate() {
+			return lastUpdate;
+		}
+
+		/**
+		 * 胜场 / wins
+		 */
+		@Override
+		public int wins() {
+			return wins;
+		}
+
+		/**
+		 * 当前排名 / current rank
+		 */
+		@Override
+		public int rank() {
+			return rank;
+		}
+	}
 }

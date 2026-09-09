@@ -33,7 +33,7 @@ import com.aionemu.gameserver.world.World;
 public class WeatherService {
 	private static volatile ObjectProvider<WeatherService> instanceProvider;
 	/** 各地图天气键到区域天气数组的映射。 / Map of weather keys to per-zone weather entry arrays. */
-	private Map<WeatherKey, WeatherEntry[]> worldZoneWeathers;
+	private final Map<WeatherKey, WeatherEntry[]> worldZoneWeathers;
 
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。

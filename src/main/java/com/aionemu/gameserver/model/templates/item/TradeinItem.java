@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 兑换（以旧换新）物品模板：物品与价格。
@@ -15,18 +16,12 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "TradeinItem")
 public class TradeinItem {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute
 	protected int id;
+	/** 获取价格。 / Returns the price. */
+	@Getter
 	@XmlAttribute
 	protected int price;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取价格。 / Returns the price. */
-	public int getPrice() {
-		return price;
-	}
 }

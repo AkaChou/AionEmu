@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 佐尔希夫挖掘舰活动启动定时任务。
@@ -15,19 +16,10 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class DredgionStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public DredgionStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行分阶段启动流程。

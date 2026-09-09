@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.basespawns.BaseSpawnTemplate;
+import lombok.Getter;
 
 /**
  * 基础 NPC 游戏对象。
@@ -14,16 +15,13 @@ import com.aionemu.gameserver.model.templates.spawns.basespawns.BaseSpawnTemplat
  */
 
 public class BaseNpc extends Npc {
-	private int baseId;
+	/** 返回 base id / Returns the base id */
+	@Getter
+	private final int baseId;
 
 	public BaseNpc(int objId, NpcController controller, BaseSpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {
 		super(objId, controller, spawnTemplate, objectTemplate);
 		this.baseId = spawnTemplate.getId();
-	}
-
-	/** 返回 base id / Returns the base id */
-	public int getBaseId() {
-		return baseId;
 	}
 
 	/** 获取刷新点。 / Returns the spawn. */

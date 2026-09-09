@@ -21,10 +21,6 @@ public class CM_COALESCENCE extends AionClientPacket {
 	private int mainItemObjId;
 	private int materialCount;
 	private List<Integer> materialItemObjId;
-	private int ItemSize;
-	private int upgradedItemObjectId;
-	private int Items;
-	private List<Integer> ItemsList = new ArrayList();
 
 	/**
 	 * 构造客户端包实例。

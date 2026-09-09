@@ -117,10 +117,10 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	public static final int STR_ASK_ROUND_RETURN_ITEM_ACCEPT_MOVE_DONT_RETURN = 907536;
 	public static final int STR_HOTSPOT_CONFIRM_NO_COST = 905097;
 
-	private int code;
-	private int senderId;
-	private int range;
-	private Object[] params;
+	private final int code;
+	private final int senderId;
+	private final int range;
+	private final Object[] params;
 	private ArtifactLocation artifact;
 
 	/**

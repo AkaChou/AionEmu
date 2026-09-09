@@ -146,8 +146,7 @@ public class InstanceService {
 			Iterator<VisibleObject> it = instance.objectIterator();
 			while (it.hasNext()) {
 				VisibleObject obj = it.next();
-				if (obj instanceof Player) {
-					Player player = (Player) obj;
+				if (obj instanceof Player player) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(SystemMessageId.LEAVE_INSTANCE_NOT_PARTY));
 					moveToExitPoint((Player) obj);
 				} else {
@@ -155,8 +154,7 @@ public class InstanceService {
 				}
 			}
 			instance.getInstanceHandler().onInstanceDestroy();
-			if (instance instanceof WorldMap2DInstance) {
-				WorldMap2DInstance w2d = (WorldMap2DInstance) instance;
+			if (instance instanceof WorldMap2DInstance w2d) {
 				if (w2d.isPersonal()) {
 					GameHousingServices.housingService().onInstanceDestroy(w2d.getOwnerId());
 				}

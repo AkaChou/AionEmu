@@ -19,9 +19,9 @@ public enum NpcType {
 	/** 未知 / Unknown */
 	UNKNOWN(54);
 
-	private int someClientSideId;
+	private final int someClientSideId;
 
-	private NpcType(int id) {
+	NpcType(int id) {
 		this.someClientSideId = id;
 	}
 

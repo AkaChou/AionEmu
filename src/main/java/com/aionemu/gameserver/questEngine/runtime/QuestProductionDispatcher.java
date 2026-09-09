@@ -276,8 +276,8 @@ public final class QuestProductionDispatcher {
 			return status == QuestStatus.NONE || status == QuestStatus.COMPLETE;
 		}
 		return transition.conditions().stream().anyMatch(condition ->
-			condition instanceof QuestCondition.StatusIs status
-				&& (status.status() == QuestStatus.NONE || status.status() == QuestStatus.COMPLETE));
+			condition instanceof QuestCondition.StatusIs(QuestStatus status1)
+				&& (status1 == QuestStatus.NONE || status1 == QuestStatus.COMPLETE));
 	}
 
 	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,

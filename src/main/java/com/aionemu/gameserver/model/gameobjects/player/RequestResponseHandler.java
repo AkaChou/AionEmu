@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import lombok.AllArgsConstructor;
 
 /**
  * 请求响应处理器。
@@ -9,13 +10,10 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
  * @author Ben
  * @modified Lyahim
  */
+@AllArgsConstructor
 public abstract class RequestResponseHandler {
 
-	private Creature requester;
-
-	public RequestResponseHandler(Creature requester) {
-		this.requester = requester;
-	}
+	private final Creature requester;
 
 	/**
 	 * 收到响应时调用。
@@ -40,5 +38,4 @@ public abstract class RequestResponseHandler {
 	 * Called when the player denies a request.
 	 */
 	public abstract void denyRequest(Creature requester, Player responder);
-
 }

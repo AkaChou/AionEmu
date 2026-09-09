@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.Rnd;
+import lombok.Getter;
 
 /**
  * 随机物品模板：随机数量或等级范围。
@@ -19,36 +20,24 @@ import com.aionemu.commons.utils.Rnd;
 @Slf4j
 public class RandomItem {
 
+	/** 获取类型。 / Returns the type. */
+	@Getter
 	@XmlAttribute(name = "type")
 	protected RandomType type;
+	/** 获取计数。 / Returns the count. */
+	@Getter
 	@XmlAttribute(name = "count")
 	protected int count;
 
+	/** 返回随机下限 / Returns the rnd min */
+	@Getter
 	@XmlAttribute(name = "rnd_min")
 	public int rndMin;
 
+	/** 返回随机上限 / Returns the rnd max */
+	@Getter
 	@XmlAttribute(name = "rnd_max")
 	public int rndMax;
-
-	/** 获取计数。 / Returns the count. */
-	public int getCount() {
-		return count;
-	}
-
-	/** 获取类型。 / Returns the type. */
-	public RandomType getType() {
-		return type;
-	}
-
-	/** 返回随机下限 / Returns the rnd min */
-	public int getRndMin() {
-		return rndMin;
-	}
-
-	/** 返回随机上限 / Returns the rnd max */
-	public int getRndMax() {
-		return rndMax;
-	}
 
 	/** 获取结果计数。 / Returns the result count. */
 	public final int getResultCount() {

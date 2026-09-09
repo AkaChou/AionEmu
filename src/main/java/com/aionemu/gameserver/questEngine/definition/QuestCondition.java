@@ -49,8 +49,8 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	 * Determines whether two conditions can never both hold; returns false (conservatively) when undecidable.
 	 */
 	static boolean areMutuallyExclusive(QuestCondition left, QuestCondition right) {
-		if (left instanceof StatusIs leftStatus && right instanceof StatusIs rightStatus) {
-			return leftStatus.status() != rightStatus.status();
+		if (left instanceof StatusIs(QuestStatus status1) && right instanceof StatusIs(QuestStatus status)) {
+			return status1 != status;
 		}
 		if (factConditionsAreMutuallyExclusive(left, right)) {
 			return true;
@@ -63,47 +63,53 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	 * Determines exclusivity for condition pairs that depend on live player facts.
 	 */
 	private static boolean factConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
-		if (left instanceof PlayerInGroup a && right instanceof PlayerInGroup b) {
-			return a.expected() != b.expected();
+		if (left instanceof PlayerInGroup(boolean expected19) && right instanceof PlayerInGroup(boolean expected18)) {
+			return expected19 != expected18;
 		}
-		if (left instanceof HasItem a && right instanceof HasItem b) {
-			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		if (left instanceof HasItem(int itemId3, int count5, boolean expected17) && right instanceof HasItem(int itemId2, int count4, boolean expected16)) {
+			return itemId3 == itemId2 && count5 == count4 && expected17 != expected16;
 		}
-		if (left instanceof GenderIs a && right instanceof GenderIs b) {
-			return a.gender() != b.gender();
+		if (left instanceof GenderIs(Gender gender1) && right instanceof GenderIs(Gender gender)) {
+			return gender1 != gender;
 		}
-		if (left instanceof PlayerRaceIs a && right instanceof PlayerRaceIs b) {
-			return a.race() != b.race();
+		if (left instanceof PlayerRaceIs(Race race1) && right instanceof PlayerRaceIs(Race race)) {
+			return race1 != race;
 		}
-		if (left instanceof PlayerClassIs a && right instanceof PlayerClassIs b) {
-			return a.startingClass() != b.startingClass();
+		if (left instanceof PlayerClassIs(PlayerClass startingClass1) && right instanceof PlayerClassIs(PlayerClass startingClass)) {
+			return startingClass1 != startingClass;
 		}
-		if (left instanceof AdvancedClassIs a && right instanceof AdvancedClassIs b) {
-			return a.playerClass() != b.playerClass();
+		if (left instanceof AdvancedClassIs(PlayerClass aClass) && right instanceof AdvancedClassIs(PlayerClass playerClass)) {
+			return aClass != playerClass;
 		}
-		if (left instanceof WorldIs a && right instanceof WorldIs b) {
-			return a.worldId() == b.worldId() && a.expected() != b.expected();
+		if (left instanceof WorldIs(int worldId1, boolean expected15) && right instanceof WorldIs(int worldId, boolean expected14)) {
+			return worldId1 == worldId && expected15 != expected14;
 		}
-		if (left instanceof WorldNpcIs a && right instanceof WorldNpcIs b) {
-			return a.npcId() == b.npcId() && a.expected() != b.expected();
+		if (left instanceof WorldNpcIs(int npcId1, boolean expected13) && right instanceof WorldNpcIs(int npcId, boolean expected12)) {
+			return npcId1 == npcId && expected13 != expected12;
 		}
-		if (left instanceof ZoneIs a && right instanceof ZoneIs b) {
-			return a.zone().equals(b.zone()) && a.expected() != b.expected();
+		if (left instanceof ZoneIs(String zone1, boolean expected11) && right instanceof ZoneIs(String zone, boolean expected10)) {
+			return zone1.equals(zone) && expected11 != expected10;
 		}
-		if (left instanceof EquipmentSetEquipped a && right instanceof EquipmentSetEquipped b) {
-			return a.count() == b.count() && a.setIds().equals(b.setIds()) && a.expected() != b.expected();
+		if (left instanceof EquipmentSetEquipped(Set<Integer> ids, int count3, boolean expected9) && right instanceof EquipmentSetEquipped(
+			Set<Integer> setIds, int count2, boolean expected8
+		)) {
+			return count3 == count2 && ids.equals(setIds) && expected9 != expected8;
 		}
-		if (left instanceof EquippedItem a && right instanceof EquippedItem b) {
-			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		if (left instanceof EquippedItem(
+			int itemId1, int count1, boolean expected7
+		) && right instanceof EquippedItem(int itemId, int count, boolean expected6)) {
+			return itemId1 == itemId && count1 == count && expected7 != expected6;
 		}
-		if (left instanceof MembershipPermission a && right instanceof MembershipPermission b) {
-			return a.permission() == b.permission() && a.expected() != b.expected();
+		if (left instanceof MembershipPermission(QuestMembershipPermission permission1, boolean expected5) && right instanceof MembershipPermission(
+			QuestMembershipPermission permission, boolean expected4
+		)) {
+			return permission1 == permission && expected5 != expected4;
 		}
-		if (left instanceof CompleteCountIs a && right instanceof CompleteCountIs b) {
-			return a.value() == b.value() && a.expected() != b.expected();
+		if (left instanceof CompleteCountIs(int value1, boolean expected3) && right instanceof CompleteCountIs(int value, boolean expected2)) {
+			return value1 == value && expected3 != expected2;
 		}
-		if (left instanceof EventActive a && right instanceof EventActive b) {
-			return a.questId() == b.questId() && a.expected() != b.expected();
+		if (left instanceof EventActive(int id, boolean expected1) && right instanceof EventActive(int questId, boolean expected)) {
+			return id == questId && expected1 != expected;
 		}
 		return false;
 	}
@@ -113,26 +119,26 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	 * Determines exclusivity for quest-variable condition pairs by value range.
 	 */
 	private static boolean variableConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
-		if (left instanceof QuestVariableIs a && right instanceof QuestVariableIs b) {
-			return a.field().equals(b.field()) && a.value() != b.value();
+		if (left instanceof QuestVariableIs(String field13, int value13) && right instanceof QuestVariableIs(String field12, int value12)) {
+			return field13.equals(field12) && value13 != value12;
 		}
-		if (left instanceof QuestVariableIs a && right instanceof VariableAtLeast b) {
-			return a.field().equals(b.field()) && a.value() < b.value();
+		if (left instanceof QuestVariableIs(String field11, int value11) && right instanceof VariableAtLeast(String field10, int value10)) {
+			return field11.equals(field10) && value11 < value10;
 		}
-		if (left instanceof VariableAtLeast a && right instanceof QuestVariableIs b) {
-			return a.field().equals(b.field()) && b.value() < a.value();
+		if (left instanceof VariableAtLeast(String field9, int value9) && right instanceof QuestVariableIs(String field8, int value8)) {
+			return field9.equals(field8) && value8 < value9;
 		}
-		if (left instanceof QuestVariableIs a && right instanceof VariableBelow b) {
-			return a.field().equals(b.field()) && a.value() >= b.value();
+		if (left instanceof QuestVariableIs(String field7, int value7) && right instanceof VariableBelow(String field6, int value6)) {
+			return field7.equals(field6) && value7 >= value6;
 		}
-		if (left instanceof VariableBelow a && right instanceof QuestVariableIs b) {
-			return a.field().equals(b.field()) && b.value() >= a.value();
+		if (left instanceof VariableBelow(String field5, int value5) && right instanceof QuestVariableIs(String field4, int value4)) {
+			return field5.equals(field4) && value4 >= value5;
 		}
-		if (left instanceof VariableAtLeast a && right instanceof VariableBelow b) {
-			return a.field().equals(b.field()) && a.value() >= b.value();
+		if (left instanceof VariableAtLeast(String field3, int value3) && right instanceof VariableBelow(String field2, int value2)) {
+			return field3.equals(field2) && value3 >= value2;
 		}
-		if (left instanceof VariableBelow a && right instanceof VariableAtLeast b) {
-			return a.field().equals(b.field()) && b.value() >= a.value();
+		if (left instanceof VariableBelow(String field1, int value1) && right instanceof VariableAtLeast(String field, int value)) {
+			return field1.equals(field) && value >= value1;
 		}
 		return false;
 	}

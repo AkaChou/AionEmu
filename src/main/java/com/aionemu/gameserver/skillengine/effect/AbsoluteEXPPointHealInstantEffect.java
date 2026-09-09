@@ -23,8 +23,7 @@ public class AbsoluteEXPPointHealInstantEffect extends EffectTemplate {
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {
-		if ((effect.getEffected() instanceof Player)) {
-			Player player = (Player) effect.getEffected();
+		if ((effect.getEffected() instanceof Player player)) {
 			player.getCommonData().addBerdinStar(points);
 			PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		}

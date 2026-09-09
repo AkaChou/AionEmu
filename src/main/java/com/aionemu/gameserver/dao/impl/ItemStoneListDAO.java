@@ -286,9 +286,8 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                 st.setInt(3, is.getSlot());
                 st.setInt(4, ist.ordinal());
 
-                if (is instanceof IdianStone) {
-                    IdianStone stone = (IdianStone) is;
-                    st.setInt(5, stone.getPolishNumber());
+                if (is instanceof IdianStone stone) {
+					st.setInt(5, stone.getPolishNumber());
                     st.setInt(6, stone.getPolishCharge());
                 } else {
                     st.setInt(5, 0);
@@ -325,9 +324,8 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                 st.setInt(1, is.getItemId());
                 st.setInt(2, is.getSlot());
 
-                if (is instanceof IdianStone) {
-                    IdianStone stone = (IdianStone) is;
-                    st.setInt(3, stone.getPolishNumber());
+                if (is instanceof IdianStone stone) {
+					st.setInt(3, stone.getPolishNumber());
                     st.setInt(4, stone.getPolishCharge());
                 } else {
                     st.setInt(3, 0);

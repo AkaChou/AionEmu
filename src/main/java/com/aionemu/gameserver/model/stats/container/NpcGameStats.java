@@ -11,6 +11,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * NPC 的游戏属性：基础属性计算与缓存。
@@ -21,19 +23,30 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class NpcGameStats extends CreatureGameStats<Npc> {
 
 	int currentRunSpeed = 0;
+	@Getter
 	private long lastAttackTime = 0;
+	@Getter
 	private long lastAttackedTime = 0;
+	/** 设置 next attack time / Sets the next attack time */
+	@Setter
 	private long nextAttackTime = 0;
 	private long lastSkillTime = 0;
 	private long nextSkillTime = 0;
+	/** 返回 fight starting time / Returns the fight starting time */
+	@Getter
 	private long fightStartingTime = 0;
+	@Getter
+	@Setter
 	private long lastSpawnPointChaseCheck;
 	private int cachedState;
 	private Stat2 cachedSpeedStat;
+	/**
+	 * @param lastGeoZUpdate the lastGeoZUpdate to set
+	 */
+	@Setter
 	private long lastGeoZUpdate;
 	private long lastChangeTarget = 0;
 	private int pAccuracy = 0;
-	private int mRes = 0;
 
 	public NpcGameStats(Npc owner) {
 		super(owner);
@@ -325,17 +338,9 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 		return Math.round((System.currentTimeMillis() - lastAttackTime) / 1000f);
 	}
 
-	public long getLastAttackTime() {
-		return lastAttackTime;
-	}
-
 	/** 返回 last attacked time delta / Returns the last attacked time delta */
 	public int getLastAttackedTimeDelta() {
 		return Math.round((System.currentTimeMillis() - lastAttackedTime) / 1000f);
-	}
-
-	public long getLastAttackedTime() {
-		return lastAttackedTime;
 	}
 
 	/** 刷新上次攻击时间 / renew Last Attack Time. */
@@ -359,24 +364,6 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	public void setFightStartingTime() {
 		this.fightStartingTime = System.currentTimeMillis();
 		this.lastSpawnPointChaseCheck = 0;
-	}
-
-	/** 返回 fight starting time / Returns the fight starting time */
-	public long getFightStartingTime() {
-		return this.fightStartingTime;
-	}
-
-	public long getLastSpawnPointChaseCheck() {
-		return lastSpawnPointChaseCheck;
-	}
-
-	public void setLastSpawnPointChaseCheck(long time) {
-		lastSpawnPointChaseCheck = time;
-	}
-
-	/** 设置 next attack time / Sets the next attack time */
-	public void setNextAttackTime(long nextAttackTime) {
-		this.nextAttackTime = nextAttackTime;
 	}
 
 	/**
@@ -450,13 +437,6 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	/** 返回 last geo z update / Returns the last geo z update */
 	public final long getLastGeoZUpdate() {
 		return lastGeoZUpdate;
-	}
-
-	/**
-	 * @param lastGeoZUpdate the lastGeoZUpdate to set
-	 */
-	public void setLastGeoZUpdate(long lastGeoZUpdate) {
-		this.lastGeoZUpdate = lastGeoZUpdate;
 	}
 
 	private void calcStats() {

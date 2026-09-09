@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * MassiveLooting 模板（静态数据/XML）。
@@ -13,35 +14,23 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MassiveLooting")
 public class MassiveLooting {
+	/** 返回物品 ID / Returns the itemid */
+	@Getter
 	@XmlAttribute
 	protected int itemid;
 
+	/** 返回 looting num / Returns the looting num */
+	@Getter
 	@XmlAttribute(name = "looting_num")
 	protected int lootingNum;
 
+	/** 获取最小等级。 / Returns the min level. */
+	@Getter
 	@XmlAttribute(name = "min_level")
 	protected int minLevel;
 
+	/** 获取最大等级。 / Returns the max level. */
+	@Getter
 	@XmlAttribute(name = "max_level")
 	protected int maxLevel;
-
-	/** 返回 looting num / Returns the looting num */
-	public int getLootingNum() {
-		return lootingNum;
-	}
-
-	/** 返回物品 ID / Returns the itemid */
-	public int getItemid() {
-		return itemid;
-	}
-
-	/** 获取最小等级。 / Returns the min level. */
-	public int getMinLevel() {
-		return minLevel;
-	}
-
-	/** 获取最大等级。 / Returns the max level. */
-	public int getMaxLevel() {
-		return maxLevel;
-	}
 }

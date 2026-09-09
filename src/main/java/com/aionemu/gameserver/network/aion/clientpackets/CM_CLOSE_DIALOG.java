@@ -45,14 +45,13 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 		if (obj == null) {
 			return;
 		}
-		if (obj instanceof Npc) {
-			Npc npc = (Npc) obj;
+		if (obj instanceof Npc npc) {
 			npc.getAi2().onCreatureEvent(AIEventType.DIALOG_FINISH, player);
 			DialogService.onCloseDialog(npc, player);
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, (byte) obj.getHeading()));
+					client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, obj.getHeading()));
 				}
 			}, 1200);
 		}

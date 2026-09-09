@@ -1,10 +1,5 @@
 package com.aionemu.gameserver.world.geo.path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -19,6 +14,8 @@ import java.util.concurrent.TimeoutException;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class PathServiceConcurrencyTest {
 
 	@Test
@@ -30,7 +27,7 @@ class PathServiceConcurrencyTest {
 
 		assertTrue(pathfinders.getMaximumPoolSize() >= 1 && pathfinders.getMaximumPoolSize() <= 8);
 		assertEquals(pathfinders.getCorePoolSize(), pathfinders.getMaximumPoolSize());
-		assertTrue(pathfinders.getQueue() instanceof PriorityBlockingQueue);
+		assertInstanceOf(PriorityBlockingQueue.class, pathfinders.getQueue());
 		service.destroy();
 		assertTrue(pathfinders.isShutdown());
 	}
@@ -169,7 +166,7 @@ class PathServiceConcurrencyTest {
 
 			ExecutionException failure = assertThrows(ExecutionException.class,
 					() -> queued.get(1, TimeUnit.SECONDS));
-			assertTrue(failure.getCause() instanceof PathService.QueueExpiredException);
+			assertInstanceOf(PathService.QueueExpiredException.class, failure.getCause());
 			assertFalse(PathService.isDefinitivePathFailure(failure.getCause()));
 			assertEquals(1, service.metrics().queueExpired());
 			assertEquals(0, service.metrics().timedOut());
@@ -220,7 +217,7 @@ class PathServiceConcurrencyTest {
 				return new float[0][];
 			});
 
-			assertEquals(null, result);
+			assertNull(result);
 			assertEquals(1, service.metrics().submitted());
 			assertEquals(1, service.metrics().timedOut());
 		} finally {

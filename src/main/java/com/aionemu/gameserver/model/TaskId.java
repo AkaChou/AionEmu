@@ -61,5 +61,5 @@ public enum TaskId {
 	/** 迷你兵传送检查 / Minion Teleport Check */
 	MINION_TELEPORT_CHECK,
 	/** 可攻击任务目标诱导检查 / Attackable quest-target lure check */
-	QUEST_LURE;
+	QUEST_LURE
 }

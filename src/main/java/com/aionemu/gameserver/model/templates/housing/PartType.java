@@ -30,10 +30,10 @@ public enum PartType {
 	/** 附加 / Addon. */
 	ADDON(27, 27);
 
-	private int lineNrStart;
-	private int lineNrEnd;
+	private final int lineNrStart;
+	private final int lineNrEnd;
 
-	private PartType(int packetLineStart, int packetLineEnd) {
+	PartType(int packetLineStart, int packetLineEnd) {
 		this.lineNrStart = packetLineStart;
 		this.lineNrEnd = packetLineEnd;
 	}

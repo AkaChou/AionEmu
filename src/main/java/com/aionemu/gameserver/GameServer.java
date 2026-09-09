@@ -174,47 +174,47 @@ public class GameServer {
 		if (!backupDir.exists() && !backupDir.mkdirs()) {
 			log.error(I18n.get("log.77147bf4cff7", backupDir.getAbsolutePath()));
 		}
-		
+
 		File logDir = new File("./log/");
 		File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
-		
+
 		if (logFiles != null && logFiles.length > 0) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HHmmss");
 			String outFilename = "./log/backup/" + dateFormat.format(new Date()) + ".zip";
-			
+
 			try (FileOutputStream fos = new FileOutputStream(outFilename);
 				 ZipOutputStream zos = new ZipOutputStream(fos)) {
-				
+
 				zos.setLevel(Deflater.BEST_SPEED);
 				byte[] buffer = new byte[32768];
-				
+
 				for (File logFile : logFiles) {
 					try (FileInputStream fis = new FileInputStream(logFile)) {
 						ZipEntry entry = new ZipEntry(logFile.getName());
 						zos.putNextEntry(entry);
-						
+
 						int length;
 						while ((length = fis.read(buffer)) > 0) {
 							zos.write(buffer, 0, length);
 						}
-						
+
 						zos.closeEntry();
 					} catch (IOException e) {
 						log.error(I18n.get("log.c1a01a282f44", logFile.getName(), e));
 					}
-					
+
 					if (!logFile.delete()) {
 						log.error(I18n.get("log.f20ba663444a", logFile.getName()));
 					}
 				}
-				
+
 				log.info(I18n.get("log.038919cb0a3e", logFiles.length, outFilename));
-				
+
 			} catch (IOException e) {
 				log.error(I18n.get("log.6f01b0cf500e", outFilename, e));
 			}
 		}
-		
+
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		try {
 			LogbackConfiguration.configure(lc);
@@ -1483,7 +1483,7 @@ public class GameServer {
 		if (startupHooks != null && !startupHooks.isEmpty()) {
 			log.info(I18n.get("log.a5ddca4aaca5", startupHooks.size()));
 			long hooksStart = System.currentTimeMillis();
-			
+
 			for (StartupHook hook : startupHooks) {
 				try {
 					long hookStart = System.currentTimeMillis();
@@ -1494,7 +1494,7 @@ public class GameServer {
 					log.error(I18n.get("log.00fadfdcf59f", e));
 				}
 			}
-			
+
 			long hooksTime = System.currentTimeMillis() - hooksStart;
 			log.info(I18n.get("log.ca08b9810fb8", hooksTime));
 		} else {
@@ -1606,11 +1606,11 @@ public class GameServer {
 	 * 启动完成后回调钩子。
 	 * Callback hook invoked after startup completes.
 	 */
-	public static abstract interface StartupHook {
+	public interface StartupHook {
 		/**
 		 * 启动钩子回调。
 		 * Startup hook callback.
 		 */
-		public abstract void onStartup();
+		void onStartup();
 	}
 }

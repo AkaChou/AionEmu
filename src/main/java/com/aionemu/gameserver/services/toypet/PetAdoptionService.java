@@ -79,10 +79,7 @@ public class PetAdoptionService {
 		if (player.getPetList().hasPet(petId)) {
 			return false;
 		}
-		if (DataManager.PET_DATA.getPetTemplate(petId) == null) {
-			return false;
-		}
-		return true;
+		return DataManager.PET_DATA.getPetTemplate(petId) != null;
 	}
 
 	/**

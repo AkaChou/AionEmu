@@ -7,6 +7,9 @@ import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 特殊欧比斯着陆点生命周期抽象基类。
@@ -14,9 +17,15 @@ import com.aionemu.gameserver.services.AbyssLandingSpecialService;
  *
  * @param <RL> 特殊着陆点位置类型 / Special landing-location type
  */
+@RequiredArgsConstructor
 public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	private boolean started;
 	private final RL spacialLandingLocation;
+	/**
+	 * @return 当前状态类型 / Current state type
+	 */
+	@Getter
+	@Setter
 	private LandingSpecialStateType type;
 
 	/**
@@ -32,13 +41,6 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	protected abstract void startLanding();
 
 	private final AtomicBoolean closed = new AtomicBoolean();
-
-	/**
-	 * @param specialLandingLocation 特殊着陆点位置 / Special landing location
-	 */
-	public SpecialLanding(RL specialLandingLocation) {
-		this.spacialLandingLocation = specialLandingLocation;
-	}
 
 	/**
 	 * 幂等启动：已启动则直接返回。
@@ -104,20 +106,6 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	 */
 	public int getSpecialLandingLocationId() {
 		return spacialLandingLocation.getId();
-	}
-
-	/**
-	 * @return 当前状态类型 / Current state type
-	 */
-	public LandingSpecialStateType getType() {
-		return this.type;
-	}
-
-	/**
-	 * @param tp 状态类型 / State type
-	 */
-	public void setType(LandingSpecialStateType tp) {
-		this.type = tp;
 	}
 
 	/**

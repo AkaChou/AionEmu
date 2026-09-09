@@ -24,9 +24,9 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 {
 	private Player owner;
 	public static int EVENT_SET_CREATOR = 1;
-	private static int SERVICE_TIME = 10 * 60 * 1000;
-	private static int SPAWN_ACTION_DELAY = 1000;
-	
+	private static final int SERVICE_TIME = 10 * 60 * 1000;
+	private static final int SPAWN_ACTION_DELAY = 1000;
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -37,7 +37,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new DeliveryManSpawnAction(), SPAWN_ACTION_DELAY);
 		super.handleSpawned();
 	}
-	
+
 	/**
 	 * 处理消失事件。
 	 * Handle despawn.
@@ -47,7 +47,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 		sendMsg(390267, getObjectId(), false, 0);
 		super.handleDespawned();
 	}
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -61,7 +61,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 			player.getMailbox().sendMailList(true);
 		}
 	}
-	
+
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
@@ -74,7 +74,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 			FollowEventHandler.creatureMoved(this, creature);
 		}
 	}
-	
+
 	/**
 	 * 处理自定义事件。
 	 * Handle custom event.
@@ -88,14 +88,14 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 			owner = (Player) args[0];
 		}
 	}
-	
+
 	private final class DeleteDeliveryMan implements Runnable {
 		@Override
 		public void run() {
 			AI2Actions.deleteOwner(DeliveryManAI2.this);
 		}
 	}
-	
+
 	private final class DeliveryManSpawnAction implements Runnable {
 		@Override
 		public void run() {
@@ -105,7 +105,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 			handleCreatureMoved(owner);
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

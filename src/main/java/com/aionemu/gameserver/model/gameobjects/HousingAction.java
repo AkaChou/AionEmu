@@ -11,9 +11,9 @@ public enum HousingAction {
 	/** 消失对象 / Despawn Object. */
 	DESPAWN_OBJECT(7), ENTER_RENOVATION(14), EXIT_RENOVATION(15), CHANGE_APPEARANCE(16);
 
-	private int id;
+	private final int id;
 
-	private HousingAction(int id) {
+	HousingAction(int id) {
 		this.id = id;
 	}
 

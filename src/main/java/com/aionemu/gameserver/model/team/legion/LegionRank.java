@@ -18,9 +18,9 @@ public enum LegionRank {
 	/** 志愿兵 / Volunteer. */
 	VOLUNTEER(4);
 
-	private byte rank;
+	private final byte rank;
 
-	private LegionRank(int rank) {
+	LegionRank(int rank) {
 		this.rank = (byte) rank;
 	}
 

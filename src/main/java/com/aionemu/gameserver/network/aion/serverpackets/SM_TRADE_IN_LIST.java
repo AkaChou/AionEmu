@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 打开 NPC 以物易物（Trade-In）列表的服务端包。
@@ -12,21 +13,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Rinzler (30.03.2014)
  */
+@AllArgsConstructor
 public class SM_TRADE_IN_LIST extends AionServerPacket {
-	private Npc npc;
-	private TradeListTemplate tlist;
-	private int buyPriceModifier;
-
-	/**
-	 * trade NPC
-	 * @param tlist            以物易物列表模板 / trade-in list template
-	 * price modifier
-	 */
-	public SM_TRADE_IN_LIST(Npc npc, TradeListTemplate tlist, int buyPriceModifier) {
-		this.npc = npc;
-		this.tlist = tlist;
-		this.buyPriceModifier = buyPriceModifier;
-	}
+	private final Npc npc;
+	private final TradeListTemplate tlist;
+	private final int buyPriceModifier;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

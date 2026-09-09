@@ -16,11 +16,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ABYSS_RANKING_PLAYERS extends AionServerPacket {
 
-	private List<AbyssRankingResult> data;
-	private int lastUpdate;
-	private int race;
-	private int page;
-	private boolean isEndPacket;
+	private final List<AbyssRankingResult> data;
+	private final int lastUpdate;
+	private final int race;
+	private final int page;
+	private final boolean isEndPacket;
 
 	/**
 	 * 使用分页排行数据构造同步包。

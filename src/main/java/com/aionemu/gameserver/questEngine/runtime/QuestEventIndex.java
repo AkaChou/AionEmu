@@ -5,18 +5,12 @@ import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalInt;
+import java.util.*;
 
-/** 仅由编译定义构建的确定性事件到拥有者索引。 / Deterministic event-to-owner index built only from compiled definitions. */
-public final class QuestEventIndex {
-	private final Map<QuestEvent, List<Route>> routes;
-
+/**
+ * 仅由编译定义构建的确定性事件到拥有者索引。 / Deterministic event-to-owner index built only from compiled definitions.
+ */
+public record QuestEventIndex(Map<QuestEvent, List<Route>> routes) {
 	public QuestEventIndex(QuestCatalog catalog) {
 		List<CompiledQuestDefinition> definitions = new ArrayList<>(catalog.executables());
 		definitions.sort(Comparator.comparingInt(CompiledQuestDefinition::id));
@@ -25,7 +19,7 @@ public final class QuestEventIndex {
 			for (QuestTransition transition : definition.definition().transitions()) {
 				for (QuestEvent routeKey : routeKeys(transition.event())) {
 					mutable.computeIfAbsent(routeKey, ignored -> new ArrayList<>())
-							.add(new Route(definition.id(), transition));
+						.add(new Route(definition.id(), transition));
 				}
 			}
 		}
@@ -34,12 +28,12 @@ public final class QuestEventIndex {
 			.thenComparing(route -> route.transition().priority(), Comparator.nullsLast(Integer::compareTo));
 		mutable.forEach((event, entries) -> frozen.put(event,
 			entries.stream().sorted(routeOrder).toList()));
-		this.routes = Collections.unmodifiableMap(frozen);
+		this(Collections.unmodifiableMap(frozen));
 	}
 
 	private static List<QuestEvent> routeKeys(QuestEvent event) {
-		if (event instanceof QuestEvent.KillNpcSet kills) {
-			return kills.npcIds().stream().sorted()
+		if (event instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
+			return npcIds.stream().sorted()
 				.map(npcId -> (QuestEvent) new QuestEvent.KillNpc(npcId)).toList();
 		}
 		return List.of(QuestEvent.routeKey(event));
@@ -100,9 +94,6 @@ public final class QuestEventIndex {
 		return OptionalInt.of(duration);
 	}
 
-	public Map<QuestEvent, List<Route>> routes() {
-		return routes;
-	}
 
 	public record Route(int questId, QuestTransition transition) {
 	}

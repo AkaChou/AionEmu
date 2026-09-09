@@ -22,9 +22,9 @@ public enum AuctionResult {
 	/** 宽限期成功 / Grace success. */
 	GRACE_SUCCESS(7);
 
-	private int value;
+	private final int value;
 
-	private AuctionResult(int value) {
+	AuctionResult(int value) {
 		this.value = value;
 	}
 

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services.toypet;
 
+import lombok.Getter;
+
 /**
  * 宠物饥饿等级。
  * Pet hunger level.
@@ -16,20 +18,17 @@ public enum PetHungryLevel {
 	/** 吃饱 / Full */
 	FULL(3);
 
-	private byte value;
-
-	PetHungryLevel(int value) {
-		this.value = (byte) value;
-	}
-
 	/**
 	 * 返回等级对应的数值。
 	 * Returns the numeric value of this level.
 	 *
 	 * Level value
 	 */
-	public byte getValue() {
-		return value;
+	@Getter
+	private final byte value;
+
+	PetHungryLevel(int value) {
+		this.value = (byte) value;
 	}
 
 	/**

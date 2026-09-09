@@ -26,6 +26,8 @@ import com.aionemu.gameserver.model.templates.item.actions.ItemActions;
 import com.aionemu.gameserver.model.templates.itemset.ItemSetTemplate;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 物品模板：定义物品全部静态属性（分类、品质、装备、强化等）。
@@ -35,47 +37,64 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(namespace = "", name = "ItemTemplate")
 public class ItemTemplate extends VisibleObjectTemplate {
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	@XmlID
 	private String id;
+	/** 设置物品 ID / Sets the item id */
+	@Setter
 	private int itemId;
 
 	@XmlElement(name = "modifiers", required = false)
 	protected ModifiersTemplate modifiers;
 
+	/** 返回 descr / Returns the descr */
+	@Getter
 	@XmlAttribute(name = "descr")
 	private String descr;
 
+	@Getter
 	@XmlElement(name = "actions", required = false)
 	protected ItemActions actions;
 
+	/** 返回 namedesc / Returns the namedesc */
+	@Getter
 	@XmlAttribute(name = "name_desc")
 	private String namedesc;
 
+	@Getter
 	@XmlAttribute(name = "mask")
 	private int mask;
 
+	@Getter
 	@XmlAttribute(name = "category")
 	private ItemCategory category = ItemCategory.NONE;
 
+	@Getter
 	@XmlAttribute(name = "slot")
 	private int itemSlot;
 
+	@Getter
 	@XmlAttribute(name = "equipment_type")
 	private EquipType equipmentType = EquipType.NONE;
 
+	/** 返回武器加速 / Returns the weapon boost*/
+	@Getter
 	@XmlAttribute(name = "weapon_boost")
 	private int weaponBoost;
 
+	@Getter
 	@XmlAttribute(name = "price")
 	private int price;
 
+	@Getter
 	@XmlAttribute(name = "luna_price")
 	private int lunaPrice;
 
 	@XmlAttribute(name = "robot_id")
 	private int robot_id;
 
+	@Getter
 	@XmlAttribute(name = "abyss_point")
 	private int abyssPoint;
 
@@ -85,30 +104,37 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "unit_sell_count")
 	private int unitSellCount = 1;
 
+	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 
+	@Getter
 	@XmlAttribute(name = "quality")
 	private ItemQuality itemQuality;
 
+	@Getter
 	@XmlAttribute(name = "item_type")
 	private ItemType itemType;
 
+	@Getter
 	@XmlAttribute(name = "weapon_type")
 	private WeaponType weaponType;
 
 	@XmlAttribute(name = "armor_type")
 	private ArmorType armorType;
 
+	@Getter
 	@XmlAttribute(name = "attack_type")
 	private ItemAttackType attackType;
 
+	@Getter
 	@XmlAttribute(name = "attack_gap")
 	private float attackGap;
 
 	@XmlAttribute(name = "desc")
 	private String description;
 
+	@Getter
 	@XmlAttribute(name = "option_slot_bonus")
 	private int optionSlotBonus;
 
@@ -121,15 +147,22 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "wrappable_count")
 	private int wrappable_count = 0;
 
+	/** 返回 max authorize / Returns the max authorize */
+	@Getter
 	@XmlAttribute(name = "max_authorize")
 	private int maxAuthorize;
 
+	/** 返回 tempering table id / Returns the tempering table id */
+	@Getter
 	@XmlAttribute(name = "tempering_table_id")
 	private int temperingTableId;
 
+	/** 返回 robot name / Returns the robot name */
+	@Getter
 	@XmlAttribute(name = "robot_name")
 	private int robotName = 0;
 
+	@Getter
 	@XmlAttribute(name = "bonus_apply")
 	private String bonusApply;
 
@@ -139,18 +172,28 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "dye")
 	private boolean itemDyePermitted;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race")
 	private Race race = Race.PC_ALL;
 
+	/** 返回返回世界 ID / Returns the return world id */
+	@Getter
 	@XmlAttribute(name = "return_world")
 	private int returnWorldId;
 
+	/** 返回 return alias / Returns the return alias */
+	@Getter
 	@XmlAttribute(name = "return_alias")
 	private String returnAlias;
 
+	/** 返回神石信息 / Returns the godstone info*/
+	@Getter
 	@XmlElement(name = "godstone")
 	private GodstoneInfo godstoneInfo;
 
+	/** 返回烙印之石 / Returns the stigma*/
+	@Getter
 	@XmlElement(name = "stigma")
 	private Stigma stigma;
 
@@ -169,9 +212,13 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlTransient
 	private byte[] restrictsMax;
 
+	/** 返回魔石槽位 / Returns the manastone slots*/
+	@Getter
 	@XmlAttribute(name = "m_slots")
 	private int manastoneSlots;
 
+	/** 返回特殊槽位 / Returns the special slots*/
+	@Getter
 	@XmlAttribute(name = "s_slots")
 	private int specialSlots;
 
@@ -184,42 +231,63 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "temp_exchange_time")
 	protected int temExchangeTime;
 
+	/** 获取过期时间。 / Returns the expire time. */
+	@Getter
 	@XmlAttribute(name = "expire_time")
 	protected int expireTime;
 
 	@XmlElement(name = "weapon_stats")
 	protected WeaponStats weaponStats;
 
+	/** 返回 activation count / Returns the activation count */
+	@Getter
 	@XmlAttribute(name = "activate_count")
 	private int activationCount;
 
 	@XmlAttribute(name = "func_pet_id")
 	private int funcPetId;
 
+	/** 返回 tradein list / Returns the tradein list */
+	@Getter
 	@XmlElement(name = "tradein_list")
 	protected TradeinList tradeinList;
 
+	/** 返回 acquisition / Returns the acquisition */
+	@Getter
 	@XmlElement(name = "acquisition")
 	private Acquisition acquisition;
 
+	/** 返回 disposition / Returns the disposition */
+	@Getter
 	@XmlElement(name = "disposition")
 	private Disposition disposition;
 
+	/** 返回 improvement / Returns the improvement */
+	@Getter
 	@XmlElement(name = "improve")
 	private Improvement improvement;
 
+	/** 返回 use limits / Returns the use limits */
+	@Getter
 	@XmlElement(name = "uselimits")
 	private ItemUseLimits useLimits = new ItemUseLimits();
 
+	/** 返回 purchable limits / Returns the purchable limits */
+	@Getter
 	@XmlElement(name = "purchable")
 	private ItemPurchableLimits purchableLimits = new ItemPurchableLimits();
 
 	@XmlElement(name = "inventory")
 	private ExtraInventory extraInventory;
 
+	/** 获取伊迪安动作。 / Returns the idian action. */
+	@Getter
 	@XmlElement(name = "idian")
 	private Idian idianAction;
 
+	/** 是否任务更新物品 / Whether quest update item*/
+	@Getter
+	@Setter
 	@XmlTransient
 	private boolean isQuestUpdateItem;
 
@@ -235,6 +303,8 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "enchant_base")
 	private int enchant_base = 0;
 
+	/** 返回 item custom set / Returns the item custom set */
+	@Getter
 	@XmlAttribute(name = "item_custom_set")
 	private int itemCustomSet = 0;
 
@@ -278,22 +348,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return 0;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public int getMask() {
-		return mask;
-	}
-
-	public ItemCategory getCategory() {
-		return category;
-	}
-
-	public int getItemSlot() {
-		return itemSlot;
-	}
-
 	/**
 	 * @param playerClass
 	 * @return
@@ -330,44 +384,8 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return null;
 	}
 
-	public ItemActions getActions() {
-		return actions;
-	}
-
-	public EquipType getEquipmentType() {
-		return equipmentType;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public int getLunaPrice() {
-		return lunaPrice;
-	}
-
 	public int getRobotId() {
 		return robot_id;
-	}
-
-	public int getAbyssPoint() {
-		return abyssPoint;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public ItemQuality getItemQuality() {
-		return itemQuality;
-	}
-
-	public ItemType getItemType() {
-		return itemType;
-	}
-
-	public WeaponType getWeaponType() {
-		return weaponType;
 	}
 
 	public ArmorType getArmorType() {
@@ -408,22 +426,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return maxStackCount;
 	}
 
-	public ItemAttackType getAttackType() {
-		return attackType;
-	}
-
-	public float getAttackGap() {
-		return attackGap;
-	}
-
-	public int getOptionSlotBonus() {
-		return optionSlotBonus;
-	}
-
-	public String getBonusApply() {
-		return bonusApply;
-	}
-
 	/** 是否无强化 / Whether no enchant */
 	public boolean isNoEnchant() {
 		return (getMask() & ItemMask.NO_ENCHANT) == ItemMask.NO_ENCHANT;
@@ -432,16 +434,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	/** 是否允许物品染色 / Whether item dye permitted */
 	public boolean isItemDyePermitted() {
 		return (getMask() & ItemMask.DYEABLE) == ItemMask.DYEABLE;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 返回武器加速 / Returns the weapon boost*/
-	public int getWeaponBoost() {
-		return weaponBoost;
 	}
 
 	/** 是否武器 / Whether weapon*/
@@ -517,11 +509,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return name.endsWith("(Inert)");
 	}
 
-	/** 设置物品 ID / Sets the item id */
-	public void setItemId(int itemId) {
-		this.itemId = itemId;
-	}
-
 	/**
 	 * @return id of the associated ItemSetTemplate or null if none
 	 */
@@ -536,11 +523,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return getItemSet() != null;
 	}
 
-	/** 返回神石信息 / Returns the godstone info*/
-	public GodstoneInfo getGodstoneInfo() {
-		return godstoneInfo;
-	}
-
 	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
@@ -551,31 +533,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@Override
 	public int getTemplateId() {
 		return itemId;
-	}
-
-	/** 返回返回世界 ID / Returns the return world id */
-	public int getReturnWorldId() {
-		return returnWorldId;
-	}
-
-	/** 返回 return alias / Returns the return alias */
-	public String getReturnAlias() {
-		return returnAlias;
-	}
-
-	/** 返回烙印之石 / Returns the stigma*/
-	public Stigma getStigma() {
-		return stigma;
-	}
-
-	/** 返回魔石槽位 / Returns the manastone slots*/
-	public int getManastoneSlots() {
-		return manastoneSlots;
-	}
-
-	/** 返回特殊槽位 / Returns the special slots*/
-	public int getSpecialSlots() {
-		return specialSlots;
 	}
 
 	/** 返回最大强化等级 / Returns the max enchant level*/
@@ -664,19 +621,9 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return temExchangeTime;
 	}
 
-	/** 获取过期时间。 / Returns the expire time. */
-	public int getExpireTime() {
-		return expireTime;
-	}
-
 	/** 返回 weapon stats / Returns the weapon stats */
 	public final WeaponStats getWeaponStats() {
 		return weaponStats;
-	}
-
-	/** 返回 activation count / Returns the activation count */
-	public int getActivationCount() {
-		return activationCount;
 	}
 
 	/** 返回 func pet id / Returns the func pet id */
@@ -712,16 +659,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return useLimits.getUseArea();
 	}
 
-	/** 返回 tradein list / Returns the tradein list */
-	public TradeinList getTradeinList() {
-		return tradeinList;
-	}
-
-	/** 返回 acquisition / Returns the acquisition */
-	public Acquisition getAcquisition() {
-		return acquisition;
-	}
-
 	/** 返回 random bonus id / Returns the random bonus id */
 	public int getRandomBonusId() {
 		return rnd_bonus;
@@ -737,49 +674,9 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return wrappable_count;
 	}
 
-	/** 返回 max authorize / Returns the max authorize */
-	public int getMaxAuthorize() {
-		return maxAuthorize;
-	}
-
-	/** 返回 tempering table id / Returns the tempering table id */
-	public int getTemperingTableId() {
-		return temperingTableId;
-	}
-
-	/** 返回 robot name / Returns the robot name */
-	public int getRobotName() {
-		return robotName;
-	}
-
-	/** 返回 improvement / Returns the improvement */
-	public Improvement getImprovement() {
-		return improvement;
-	}
-
-	/** 返回 use limits / Returns the use limits */
-	public ItemUseLimits getUseLimits() {
-		return useLimits;
-	}
-
-	/** 返回 purchable limits / Returns the purchable limits */
-	public ItemPurchableLimits getPurchableLimits() {
-		return purchableLimits;
-	}
-
-	/** 返回 disposition / Returns the disposition */
-	public Disposition getDisposition() {
-		return disposition;
-	}
-
 	/** 返回 ownership world / Returns the ownership world */
 	public int getOwnershipWorld() {
 		return useLimits.getOwnershipWorld();
-	}
-
-	/** 获取伊迪安动作。 / Returns the idian action. */
-	public Idian getIdianAction() {
-		return idianAction;
 	}
 
 	/** 是否为组合物品 / Whether combination item */
@@ -830,16 +727,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 				|| category == ItemCategory.HELMET;
 	}
 
-	/** 是否任务更新物品 / Whether quest update item*/
-	public boolean isQuestUpdateItem() {
-		return isQuestUpdateItem;
-	}
-
-	/** 设置任务更新物品 / Sets the quest update item*/
-	public void setQuestUpdateItem(boolean value) {
-		this.isQuestUpdateItem = value;
-	}
-
 	/** 返回 extra inventory id / Returns the extra inventory id */
 	public int getExtraInventoryId() {
 		if (extraInventory == null) {
@@ -868,11 +755,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return enchant_base;
 	}
 
-	/** 返回 item custom set / Returns the item custom set */
-	public int getItemCustomSet() {
-		return itemCustomSet;
-	}
-
 	/** 返回 minion ticket / Returns the minion ticket */
 	public boolean getMinionTicket() {
 		return this.minion_ticket;
@@ -888,15 +770,5 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	/** 返回 skill enhance / Returns the skill enhance */
 	public int getSkillEnhance() {
 		return skill_enchant;
-	}
-
-	/** 返回 descr / Returns the descr */
-	public String getDescr() {
-		return descr;
-	}
-
-	/** 返回 namedesc / Returns the namedesc */
-	public String getNamedesc() {
-		return namedesc;
 	}
 }

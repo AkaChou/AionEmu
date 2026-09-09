@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.model.items.ItemSlot;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 装备方案应用动作（穿戴/卸下/切换主副手）。
  * Equipment preset apply action (equip / unequip / switch hands).
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 class EquipmentSettingUseAction {
 
 	/** 穿戴动作 / Equip action. */
@@ -36,17 +39,6 @@ class EquipmentSettingUseAction {
 	 * Item object id.
 	 */
 	private final int itemObjectId;
-
-	/**
-	 * 动作类型 / action type
-	 * 目标槽位掩码 / slot
-	 * 物品对象 ID / item object id
-	 */
-	EquipmentSettingUseAction(int action, long slot, int itemObjectId) {
-		this.action = action;
-		this.slot = slot;
-		this.itemObjectId = itemObjectId;
-	}
 
 	/**
 	 * 对目标执行本动作。

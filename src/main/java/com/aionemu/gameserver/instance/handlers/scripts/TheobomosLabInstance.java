@@ -39,8 +39,8 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 		/** elementsealingstone 任务 / element sealing stone task */
 		private Future<?> elementSealingStoneTask;
 		/** element sealing stone / element sealing stone */
-		private List<Npc> elementSealingStone = new ArrayList<Npc>();
-	
+		private final List<Npc> elementSealingStone = new ArrayList<Npc>();
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -167,7 +167,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -190,7 +190,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -220,7 +220,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			}, 180000);
 		}
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -292,13 +292,13 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -321,7 +321,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

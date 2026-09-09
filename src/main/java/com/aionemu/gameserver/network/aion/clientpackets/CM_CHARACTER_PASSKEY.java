@@ -15,6 +15,8 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * 角色二级密码（Passkey）设置/校验的客户端包。
  * Client packet for character passkey setup and verification.
@@ -36,9 +38,9 @@ public class CM_CHARACTER_PASSKEY extends AionClientPacket {
 		type = readC();
 		unk = readC();
 		try {
-			passkey = new String(readB(32), "UTF-16le");
+			passkey = new String(readB(32), StandardCharsets.UTF_16LE);
 			if (type == 2) {
-				newPasskey = new String(readB(32), "UTF-16le");
+				newPasskey = new String(readB(32), StandardCharsets.UTF_16LE);
 			}
 		} catch (Exception e) {
 		}

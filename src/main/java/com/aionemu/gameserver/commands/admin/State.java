@@ -57,12 +57,10 @@ public class State extends AdminCommand {
 			return;
 		}
 
-		if (!(target instanceof Creature)) {
+		if (!(target instanceof Creature creature)) {
 			PacketSendUtility.sendMessage(admin, "You can select only creatures!!!");
 			return;
 		}
-
-		Creature creature = (Creature) target;
 
 		if (params[0].equals("show")) {
 			if (params.length != 1) {

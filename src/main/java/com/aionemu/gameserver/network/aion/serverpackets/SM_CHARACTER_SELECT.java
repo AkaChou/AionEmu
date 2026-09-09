@@ -3,6 +3,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 角色选择阶段二级密码（Passkey）相关 UI 与结果消息的服务端包。
@@ -10,22 +11,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author cura
  */
+@RequiredArgsConstructor
 public class SM_CHARACTER_SELECT extends AionServerPacket {
 
-	private int type; // 0: new passkey input window, 1: passkey input window, 2: message window
+	private final int type; // 0: new passkey input window, 1: passkey input window, 2: message window
 	private int messageType; // 0: newpasskey complete, 2: passkey edit complete, 3: passkey input
 	private int wrongCount;
 	private int unk;
-
-	/**
-	 * 打开二级密码相关窗口（新建/输入）。
-	 * input).
-	 *
-	 * @param type 窗口类型：0 新建、1 输入、2 消息 / window type: 0 create, 1 input, 2 message
-	 */
-	public SM_CHARACTER_SELECT(int type) {
-		this.type = type;
-	}
 
 	/**
 	 * 返回二级密码操作结果消息。

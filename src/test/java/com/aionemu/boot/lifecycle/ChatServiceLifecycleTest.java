@@ -1,8 +1,5 @@
 package com.aionemu.boot.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyChatConfigOverrides;
 import com.aionemu.boot.config.LegacyChatProperties;
@@ -21,6 +18,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.DefaultApplicationArguments;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class ChatServiceLifecycleTest {
 
     @TempDir
@@ -34,13 +33,13 @@ class ChatServiceLifecycleTest {
     @Test
     void usesChatServerLifecycleGatewayInsteadOfActionAdapters() {
         assertEquals(ChatServerLifecycleGateway.class, fieldType("chatServerLifecycleGateway"));
-        assertEquals(null, findFieldType("startAction"));
-        assertEquals(null, findFieldType("stopAction"));
+		assertNull(findFieldType("startAction"));
+		assertNull(findFieldType("stopAction"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "chatServerRuntimeProvider"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "runtimeBridgeProvider"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerRuntimeBridge.class, "chatServerRuntimeProvider"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerRuntimeBridge.class, "processBridgeProvider"));
-        assertEquals(null, findFieldType(ChatServerLifecycleGateway.class, "chatServerRuntime"));
+		assertNull(findFieldType(ChatServerLifecycleGateway.class, "chatServerRuntime"));
     }
 
     @Test

@@ -16,7 +16,7 @@ public enum WrappingUseTarget {
 	/** 全部 / All. */
 	ALL, ARMOR, OTHER, WEAPON, ACCESSORY, EQUIPMENT;
 
-	private WrappingUseTarget() {
+	WrappingUseTarget() {
 	}
 
 	/** 值。 / Value. */

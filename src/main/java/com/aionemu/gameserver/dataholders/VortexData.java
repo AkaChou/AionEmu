@@ -28,9 +28,9 @@ public class VortexData {
 	@XmlElement(name = "vortex_location")
 	private List<VortexTemplate> vortexTemplates;
 	@XmlTransient
-	private Map<Integer, VortexLocation> vortex = new LinkedHashMap<Integer, VortexLocation>();
+	private final Map<Integer, VortexLocation> vortex = new LinkedHashMap<Integer, VortexLocation>();
 	@XmlTransient
-	private Map<Integer, VortexLocation> vortexByInvasionWorldId = new HashMap<Integer, VortexLocation>();
+	private final Map<Integer, VortexLocation> vortexByInvasionWorldId = new HashMap<Integer, VortexLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板索引为漩涡点位映射。

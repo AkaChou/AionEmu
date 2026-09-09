@@ -24,15 +24,12 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.EvergaleCanyonReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -65,19 +62,18 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
 		/** evergalecanyon 任务 / evergale canyon task */
 		private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
-	
+
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
         evergaleCanyonReward.regPlayerReward(player);
-        return (EvergaleCanyonPlayerReward) evergaleCanyonReward.getPlayerReward(player.getObjectId());
+        return evergaleCanyonReward.getPlayerReward(player.getObjectId());
     }
-	
+
     private boolean containPlayer(Integer object) {
         return evergaleCanyonReward.containPlayer(object);
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -92,12 +88,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         switch (npcId) {
         }
     }
-	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(0, storage.getItemCountByItemId(0));
-	}
-	
+
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
         evergaleCanyonReward.setInstanceStartTime();
@@ -178,7 +169,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         }, 1800000));
     }
-	
+
 	protected void stopInstance(Race race) {
         stopInstanceTask();
         evergaleCanyonReward.setWinnerRace(race);
@@ -186,7 +177,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         reward();
         evergaleCanyonReward.sendPacket(5, null);
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -200,7 +191,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
         sendEnterPacket(player);
     }
-	
+
 	private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -227,7 +218,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-	
+
 	private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -245,7 +236,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         });
     }
-	
+
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
@@ -275,7 +266,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             });
     	}
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -300,7 +291,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -314,9 +305,9 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			int abyssPoint = 3163;
 			int gloryPoint = 150;
 			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
+			playerReward.setRewardAp(abyssPoint);
+            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(evergaleCanyonReward.getWinnerRace())) {
                 abyssPoint += evergaleCanyonReward.AbyssReward(true, isCommanderKilled(player.getRace()));
                 gloryPoint += evergaleCanyonReward.GloryReward(true, isCommanderKilled(player.getRace()));
@@ -345,8 +336,8 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			}
 			ItemService.addItem(player, 186000472, 10); //coin_ideternity_war_01.
             ItemService.addItem(player, 188100391, 500); //Fragmented Spinel 5.5
-			AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
+			AbyssPointsService.addAp(player, abyssPoint);
+            AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
         } for (Npc npc: instance.getNpcs()) {
 			npc.getController().onDelete();
@@ -367,7 +358,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
     }
-	
+
 	private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -377,7 +368,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
         return 0;
     }
-	
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -393,7 +384,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		evergaleCanyonReward.portToPosition(player);
         return true;
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -423,38 +414,35 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         updateScore(player, player, -points, false);
         return true;
     }
-	
+
 	private boolean isCommanderKilled(Race PlayerRace) {
-    	if (PlayerRace == RaceKilledCommander) {
-    		return true;
-    	}
-    	return false;
-    }
-	
+		return PlayerRace == RaceKilledCommander;
+	}
+
 	private MutableInt getPvpKillsByRace(Race race) {
         return evergaleCanyonReward.getPvpKillsByRace(race);
     }
-	
+
     private MutableInt getPointsByRace(Race race) {
         return evergaleCanyonReward.getPointsByRace(race);
     }
-	
+
     private void addPointsByRace(Race race, int points) {
         evergaleCanyonReward.addPointsByRace(race, points);
     }
-	
+
     private void addPvpKillsByRace(Race race, int points) {
         evergaleCanyonReward.addPvpKillsByRace(race, points);
     }
-	
+
     private void addPointToPlayer(Player player, int points) {
         evergaleCanyonReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-	
+
     private void addPvPKillToPlayer(Player player) {
         evergaleCanyonReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
-	
+
 	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -494,7 +482,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
         evergaleCanyonReward.sendPacket(11, player.getObjectId());
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -627,7 +615,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
 		updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -1088,19 +1076,19 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
 		updateScore(player, npc, point, false);
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1112,27 +1100,27 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         stopInstanceTask();
         doors.clear();
     }
-	
+
 	protected void openFirstDoors() {
         openDoor(352);
 		openDoor(507);
     }
-	
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
             door.setOpen(true);
         }
     }
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1150,7 +1138,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1167,7 +1155,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1193,22 +1181,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
     private void stopInstanceTask() {
         for (Future<?> task : evergaleCanyonTask) {
 			if (task != null) {
@@ -1216,7 +1189,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -1227,7 +1200,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     public InstanceReward<?> getInstanceReward() {
         return evergaleCanyonReward;
     }
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -1238,7 +1211,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1252,14 +1225,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		EvergaleCanyonPlayerReward playerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
 		playerReward.endBoostMoraleEffect(player);
     }
-	
-	private void sendMovie(Player player, int movie) {
-        if (!movies.contains(movie)) {
-             movies.add(movie);
-             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-        }
-    }
-	
+
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.

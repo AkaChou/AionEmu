@@ -20,7 +20,7 @@ public class BaseCommand extends AdminCommand
 {
 	private static final String COMMAND_LIST = "list";
 	private static final String COMMAND_CAPTURE = "capture";
-	
+
 	/**
 	 * 注册 {@code //base} 命令。
 	 * Registers the {@code //base} command.
@@ -28,7 +28,7 @@ public class BaseCommand extends AdminCommand
 	public BaseCommand() {
 		super("base");
 	}
-	
+
 	/**
 	 * 执行基地管理：list/capture 子命令。
 	 * Executes base management: list/capture subcommands.
@@ -46,7 +46,7 @@ public class BaseCommand extends AdminCommand
 			capture(player, params);
 		}
 	}
-	
+
 	/**
 	 * 校验基地地点 ID 是否有效。
 	 * Validates whether the base location id exists.
@@ -55,13 +55,13 @@ public class BaseCommand extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidBaseLocationId(Player player, int baseId) {
-		if (!GameFeatureServices.baseService().getBaseLocations().keySet().contains(baseId)) {
+		if (!GameFeatureServices.baseService().getBaseLocations().containsKey(baseId)) {
 			PacketSendUtility.sendMessage(player, "Id " + baseId + " is invalid");
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 列出所有基地及其当前归属阵营。
 	 * Lists all bases and their current owning race.
@@ -75,7 +75,7 @@ public class BaseCommand extends AdminCommand
 			PacketSendUtility.sendMessage(player, "Base:" + base.getId() + " belongs to " + base.getRace());
 		}
 	}
-	
+
 	/**
 	 * 将指定基地占领为给定阵营。
 	 * Captures the specified base for the given race.
@@ -105,7 +105,7 @@ public class BaseCommand extends AdminCommand
 			GameFeatureServices.baseService().capture(baseId, race);
 		}
 	}
-	
+
 	/**
 	 * 向管理员输出 {@code //base} 用法。
 	 * Sends {@code //base} usage help to the admin.

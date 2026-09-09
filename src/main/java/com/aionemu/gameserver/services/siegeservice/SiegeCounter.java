@@ -34,7 +34,7 @@ public class SiegeCounter {
 	public void addDamage(Creature creature, int damage) {
 		SiegeRace siegeRace;
 		if (creature instanceof Player) {
-			siegeRace = SiegeRace.getByRace(((Player) creature).getRace());
+			siegeRace = SiegeRace.getByRace(creature.getRace());
 		} else if (creature instanceof SiegeNpc) {
 			siegeRace = ((SiegeNpc) creature).getSiegeRace();
 		} else {

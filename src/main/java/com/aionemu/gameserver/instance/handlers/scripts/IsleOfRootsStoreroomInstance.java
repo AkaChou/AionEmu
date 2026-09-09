@@ -69,8 +69,8 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** isle of roots storeroom chest / isle of roots storeroom chest */
-		private List<Npc> isleOfRootsStoreroomChest = new ArrayList<Npc>();
-	
+		private final List<Npc> isleOfRootsStoreroomChest = new ArrayList<Npc>();
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -87,7 +87,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -122,7 +122,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -157,7 +157,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -256,7 +256,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -309,7 +309,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer2() {
         if (!isStartTimer2) {
 			isStartTimer2 = true;
@@ -342,7 +342,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer3() {
 	    if (!isStartTimer3) {
 			isStartTimer3 = true;
@@ -375,7 +375,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer4() {
 	    if (!isStartTimer4) {
 			isStartTimer4 = true;
@@ -408,7 +408,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer5() {
 	    if (!isStartTimer5) {
 			isStartTimer5 = true;
@@ -441,7 +441,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer6() {
 	    if (!isStartTimer6) {
 			isStartTimer6 = true;
@@ -474,7 +474,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer7() {
 	    if (!isStartTimer7) {
 			isStartTimer7 = true;
@@ -507,7 +507,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer8() {
 	    if (!isStartTimer8) {
 			isStartTimer8 = true;
@@ -540,7 +540,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer9() {
 	    if (!isStartTimer9) {
 			isStartTimer9 = true;
@@ -573,7 +573,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer10() {
 	    if (!isStartTimer10) {
 			isStartTimer10 = true;
@@ -606,7 +606,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer11() {
 	    if (!isStartTimer11) {
 			isStartTimer11 = true;
@@ -639,7 +639,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer12() {
 	    if (!isStartTimer12) {
 			isStartTimer12 = true;
@@ -672,7 +672,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -683,7 +683,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -694,7 +694,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000056, storage.getItemCountByItemId(185000056));
@@ -703,7 +703,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000059, storage.getItemCountByItemId(185000059));
 		storage.decreaseByItemId(185000060, storage.getItemCountByItemId(185000060));
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -726,7 +726,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -752,13 +752,13 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.

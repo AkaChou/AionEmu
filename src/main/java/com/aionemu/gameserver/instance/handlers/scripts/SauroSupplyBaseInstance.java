@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -17,7 +16,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.util.Map;
@@ -258,7 +256,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				} */
 				spawn(801967, 708.9197f, 884.59625f, 411.57986f, (byte) 45); //Sauro Supply Base Exit.
 				spawn(802181, 710.25726f, 889.6806f, 411.59103f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
 			break;
 			case 230858: //Brigade General Sheba.
 /* 				switch (Rnd.get(1, 2)) {
@@ -271,7 +268,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				} */
 				spawn(801967, 905.3781f, 895.2461f, 411.57785f, (byte) 75); //Sauro Supply Base Exit.
 				spawn(802181, 906.9721f, 889.6604f, 411.59854f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
 			break;
 		}
     }
@@ -290,20 +286,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000179, storage.getItemCountByItemId(185000179)); //Danuar Stone Room Key.
     }
 	
-    private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

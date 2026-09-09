@@ -82,8 +82,8 @@ class Quest24026RetailAlignmentTest {
 		assertTrue(defenseStart.afterCommit().contains(new AfterCommitAction.AttackNpcTemplate("defense-mob", 204432)));
 
 		QuestTransition defenseKill = transitions.stream()
-			.filter(t -> t.event() instanceof QuestEvent.KillNpcSet kill
-				&& kill.npcIds().equals(Set.of(213576, 213577, 213578, 213579)))
+			.filter(t -> t.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+				&& npcIds.equals(Set.of(213576, 213577, 213578, 213579)))
 			.findFirst().orElseThrow();
 		assertEquals("defense", defenseKill.targetNode());
 		assertTrue(defenseKill.afterCommit().stream().anyMatch(AfterCommitAction.SpawnNpcRandom.class::isInstance));

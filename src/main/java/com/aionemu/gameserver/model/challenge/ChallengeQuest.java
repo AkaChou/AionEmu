@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.challenge;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
+import lombok.Getter;
 
 /**
  * 挑战任务模型。
@@ -10,7 +11,11 @@ import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 
 public class ChallengeQuest {
 	private final ChallengeQuestTemplate template;
+	/** 返回 complete count / Returns the complete count */
+	@Getter
 	private int completeCount;
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
 	private PersistentState persistentState;
 
 	public ChallengeQuest(ChallengeQuestTemplate template, int completeCount) {
@@ -38,20 +43,10 @@ public class ChallengeQuest {
 		return template.getScore();
 	}
 
-	/** 返回 complete count / Returns the complete count */
-	public int getCompleteCount() {
-		return completeCount;
-	}
-
 	/** Increasecomplete 次数 / Increase complete count */
 	public synchronized void increaseCompleteCount() {
 		this.completeCount++;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/** 设置持久化状态。 / Sets the persistent state. */

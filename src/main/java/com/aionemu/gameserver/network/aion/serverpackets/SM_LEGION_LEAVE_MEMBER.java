@@ -11,10 +11,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_LEGION_LEAVE_MEMBER extends AionServerPacket {
 
-	private String name;
+	private final String name;
 	private String name1;
-	private int playerObjId;
-	private int msgId;
+	private final int playerObjId;
+	private final int msgId;
 
 	/**
 	 * 构造仅含单名称的成员离开通知包。

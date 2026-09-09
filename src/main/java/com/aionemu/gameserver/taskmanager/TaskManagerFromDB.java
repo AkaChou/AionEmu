@@ -39,13 +39,13 @@ public class TaskManagerFromDB {
 	 * 数据库任务列表。
 	 * Tasks loaded from the database.
 	 */
-	private ArrayList<TaskFromDB> tasksList;
+	private final ArrayList<TaskFromDB> tasksList;
 
 	/**
 	 * 任务名到处理器模板的映射。
 	 * Map of task name to handler template.
 	 */
-	private HashMap<String, TaskFromDBHandler> handlers;
+	private final HashMap<String, TaskFromDBHandler> handlers;
 
 	/**
 	 * 加载 DB 任务、注册内置处理器并安排调度。
@@ -128,7 +128,7 @@ public class TaskManagerFromDB {
 	 * @param dbTask 数据库任务配置 / DB task configuration
 	 */
 	private void runFixedInTimeTask(TaskFromDBHandler handler, TaskFromDB dbTask) {
-		String time[] = dbTask.getStartTime().split(":");
+		String[] time = dbTask.getStartTime().split(":");
 		int hour = Integer.parseInt(time[0]);
 		int minute = Integer.parseInt(time[1]);
 		int second = Integer.parseInt(time[2]);
@@ -141,9 +141,9 @@ public class TaskManagerFromDB {
 		long delay = calendar.getTimeInMillis() - System.currentTimeMillis();
 
 		if (delay < 0) {
-			delay += 1 * 24 * 60 * 60 * 1000;
+			delay += 24 * 60 * 60 * 1000;
 		}
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(handler, delay, 24 * 60 * 60 * 1000);
 	}
 
 	/**

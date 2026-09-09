@@ -28,34 +28,34 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 {
 	private int stage = 0;
 	private boolean isStart = false;
-	
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 		wakeUp();
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		beritraFavor();
 	}
-	
+
 	private void beritraFavor() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 		wakeUp();
 	}
-	
+
 	private void wakeUp() {
 		isStart = true;
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90 && stage < 1) {
 			stage1();
@@ -71,22 +71,20 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			stage = 4;
 		}
 	}
-	
+
 	private void stage1() {
 		int delay = 25000;
 		if (isAlreadyDead() || !isStart) {
-			return;
 		} else {
 		   	sendMsg(1500775);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); // 挥之不去的厄运 / Lingering Doom.
 			scheduleDelayStage1(delay);
 		}
 	}
-	
+
 	private void stage2() {
 		int delay = 10000;
 		if (isAlreadyDead() || !isStart) {
-			return;
 		} else {
 		   	sendMsg(1500774);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
@@ -95,22 +93,20 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			spawn(284435, 900.1312f, 901.20688f, 411.875f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
 		}
 	}
-	
+
 	private void stage3() {
 		int delay = 40000;
 		if (isAlreadyDead() || !isStart) {
-			return;
 		} else {
 		   	sendMsg(1500777);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); // 灵魂出窍 / Out Of Body.
 			scheduleDelayStage3(delay);
 		}
 	}
-	
+
 	private void stage4() {
 		int delay = 45000;
 		if (isAlreadyDead() || !isStart) {
-			return;
 		} else {
 		   	sendMsg(1500776);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); // Danuar 引导 / Danuar Channeling.
@@ -133,10 +129,9 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			scheduleDelayStage4(delay);
 		}
 	}
-	
+
 	private void scheduleDelayStage4(int delay) {
 		if (!isStart && !isAlreadyDead()) {
-			return;
 		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -146,10 +141,9 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			}, delay);
 		}
 	}
-	
+
 	private void scheduleDelayStage3(int delay) {
 		if (!isStart && !isAlreadyDead()) {
-			return;
 		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -159,10 +153,9 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			}, delay);
 		}
 	}
-	
+
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
-			return;
 		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
@@ -172,7 +165,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			}, delay);
 		}
 	}
-	
+
 	private void despawnNpcs(int npcId) {
 		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
 		for (Npc npc : npcs) {
@@ -181,11 +174,11 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 	    despawnNpcs(284435); // 堕落的 Danuar / Corrupted Danuar.

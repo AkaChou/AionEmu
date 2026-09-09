@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.legiondominion;
 
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 军团领地种族枚举。
@@ -16,17 +17,16 @@ public enum LegionDominionRace {
 	/** 龙族 / Balaur. */
 	BALAUR(2, 1800485);
 
-	private int raceId;
-	private DescriptionId descriptionId;
+	/** 返回种族 ID / Returns the race id */
+	@Getter
+	private final int raceId;
+	/** 返回描述 ID / Returns the description id */
+	@Getter
+	private final DescriptionId descriptionId;
 
-	private LegionDominionRace(int id, int descriptionId) {
+	LegionDominionRace(int id, int descriptionId) {
 		this.raceId = id;
 		this.descriptionId = new DescriptionId(descriptionId);
-	}
-
-	/** 返回种族 ID / Returns the race id */
-	public int getRaceId() {
-		return this.raceId;
 	}
 
 	/** 返回对应种族 / Returns the matching race */
@@ -39,10 +39,5 @@ public enum LegionDominionRace {
 		default:
 			return LegionDominionRace.BALAUR;
 		}
-	}
-
-	/** 返回描述 ID / Returns the description id */
-	public DescriptionId getDescriptionId() {
-		return descriptionId;
 	}
 }

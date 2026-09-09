@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.svs.SvsLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 帕内斯特拉（SVS）活动启动定时任务。
@@ -15,19 +16,10 @@ import com.aionemu.gameserver.model.svs.SvsLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class SvsStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public SvsStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行启动流程。

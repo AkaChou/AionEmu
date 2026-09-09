@@ -52,7 +52,7 @@ public class SvsService {
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, SvsLocation> svs;
 	// 特兰西迪姆附楼 4.7 / Transidium Annex 4.7
-	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
+	private final Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
 	private final ConcurrentMap<Integer, Panesterra<?>> activeSvs = new ConcurrentHashMap<Integer, Panesterra<?>>();
 
 	/**
@@ -121,7 +121,7 @@ public class SvsService {
 			public void run() {
 				stopSvs(id);
 			}
-		}, CustomConfig.SVS_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.SVS_DURATION * 3600 * 1000);
 	}
 
 	/**

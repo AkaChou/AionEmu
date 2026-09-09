@@ -65,20 +65,20 @@ class Quest30318To30321RetailAlignmentTest {
 
 	private static long killRouteCount(QuestDefinition definition, int npcId) {
 		return definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc single
-				? single.npcId() == npcId
-				: transition.event() instanceof QuestEvent.KillNpcSet set
-					&& set.npcIds().contains(npcId))
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int id)
+				? id == npcId
+				: transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+					&& npcIds.contains(npcId))
 			.count();
 	}
 
 	private static Set<Integer> killNpcIds(QuestDefinition definition) {
 		Set<Integer> ids = new HashSet<>();
 		definition.transitions().forEach(transition -> {
-			if (transition.event() instanceof QuestEvent.KillNpc single) {
-				ids.add(single.npcId());
-			} else if (transition.event() instanceof QuestEvent.KillNpcSet set) {
-				ids.addAll(set.npcIds());
+			if (transition.event() instanceof QuestEvent.KillNpc(int npcId)) {
+				ids.add(npcId);
+			} else if (transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
+				ids.addAll(npcIds);
 			}
 		});
 		return ids;

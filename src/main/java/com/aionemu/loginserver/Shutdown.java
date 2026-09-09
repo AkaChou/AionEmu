@@ -30,7 +30,7 @@ public class Shutdown extends Thread {
      * 单例实例。
      * Singleton instance.
      */
-    private static Shutdown instance = new Shutdown();
+    private static final Shutdown instance = new Shutdown();
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**
      * 为 true 时仅重启，否则正常退出。

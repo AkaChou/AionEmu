@@ -76,14 +76,12 @@ public class CM_TARGET_SELECT extends AionClientPacket {
 			} else {
 				player.setTarget(obj);
 			}
-			if (obj instanceof Player) {
-				Player target = (Player) obj;
+			if (obj instanceof Player target) {
 				if (player != obj && !player.canSee(target)) {
 					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Player name: "
 							+ target.getName() + " objectId: " + target.getObjectId() + " by");
 				}
-			} else if (obj instanceof Trap) {
-				Trap target = (Trap) obj;
+			} else if (obj instanceof Trap target) {
 				boolean isSameTeamTrap = false;
 				if (target.getMaster() instanceof Player) {
 					isSameTeamTrap = ((Player) target.getMaster()).isInSameTeam(player);
@@ -92,8 +90,7 @@ public class CM_TARGET_SELECT extends AionClientPacket {
 					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Trap name: "
 							+ target.getName() + " objectId: " + target.getObjectId() + " by");
 				}
-			} else if (obj instanceof Creature) {
-				Creature target = (Creature) obj;
+			} else if (obj instanceof Creature target) {
 				if (player != obj && !player.canSee(target)) {
 					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Npc name: "
 							+ target.getName() + " objectId: " + target.getObjectId() + " by");

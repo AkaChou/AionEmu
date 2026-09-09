@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 骑乘边界模板（静态数据/XML）。
@@ -12,20 +14,15 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RideBound")
+@NoArgsConstructor
 public class RideBound extends BoundRadius {
+	/** 返回 altitude / Returns the altitude */
+	@Getter
 	@XmlAttribute
 	private Float altitude;
-
-	public RideBound() {
-	}
 
 	public RideBound(float front, float side, float upper, float altitude) {
 		super(front, side, upper);
 		this.altitude = altitude;
-	}
-
-	/** 返回 altitude / Returns the altitude */
-	public Float getAltitude() {
-		return altitude;
 	}
 }

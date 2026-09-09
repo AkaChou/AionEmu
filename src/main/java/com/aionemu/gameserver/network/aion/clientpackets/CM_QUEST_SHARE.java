@@ -101,7 +101,6 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 			}
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000));
-			return;
 		}
 	}
 

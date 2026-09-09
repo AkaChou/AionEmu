@@ -139,7 +139,7 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 @Slf4j
 public class VisibleObjectSpawner {
 
-    
+
     private static final java.util.concurrent.ConcurrentHashMap<Integer, NpcStatsTemplate> ORIGINAL_STATS = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
@@ -155,21 +155,21 @@ public class VisibleObjectSpawner {
             log.error(I18n.get("log.e37e95107d9d", objId));
             return null;
         }
-        
+
         // 首次访问时保存原始属性 / Store original stats on first access
         if (!ORIGINAL_STATS.containsKey(objId)) {
             NpcStatsTemplate originalStats = cloneStats(npcTemplate.getStatsTemplate());
             ORIGINAL_STATS.put(objId, originalStats);
         }
-        
+
         NpcStatsTemplate originalStats = ORIGINAL_STATS.get(objId);
         NpcStatsTemplate currentStats = npcTemplate.getStatsTemplate();
-        
+
         double RateHP = 1.0;
         double RatePW = 1.0;
-        
+
         NpcRating rating = npcTemplate.getRating();
-        
+
         switch (rating) {
             case NORMAL:
                 RateHP = RateConfig.NORMAL_MOBS_RATE_HP;
@@ -191,30 +191,30 @@ public class VisibleObjectSpawner {
             default:
                 break;
         }
-        
+
         if (npcTemplate.getLevel() >= 1 && rating != NpcRating.JUNK) {
-            
+
             // ===== 生命值 ===== / ===== HP =====
             currentStats.setMaxHp((int) (originalStats.getMaxHp() * RateHP));
-            
+
             // ===== 力量（魔法攻击） ===== / ===== POWER (Magical Attack) =====
             currentStats.setPower((int) (originalStats.getPower() * RatePW));
-            
+
             // ===== 物理攻击 ===== / ===== PHYSICAL ATTACK =====
             currentStats.setMainHandAttack((int) (originalStats.getMainHandAttack() * RatePW));
-            
+
             // ===== 命中 ===== / ===== ACCURACY =====
             currentStats.setMainHandAccuracy((int) (originalStats.getMainHandAccuracy() * RatePW));
-            
+
             // ===== 物理防御 ===== / ===== PHYSICAL DEFENSE =====
             currentStats.setPdef((int) (originalStats.getPdef() * RatePW));
-            
+
             // ===== 魔法防御 ===== / ===== MAGICAL DEFENSE =====
             currentStats.setMdef((int) (originalStats.getMdef() * RatePW));
-            
+
             // ===== 闪避 ===== / ===== EVASION =====
             currentStats.setEvasion((int) (originalStats.getEvasion() * RatePW));
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("Scaled NPC [{}] {} - Rating: {}", objId, npcTemplate.getName(), rating);
                 log.debug("  HP: {} -> {} (x{})", originalStats.getMaxHp(), currentStats.getMaxHp(), RateHP);
@@ -226,38 +226,38 @@ public class VisibleObjectSpawner {
                 log.debug("  Evasion: {} -> {} (x{})", originalStats.getEvasion(), currentStats.getEvasion(), RatePW);
             }
         }
-        
+
         return npcTemplate;
     }
-    
+
     /**
      * 克隆 NpcStatsTemplate（仅复制所需属性）。
      * Clone NpcStatsTemplate for required stats only.
      */
     private static NpcStatsTemplate cloneStats(NpcStatsTemplate original) {
         NpcStatsTemplate clone = new NpcStatsTemplate();
-        
+
         // 生命值 / HP
         clone.setMaxHp(original.getMaxHp());
-        
+
         // 力量（魔法攻击） / Power (Magical Attack)
         clone.setPower(original.getPower());
-        
+
         // 物理攻击 / Physical Attack
         clone.setMainHandAttack(original.getMainHandAttack());
-        
+
         // 命中 / Accuracy
         clone.setMainHandAccuracy(original.getMainHandAccuracy());
-        
+
         // 物理防御 / Physical Defense
         clone.setPdef(original.getPdef());
-        
+
         // 魔法防御 / Magical Defense
         clone.setMdef(original.getMdef());
-        
+
         // 闪避 / Evasion
         clone.setEvasion(original.getEvasion());
-        
+
         return clone;
     }
 
@@ -276,7 +276,7 @@ public class VisibleObjectSpawner {
                 }
             }
         }
-        
+
         NpcTemplate npcTemplate = RatedTemplate(objectId);
         if (npcTemplate == null) {
             log.error(I18n.get("log.b1ee12e6edee", String.valueOf(objectId)));
@@ -295,7 +295,7 @@ public class VisibleObjectSpawner {
         try {
             SpawnEngine.bringIntoWorld(npc, spawn, instanceIndex);
         } catch (Exception ex) {
-            log.error(I18n.get("log.25b31202cf98", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() }), ex);
+            log.error(I18n.get("log.25b31202cf98", npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY()), ex);
             com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(npc);
         }
         return npc;

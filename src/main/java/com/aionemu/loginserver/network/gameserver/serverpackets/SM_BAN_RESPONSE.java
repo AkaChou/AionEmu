@@ -2,6 +2,7 @@ package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：封禁请求处理结果响应。
@@ -9,6 +10,7 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author Watson
  */
+@AllArgsConstructor
 public class SM_BAN_RESPONSE extends GsServerPacket {
 
     /**
@@ -41,26 +43,6 @@ public class SM_BAN_RESPONSE extends GsServerPacket {
      * Whether the ban operation succeeded.
      */
     private final boolean result;
-
-    /**
-     * 构造封禁结果响应包。
-     * Constructs a ban result response packet.
-     *
-     * @param type 封禁类型 / ban type
-     * @param accountId 账号 ID / account id
-     * @param ip 被封 IP / banned IP
-     * @param time 封禁时长 / ban duration
-     * @param adminObjId 管理员对象 ID / admin object id
-     * @param result 是否成功 / whether succeeded
-     */
-    public SM_BAN_RESPONSE(byte type, int accountId, String ip, int time, int adminObjId, boolean result) {
-        this.type = type;
-        this.accountId = accountId;
-        this.ip = ip;
-        this.time = time;
-        this.adminObjId = adminObjId;
-        this.result = result;
-    }
 
     /**
      * {@inheritDoc}

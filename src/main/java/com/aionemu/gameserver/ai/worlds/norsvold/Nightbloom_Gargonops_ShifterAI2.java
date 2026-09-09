@@ -15,7 +15,7 @@ public class Nightbloom_Gargonops_ShifterAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242503, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Nightbloom Baby Gargaonops.
+		spawn(242503, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Nightbloom Baby Gargaonops.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

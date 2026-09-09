@@ -11,10 +11,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_USE_OBJECT extends AionServerPacket {
 
-	private int playerObjId;
-	private int targetObjId;
-	private int time;
-	private int actionType;
+	private final int playerObjId;
+	private final int targetObjId;
+	private final int time;
+	private final int actionType;
 
 	/**
 	 * player object id

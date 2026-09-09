@@ -91,13 +91,13 @@ public class CM_LOGIN extends AionClientPacket {
                 client.setState(State.AUTHED_LOGIN);
                 client.setSessionKey(new SessionKey(client.getAccount()));
                 client.sendPacket(new SM_LOGIN_OK(client.getSessionKey()));
-                log.debug("" + user + " got authed state");
+                log.debug(user + " got authed state");
                 break;
             case INVALID_PASSWORD:
                 if (Config.ENABLE_BRUTEFORCE_PROTECTION) {
                     String ip = client.getIP();
                     if (LoginProtectionServices.bruteForceProtector().addFailedConnect(ip)) {
-                        Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
+                        Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
                         LoginProtectionServices.bannedIpService().banIp(ip, newTime);
                         log.debug(user + " on " + ip + " banned for " + Config.WRONG_LOGIN_BAN_TIME + " min. bruteforce");
                         client.close(new SM_LOGIN_FAIL(AionAuthResponse.BAN_IP), false);
@@ -111,7 +111,7 @@ public class CM_LOGIN extends AionClientPacket {
                 }
                 break;
             default:
-                log.debug(user + " got unknown (" + response.toString() + ") attemp state");
+                log.debug(user + " got unknown (" + response + ") attemp state");
                 client.close(new SM_LOGIN_FAIL(response), false);
                 break;
         }

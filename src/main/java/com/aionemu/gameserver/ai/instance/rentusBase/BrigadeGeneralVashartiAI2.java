@@ -39,17 +39,17 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	private boolean canThink = true;
 	private Future<?> flameBuffTask;
 	private Future<?> flameSmashTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	private List<Integer> percents = new ArrayList<Integer>();
-	private List<Point3D> blueFlameSmashs = new ArrayList<Point3D>();
-	private List<Point3D> redFlameSmashs = new ArrayList<Point3D>();
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Point3D> blueFlameSmashs = new ArrayList<Point3D>();
+	private final List<Point3D> redFlameSmashs = new ArrayList<Point3D>();
 	private int flameSmashCount = 1;
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -59,7 +59,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private synchronized void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
@@ -72,7 +72,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startAirEvent(final NpcAI2 ai, final int percent) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -147,14 +147,14 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}, 4000);
 	}
-	
+
 	private void cancelFlameSmashTask() {
 		flameSmashCount = 1;
 		if (flameSmashTask != null && !flameSmashTask.isDone()) {
 			flameSmashTask.cancel(true);
 		}
 	}
-	
+
 	private void startFlameSmashEvent(final int percent) {
 		flameSmashTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -208,14 +208,14 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 3000);
 	}
-	
+
 	private void spawnFlameSmash(List<Point3D> flameSmashs, int npcId) {
 		if (!flameSmashs.isEmpty()) {
 			Point3D spawn = flameSmashs.remove(Rnd.get(flameSmashs.size()));
 			spawn(npcId, spawn.getX(), spawn.getY(), spawn.getZ(), (byte) 0);
 		}
 	}
-	
+
 	private boolean isSpawned(int npcId, Point3D position ) {
 		for (Npc npc : getPosition().getWorldMapInstance().getNpcs(npcId)) {
 			if (npc.getX() == position.getX() && npc.getY() == position.getY()) {
@@ -224,7 +224,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		}
 		return false;
 	}
-	
+
 	private List<Point3D> getRedFlameSmashs(int npcId) {
 		List<Point3D> flameSmashs = new ArrayList<Point3D>();
 		for (Point3D flameSmash : (npcId == 283008 ? redFlameSmashs : blueFlameSmashs)) {
@@ -234,7 +234,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		}
 		return flameSmashs;
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc : npcs) {
 			if (npc != null) {
@@ -242,7 +242,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void cancelAirEvent() {
 		canThink = true;
 		if (!isAlreadyDead()) {
@@ -266,7 +266,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			airTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelFlameBuffEvent() {
 		if (flameBuffTask != null && !flameBuffTask.isDone()) {
 			flameBuffTask.cancel(true);
@@ -274,7 +274,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20532, 60, getOwner()).useNoAnimationSkill();
 		}
 	}
-	
+
 	private void startFlameBuffEvent() {
 		flameBuffTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -299,7 +299,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}, 0, 40000);
 	}
-	
+
 	private void useKissBuff(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -310,12 +310,12 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			}
 		}, 1000);
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{80, 70, 50, 40, 25});
+		Collections.addAll(percents, 80, 70, 50, 40, 25);
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		addPercent();
@@ -348,7 +348,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		redFlameSmashs.add(new Point3D(173.963f, 412.215f, 260.557f));
 		redFlameSmashs.add(new Point3D(175.762f, 422.974f, 260.572f));
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		percents.clear();
@@ -359,7 +359,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		cancelFlameSmashTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
@@ -370,7 +370,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		isHome.set(true);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		percents.clear();

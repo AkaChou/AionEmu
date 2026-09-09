@@ -1,6 +1,7 @@
 package com.aionemu.chatserver.model.channel;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.service.ChatCoreServices;
@@ -50,7 +51,7 @@ public abstract class Channel {
         this.channelType = channelType;
         this.identifier = identifier;
         this.channelId = ChatCoreServices.idFactory().nextId();
-        this.identifierBytes = identifier.getBytes(Charset.forName("UTF-16le"));
+        this.identifierBytes = identifier.getBytes(StandardCharsets.UTF_16LE);
     }
 
     /**

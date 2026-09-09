@@ -18,6 +18,8 @@ import com.aionemu.gameserver.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 军团，用于团队相关逻辑。
@@ -29,26 +31,101 @@ public class Legion {
 
 	/** 军团信息。 / Legion information. */
 	private ServiceBuff serviceBuff;
+	/**
+	 * @param legionId the legionId to set
+	 */
+	@Getter
+	@Setter
 	private int legionId = 0;
+	/**
+	 * @param legionName the legionName to set
+	 */
+	@Getter
+	@Setter
 	private String legionName = "";
+	/**
+	 * @return the legionLevel
+	 */
+	@Getter
+	@Setter
 	private int legionLevel = 1;
+	/**
+	 * @param legionRank the legionRank to set
+	 */
+	@Getter
+	@Setter
 	private int legionRank = 0;
+	/**
+	 * @param contributionPoints
+	 */
+	@Getter
+	@Setter
 	private long contributionPoints = 0;
+	/**
+	 * @return the legionMembers
+	 */
+	@Getter
 	private List<Integer> legionMembers = new ArrayList<Integer>();
+	/**
+	 * @return the deputyPermission
+	 */
+	@Getter
 	private short deputyPermission = 0x1E0C;
+	/**
+	 * @return the centurionPermission
+	 */
+	@Getter
 	private short centurionPermission = 0x1C08;
+	/**
+	 * @return the legionarPermission
+	 */
+	@Getter
 	private short legionaryPermission = 0x1800;
+	/**
+	 * @return the volunteerPermission
+	 */
+	@Getter
 	private short volunteerPermission = 0x800;
+	/**
+	 * @param disbandTime the disbandTime to set
+	 */
+	@Getter
+	@Setter
 	private int disbandTime;
+	/**
+	 * @return the announcementList
+	 */
+	@Getter
 	private TreeMap<Timestamp, String> announcementList = new TreeMap<Timestamp, String>();
+	/**
+	 * @param legionEmblem the legionEmblem to set
+	 */
+	@Getter
+	@Setter
 	private LegionEmblem legionEmblem = new LegionEmblem();
+	/**
+	 * @param legionWarehouse the legionWarehouse to set
+	 */
+	@Getter
+	@Setter
 	private LegionWarehouse legionWarehouse;
-	private SortedSet<LegionHistory> legionHistory;
-	private AtomicBoolean hasBonus = new AtomicBoolean(false);
-	private Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<Integer, LegionJoinRequest>();
+	private final SortedSet<LegionHistory> legionHistory;
+	private final AtomicBoolean hasBonus = new AtomicBoolean(false);
+	/** 返回加入申请映射。 / Returns the join request map. */
+	@Getter
+	private final Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<Integer, LegionJoinRequest>();
+	/** 设置描述。 / Sets the description. */
+	@Setter
 	private String description = "";
+	/** 设置最小加入等级。 / Sets the min join level. */
+	@Setter
 	private int minJoinLevel = 0;
+	/** 设置加入类型。 / Sets the join type. */
+	@Setter
 	private int joinType = 0;
+	/** 返回领地。 / Returns the territory. */
+	@Getter
+	@Setter
 	private LegionTerritory territory;
 
 	/**
@@ -73,36 +150,7 @@ public class Legion {
 			public int compare(LegionHistory o1, LegionHistory o2) {
 				return o1.getTime().getTime() < o2.getTime().getTime() ? 1 : -1;
 			}
-
 		});
-	}
-
-	/**
-	 * @param legionId the legionId to set
-	 */
-	public void setLegionId(int legionId) {
-		this.legionId = legionId;
-	}
-
-	/**
-	 * @return the legionId
-	 */
-	public int getLegionId() {
-		return legionId;
-	}
-
-	/**
-	 * @param legionName the legionName to set
-	 */
-	public void setLegionName(String legionName) {
-		this.legionName = legionName;
-	}
-
-	/**
-	 * @return the legionName
-	 */
-	public String getLegionName() {
-		return legionName;
 	}
 
 	/**
@@ -110,13 +158,6 @@ public class Legion {
 	 */
 	public void setLegionMembers(ArrayList<Integer> legionMembers) {
 		this.legionMembers = legionMembers;
-	}
-
-	/**
-	 * @return the legionMembers
-	 */
-	public List<Integer> getLegionMembers() {
-		return legionMembers;
 	}
 
 	/**
@@ -177,80 +218,10 @@ public class Legion {
 	}
 
 	/**
-	 * @return the deputyPermission
-	 */
-	public short getDeputyPermission() {
-		return deputyPermission;
-	}
-
-	/**
-	 * @return the centurionPermission
-	 */
-	public short getCenturionPermission() {
-		return centurionPermission;
-	}
-
-	/**
-	 * @return the legionarPermission
-	 */
-	public short getLegionaryPermission() {
-		return legionaryPermission;
-	}
-
-	/**
-	 * @return the volunteerPermission
-	 */
-	public short getVolunteerPermission() {
-		return volunteerPermission;
-	}
-
-	/**
-	 * @return the legionLevel
-	 */
-	public int getLegionLevel() {
-		return legionLevel;
-	}
-
-	/**
-	 * @param legionLevel
-	 */
-	public void setLegionLevel(int legionLevel) {
-		this.legionLevel = legionLevel;
-	}
-
-	/**
-	 * @param legionRank the legionRank to set
-	 */
-	public void setLegionRank(int legionRank) {
-		this.legionRank = legionRank;
-	}
-
-	/**
-	 * @return the legionRank
-	 */
-	public int getLegionRank() {
-		return legionRank;
-	}
-
-	/**
 	 * @param contributionPoints the contributionPoints to set
 	 */
 	public void addContributionPoints(long contributionPoints) {
 		this.contributionPoints += contributionPoints;
-	}
-
-	/**
-	 * @param contributionPoints
-	 */
-	public void setContributionPoints(long contributionPoints) {
-		this.contributionPoints = contributionPoints;
-	}
-
-	/**
-	 * @return the contributionPoints
-	 */
-	public long getContributionPoints() {
-		return contributionPoints;
 	}
 
 	/**
@@ -388,13 +359,6 @@ public class Legion {
 	}
 
 	/**
-	 * @return the announcementList
-	 */
-	public TreeMap<Timestamp, String> getAnnouncementList() {
-		return this.announcementList;
-	}
-
-	/**
 	 * @return the currentAnnouncement
 	 */
 	public Entry<Timestamp, String> getCurrentAnnouncement() {
@@ -402,20 +366,6 @@ public class Legion {
 			return this.announcementList.lastEntry();
 		}
 		return null;
-	}
-
-	/**
-	 * @param disbandTime the disbandTime to set
-	 */
-	public void setDisbandTime(int disbandTime) {
-		this.disbandTime = disbandTime;
-	}
-
-	/**
-	 * @return the disbandTime
-	 */
-	public int getDisbandTime() {
-		return disbandTime;
 	}
 
 	/**
@@ -434,34 +384,6 @@ public class Legion {
 	 */
 	public boolean isMember(int playerObjId) {
 		return legionMembers.contains(playerObjId);
-	}
-
-	/**
-	 * @param legionEmblem the legionEmblem to set
-	 */
-	public void setLegionEmblem(LegionEmblem legionEmblem) {
-		this.legionEmblem = legionEmblem;
-	}
-
-	/**
-	 * @return the legionEmblem
-	 */
-	public LegionEmblem getLegionEmblem() {
-		return legionEmblem;
-	}
-
-	/**
-	 * @param legionWarehouse the legionWarehouse to set
-	 */
-	public void setLegionWarehouse(LegionWarehouse legionWarehouse) {
-		this.legionWarehouse = legionWarehouse;
-	}
-
-	/**
-	 * @return the legionWarehouse
-	 */
-	public LegionWarehouse getLegionWarehouse() {
-		return legionWarehouse;
 	}
 
 	/**
@@ -613,26 +535,6 @@ public class Legion {
 		return minJoinLevel;
 	}
 
-	/** 设置描述。 / Sets the description. */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/** 设置最小加入等级。 / Sets the min join level. */
-	public void setMinJoinLevel(int minJoinLevel) {
-		this.minJoinLevel = minJoinLevel;
-	}
-
-	/** 设置加入类型。 / Sets the join type. */
-	public void setJoinType(int joinType) {
-		this.joinType = joinType;
-	}
-
-	/** 返回加入申请映射。 / Returns the join request map. */
-	public Map<Integer, LegionJoinRequest> getJoinRequestMap() {
-		return joinRequestMap;
-	}
-
 	/** 按玩家 ID 返回加入申请。 / Returns the join request by player id. */
 	public LegionJoinRequest getJoinRequestByPlayerId(int playerId) {
 		return joinRequestMap.get(playerId);
@@ -663,15 +565,5 @@ public class Legion {
 	/** 是否拥有领地。 / Whether the legion owns a territory. */
 	public boolean ownsTerretory() {
 		return getTerritory().getId() > 0;
-	}
-
-	/** 返回领地。 / Returns the territory. */
-	public LegionTerritory getTerritory() {
-		return territory;
-	}
-
-	/** 设置领地。 / Sets the territory. */
-	public void setTerritory(LegionTerritory territory) {
-		this.territory = territory;
 	}
 }

@@ -30,7 +30,7 @@ public class CuringZoneService {
 
 	private static volatile ObjectProvider<CuringZoneService> instanceProvider;
 	/** 已生成的治愈物列表。 / Spawned curing objects. */
-	private List<CuringObject> curingObjects = new ArrayList<CuringObject>();
+	private final List<CuringObject> curingObjects = new ArrayList<CuringObject>();
 
 	/**
 	 * 加载治愈模板、生成治愈物并启动周期任务。

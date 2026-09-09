@@ -27,5 +27,5 @@ public enum ChannelType {
     /**
      * 语言频道 / Language channel
      */
-    LANG;
+    LANG
 }

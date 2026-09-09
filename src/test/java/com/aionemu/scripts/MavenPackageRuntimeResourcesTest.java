@@ -1,5 +1,6 @@
 package com.aionemu.scripts;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -12,8 +13,8 @@ class MavenPackageRuntimeResourcesTest {
     void packagePhaseDoesNotCopyRuntimeResourcesUnderAionHome() throws Exception {
         String pom = Files.readString(Path.of("pom.xml"));
 
-        assertTrue(!pom.contains("<id>copy-runtime-aion-resources</id>"));
-        assertTrue(!pom.contains("<id>copy-runtime-logback</id>"));
+		assertFalse(pom.contains("<id>copy-runtime-aion-resources</id>"));
+		assertFalse(pom.contains("<id>copy-runtime-logback</id>"));
         assertTrue(pom.contains("<exclude>aion/**</exclude>"));
         assertTrue(pom.contains("<id>external-runtime-resources</id>"));
         assertTrue(pom.contains("<name>aion.external-resources</name>"));

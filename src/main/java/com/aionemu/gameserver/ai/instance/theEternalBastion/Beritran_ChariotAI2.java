@@ -36,9 +36,9 @@ public class Beritran_ChariotAI2 extends NpcAI2
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000137, 1)) { //Mobile Turret Key.
 		// 移动炮塔钥匙。 / Mobile Turret Key.
 		    switch (getNpcId()) {
-			    case 701624: //Beritran Chariot.
+			    case 701624: // 待命中的布里特拉战车 / Beritran Chariot.
 			    // 贝里特兰战车。 / Beritran Chariot.
-				case 702689: //Beritran Chariot.
+				case 702689: // 待命中的布里特拉战车 / Beritran Chariot.
 				// 贝里特兰战车。 / Beritran Chariot.
 				    GameEngineServices.skillEngine().getSkill(player, 21141, 1, player).useNoAnimationSkill();
 				break;

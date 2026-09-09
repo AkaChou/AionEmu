@@ -1,9 +1,8 @@
 package com.aionemu.commons.utils;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AEInfosTest {
 
@@ -11,7 +10,7 @@ class AEInfosTest {
     void memoryInfoHasNoBoxDecorations() {
         for (String line : AEInfos.getMemoryInfo()) {
             assertFalse(line.startsWith("+----"), line);
-            assertFalse(line.equals("|    |"), line);
+			assertNotEquals("|    |", line, line);
             assertFalse(line.contains("...."), line);
         }
         assertTrue(AEInfos.getMemoryInfo().length >= 4);

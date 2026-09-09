@@ -28,7 +28,7 @@ public class ConquestData {
 	private List<ConquestTemplate> conquestTemplates;
 
 	@XmlTransient
-	private Map<Integer, ConquestLocation> conquest = new LinkedHashMap<Integer, ConquestLocation>();
+	private final Map<Integer, ConquestLocation> conquest = new LinkedHashMap<Integer, ConquestLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 索引。

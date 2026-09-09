@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -143,7 +142,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		spawn(831110, 183.95969f, 237.51074f, 536.16974f, (byte) 71); //Crown Prince's Admirer.
+		spawn(831110, 183.95969f, 237.51074f, 536.16974f, (byte) 71); // 称颂皇太子的人 / Crown Prince's Admirer.
 		spawn(831095, 218.27571f, 287.24326f, 550.68805f, (byte) 74); //Shugo Warrior Transformation Device.
 	}
 	
@@ -169,8 +168,8 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 				} else if (diligentKoboldWorker == 20) {
 					tombRaidTaskA1.cancel(true);
 					spawn(831095, 344.28635f, 425.418f, 294.75867f, (byte) 56); //Shugo Warrior Transformation Device.
-					spawn(831114, 183.95969f, 237.51074f, 536.16974f, (byte) 71); //Crown Prince's Delighted Admirer.
-					spawn(831111, 340.27893f, 426.2435f, 294.7574f, (byte) 56); //Empress' Admirer.
+					spawn(831114, 183.95969f, 237.51074f, 536.16974f, (byte) 71); // 称颂喜悦的皇太子的人 / Crown Prince's Delighted Admirer.
+					spawn(831111, 340.27893f, 426.2435f, 294.7574f, (byte) 56); // A地区NPC战斗开始 / Empress' Admirer.
 				}
 			break;
 			case 219514: //Strong Kobold Worker.
@@ -228,15 +227,15 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402834, Race.PC_ALL, 5000);
 			break;
 			case 219531: //Captain Lediar.
-			    deleteNpc(831130); //Crown Prince's Monument.
-			    spawn(831116, 443.322f, 110.39832f, 212.20023f, (byte) 92); //Emperor's Delighted Admirer.
-				spawn(831119, 440.2393f, 109.80865f, 212.20023f, (byte) 94); //Marayrinerk.
-				spawn(831350, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Imperial Shrine.
+			    deleteNpc(831130); // 皇太子的石碑 / Crown Prince's Monument.
+			    spawn(831116, 443.322f, 110.39832f, 212.20023f, (byte) 92); // 称颂喜悦的皇帝的人 / Emperor's Delighted Admirer.
+				spawn(831119, 440.2393f, 109.80865f, 212.20023f, (byte) 94); // 马里安·雷林 / Marayrinerk.
+				spawn(831350, 452.43765f, 106.14462f, 212.20023f, (byte) 68); // 神圣祭坛 / Imperial Shrine.
 			break;
 			case 219544: //Awakened Guardian.
 			    spawn(831095, 465.13556f, 111.26043f, 214.702f, (byte) 8); //Shugo Warrior Transformation Device.
-				spawn(831115, 329.33588f, 432.96265f, 294.76144f, (byte) 100); //Empress's Delighted Admirer.
-			    spawn(831112, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Emperor's Admirer.
+				spawn(831115, 329.33588f, 432.96265f, 294.76144f, (byte) 100); // 称颂喜悦的皇后的人 / Empress's Delighted Admirer.
+			    spawn(831112, 452.43765f, 106.14462f, 212.20023f, (byte) 68); // 称颂皇帝的人 / Emperor's Admirer.
 			break;
 		}
 	}
@@ -1075,11 +1074,6 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21096);
 	}
 	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
 	
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
@@ -1113,20 +1107,6 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		removeEffects(player);
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	
 	/**
 	 * 副本销毁时清理资源。
@@ -1137,13 +1117,6 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 	}
 	
-	private void stopInstanceTask() {
-        for (Future<?> task : imperialTombTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         imperialTombTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

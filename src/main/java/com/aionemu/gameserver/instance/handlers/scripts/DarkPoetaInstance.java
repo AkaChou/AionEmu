@@ -56,12 +56,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	private DarkPoetaReward instanceReward;
 	// 准备时间。 / Preparation Time.
 		/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 120000; //...2Min
+		private final int prepareTimerSeconds = 120000; //...2Min
 	// 副本持续计时。 / Duration Instance Time.
 		/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 14400000; //...4Hrs
+		private final int instanceTimerSeconds = 14400000; //...4Hrs
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** darkpoeta 任务 / dark poeta task */
 		private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
 	/**
@@ -70,7 +70,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -210,7 +210,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		    break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -494,12 +494,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
 		return instanceTimerSeconds - (int) result;
 	}
-	
+
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -517,7 +517,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private int checkRank(int totalPoints) {
 		int rank = 0;
 		if (totalPoints >= 19643) { //Rank S.
@@ -555,7 +555,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		darkPoetaTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -579,7 +579,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
             }
         }, 14400000));
     }
-	
+
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
@@ -601,7 +601,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -620,7 +620,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		spawn(npc3, 584.8461f, 162.49805f, 104.1250f, (byte) 21);
 		spawn(npc4, 583.2826f, 230.01761f, 106.8750f, (byte) 05);
 	}
-	
+
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -647,7 +647,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void startMainInstanceTimer() {
 		if (!timerPrepare.isDone()) {
 			timerPrepare.cancel(false);
@@ -662,13 +662,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance(Player player) {
         stopInstanceTask();
         instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Dark Poeta>");
 		sendPacket(0, 0);
 	}
 	/**
@@ -677,7 +676,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
@@ -689,13 +688,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void despawnNpcs(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : darkPoetaTask) {
 			if (task != null) {
@@ -703,7 +702,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -720,7 +719,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		doors.clear();
 		movies.clear();
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -749,7 +748,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
@@ -771,7 +770,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			sendPacket(gatherable.getObjectTemplate().getNameId(), points);
 		}
 	}
-	
+
 	private void toScheduleMarbataController(final int npcId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -830,13 +829,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -851,7 +850,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
             PlayerGroupService.removePlayer(player);
         }
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -865,28 +864,14 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -895,7 +880,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

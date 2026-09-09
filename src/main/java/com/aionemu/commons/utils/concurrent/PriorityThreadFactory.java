@@ -15,13 +15,13 @@ public class PriorityThreadFactory implements ThreadFactory {
      * 线程优先级。
      * Thread priority.
      */
-    private int prio;
+    private final int prio;
 
     /**
      * 线程名前缀。
      * Thread name prefix.
      */
-    private String name;
+    private final String name;
 
     /**
      * 关联线程池。
@@ -33,13 +33,13 @@ public class PriorityThreadFactory implements ThreadFactory {
      * 线程序号。
      * Thread sequence counter.
      */
-    private AtomicInteger threadNumber;
+    private final AtomicInteger threadNumber;
 
     /**
      * 线程组。
      * Thread group.
      */
-    private ThreadGroup group;
+    private final ThreadGroup group;
 
     /**
      * 使用名称与优先级创建工厂。

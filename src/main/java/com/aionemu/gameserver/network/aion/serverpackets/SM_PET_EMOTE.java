@@ -13,8 +13,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_PET_EMOTE extends AionServerPacket {
 
-	private Pet pet;
-	private PetEmote emote;
+	private final Pet pet;
+	private final PetEmote emote;
 	private final float x, y, z, x2, y2, z2;
 	private final byte heading;
 	private int emotionId, param1;

@@ -30,8 +30,8 @@ public enum GmSpecialSkills {
 	AccessLevel10(10, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396});
     private final int level;
     private final String nameLevel;
-    private String status;
-    private int[] skills;
+    private final String status;
+    private final int[] skills;
 
 	/**
 	 * 构造权限等级条目。

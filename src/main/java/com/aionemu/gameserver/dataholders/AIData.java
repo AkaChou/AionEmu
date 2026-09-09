@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.templates.ai.AITemplate;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * AI 模板数据容器，持有并索引全部 NPC AI 配置。
@@ -26,7 +27,14 @@ public class AIData {
 
 	@XmlElement(name = "ai", type = Ai.class)
 	private List<Ai> templates;
-	private Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
+	/**
+	 * 返回全部 AI 模板映射。
+	 * Returns the full AI template map.
+	 *
+	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
+	 */
+	@Getter
+	private final Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，将列表转为按 NPC ID 索引的 AI 模板映射。
@@ -52,15 +60,5 @@ public class AIData {
 	/** 合并另一份 AI 模板数据。 / Merges another AI template data set. */
 	public void merge(AIData data) {
 		aiTemplate.putAll(data.aiTemplate);
-	}
-
-	/**
-	 * 返回全部 AI 模板映射。
-	 * Returns the full AI template map.
-	 *
-	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
-	 */
-	public Map<Integer, AITemplate> getAiTemplate() {
-		return aiTemplate;
 	}
 }

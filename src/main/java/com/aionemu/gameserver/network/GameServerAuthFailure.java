@@ -4,17 +4,17 @@ import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import java.util.function.IntConsumer;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 游戏服认证失败处理：嵌入模式走失败处理器，独立模式退出进程。
  * Game-server auth failure handling: embedded mode uses failure handler, standalone exits the process.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GameServerAuthFailure {
 
     private static volatile IntConsumer exitAction = System::exit;
-
-    private GameServerAuthFailure() {
-    }
 
     /**
      * 对端未通过认证时的处理入口。

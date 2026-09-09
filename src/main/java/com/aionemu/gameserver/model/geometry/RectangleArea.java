@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import lombok.Getter;
 
 /**
  * Rectangle 区域，用于几何相关逻辑。
@@ -19,52 +20,28 @@ public class RectangleArea extends AbstractArea {
 	 * 最小 X 坐标。
 	 * Min x point.
 	 */
+	@Getter
 	private final float minX;
-
-	/**
-	 * @return 最小 X 坐标 / the min x
-	 */
-	public float getMinX() {
-		return minX;
-	}
-
-	/**
-	 * @return 最大 X 坐标 / the max x
-	 */
-	public float getMaxX() {
-		return maxX;
-	}
-
-	/**
-	 * @return 最小 Y 坐标 / the min y
-	 */
-	public float getMinY() {
-		return minY;
-	}
-
-	/**
-	 * @return 最大 Y 坐标 / the max y
-	 */
-	public float getMaxY() {
-		return maxY;
-	}
 
 	/**
 	 * 最大 X 坐标。
 	 * Max x point.
 	 */
+	@Getter
 	private final float maxX;
 
 	/**
 	 * 最小 Y 坐标。
 	 * Min y point.
 	 */
+	@Getter
 	private final float minY;
 
 	/**
 	 * 最大 Y 坐标。
 	 * Max y point.
 	 */
+	@Getter
 	private final float maxY;
 
 	/**

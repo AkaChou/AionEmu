@@ -30,15 +30,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("calindiflamelord")
 public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 {
-	private List<Integer> percents = new ArrayList<Integer>();
-	private AtomicBoolean isStart = new AtomicBoolean(false);
-	
+	private final List<Integer> percents = new ArrayList<Integer>();
+	private final AtomicBoolean isStart = new AtomicBoolean(false);
+
 	@Override
 	protected void handleSpawned() {
 		addPercent();
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -47,7 +47,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			checkTimer();
 		}
 	}
-	
+
 	private synchronized void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
@@ -76,7 +76,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sp(int npcId) {
 		if (npcId == 281267) {
 			spawn(npcId, 1191.2714f, 1220.5795f, 144.2901f, (byte) 36);
@@ -92,7 +92,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			spawn(npcId, p.getX() + x1, p.getY() + y1, p.getZ(), p.getHeading());
 		}
 	}
-	
+
 	private void checkTimer() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -114,24 +114,24 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			}
 		}, 600000);
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{60, 30});
+		Collections.addAll(percents, 60, 30);
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		percents.clear();

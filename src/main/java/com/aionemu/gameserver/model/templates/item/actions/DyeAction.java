@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_PLAYER_APPEARANCE;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * Dye 动作模板（静态数据/XML）。
@@ -29,6 +30,8 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	@XmlAttribute
 	private Integer minutes;
 
+	/** 是否为自定义。 / Whether custom. */
+	@Getter
 	@XmlAttribute
 	private boolean custom;
 
@@ -51,11 +54,6 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 			int rgb = Integer.parseInt(color, 16);
 			return 0xFF | ((rgb & 0xFF) << 24) | ((rgb & 0xFF00) << 8) | ((rgb & 0xFF0000) >>> 8);
 		}
-	}
-
-	/** 是否为自定义。 / Whether custom. */
-	public boolean isCustom() {
-		return custom;
 	}
 
 	/** 返回 color / Returns the color */

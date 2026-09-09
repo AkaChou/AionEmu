@@ -2,11 +2,14 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 旧版 XML 路径到规范元数据路径的显式映射。
  * Explicit legacy XML path to canonical metadata path mapping.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestMetadataFieldMapping {
 	private static final Map<String, String> MAPPING;
 
@@ -61,9 +64,6 @@ public final class QuestMetadataFieldMapping {
 		fields.put("songweaver_selectable_reward", "QuestMetadata.classRewards.SONGWEAVER");
 		fields.put("aethertech_selectable_reward", "QuestMetadata.classRewards.AETHERTECH");
 		MAPPING = Map.copyOf(fields);
-	}
-
-	private QuestMetadataFieldMapping() {
 	}
 
 	public static Map<String, String> mapping() {

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import java.util.LinkedHashMap;
 
 import com.aionemu.gameserver.model.trade.TradePSItem;
+import lombok.Getter;
 
 /**
  * PrivateStore 游戏对象。
@@ -12,6 +13,13 @@ import com.aionemu.gameserver.model.trade.TradePSItem;
  */
 public class PrivateStore {
 
+	/**
+	 * 将 return 所有者。
+	 * This method will return the owner of the store
+	 *
+	 * @return Player
+	 */
+	@Getter
 	private final Player owner;
 	private final LinkedHashMap<Integer, TradePSItem> items;
 	private String storeMessage;
@@ -23,16 +31,6 @@ public class PrivateStore {
 	public PrivateStore(Player owner) {
 		this.owner = owner;
 		this.items = new LinkedHashMap<Integer, TradePSItem>();
-	}
-
-	/**
-	 * 将 return 所有者。
-	 * This method will return the owner of the store
-	 *
-	 * @return Player
-	 */
-	public Player getOwner() {
-		return owner;
 	}
 
 	/**

@@ -11,9 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ranastic
  */
 public class SM_CONDITION_VARIABLE extends AionServerPacket {
-	private int instanceId;
-	private int value;
-	private String variable;
+	private final int instanceId;
+	private final int value;
+	private final String variable;
 
 	/**
 	 * 构造条件变量同步包（取玩家所在实例 ID）。

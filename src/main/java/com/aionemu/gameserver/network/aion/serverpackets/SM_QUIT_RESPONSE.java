@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 对 CM_QUIT 的应答，通知客户端退出或进入编辑模式结果。
@@ -9,26 +11,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class SM_QUIT_RESPONSE extends AionServerPacket {
 
 	private boolean edit_mode = false;
-
-	/**
-	 * 构造默认的 SM_QUIT_RESPONSE 包。
-	 * Creates a default SM_QUIT_RESPONSE packet.
-	 */
-	public SM_QUIT_RESPONSE() {
-	}
-
-	/**
-	 * 使用给定参数构造 SM_QUIT_RESPONSE 包。
-	 * Creates a SM_QUIT_RESPONSE packet with the given parameters.
-	 *
-	 * @param edit_mode 是否编辑模式 / edit mode flag
-	 */
-	public SM_QUIT_RESPONSE(boolean edit_mode) {
-		this.edit_mode = edit_mode;
-	}
 
 	/**
 	 * {@inheritDoc}

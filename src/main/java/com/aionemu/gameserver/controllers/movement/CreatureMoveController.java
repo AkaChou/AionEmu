@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 生物移动控制器抽象基类，维护目标点、朝向、移动掩码与启停状态。
@@ -21,6 +22,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/** 朝向 / Heading */
 	protected byte heading;
 	/** 上次移动更新时间戳 / Last move update timestamp */
+	@Getter
 	protected long lastMoveUpdate = System.currentTimeMillis();
 	/** 是否处于移动中 / Whether currently in move */
 	protected boolean isInMove = false;
@@ -149,16 +151,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 */
 	public final void updateLastMove() {
 		lastMoveUpdate = System.currentTimeMillis();
-	}
-
-	/**
-	 * 返回上次移动更新时间戳。
-	 * Return the last move update timestamp.
-	 *
-	 * @return 时间戳 / Timestamp
-	 */
-	public long getLastMoveUpdate() {
-		return lastMoveUpdate;
 	}
 
 	/**

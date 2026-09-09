@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TribeClass;
+import lombok.Getter;
 
 /**
  * 刷新点 Model 模板（静态数据/XML）。
@@ -15,19 +16,13 @@ import com.aionemu.gameserver.model.TribeClass;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnModel")
 public class SpawnModel {
+	/** 获取部落。 / Returns the tribe. */
+	@Getter
 	@XmlAttribute(name = "tribe")
 	private TribeClass tribe;
 
+	/** 返回 AI / Returns the ai */
+	@Getter
 	@XmlAttribute(name = "ai")
 	private String ai;
-
-	/** 获取部落。 / Returns the tribe. */
-	public TribeClass getTribe() {
-		return tribe;
-	}
-
-	/** 返回 AI / Returns the ai */
-	public String getAi() {
-		return ai;
-	}
 }

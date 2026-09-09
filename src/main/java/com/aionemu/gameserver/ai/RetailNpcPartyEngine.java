@@ -11,16 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 真实 NPC Party 刷怪引擎：按 Party 配置生成显式成员。
  * Retail NPC party spawn engine that spawns explicit party members by config.
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetailNpcPartyEngine {
-
-	private RetailNpcPartyEngine() {
-	}
 
 	public static void initialize(WorldMapInstance instance) {
 		if (DataManager.RETAIL_AI_DATA == null) {

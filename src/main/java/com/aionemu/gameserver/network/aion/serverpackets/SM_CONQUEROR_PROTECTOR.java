@@ -12,7 +12,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet for conqueror/protector status: debuff level, or territory intruder scan/radar player list.
  */
 public class SM_CONQUEROR_PROTECTOR extends AionServerPacket {
-	private int type;
+	private final int type;
 	private int debuffLvl;
 	private Collection<Player> players;
 

@@ -7,12 +7,15 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 二维向量，提供几何运算（jME 风格流式 API）。
  * Two-dimensional vector with geometric operations (jME-style fluent API).
  */
 @Slf4j
+@AllArgsConstructor
 public final class Vector2f implements Cloneable {
 
 	/** 零向量 (0, 0)。 / Zero vector (0, 0). */
@@ -22,22 +25,12 @@ public final class Vector2f implements Cloneable {
 	public static final Vector2f UNIT_XY = new Vector2f(1.0f, 1.0f);
 
 	/** X 分量 / X component */
+	@Getter
 	public float x;
 
 	/** Y 分量 / Y component */
+	@Getter
 	public float y;
-
-	/**
-	 * 用指定分量构造向量。
-	 * Constructs a vector with the given components.
-	 *
-	 * @param x X 分量 / X component
-	 * @param y Y 分量 / Y component
-	 */
-	public Vector2f(float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
 
 	/**
 	 * 构造零向量。
@@ -523,16 +516,6 @@ public final class Vector2f implements Cloneable {
 	}
 
 	/**
-	 * 获取 X 分量。
-	 * Gets the X component.
-	 *
-	 * @return X 分量 / X component
-	 */
-	public float getX() {
-		return this.x;
-	}
-
-	/**
 	 * 设置 X 分量。
 	 * Sets the X component.
 	 *
@@ -542,16 +525,6 @@ public final class Vector2f implements Cloneable {
 	public Vector2f setX(float x) {
 		this.x = x;
 		return this;
-	}
-
-	/**
-	 * 获取 Y 分量。
-	 * Gets the Y component.
-	 *
-	 * @return Y 分量 / Y component
-	 */
-	public float getY() {
-		return this.y;
 	}
 
 	/**
@@ -637,13 +610,12 @@ public final class Vector2f implements Cloneable {
 	 * @return 若 equal 则为 true / True if equal
 	 */
 	public boolean equals(Object o) {
-		if (!(o instanceof Vector2f)) {
+		if (!(o instanceof Vector2f comp)) {
 			return false;
 		}
 		if (this == o) {
 			return true;
 		}
-		Vector2f comp = (Vector2f) o;
 		if (Float.compare(this.x, comp.x) != 0) {
 			return false;
 		}

@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 召唤物配置集合：按百分比阈值组织召唤物队伍。
@@ -17,11 +18,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "Summons")
 public class Summons {
 
+	/** 返回 percentage / Returns the percentage */
+	@Getter
 	@XmlElement(name = "percentage")
 	private List<Percentage> percentage;
-
-	/** 返回 percentage / Returns the percentage */
-	public List<Percentage> getPercentage() {
-		return this.percentage;
-	}
 }

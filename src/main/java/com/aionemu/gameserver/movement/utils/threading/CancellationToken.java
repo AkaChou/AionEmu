@@ -39,7 +39,7 @@ public class CancellationToken {
 	public void cancel() throws InterruptedException {
 		if (this._isCancelled.compareAndSet(false, true)) {
 			Runnable run;
-			while ((run = (Runnable) this._cancelActions.poll()) != null) {
+			while ((run = this._cancelActions.poll()) != null) {
 				run.run();
 			}
 		}

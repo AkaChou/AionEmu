@@ -23,7 +23,7 @@ public class Imperial_ShrineAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-            case 831350: { //Imperial Shrine.
+            case 831350: { // 神圣祭坛 / Imperial Shrine.
 				super.handleDialogStart(player);
 				break;
 			} default: {

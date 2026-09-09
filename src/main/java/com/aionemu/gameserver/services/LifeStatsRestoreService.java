@@ -30,7 +30,7 @@ public class LifeStatsRestoreService {
 	/** 飞行值恢复默认间隔（毫秒）。 / Default FP restore interval in ms. */
 	private static final int DEFAULT_FPRESTORE_DELAY = 2000;
 
-	private static LifeStatsRestoreService instance = new LifeStatsRestoreService();
+	private static final LifeStatsRestoreService instance = new LifeStatsRestoreService();
 
 	/**
 	 * 调度 HP 与 MP 恢复任务。
@@ -162,7 +162,7 @@ public class LifeStatsRestoreService {
 	private static class FpReduceTask implements Runnable {
 
 		private PlayerLifeStats lifeStats;
-		private Integer costFp;
+		private final Integer costFp;
 
 		private FpReduceTask(PlayerLifeStats lifeStats, final Integer costFp) {
 			this.lifeStats = lifeStats;

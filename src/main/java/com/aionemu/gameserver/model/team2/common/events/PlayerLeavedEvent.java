@@ -15,8 +15,8 @@ import com.google.common.base.Predicate;
 
 public abstract class PlayerLeavedEvent<TM extends TeamMember<Player>, T extends TemporaryPlayerTeam<TM>>
 		implements Predicate<TM>, TeamEvent {
-	public static enum LeaveReson {
-		BAN, LEAVE, LEAVE_TIMEOUT, DISBAND;
+	public enum LeaveReson {
+		BAN, LEAVE, LEAVE_TIMEOUT, DISBAND
 	}
 
 	protected final T team;

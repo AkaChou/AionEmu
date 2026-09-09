@@ -19,9 +19,6 @@ import java.io.Serializable;
  */
 public class Polygon2D implements Shape, Cloneable, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -243,7 +240,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	 * 判断指定点/坐标是否在此几何内。 / Determines whether the specified coordinates are inside this <code>Polygon</code>. <p>.
 	 */
 	public boolean contains(int x, int y) {
-		return contains((double) x, (double) y);
+		return contains(x, (double) y);
 	}
 
 	/**

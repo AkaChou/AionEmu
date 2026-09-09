@@ -5,11 +5,14 @@ import java.util.List;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestState;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 向客户端同步已完成任务列表（支持分包发送）。
  * Server packet synchronizing the completed-quest list to the client (chunked when large).
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
 
     private static final int MAX_PACKET_SIZE = 8000;
@@ -28,12 +31,6 @@ public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
      */
     public SM_QUEST_COMPLETED_LIST(List<QuestState> allQuests) {
         this(allQuests, 0, allQuests.size());
-    }
-
-    private SM_QUEST_COMPLETED_LIST(List<QuestState> allQuests, int startIndex, int totalSize) {
-        this.allQuests = allQuests;
-        this.startIndex = startIndex;
-        this.totalSize = totalSize;
     }
 
     @Override

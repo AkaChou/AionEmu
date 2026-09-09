@@ -32,14 +32,14 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 {
 	private Future<?> mazikinTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -62,7 +62,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		super.handleCreatureMoved(creature);
@@ -173,19 +173,19 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void cancelMazikinTask() {
 		if (mazikinTask != null && !mazikinTask.isDone()) {
 			mazikinTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelMazikinTask();
 		super.handleDied();
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}

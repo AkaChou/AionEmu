@@ -26,8 +26,8 @@ import java.util.List;
 @AIName("vritra_power_device")
 public class GuardPostGeneratorAI2 extends NpcAI2
 {
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
@@ -40,7 +40,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 			}
 		}, 1000);
     }
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -76,12 +76,12 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 			break;
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

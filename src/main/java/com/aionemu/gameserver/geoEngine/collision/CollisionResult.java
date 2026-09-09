@@ -2,6 +2,9 @@ package com.aionemu.gameserver.geoEngine.collision;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 单次碰撞命中结果，包含接触点、法线、距离与命中几何体；可按距离排序。
@@ -10,15 +13,24 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
  *
  * @author Kirill
  */
+@NoArgsConstructor
 public class CollisionResult implements Comparable<CollisionResult> {
 
 	/** 命中的空间几何体。 / Hit spatial geometry. */
+	@Getter
+	@Setter
 	private Spatial geometry;
 	/** 接触点（世界坐标）。 / Contact point in world space. */
+	@Getter
+	@Setter
 	private Vector3f contactPoint;
 	/** 接触法线。 / Contact normal. */
+	@Getter
+	@Setter
 	private Vector3f contactNormal;
 	/** 从射线原点到接触点的距离。 / Distance from ray origin to contact point. */
+	@Getter
+	@Setter
 	private float distance;
 
 	/**
@@ -31,33 +43,6 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	public CollisionResult(Vector3f contactPoint, float distance) {
 		this.contactPoint = contactPoint;
 		this.distance = distance;
-	}
-
-	/**
-	 * 空构造，供后续 setter 填充。
-	 * Empty constructor for later setter population.
-	 */
-	public CollisionResult() {
-	}
-
-	/**
-	 * 设置接触点。
-	 * Sets the contact point.
-	 *
-	 * @param point 接触点 / contact point
-	 */
-	public void setContactPoint(Vector3f point) {
-		this.contactPoint = point;
-	}
-
-	/**
-	 * 设置距离。
-	 * Sets the distance.
-	 *
-	 * @param dist 距离 / distance
-	 */
-	public void setDistance(float dist) {
-		this.distance = dist;
 	}
 
 	/**
@@ -76,65 +61,5 @@ public class CollisionResult implements Comparable<CollisionResult> {
 		} else {
 			return 0;
 		}
-	}
-
-	/**
-	 * 设置接触法线。
-	 * Sets the contact normal.
-	 *
-	 * @param norm 法线 / normal
-	 */
-	public void setContactNormal(Vector3f norm) {
-		this.contactNormal = norm;
-	}
-
-	/**
-	 * 设置命中几何体。
-	 * Sets the hit geometry.
-	 *
-	 * @param geom 空间对象 / spatial
-	 */
-	public void setGeometry(Spatial geom) {
-		this.geometry = geom;
-	}
-
-	/**
-	 * 返回接触法线。
-	 * Returns the contact normal.
-	 *
-	 * @return 接触法线 / normal
-	 */
-	public Vector3f getContactNormal() {
-		return contactNormal;
-	}
-
-	/**
-	 * 返回接触点。
-	 * Returns the contact point.
-	 *
-	 * @return 接触点 / contact point
-	 */
-	public Vector3f getContactPoint() {
-		return contactPoint;
-	}
-
-	/**
-	 * 返回命中几何体。
-	 * Returns the hit geometry.
-	 *
-	 * @return 命中空间对象 / spatial
-	 */
-	public Spatial getGeometry() {
-		return geometry;
-	}
-
-	/**
-	 * 返回距离。
-	 * Returns the distance.
-	 *
-	 * @return 距离 / distance
-	 */
-	public float getDistance() {
-		return distance;
 	}
 }

@@ -24,8 +24,8 @@ import java.util.Set;
 public class ShadowCourtInstance extends GeneralInstanceHandler
 {
     /** 已播放动画集合 / played-movie set */
-    private List<Integer> movies = new ArrayList<Integer>();
-	
+    private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -46,7 +46,7 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -75,14 +75,14 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
 		    break;
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

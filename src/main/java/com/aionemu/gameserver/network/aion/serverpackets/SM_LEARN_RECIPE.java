@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 通知客户端学会新配方的服务端包。
@@ -9,19 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author lord_rex
  */
+@AllArgsConstructor
 public class SM_LEARN_RECIPE extends AionServerPacket {
 
-	private int recipeId;
-
-	/**
-	 * 构造学会配方通知包。
-	 * Creates a packet announcing a newly learned recipe.
-	 *
-	 * recipe id
-	 */
-	public SM_LEARN_RECIPE(int recipeId) {
-		this.recipeId = recipeId;
-	}
+	private final int recipeId;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

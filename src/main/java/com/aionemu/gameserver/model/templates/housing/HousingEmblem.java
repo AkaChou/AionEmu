@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 住房徽章模板（静态数据/XML）。
@@ -15,6 +16,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "HousingEmblem")
 public class HousingEmblem extends PlaceableHouseObject {
 
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	@XmlAttribute(name = "level", required = true)
 	private int level;
 
@@ -22,10 +25,5 @@ public class HousingEmblem extends PlaceableHouseObject {
 	@Override
 	public byte getTypeId() {
 		return 11;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
 	}
 }

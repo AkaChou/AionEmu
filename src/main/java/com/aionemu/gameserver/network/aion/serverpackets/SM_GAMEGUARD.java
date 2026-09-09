@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端发送游戏守护校验数据的服务端包。
@@ -9,16 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Alcapwnd
  */
+@AllArgsConstructor
 public class SM_GAMEGUARD extends AionServerPacket {
 
-	private int size;
-
-	/**
-	 * @param size 校验数据缓冲区大小 / Size of the check data buffer
-	 */
-	public SM_GAMEGUARD(int size) {
-		this.size = size;
-	}
+	private final int size;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

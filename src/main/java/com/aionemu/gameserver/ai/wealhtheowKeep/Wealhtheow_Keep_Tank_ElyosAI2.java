@@ -28,12 +28,12 @@ public class Wealhtheow_Keep_Tank_ElyosAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
 	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -62,14 +62,14 @@ public class Wealhtheow_Keep_Tank_ElyosAI2 extends NpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		// 登上武器，持续 1 小时后删除并安排重生。 / Board the weapon for 1h, then delete and schedule respawn.
-		GameEngineServices.skillEngine().applyEffectDirectly(21592, player, player, 3600000 * 1); //Board The Weapon.
+		GameEngineServices.skillEngine().applyEffectDirectly(21592, player, player, 3600000); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

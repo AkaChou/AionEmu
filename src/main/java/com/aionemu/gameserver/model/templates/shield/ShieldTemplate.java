@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.utils3d.Point3D;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 护盾模板（静态数据/XML）。
@@ -16,50 +18,33 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Shield")
+@NoArgsConstructor
 public class ShieldTemplate {
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
+	/** 获取地图。 / Returns the map. */
+	@Getter
 	@XmlAttribute(name = "map")
 	protected int map;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
+	/** 获取半径。 / Returns the radius. */
+	@Getter
 	@XmlAttribute(name = "radius")
 	protected float radius;
 
+	/** 返回中心点 / Returns the center */
+	@Getter
 	@XmlElement(name = "center")
 	protected ShieldPoint center;
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 获取地图。 / Returns the map. */
-	public int getMap() {
-		return map;
-	}
-
-	/** 获取半径。 / Returns the radius. */
-	public float getRadius() {
-		return radius;
-	}
-
-	/** 返回中心点 / Returns the center */
-	public ShieldPoint getCenter() {
-		return center;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	public ShieldTemplate() {
-	};
 
 	/**
 	 * 用给定名称、地图和中心点构造护盾模板，默认半径 6。

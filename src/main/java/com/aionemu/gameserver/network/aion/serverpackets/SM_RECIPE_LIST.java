@@ -13,8 +13,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_RECIPE_LIST extends AionServerPacket {
 
-	private Integer[] recipeIds;
-	private int count;
+	private final Integer[] recipeIds;
+	private final int count;
 
 	/**
 	 * 使用给定参数构造 SM_RECIPE_LIST 包。

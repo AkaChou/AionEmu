@@ -23,12 +23,12 @@ public class Garden_Temple_Bind_PointAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
 		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
@@ -36,19 +36,19 @@ public class Garden_Temple_Bind_PointAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		announceGardenTemple();
 	}
-	
+
 	private void GardenTempleBindPoint() {
 		AI2Actions.deleteOwner(Garden_Temple_Bind_PointAI2.this);
-		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(834043, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Geodesic <To The Library Gap>
+		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(834043, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Geodesic <To The Library Gap>
     }
-	
+
 	private void announceGardenTemple() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -60,7 +60,7 @@ public class Garden_Temple_Bind_PointAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

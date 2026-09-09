@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -268,7 +267,6 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				hellpathSecondWave();
 			break;
 			case 236306: //Reviver Nasto.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Raksang Ruins>");
 				spawn(730445, 648.5508f, 700.05725f, 522.0487f, (byte) 80); //Raksang Exit.
 			break;
 		}
@@ -748,20 +746,6 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}, 1000);
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

@@ -26,14 +26,14 @@ public class ClusteredNpc {
 	 * Instance id.
 	 */
 	@Getter
-	private int instance;
+	private final int instance;
 
 	/**
 	 * 巡逻路径模板。
 	 * Walker route template.
 	 */
 	@Getter
-	private WalkerTemplate walkTemplate;
+	private final WalkerTemplate walkTemplate;
 
 	/**
 	 * 刷怪 X 坐标。
@@ -53,7 +53,7 @@ public class ClusteredNpc {
 	 * 巡逻成员序号。
 	 * Walker member index.
 	 */
-	private int walkerIdx;
+	private final int walkerIdx;
 
 	/**
 	 * 以 NPC、实例与巡逻模板构造集群数据。

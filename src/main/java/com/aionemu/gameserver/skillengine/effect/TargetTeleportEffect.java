@@ -39,11 +39,10 @@ public class TargetTeleportEffect extends EffectTemplate {
 
 	@Override
 	public void applyEffect(Effect effect) {
-		if (!(effect.getEffected() instanceof Player)) {
+		if (!(effect.getEffected() instanceof Player effected)) {
 			return;
 		}
 		Creature effector = effect.getEffector();
-		Player effected = (Player) effect.getEffected();
 		if (!isSameMap) {
 			List<LocationAliasPoint> points = DataManager.RETAIL_AI_DATA.findLocationAlias(effector.getWorldId(), alias);
 			if (points == null || points.isEmpty()) {

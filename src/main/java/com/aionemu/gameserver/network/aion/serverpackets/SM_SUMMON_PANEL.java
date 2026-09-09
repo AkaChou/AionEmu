@@ -3,6 +3,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端展示召唤物控制面板。
@@ -10,19 +11,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author ATracer, xTz
  */
+@AllArgsConstructor
 public class SM_SUMMON_PANEL extends AionServerPacket {
 
-	private Summon summon;
-
-	/**
-	 * 使用给定参数构造 SM_SUMMON_PANEL 包。
-	 * Creates a SM_SUMMON_PANEL packet with the given parameters.
-	 *
-	 * summon
-	 */
-	public SM_SUMMON_PANEL(Summon summon) {
-		this.summon = summon;
-	}
+	private final Summon summon;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

@@ -117,7 +117,6 @@ public class Base64 {
 			return new byte[0];
 		}
 		
-		// 统计非法字符数量（包括'\r', '\n'）以确定返回数组的大小
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
 		for (int i = 0; i < sLen; i++) {
@@ -307,7 +306,7 @@ public class Base64 {
 		}
 		
 		// 处理剩余字节 Pad and encode last bits if source isn't an even 24 bits
-		int left = sLen - eLen; // 剩余字节数 0 - 2
+		int left = sLen - eLen; // 剩余字节数（0-2）/ remaining byte count (0-2)
 		if (left > 0) {
 			// 准备最后的 int Prepare the last int
 			int i = ((sArr[eLen] & 0xff) << 10) | (left == 2 ? ((sArr[sLen - 1] & 0xff) << 2) : 0);
@@ -334,7 +333,6 @@ public class Base64 {
 		// 检查特殊情况 Check special case
 		int sLen = sArr.length;
 		
-		// 统计非法字符数量（包括'\r', '\n'）以确定返回数组的大小
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
 		for (int i = 0; i < sLen; i++) {
@@ -519,7 +517,6 @@ public class Base64 {
 			return new byte[0];
 		}
 		
-		// 统计非法字符数量（包括'\r', '\n'）以确定返回数组的大小
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
 		for (int i = 0; i < sLen; i++) {

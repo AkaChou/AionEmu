@@ -22,9 +22,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 @Slf4j
 public class SM_LOOT_ITEMLIST extends AionServerPacket {
-	private int targetObjectId;
+	private final int targetObjectId;
 	private final boolean teamMembersNearby;
-	private List<DropItem> dropItems;
+	private final List<DropItem> dropItems;
 
 	/**
 	 * 构造玩家可见的掉落物品列表包。

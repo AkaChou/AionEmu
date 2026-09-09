@@ -1,11 +1,14 @@
 package com.aionemu.loginserver.configs;
 
 import com.aionemu.commons.configuration.Property;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 独立账号 VIP 配置。
  * Independent account VIP configuration.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VipConfig {
 
     /** 是否自动启用账号 VIP。 / Whether to auto-enable account VIP. */
@@ -27,9 +30,6 @@ public final class VipConfig {
     /** STS 服务端口。 / STS service port. */
     @Property(key = "loginserver.vip.sts.port", defaultValue = "6600")
     public static int STS_PORT;
-
-    private VipConfig() {
-    }
 
     /**
      * 校验配置值范围（VIP 等级与 STS 端口）。

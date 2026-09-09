@@ -23,6 +23,7 @@ import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+import lombok.Getter;
 
 /**
  * Enchant 物品动作模板（静态数据/XML）。
@@ -33,6 +34,8 @@ import com.aionemu.gameserver.world.World;
 @XmlType(name = "EnchantItemAction")
 public class EnchantItemAction extends AbstractItemAction {
 
+	/** 获取计数。 / Returns the count. */
+	@Getter
 	@XmlAttribute(name = "count")
 	private int count;
 
@@ -45,6 +48,8 @@ public class EnchantItemAction extends AbstractItemAction {
 	@XmlAttribute(name = "manastone_only")
 	private boolean manastone_only;
 
+	/** 返回概率 / Returns the chance*/
+	@Getter
 	@XmlAttribute(name = "chance")
 	private float chance;
 
@@ -83,10 +88,7 @@ public class EnchantItemAction extends AbstractItemAction {
 		int msID = parentItem.getItemTemplate().getTemplateId() / 1000000;
 		int tID = targetItem.getItemTemplate().getTemplateId() / 1000000;
 		int wID = targetItem.getItemTemplate().getTemplateId() / 1000000;
-		if ((msID != 167 && msID != 166) || tID >= 120 && wID != 187) {
-			return false;
-		}
-		return true;
+		return (msID == 167 || msID == 166) && (tID < 120 || wID == 187);
 	}
 
 	/** 执行 / act. */
@@ -179,11 +181,6 @@ public class EnchantItemAction extends AbstractItemAction {
 		return false;
 	}
 
-	/** 获取计数。 / Returns the count. */
-	public int getCount() {
-		return count;
-	}
-
 	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return max_level != null ? max_level : 0;
@@ -199,11 +196,6 @@ public class EnchantItemAction extends AbstractItemAction {
 	 */
 	public boolean isManastoneOnly() {
 		return manastone_only;
-	}
-
-	/** 返回概率 / Returns the chance*/
-	public float getChance() {
-		return chance;
 	}
 
 	boolean isSupplementAction() {

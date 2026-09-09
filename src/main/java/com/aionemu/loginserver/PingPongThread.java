@@ -21,16 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PingPongThread implements Runnable {
 
-    private GsConnection connection;
+    private final GsConnection connection;
     /**
      * 线程是否继续运行。
      * Whether the thread should keep running.
      */
     public volatile boolean uptime = true;
-    private SM_PING ping;
+    private final SM_PING ping;
     private byte requests = 0;
     private int serverPID = -1;
-    private boolean killProcess = false;
+    private final boolean killProcess = false;
 
     /**
      * 为指定游戏服连接创建心跳线程。

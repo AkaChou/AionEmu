@@ -17,12 +17,14 @@ import com.aionemu.gameserver.geoEngine.scene.CollisionData;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.scene.VertexBuffer.Type;
 import com.aionemu.gameserver.geoEngine.scene.mesh.IndexBuffer;
+import lombok.NoArgsConstructor;
 
 /**
  * 包围区间层次（BIH）加速结构，实现 {@link CollisionData}，用于网格与射线/包围体的快速碰撞检测。
  * Bounding Interval Hierarchy acceleration structure implementing {@link CollisionData}
  * for fast mesh collisions against rays and bounding volumes.
  */
+@NoArgsConstructor
 public class BIHTree implements CollisionData {
 
 	/** 最大树深度。 / Maximum tree depth. */
@@ -114,13 +116,6 @@ public class BIHTree implements CollisionData {
 	 */
 	public BIHTree(Mesh mesh) {
 		this(mesh, MAX_TRIS_PER_NODE);
-	}
-
-	/**
-	 * 空构造。
-	 * Default constructor.
-	 */
-	public BIHTree() {
 	}
 
 	/**
@@ -540,11 +535,9 @@ public class BIHTree implements CollisionData {
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,
 			CollisionResults results) {
 
-		if (other instanceof Ray) {
-			Ray ray = (Ray) other;
+		if (other instanceof Ray ray) {
 			return collideWithRay(ray, worldMatrix, worldBound, results);
-		} else if (other instanceof BoundingVolume) {
-			BoundingVolume bv = (BoundingVolume) other;
+		} else if (other instanceof BoundingVolume bv) {
 			return collideWithBoundingVolume(bv, worldMatrix, results);
 		} else {
 			throw new UnsupportedCollisionException();

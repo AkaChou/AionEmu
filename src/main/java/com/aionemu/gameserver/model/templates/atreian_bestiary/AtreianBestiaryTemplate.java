@@ -101,6 +101,6 @@ public class AtreianBestiaryTemplate {
 		/** 普通图鉴 / Normal book */
 		NORMAL(),
 		/** 英雄图鉴 / Hero book */
-		HERO();
+		HERO()
 	}
 }

@@ -40,22 +40,17 @@ public class FirstTargetProperty {
 				if (skill.getFirstTarget().isEnemy(playerEffector)) {
 					changeTargetToMe = true;
 				}
-			} else if ((skill.getFirstTarget() instanceof Player) && (skill.getEffector() instanceof Player)) {
-				Player playerEffected = (Player) skill.getFirstTarget();
-				Player playerEffector = (Player) skill.getEffector();
+			} else if ((skill.getFirstTarget() instanceof Player playerEffected) && (skill.getEffector() instanceof Player playerEffector)) {
 				if (playerEffected.isEnemy(playerEffector)) {
 					changeTargetToMe = true;
 				}
-			} else if (skill.getFirstTarget() instanceof Npc) {
-				Npc npcEffected = (Npc) skill.getFirstTarget();
+			} else if (skill.getFirstTarget() instanceof Npc npcEffected) {
 				Player playerEffector = (Player) skill.getEffector();
 				if (npcEffected.isEnemy(playerEffector)) {
 					changeTargetToMe = true;
 				}
-			} else if ((skill.getFirstTarget() instanceof Summon) && (skill.getEffector() instanceof Player)) {
-				Summon summon = (Summon) skill.getFirstTarget();
+			} else if ((skill.getFirstTarget() instanceof Summon summon) && (skill.getEffector() instanceof Player playerEffector)) {
 				Player playerEffected = summon.getMaster();
-				Player playerEffector = (Player) skill.getEffector();
 				if (playerEffected.isEnemy(playerEffector)) {
 					changeTargetToMe = true;
 				}

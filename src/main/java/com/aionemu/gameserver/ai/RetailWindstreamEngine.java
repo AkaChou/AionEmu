@@ -10,17 +10,17 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 真实 AI 控制的实例级风道开关。
  * Retail AI-controlled instance-level windstream switches.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetailWindstreamEngine {
 
 	private static final Map<WorldMapInstance, Map<Integer, Integer>> STATES = new ConcurrentHashMap<>();
-
-	private RetailWindstreamEngine() {
-	}
 
 	public static boolean supports(int mapId, int groupId) {
 		return location(mapId, groupId) != null;

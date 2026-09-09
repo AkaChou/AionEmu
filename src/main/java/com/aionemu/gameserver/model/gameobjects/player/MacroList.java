@@ -11,33 +11,28 @@ import java.util.Map;
  * 宏列表。
  * Macro list.
  *
+ * @param macrosses 宏容器：位置到 XML 的映射。
+ *                  Container of macros: position to XML.
  * @author Aquanox, nrg
  */
 @Slf4j
-public class MacroList {
-
-	/**
-	 * 宏容器：位置到 XML 的映射。
-	 * Container of macros: position to XML.
-	 */
-	private final Map<Integer, String> macrosses;
+public record MacroList(Map<Integer, String> macrosses) {
 
 	/**
 	 * 创建空宏列表。
 	 * Creates an empty macro list.
 	 */
 	public MacroList() {
-		this.macrosses = new HashMap<Integer, String>(12);
+		this(new HashMap<Integer, String>(12));
 	}
 
 	/**
 	 * 用已有映射创建宏列表。
 	 * Creates a macro list from an existing map.
 	 *
-	 * @param arg 位置到宏 XML 的映射 / map of position to macro XML
+	 * @param macrosses 位置到宏 XML 的映射 / map of position to macro XML
 	 */
-	public MacroList(Map<Integer, String> arg) {
-		this.macrosses = arg;
+	public MacroList {
 	}
 
 	/**
@@ -46,7 +41,8 @@ public class MacroList {
 	 *
 	 * @return 全部宏 / all macros
 	 */
-	public Map<Integer, String> getMacrosses() {
+	@Override
+	public Map<Integer, String> macrosses() {
 		return Collections.unmodifiableMap(macrosses);
 	}
 
@@ -55,7 +51,7 @@ public class MacroList {
 	 * Adds a macro to the collection.
 	 *
 	 * @param macroPosition 宏槽位 / macro slot
-	 * @param macroXML 宏 XML 内容 / macro XML contents
+	 * @param macroXML      宏 XML 内容 / macro XML contents
 	 * @return 新增成功且可入库则为 true；覆盖已有槽位则为 false / true if newly added and storable; false if an existing slot was replaced
 	 */
 	public synchronized boolean addMacro(int macroPosition, String macroXML) {

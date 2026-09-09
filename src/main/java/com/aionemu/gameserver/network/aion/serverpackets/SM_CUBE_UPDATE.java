@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 魔立方/仓库容量更新包：同步格子数与扩展次数，或进阶烙印槽位。
@@ -11,13 +13,14 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Sweetkr
  */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SM_CUBE_UPDATE extends AionServerPacket {
 
-	private int action;
+	private final int action;
 	/**
 	 * action 0：仓库类型；action 6：高级烙印之石数量。 / for action 0 - its storage type<br> for action 6 - its advanced stigma count
 	 */
-	private int actionValue;
+	private final int actionValue;
 
 	private int itemsCount;
 	private int npcExpands;
@@ -68,11 +71,6 @@ public class SM_CUBE_UPDATE extends AionServerPacket {
 		this.itemsCount = itemsCount;
 		this.npcExpands = npcExpands;
 		this.questExpands = questExpands;
-	}
-
-	private SM_CUBE_UPDATE(int action, int actionValue) {
-		this.action = action;
-		this.actionValue = actionValue;
 	}
 
 	@Override

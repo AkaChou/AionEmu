@@ -85,7 +85,7 @@ public class DialogService {
             case 314362: // Stigma Master A.
             case 314365: // Stigma Master B.
             case 314366: // Stigma Master C.
-            case 350410: // Stigma Master.
+            case 350410: // 烙印之石名人 / Stigma Master.
             case 469968: // Stigma 5.8
             case 469977: // Stigma 5.8
             case 469982: // Stigma 5.8
@@ -179,7 +179,7 @@ public class DialogService {
                 }
                 switch (npc.getNpcId()) {
                     // <钢铁战斗行政官 天族> / <Iron Combat Administration Officer Elyos>
-                    case 203179: // Anontrite.
+                    case 203179: // 阿南特里特 / Anontrite.
                     case 203330: // Laksis.
                         if (player.getInventory().getItemCountByItemId(186000001) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
@@ -187,42 +187,42 @@ public class DialogService {
                         }
                         break;
                     // <钢铁战斗行政官 魔族> / <Iron Combat Administration Officer Asmodians>
-                    case 203659: // Lateni.
-                    case 203689: // Lohaban.
+                    case 203659: // 拉泰尼 / Lateni.
+                    case 203689: // 罗哈班 / Lohaban.
                         if (player.getInventory().getItemCountByItemId(186000006) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <青铜战斗行政官 天族> / <Bronze Combat Administration Officer Elyos>
-                    case 203931: // Ferenna.
-                    case 798111: // Atro.
+                    case 203931: // 佩兰娜 / Ferenna.
+                    case 798111: // 阿特罗 / Atro.
                         if (player.getInventory().getItemCountByItemId(186000002) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <青铜战斗行政官 魔族> / <Bronze Combat Administration Officer Asmodians>
-                    case 204360: // Nott.
-                    case 204368: // Cliessa.
+                    case 204360: // 诺特 / Nott.
+                    case 204368: // 福尔拉 / Cliessa.
                     case 204425: // Bevna.
-                    case 204426: // Skataon.
+                    case 204426: // 斯卡塔文 / Skataon.
                         if (player.getInventory().getItemCountByItemId(186000007) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <白银行政官 天族> / <Silver Administration Officer Elyos>
-                    case 203964: // Agrips.
-                    case 204011: // Sandinas.
-                    case 204515: // Belakade.
-                    case 204571: // Lomulias.
-                    case 204637: // Keas.
-                    case 204639: // Serdy.
-                    case 798112: // Metea.
-                    case 798113: // Anobi.
-                    case 801158: // Callias.
-                    case 801161: // Donar.
+                    case 203964: // 阿格林斯 / Agrips.
+                    case 204011: // 山迪纳斯 / Sandinas.
+                    case 204515: // 贝拉卡戴 / Belakade.
+                    case 204571: // 罗莫里亚斯 / Lomulias.
+                    case 204637: // 凯亚斯 / Keas.
+                    case 204639: // 塞尔迪 / Serdy.
+                    case 798112: // 梅特亚 / Metea.
+                    case 798113: // 阿诺比 / Anobi.
+                    case 801158: // 卡利亚斯 / Callias.
+                    case 801161: // 多纳尔 / Donar.
                         if (player.getInventory().getItemCountByItemId(186000003) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
@@ -230,9 +230,9 @@ public class DialogService {
                         break;
                     // <白银行政官 魔族> / <Silver Administration Officer Asmodians>
                     case 204359: // Royaa.
-                    case 204427: // Sigen.
-                    case 204781: // Govanon.
-                    case 204789: // Lewin.
+                    case 204427: // 西凯恩 / Sigen.
+                    case 204781: // 高巴农 / Govanon.
+                    case 204789: // 莱文 / Lewin.
                     case 801170: // Lamachus.
                     case 801173: // Kellas.
                         if (player.getInventory().getItemCountByItemId(186000008) == 0) {
@@ -241,22 +241,22 @@ public class DialogService {
                         }
                         break;
                     // <黄金行政官 天族> / <Gold Administration Officer Elyos>
-                    case 204548: // Euripia.
-                    case 204638: // Tolemos.
-                    case 801164: // Alcman.
-                    case 801167: // Dalla.
-                    case 801182: // Dinon.
-                    case 801185: // Gudrun.
+                    case 204548: // 埃乌里皮亚 / Euripia.
+                    case 204638: // 拖雷摩斯 / Tolemos.
+                    case 801164: // 阿尔克曼 / Alcman.
+                    case 801167: // 戴昂斯 / Dalla.
+                    case 801182: // 迪农 / Dinon.
+                    case 801185: // 格特仑 / Gudrun.
                         if (player.getInventory().getItemCountByItemId(186000004) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <黄金行政官 魔族> / <Gold Administration Officer Asmodians>
-                    case 204761: // Cinnia.
-                    case 204762: // Coventina.
-                    case 204766: // Maponus.
-                    case 204767: // Art.
+                    case 204761: // 辛尼亚 / Cinnia.
+                    case 204762: // 克贝蒂纳 / Coventina.
+                    case 204766: // 玛珀努斯 / Maponus.
+                    case 204767: // 阿尔特 / Art.
                     case 801179: // Nibelr.
                     case 801196: // Hippias.
                     case 801199: // Thorkell.
@@ -266,51 +266,51 @@ public class DialogService {
                         }
                         break;
                     // <白金行政官 天族> / <Platinum Administration Officer Elyos>
-                    case 798172: // Eunomia.
-                    case 798173: // Euterpe.
-                    case 798174: // Guneus.
-                    case 798175: // Charites.
-                    case 798195: // Iphigenia.
-                    case 798196: // Illithyia.
-                    case 798197: // Neoptolemos.
-                    case 798198: // Calliope.
+                    case 798172: // 埃乌诺米亚 / Eunomia.
+                    case 798173: // 埃乌泰尔佩 / Euterpe.
+                    case 798174: // 居内乌斯 / Guneus.
+                    case 798175: // 卡里德斯 / Charites.
+                    case 798195: // 伊皮盖尼亚 / Iphigenia.
+                    case 798196: // 伊力提亚 / Illithyia.
+                    case 798197: // 内奥波特雷斯 / Neoptolemos.
+                    case 798198: // 卡里奥佩 / Calliope.
                     case 801188: // Cariton.
-                    case 801192: // Lithrasir.
+                    case 801192: // 李特拉希尔 / Lithrasir.
                         if (player.getInventory().getItemCountByItemId(186000005) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <白金行政官 魔族> / <Platinum Administration Officer Asmodians>
-                    case 205160: // Nagel.
-                    case 205161: // Huvat.
-                    case 205162: // Bern.
-                    case 205163: // Rumolt.
-                    case 205183: // Signa.
-                    case 205184: // Pogel.
-                    case 205185: // Flazetta.
-                    case 205186: // Forseti.
+                    case 205160: // 纳盖尔 / Nagel.
+                    case 205161: // 胡巴特 / Huvat.
+                    case 205162: // 贝伦 / Bern.
+                    case 205163: // 鲁莫特 / Rumolt.
+                    case 205183: // 斯格纳 / Signa.
+                    case 205184: // 普盖尔 / Pogel.
+                    case 205185: // 普鲁杰 / Flazetta.
+                    case 205186: // 普尔塞蒂 / Forseti.
                     case 801202: // Bupalus.
-                    case 801206: // Mofrig.
+                    case 801206: // 莫普里格 / Mofrig.
                         if (player.getInventory().getItemCountByItemId(186000010) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <秘银行政官 天族> / <Mithril Administration Officer Elyos>
-                    case 798914: // Eduardo.
+                    case 798914: // 埃杜阿尔多 / Eduardo.
                     case 798915: // Giuseppe.
-                    case 798916: // Silva.
-                    case 798917: // Amauri.
+                    case 798916: // 希尔瓦 / Silva.
+                    case 798917: // 阿玛乌里 / Amauri.
                         if (player.getInventory().getItemCountByItemId(186000018) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
                     // <秘银行政官 魔族> / <Mithril Administration Officer Asmodians>
-                    case 799213: // Nordin.
-                    case 799214: // Flores.
-                    case 799215: // Godin.
+                    case 799213: // 诺尔丁 / Nordin.
+                    case 799214: // 普洛雷斯 / Flores.
+                    case 799215: // 高丁 / Godin.
                     case 799216: // Assulin.
                         if (player.getInventory().getItemCountByItemId(186000019) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
@@ -349,7 +349,7 @@ public class DialogService {
                     // <查里伦克的恶魔管家 魔族> / <Charlirunerk's Daemons Steward Asmodians>
                     case 805051: // Atarinrinerk.
                     case 805052: // Moerunerk.
-                    case 805053: // Momorinrinerk.
+                    case 805053: // 莫莫灵灵 / Momorinrinerk.
                     case 805054: // Yokurunerk.
                         if (player.getInventory().getItemCountByItemId(186000105) == 0) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
@@ -387,17 +387,17 @@ public class DialogService {
                 }
                 // 欧比斯烙印之石/物品商人 / Abyss Stigma/Stuff Seller's
                 switch (npc.getNpcId()) {
-                    case 203708: // Iocaste.
-                    case 203710: // Dairos.
+                    case 203708: // 伊奥凯斯特 / Iocaste.
+                    case 203710: // 戴罗斯 / Dairos.
                         if (level < 25) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
-                    case 798505: // Salvius.
-                    case 798509: // Papinius.
-                    case 798510: // Ecocia.
-                    case 799224: // Camila.
+                    case 798505: // 萨比乌斯 / Salvius.
+                    case 798509: // 帕皮尼乌斯 / Papinius.
+                    case 798510: // 艾克希亚 / Ecocia.
+                    case 799224: // 卡米拉 / Camila.
                     case 802210: // Fujak.
                     case 805130: // Fibhe.
                         if (level < 45) {
@@ -405,14 +405,14 @@ public class DialogService {
                             return;
                         }
                         break;
-                    case 798507: // Gracus.
-                    case 798508: // Tororite.
+                    case 798507: // 格拉库斯 / Gracus.
+                    case 798508: // 托罗里泰 / Tororite.
                         if (level < 50) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
                         }
                         break;
-                    case 798506: // Elmaia.
+                    case 798506: // 埃尔马伊亚 / Elmaia.
                         if (level < 55) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
@@ -434,9 +434,9 @@ public class DialogService {
                 // 出售物品。 / Sell Item's.
                 int level = player.getLevel();
                 switch (npc.getNpcId()) {
-                    case 798509: // Papinius.
-                    case 798510: // Ecocia.
-                    case 799224: // Camila.
+                    case 798509: // 帕皮尼乌斯 / Papinius.
+                    case 798510: // 艾克希亚 / Ecocia.
+                    case 799224: // 卡米拉 / Camila.
                         if (level < 45) {
                             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             return;
@@ -452,7 +452,7 @@ public class DialogService {
                     case 314362: // Stigma Master A.
                     case 314365: // Stigma Master B.
                     case 314366: // Stigma Master C.
-                    case 350410: // Stigma Master.
+                    case 350410: // 烙印之石名人 / Stigma Master.
                     case 357007: // Arcadian Fortress Stigma Master.
                     case 357019: // Umbral Fortress Stigma Master.
                     case 357031: // Eternum Fortress Stigma Master.
@@ -579,13 +579,13 @@ public class DialogService {
                 // 竞技场城市传送者。 / Arena City Teleporter.
                 int level = player.getLevel();
                 switch (npc.getNpcId()) {
-                    case 204089: // Garm.
+                    case 204089: // 加勒姆 / Garm.
                         TeleportService2.teleportTo(player, 120010000, 984.000f, 1543.000f, 222.100f, (byte) 0);
                         break;
-                    case 203764: // Epeios.
+                    case 203764: // 埃佩奥斯 / Epeios.
                         TeleportService2.teleportTo(player, 110010000, 1462.500f, 1326.100f, 564.100f, (byte) 0);
                         break;
-                    case 203981: // Meneus.
+                    case 203981: // 梅纳乌斯 / Meneus.
                         if (player.getRace() == Race.ELYOS) {
                             QuestState qs = player.getQuestStateList().getQuestState(1346); // Killing For Castor.
                             if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
@@ -636,13 +636,13 @@ public class DialogService {
             case 37: {
                 // 竞技场城市传送者。 / Arena City Teleporter.
                 switch (npc.getNpcId()) {
-                    case 204087: // Gunnar.
+                    case 204087: // 古纳尔 / Gunnar.
                         TeleportService2.teleportTo(player, 120010000, 1005.100f, 1528.900f, 222.100f, (byte) 0);
                         break;
-                    case 203875: // Nepis.
+                    case 203875: // 内皮斯 / Nepis.
                         TeleportService2.teleportTo(player, 110010000, 1470.300f, 1343.500f, 563.700f, (byte) 0);
                         break;
-                    case 203982: // Ipetos.
+                    case 203982: // 伊裴图斯 / Ipetos.
                         TeleportService2.teleportTo(player, 210020000, 446.200f, 431.100f, 274.500f, (byte) 0);
                         break;
                 }
@@ -1071,7 +1071,7 @@ public class DialogService {
                     case 314362: // Stigma Master A.
                     case 314365: // Stigma Master B.
                     case 314366: // Stigma Master C.
-                    case 350410: // Stigma Master.
+                    case 350410: // 烙印之石名人 / Stigma Master.
                     case 357007: // Arcadian Fortress Stigma Master.
                     case 357019: // Umbral Fortress Stigma Master.
                     case 357031: // Eternum Fortress Stigma Master.

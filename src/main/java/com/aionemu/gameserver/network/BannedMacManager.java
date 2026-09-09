@@ -18,7 +18,7 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTRO
  */
 @Slf4j
 public class BannedMacManager {
-	private static BannedMacManager manager = new BannedMacManager();
+	private static final BannedMacManager manager = new BannedMacManager();
 
 	/**
 	 * 获取管理器单例。
@@ -31,7 +31,7 @@ public class BannedMacManager {
 	}
 
 	/** 按 MAC 索引的封禁表 / Ban table keyed by MAC */
-	private Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
+	private final Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
 
 	/**
 	 * 封禁指定 MAC，并通知登录服。

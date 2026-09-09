@@ -208,7 +208,6 @@ public class DivineTowerInstanceL extends GeneralInstanceHandler
 				}
 			break;
 			case 248025: //IDAb1_Heroes_Boss_73_Ah.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Divine Tower>");
 				sp(806731, 239.40633f, 249.12549f, 404.25793f, (byte) 9, 0, 0, 0, null); //Vokes.
 			break;
 		}
@@ -229,19 +228,7 @@ public class DivineTowerInstanceL extends GeneralInstanceHandler
 		}
 	}
 	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
 	
-	private void stopInstanceTask() {
-        for (Future<?> task : divineTowerTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -336,20 +323,6 @@ public class DivineTowerInstanceL extends GeneralInstanceHandler
         }, time));
     }
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

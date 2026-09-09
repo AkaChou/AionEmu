@@ -16,8 +16,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("captain_xasta_ride")
 public class CaptainXastaRideAI2 extends AggressiveNpcAI2
 {
-	private String walkerId = "Captain_Xasta_Ride";
-	
+	private final String walkerId = "Captain_Xasta_Ride";
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();

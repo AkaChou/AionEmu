@@ -11,12 +11,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_SHUGO_SWEEP extends AionServerPacket {
 
-	private int tableId;
-	private int currentStep;
-	private int diceLeft;
-	private int diceGolden;
-	private int unkButton;
-	private int moveStep;
+	private final int tableId;
+	private final int currentStep;
+	private final int diceLeft;
+	private final int diceGolden;
+	private final int unkButton;
+	private final int moveStep;
 
 	@SuppressWarnings("unused")
 	private int unk;

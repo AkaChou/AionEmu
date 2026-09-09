@@ -16,7 +16,7 @@ public class Anoha extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
 	/**
 	 * 注册 {@code //anoha} 命令。
 	 * Registers the {@code //anoha} command.
@@ -24,7 +24,7 @@ public class Anoha extends AdminCommand
 	public Anoha() {
 		super("anoha");
 	}
-	
+
 	/**
 	 * 执行阿诺哈控制：解析 start/stop 与地点 ID。
 	 * Executes Anoha control: parses start/stop and location id.
@@ -39,7 +39,7 @@ public class Anoha extends AdminCommand
 			handleStartStop(player, params);
 		}
 	}
-	
+
 	/**
 	 * 处理阿诺哈活动的开始/停止逻辑。
 	 * Handles start/stop logic for an Anoha event.
@@ -71,7 +71,7 @@ public class Anoha extends AdminCommand
 			}
 		}
 	}
-	
+
 	/**
 	 * 校验阿诺哈地点 ID 是否有效。
 	 * Validates whether the Anoha location id exists.
@@ -80,13 +80,13 @@ public class Anoha extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAnohaLocationId(Player player, int anohaId) {
-		if (!GameLocationBootstrapServices.anohaService().getAnohaLocations().keySet().contains(anohaId)) {
+		if (!GameLocationBootstrapServices.anohaService().getAnohaLocations().containsKey(anohaId)) {
 			PacketSendUtility.sendMessage(player, "Id " + anohaId + " is invalid");
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 向管理员输出 {@code //anoha} 用法。
 	 * Sends {@code //anoha} usage help to the admin.

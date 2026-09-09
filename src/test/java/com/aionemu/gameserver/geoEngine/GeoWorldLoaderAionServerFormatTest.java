@@ -1,9 +1,5 @@
 package com.aionemu.gameserver.geoEngine;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -36,6 +32,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GeoWorldLoaderAionServerFormatTest {
 
@@ -94,7 +92,7 @@ class GeoWorldLoaderAionServerFormatTest {
 
 		loadCurrentWorld(1001, models, map);
 		DespawnableNode node = findDespawnable(map);
-		assertTrue(node != null);
+		assertNotNull(node);
 		assertEquals(DespawnableNode.DespawnableType.PLACEABLE, node.type);
 		assertEquals(123, node.id);
 		assertFalse(node.isActive(1));

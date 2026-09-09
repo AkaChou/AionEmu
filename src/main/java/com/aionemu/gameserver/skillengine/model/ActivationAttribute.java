@@ -24,5 +24,5 @@ public enum ActivationAttribute {
 	/** 被动 / Passive */
 	PASSIVE,
 	/** 充能 / Charge */
-	CHARGE;
+	CHARGE
 }

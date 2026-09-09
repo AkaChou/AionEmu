@@ -141,7 +141,7 @@ public class HouseCommand extends AdminCommand
 			PacketSendUtility.sendMessage(admin, "House " + revokedHouse.getName() + " revoked");
 			PacketSendUtility.sendPacket(target, new SM_HOUSE_OWNER_INFO(target, oldHouse));
 			PacketSendUtility.sendPacket(target, new SM_HOUSE_ACQUIRE(target.getObjectId(), revokedHouse.getAddress().getId(), false));
-			((HouseController) revokedHouse.getController()).updateAppearance();
+			revokedHouse.getController().updateAppearance();
 		}
 	}
 

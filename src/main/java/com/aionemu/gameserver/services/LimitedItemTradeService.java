@@ -27,10 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LimitedItemTradeService {
 	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
-	private GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
-	private TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
+	private final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
+	private final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	/** NPC ID 到限购交易数据 / NPC id to limited-trade data*/
-	private Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new HashMap<Integer, LimitedTradeNpc>();
+	private final Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new HashMap<Integer, LimitedTradeNpc>();
 
 	/**
 	 * 从交易表加载限购项，并按销售时间 cron 重置。

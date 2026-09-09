@@ -13,6 +13,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 /**
  * EvergaleCanyon 奖励，用于副本相关逻辑。
@@ -20,17 +21,21 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 
 public class EvergaleCanyonReward extends InstanceReward<EvergaleCanyonPlayerReward> {
-	private int capPoints;
-	private MutableInt asmodiansPoints = new MutableInt(0);
-	private MutableInt elyosPoins = new MutableInt(0);
-	private MutableInt asmodiansPvpKills = new MutableInt(0);
-	private MutableInt elyosPvpKills = new MutableInt(0);
+	/** 返回 cap points / Returns the cap points */
+	@Getter
+	private final int capPoints;
+	private final MutableInt asmodiansPoints = new MutableInt(0);
+	private final MutableInt elyosPoins = new MutableInt(0);
+	private final MutableInt asmodiansPvpKills = new MutableInt(0);
+	private final MutableInt elyosPvpKills = new MutableInt(0);
 	private Race race;
 	private Point3D asmodiansStartPosition;
 	private Point3D elyosStartPosition;
 	protected WorldMapInstance instance;
 	private long instanceTime;
-	private int bonusTime;
+	private final int bonusTime;
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
 	private final byte buffId;
 
 	public EvergaleCanyonReward(Integer mapId, int instanceId, WorldMapInstance instance) {
@@ -193,19 +198,9 @@ public class EvergaleCanyonReward extends InstanceReward<EvergaleCanyonPlayerRew
 		return 0;
 	}
 
-	/** 返回增益 ID / Returns the buff id */
-	public byte getBuffId() {
-		return buffId;
-	}
-
 	/** 设置 instance start time / Sets the instance start time */
 	public void setInstanceStartTime() {
 		this.instanceTime = System.currentTimeMillis();
-	}
-
-	/** 返回 cap points / Returns the cap points */
-	public int getCapPoints() {
-		return capPoints;
 	}
 
 	/**

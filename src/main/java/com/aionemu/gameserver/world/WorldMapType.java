@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.world;
 
+import lombok.Getter;
+
 /**
  * 世界地图类型枚举：全部已知地图 ID 与是否个人住房标记。
  * World-map type enum: all known map ids and personal-housing flags.
@@ -127,6 +129,7 @@ public enum WorldMapType {
 	/** 世界地图 ID / world map id */
 	private final int worldId;
 	/** 是否个人住房地图 / whether this is a personal housing map */
+	@Getter
 	private final boolean isPersonal;
 
 	/**
@@ -159,16 +162,6 @@ public enum WorldMapType {
 	 */
 	public int getId() {
 		return worldId;
-	}
-
-	/**
-	 * 是否个人住房地图。
-	 * Whether this is a personal housing map.
-	 *
-	 * @return 个人地图为 true / true if personal
-	 */
-	public boolean isPersonal() {
-		return isPersonal;
 	}
 
 	/**

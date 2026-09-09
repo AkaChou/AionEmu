@@ -39,7 +39,7 @@ public class RiftService {
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
-	private Map<Integer, RiftLocation> activeRifts = new HashMap<>();
+	private final Map<Integer, RiftLocation> activeRifts = new HashMap<>();
 
 	/**
 	 * 初始化裂隙地点数据。
@@ -90,7 +90,7 @@ public class RiftService {
 	 */
 	public boolean isValidId(int id) {
 		if (isRift(id)) {
-			return getRiftLocations().keySet().contains(id);
+			return getRiftLocations().containsKey(id);
 		} else {
 			for (RiftLocation loc : getRiftLocations().values()) {
 				if (loc.getWorldId() == id) {
@@ -185,7 +185,7 @@ public class RiftService {
 			public void run() {
 				closeRifts();
 			}
-		}, CustomConfig.RIFT_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

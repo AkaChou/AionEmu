@@ -570,7 +570,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				for (SiegeLegionReward medalsType : legionRewards) {
 					MailFormatter.sendAbyssRewardMail(getSiegeLocation(), BGeneral, AbyssSiegeLevel.VETERAN_SOLDIER,
 							resultLegion, System.currentTimeMillis(), medalsType.getItemId(),
-							medalsType.getCount() * SiegeConfig.SIEGE_MEDAL_RATE, 0);
+						(long) medalsType.getCount() * SiegeConfig.SIEGE_MEDAL_RATE, 0);
 				}
 			}
 		}
@@ -583,54 +583,51 @@ public class FortressSiege extends Siege<FortressLocation> {
 	 * @return 是否在攻城区 / whether inside a siege zone
 	 */
 	public boolean isInSiegeZone(Player player) {
-		if (player.isInsideZone(ZoneName.get("EYE_OF_RESHANTA_400010000"))
-				|| player.isInsideZone(ZoneName.get("DIVINE_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("KROTAN_REFUGE_400010000"))
-				|| player.isInsideZone(ZoneName.get("KROTAN_ROCK_400010000"))
-				|| player.isInsideZone(ZoneName.get("RATTLEFROST_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("BLOODBURN_REACH_400010000"))
-				|| player.isInsideZone(ZoneName.get("SLIVERSLEET_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("MIREN_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("MIREN_ISLAND_400010000"))
-				|| player.isInsideZone(ZoneName.get("COLDFORGE_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("SHIMMERFROST_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("ICEHOWL_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("KYSIS_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("KYSIS_ISLE_400010000"))
-				|| player.isInsideZone(ZoneName.get("CHILLHAUNT_OUTPOST_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_EASTERN_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_RIGHT_WING_A_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_RIGHT_WING_B_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_LEFT_WING_A_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_LEFT_WING_B_400010000"))
-				|| player.isInsideZone(ZoneName.get("WING_OF_SIEL_ARCHIPELAGO_A_400010000"))
-				|| player.isInsideZone(ZoneName.get("WING_OF_SIEL_ARCHIPELAGO_B_400010000"))
-				|| player.isInsideZone(ZoneName.get("HEART_OF_SIEL_400010000"))
-				|| player.isInsideZone(ZoneName.get("SIEL_WESTERN_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("ISLE_OF_DISGRACE_400010000"))
-				|| player.isInsideZone(ZoneName.get("ISLE_OF_ROOT_400010000"))
-				|| player.isInsideZone(ZoneName.get("ISLE_OF_REPROACH_400010000"))
-				|| player.isInsideZone(ZoneName.get("SULFUR_FLOW_400010000"))
-				|| player.isInsideZone(ZoneName.get("SULFUR_SWAMP_400010000"))
-				|| player.isInsideZone(ZoneName.get("SULFUR_FORTRESS_400010000"))
-				|| player.isInsideZone(ZoneName.get("KRAKON_DISPUTE_400010000"))
-				|| player.isInsideZone(ZoneName.get("SULFUR_ARCHIPELAGO_400010000"))
-				|| player.isInsideZone(ZoneName.get("WESTERN_RIDGE_400010000"))
-				|| player.isInsideZone(ZoneName.get("NORTHERN_RIDGE_400010000"))
-				|| player.isInsideZone(ZoneName.get("EASTERN_RIDGE_400010000"))
-				|| player.isInsideZone(ZoneName.get("SOUTHERN_RIDGE_400010000"))
-				|| player.isInsideZone(ZoneName.get("HEROS_FALL_600090000"))
-				|| player.isInsideZone(ZoneName.get("ASHEN_GLADE_600090000"))
-				|| player.isInsideZone(ZoneName.get("WEALHTHEOWS_KEEP_600090000"))
-				|| player.isInsideZone(ZoneName.get("WEALHTHEOWS_KEEP_RUINS_600090000"))
-				|| player.isInsideZone(ZoneName.get("MOLTEN_CLIFFS_600090000"))
-				|| player.isInsideZone(ZoneName.get("SOUTH_ROAD_600090000"))
-				|| player.isInsideZone(ZoneName.get("SMOLDERING_CRAG_600090000"))
-				|| player.isInsideZone(ZoneName.get("ANOHA_PASS_600090000"))
-				|| player.isInsideZone(ZoneName.get("ANOHA_BINDING_600090000"))) {
-			return true;
-		}
-		return false;
+		return player.isInsideZone(ZoneName.get("EYE_OF_RESHANTA_400010000"))
+			|| player.isInsideZone(ZoneName.get("DIVINE_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("KROTAN_REFUGE_400010000"))
+			|| player.isInsideZone(ZoneName.get("KROTAN_ROCK_400010000"))
+			|| player.isInsideZone(ZoneName.get("RATTLEFROST_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("BLOODBURN_REACH_400010000"))
+			|| player.isInsideZone(ZoneName.get("SLIVERSLEET_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("MIREN_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("MIREN_ISLAND_400010000"))
+			|| player.isInsideZone(ZoneName.get("COLDFORGE_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("SHIMMERFROST_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("ICEHOWL_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("KYSIS_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("KYSIS_ISLE_400010000"))
+			|| player.isInsideZone(ZoneName.get("CHILLHAUNT_OUTPOST_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_EASTERN_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_RIGHT_WING_A_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_RIGHT_WING_B_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_LEFT_WING_A_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_LEFT_WING_B_400010000"))
+			|| player.isInsideZone(ZoneName.get("WING_OF_SIEL_ARCHIPELAGO_A_400010000"))
+			|| player.isInsideZone(ZoneName.get("WING_OF_SIEL_ARCHIPELAGO_B_400010000"))
+			|| player.isInsideZone(ZoneName.get("HEART_OF_SIEL_400010000"))
+			|| player.isInsideZone(ZoneName.get("SIEL_WESTERN_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("ISLE_OF_DISGRACE_400010000"))
+			|| player.isInsideZone(ZoneName.get("ISLE_OF_ROOT_400010000"))
+			|| player.isInsideZone(ZoneName.get("ISLE_OF_REPROACH_400010000"))
+			|| player.isInsideZone(ZoneName.get("SULFUR_FLOW_400010000"))
+			|| player.isInsideZone(ZoneName.get("SULFUR_SWAMP_400010000"))
+			|| player.isInsideZone(ZoneName.get("SULFUR_FORTRESS_400010000"))
+			|| player.isInsideZone(ZoneName.get("KRAKON_DISPUTE_400010000"))
+			|| player.isInsideZone(ZoneName.get("SULFUR_ARCHIPELAGO_400010000"))
+			|| player.isInsideZone(ZoneName.get("WESTERN_RIDGE_400010000"))
+			|| player.isInsideZone(ZoneName.get("NORTHERN_RIDGE_400010000"))
+			|| player.isInsideZone(ZoneName.get("EASTERN_RIDGE_400010000"))
+			|| player.isInsideZone(ZoneName.get("SOUTHERN_RIDGE_400010000"))
+			|| player.isInsideZone(ZoneName.get("HEROS_FALL_600090000"))
+			|| player.isInsideZone(ZoneName.get("ASHEN_GLADE_600090000"))
+			|| player.isInsideZone(ZoneName.get("WEALHTHEOWS_KEEP_600090000"))
+			|| player.isInsideZone(ZoneName.get("WEALHTHEOWS_KEEP_RUINS_600090000"))
+			|| player.isInsideZone(ZoneName.get("MOLTEN_CLIFFS_600090000"))
+			|| player.isInsideZone(ZoneName.get("SOUTH_ROAD_600090000"))
+			|| player.isInsideZone(ZoneName.get("SMOLDERING_CRAG_600090000"))
+			|| player.isInsideZone(ZoneName.get("ANOHA_PASS_600090000"))
+			|| player.isInsideZone(ZoneName.get("ANOHA_BINDING_600090000"));
 	}
 	/**
 	 * 将敌对阵营玩家传送出攻城区。
@@ -683,7 +680,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				++rewardedPC;
 				MailFormatter.sendAbyssRewardMail(getSiegeLocation(), pcd, AbyssSiegeLevel.VETERAN_SOLDIER,
 						resultPlayers, System.currentTimeMillis(), topGrade.getItemId(),
-						topGrade.getCount() * SiegeConfig.SIEGE_MEDAL_RATE, 0);
+					(long) topGrade.getCount() * SiegeConfig.SIEGE_MEDAL_RATE, 0);
 			}
 		}
 	}

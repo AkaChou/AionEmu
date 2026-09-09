@@ -66,9 +66,9 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 public class Equipment {
 
 	private Player owner;
-	private Set<Long> markedFreeSlots = new HashSet<Long>();
+	private final Set<Long> markedFreeSlots = new HashSet<Long>();
 	private PersistentState persistentState = PersistentState.UPDATED;
-	private SortedMap<Long, Item> equipment = new TreeMap<Long, Item>();
+	private final SortedMap<Long, Item> equipment = new TreeMap<Long, Item>();
 
 	private static final long[] ARMOR_SLOTS = new long[] { ItemSlot.BOOTS.getSlotIdMask(), ItemSlot.GLOVES.getSlotIdMask(), ItemSlot.PANTS.getSlotIdMask(), ItemSlot.SHOULDER.getSlotIdMask(), ItemSlot.TORSO.getSlotIdMask() };
 
@@ -91,7 +91,7 @@ public class Equipment {
 		if (itemTemplate.isWeapon() && !itemTemplate.isTwoHandWeapon() && !WeaponDualEffect.hasDualWieldEffect(owner)) {
 			slot = ItemSlot.MAIN_HAND.getSlotIdMask();
 		}
-		if (item.getItemTemplate().isClassSpecific(owner.getCommonData().getPlayerClass()) == false) {
+		if (!item.getItemTemplate().isClassSpecific(owner.getCommonData().getPlayerClass())) {
 			// 你的职业无法使用所选物品。 / Your Class cannot use the selected item.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_CLASS);
 			return null;
@@ -600,8 +600,11 @@ public class Equipment {
 	}
 
 	/**
-	 * @param value
-	 * @return 已装备物品列表 / List<Item>
+	 * 返回装备中与指定物品模板 ID 匹配的物品列表。
+	 * Returns the equipped items whose item template id equals the given value.
+	 *
+	 * @param value 物品模板 ID / item template id
+	 * @return 匹配的已装备物品列表 / the matching equipped items
 	 */
 	public List<Item> getEquippedItemsByItemId(int value) {
 		List<Item> equippedItemsById = new ArrayList<Item>();
@@ -686,7 +689,10 @@ public class Equipment {
 	}
 
 	/**
-	 * @return 已装备物品列表 / List<Item>
+	 * 返回当前装备的全部物品。
+	 * Returns all currently equipped items.
+	 *
+	 * @return 全部已装备物品 / all equipped items
 	 */
 	public List<Item> getEquippedItems() {
 		HashSet<Item> equippedItems = new HashSet<Item>();
@@ -696,8 +702,10 @@ public class Equipment {
 	}
 
 	/**
-	 * @return 已装备物品 ID 列表 / List<Integer>
-	 * @usage return all equipped items at the same time
+	 * 返回当前装备的全部物品 ID。
+	 * Returns the item ids of all currently equipped items.
+	 *
+	 * @return 已装备物品 ID 列表 / the equipped item ids
 	 */
 	public List<Integer> getEquippedItemIds() {
 		HashSet<Integer> equippedIds = new HashSet<Integer>();
@@ -708,7 +716,10 @@ public class Equipment {
 	}
 
 	/**
-	 * @return 已装备物品列表 / List<Item>
+	 * 返回非烙印槽位的已装备物品（双手武器仅保留一件）。
+	 * Returns equipped items outside stigma slots (only one two-handed weapon is kept).
+	 *
+	 * @return 非烙印槽已装备物品 / the equipped items outside stigma slots
 	 */
 	public List<Item> getEquippedItemsWithoutStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -728,8 +739,8 @@ public class Equipment {
 	}
 
 	/**
-	 * 获取 Equipped 物品 WithoutStigmaOld。
-	 * Returns the equipped items without stigma old.
+	 * 旧版实现：返回非烙印槽位已装备物品（区分主/副手双手武器）。
+	 * Legacy variant: returns equipped items outside stigma slots (keeps main/off two-handed weapons separate).
 	 */
 	public List<Item> getEquippedItemsWithoutStigmaOld() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -779,7 +790,10 @@ public class Equipment {
 	}
 
 	/**
-	 * @return 已装备物品列表 / List<Item>
+	 * 返回烙印槽位中的全部已装备物品。
+	 * Returns all equipped items in stigma slots.
+	 *
+	 * @return 烙印槽已装备物品 / the equipped items in stigma slots
 	 */
 	public List<Item> getEquippedItemsAllStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -791,7 +805,7 @@ public class Equipment {
 		return equippedItems;
 	}
 
-	/** 返回 equipped items all stigma ids / Returns the equipped items all stigma ids */
+	/** 返回烙印槽位已装备物品的 ID 列表。 / Returns the ids of all equipped stigma-slot items. */
 	public List<Integer> getEquippedItemsAllStigmaIds() {
 		List<Integer> equippedItemIds = new ArrayList<Integer>();
 		for (Item item : equipment.values()) {
@@ -803,7 +817,10 @@ public class Equipment {
 	}
 
 	/**
-	 * @return 已装备物品列表 / List<Item>
+	 * 返回普通烙印槽位中的全部已装备物品。
+	 * Returns all equipped items in regular stigma slots.
+	 *
+	 * @return 普通烙印槽已装备物品 / the equipped items in regular stigma slots
 	 */
 	public List<Item> getEquippedItemsRegularStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -1004,28 +1021,19 @@ public class Equipment {
 		}
 
 		Item rightPowershard = equipment.get(ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
-		if (rightPowershard != null) {
-			return true;
-		}
-		return false;
+		return rightPowershard != null;
 	}
 
 	/** 返回 main hand power shard / Returns the main hand power shard */
 	public Item getMainHandPowerShard() {
 		Item mainHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
-		if (mainHandPowerShard != null) {
-			return mainHandPowerShard;
-		}
-		return null;
+		return mainHandPowerShard;
 	}
 
 	/** 返回 off hand power shard / Returns the off hand power shard */
 	public Item getOffHandPowerShard() {
 		Item offHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
-		if (offHandPowerShard != null) {
-			return offHandPowerShard;
-		}
-		return null;
+		return offHandPowerShard;
 	}
 
 	/**
@@ -1173,10 +1181,7 @@ public class Equipment {
 		if (equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType) {
 			return true;
 		}
-		if (equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType) {
-			return true;
-		}
-		return false;
+		return equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType;
 	}
 
 	/**
@@ -1188,9 +1193,6 @@ public class Equipment {
 	 */
 	public boolean hasDualWeaponEquipped(ItemSlot slot) {
 		ItemSlot[] slotValues = ItemSlot.getSlotsFor(slot.getSlotIdMask());
-		if (slotValues.length == 0) {
-			return false;
-		}
 		for (ItemSlot s : slotValues) {
 			Item weapon = equipment.get(s.getSlotIdMask());
 			if (weapon == null || weapon.getItemTemplate().isTwoHandWeapon()) {

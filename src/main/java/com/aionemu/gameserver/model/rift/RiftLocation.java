@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.rift.RiftTemplate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 裂隙位置模型。
@@ -12,14 +15,19 @@ import com.aionemu.gameserver.model.templates.rift.RiftTemplate;
  *
  * @author Source
  */
+@NoArgsConstructor
 public class RiftLocation {
 
+	/**
+	 * @return Whether opened
+	 */
+	@Getter
+	@Setter
 	private boolean opened;
 	protected RiftTemplate template;
-	private List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public RiftLocation() {
-	}
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
+	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public RiftLocation(RiftTemplate template) {
 		this.template = template;
@@ -33,22 +41,5 @@ public class RiftLocation {
 	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return template.getWorldId();
-	}
-
-	/**
-	 * @return Whether opened
-	 */
-	public boolean isOpened() {
-		return opened;
-	}
-
-	/** 设置 opened / Sets the opened */
-	public void setOpened(boolean state) {
-		opened = state;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
 	}
 }

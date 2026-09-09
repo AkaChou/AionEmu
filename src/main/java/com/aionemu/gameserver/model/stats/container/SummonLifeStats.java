@@ -48,7 +48,7 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 	/** 返回所有者 / Returns the owner. */
 	@Override
 	public Summon getOwner() {
-		return (Summon) super.getOwner();
+		return super.getOwner();
 	}
 
 	/** 触发恢复任务 / Trigger restore task */

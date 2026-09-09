@@ -32,8 +32,8 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 @Slf4j
 public class TownService {
 	private static volatile ObjectProvider<TownService> instanceProvider;
-	private Map<Integer, Town> elyosTowns;
-	private Map<Integer, Town> asmosTowns;
+	private final Map<Integer, Town> elyosTowns;
+	private final Map<Integer, Town> asmosTowns;
 
 	private static class SingletonHolder {
 		protected static final TownService instance = new TownService();

@@ -57,7 +57,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	protected HarmonyArenaReward instanceReward;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed;
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -68,7 +68,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -87,7 +87,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 		sendEnterPacket(player);
 	}
-	
+
 	private void sendEnterPacket(final Player player) {
 		final Integer object = player.getObjectId();
 		final HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(object);
@@ -119,7 +119,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), getInstanceReward(), null));
 		instanceReward.sendPacket(4, object);
 	}
-	
+
 	private void updatePoints(Creature victim) {
 		if (!instanceReward.isStartProgress()) {
 			return;
@@ -144,8 +144,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			Creature master = ((Creature) damager.getAttacker()).getMaster();
 			if (master == null) {
 				continue;
-			} if (master instanceof Player) {
-				Player attaker = (Player) master;
+			} if (master instanceof Player attaker) {
 				int rewardPoints = (victim instanceof Player && instanceReward.getRound() == 3 && rank == 0 ? bonus * 3 : bonus) * damager.getDamage() / victim.getAggroList().getTotalDamage();
 				instanceReward.getHarmonyGroupReward(attaker.getObjectId()).addPoints(rewardPoints);
 				sendSystemMsg(attaker, victim, rewardPoints);
@@ -157,7 +156,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			instanceReward.sendPacket(5, null);
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -179,13 +178,13 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * creature
 	 * rewardPoints
 	 */
-	
+
 	protected void sendSystemMsg(Player player, Creature creature, int rewardPoints) {
 		int nameId = creature.getObjectTemplate().getNameId();
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, nameId == 0 ? creature.getName() : name, rewardPoints));
 	}
-	
+
 	private int getNpcBonus(int npcId) {
 		switch (npcId) {
 			case 207102:
@@ -196,18 +195,18 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 				return 200;
 			case 243679: //Heated Negotiator Grangvolkan.
 				return 100;
-			case 219328: //Plaza Wall.	
+			case 219328: //Plaza Wall.
 			case 243680: //Lurking Fangwing.
 				return 50;
 			default:
 				return 0;
 		}
 	}
-	
+
 	private int getTime() {
 		return instanceReward.getTime();
 	}
-	
+
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
@@ -218,7 +217,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public void onPlayerLogin(Player player) {
 		sendEnterPacket(player);
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -304,10 +303,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * 处理 spawnRings。
 	 * Handle spawnRings.
 	 */
-	
+
 	protected void spawnRings() {
 	}
-	
+
 	private boolean canStart() {
 		if (instance.getPlayersInside().size() < 2) {
 			onInstanceDestroy();
@@ -320,7 +319,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 		return true;
 	}
-	
+
 	private void changeZone() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -336,7 +335,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private void sendPacket(final AionServerPacket packet) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -351,7 +350,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -375,7 +374,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * 阵营 / race
 	 * time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -401,7 +400,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -412,7 +411,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	private void openDoors() {
 		for (StaticDoor door : instance.getDoors().values()) {
 			if (door != null) {
@@ -424,7 +423,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * 处理 reward。
 	 * Handle reward.
 	 */
-	
+
 	protected void reward() {
 		if (instanceReward.canRewarded()) {
 			for (Player player : instance.getPlayersInside()) {
@@ -470,7 +469,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -486,8 +485,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		ownerReward.applyBoostMoraleEffect(player);
 		instanceReward.sendPacket(4, player.getObjectId());
 		if (lastAttacker != null && lastAttacker != player) {
-			if (lastAttacker instanceof Player) {
-				Player winner = (Player) lastAttacker;
+			if (lastAttacker instanceof Player winner) {
 				Integer winnerObj = winner.getObjectId();
 				instanceReward.getHarmonyGroupReward(winnerObj).addPvPKillToPlayer();
 				int worldId = winner.getWorldId();
@@ -497,7 +495,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		updatePoints(player);
 		return true;
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -530,11 +528,11 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * skill id
 	 * level
 	 */
-	
+
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
 		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -552,7 +550,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

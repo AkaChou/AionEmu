@@ -37,10 +37,10 @@ public class EventData {
 	protected List<EventTemplate> events;
 
 	@XmlTransient
-	private Map<String, EventTemplate> activeEvents = new LinkedHashMap<String, EventTemplate>();
+	private final Map<String, EventTemplate> activeEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
-	private Map<String, EventTemplate> allEvents = new LinkedHashMap<String, EventTemplate>();
+	private final Map<String, EventTemplate> allEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
 	private int counter = 0;

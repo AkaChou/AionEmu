@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
+import lombok.Getter;
 
 /**
  * 永恒之塔模板（静态数据/XML）。
@@ -15,16 +16,13 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Tower")
 public class TowerOfEternityTemplate extends TowerOfEternityLocation {
+	/** 返回 ID。 / Returns the id. */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
 	@XmlAttribute(name = "world")
 	protected int world;
-
-	/** 返回 ID。 / Returns the id. */
-	public int getId() {
-		return this.id;
-	}
 
 	/** 返回世界 ID。 / Returns the world id. */
 	public int getWorldId() {

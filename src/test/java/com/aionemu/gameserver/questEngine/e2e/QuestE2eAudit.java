@@ -10,18 +10,18 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 无服务器、无数据库的全量任务端到端报告入口；生产 catalog 编译失败会直接终止而不生成伪报告。
  * Serverless and database-free full quest end-to-end report entry point; catalog compilation failure terminates
  * without producing a fabricated report.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestE2eAudit {
-	private QuestE2eAudit() {
-	}
-
 	/** 命令行参数为客户端映射目录、报告目录和摘要文件，均可省略使用仓库默认路径。 / CLI arguments are client mapping directory, report directory, and summary file; all may be omitted for repository defaults. */
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		Logger questRuntimeLogger = (Logger) LoggerFactory.getLogger("QUEST_RUNTIME");
 		Level previousLevel = questRuntimeLogger.getLevel();
 		questRuntimeLogger.setLevel(Level.ERROR);

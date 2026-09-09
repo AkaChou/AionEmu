@@ -31,8 +31,8 @@ public class SM_LOGIN_OK extends AionServerPacket {
      */
     public SM_LOGIN_OK(SessionKey key) {
         super(3);
-        this.accountId = key.accountId;
-        this.loginOk = key.loginOk;
+        this.accountId = key.accountId();
+        this.loginOk = key.loginOk();
     }
 
     /**

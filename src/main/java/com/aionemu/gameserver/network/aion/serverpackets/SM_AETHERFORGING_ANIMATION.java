@@ -11,9 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ranastic
  */
 public class SM_AETHERFORGING_ANIMATION extends AionServerPacket {
-	private int recipeId;
-	private int barTime;
-	private int type;
+	private final int recipeId;
+	private final int barTime;
+	private final int type;
 
 	/**
 	 * 构造奥德锻造动画包。

@@ -11,5 +11,5 @@ public enum ConquestStateType {
 	/** 征服。 / Conquest. */
 	CONQUEST,
 	/** 和平。 / Peace. */
-	PEACE;
+	PEACE
 }

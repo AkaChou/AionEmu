@@ -1,15 +1,11 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameLoggingLifecycleTest {
 
@@ -31,7 +27,7 @@ class GameLoggingLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("initializeLogger"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -52,7 +48,7 @@ class GameLoggingLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("initializeLogger", "initializeLogger"), events);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     private static Class<?> fieldType(String name) {

@@ -13,6 +13,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
 
 /**
  * Building 模板（静态数据/XML）。
@@ -25,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 public class Building {
 	private Parts parts;
 
+	/** 是否默认 / Whether default. */
+	@Getter
 	@XmlAttribute(name = "default")
 	protected boolean isDefault;
 
@@ -37,13 +40,10 @@ public class Building {
 	@XmlAttribute
 	protected BuildingType type;
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
-
-	/** 是否默认 / Whether default. */
-	public boolean isDefault() {
-		return isDefault;
-	}
 
 	@XmlTransient
 	Map<PartType, Integer> partsByType = new HashMap<PartType, Integer>();
@@ -100,11 +100,6 @@ public class Building {
 			return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).getType();
 		}
 		return type;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 
 	/** 返回 default part id / Returns the default part id */

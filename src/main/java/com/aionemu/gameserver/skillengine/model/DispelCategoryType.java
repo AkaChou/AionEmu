@@ -33,5 +33,5 @@ public enum DispelCategoryType {
 	/** NPC 精神减益 / NPC mental debuff */
 	NPC_DEBUFF_MENTAL,
 	/** 眩晕类 / Stun category */
-	STUN;
+	STUN
 }

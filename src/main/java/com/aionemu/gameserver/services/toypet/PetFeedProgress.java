@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.services.toypet;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 宠物喂养进度，记录积分、消耗次数与饥饿等级。
  * Pet feed progress tracking points, consumption counts and hunger level.
@@ -8,11 +11,33 @@ package com.aionemu.gameserver.services.toypet;
  */
 public final class PetFeedProgress {
 
+	/**
+	 * 返回累计喂养积分。
+	 * Returns total feed points.
+	 *
+	 * Total points
+	 */
+	@Getter
 	private int totalPoints = 0;
 	private short regularConsumed = 0;
 	private short lovedConsumed = 0;
+	/**
+	 * 返回当前饥饿等级。
+	 * Returns current hunger level.
+	 *
+	 * Hungry level
+	 */
+	@Getter
+	@Setter
 	private PetHungryLevel hungryLevel = PetHungryLevel.HUNGRY;
 	private short lovedFoodMax = 0;
+	/**
+	 * 是否处于喜爱食物喂养流程。
+	 * Whether currently in loved-food feeding flow.
+	 *
+	 * @return 是否喜爱喂养 / Loved feeded flag
+	 */
+	@Getter
 	private boolean lovedFeeded = false;
 
 	/**
@@ -26,16 +51,6 @@ public final class PetFeedProgress {
 	}
 
 	/**
-	 * 返回累计喂养积分。
-	 * Returns total feed points.
-	 *
-	 * Total points
-	 */
-	public int getTotalPoints() {
-		return totalPoints;
-	}
-
-	/**
 	 * 设置累计喂养积分（14 位掩码）。
 	 * Set total feed points (14-bit mask).
 	 *
@@ -43,26 +58,6 @@ public final class PetFeedProgress {
 	 */
 	public void setTotalPoints(int points) {
 		totalPoints = points & 0x3FFF;
-	}
-
-	/**
-	 * 返回当前饥饿等级。
-	 * Returns current hunger level.
-	 *
-	 * Hungry level
-	 */
-	public PetHungryLevel getHungryLevel() {
-		return hungryLevel;
-	}
-
-	/**
-	 * 设置饥饿等级。
-	 * Set hunger level.
-	 *
-	 * @param level 饥饿等级 / Hungry level
-	 */
-	public void setHungryLevel(PetHungryLevel level) {
-		hungryLevel = level;
 	}
 
 	/**
@@ -93,16 +88,6 @@ public final class PetFeedProgress {
 	 */
 	public int getLovedFoodRemaining() {
 		return lovedFoodMax - lovedConsumed;
-	}
-
-	/**
-	 * 是否处于喜爱食物喂养流程。
-	 * Whether currently in loved-food feeding flow.
-	 *
-	 * @return 是否喜爱喂养 / Loved feeded flag
-	 */
-	public boolean isLovedFeeded() {
-		return lovedFeeded;
 	}
 
 	/**

@@ -6,8 +6,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -20,17 +18,13 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +45,8 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -80,7 +74,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -108,7 +102,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -456,7 +450,6 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				        break;
 					}
 			    }
-/* 				spawnAbbeyNobleBox(); */
 				spawnTiamatHugeTreasureCrate();
 			    killNpc(getNpcs(701502)); //Siel's Relic.
 				despawnNpc(getNpc(219489)); //God Kaisinel Tired.
@@ -563,7 +556,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 		    break;
 	    }
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -574,7 +567,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -585,13 +578,13 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(20932); //Kaisinel's Light.
 		effectController.removeEffect(20936); //Marchutan's Grace.
 	}
-	
+
 	// 凯希内尔之光。 / Kaisinel's Light.
 	private void kaisinelLight() {
 		for (Player p: instance.getPlayersInside()) {
@@ -601,7 +594,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 			e.applyEffect();
 		}
 	}
-	
+
 	// 玛尔库坦的恩典。 / Marchutan's Grace.
 	private void marchutanGrace() {
 		for (Player p: instance.getPlayersInside()) {
@@ -611,7 +604,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 			e.applyEffect();
 		}
 	}
-	
+
 	// 阶段：提亚马特。 / PHASE TIAMAT.
 	private void spawnTiamatWomanForm() {
 		spawn(219360, 470.5909f, 515.02856f, 417.40436f, (byte) 119); //提亚马特。 / Tiamat.
@@ -625,24 +618,14 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	private void spawnTiamatHugeTreasureCrate() {
 		spawn(701542, 485.7635f, 514.60126f, 417.40436f, (byte) 0); //Tiamat's Huge Treasure Crate.
 	}
-	private void spawnAbbeyNobleBox() {
-		switch (Rnd.get(1, 2)) {
-		    case 1:
-				spawn(702658, 488.25827f, 505.1509f, 417.40436f, (byte) 11); //修道院箱子。 / Abbey Box.
-			break;
-			case 2:
-				spawn(702659, 488.25827f, 505.1509f, 417.40436f, (byte) 11); //高级修道院箱子。 / Noble Abbey Box.
-			break;
-		}
-	}
-	
+
 	private void eventGodAttack(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	// 阶段：主神凯希内尔。 / PHASE GOD KASINEL.
 	private void startGodKaisinelEvent() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -659,7 +642,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	private void spawnGodKaisinelGroggy() {
 		spawn(219489, 507.17175f, 513.7484f, 417.40436f, (byte) 59); //God Kaisinel Tired.
 	}
-	
+
 	// 阶段：主神玛尔库坦。 / PHASE GOD MARCHUTAN.
 	private void startGodMarchutanEvent() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -676,7 +659,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	private void spawnGodMarchutanGroggy() {
 		spawn(219492, 507.17175f, 513.7484f, 417.40436f, (byte) 59); //God Marchutan Tired.
 	}
-	
+
 	// 阶段 4 龙。 / PHASE 4 DRAGON.
 	private void spawnFissurefang() {
 		spawn(219365, 196.67767f, 176.11638f, 246.07117f, (byte) 8); //Fissurefang.
@@ -690,7 +673,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	private void spawnPetriscale() {
 		spawn(219368, 796.535f, 849.48615f, 246.07117f, (byte) 72); //Petriscale.
 	}
-	
+
 	// 传送者。 / TELEPORTER.
 	private void spawnInternalPassageEnter1() {
 		spawn(730673, 461.24423f, 458.91919f, 416.62000f, (byte) 0, 35); //Internal Passage I.
@@ -704,7 +687,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	private void spawnInternalPassageEnter4() {
 		spawn(730676, 546.47882f, 570.13873f, 416.62000f, (byte) 0, 32); //Internal Passage IV.
 	}
-	
+
 	// 阶段：突击。 / PHASE RUSH.
 	private void rushWalk(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -730,7 +713,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 startRushWalkEvent1。
 	 * Handle startRushWalkEvent1.
 	 */
-	
+
 	public void startRushWalkEvent1() {
 		rushWalk((Npc)spawn(219538, 468.89908f, 463.28857f, 417.40436f, (byte) 16)); //Sardha Drakan Sorcerer.
 		rushWalk((Npc)spawn(219539, 467.41974f, 466.10922f, 417.40436f, (byte) 13)); //Sardha Drakan Clerc.
@@ -740,13 +723,13 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 startRushWalkEvent2。
 	 * Handle startRushWalkEvent2.
 	 */
-	
+
 	public void startRushWalkEvent2() {
 		rushWalk((Npc)spawn(219532, 540.9507f, 466.07214f, 417.40436f, (byte) 42)); //Noble Drakan Figther.
 		rushWalk((Npc)spawn(219533, 544.04144f, 469.6464f, 417.40436f, (byte) 52)); //Noble Drakan Wizard.
 		rushWalk((Npc)spawn(219534, 536.7774f, 463.96362f, 417.40436f, (byte) 33)); //Noble Drakan Sorcerer.
 	}
-	
+
 	private void startRushWalkEvent3() {
 		rushWalk((Npc)spawn(219535, 462.77353f, 562.71106f, 417.40436f, (byte) 77)); //Noble Drakan Clerc.
 		rushWalk((Npc)spawn(219536, 467.94543f, 567.6658f, 417.40436f, (byte) 85)); //Sardha Drakan Figther.
@@ -756,25 +739,20 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 startRushWalkEvent4。
 	 * Handle startRushWalkEvent4.
 	 */
-	
+
 	public void startRushWalkEvent4() {
 		rushWalk((Npc)spawn(219535, 542.7636f, 565.65045f, 417.40436f, (byte) 77)); //Noble Drakan Clerc.
 		rushWalk((Npc)spawn(219536, 538.6315f, 566.12714f, 417.40436f, (byte) 85)); //Sardha Drakan Figther.
 		rushWalk((Npc)spawn(219537, 544.4505f, 561.9321f, 417.40436f, (byte) 67)); //Sardha Drakan Wizard.
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
+
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -786,7 +764,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void despawnNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			npc.getController().onDelete();
@@ -799,7 +777,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * @param npcId NPC / NPC
 	 * @return 结果 / result
 	 */
-	
+
 	protected Npc getNpc(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpc(npcId);
@@ -813,7 +791,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * @param npcId NPC / NPC
 	 * @return 结果 / result
 	 */
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
@@ -826,13 +804,13 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -855,7 +833,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -881,14 +859,14 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -904,7 +882,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}

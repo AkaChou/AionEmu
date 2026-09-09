@@ -2,6 +2,9 @@ package com.aionemu.gameserver.model.team2.group;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.google.common.base.Predicate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 玩家队伍属性，用于团队2相关逻辑。
@@ -9,17 +12,18 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class PlayerGroupStats implements Predicate<Player> {
 
 	private final PlayerGroup group;
+	/** 返回最小经验玩家等级 / Returns the min exp player level*/
+	@Getter
 	private int minExpPlayerLevel;
+	/** 返回最大经验玩家等级 / Returns the max exp player level*/
+	@Getter
 	private int maxExpPlayerLevel;
 	Player minLevelPlayer;
 	Player maxLevelPlayer;
-
-	PlayerGroupStats(PlayerGroup group) {
-		this.group = group;
-	}
 
 	/** 添加玩家 / On Add Player*/
 	public void onAddPlayer(PlayerGroupMember member) {
@@ -54,15 +58,5 @@ public class PlayerGroupStats implements Predicate<Player> {
 			}
 		}
 		return true;
-	}
-
-	/** 返回最小经验玩家等级 / Returns the min exp player level*/
-	public int getMinExpPlayerLevel() {
-		return minExpPlayerLevel;
-	}
-
-	/** 返回最大经验玩家等级 / Returns the max exp player level*/
-	public int getMaxExpPlayerLevel() {
-		return maxExpPlayerLevel;
 	}
 }

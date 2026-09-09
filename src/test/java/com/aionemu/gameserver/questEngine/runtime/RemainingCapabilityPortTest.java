@@ -29,10 +29,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Every newly composed event port rejects an incomplete authoritative boundary. */
 class RemainingCapabilityPortTest {
@@ -162,7 +159,7 @@ class RemainingCapabilityPortTest {
 		QuestSnapshot snapshot = new QuestSnapshot(7, 2333, QuestStatus.START, 0, Map.of(), Map.of());
 		Npc registered = new ObjenesisStd().newInstance(Npc.class);
 		registered.setPosition(new WorldPosition(210130000));
-		assertEquals(true, QuestSpawnRegistry.global().register(snapshot, "escort", registered));
+		assertTrue(QuestSpawnRegistry.global().register(snapshot, "escort", registered));
 		new PlayerQuestRecoveryEventPort().recover(new QuestEnv(null, player, 0, 0));
 		assertFalse(QuestSpawnRegistry.global().contains(snapshot, "escort"));
 	}

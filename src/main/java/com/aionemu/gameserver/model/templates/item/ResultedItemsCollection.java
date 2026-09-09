@@ -26,12 +26,12 @@ public class ResultedItemsCollection {
 
 	/** 获取物品。 / Returns the items. */
 	public Collection<ResultedItem> getItems() {
-		return items != null ? items : Collections.<ResultedItem>emptyList();
+		return items != null ? items : Collections.emptyList();
 	}
 
 	/** 获取套装。 / Returns the item set. */
 	public Collection<ResultedItemSet> getItemSet() {
-		return item_set != null ? item_set : Collections.<ResultedItemSet>emptyList();
+		return item_set != null ? item_set : Collections.emptyList();
 	}
 
 	/** 返回随机物品列表 / Returns the random items */

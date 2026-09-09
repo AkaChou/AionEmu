@@ -3,26 +3,18 @@ package com.aionemu.gameserver.geoEngine.collision.bih;
 import java.util.Comparator;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.AllArgsConstructor;
 
 /**
  * 按指定轴上三角形质心分量比较的比较器，用于 BIH 建树时的三角形排序。
  * Comparator of {@link BIHTriangle}s by centroid component on a chosen axis,
  * used when sorting triangles during BIH construction.
  */
+@AllArgsConstructor
 public class TriangleAxisComparator implements Comparator<BIHTriangle> {
 
 	/** 比较轴 0/1/2 对应 x/y/z。 / Comparison axis 0/1/2 for x/y/z. */
 	private final int axis;
-
-	/**
-	 * 以比较轴构造。
-	 * Constructs with the comparison axis.
-	 *
-	 * @param axis 轴索引 / axis index
-	 */
-	public TriangleAxisComparator(int axis) {
-		this.axis = axis;
-	}
 
 	/**
 	 * 按质心在指定轴上的分量比较两三角形。

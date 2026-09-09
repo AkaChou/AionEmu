@@ -94,7 +94,7 @@ public class LegionService {
 	private static volatile ObjectProvider<LegionService> instanceProvider;
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();
-	private World world;
+	private final World world;
 	/** 踢出成员的军团动作操作码 / Legion action opcode for kicking a member. */
 	public final static int LEGION_ACTION_KICK = 4;
 	/** 军团最高等级 / Maximum legion level. */
@@ -102,7 +102,7 @@ public class LegionService {
 	/** 军团排行缓存 / Legion ranking cache. */
 	private Map<Integer, Integer> legionRanking;
 	/** 军团操作限制校验器 / Legion operation restriction checker. */
-	private LegionRestrictions legionRestrictions = new LegionRestrictions();
+	private final LegionRestrictions legionRestrictions = new LegionRestrictions();
 
 	/**
 	 * 获取军团服务单例（优先 Spring ObjectProvider，否则回退内部 holder）。
@@ -1145,7 +1145,7 @@ public class LegionService {
 	public void openLegionWarehouse(Player player, Npc npc) {
 		if (legionRestrictions.canOpenWarehouse(player)) {
 			LegionWhUpdate(player);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));// kinah
+			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));// 基纳 / kinah
 			int whLvl = player.getLegion().getWarehouseLevel();
 			List<Item> items = player.getLegion().getLegionWarehouse().getItems();
 			int storageId = StorageType.LEGION_WAREHOUSE.getId();
@@ -1895,14 +1895,11 @@ public class LegionService {
 							SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_HE_IS_OTHER_GUILD_MEMBER(targetPlayer.getName()));
 				}
 				return false;
-			} else if (!activePlayer.getLegionMember().hasRights(LegionPermissionsMask.INVITE)) {
+			} else // 不同种族 / Not Same Race
+				if (!activePlayer.getLegionMember().hasRights(LegionPermissionsMask.INVITE)) {
 				// 无权邀请 / No rights to invite
 				return false;
-			} else if (activePlayer.getRace() != targetPlayer.getRace() && !LegionConfig.LEGION_INVITEOTHERFACTION) {
-				// 不同种族 / Not Same Race
-				return false;
-			}
-			return true;
+			} else return activePlayer.getRace() == targetPlayer.getRace() || LegionConfig.LEGION_INVITEOTHERFACTION;
 		}
 
 		/**
@@ -1966,14 +1963,11 @@ public class LegionService {
 						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MEMBER_RANK_DONT_HAVE_RIGHT);
 				return false;
 			}
+			// 不在同一军团 / not in same legion
 			if (isSelf(activePlayer, targetPlayer.getObjectId())) {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_ERROR_SELF);
 				return false;
-			} else if (!legion.isMember(targetPlayer.getObjectId())) {
-				// 不在同一军团 / not in same legion
-				return false;
-			}
-			return true;
+			} else return legion.isMember(targetPlayer.getObjectId());
 		}
 
 		/**
@@ -1992,14 +1986,11 @@ public class LegionService {
 						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MEMBER_RANK_DONT_HAVE_RIGHT);
 				return false;
 			}
+			// 不在同一军团 / not in same legion
 			if (isSelf(activePlayer, targetObjId)) {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_ERROR_SELF);
 				return false;
-			} else if (!legion.isMember(targetObjId)) {
-				// 不在同一军团 / not in same legion
-				return false;
-			}
-			return true;
+			} else return legion.isMember(targetObjId);
 		}
 
 		/**
@@ -2012,10 +2003,7 @@ public class LegionService {
 	 * @return 允许 / 成功则为 true / true if allowed to change self intro
 	 */
 		private boolean canChangeSelfIntro(Player activePlayer, String newSelfIntro) {
-			if (!isValidSelfIntro(newSelfIntro)) {
-				return false;
-			}
-			return true;
+			return isValidSelfIntro(newSelfIntro);
 		}
 
 		/**
@@ -2062,14 +2050,11 @@ public class LegionService {
 	 * @return true if allowed to change nickname of target player
 	 */
 		private boolean canChangeNickname(Legion legion, int targetObjectId, String newNickname) {
+			// 不在同一军团 / not in same legion
 			if (!isValidNickname(newNickname)) {
 				// 无效昵称 / invalid nickname
 				return false;
-			} else if (!legion.isMember(targetObjectId)) {
-				// 不在同一军团 / not in same legion
-				return false;
-			}
-			return true;
+			} else return legion.isMember(targetObjectId);
 		}
 
 		/**
@@ -2083,7 +2068,7 @@ public class LegionService {
 	 */
 		private boolean canChangeAnnouncement(LegionMember legionMember, String announcement) {
 			return legionMember.hasRights(LegionPermissionsMask.EDIT)
-					&& (announcement.isEmpty() ? true : isValidAnnouncement(announcement));
+					&& (announcement.isEmpty() || isValidAnnouncement(announcement));
 		}
 
 		/**
@@ -2144,10 +2129,7 @@ public class LegionService {
 		 * @return 允许修改时为 {@code true} / {@code true} if allowed
 		 */
 		public boolean canChangeLegionJoinSetting(Player activePlayer) {
-			if (!isBrigadeGeneral(activePlayer)) {
-				return false;
-			}
-			return true;
+			return isBrigadeGeneral(activePlayer);
 		}
 
 		/**
@@ -2160,15 +2142,12 @@ public class LegionService {
 	 * @return 允许 / 成功则为 true / true if allowed to recreate legion
 	 */
 		private boolean canRecreateLegion(Player activePlayer, Legion legion) {
+			// 军团未在解散 / Legion is not disbanding
 			if (!isBrigadeGeneral(activePlayer)) {
 				PacketSendUtility.sendPacket(activePlayer,
 						SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_ONLY_MASTER_CAN_DISPERSE);
 				return false;
-			} else if (!legion.isDisbanding()) {
-				// 军团未在解散 / Legion is not disbanding
-				return false;
-			}
-			return true;
+			} else return legion.isDisbanding();
 		}
 
 		/**
@@ -2206,14 +2185,11 @@ public class LegionService {
 			if (!isBrigadeGeneral(activePlayer)) {
 				// 不是军团长 / Not legion leader
 				return false;
-			} else if (activePlayer.getLegion().getLegionLevel() < 3) {
+			} else // 未上传徽章 / Not uploading emblem
+				if (activePlayer.getLegion().getLegionLevel() < 3) {
 				// 军团等级不够高 / Legion level isn't high enough
 				return false;
-			} else if (!activePlayer.getLegion().getLegionEmblem().isUploading()) {
-				// 未上传徽章 / Not uploading emblem
-				return false;
-			}
-			return true;
+			} else return activePlayer.getLegion().getLegionEmblem().isUploading();
 		}
 
 		/**
@@ -2349,7 +2325,7 @@ public class LegionService {
 	public void addWHItemHistory(Player player, int itemId, long count, IStorage sourceStorage, IStorage destStorage) {
 		Legion legion = player.getLegion();
 		if (legion != null) {
-			String description = Integer.toString(itemId) + ":" + Long.toString(count);
+			String description = itemId + ":" + count;
 			if (sourceStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
 				addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
 						description);
@@ -2523,9 +2499,7 @@ public class LegionService {
 		Legion legion = getLegion(legionId);
 		player.clearJoinRequest();
 		sendLegionJoinRequestPacket(player, 0);
-		if (legion.getJoinRequestMap().containsKey(player.getObjectId())) {
-			legion.getJoinRequestMap().remove(player.getObjectId());
-		}
+		legion.getJoinRequestMap().remove(player.getObjectId());
 		Player bg = getBrigadeGeneral(legion);
 		if (bg != null) {
 			PacketSendUtility.sendPacket(bg, new SM_LEGION_REQUEST(player.getObjectId(), false));
@@ -2578,9 +2552,7 @@ public class LegionService {
 		if (player == null) {
 			playerOnline = false;
 			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);
-			if (legion.getJoinRequestMap().containsKey(playerId)) {
-				legion.getJoinRequestMap().remove(playerId);
-			}
+			legion.getJoinRequestMap().remove(playerId);
 		}
 		PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST(playerId, accept));
 		if (playerOnline) {

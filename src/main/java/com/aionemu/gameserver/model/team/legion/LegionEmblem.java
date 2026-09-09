@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.model.team.legion;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 军团徽章，用于团队相关逻辑。
@@ -10,27 +12,71 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 public class LegionEmblem {
 
+	/**
+	 * @return the emblemId
+	 */
+	@Getter
 	private int emblemId = 0x00;
+	/**
+	 * @return the color_r
+	 */
+	@Getter
 	private int color_r = 0x00;
+	/**
+	 * @return the color_g
+	 */
+	@Getter
 	private int color_g = 0x00;
+	/**
+	 * @return the color_b
+	 */
+	@Getter
 	private int color_b = 0x00;
+	/**
+	 * @return the defaultEmblem
+	 */
+	@Getter
 	private boolean defaultEmblem = true;
+	/**
+	 * @param emblemType the emblemType to set
+	 */
+	@Getter
+	@Setter
 	private LegionEmblemType emblemType = LegionEmblemType.DEFAULT;
+	/**
+	 * @return the persistentState
+	 */
+	@Getter
 	private PersistentState persistentState;
 
+	/**
+	 * @param isUploading the isUploading to set
+	 */
+	@Getter
+	@Setter
 	private boolean isUploading = false;
+	/**
+	 * @param emblemSize the emblemSize to set
+	 */
+	@Getter
+	@Setter
 	private int uploadSize = 0;
+	/**
+	 * @return the uploadedSize
+	 */
+	@Getter
 	private int uploadedSize = 0;
+	/**
+	 * @return the uploadData
+	 */
+	@Getter
 	private byte[] uploadData;
-
-	private byte[] customEmblemData;
 
 	/**
 	 * @return the customEmblemData
 	 */
-	public byte[] getCustomEmblemData() {
-		return customEmblemData;
-	}
+	@Getter
+	private byte[] customEmblemData;
 
 	/**
 	 * @param customEmblemData the customEmblemData to set
@@ -71,75 +117,12 @@ public class LegionEmblem {
 	}
 
 	/**
-	 * @return the emblemId
-	 */
-	public int getEmblemId() {
-		return emblemId;
-	}
-
-	/**
-	 * @return the color_r
-	 */
-	public int getColor_r() {
-		return color_r;
-	}
-
-	/**
-	 * @return the color_g
-	 */
-	public int getColor_g() {
-		return color_g;
-	}
-
-	/**
-	 * @return the color_b
-	 */
-	public int getColor_b() {
-		return color_b;
-	}
-
-	/**
-	 * @return the defaultEmblem
-	 */
-	public boolean isDefaultEmblem() {
-		return defaultEmblem;
-	}
-
-	/**
-	 * @param isUploading the isUploading to set
-	 */
-	public void setUploading(boolean isUploading) {
-		this.isUploading = isUploading;
-	}
-
-	/**
-	 * @return the isUploading
-	 */
-	public boolean isUploading() {
-		return isUploading;
-	}
-
-	/**
-	 * @param emblemSize the emblemSize to set
-	 */
-	public void setUploadSize(int emblemSize) {
-		this.uploadSize = emblemSize;
-	}
-
-	/**
-	 * @return the emblemSize
-	 */
-	public int getUploadSize() {
-		return uploadSize;
-	}
-
-	/**
 	 * @param data the uploadData to set
 	 */
 	public void addUploadData(byte[] data) {
 		byte[] newData = new byte[uploadedSize];
 		int i = 0;
-		if (uploadData != null && uploadData.length > 0) {
+		if (uploadData != null) {
 			for (byte dataByte : uploadData) {
 				newData[i] = dataByte;
 				i++;
@@ -153,38 +136,10 @@ public class LegionEmblem {
 	}
 
 	/**
-	 * @return the uploadData
-	 */
-	public byte[] getUploadData() {
-		return this.uploadData;
-	}
-
-	/**
 	 * @param uploadedSize the uploadedSize to set
 	 */
 	public void addUploadedSize(int uploadedSize) {
 		this.uploadedSize += uploadedSize;
-	}
-
-	/**
-	 * @return the uploadedSize
-	 */
-	public int getUploadedSize() {
-		return uploadedSize;
-	}
-
-	/**
-	 * @param emblemType the emblemType to set
-	 */
-	public void setEmblemType(LegionEmblemType emblemType) {
-		this.emblemType = emblemType;
-	}
-
-	/**
-	 * @return the emblemType
-	 */
-	public LegionEmblemType getEmblemType() {
-		return emblemType;
 	}
 
 	/**
@@ -209,12 +164,5 @@ public class LegionEmblem {
 		default:
 			this.persistentState = persistentState;
 		}
-	}
-
-	/**
-	 * @return the persistentState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 }

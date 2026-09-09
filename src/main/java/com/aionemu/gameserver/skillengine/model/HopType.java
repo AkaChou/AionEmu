@@ -16,5 +16,5 @@ public enum HopType {
 	/** 按伤害 / From damage */
 	DAMAGE,
 	/** 按技能等级 / From skill level */
-	SKILLLV;
+	SKILLLV
 }

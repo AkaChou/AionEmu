@@ -29,11 +29,11 @@ public class TradeListData {
 	private List<TradeListTemplate> ptlist;
 
 	/** 普通交易列表映射 / sell trade-list map */
-	private IntObjectHashMap<TradeListTemplate> npctlistData = new IntObjectHashMap<TradeListTemplate>();
+	private final IntObjectHashMap<TradeListTemplate> npctlistData = new IntObjectHashMap<TradeListTemplate>();
 
-	private IntObjectHashMap<TradeListTemplate> npcTradeInlistData = new IntObjectHashMap<TradeListTemplate>();
+	private final IntObjectHashMap<TradeListTemplate> npcTradeInlistData = new IntObjectHashMap<TradeListTemplate>();
 
-	private IntObjectHashMap<TradeListTemplate> npcPurchaselistData = new IntObjectHashMap<TradeListTemplate>();
+	private final IntObjectHashMap<TradeListTemplate> npcPurchaselistData = new IntObjectHashMap<TradeListTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，将三类交易列表按 NPC ID 索引。

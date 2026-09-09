@@ -11,8 +11,8 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
  */
 public class SM_MAC extends LsServerPacket {
 
-	private int accountId;
-	private String address;
+	private final int accountId;
+	private final String address;
 
 	/**
 	 * 构造 MAC 地址上报包。

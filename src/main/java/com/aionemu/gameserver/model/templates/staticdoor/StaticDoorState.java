@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.templates.staticdoor;
 
 import java.util.EnumSet;
+import lombok.Getter;
 
 /**
  * 静态 Door 状态枚举。
@@ -20,16 +21,13 @@ public enum StaticDoorState {
 	/** 单向 / One-way. */
 	ONEWAY(1 << 3);
 
-	private StaticDoorState(int flag) {
+	StaticDoorState(int flag) {
 		this.flag = flag;
 	}
 
-	private int flag;
-
 	/** 返回标志 / Returns the flag*/
-	public int getFlag() {
-		return flag;
-	}
+	@Getter
+	private final int flag;
 
 	/** 按标志位设置状态 / Sets the states */
 	public static void setStates(int flags, EnumSet<StaticDoorState> state) {

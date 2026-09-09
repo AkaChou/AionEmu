@@ -12,6 +12,9 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 次元漩涡入侵活动抽象基类。
@@ -23,12 +26,43 @@ import com.aionemu.gameserver.model.vortex.VortexStateType;
  * @author Rinzler (Encom)
  * @param <VL> 漩涡地点类型 / vortex location type
  */
+@RequiredArgsConstructor
 public abstract class DimensionalVortex<VL extends VortexLocation> {
 
+	/**
+	 * 获取绑定的漩涡地点。
+	 * Returns the bound vortex location.
+	 *
+	 * @return 绑定的漩涡地点 / location
+	 */
+	@Getter
 	private final VL vortexLocation;
+	/**
+	 * 获取生成器摧毁监听器。
+	 * Returns the generator destroy listener.
+	 *
+	 * @return 生成器摧毁监听器 / listener
+	 */
+	@Getter
 	private final GeneratorDestroyListener generatorDestroyListener = new GeneratorDestroyListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
+	/**
+	 * 生成器是否已被摧毁。
+	 * Whether the generator has been destroyed.
+	 *
+	 * @return 已摧毁则为 true / true if destroyed
+	 */
+	@Getter
+	@Setter
 	private boolean generatorDestroyed;
+	/**
+	 * 获取裂隙生成器 NPC。
+	 * Returns the rift generator NPC.
+	 *
+	 * @return 生成器 NPC / generator
+	 */
+	@Getter
+	@Setter
 	private Npc generator;
 	private boolean started;
 
@@ -93,16 +127,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * @return 攻方玩家表 / invaders
 	 */
 	public abstract Map<Integer, Player> getInvaders();
-
-	/**
-	 * 绑定漩涡地点。
-	 * Binds the vortex location.
-	 *
-	 * @param vortexLocation 漩涡地点 / vortex location
-	 */
-	public DimensionalVortex(VL vortexLocation) {
-		this.vortexLocation = vortexLocation;
-	}
 
 	/**
 	 * 启动入侵（幂等）。
@@ -191,56 +215,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	}
 
 	/**
-	 * 生成器是否已被摧毁。
-	 * Whether the generator has been destroyed.
-	 *
-	 * @return 已摧毁则为 true / true if destroyed
-	 */
-	public boolean isGeneratorDestroyed() {
-		return generatorDestroyed;
-	}
-
-	/**
-	 * 设置生成器摧毁状态。
-	 * Sets the generator destroyed flag.
-	 *
-	 * @param state 状态 / state
-	 */
-	public void setGeneratorDestroyed(boolean state) {
-		this.generatorDestroyed = state;
-	}
-
-	/**
-	 * 获取裂隙生成器 NPC。
-	 * Returns the rift generator NPC.
-	 *
-	 * @return 生成器 NPC / generator
-	 */
-	public Npc getGenerator() {
-		return generator;
-	}
-
-	/**
-	 * 设置裂隙生成器 NPC。
-	 * Sets the rift generator NPC.
-	 *
-	 * @param generator 生成器 NPC / generator
-	 */
-	public void setGenerator(Npc generator) {
-		this.generator = generator;
-	}
-
-	/**
-	 * 获取生成器摧毁监听器。
-	 * Returns the generator destroy listener.
-	 *
-	 * @return 生成器摧毁监听器 / listener
-	 */
-	public GeneratorDestroyListener getGeneratorDestroyListener() {
-		return generatorDestroyListener;
-	}
-
-	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
 	 *
@@ -248,16 +222,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定的漩涡地点。
-	 * Returns the bound vortex location.
-	 *
-	 * @return 绑定的漩涡地点 / location
-	 */
-	public VL getVortexLocation() {
-		return vortexLocation;
 	}
 
 	/**

@@ -63,7 +63,7 @@ public class cmd_queue extends PlayerCommand {
         // 修复 GM 开启无限报名时输入 .queue 的问题。 / Find a way to fix the problem when u type .queue when the gm has enabled the registration for unlimited players..
         // getCountplayers 在 .queue 工作时设值，为 0 时结束，默认即为 0。 / since the getCountplayers are set to a value when .queue is working.. and it ends when its 0.. and by default its by 0..
 
-        if(anyEventfound == true){
+        if(anyEventfound){
             PacketSendUtility.sendMessage(player, "You've registered to the upcoming event!");
             player.setRegedEvent(true);
         }else{

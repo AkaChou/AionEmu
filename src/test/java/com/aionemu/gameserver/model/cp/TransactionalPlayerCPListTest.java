@@ -26,7 +26,7 @@ class TransactionalPlayerCPListTest {
 
 		snapshot.restore();
 
-		assertTrue(cp.getBasicCP().length == 1);
+		assertEquals(1, cp.getBasicCP().length);
 		assertEquals(entry, cp.getBasicCP()[0]);
 		assertEquals(PersistentState.UPDATED, entry.getPersistentState());
 	}

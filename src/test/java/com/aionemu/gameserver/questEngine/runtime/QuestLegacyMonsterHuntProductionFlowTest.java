@@ -989,10 +989,10 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		QuestSnapshot snapshot = snapshot(compiled.id(), QuestStatus.START,
 			Map.of("var0", 0, "var1", 0), definition);
 		assertNoMatch(compiled, snapshot, reportEvent);
-		int firstTarget = firstEvent instanceof QuestEvent.KillNpcSet kill
-			? kill.npcIds().iterator().next() : 0;
-		int secondTarget = secondEvent instanceof QuestEvent.KillNpcSet kill
-			? kill.npcIds().iterator().next() : 0;
+		int firstTarget = firstEvent instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+			? npcIds.iterator().next() : 0;
+		int secondTarget = secondEvent instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+			? npcIds.iterator().next() : 0;
 		for (int count = 1; count <= 20; count++) {
 			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(firstTarget)));
 			assertEquals(QuestStatus.START, snapshot.status());

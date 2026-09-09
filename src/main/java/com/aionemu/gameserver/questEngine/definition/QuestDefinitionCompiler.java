@@ -74,9 +74,9 @@ public final class QuestDefinitionCompiler {
 					fail("PVP_CONDITION_EVENT_MISMATCH",
 						"pvp-recipient-in-zone is only valid on PvP kill events");
 				}
-				if (condition instanceof QuestCondition.QuestVariableIs variable) {
-					validateProgressField(definition, variable.field(), "condition");
-					definition.progressLayout().pack(Map.of(variable.field(), variable.value()));
+				if (condition instanceof QuestCondition.QuestVariableIs(String field, int value)) {
+					validateProgressField(definition, field, "condition");
+					definition.progressLayout().pack(Map.of(field, value));
 				}
 				if (condition instanceof QuestCondition.VariableAtLeast variable) {
 					validateProgressField(definition, variable.field(), "condition");
@@ -92,16 +92,16 @@ public final class QuestDefinitionCompiler {
 				}
 			}
 			for (QuestAction action : transition.actions()) {
-				if (action instanceof QuestAction.GrantSelectedReward selected
-						&& selected.rewardIndex() >= definition.metadata().rewards().size()) {
+				if (action instanceof QuestAction.GrantSelectedReward(int rewardIndex)
+						&& rewardIndex >= definition.metadata().rewards().size()) {
 					fail("SELECTED_REWARD_INDEX_OUT_OF_RANGE",
-						"selected reward index " + selected.rewardIndex() + " is not present in quest metadata");
+						"selected reward index " + rewardIndex + " is not present in quest metadata");
 				}
-				if (action instanceof QuestAction.SetVariable variable) {
-					if (definition.progressLayout().field(variable.field()) == null) {
-						fail("UNKNOWN_PROGRESS_FIELD", "action references unknown field: " + variable.field());
+				if (action instanceof QuestAction.SetVariable(String field, int value)) {
+					if (definition.progressLayout().field(field) == null) {
+						fail("UNKNOWN_PROGRESS_FIELD", "action references unknown field: " + field);
 					}
-					definition.progressLayout().pack(Map.of(variable.field(), variable.value()));
+					definition.progressLayout().pack(Map.of(field, value));
 				}
 				if (action instanceof QuestAction.GrantReward reward
 						&& reward.amountMode() == QuestRewardAmountMode.QUEST_BASE
@@ -116,8 +116,8 @@ public final class QuestDefinitionCompiler {
 			}
 			QuestStatus effectiveStatus = nodes.get(transition.targetNode()).projection().status();
 			for (QuestAction action : transition.actions()) {
-				if (action instanceof QuestAction.SetStatus setStatus) {
-					effectiveStatus = setStatus.status();
+				if (action instanceof QuestAction.SetStatus(QuestStatus status)) {
+					effectiveStatus = status;
 				}
 			}
 			long completions = transition.actions().stream()
@@ -215,8 +215,10 @@ public final class QuestDefinitionCompiler {
 		for (QuestTransition transition : definition.transitions()) {
 			QuestStatus targetStatus = statuses.get(transition.targetNode());
 			boolean startsFromNone = transition.sourceNode() == null
-				? transition.conditions().stream().anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
-					&& status.status() == QuestStatus.NONE)
+				? transition.conditions().stream().anyMatch(condition -> condition instanceof QuestCondition.StatusIs(
+				QuestStatus status1
+			)
+					&& status1 == QuestStatus.NONE)
 				: statuses.get(transition.sourceNode()) == QuestStatus.NONE;
 			boolean hasEligibility = transition.conditions().stream()
 				.anyMatch(QuestCondition.StartEligible.class::isInstance);
@@ -383,8 +385,8 @@ public final class QuestDefinitionCompiler {
 				? Set.of(transition.sourceNode()) : Set.of();
 		}
 		boolean rewardBound = transition.conditions().stream()
-			.anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
-				&& status.status() == QuestStatus.REWARD);
+			.anyMatch(condition -> condition instanceof QuestCondition.StatusIs(QuestStatus status1)
+				&& status1 == QuestStatus.REWARD);
 		if (!rewardBound) {
 			return Set.of();
 		}
@@ -423,9 +425,9 @@ public final class QuestDefinitionCompiler {
 		Set<Integer> questOwnedRecipes = new HashSet<>();
 		for (QuestTransition transition : definition.transitions()) {
 			for (QuestAction action : transition.actions()) {
-				if (action instanceof QuestAction.LearnRecipe learn
-						&& learn.ownership() == QuestRecipeOwnership.QUEST_OWNED) {
-					questOwnedRecipes.add(learn.recipeId());
+				if (action instanceof QuestAction.LearnRecipe(int recipeId, QuestRecipeOwnership ownership)
+						&& ownership == QuestRecipeOwnership.QUEST_OWNED) {
+					questOwnedRecipes.add(recipeId);
 				}
 			}
 		}
@@ -434,8 +436,8 @@ public final class QuestDefinitionCompiler {
 			boolean terminalCleanup = false;
 			for (QuestTransition transition : definition.transitions()) {
 				boolean forgetsRecipe = transition.actions().stream()
-					.anyMatch(action -> action instanceof QuestAction.ForgetRecipe forget
-						&& forget.recipeId() == recipeId);
+					.anyMatch(action -> action instanceof QuestAction.ForgetRecipe(int id)
+						&& id == recipeId);
 				if (!forgetsRecipe) {
 					continue;
 				}
@@ -471,8 +473,8 @@ public final class QuestDefinitionCompiler {
 		}
 		Set<QuestStatus> statuses = new HashSet<>();
 		for (QuestCondition condition : transition.conditions()) {
-			if (condition instanceof QuestCondition.StatusIs status) {
-				statuses.add(status.status());
+			if (condition instanceof QuestCondition.StatusIs(QuestStatus status1)) {
+				statuses.add(status1);
 			}
 		}
 		if (statuses.size() == 1) {
@@ -548,8 +550,8 @@ public final class QuestDefinitionCompiler {
 		if (event instanceof QuestEvent.ItemPlay itemPlay) {
 			return List.of(new EventConflictKey(QuestEvent.ItemPlay.class, itemPlay.itemId()));
 		}
-		if (event instanceof QuestEvent.QuestDialog dialog) {
-			return List.of(new EventConflictKey(QuestEvent.QuestDialog.class, dialog.dialogId()));
+		if (event instanceof QuestEvent.QuestDialog(int dialogId)) {
+			return List.of(new EventConflictKey(QuestEvent.QuestDialog.class, dialogId));
 		}
 		if (event instanceof QuestEvent.KillRanked) {
 			return List.of(new EventConflictKey(QuestEvent.KillRanked.class, Boolean.TRUE));
@@ -560,12 +562,12 @@ public final class QuestDefinitionCompiler {
 		if (event instanceof QuestEvent.KillInWorld) {
 			return List.of(new EventConflictKey(QuestEvent.KillInWorld.class, Boolean.TRUE));
 		}
-		if (event instanceof QuestEvent.KillNpc kill) {
-			return List.of(new EventConflictKey(QuestEvent.KillNpc.class, kill.npcId()));
+		if (event instanceof QuestEvent.KillNpc(int id)) {
+			return List.of(new EventConflictKey(QuestEvent.KillNpc.class, id));
 		}
-		if (event instanceof QuestEvent.KillNpcSet kills) {
-			List<EventConflictKey> keys = new ArrayList<>(kills.npcIds().size());
-			for (int npcId : kills.npcIds()) {
+		if (event instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
+			List<EventConflictKey> keys = new ArrayList<>(npcIds.size());
+			for (int npcId : npcIds) {
 				keys.add(new EventConflictKey(QuestEvent.KillNpc.class, npcId));
 			}
 			return keys;
@@ -618,11 +620,11 @@ public final class QuestDefinitionCompiler {
 		}
 		QuestStatus statusBound = null;
 		for (QuestCondition condition : transition.conditions()) {
-			if (condition instanceof QuestCondition.StatusIs status) {
-				if (statusBound != null && statusBound != status.status()) {
+			if (condition instanceof QuestCondition.StatusIs(QuestStatus status1)) {
+				if (statusBound != null && statusBound != status1) {
 					return compatible;
 				}
-				statusBound = status.status();
+				statusBound = status1;
 			}
 		}
 		if (statusBound != null) {
@@ -666,25 +668,25 @@ public final class QuestDefinitionCompiler {
 	 */
 	private static Boolean conditionMatchesNode(QuestCondition condition, QuestNode node) {
 		NodeProjection projection = node.projection();
-		if (condition instanceof QuestCondition.StatusIs status) {
-			return projection.status() == status.status();
+		if (condition instanceof QuestCondition.StatusIs(QuestStatus status1)) {
+			return projection.status() == status1;
 		}
-		if (condition instanceof QuestCondition.QuestVariableIs variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) == variable.value();
+		if (condition instanceof QuestCondition.QuestVariableIs(String field3, int value4)) {
+			return projection.variables().getOrDefault(field3, 0) == value4;
 		}
-		if (condition instanceof QuestCondition.VariableAtLeast variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) >= variable.value();
+		if (condition instanceof QuestCondition.VariableAtLeast(String field2, int value3)) {
+			return projection.variables().getOrDefault(field2, 0) >= value3;
 		}
-		if (condition instanceof QuestCondition.VariableBelow variable) {
-			return projection.variables().getOrDefault(variable.field(), 0) < variable.value();
+		if (condition instanceof QuestCondition.VariableBelow(String field1, int value2)) {
+			return projection.variables().getOrDefault(field1, 0) < value2;
 		}
-		if (condition instanceof QuestCondition.VariableSumIs variable) {
-			int sum = variable.fields().stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
-			return sum == variable.value();
+		if (condition instanceof QuestCondition.VariableSumIs(List<String> fields1, int value1)) {
+			int sum = fields1.stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
+			return sum == value1;
 		}
-		if (condition instanceof QuestCondition.VariableSumBelow variable) {
-			int sum = variable.fields().stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
-			return sum < variable.value();
+		if (condition instanceof QuestCondition.VariableSumBelow(List<String> fields, int value)) {
+			int sum = fields.stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
+			return sum < value;
 		}
 		return null;
 	}

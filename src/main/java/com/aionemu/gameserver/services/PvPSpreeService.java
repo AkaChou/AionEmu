@@ -166,7 +166,7 @@ public class PvPSpreeService {
 	 * @param killsBeforeDeath 死前连杀数 / kills before death
 	 */
 	private static void sendEndSpreeMessage(Player victim, Creature killer, boolean isPvPDeath, int killsBeforeDeath) {
-		String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "A monster";
+		String spreeEnder = isPvPDeath ? killer.getName() : "A monster";
 		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			PacketSendUtility.sendWhiteMessageOnCenter(p, "The killing spree of " + victim.getName()
 					+ " has been stopped by " + spreeEnder + " after " + killsBeforeDeath + " uninterrupted murders !");

@@ -16,6 +16,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 技能外观列表。
@@ -26,21 +28,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class SkillSkinList {
 
 	private final Map<Integer, SkillSkin> skillskins;
+	/** 返回所有者 / Returns the owner*/
+	@Getter
+	@Setter
 	private Player owner;
 
 	public SkillSkinList() {
 		skillskins = new HashMap<>();
 		owner = null;
-	}
-
-	/** 返回所有者 / Returns the owner*/
-	public Player getOwner() {
-		return owner;
-	}
-
-	/** 设置所有者 / Sets the owner*/
-	public void setOwner(Player owner) {
-		this.owner = owner;
 	}
 
 	/** 是否包含。 / Contains. */

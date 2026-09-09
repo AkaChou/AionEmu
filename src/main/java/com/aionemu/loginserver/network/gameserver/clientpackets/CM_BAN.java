@@ -84,7 +84,7 @@ public class CM_BAN extends GsClientPacket {
             // 1000 表示“无限”值 / 1000 is 'infinity' value
             Timestamp newTime = null;
             if (time >= 0) {
-                newTime = new Timestamp(time == 0 ? 1000 : System.currentTimeMillis() + time * 60000);
+                newTime = new Timestamp(time == 0 ? 1000 : System.currentTimeMillis() + time * 60000L);
             }
 
             if (account != null) {
@@ -116,7 +116,7 @@ public class CM_BAN extends GsClientPacket {
                 }
                 if (time >= 0) // 执行封禁 / Ban
                 {
-                    Timestamp newTime = time != 0 ? new Timestamp(System.currentTimeMillis() + time * 60000) : null;
+                    Timestamp newTime = time != 0 ? new Timestamp(System.currentTimeMillis() + time * 60000L) : null;
                     result = LoginProtectionServices.bannedIpService().banIp(ip, newTime);
                 }
             }

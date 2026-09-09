@@ -44,10 +44,9 @@ public class MoveBehindEffect extends DamageEffect {
 		if (effect.getEffected() == null) {
 			return;
 		}
-		if (!(effect.getEffector() instanceof Player)) {
+		if (!(effect.getEffector() instanceof Player effector)) {
 			return;
 		}
-		final Player effector = (Player) effect.getEffector();
 		if (effect.getSkill().getSkillId() == 11333) { // 쇠갈고리 [Mirash Sanctuary]
 			effect.setDashStatus(DashStatus.MOVEBEHIND);
 			effect.setSkillMoveType(SkillMoveType.MOVEBEHIND);
@@ -69,7 +68,6 @@ public class MoveBehindEffect extends DamageEffect {
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effected.getHeading());
 		if (!super.calculate(effect, DamageType.PHYSICAL)) {
-			return;
 		}
 	}
 }

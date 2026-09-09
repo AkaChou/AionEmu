@@ -24,6 +24,7 @@ import com.aionemu.gameserver.model.templates.restriction.ItemCleanupTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载与限制清理。
@@ -44,11 +45,25 @@ public class ItemData extends ReloadableData {
 	private Map<String, ItemTemplate> itemsByName;
 
 	@XmlTransient
-	private IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
+	private final IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
 
+	/**
+	 * 返回按等级分组的魔石模板映射。
+	 * Returns manastone templates grouped by level.
+	 *
+	 * @return 等级到魔石列表的映射 / map of level to manastone list
+	 */
+	@Getter
 	@XmlTransient
 	Map<Integer, List<ItemTemplate>> manastones = new HashMap<Integer, List<ItemTemplate>>();
 
+	/**
+	 * 返回全部物品模板映射。
+	 * Returns the full item template map.
+	 *
+	 * @return ID 到物品模板的映射 / map of id to item template
+	 */
+	@Getter
 	@XmlTransient
 	Map<Integer, ItemTemplate> allItems;
 
@@ -158,16 +173,6 @@ public class ItemData extends ReloadableData {
 	}
 
 	/**
-	 * 返回全部物品模板映射。
-	 * Returns the full item template map.
-	 *
-	 * @return ID 到物品模板的映射 / map of id to item template
-	 */
-	public Map<Integer, ItemTemplate> getAllItems() {
-		return allItems;
-	}
-
-	/**
 	 * 返回已加载的物品模板数量。
 	 * Returns the number of loaded item templates.
 	 *
@@ -175,16 +180,6 @@ public class ItemData extends ReloadableData {
 	 */
 	public int size() {
 		return items.size();
-	}
-
-	/**
-	 * 返回按等级分组的魔石模板映射。
-	 * Returns manastone templates grouped by level.
-	 *
-	 * @return 等级到魔石列表的映射 / map of level to manastone list
-	 */
-	public Map<Integer, List<ItemTemplate>> getManastones() {
-		return manastones;
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 熔岩领主（Moltenus）活动启动定时任务。
@@ -15,19 +16,10 @@ import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class MoltenusStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public MoltenusStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行启动流程。

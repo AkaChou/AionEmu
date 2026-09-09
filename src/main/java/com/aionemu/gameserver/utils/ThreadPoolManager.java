@@ -128,7 +128,7 @@ public final class ThreadPoolManager {
 	 * @param delay 延迟毫秒 / Delay in milliseconds
 	 * @return 调度的 future / Scheduled future
 	 */
-	public final ScheduledFuture<?> schedule(Runnable r, long delay) {
+	public ScheduledFuture<?> schedule(Runnable r, long delay) {
 		r = new ThreadPoolRunnableWrapper(r);
 		delay = validate(delay);
 		return scheduledPool.schedule(r, delay, TimeUnit.MILLISECONDS);
@@ -143,7 +143,7 @@ public final class ThreadPoolManager {
 	 * 周期（毫秒） / Period in milliseconds
 	 * @param period 调度的 future / Scheduled future
 	 */
-	public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
+	public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
 		r = new ThreadPoolRunnableWrapper(r);
 		delay = validate(delay);
 		period = validate(period);
@@ -166,7 +166,7 @@ public final class ThreadPoolManager {
 	 *
 	 * @param r 任务 / Task
 	 */
-	public final void execute(Runnable r) {
+	public void execute(Runnable r) {
 		r = new ThreadPoolRunnableWrapper(r);
 		instantPool.execute(r);
 	}
@@ -177,7 +177,7 @@ public final class ThreadPoolManager {
 	 *
 	 * @param r 任务 / Task
 	 */
-	public final void executeLongRunning(Runnable r) {
+	public void executeLongRunning(Runnable r) {
 		r = new RunnableWrapper(r);
 		longRunningPool.execute(r);
 	}
@@ -189,7 +189,7 @@ public final class ThreadPoolManager {
 	 * @param r 任务 / Task
 	 * @return Future 句柄 / Future handle
 	 */
-	public final Future<?> submit(Runnable r) {
+	public Future<?> submit(Runnable r) {
 		r = new ThreadPoolRunnableWrapper(r);
 		return instantPool.submit(r);
 	}
@@ -201,7 +201,7 @@ public final class ThreadPoolManager {
 	 * @param r 任务 / Task
 	 * @return Future 句柄 / Future handle
 	 */
-	public final Future<?> submitLongRunning(Runnable r) {
+	public Future<?> submitLongRunning(Runnable r) {
 		r = new RunnableWrapper(r);
 		return longRunningPool.submit(r);
 	}

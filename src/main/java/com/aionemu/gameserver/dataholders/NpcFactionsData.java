@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.factions.NpcFactionTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * NPC 势力数据容器，按势力 ID 与关联 NPC ID 索引 {@link NpcFactionTemplate}。
@@ -22,10 +23,17 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NpcFactionsData {
 
+	/**
+	 * 返回原始势力模板列表。
+	 * Returns the raw faction template list.
+	 *
+	 * @return 势力模板列表 / faction template list
+	 */
+	@Getter
 	@XmlElement(name = "npc_faction", required = true)
 	protected List<NpcFactionTemplate> npcFactionsData;
-	private IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();
-	private IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<NpcFactionTemplate>();
+	private final IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();
+	private final IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<NpcFactionTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按势力 ID 与 NPC ID 建立索引。
@@ -61,16 +69,6 @@ public class NpcFactionsData {
 	 */
 	public NpcFactionTemplate getNpcFactionByNpcId(int id) {
 		return factionsByNpcId.get(id);
-	}
-
-	/**
-	 * 返回原始势力模板列表。
-	 * Returns the raw faction template list.
-	 *
-	 * @return 势力模板列表 / faction template list
-	 */
-	public List<NpcFactionTemplate> getNpcFactionsData() {
-		return npcFactionsData;
 	}
 
 	/**

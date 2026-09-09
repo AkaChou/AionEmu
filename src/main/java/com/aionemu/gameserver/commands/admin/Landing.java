@@ -51,8 +51,7 @@ public class Landing extends AdminCommand
                         GameLocationBootstrapServices.abyssLandingService().onHarbingerLandingLevelDown(level);
                     }
                 }
-                return;
-            }
+			}
         }
     }
 

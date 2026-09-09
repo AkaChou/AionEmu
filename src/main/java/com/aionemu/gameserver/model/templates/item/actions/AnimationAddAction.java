@@ -60,10 +60,7 @@ public class AnimationAddAction extends AbstractItemAction {
 		player.getController().cancelUseItem();
 
 		// 检查是否需要播放动画（若玩家尚未拥有任一动作）。 / Check whether the animation should play (if the player has none of the motions).
-		boolean shouldPlayAnimation = false;
-		if (idle != null && !player.getMotions().hasMotion(idle)) {
-			shouldPlayAnimation = true;
-		}
+		boolean shouldPlayAnimation = idle != null && !player.getMotions().hasMotion(idle);
 		if (run != null && !player.getMotions().hasMotion(run) && !shouldPlayAnimation) {
 			shouldPlayAnimation = true;
 		}
@@ -150,8 +147,8 @@ public class AnimationAddAction extends AbstractItemAction {
 					PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 					PacketSendUtility.broadcastPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()), false);
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423, new DescriptionId(parentItem.getItemTemplate().getNameId())));
-					 if (player.getInventory().decreaseItemCount(parentItem, 1) != 0)
-						return;
+					 if (player.getInventory().decreaseItemCount(parentItem, 1) != 0) {
+					 }
 				}
 			}
 		}, 1000);

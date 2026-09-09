@@ -9,5 +9,5 @@ package com.aionemu.gameserver.model.rvr;
 
 public enum RvrStateType {
 	/** 阵营战。 / Rvr. */
-	RVR, PEACE;
+	RVR, PEACE
 }

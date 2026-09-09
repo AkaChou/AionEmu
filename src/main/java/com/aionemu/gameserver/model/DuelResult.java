@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * 决斗结果。
  * Duel Result enumeration.
@@ -13,21 +15,15 @@ public enum DuelResult {
 	/** 决斗超时 / Duel Timeout */
 	DUEL_TIMEOUT(1300100, (byte) 1);
 
-	private int msgId;
-	private byte resultId;
+	/** 返回消息 ID / Returns the msg id */
+	@Getter
+	private final int msgId;
+	/** 返回结果 ID / Returns the result id */
+	@Getter
+	private final byte resultId;
 
-	private DuelResult(int msgId, byte resultId) {
+	DuelResult(int msgId, byte resultId) {
 		this.msgId = msgId;
 		this.resultId = resultId;
-	}
-
-	/** 返回消息 ID / Returns the msg id */
-	public int getMsgId() {
-		return msgId;
-	}
-
-	/** 返回结果 ID / Returns the result id */
-	public byte getResultId() {
-		return resultId;
 	}
 }

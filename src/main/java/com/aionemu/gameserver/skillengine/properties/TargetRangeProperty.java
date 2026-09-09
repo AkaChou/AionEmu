@@ -71,7 +71,7 @@ public class TargetRangeProperty {
 					}
 					if (skill.isPointSkill()) {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
-						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
+						float creatureCollision = nextCreature.getObjectTemplate().getBoundRadius().getCollision();
 						float radius = distance + targetCollision + creatureCollision + 1;
 						boolean inRange = altitude > 0
 								? MathUtil.getDistance(skill.getX(), skill.getY(), nextCreature.getX(), nextCreature.getY()) < radius
@@ -84,7 +84,7 @@ public class TargetRangeProperty {
 						}
 					} else if (properties.getEffectiveWidth() > 0) {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
-						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
+						float creatureCollision = nextCreature.getObjectTemplate().getBoundRadius().getCollision();
 						if (MathUtil.isInsideAttackCylinder(firstTarget, nextCreature,
 								(int) (distance + targetCollision + creatureCollision),
 								(int) (properties.getEffectiveWidth() + targetCollision + creatureCollision),
@@ -101,7 +101,7 @@ public class TargetRangeProperty {
 						Range<Float> range = Range.of(angle, 360.0F - angle);
 						if (range.contains(PositionUtil.getAngleToTarget(firstTarget, nextCreature))) {
 							float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
-							float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
+							float creatureCollision = nextCreature.getObjectTemplate().getBoundRadius().getCollision();
 							float radius = distance + targetCollision + creatureCollision;
 							if (altitude > 0 ? MathUtil.isInRange(firstTarget, nextCreature, radius)
 									: MathUtil.isIn3dRange(firstTarget, nextCreature, radius)) {
@@ -112,7 +112,7 @@ public class TargetRangeProperty {
 						}
 					} else {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
-						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
+						float creatureCollision = nextCreature.getObjectTemplate().getBoundRadius().getCollision();
 						float radius = distance + targetCollision + creatureCollision;
 						if (altitude > 0 ? MathUtil.isInRange(firstTarget, nextCreature, radius)
 								: MathUtil.isIn3dRange(firstTarget, nextCreature, radius)) {
@@ -129,8 +129,7 @@ public class TargetRangeProperty {
 			if (maxcount == 1)
 				break;
 			int partyCount = 0;
-			if (skill.getEffector() instanceof Player) {
-				Player effector = (Player) skill.getEffector();
+			if (skill.getEffector() instanceof Player effector) {
 				if (effector.isInAlliance2()) {
 					effectedList.clear();
 					for (Player player : effector.getPlayerAllianceGroup2().getMembers()) {
@@ -160,8 +159,7 @@ public class TargetRangeProperty {
 			}
 			break;
 		case PARTY_WITHPET:
-			if (skill.getEffector() instanceof Player) {
-				final Player effector = (Player) skill.getEffector();
+			if (skill.getEffector() instanceof Player effector) {
 				if (effector.isInAlliance2()) {
 					effectedList.clear();
 					for (Player player : effector.getPlayerAllianceGroup2().getMembers()) {
@@ -212,7 +210,7 @@ public class TargetRangeProperty {
 				if ((nextCreature instanceof Player) && (((Player) nextCreature).isProtectionActive())) {
 					continue;
 				}
-				float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
+				float creatureCollision = nextCreature.getObjectTemplate().getBoundRadius().getCollision();
 				if (MathUtil.getDistance(skill.getX(), skill.getY(), skill.getZ(), nextCreature.getX(),
 						nextCreature.getY(), nextCreature.getZ()) <= distance + creatureCollision + 1) {
 					if (skill.shouldAffectTarget(nextCreature)) {
@@ -224,9 +222,7 @@ public class TargetRangeProperty {
 		}
 		if (properties.isOtherTargetOnly()) {
 			effectedList.remove(skill.getEffector());
-			if (value == TargetRangeAttribute.ONLYONE && effectedList.isEmpty()) {
-				return false;
-			}
+			return value != TargetRangeAttribute.ONLYONE || !effectedList.isEmpty();
 		}
 		return true;
 	}

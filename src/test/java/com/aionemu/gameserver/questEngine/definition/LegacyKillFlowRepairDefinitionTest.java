@@ -100,8 +100,8 @@ class LegacyKillFlowRepairDefinitionTest {
 
 		CompiledQuestDefinition umkata = load(24114);
 		QuestTransition spirit = umkata.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet set
-				&& set.npcIds().equals(Set.of(210722, 210588))).findFirst().orElseThrow();
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+				&& npcIds.equals(Set.of(210722, 210588))).findFirst().orElseThrow();
 		assertEquals("started", spirit.targetNode());
 		QuestTransition boss = kill(umkata, "started", 210752);
 		assertEquals("reward", boss.targetNode());

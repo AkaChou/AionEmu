@@ -61,10 +61,12 @@ class Quest2008RetailAlignmentTest {
 			transition.event() instanceof QuestEvent.InvisibleTimerEnd
 				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SpawnNpc spawn
 					&& spawn.templateId() == 205040)));
-		assertEquals(4, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
-			&& kill.npcId() == 205040).count());
+		assertEquals(4, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.KillNpc(
+			int npcId
+		)
+			&& npcId == 205040).count());
 		assertTrue(transitions.stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.MovieEnd movie && movie.movieId() == 152
+			transition.event() instanceof QuestEvent.MovieEnd(int movieId) && movieId == 152
 				&& transition.targetNode().equals("s6")
 				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SpawnNpc spawn
 					&& spawn.templateId() == 203550)));
@@ -178,8 +180,10 @@ class Quest2008RetailAlignmentTest {
 			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SendSystemMessage))
 			.count());
 		assertEquals(7, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.EnterWorld
-			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.Morph morph
-				&& morph.ascensionId() == 1)).count());
+			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.Morph(
+			int ascensionId
+		)
+				&& ascensionId == 1)).count());
 
 		QuestTransition completion = transitions.stream()
 			.filter(transition -> transition.sourceNode().equals("reward")

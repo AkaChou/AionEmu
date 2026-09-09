@@ -13,15 +13,15 @@ public class Plane3D {
 
 	private static final double[] column = new double[] { 1, 1, 1 };
 
-	private Point3D p0;
-	private Point3D p1;
-	private Point3D p2;
+	private final Point3D p0;
+	private final Point3D p1;
+	private final Point3D p2;
 
-	private double a;
-	private double b;
-	private double c;
-	private double d;
-	private double normalization;
+	private final double a;
+	private final double b;
+	private final double c;
+	private final double d;
+	private final double normalization;
 
 	public Plane3D(Point3D p0, Point3D p1, Point3D p2) {
 		this.p0 = p0;
@@ -57,10 +57,7 @@ public class Plane3D {
 		double distanceL0 = getPointDistance(l0);
 		double distanceL1 = getPointDistance(l1);
 
-		if ((distanceL0 > 0 && distanceL1 < 0) || (distanceL0 < 0 && distanceL1 > 0)) {
-			return true;
-		}
-		return false;
+		return (distanceL0 > 0 && distanceL1 < 0) || (distanceL0 < 0 && distanceL1 > 0);
 	}
 
 	/** 计算线段与平面交点 / intersection. */

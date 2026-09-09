@@ -25,7 +25,7 @@ public enum StatEnum {
 
 	ATTACK_RANGE(38, true), // Atk Range
 	ATTACK_SPEED(29, -1, true), // Atk Speed
-	PHYSICAL_ATTACK(25), // Attack
+	PHYSICAL_ATTACK(25), // 攻击 / Attack
 	PHYSICAL_ACCURACY(30), // 命中 / Accuracy
 	PHYSICAL_CRITICAL(34), // Critical Strike
 	PHYSICAL_DEFENSE(26), // Physical Def
@@ -84,36 +84,36 @@ public enum StatEnum {
 	// 4.8
 	ENCHANT_BOOST, AP_REDUCE_RATE, AUTHORIZE_BOOST, INDUN_DROP_BOOST, DEATH_PENALTY_REDUCE, ENCHANT_OPTION_BOOST,
 	ORDALIE_REWARD,
-	
-	HSTR,  
-	HVIT,  
-	HDEX,  
-	HAGI,  
-	HKNO,  
+
+	HSTR,
+	HVIT,
+	HDEX,
+	HAGI,
+	HKNO,
 	HWIL;
 
-	private boolean replace;
-	private int sign;
+	private final boolean replace;
+	private final int sign;
 
-	private int itemStoneMask;
+	private final int itemStoneMask;
 
-	private StatEnum() {
+	StatEnum() {
 		this(0);
 	}
 
-	private StatEnum(int stoneMask) {
+	StatEnum(int stoneMask) {
 		this(stoneMask, 1, false);
 	}
 
-	private StatEnum(int stoneMask, boolean replace) {
+	StatEnum(int stoneMask, boolean replace) {
 		this(stoneMask, 1, replace);
 	}
 
-	private StatEnum(int stoneMask, int sign) {
+	StatEnum(int stoneMask, int sign) {
 		this(stoneMask, sign, false);
 	}
 
-	private StatEnum(int stoneMask, int sign, boolean replace) {
+	StatEnum(int stoneMask, int sign, boolean replace) {
 		this.itemStoneMask = stoneMask;
 		this.replace = replace;
 		this.sign = sign;

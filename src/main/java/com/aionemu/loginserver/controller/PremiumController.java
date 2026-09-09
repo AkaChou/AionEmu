@@ -41,7 +41,7 @@ public class PremiumController {
      */
     public static byte RESULT_ADD = 4;
 
-    private PremiumDAO dao;
+    private final PremiumDAO dao;
 
     /**
      * 获取单例（遗留入口，启动迁移后弃用）。

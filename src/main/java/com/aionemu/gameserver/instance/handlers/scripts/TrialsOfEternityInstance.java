@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -87,14 +86,14 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		/** trialseternity 任务 A8 / trials of eternity task a8 */
 		private Future<?> trialsOfEternityTaskA8;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** scattered energy book / scattered energy book */
-		private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
+		private final List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
 		/** trialseternity 任务 / trials of eternity task */
 		private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
 		/** trials shield / trials shield */
-		private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -163,7 +162,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -180,7 +179,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		IDEternity03Shield1.setEntityId(133);
 		trialsShield.put(700998, SpawnEngine.spawnObject(IDEternity03Shield1, instanceId));
 	}
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -210,7 +209,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	private void spawnTrialsOfEternityRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("TRIALS_OF_ETERNITY", mapId,
         new Point3D(810.5852, 1323.6439, 735.4228),
@@ -218,7 +217,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
         new Point3D(810.4953, 1333.4171, 735.4228), 60), instanceId);
         f1.spawn();
     }
-	
+
 	private void sendPacket(Player player, final String variable, final int value) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 		    /**
@@ -235,7 +234,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -246,7 +245,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
 		// 冥界魔法。 / Netherworld Magic.
-		sendPacket(player, "UI_Gauge_01", 0 + 1);
+		sendPacket(player, "UI_Gauge_01", 1);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
 		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -278,7 +277,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, 300000); //...5Min
 	}
-	
+
 	// 散落的黄色能量书。 / Scattered Yellow Energy Book.
 	private void scatteredYellowEnergyBook() {
 		ScatteredEnergyBook.add((Npc) spawn(731752, 712.32526f, 1270.5907f, 735.4228f, (byte) 9));
@@ -307,7 +306,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		ScatteredEnergyBook.add((Npc) spawn(731752, 696.08844f, 1317.2058f, 733.9775f, (byte) 82));
 		ScatteredEnergyBook.add((Npc) spawn(731752, 664.81006f, 1356.33f, 735.4228f, (byte) 90));
 	}
-	
+
 	private void startTrialsOfEternityTimer() {
 		// 书本被摧毁。 / The book was destroyed.
 		this.sendMessage(1404208, 10 * 60 * 1000);
@@ -346,7 +345,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, 600000); //10 Minutes.
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -440,7 +439,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	//============================//
 	//Wave Before Boss Fight * *//
 	//============================//
@@ -628,29 +627,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             }
         }, 1020000)); //...17Min
     }
-	
+
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
 		// sendMsg("[成功]：你活下来了！！！"); / sendMsg("[SUCCES]: You survived !!! :) ");
 	}
-	
+
 	protected void dimensionBoss01(Player player) {
 		// 波利亚格。 / Boliag.
 		sp(246440, 189.53326f, 1025.3595f, 707.59015f, (byte) 0, 0, 40000, 0, null);
 		final int endVideo = videoRace == Race.ASMODIANS ? 964 : 953;
 		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, endVideo));
 	}
-	
-	private int getTime() {
-		long result = System.currentTimeMillis() - instanceTime;
-		if (result < 60000) {
-			return (int) (60000 - result);
-		} else if (result < 1020000) { //...17Min
-			return (int) (1020000 - (result - 60000));
-		}
-		return 0;
-	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -689,11 +678,11 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	protected void TrialsOfEternityTeleporter(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	private void SpawnTrialsOfEternityRace() {
 		// Npc.
 		final int Peregrine_Viola1 = spawnRace == Race.ASMODIANS ? 806572 : 806563;
@@ -746,7 +735,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		spawn(IDEternity03EventGuardWi, 535.5834f, 1108.8912f, 710.60004f, (byte) 90);
 		spawn(IDEternity03EventGuardWi, 537.58624f, 1105.864f, 710.5986f, (byte) 90);
 	}
-	
+
 	private void rushTrialsOfEternity(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -767,7 +756,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private void startTrialsOfEternityA1() {
 		trialsOfEternityTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -936,7 +925,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private void fallingRock() {
 		spawn(246452, 1025.4661f, 1015.3299f, 750.54456f, (byte) 44);
         spawn(246452, 1016.78424f, 1025.8098f, 750.57355f, (byte) 103);
@@ -967,7 +956,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
         spawn(246452, 986.8397f, 1050.9484f, 750.418f, (byte) 20);
         spawn(246452, 939.2889f, 1040.133f, 750.68445f, (byte) 119);
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : trialsOfEternityTask) {
 			if (task != null) {
@@ -975,15 +964,15 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1001,7 +990,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1018,7 +1007,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -1033,7 +1022,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -1049,7 +1038,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1075,7 +1064,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000297, storage.getItemCountByItemId(185000297));
@@ -1084,7 +1073,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000300, storage.getItemCountByItemId(185000300));
 		storage.decreaseByItemId(185000301, storage.getItemCountByItemId(185000301));
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1095,7 +1084,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     public void onPlayerLogOut(Player player) {
         removeItems(player);
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1106,7 +1095,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1118,19 +1107,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		movies.clear();
 		doors.clear();
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);

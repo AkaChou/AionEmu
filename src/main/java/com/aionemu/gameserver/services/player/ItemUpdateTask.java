@@ -8,6 +8,8 @@ import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 玩家物品周期更新任务，批量持久化物品数据。
@@ -17,13 +19,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 class ItemUpdateTask implements Runnable {
 
 	private final int playerId;
-
-	ItemUpdateTask(int playerId) {
-		this.playerId = playerId;
-	}
 
 	@Override
 	/**

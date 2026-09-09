@@ -53,7 +53,7 @@ public class BeritraSchedule {
 		BeritraSchedule bs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/beritra_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			bs = (BeritraSchedule) JAXBUtil.deserialize(xml, BeritraSchedule.class);
+			bs = JAXBUtil.deserialize(xml, BeritraSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize beritra", e);
 		}

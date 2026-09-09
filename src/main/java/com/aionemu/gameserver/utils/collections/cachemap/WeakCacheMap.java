@@ -32,7 +32,7 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		 * 关联键。
 		 * Associated key.
 		 */
-		private K key;
+		private final K key;
 
 		/**
 		 * 使用键、引用对象与队列构造。

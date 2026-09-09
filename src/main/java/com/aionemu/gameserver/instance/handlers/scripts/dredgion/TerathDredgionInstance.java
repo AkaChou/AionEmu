@@ -29,7 +29,6 @@ import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -105,11 +104,11 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	protected void captureRoom(Race race, int roomId) {
 		dredgionReward.getDredgionRoomById(roomId).captureRoom(race);
 	}
-	
+
 	private void addPlayerToReward(Player player) {
 		dredgionReward.addPlayerReward(new DredgionPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return dredgionReward.containPlayer(object);
 	}
@@ -180,7 +179,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void onDieSurkan(Npc npc, Player mostPlayerDamage, int points) {
 		Race race = mostPlayerDamage.getRace();
 		captureRoom(race, npc.getNpcId() + 14 - 701454); //Cabin Power Surkana.
@@ -199,7 +198,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -262,7 +261,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			}
 		}, 3600000));
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -432,7 +431,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 		updateScore(mostPlayerDamage, npc, point, false);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -447,7 +446,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		openDoor(4);
 		openDoor(173);
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -461,7 +460,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 		sendPacket();
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -482,7 +481,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 *
 	 * @param race 阵营 / race
 	 */
-	
+
 	protected void stopInstance(Race race) {
 		stopInstanceTask();
 		dredgionReward.setWinningRace(race);
@@ -494,7 +493,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
 	 */
-	
+
 	public void doReward() {
 		for (Player player : instance.getPlayersInside()) {
 			InstancePlayerReward playerReward = getPlayerReward(player);
@@ -526,7 +525,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
-	
+
 	private int getTime() {
 		long result = System.currentTimeMillis() - instanceTime;
 		if (result < 60000) {
@@ -536,7 +535,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -553,7 +552,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
         dredgionReward.portToPosition(player);
 		return true;
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -581,23 +580,23 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		updateScore(player, player, -points, false);
 		return true;
 	}
-	
+
 	private MutableInt getPointsByRace(Race race) {
 		return dredgionReward.getPointsByRace(race);
 	}
-	
+
 	private void addPointsByRace(Race race, int points) {
 		dredgionReward.addPointsByRace(race, points);
 	}
-	
+
 	private void addPointToPlayer(Player player, int points) {
 		getPlayerReward(player).addPoints(points);
 	}
-	
+
 	private void addPvPKillToPlayer(Player player) {
 		getPlayerReward(player).addPvPKillToPlayer();
 	}
-	
+
 	private void addBalaurKillToPlayer(Player player) {
 		getPlayerReward(player).addMonsterKillToPlayer();
 	}
@@ -647,12 +646,12 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			loosingGroupMultiplier = 1;
 		} if (pvpKill && points > 0) {
 			addPvPKillToPlayer(player);
-		} else if (target instanceof Npc && ((Npc) target).getRace().equals(Race.DRAKAN)) {
+		} else if (target instanceof Npc && target.getRace().equals(Race.DRAKAN)) {
 			addBalaurKillToPlayer(player);
 		}
 		sendPacket();
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -677,7 +676,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			door.setOpen(true);
 		}
 	}
-	
+
 	private void sendPacket() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -807,22 +806,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : terathTask) {
 			if (task != null) {
@@ -830,7 +814,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -841,7 +825,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return dredgionReward;
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -852,7 +836,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

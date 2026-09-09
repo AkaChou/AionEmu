@@ -91,39 +91,34 @@ public class ConfuseEffect extends EffectTemplate {
 		effected.getEffectController().unsetAbnormal(AbnormalState.CONFUSE.getId());
 		effected.getMoveController().abortMove();
 		if (effected instanceof Npc) {
-			((NpcAI2) effected.getAi2()).onCreatureEvent(AIEventType.ATTACK, effect.getEffector());
+			effected.getAi2().onCreatureEvent(AIEventType.ATTACK, effect.getEffector());
 		}
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TARGET_IMMOBILIZE(effected));
 	}
 
-	private static class ConfuseTask implements Runnable {
-		private final Creature effected;
+    private record ConfuseTask(Creature effected) implements Runnable {
 
-		private ConfuseTask(Creature effected) {
-			this.effected = effected;
-		}
-
-		@Override
-		public void run() {
-			if (!effected.getEffectController().isConfused()) {
-				return;
-			}
-			float angle = Rnd.get() * 360f;
-			double radian = Math.toRadians(angle);
-			float distance = effected.getGameStats().getMovementSpeedFloat();
-			float targetX = effected.getX() + (float) Math.cos(radian) * distance;
-			float targetY = effected.getY() + (float) Math.sin(radian) * distance;
-			byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-			Vector3f destination = GameWorldServices.geoService().getClosestCollision(effected, targetX, targetY,
-					effected.getZ(), true, intentions);
-			byte heading = MathUtil.convertDegreeToHeading(angle);
-			if (effected instanceof Npc) {
-				((Npc) effected).getMoveController().resetMove();
-				((Npc) effected).getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
-			} else {
-				effected.getMoveController().setNewDirection(destination.getX(), destination.getY(), destination.getZ(), heading);
-				effected.getMoveController().startMovingToDestination();
-			}
-		}
-	}
+        @Override
+        public void run() {
+            if (!effected.getEffectController().isConfused()) {
+                return;
+            }
+            float angle = Rnd.get() * 360f;
+            double radian = Math.toRadians(angle);
+            float distance = effected.getGameStats().getMovementSpeedFloat();
+            float targetX = effected.getX() + (float) Math.cos(radian) * distance;
+            float targetY = effected.getY() + (float) Math.sin(radian) * distance;
+            byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
+            Vector3f destination = GameWorldServices.geoService().getClosestCollision(effected, targetX, targetY,
+                    effected.getZ(), true, intentions);
+            byte heading = MathUtil.convertDegreeToHeading(angle);
+            if (effected instanceof Npc) {
+                ((Npc) effected).getMoveController().resetMove();
+                ((Npc) effected).getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
+            } else {
+                effected.getMoveController().setNewDirection(destination.getX(), destination.getY(), destination.getZ(), heading);
+                effected.getMoveController().startMovingToDestination();
+            }
+        }
+    }
 }

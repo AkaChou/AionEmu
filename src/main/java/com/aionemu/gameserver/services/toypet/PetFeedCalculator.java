@@ -90,7 +90,7 @@ public final class PetFeedCalculator {
 				if (finalLevel % 5 == 0) {
 					finalLevel--;
 				}
-				int pointLevel = (int) itemLevels[(int) (finalLevel / 5)];
+				int pointLevel = itemLevels[finalLevel / 5];
 				int feedPoints = Math.max(0, pointLevel - 5) / 5 * 8;
 				// System.out.println("ITEM LEVEL: " + level + ", COUNT: " + count + ", STEP: "
 				// + feedPoints);
@@ -178,7 +178,7 @@ public final class PetFeedCalculator {
 			if (finalLevel % 5 == 0) {
 				finalLevel--;
 			}
-			byte pointLevel = itemLevels[(int) (finalLevel / 5)];
+			byte pointLevel = itemLevels[finalLevel / 5];
 			byte pointsEarned = (byte) (Math.max(0, pointLevel - 5) / 5 * 8);
 			int feedProgress = progress.getTotalPoints() + Math.round(pointsEarned * rate);
 			progress.setTotalPoints(feedProgress);

@@ -26,7 +26,6 @@ public class CM_CHECK_MAIL_SIZE extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		if (player.getMailbox().getLetters().size() != mailSize) {
-			return;
 		} else {
 			player.getMailbox().sendMailList(false);
 		}

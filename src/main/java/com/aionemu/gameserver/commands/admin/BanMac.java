@@ -38,10 +38,10 @@ public class BanMac extends AdminCommand {
 		int time;
             String address;
             String targetName = "direct_type";
-                
+
             // 尝试解析 / try parsing
 		try {
-			time = Integer.parseInt(params[0]); 
+			time = Integer.parseInt(params[0]);
                 if (time == 0)  //0 is 10 years since system don't allow infinte banns without rework - it's pseudo infinity
                     time = 60 * 24 * 365 * 10;
 		}
@@ -55,14 +55,13 @@ public class BanMac extends AdminCommand {
             }
             else {  //no address defined
                 VisibleObject target = player.getTarget();
-                if (target != null && target instanceof Player) {
+                if (target != null && target instanceof Player targetpl) {
 			if (target.getObjectId() == player.getObjectId()) {
 				onFail(player, "Omg, disselect yourself please.");
 				return;
 			}
 
-			Player targetpl = (Player) target;
-			address = targetpl.getClientConnection().getMacAddress();
+					address = targetpl.getClientConnection().getMacAddress();
 			targetName = targetpl.getName();
             targetpl.getClientConnection().closeNow();
             }
@@ -71,7 +70,7 @@ public class BanMac extends AdminCommand {
                     return;
                 }
             }
-		GameServerNetworkServices.bannedMacManager().banAddress(address, System.currentTimeMillis() + time * 60 * 1000, "author=" + player.getName() + ", " + player.getObjectId() + "; target=" + targetName);
+		GameServerNetworkServices.bannedMacManager().banAddress(address, System.currentTimeMillis() + (long) time * 60 * 1000, "author=" + player.getName() + ", " + player.getObjectId() + "; target=" + targetName);
 	}
 
 	/**

@@ -12,10 +12,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_CUSTOM_SETTINGS extends AionServerPacket {
 
-	private Integer obj;
+	private final Integer obj;
 	private int unk = 0;
-	private int display;
-	private int deny;
+	private final int display;
+	private final int deny;
 
 	/**
 	 * 按玩家自定义显示/拒绝设置构造同步包。

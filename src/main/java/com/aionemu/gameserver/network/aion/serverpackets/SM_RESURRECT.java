@@ -13,8 +13,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_RESURRECT extends AionServerPacket {
 
-	private String name;
-	private int skillId;
+	private final String name;
+	private final int skillId;
 
 	/**
 	 * 使用给定参数构造 SM_RESURRECT 包。

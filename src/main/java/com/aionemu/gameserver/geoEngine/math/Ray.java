@@ -5,6 +5,8 @@ import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.UnsupportedCollisionException;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 射线：原点加方向，支持与三角形/平面/包围体求交，并实现 {@link Collidable}。
@@ -13,10 +15,14 @@ import com.aionemu.gameserver.geoEngine.collision.UnsupportedCollisionException;
 public final class Ray implements Cloneable, Collidable {
 
 	/** 射线原点。 / Ray origin. */
+	@Getter
 	public Vector3f origin;
 	/** 射线方向（通常为单位向量）。 / Ray direction (typically unit length). */
+	@Getter
 	public Vector3f direction;
 	/** 射线最大长度限制，默认正无穷。 / Maximum ray length limit; default positive infinity. */
+	@Getter
+	@Setter
 	public float limit = Float.POSITIVE_INFINITY;
 
 	/**
@@ -253,12 +259,10 @@ public final class Ray implements Cloneable, Collidable {
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
-		if (other instanceof BoundingVolume) {
-			BoundingVolume bv = (BoundingVolume) other;
+		if (other instanceof BoundingVolume bv) {
 			return bv.collideWith(this, results);
 		}
-		if (other instanceof AbstractTriangle) {
-			AbstractTriangle tri = (AbstractTriangle) other;
+		if (other instanceof AbstractTriangle tri) {
 			float d = this.intersects(tri.get1(), tri.get2(), tri.get3());
 			if (Float.isInfinite(d) || Float.isNaN(d)) {
 				return 0;
@@ -296,16 +300,6 @@ public final class Ray implements Cloneable, Collidable {
 	}
 
 	/**
-	 * 返回射线原点（内部引用）。
-	 * Returns the ray origin (internal reference).
-	 *
-	 * @return 原点 / origin
-	 */
-	public Vector3f getOrigin() {
-		return this.origin;
-	}
-
-	/**
 	 * 拷贝设置射线原点。
 	 * Copies and sets the ray origin.
 	 *
@@ -313,36 +307,6 @@ public final class Ray implements Cloneable, Collidable {
 	 */
 	public void setOrigin(Vector3f origin) {
 		this.origin.set(origin);
-	}
-
-	/**
-	 * 返回射线最大长度限制。
-	 * Returns the maximum ray length limit.
-	 *
-	 * @return 长度上限 / length limit
-	 */
-	public float getLimit() {
-		return this.limit;
-	}
-
-	/**
-	 * 设置射线最大长度限制。
-	 * Sets the maximum ray length limit.
-	 *
-	 * @param limit 长度限制 / length limit
-	 */
-	public void setLimit(float limit) {
-		this.limit = limit;
-	}
-
-	/**
-	 * 返回射线方向（内部引用）。
-	 * Returns the ray direction (internal reference).
-	 *
-	 * @return 方向 / direction
-	 */
-	public Vector3f getDirection() {
-		return this.direction;
 	}
 
 	/**

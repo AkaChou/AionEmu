@@ -216,8 +216,8 @@ public final class QuestProductionJourneyPlanner {
 			PathState state, Map<String, QuestNode> nodes) {
 		if (state.activeMovieId() > 0) {
 			return firstRoutes(fromNode(definition, state, nodes).stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.MovieEnd movie
-					&& movie.movieId() == state.activeMovieId())
+				.filter(transition -> transition.event() instanceof QuestEvent.MovieEnd(int movieId)
+					&& movieId == state.activeMovieId())
 				.map(transition -> new Choice(StepKind.WORLD_EVENT, transition, null))
 				.toList());
 		}
@@ -316,10 +316,10 @@ public final class QuestProductionJourneyPlanner {
 				return StepKind.PAGE_ACTION;
 			}
 		}
-		if (event instanceof QuestEvent.QuestDialog dialog) {
+		if (event instanceof QuestEvent.QuestDialog(int dialogId)) {
 			if (currentNpcId != 0) return null;
-			if (rewardWindow && isNativeRewardAction(dialog.dialogId())) return StepKind.NATIVE_REWARD_ACTION;
-			if (visibleActions.contains(dialog.dialogId())) return StepKind.PAGE_ACTION;
+			if (rewardWindow && isNativeRewardAction(dialogId)) return StepKind.NATIVE_REWARD_ACTION;
+			if (visibleActions.contains(dialogId)) return StepKind.PAGE_ACTION;
 		}
 		return null;
 	}
@@ -330,12 +330,12 @@ public final class QuestProductionJourneyPlanner {
 			if (talk.dialogId() == -1) return StepKind.USE_OBJECT;
 			return null;
 		}
-		if (event instanceof QuestEvent.QuestDialog dialog) {
-			return oracle.actionExists(dialog.dialogId()) ? StepKind.TARGETLESS_ACTION : null;
+		if (event instanceof QuestEvent.QuestDialog(int dialogId)) {
+			return oracle.actionExists(dialogId) ? StepKind.TARGETLESS_ACTION : null;
 		}
 		if (event instanceof QuestEvent.CanAct) return null;
-		if (event instanceof QuestEvent.MovieEnd movie) {
-			return movie.movieId() == state.activeMovieId() ? StepKind.WORLD_EVENT : null;
+		if (event instanceof QuestEvent.MovieEnd(int movieId)) {
+			return movieId == state.activeMovieId() ? StepKind.WORLD_EVENT : null;
 		}
 		if (event instanceof QuestEvent.QuestTimerEnd) {
 			return state.visibleTimerActive() ? StepKind.WORLD_EVENT : null;
@@ -425,27 +425,27 @@ public final class QuestProductionJourneyPlanner {
 			if (action instanceof AfterCommitAction.CloseDialog) {
 				page = 0;
 				dialogStateChanged = true;
-			} else if (action instanceof AfterCommitAction.ShowQuestDialog show) {
-				page = show.dialogId();
+			} else if (action instanceof AfterCommitAction.ShowQuestDialog(int dialogId1)) {
+				page = dialogId1;
 				dialogStateChanged = true;
-			} else if (action instanceof AfterCommitAction.ShowQuestSelectionDialog show) {
-				page = show.dialogId();
+			} else if (action instanceof AfterCommitAction.ShowQuestSelectionDialog(int id)) {
+				page = id;
 				dialogStateChanged = true;
-			} else if (action instanceof AfterCommitAction.ShowDialogWindow show) {
-				page = show.dialogId();
+			} else if (action instanceof AfterCommitAction.ShowDialogWindow(int dialogId)) {
+				page = dialogId;
 				dialogStateChanged = true;
 			} else if (action instanceof AfterCommitAction.PlayMovie movie) {
 				activeMovieId = movie.movieId();
-			} else if (action instanceof AfterCommitAction.PlayMovieRandom random) {
-				activeMovieId = random.movieIds().getFirst();
+			} else if (action instanceof AfterCommitAction.PlayMovieRandom(List<Integer> movieIds)) {
+				activeMovieId = movieIds.getFirst();
 			} else if (action instanceof AfterCommitAction.StartQuestTimer) {
 				visibleTimerActive = true;
 			} else if (action instanceof AfterCommitAction.StartInvisibleTimer) {
 				invisibleTimerActive = true;
-			} else if (action instanceof AfterCommitAction.CancelQuestTimer cancel) {
-				if (QuestTimerPolicy.VISIBLE_TIMER_ID.equals(cancel.identity().timerId())) {
+			} else if (action instanceof AfterCommitAction.CancelQuestTimer(QuestTimerPolicy.Identity identity)) {
+				if (QuestTimerPolicy.VISIBLE_TIMER_ID.equals(identity.timerId())) {
 					visibleTimerActive = false;
-				} else if (QuestTimerPolicy.INVISIBLE_TIMER_ID.equals(cancel.identity().timerId())) {
+				} else if (QuestTimerPolicy.INVISIBLE_TIMER_ID.equals(identity.timerId())) {
 					invisibleTimerActive = false;
 				}
 			}
@@ -453,8 +453,8 @@ public final class QuestProductionJourneyPlanner {
 		int playedMovieId = activeMovieId;
 		if (playedMovieId > 0 && definition.definition().transitions().stream().noneMatch(transition ->
 			choice.transition().targetNode().equals(transition.sourceNode())
-				&& transition.event() instanceof QuestEvent.MovieEnd movie
-				&& movie.movieId() == playedMovieId)) {
+				&& transition.event() instanceof QuestEvent.MovieEnd(int movieId)
+				&& movieId == playedMovieId)) {
 			activeMovieId = 0;
 		}
 		int npcId = page == 0 ? 0 : !dialogStateChanged ? current.npcId()
@@ -466,10 +466,10 @@ public final class QuestProductionJourneyPlanner {
 			inventory.putIfAbsent(use.itemId(), 1);
 		} else if (choice.transition().event() instanceof QuestEvent.ItemPlay itemPlay) {
 			inventory.putIfAbsent(itemPlay.itemId(), 1);
-		} else if (choice.transition().event() instanceof QuestEvent.GetItem get) {
-			inventory.merge(get.itemId(), 1, Math::max);
-		} else if (choice.transition().event() instanceof QuestEvent.CollectItem collect) {
-			inventory.merge(collect.itemId(), collect.count(), Math::max);
+		} else if (choice.transition().event() instanceof QuestEvent.GetItem(int id)) {
+			inventory.merge(id, 1, Math::max);
+		} else if (choice.transition().event() instanceof QuestEvent.CollectItem(int itemId, int count)) {
+			inventory.merge(itemId, count, Math::max);
 		}
 		if (choice.metadataDrop() != null) {
 			inventory.merge(choice.metadataDrop().itemId(), 1, Integer::sum);
@@ -513,10 +513,10 @@ public final class QuestProductionJourneyPlanner {
 		Set<PlayerClass> classes = new java.util.LinkedHashSet<>();
 		for (QuestTransition transition : definition.definition().transitions()) {
 			for (QuestCondition condition : transition.conditions()) {
-				if (condition instanceof QuestCondition.AdvancedClassIs advanced) {
-					classes.add(advanced.playerClass());
-				} else if (condition instanceof QuestCondition.PlayerClassIs starting) {
-					classes.add(representativeClass(starting.startingClass()));
+				if (condition instanceof QuestCondition.AdvancedClassIs(PlayerClass playerClass)) {
+					classes.add(playerClass);
+				} else if (condition instanceof QuestCondition.PlayerClassIs(PlayerClass startingClass)) {
+					classes.add(representativeClass(startingClass));
 				}
 			}
 		}
@@ -529,11 +529,11 @@ public final class QuestProductionJourneyPlanner {
 		for (PlannedStep step : steps) {
 			if (step.transition() == null) continue;
 			for (QuestCondition condition : step.transition().conditions()) {
-				if (condition instanceof QuestCondition.HasItem item && item.expected()) {
-					int deficit = Math.max(0, item.count() - inventory.getOrDefault(item.itemId(), 0));
+				if (condition instanceof QuestCondition.HasItem(int itemId, int count, boolean expected) && expected) {
+					int deficit = Math.max(0, count - inventory.getOrDefault(itemId, 0));
 					if (deficit > 0) {
-						required.merge(item.itemId(), deficit, Integer::sum);
-						inventory.merge(item.itemId(), deficit, Integer::sum);
+						required.merge(itemId, deficit, Integer::sum);
+						inventory.merge(itemId, deficit, Integer::sum);
 					}
 				}
 			}
@@ -546,8 +546,8 @@ public final class QuestProductionJourneyPlanner {
 				default -> { }
 			}
 			for (QuestAction action : step.transition().actions()) {
-				if (action instanceof QuestAction.GiveItem give) {
-					inventory.merge(give.itemId(), give.count(), Integer::sum);
+				if (action instanceof QuestAction.GiveItem(int itemId, int count1)) {
+					inventory.merge(itemId, count1, Integer::sum);
 				} else if (action instanceof QuestAction.RemoveItem remove) {
 					if (remove.removeAll()) {
 						inventory.remove(remove.itemId());

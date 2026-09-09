@@ -39,11 +39,11 @@ enum AbyssSkills {
 	/** 魔族 5 星军官 / Asmodian 5-star officer */
 	STAR5_OFFICER_A(Race.ASMODIANS, AbyssRankEnum.STAR5_OFFICER, new int[] { 11890, 11895 });
 
-	private int[] skills;
-	private AbyssRankEnum rankenum;
-	private Race race;
+	private final int[] skills;
+	private final AbyssRankEnum rankenum;
+	private final Race race;
 
-	private AbyssSkills(Race race, AbyssRankEnum rankEnum, int[] skills) {
+	AbyssSkills(Race race, AbyssRankEnum rankEnum, int[] skills) {
 		this.race = race;
 		rankenum = rankEnum;
 		this.skills = skills;

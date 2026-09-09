@@ -23,12 +23,12 @@ public class Walking_Path_Bind_PointAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
 		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
@@ -36,19 +36,19 @@ public class Walking_Path_Bind_PointAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		announceWalkingPath();
 	}
-	
+
 	private void WalkingPathBindPoint() {
 		AI2Actions.deleteOwner(Walking_Path_Bind_PointAI2.this);
-		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(806037, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Geodesis <To The Garden Temple>
+		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(806037, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Geodesis <To The Garden Temple>
     }
-	
+
 	private void announceWalkingPath() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -60,7 +60,7 @@ public class Walking_Path_Bind_PointAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

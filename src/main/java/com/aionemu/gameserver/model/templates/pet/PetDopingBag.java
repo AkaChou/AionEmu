@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.templates.pet;
 
 import java.util.Arrays;
+import lombok.Getter;
 
 /**
  * 宠物兴奋剂包模板（静态数据/XML）。
@@ -11,6 +12,10 @@ import java.util.Arrays;
 public class PetDopingBag {
 
 	private int[] itemBag = null;
+	/**
+	 * @return 是否需要保存 / true if the bag needs saving
+	 */
+	@Getter
 	private boolean isDirty = false;
 
 	/** 设置食物物品 / Sets the food item*/
@@ -65,12 +70,5 @@ public class PetDopingBag {
 			return new int[0];
 		}
 		return Arrays.copyOfRange(itemBag, 2, itemBag.length);
-	}
-
-	/**
-	 * @return 是否需要保存 / true if the bag needs saving
-	 */
-	public boolean isDirty() {
-		return isDirty;
 	}
 }

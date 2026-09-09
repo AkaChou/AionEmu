@@ -21,18 +21,18 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @AIName("agrint")
 public class AgrintAI2 extends AggressiveNpcAI2
 {
-	private boolean canThink = true;
-	
+	private final boolean canThink = true;
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
@@ -51,7 +51,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 			break;
 		}
     }
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -92,7 +92,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void announceSpringAgrint() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -101,7 +101,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceSummerAgrint() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -110,7 +110,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceFallAgrint() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -119,7 +119,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceWinterAgrint() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -128,7 +128,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void spawnUmbronite(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
@@ -137,7 +137,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
@@ -145,12 +145,12 @@ public class AgrintAI2 extends AggressiveNpcAI2
 		WorldPosition p = getPosition();
 		return (Npc) spawn(npcId, p.getX() + x1, p.getY() + y1, p.getZ(), (byte) 0);
 	}
-	
+
 	@Override
 	public int modifyOwnerDamage(int damage) {
 		return 1;
 	}
-	
+
 	@Override
 	public int modifyDamage(int damage) {
 		return 1;

@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class KinquidAI2 extends AggressiveNpcAI2
 {
 	private Future<?> skillTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
@@ -37,7 +37,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 			startSkillTask();
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelSkillTask();
@@ -46,26 +46,26 @@ public class KinquidAI2 extends AggressiveNpcAI2
 		super.handleBackHome();
 		despawnDestroyer();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelSkillTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		getPosition().getWorldMapInstance().getDoors().get(48).setOpen(true);
 		cancelSkillTask();
 	}
-	
+
 	private void cancelSkillTask() {
 		if (skillTask != null && !skillTask.isDone()) {
 			skillTask.cancel(true);
 		}
 	}
-	
+
 	private void startSkillTask() {
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -86,7 +86,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 			}
 		}, 35000, 35000);
 	}
-	
+
 	private void doSchedule() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -95,7 +95,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 			}
 		}, 2500);
 	}
-	
+
 	private void despawnDestroyer() {
 		Npc cleaveArmor = getPosition().getWorldMapInstance().getNpc(282008);
 		if (cleaveArmor != null) {
@@ -106,7 +106,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 			accessoryDestruction.getController().onDelete();
 		}
 	}
-	
+
 	private void check() {
 		despawnDestroyer();
 		if (getPosition().isSpawned() && !isAlreadyDead() && !isHome.get()) {

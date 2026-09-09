@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Runtime parity for the former Java owners 80030 and 80033. */
 class QuestCharmedEventDefinitionTest {
@@ -93,7 +92,7 @@ class QuestCharmedEventDefinitionTest {
 			.filter(AfterCommitAction.ScheduleEventQuestRefresh.class::isInstance)
 			.map(AfterCommitAction.ScheduleEventQuestRefresh.class::cast).findFirst().orElseThrow();
 		assertEquals(10, schedule.seconds());
-		assertTrue(Arrays.equals(targets, schedule.questIds()));
+		assertArrayEquals(targets, schedule.questIds());
 
 		QuestSnapshot snapshot = new QuestSnapshot(7, questId, QuestStatus.NONE, 0, Map.of())
 			.withRace(race).withEventActivities(Map.of(activeQuestId, true));

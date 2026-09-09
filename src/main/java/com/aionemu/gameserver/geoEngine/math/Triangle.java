@@ -1,9 +1,14 @@
 package com.aionemu.gameserver.geoEngine.math;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
 /**
  * 三角形：三个顶点，支持懒计算中心/法线，并实现对象池复用。
  * Triangle with three vertices, lazy center/normal, and object-pool reuse.
  */
+@NoArgsConstructor
 public class Triangle extends AbstractTriangle implements Reusable {
 
 	/** 对象工厂。 / Object factory. */
@@ -20,20 +25,19 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/** 顶点 C / Vertex C */
 	private Vector3f pointc = new Vector3f();
 	/** 懒计算的中心（质心）。 / Lazily computed center (centroid). */
+	@Setter
 	private transient Vector3f center;
 	/** 懒计算的单位法线。 / Lazily computed unit normal. */
+	@Setter
 	private transient Vector3f normal;
 	/** 投影值（外部用途）。 / Projection value (external use). */
+	@Getter
+	@Setter
 	private float projection;
 	/** 索引（外部用途）。 / Index (external use). */
+	@Getter
+	@Setter
 	private int index;
-
-	/**
-	 * 构造空三角形（顶点为零）。
-	 * Constructs an empty triangle (zero vertices).
-	 */
-	public Triangle() {
-	}
 
 	/**
 	 * 按三个顶点构造三角形（拷贝分量）。
@@ -239,16 +243,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	}
 
 	/**
-	 * 直接设置质心引用（不从顶点推导）。
-	 * Sets the centroid reference directly (not derived from vertices).
-	 *
-	 * @param center 质心 / centroid
-	 */
-	public void setCenter(Vector3f center) {
-		this.center = center;
-	}
-
-	/**
 	 * 返回单位法线；若尚未计算则先计算。
 	 * Returns the unit normal; computes it first if absent.
 	 *
@@ -259,56 +253,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 			this.calculateNormal();
 		}
 		return this.normal;
-	}
-
-	/**
-	 * 直接设置法线引用（不从顶点推导）。
-	 * Sets the normal reference directly (not derived from vertices).
-	 *
-	 * @param normal 法线 / normal
-	 */
-	public void setNormal(Vector3f normal) {
-		this.normal = normal;
-	}
-
-	/**
-	 * 返回投影值。
-	 * Returns the projection value.
-	 *
-	 * @return 投影 / projection
-	 */
-	public float getProjection() {
-		return this.projection;
-	}
-
-	/**
-	 * 设置投影值。
-	 * Sets the projection value.
-	 *
-	 * @param projection 投影 / projection
-	 */
-	public void setProjection(float projection) {
-		this.projection = projection;
-	}
-
-	/**
-	 * 返回索引。
-	 * Returns the index.
-	 *
-	 * @return 索引 / index
-	 */
-	public int getIndex() {
-		return this.index;
-	}
-
-	/**
-	 * 设置索引。
-	 * Sets the index.
-	 *
-	 * @param index 索引 / index
-	 */
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	/**
@@ -390,6 +334,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * @param instance 待回收实例 / instance to recycle
 	 */
 	public static void recycle(Triangle instance) {
-		FACTORY.recycle((Object) instance);
+		FACTORY.recycle(instance);
 	}
 }

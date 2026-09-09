@@ -36,15 +36,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 {
 	private Future<?> skillTask;
-	private boolean canThink = true;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final boolean canThink = true;
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -54,12 +54,12 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
             startSkillTask();
 		}
 	}
-	
+
     private void addPercent() {
         percents.clear();
-        Collections.addAll(percents, new Integer[]{75, 70, 65, 60, 50});
+        Collections.addAll(percents, 75, 70, 65, 60, 50);
     }
-	
+
     private void checkPercentage(int hpPercentage) {
         for (Integer percent : percents) {
             if (hpPercentage <= percent) {
@@ -87,7 +87,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
             }
         }
     }
-	
+
 	private void startSkillTask() {
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -100,13 +100,13 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 5000, 30000);
 	}
-	
+
 	private void cancelTask() {
 		if (skillTask != null && !skillTask.isCancelled()) {
 			skillTask.cancel(true);
 		}
 	}
-	
+
     private void chooseRandomEvent() {
         switch (Rnd.get(1, 2)) {
             case 1:
@@ -120,7 +120,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
             break;
         }
     }
-	
+
 	private void Teleport() {
 		if (!isAlreadyDead()) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
@@ -138,7 +138,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 			}, 2000);
 		}
 	}
-	
+
     private void Teleport2() {
         AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
         GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
@@ -146,7 +146,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
-			    float pos1[][] = {
+			    float[][] pos1 = {
                     {
                         232.426f, 263.818f, 248.6419f, 115
                     }, {
@@ -155,20 +155,20 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                         240.130f, 235.219f, 251.1553f, 17
                     }
                 };
-                float pos[] = pos1[Rnd.get(0, 2)];
+                float[] pos = pos1[Rnd.get(0, 2)];
                 com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
     }
-	
+
 	private void Teleport3() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run(){
-                float pos1[][] = {
+                float[][] pos1 = {
                     {
                         245.426f, 261.818f, 242.1f, 114
                     }, {
@@ -181,13 +181,13 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                         256.426f, 269.243f, 242.1f, 90
                     }
                 };
-                float pos[] = pos1[Rnd.get(0, 4)];
+                float[] pos = pos1[Rnd.get(0, 4)];
                 com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
 	}
-	
+
 	private void Teleport4() {
 		AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
@@ -200,7 +200,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
 	private void Teleport5() {
 		AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
@@ -217,35 +217,35 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 			}
 		}, 2000);
 	}
-	
+
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 	}
-	
+
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
         addPercent();
     }
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		percents.clear();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		addPercent();
 		super.handleBackHome();
 		isHome.set(true);
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
-	
+
 	private void despawnNpcs(int npcId) {
 		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
 		for (Npc npc: npcs) {

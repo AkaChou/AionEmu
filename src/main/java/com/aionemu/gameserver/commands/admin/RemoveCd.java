@@ -40,8 +40,7 @@ public class RemoveCd extends AdminCommand {
 		if (target == null)
 			target = admin;
 
-		if (target instanceof Player) {
-			Player player = (Player) target;
+		if (target instanceof Player player) {
 			if (params.length == 0) {
 				List<Integer> delayIds = new ArrayList<Integer>();
 				if (player.getSkillCoolDowns() != null) {

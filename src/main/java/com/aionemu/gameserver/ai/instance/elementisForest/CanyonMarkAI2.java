@@ -17,9 +17,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
  */
 @AIName("canyonmark")
 public class CanyonMarkAI2 extends AggressiveNpcAI2 {
-	
+
 	private Creature target;
-	
+
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
@@ -28,7 +28,7 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 
 	private void markTarget() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				target = (Creature) getOwner().getTarget();
@@ -46,8 +46,8 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 							}
 						}
 
-					}, Rnd.get(5,10) * 1000);
-					
+					}, Rnd.get(5,10) * 1000L);
+
 				}
 				else {
 					AI2Actions.deleteOwner(CanyonMarkAI2.this);

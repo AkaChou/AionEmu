@@ -16,11 +16,14 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.LoaderClassPath;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 回调编译期织入器，在构建阶段对 class 文件注入回调增强
  * Build-time callback weaver that injects callback enhancements into class files
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CallbackBuildTimeWeaver {
 
 	private static final CallbackClassFileTransformer[] TRANSFORMERS = {
@@ -32,9 +35,6 @@ public final class CallbackBuildTimeWeaver {
 	private static final byte[] GLOBAL_CALLBACK_DESCRIPTOR =
 		"Lcom/aionemu/commons/callbacks/metadata/GlobalCallback;".getBytes(StandardCharsets.ISO_8859_1);
 
-	private CallbackBuildTimeWeaver() {
-	}
-
 	/**
 	 * 命令行入口，对指定 classes 目录执行回调织入
 	 * CLI entry point that weaves callbacks for the given classes directory
@@ -42,7 +42,7 @@ public final class CallbackBuildTimeWeaver {
 	 * @param args 参数，仅接受一个 classes 目录路径 / Arguments, expects a single classes directory path
 	 * @throws Exception 织入失败时抛出 / When weaving fails
 	 */
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			throw new IllegalArgumentException("Usage: CallbackBuildTimeWeaver <classes-directory>");
 		}

@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -48,9 +47,9 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** poppy / poppy */
-		private List<Npc> Poppy = new ArrayList<Npc>();
+		private final List<Npc> Poppy = new ArrayList<Npc>();
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** kumukicave 任务 / kumuki cave task */
 		private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
 	/**
@@ -59,7 +58,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -81,7 +80,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -95,7 +94,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		poppy();
 		startInstanceTask();
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -109,7 +108,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
         }
 		sendMovie(player, 951);
 	}
-	
+
 	private void poppy() {
 	    Poppy.add((Npc) spawn(246279, 200.82152f, 307.74332f, 142.84671f, (byte) 0)); //First Poppy.
 		Poppy.add((Npc) spawn(246280, 202.79213f, 331.99738f, 142.84671f, (byte) 0)); //Second Poppy.
@@ -120,7 +119,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -228,7 +227,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             }
         }, 900000)); //15 Minutes.
     }
-	
+
 	private void startKumukiCaveTimer() {
 		// 距库穆基晚餐时间还有 15 分钟。 / 15 minutes until dinner time for the Kumukis.
 		sendMsgByRace(1404013, Race.PC_ALL, 20000);
@@ -245,7 +244,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		// 距库穆基晚餐时间还有 1 分钟。 / 1 minute until dinner time for the Kumukis.
 		this.sendMessage(1404011, 14 * 60 * 1000);
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -293,7 +292,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -332,7 +331,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 			case 703425: //Door Activator.
 				doors.get(19).setOpen(true);
-				GameEngineServices.skillEngine().applyEffectDirectly(17619, player, player, 900000 * 1); //Shabby Kumuki Transformation.
+				GameEngineServices.skillEngine().applyEffectDirectly(17619, player, player, 900000); //Shabby Kumuki Transformation.
 			break;
 			case 703426: //Door Activator.
 				doors.get(3).setOpen(true);
@@ -350,7 +349,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				//GameEngineServices.skillEngine().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
 			break;
 			case 835071: //Suspicious Ginseng Snack.
-			    GameEngineServices.skillEngine().applyEffectDirectly(17623, player, player, 4000 * 1); //Ginseng Transformation.
+			    GameEngineServices.skillEngine().applyEffectDirectly(17623, player, player, 4000); //Ginseng Transformation.
 			break;
 		}
 	}
@@ -360,7 +359,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance1(Player player) {
 		stopInstanceTask();
 		onInstanceDestroy();
@@ -373,25 +372,19 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance2(Player player) {
 		stopInstanceTask();
 		onInstanceDestroy();
 		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You managed to save all <Poppy> :) ");
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : kumukiCaveTask) {
 			if (task != null) {
@@ -410,14 +403,14 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * @param h 朝向 / h
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -427,14 +420,14 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -445,7 +438,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -466,7 +459,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -475,7 +468,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -492,7 +485,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -507,7 +500,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -531,7 +524,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -557,7 +550,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -569,7 +562,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -581,7 +574,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
@@ -594,21 +587,11 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
-	private int getTime() {
-		long result = System.currentTimeMillis() - instanceTime;
-		if (result < 10000) {
-			return (int) (10000 - result);
-		} else if (result < 900000) { //15 Minutes.
-			return (int) (900000 - (result - 10000));
-		}
-		return 0;
-	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000295, storage.getItemCountByItemId(185000295)); //Iron Fence Key.
@@ -616,7 +599,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(186000459, storage.getItemCountByItemId(186000459)); //Golden Treasure Chest Key.
 		storage.decreaseByItemId(164002390, storage.getItemCountByItemId(164002390)); //Shabby Kumuki Transformation Scroll.
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(16973); //Riding A Wagon.
@@ -624,7 +607,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		effectController.removeEffect(17619); //Shabby Kumuki Transformation.
 		effectController.removeEffect(17623); //Ginseng Transformation.
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.

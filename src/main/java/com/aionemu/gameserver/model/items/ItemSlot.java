@@ -78,14 +78,14 @@ public enum ItemSlot {
 	/** 全部烙印之石槽位 / All Stigma */
 	ALL_STIGMA(REGULAR_STIGMAS.slotIdMask, true);
 
-	private long slotIdMask;
-	private boolean combo;
+	private final long slotIdMask;
+	private final boolean combo;
 
-	private ItemSlot(long mask) {
+	ItemSlot(long mask) {
 		this(mask, false);
 	}
 
-	private ItemSlot(long mask, boolean combo) {
+	ItemSlot(long mask, boolean combo) {
 		this.slotIdMask = mask;
 		this.combo = combo;
 	}

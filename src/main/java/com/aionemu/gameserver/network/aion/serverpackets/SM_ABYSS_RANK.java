@@ -10,8 +10,8 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  * Server packet synchronizing the player's Abyss rank (AP/GP, kills, and daily/weekly stats) to the client.
  */
 public class SM_ABYSS_RANK extends AionServerPacket {
-	private AbyssRank rank;
-	private int currentRankId;
+	private final AbyssRank rank;
+	private final int currentRankId;
 
 	/**
 	 * 使用玩家当前欧比斯军衔数据构造同步包。

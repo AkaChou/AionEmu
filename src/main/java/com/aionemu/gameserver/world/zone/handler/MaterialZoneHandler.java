@@ -26,9 +26,9 @@ public class MaterialZoneHandler implements ZoneHandler {
 	Map<Integer, IActor> observed = new ConcurrentHashMap<Integer, IActor>();
 
 	/** 材质几何体 / material geometry */
-	private Spatial geometry;
+	private final Spatial geometry;
 	/** 材质模板 / material template */
-	private MaterialTemplate template;
+	private final MaterialTemplate template;
 	/** 是否在进入时立即触发材质效果 / whether to act immediately on zone enter */
 	private boolean actOnEnter = false;
 	/** 所属阵营（同阵营不受影响）/ owner race (same race is immune) */

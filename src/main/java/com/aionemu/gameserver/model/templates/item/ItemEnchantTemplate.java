@@ -12,6 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
+import lombok.Getter;
 
 /**
  * 物品强化模板：按类型与等级组织强化加成。
@@ -21,6 +22,8 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantTemplate")
 public class ItemEnchantTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
@@ -31,7 +34,7 @@ public class ItemEnchantTemplate {
 	private List<ItemEnchantBonus> item_enchant;
 
 	@XmlTransient
-	private Map<Integer, List<StatFunction>> enchants = new HashMap<Integer, List<StatFunction>>();
+	private final Map<Integer, List<StatFunction>> enchants = new HashMap<Integer, List<StatFunction>>();
 
 	/** 获取属性。 / Returns the stats. */
 	public List<StatFunction> getStats(int level) {
@@ -44,11 +47,6 @@ public class ItemEnchantTemplate {
 	/** 返回物品强化列表 / Returns the item enchant list */
 	public List<ItemEnchantBonus> getItemEnchant() {
 		return this.item_enchant;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
 	}
 
 	/** 返回强化类型 / Returns the enchant type */

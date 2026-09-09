@@ -7,19 +7,18 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 传送门冷却列表。
  * Portal Cooldown List game object.
  */
 
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class PortalCooldownList {
-	private Player owner;
+	private final Player owner;
 	private Map<Integer, PortalCooldownItem> portalCooldowns;
-
-	PortalCooldownList(Player owner) {
-		this.owner = owner;
-	}
 
 	/**
 	 * @param worldId 传送门是否禁用所查的世界 ID / Whether portal use disabled

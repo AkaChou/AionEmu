@@ -6,11 +6,14 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 移动电机抽象基类：持有 NPC 与处理器引用，并维护目标点、朝向与移动掩码。
  * Abstract movement-motor base: holds NPC and processor references and tracks target, heading and movement mask.
  */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class AMovementMotor {
 
 	/**
@@ -60,18 +63,6 @@ public abstract class AMovementMotor {
 	 * Target heading.
 	 */
 	byte _targetHeading;
-
-	/**
-	 * 绑定所属 NPC 与移动处理器。
-	 * Bind the owner NPC and movement processor.
-	 *
-	 * @param owner 所属 NPC / owner NPC
-	 * @param processor 移动处理器 / Movement processor
-	 */
-	AMovementMotor(Npc owner, MovementProcessor processor) {
-		this._owner = owner;
-		this._processor = processor;
-	}
 
 	/**
 	 * 启动电机。

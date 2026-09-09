@@ -35,25 +35,25 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 	private boolean think = true;
 	private int curentPercent = 100;
 	private Future<?> specialSkillTask;
-	private List<Integer> percents = new ArrayList<Integer>();
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final List<Integer> percents = new ArrayList<Integer>();
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return think;
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		addPercent();
 		darkLordBlessing();
 	}
-	
+
 	private void darkLordBlessing() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); // 黑暗之主的祝福 / Dark Lord's Blessing.
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -63,11 +63,11 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
 	}
-	
+
 	/**
 	 * 按血量百分比触发阶段行为：特定阈值打断思考并释放压制技能，其余阈值启动阶段任务。
 	 * Triggers phase behavior by HP percentage: certain thresholds interrupt thinking and cast a crush skill, others start the phase task.
@@ -124,7 +124,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startThinkTask() {
 		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -151,7 +151,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 			}
 		}, 20000);
 	}
-	
+
 	private void startPhaseTask() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500500);
@@ -165,7 +165,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 			}
 		}, 4000);
 	}
-	
+
 	private void startSpecialSkillTask() {
 		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -203,30 +203,30 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 			}
 		}, 12000);
 	}
-	
+
 	private void cancelspecialSkillTask() {
 		if (specialSkillTask != null && !specialSkillTask.isDone()) {
 			specialSkillTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelThinkTask() {
 		if (thinkTask != null && !thinkTask.isDone()) {
 			thinkTask.cancel(true);
 		}
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{90, 84, 79, 75, 72, 70, 67, 63, 59, 53, 47, 44, 43, 39, 35, 30, 26, 23, 21, 16, 11, 6});
+		Collections.addAll(percents, 90, 84, 79, 75, 72, 70, 67, 63, 59, 53, 47, 44, 43, 39, 35, 30, 26, 23, 21, 16, 11, 6);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelspecialSkillTask();
@@ -235,7 +235,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		sendMsg(1500503);
@@ -245,7 +245,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 		percents.clear();
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		think = true;

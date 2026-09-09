@@ -16,9 +16,9 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  */
 public class SM_EXCHANGE_ADD_ITEM extends AionServerPacket {
 
-	private Player player;
-	private int action;
-	private Item item;
+	private final Player player;
+	private final int action;
+	private final Item item;
 
 	/**
 	 * 0=self, 1=other。

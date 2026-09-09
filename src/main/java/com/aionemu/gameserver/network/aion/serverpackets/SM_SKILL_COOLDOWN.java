@@ -84,24 +84,15 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 		cooldowns.sort(Comparator.comparingInt(Cooldown::getAnimationDurationMillis));
 	}
 
-	private static class Cooldown {
-		private final int skillId;
-		private final long reuseTime;
-		private final int attackDelay;
+    private record Cooldown(int skillId, long reuseTime, int attackDelay) {
 
-		private Cooldown(int skillId, long reuseTime, int attackDelay) {
-			this.skillId = skillId;
-			this.reuseTime = reuseTime;
-			this.attackDelay = attackDelay;
-		}
+        private int getRemainingMillis() {
+            return (int) Math.max(0, reuseTime - System.currentTimeMillis());
+        }
 
-		private int getRemainingMillis() {
-			return (int) Math.max(0, reuseTime - System.currentTimeMillis());
-		}
-
-		private int getAnimationDurationMillis() {
-			SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-			return SkillConfig.scaleCooldown(template.scaleCooldownByAttackDelay(template.getCooldown(), attackDelay)) * 100;
-		}
-	}
+        private int getAnimationDurationMillis() {
+            SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+            return SkillConfig.scaleCooldown(template.scaleCooldownByAttackDelay(template.getCooldown(), attackDelay)) * 100;
+        }
+    }
 }

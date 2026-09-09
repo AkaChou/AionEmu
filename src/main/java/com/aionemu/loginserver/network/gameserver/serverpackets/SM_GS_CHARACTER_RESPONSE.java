@@ -2,6 +2,7 @@ package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：角色相关应答（携带目标账号 ID）。
@@ -9,6 +10,7 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author cura
  */
+@AllArgsConstructor
 public class SM_GS_CHARACTER_RESPONSE extends GsServerPacket {
 
     /**
@@ -16,16 +18,6 @@ public class SM_GS_CHARACTER_RESPONSE extends GsServerPacket {
      * Target account id.
      */
     private final int accountId;
-
-    /**
-     * 构造角色应答包。
-     * Constructs a character response packet.
-     *
-     * @param accountId 账号 ID / account id
-     */
-    public SM_GS_CHARACTER_RESPONSE(int accountId) {
-        this.accountId = accountId;
-    }
 
     /**
      * {@inheritDoc}

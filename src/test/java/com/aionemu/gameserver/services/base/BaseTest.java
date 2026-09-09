@@ -103,7 +103,7 @@ class BaseTest {
 		private NpcController controller;
 
 		private TestBaseNpc() {
-			super(0, new NpcController(), null, (NpcTemplate) null);
+			super(0, new NpcController(), null, null);
 		}
 
 		@Override

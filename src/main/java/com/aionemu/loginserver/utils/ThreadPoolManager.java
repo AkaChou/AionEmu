@@ -80,7 +80,6 @@ public final class ThreadPoolManager {
         }
     }
 
-    // ===========================================================================================
     /**
      * 延迟调度任务。
      * Schedules a runnable after the given delay.
@@ -89,7 +88,7 @@ public final class ThreadPoolManager {
      * @param delay 延迟毫秒 / delay in milliseconds
      * @return 可取消的 Future / cancellable future
      */
-    public final ScheduledFuture<?> schedule(Runnable r, long delay) {
+    public ScheduledFuture<?> schedule(Runnable r, long delay) {
         r = new ThreadPoolRunnableWrapper(r);
         delay = validate(delay);
 
@@ -104,11 +103,10 @@ public final class ThreadPoolManager {
      * @param delay 延迟毫秒 / delay in milliseconds
      * @return 可取消的 Future / cancellable future
      */
-    public final ScheduledFuture<?> scheduleEffect(Runnable r, long delay) {
+    public ScheduledFuture<?> scheduleEffect(Runnable r, long delay) {
         return schedule(r, delay);
     }
 
-    // ===========================================================================================
     /**
      * 固定频率周期调度。
      * Schedules a runnable at a fixed rate.
@@ -118,7 +116,7 @@ public final class ThreadPoolManager {
      * @param period 周期（毫秒） / period in milliseconds
      * @return 可取消的 Future / cancellable future
      */
-    public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
         r = new ThreadPoolRunnableWrapper(r);
         delay = validate(delay);
         period = validate(period);
@@ -135,18 +133,17 @@ public final class ThreadPoolManager {
      * @param period 周期（毫秒） / period in milliseconds
      * @return 可取消的 Future / cancellable future
      */
-    public final ScheduledFuture<?> scheduleEffectAtFixedRate(Runnable r, long delay, long period) {
+    public ScheduledFuture<?> scheduleEffectAtFixedRate(Runnable r, long delay, long period) {
         return scheduleAtFixedRate(r, delay, period);
     }
 
-    // ===========================================================================================
     /**
      * 在瞬时线程池中执行任务。
      * Executes a runnable on the instant pool.
      *
      * @param r 任务 / runnable
      */
-    public final void execute(Runnable r) {
+    public void execute(Runnable r) {
         r = new ThreadPoolRunnableWrapper(r);
 
         instantPool.execute(r);
@@ -158,7 +155,7 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      */
-    public final void executeTask(Runnable r) {
+    public void executeTask(Runnable r) {
         execute(r);
     }
 
@@ -168,13 +165,12 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      */
-    public final void executeLongRunning(Runnable r) {
+    public void executeLongRunning(Runnable r) {
         r = new RunnableWrapper(r);
 
         longRunningPool.execute(r);
     }
 
-    // ===========================================================================================
     /**
      * 提交任务到瞬时线程池。
      * Submits a runnable to the instant pool.
@@ -182,7 +178,7 @@ public final class ThreadPoolManager {
      * @param r 任务 / runnable
      * @return 任务 Future / task future
      */
-    public final Future<?> submit(Runnable r) {
+    public Future<?> submit(Runnable r) {
         r = new ThreadPoolRunnableWrapper(r);
 
         return instantPool.submit(r);
@@ -195,13 +191,12 @@ public final class ThreadPoolManager {
      * @param r 任务 / runnable
      * @return 任务 Future / task future
      */
-    public final Future<?> submitLongRunning(Runnable r) {
+    public Future<?> submitLongRunning(Runnable r) {
         r = new RunnableWrapper(r);
 
         return longRunningPool.submit(r);
     }
 
-    // ===========================================================================================
     /**
      * 执行登录服数据包任务。
      * Executes a login-server packet task.

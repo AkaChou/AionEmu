@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.idfactory;
 
+import lombok.NoArgsConstructor;
+
 /**
  * ID 工厂抛出的致命错误。
  * Fatal error thrown by the ID factory.
@@ -7,15 +9,8 @@ package com.aionemu.gameserver.utils.idfactory;
  * @author SoulKeeper
  */
 @SuppressWarnings("serial")
+@NoArgsConstructor
 public class IDFactoryError extends Error {
-
-	/**
-	 * 无消息构造。
-	 * No-arg constructor.
-	 */
-	public IDFactoryError() {
-
-	}
 
 	/**
 	 * 带消息构造。

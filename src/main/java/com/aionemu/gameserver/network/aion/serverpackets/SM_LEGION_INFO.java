@@ -6,6 +6,7 @@ import java.util.Map;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端下发军团完整信息（名称、等级、权限、公告等）的服务端包。
@@ -13,20 +14,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Simple
  */
+@AllArgsConstructor
 public class SM_LEGION_INFO extends AionServerPacket {
 
 	/** 军团信息 / Legion information */
-	private Legion legion;
-
-	/**
-	 * 构造军团信息下发包。
-	 * Creates a packet that delivers legion information.
-	 *
-	 * legion instance
-	 */
-	public SM_LEGION_INFO(Legion legion) {
-		this.legion = legion;
-	}
+	private final Legion legion;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

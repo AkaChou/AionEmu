@@ -31,8 +31,8 @@ public class SM_UPDATE_SESSION extends AionServerPacket {
      */
     public SM_UPDATE_SESSION(SessionKey key) {
         super(0x0c);
-        this.accountId = key.accountId;
-        this.loginOk = key.loginOk;
+        this.accountId = key.accountId();
+        this.loginOk = key.loginOk();
     }
 
     /**

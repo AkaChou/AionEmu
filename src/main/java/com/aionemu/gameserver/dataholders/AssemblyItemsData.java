@@ -26,7 +26,7 @@ public class AssemblyItemsData {
 	protected List<AssemblyItem> item;
 
 	@XmlTransient
-	private IntObjectHashMap<AssemblyItem> itemsById = new IntObjectHashMap<AssemblyItem>();
+	private final IntObjectHashMap<AssemblyItem> itemsById = new IntObjectHashMap<AssemblyItem>();
 
 	/**
 	 * JAXB 反序列化完成后，按物品 ID 建立索引并释放列表。

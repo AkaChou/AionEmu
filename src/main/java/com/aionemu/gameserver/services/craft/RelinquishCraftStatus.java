@@ -131,10 +131,7 @@ public class RelinquishCraftStatus {
 		if (craftLearnTemplate == null || !craftLearnTemplate.isCraftSkill()) {
 			return false;
 		}
-		if (skill == null || skill.getSkillLevel() < minValue || skill.getSkillLevel() > maxValue) {
-			return false;
-		}
-		return true;
+		return skill != null && skill.getSkillLevel() >= minValue && skill.getSkillLevel() <= maxValue;
 	}
 
 	/**

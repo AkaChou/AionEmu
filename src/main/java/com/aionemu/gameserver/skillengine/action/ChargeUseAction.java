@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import lombok.Getter;
 
 /**
  * 技能消耗动作：按装备的武器/护甲耐久度扣减充能值。
@@ -17,9 +18,11 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 @XmlType(name = "ChargeUseAction")
 public class ChargeUseAction extends Action {
 
+	@Getter
 	@XmlAttribute(required = true)
 	protected int weapon;
 
+	@Getter
 	@XmlAttribute(required = true)
 	protected int armor;
 
@@ -34,13 +37,5 @@ public class ChargeUseAction extends Action {
 				item.getConditioningInfo().burn(cost);
 			}
 		}
-	}
-
-	public int getWeapon() {
-		return weapon;
-	}
-
-	public int getArmor() {
-		return armor;
 	}
 }

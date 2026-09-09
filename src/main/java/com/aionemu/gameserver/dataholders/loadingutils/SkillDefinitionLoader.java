@@ -349,8 +349,8 @@ final class SkillDefinitionLoader {
 			for (ExpansionNode child : element.children()) {
 				if (child instanceof ExpansionElement childElement) {
 					emitElement(childElement);
-				} else if (child instanceof ExpansionText textNode) {
-					char[] text = textNode.value().toCharArray();
+				} else if (child instanceof ExpansionText(String value)) {
+					char[] text = value.toCharArray();
 					super.characters(text, 0, text.length);
 				}
 			}

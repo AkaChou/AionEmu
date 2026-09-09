@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("hangar_controller")
 public class Hangar_ControllerAI2 extends NpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -41,7 +41,7 @@ public class Hangar_ControllerAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	private void announceGAB1SubTankA() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -86,7 +86,7 @@ public class Hangar_ControllerAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamRoute;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.NoArgsConstructor;
 
 /**
  * 风道数据容器，按地图 ID 索引风道模板。
@@ -26,6 +27,7 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "windstreams")
+@NoArgsConstructor
 public class WindstreamData {
 	@XmlElement(name = "windstream")
 
@@ -33,9 +35,6 @@ public class WindstreamData {
 	private IntObjectHashMap<WindstreamTemplate> windstreams;
 	@XmlTransient
 	private IntObjectHashMap<IntObjectHashMap<WindstreamRoute>> routesByMap;
-
-	public WindstreamData() {
-	}
 
 	public WindstreamData(List<WindstreamTemplate> templates, List<WindstreamRoute> routes) {
 		wts = templates;

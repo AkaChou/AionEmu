@@ -25,9 +25,9 @@ public enum SkillElement {
 	/** 暗 / Dark */
 	DARK(6);
 
-	private int element;
+	private final int element;
 
-	private SkillElement(int id) {
+	SkillElement(int id) {
 		this.element = id;
 	}
 

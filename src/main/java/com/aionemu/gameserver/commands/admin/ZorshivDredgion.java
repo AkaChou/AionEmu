@@ -87,7 +87,7 @@ public class ZorshivDredgion extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidZorshivDredgionLocationId(Player player, int zorshivDredgionId) {
-		if (!GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocations().keySet().contains(zorshivDredgionId)) {
+		if (!GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocations().containsKey(zorshivDredgionId)) {
 			PacketSendUtility.sendMessage(player, "Id " + zorshivDredgionId + " is invalid");
 			return false;
 		}

@@ -15,6 +15,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 掉落队伍模型。
@@ -27,7 +29,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public class DropGroup implements DropCalculator {
 
 
+	/** 获取掉落。 / Returns the drop. */
+	@Getter
 	protected List<Drop> drop;
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute
 	protected Race race = Race.PC_ALL;
 	@XmlAttribute(name = "name")
@@ -36,34 +42,24 @@ public class DropGroup implements DropCalculator {
 	private Boolean legacyUseCategory;
 	@XmlAttribute(name = "level_based_chance_reduction")
 	private Boolean useLevelBasedChanceReduction;
+	/** 返回最大掉落数量 / Returns the max items */
+	@Getter
 	@XmlAttribute(name = "max_items")
 	private int maxItems = 1;
 	@XmlAttribute(name = "drop_group_adjustment")
 	private int dropGroupAdjustment = 100;
+	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 / Sets the NPC-specific drop multiplier, 1 means 1x. */
+	@Getter
+	@Setter
 	@XmlTransient
 	private float chanceMultiplier = 1f;
-
-	/** 获取掉落。 / Returns the drop. */
-	public List<Drop> getDrop() {
-		return this.drop;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 返回最大掉落数量 / Returns the max items */
-	public int getMaxItems() {
-		return maxItems;
-	}
 
 	/**
 	 * 是否启用基于等级的掉率衰减。
 	 * Whether to use level based chance reduction.
 	 */
 	public boolean isUseLevelBasedChanceReduction() {
-		return useLevelBasedChanceReduction != null ? useLevelBasedChanceReduction : true;
+		return useLevelBasedChanceReduction == null || useLevelBasedChanceReduction;
 	}
 
 	/**
@@ -91,16 +87,6 @@ public class DropGroup implements DropCalculator {
 		copy.dropGroupAdjustment = dropGroupAdjustment;
 		copy.chanceMultiplier = chanceMultiplier;
 		return copy;
-	}
-
-	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 / Sets the NPC-specific drop multiplier, 1 means 1x. */
-	public void setChanceMultiplier(float chanceMultiplier) {
-		this.chanceMultiplier = chanceMultiplier;
-	}
-
-	/** 返回 NPC 专属掉落倍率。 / Returns the NPC-specific drop multiplier. */
-	public float getChanceMultiplier() {
-		return chanceMultiplier;
 	}
 
 	/** 返回应用 NPC 和掉落组专属倍率后的基础概率。 / Returns the base chance after applying the NPC and drop-group multipliers. */

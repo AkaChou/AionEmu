@@ -3,6 +3,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.model.templates.world.WeatherEntry;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 同步当前地图天气状态的服务端包。
@@ -12,16 +13,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Kwazar
  * @author Nemesiss :D:D
  */
+@AllArgsConstructor
 public class SM_WEATHER extends AionServerPacket {
 
-	private WeatherEntry[] weatherEntries;
-
-	/**
-	 * @param weatherEntries 天气条目数组 / weather entry array
-	 */
-	public SM_WEATHER(WeatherEntry[] weatherEntries) {
-		this.weatherEntries = weatherEntries;
-	}
+	private final WeatherEntry[] weatherEntries;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

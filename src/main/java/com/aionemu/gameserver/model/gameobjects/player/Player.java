@@ -130,6 +130,8 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.LinkedHashMap;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家游戏对象。
@@ -143,92 +145,304 @@ public class Player extends Creature {
 	public InGameShop inGameShop;
 	public WindstreamPath windstreamPath;
 	public WindstreamPath pendingWindstreamPath;
+	@Getter
+	@Setter
 	private PlayerAppearance playerAppearance;
+	/**
+	 * 仅用于 Size 管理员命令。
+	 * Only use for the Size admin command.
+	 */
+	@Getter
+	@Setter
 	private PlayerAppearance savedPlayerAppearance;
-	private PlayerCommonData playerCommonData;
-	private Account playerAccount;
+	private final PlayerCommonData playerCommonData;
+	@Getter
+	private final Account playerAccount;
+	/**
+	 * @param legionMember the legionMember to set
+	 */
+	@Getter
+	@Setter
 	private LegionMember legionMember;
+	@Getter
+	@Setter
 	private MacroList macroList;
+	@Getter
+	@Setter
 	private PlayerSkillList skillList;
 	private PlayerEquippedStigmaList equipped_stigma;
+	/**
+	 * 获取 playersfriend 列表。
+	 * Gets this players Friend List
+	 *
+	 * @return FriendList
+	 */
+	@Getter
+	@Setter
 	private FriendList friendList;
+	@Getter
+	@Setter
 	private BlockList blockList;
 	private PetList toyPetList;
 	private MinionList minionList;
+	@Getter
+	@Setter
 	private Mailbox mailbox;
+	/**
+	 * @return the player private store
+	 */
+	@Getter
+	@Setter
 	private PrivateStore store;
+	@Getter
 	private TitleList titleList;
+	/**
+	 * @return the questStatesList
+	 */
+	@Getter
+	@Setter
 	private QuestStateList questStateList;
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
+	@Getter
+	@Setter
 	private RecipeList recipeList;
 	private List<House> houses;
 	private ResponseRequester requester;
+	/**
+	 * @return 该玩家是否正在寻找小队 / Is this player looking for a group, true or false
+	 */
+	@Getter
+	@Setter
 	private boolean lookingForGroup = false;
+	@Getter
 	private Storage inventory;
-	private Storage[] petBag = new Storage[StorageType.PET_BAG_MAX - StorageType.PET_BAG_MIN + 1];
-	private Storage[] cabinets = new Storage[StorageType.HOUSE_WH_MAX - StorageType.HOUSE_WH_MIN + 1];
+	private final Storage[] petBag = new Storage[StorageType.PET_BAG_MAX - StorageType.PET_BAG_MIN + 1];
+	private final Storage[] cabinets = new Storage[StorageType.HOUSE_WH_MAX - StorageType.HOUSE_WH_MIN + 1];
 	private Storage regularWarehouse;
 	private Storage accountWarehouse;
+	/**
+	 * @return the inventory
+	 */
+	@Getter
+	@Setter
 	private Equipment equipment;
 	private EquipmentSettingList equipmentSettingList;
+	@Getter
+	@Setter
 	private HouseRegistry houseRegistry;
+	/**
+	 * @return the playerStatsTemplate
+	 */
+	@Getter
+	@Setter
 	private PlayerStatsTemplate playerStatsTemplate;
 	private final AbsoluteStatOwner absStatsHolder;
+	/**
+	 * @return the playerSettings
+	 */
+	@Getter
+	@Setter
 	private PlayerSettings playerSettings;
 	private com.aionemu.gameserver.model.team2.group.PlayerGroup playerGroup2;
 	private PlayerAllianceGroup playerAllianceGroup;
+	/**
+	 * @return the abyssRank
+	 */
+	@Getter
+	@Setter
 	private AbyssRank abyssRank;
+	/**
+	 * @return the npcFactions
+	 */
+	@Getter
+	@Setter
 	private NpcFactions npcFactions;
+	/**
+	 * @param rates the rates to set
+	 */
+	@Setter
 	private Rates rates;
+	/**
+	 * @return 0：普通；1：飞行；2：滑翔。 / 0: regular, 1: fly, 2: glide
+	 */
+	@Getter
 	private int flyState = 0;
+	/**
+	 * @return the isTrading
+	 */
+	@Getter
+	@Setter
 	private boolean isTrading;
+	/**
+	 * @return the prisonTimer
+	 */
+	@Getter
 	private long prisonTimer = 0;
+	@Getter
 	private boolean isGathering;
+	/**
+	 * @return the time in ms of start prison
+	 */
+	@Getter
+	@Setter
 	private long startPrison;
+	/**
+	 * 检查玩家是否无敌。
+	 * Checks whether the player is invulnerable
+	 *
+	 * @return 是否无敌 / whether invulnerable
+	 */
+	@Getter
+	@Setter
 	private boolean invul;
+	/**
+	 * @return the flyController
+	 */
+	@Getter
+	@Setter
 	private FlyController flyController;
+	/**
+	 * @param craftingTask
+	 */
+	@Getter
+	@Setter
 	private CraftingTask craftingTask;
+	/**
+	 * @param flightTeleportId
+	 */
+	@Getter
+	@Setter
 	private int flightTeleportId;
+	/**
+	 * @param flightDistance
+	 */
+	@Getter
+	@Setter
 	private int flightDistance;
+	/**
+	 * @return the summon
+	 */
+	@Getter
+	@Setter
 	private Summon summon;
+	@Getter
+	@Setter
 	private SummonedObject<?> summonedObj;
+	/**
+	 * @param toyPet the toyPet to set
+	 */
+	@Setter
 	private Pet toyPet;
+	/**
+	 * @return the minions
+	 */
+	@Getter
+	@Setter
 	private Minion minion;
+	/**
+	 * @return
+	 */
+	@Getter
+	@Setter
 	private Kisk kisk;
 	private boolean isResByPlayer = false;
+	@Getter
+	@Setter
 	private int resurrectionSkill = 0;
 	private boolean isFlyingBeforeDeath = false;
+	/**
+	 * @param isGagged the isGagged to set
+	 */
+	@Getter
+	@Setter
 	private boolean isGagged = false;
 	private boolean edit_mode = false;
+	@Getter
+	@Setter
 	private Npc questFollowingNpc = null;
+	@Getter
+	@Setter
 	private Npc postman = null;
 	private boolean isInResurrectPosState = false;
+	/**
+	 * @param value Resurrection Positional X value to set
+	 */
+	@Getter
+	@Setter
 	private float resPosX = 0;
+	/**
+	 * @param value Resurrection Positional Y value to set
+	 */
+	@Getter
+	@Setter
 	private float resPosY = 0;
+	/**
+	 * @param value Resurrection Positional Z value to set
+	 */
+	@Getter
+	@Setter
 	private float resPosZ = 0;
+	/**
+	 * @param value 禁消耗飞行值效果状态 / status of NoFpConsum Effect
+	 */
+	@Getter
+	@Setter
 	private boolean underNoFPConsum = false;
+	/**
+	 * @param isAdminTeleportation
+	 */
+	@Setter
 	private boolean isAdminTeleportation = false;
 	private boolean cooldownZero = false;
 	private boolean isUnderInvulnerableWing = false;
 	private boolean isFlying = false;
+	@Getter
 	private boolean isWispable = true;
+	@Setter
 	private boolean isCommandUsed = false;
 	private int abyssRankListUpdateMask = 0;
+	@Getter
+	@Setter
 	private BindPointPosition bindPoint;
+	/**
+	 * @return the itemCoolDowns
+	 */
+	@Getter
 	private Map<Integer, ItemCooldown> itemCoolDowns;
+	/**
+	 * @return 传送门冷却列表 / portal cooldown list
+	 */
+	@Getter
 	private PortalCooldownList portalCooldownList;
+	@Getter
 	private CraftCooldownList craftCooldownList;
+	@Getter
 	private HouseObjectCooldownList houseObjectCooldownList;
+	@Getter
+	@Setter
 	private long nextSkillUse;
+	@Getter
+	@Setter
 	private long nextSummonSkillUse;
 	private ChainSkills chainSkills;
-	private Map<AttackStatus, Long> lastCounterSkill = new HashMap<AttackStatus, Long>();
+	private final Map<AttackStatus, Long> lastCounterSkill = new HashMap<AttackStatus, Long>();
+	/**
+	 * @return the dualEffectValue
+	 */
+	@Getter
+	@Setter
 	private int dualEffectValue = 0;
 	private int rawKillcount = 0;
+	@Getter
+	@Setter
 	private int spreeLevel = 0;
 	private boolean hasBonus;
+	@Getter
+	@Setter
 	private int bonusId = 0;
 	private boolean hasAbyssBonus;
+	@Getter
+	@Setter
 	private int abyssId = 0;
 	/**
 	 * 玩家的静态信息。
@@ -236,118 +450,279 @@ public class Player extends Creature {
 	 */
 	private static final int CUBE_SPACE = 9;
 	private static final int WAREHOUSE_SPACE = 8;
+	@Getter
+	@Setter
 	private boolean isAttackMode = false;
+	@Getter
 	private long gatherableTimer = 0;
+	@Getter
+	@Setter
 	private long stopGatherable;
+	@Getter
+	@Setter
 	private String captchaWord;
+	@Getter
+	@Setter
 	private byte[] captchaImage;
 	private float instanceStartPosX, instanceStartPosY, instanceStartPosZ;
+	@Getter
+	@Setter
 	private int rebirthResurrectPercent = 1;
+	@Getter
+	@Setter
 	private int rebirthSkill = 0;
+	/**
+	 * 设置 connection 玩家。
+	 * Set connection of this player
+	 *
+	 * @param clientConnection
+	 */
+	@Getter
+	@Setter
 	private AionConnection clientConnection;
 	private FlyPathEntry flyLocationId;
+	@Getter
 	private long flyStartTime;
+	/**
+	 * @return Returns the emotions.
+	 */
+	@Getter
+	@Setter
 	private EmotionList emotions;
+	/**
+	 * @return the motions
+	 */
+	@Getter
+	@Setter
 	private MotionList motions;
+	/**
+	 * @return the flyReuseTime
+	 */
+	@Getter
+	@Setter
 	private long flyReuseTime;
 	private boolean isMentor;
 	private long lastMsgTime = 0;
 	private int floodMsgCount = 0;
 	private long onlineTime = 0;
+	@Getter
+	@Setter
 	private int lootingNpcOid;
+	@Setter
 	private boolean rebirthRevive;
 	private int subtractedSupplementsCount;
 	private int subtractedSupplementId;
+	@Getter
+	@Setter
 	private int portAnimation;
+	@Getter
 	private boolean isInSprintMode;
+	@Getter
+	@Setter
 	private ItemUseObserver craftObserver;
+	@Getter
 	private List<ActionObserver> rideObservers;
+	@Getter
 	private List<ActionObserver> hotTeleObservers;
 	private Protector protectorList;
 	private Conqueror conquerorList;
+	@Getter
 	byte buildingOwnerStates = PlayerHouseOwnerFlags.BUY_STUDIO_ALLOWED.getId();
+	@Getter
 	private int battleReturnMap;
+	@Getter
 	private float[] battleReturnCoords;
 	public int speedHackCounter;
 	public int abnormalHackCounter;
 	public WorldPosition prevPos;
 	public long prevPosUT;
 	public byte prevMoveType;
-	private PlayerVarsDAO daoVars = (PlayerVarsDAO) DAOManager.getDAO(PlayerVarsDAO.class);
+	private final PlayerVarsDAO daoVars = DAOManager.getDAO(PlayerVarsDAO.class);
 	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
+	@Getter
+	@Setter
 	private int robotId = 0;
 	public int A_STATION_TYPE = 0;
+	@Getter
+	@Setter
 	private boolean isOnAStation = false;
+	@Getter
+	@Setter
 	private int playersBonusId = 0;
 	private int transformModelId;
 	private int transformItemId;
 	private int transformPanelId;
+	@Getter
+	@Setter
 	private boolean isInWindstream = false;
+	@Getter
+	@Setter
 	private int silenceReportCount = 0;
+	@Getter
+	@Setter
 	private boolean isInCrazy;
 	private int rndPoint = 0;
 	private int crazyKillcount = 0;
+	@Getter
+	@Setter
 	private int crazyLevel = 0;
+	@Getter
+	@Setter
 	private F2p f2p;
 	private PlayerCPList cp;
 	private PlayerABList ab;
 	private PlayerEventWindowList ew;
+	@Getter
+	@Setter
 	private PlayerWardrobeList wardrobe;
 	private PlayerLunaShop lunaShop;
 	private PlayerSweep shugoSweep;
+	@Getter
+	@Setter
 	private int linkedSkill;
+	@Getter
+	@Setter
 	private int stigmaSet;
+	@Getter
+	@Setter
 	private int goldenStarOfLodi;
+	@Getter
+	@Setter
 	private int unkPoint1;
 	private int cp_slot1 = 0, cp_slot2 = 0, cp_slot3 = 0, cp_slot4 = 0, cp_slot5 = 0, cp_slot6 = 0;
+	@Getter
+	@Setter
 	private boolean enchantBoost;
+	@Getter
+	@Setter
 	private boolean authorizeBoost;
 	private boolean setMinionSpawned;
 	private Map<Integer, MaxCountOfDay> maxCountEvent;
+	/**
+	 * 月华骰子游戏。
+	 * Luna Dice Game
+	 */
+	@Getter
 	private int LunaDiceGame;
+	/** 返回 luna dice game try / Returns the luna dice game try */
+	@Getter
+	@Setter
 	private int LunaDiceGameTry = 0;
 	// PvP 系统： / Pvp System:
+	/**
+	 * @return 是否无规则状态 / Whether lawless
+	 */
+	@Getter
 	private boolean lawless = false;
+	/**
+	 * @return PVP 系统 / PVP System
+	 */
+	@Getter
 	private boolean bandit = false;
+	/** 设置 battleground / Sets the battleground */
+	@Getter
+	@Setter
 	private Battleground battleground = null;
+	/** 返回 last action / Returns the last action */
+	@Getter
 	private long lastAction = 0;
+	/** 设置 bg index / Sets the bg index */
+	@Getter
+	@Setter
 	private int bgIndex = 0;
+	/** 设置 spectating / Sets the spectating */
+	@Getter
+	@Setter
 	private boolean isSpectating = false;
+	/** 设置 total kills / Sets the total kills */
+	@Getter
+	@Setter
 	private int totalKills = 0;
 	private int arenaKillStreak = 0;
+	/** 返回 bandit kill streak / Returns the bandit kill streak */
+	@Getter
 	private int banditKillStreak = 0;
+	/**
+	 * @return 是否离开。 / Whether afk
+	 */
+	@Getter
+	@Setter
 	private boolean isAfk;
+	/** 是否处于自由混战 / Whether ffa */
+	@Getter
+	@Setter
 	private boolean isFFA = false;
 	private int hallOfTenacityCoupleId = 0;
 	private int hallOfTenacityVSId = 0;
 	private int hallOfTenacityOpponentId = 0;
 
+	/** 是否决斗 / Whether in duel */
+	@Getter
+	@Setter
 	private boolean isInDuel;
 	/**
 	 * 玩家技能动画列表。
 	 * Player Skill Animation List
 	 */
+	@Getter
 	private SkillSkinList skillSkinList;
+	/** 是否盗贼 / Whether thieves*/
+	@Getter
 	private boolean isThieves = false;
+	/** 是否处于盗贼复仇决斗。 / Whether in a thieves revenge duel. */
+	@Getter
+	@Setter
 	private boolean thievesDuel;
+	/** 设置 thieves / Sets the thieves */
+	@Getter
+	@Setter
 	private ThievesStatusList thieves;
 	/**
 	 * 活动调用与注册。
 	 * EventCaller + Event Reg
 	 */
+	@Getter
+	@Setter
 	private int checkpoints;
+	/** 返回数量玩家集合 / Returns the count players */
+	@Getter
+	@Setter
 	private int countPlayers;
+	/**
+	 * @return 是否已注册活动 / Whether reged event
+	 */
+	@Getter
+	@Setter
 	private boolean isRegedEvent = false;
+	/**
+	 * @return 活动是否已开始 / Whether event started
+	 */
+	@Getter
+	@Setter
 	private boolean isEventStarted = false;
+	/** 返回 queued players / Returns the queued players */
+	@Getter
 	public List<Player> QueuedPlayers;
 	/**
 	 * 自定义 PvE 与 PK 系统相关变量。
 	 * These variables are for the custom PvE and PK system
 	 */
+	@Getter
+	@Setter
 	private boolean isInPkMode;
+	/**
+	 * @return 是否处于 PvE 模式 / Whether in PvE mode
+	 */
+	@Getter
+	@Setter
 	private boolean isInPvEMode;
 	// 这些变量用于自定义 RP 与 GM 系统 / These variables are for the custom RP and GM system
+	/**
+	 * @return GM 模式 / GM Mode
+	 */
+	@Getter
+	@Setter
 	private boolean isGmMode = false;
 	private long creationDay;
 
@@ -432,66 +807,6 @@ public class Player extends Creature {
 		return playerCommonData.getName();
 	}
 
-	public PlayerAppearance getPlayerAppearance() {
-		return playerAppearance;
-	}
-
-	public void setPlayerAppearance(PlayerAppearance playerAppearance) {
-		this.playerAppearance = playerAppearance;
-	}
-
-	/**
-	 * 仅用于 Size 管理员命令。
-	 * Only use for the Size admin command.
-	 */
-	public PlayerAppearance getSavedPlayerAppearance() {
-		return savedPlayerAppearance;
-	}
-
-	/**
-	 * 仅用于 Size 管理员命令。
-	 * Only use for the Size admin command.
-	 */
-	public void setSavedPlayerAppearance(PlayerAppearance savedPlayerAppearance) {
-		this.savedPlayerAppearance = savedPlayerAppearance;
-	}
-
-	/**
-	 * 设置 connection 玩家。
-	 * Set connection of this player
-	 *
-	 * @param clientConnection
-	 */
-	public void setClientConnection(AionConnection clientConnection) {
-		this.clientConnection = clientConnection;
-	}
-
-	/**
-	 * 获取 connection 玩家。
-	 * Get connection of this player
-	 *
-	 * @return 玩家的连接对象 / AionConnection of this player
-	 */
-	public AionConnection getClientConnection() {
-		return this.clientConnection;
-	}
-
-	public MacroList getMacroList() {
-		return macroList;
-	}
-
-	public void setMacroList(MacroList macroList) {
-		this.macroList = macroList;
-	}
-
-	public PlayerSkillList getSkillList() {
-		return skillList;
-	}
-
-	public void setSkillList(PlayerSkillList skillList) {
-		this.skillList = skillList;
-	}
-
 	public PlayerEquippedStigmaList getEquipedStigmaList() {
 		return equipped_stigma;
 	}
@@ -507,65 +822,12 @@ public class Player extends Creature {
 		return toyPet;
 	}
 
-	/**
-	 * @param toyPet the toyPet to set
-	 */
-	public void setToyPet(Pet toyPet) {
-		this.toyPet = toyPet;
-	}
-
-	/**
-	 * @return the minions
-	 */
-	public Minion getMinion() {
-		return minion;
-	}
-
-	public void setMinion(Minion minion) {
-		this.minion = minion;
-	}
-
 	public void setMinionSpawned(boolean setMinionSpawned) {
 		this.setMinionSpawned = setMinionSpawned;
 	}
 
 	public boolean isMinionSpawned() {
 		return setMinionSpawned;
-	}
-
-	/**
-	 * 获取 playersfriend 列表。
-	 * Gets this players Friend List
-	 *
-	 * @return FriendList
-	 */
-	public FriendList getFriendList() {
-		return friendList;
-	}
-
-	/**
-	 * @return 该玩家是否正在寻找小队 / Is this player looking for a group, true or false
-	 */
-	public boolean isLookingForGroup() {
-		return lookingForGroup;
-	}
-
-	/**
-	 * 设置玩家是否正在寻找小队。
-	 * Sets whether or not this player is looking for a group
-	 *
-	 * @param lookingForGroup 是否寻找小队 / whether looking for a group
-	 */
-	public void setLookingForGroup(boolean lookingForGroup) {
-		this.lookingForGroup = lookingForGroup;
-	}
-
-	public boolean isAttackMode() {
-		return isAttackMode;
-	}
-
-	public void setAttackMode(boolean isAttackMode) {
-		this.isAttackMode = isAttackMode;
 	}
 
 	public boolean isNotGatherable() {
@@ -577,52 +839,6 @@ public class Player extends Creature {
 			gatherableTimer = 0;
 		}
 		this.gatherableTimer = gatherableTimer;
-	}
-
-	public long getGatherableTimer() {
-		return gatherableTimer;
-	}
-
-	public long getStopGatherable() {
-		return stopGatherable;
-	}
-
-	public void setStopGatherable(long stopGatherable) {
-		this.stopGatherable = stopGatherable;
-	}
-
-	public String getCaptchaWord() {
-		return captchaWord;
-	}
-
-	public void setCaptchaWord(String captchaWord) {
-		this.captchaWord = captchaWord;
-	}
-
-	public byte[] getCaptchaImage() {
-		return captchaImage;
-	}
-
-	public void setCaptchaImage(byte[] captchaImage) {
-		this.captchaImage = captchaImage;
-	}
-
-	/**
-	 * 设置 playersfriend 列表 remembersend 玩家 sm_friend_listpacket。
-	 * Sets this players friend list. Remember to send the player the SM_FRIEND_LIST packet
-	 *
-	 * @param list
-	 */
-	public void setFriendList(FriendList list) {
-		this.friendList = list;
-	}
-
-	public BlockList getBlockList() {
-		return blockList;
-	}
-
-	public void setBlockList(BlockList list) {
-		this.blockList = list;
 	}
 
 	public final PetList getPetList() {
@@ -699,18 +915,6 @@ public class Player extends Creature {
 		return (byte) playerCommonData.getLevel();
 	}
 
-	/**
-	 * @return the inventory
-	 */
-
-	public Equipment getEquipment() {
-		return equipment;
-	}
-
-	public void setEquipment(Equipment equipment) {
-		this.equipment = equipment;
-	}
-
 	public EquipmentSettingList getEquipmentSettingList() {
 		if (equipmentSettingList == null) {
 			equipmentSettingList = new EquipmentSettingList(this);
@@ -725,34 +929,6 @@ public class Player extends Creature {
 		}
 	}
 
-	/**
-	 * @return the player private store
-	 */
-	public PrivateStore getStore() {
-		return store;
-	}
-
-	/**
-	 * @param store the store that needs to be set
-	 */
-	public void setStore(PrivateStore store) {
-		this.store = store;
-	}
-
-	/**
-	 * @return the questStatesList
-	 */
-	public QuestStateList getQuestStateList() {
-		return questStateList;
-	}
-
-	/**
-	 * @param questStateList the QuestStateList to set
-	 */
-	public void setQuestStateList(QuestStateList questStateList) {
-		this.questStateList = questStateList;
-	}
-
 	/** Records a server-issued quest-share offer for this session. */
 	public void addPendingQuestShare(int questId) {
 		if (questId <= 0) {
@@ -764,28 +940,6 @@ public class Player extends Creature {
 	/** Consumes a server-issued quest-share offer exactly once. */
 	public boolean consumePendingQuestShare(int questId) {
 		return questId > 0 && pendingQuestShares.remove(questId);
-	}
-
-	/**
-	 * @return the playerStatsTemplate
-	 */
-	public PlayerStatsTemplate getPlayerStatsTemplate() {
-		return playerStatsTemplate;
-	}
-
-	/**
-	 * @param playerStatsTemplate the playerStatsTemplate to set
-	 */
-	public void setPlayerStatsTemplate(PlayerStatsTemplate playerStatsTemplate) {
-		this.playerStatsTemplate = playerStatsTemplate;
-	}
-
-	public RecipeList getRecipeList() {
-		return recipeList;
-	}
-
-	public void setRecipeList(RecipeList recipeList) {
-		this.recipeList = recipeList;
 	}
 
 	/**
@@ -948,28 +1102,6 @@ public class Player extends Creature {
 		return items;
 	}
 
-	public Storage getInventory() {
-		return inventory;
-	}
-
-	/**
-	 * @return the playerSettings
-	 */
-	public PlayerSettings getPlayerSettings() {
-		return playerSettings;
-	}
-
-	/**
-	 * @param playerSettings the playerSettings to set
-	 */
-	public void setPlayerSettings(PlayerSettings playerSettings) {
-		this.playerSettings = playerSettings;
-	}
-
-	public TitleList getTitleList() {
-		return titleList;
-	}
-
 	public void setTitleList(TitleList titleList) {
 		if (havePermission(MembershipConfig.TITLES_ADDITIONAL_ENABLE)) {
 			titleList.addEntry(102, 0);
@@ -995,20 +1127,6 @@ public class Player extends Creature {
 		this.playerGroup2 = playerGroup;
 	}
 
-	/**
-	 * @return the abyssRank
-	 */
-	public AbyssRank getAbyssRank() {
-		return abyssRank;
-	}
-
-	/**
-	 * @param abyssRank the abyssRank to set
-	 */
-	public void setAbyssRank(AbyssRank abyssRank) {
-		this.abyssRank = abyssRank;
-	}
-
 	@Override
 	public PlayerEffectController getEffectController() {
 		return (PlayerEffectController) super.getEffectController();
@@ -1028,20 +1146,6 @@ public class Player extends Creature {
 	 */
 	public boolean isLegionMember() {
 		return legionMember != null;
-	}
-
-	/**
-	 * @param legionMember the legionMember to set
-	 */
-	public void setLegionMember(LegionMember legionMember) {
-		this.legionMember = legionMember;
-	}
-
-	/**
-	 * @return the legionMember
-	 */
-	public LegionMember getLegionMember() {
-		return legionMember;
 	}
 
 	/**
@@ -1065,10 +1169,7 @@ public class Player extends Creature {
 	 * @return true if a player has a store opened
 	 */
 	public boolean hasStore() {
-		if (getStore() != null) {
-			return true;
-		}
-		return false;
+		return getStore() != null;
 	}
 
 	/**
@@ -1118,13 +1219,6 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param rates the rates to set
-	 */
-	public void setRates(Rates rates) {
-		this.rates = rates;
-	}
-
-	/**
 	 * @return warehouse size
 	 */
 	public int getWarehouseSize() {
@@ -1146,13 +1240,6 @@ public class Player extends Creature {
 		return regularWarehouse;
 	}
 
-	/**
-	 * @return 0：普通；1：飞行；2：滑翔。 / 0: regular, 1: fly, 2: glide
-	 */
-	public int getFlyState() {
-		return this.flyState;
-	}
-
 	public void setFlyState(int flyState) {
 		this.flyState = flyState;
 		if (flyState == 1) {
@@ -1160,24 +1247,6 @@ public class Player extends Creature {
 		} else if (flyState == 0) {
 			setFlyingMode(false);
 		}
-	}
-
-	/**
-	 * @return the isTrading
-	 */
-	public boolean isTrading() {
-		return isTrading;
-	}
-
-	/**
-	 * @param isTrading the isTrading to set
-	 */
-	public void setTrading(boolean isTrading) {
-		this.isTrading = isTrading;
-	}
-
-	public boolean isGathering() {
-		return isGathering;
 	}
 
 	public void setIsGathering(boolean isGathering) {
@@ -1202,73 +1271,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the prisonTimer
-	 */
-	public long getPrisonTimer() {
-		return prisonTimer;
-	}
-
-	/**
-	 * @return the time in ms of start prison
-	 */
-	public long getStartPrison() {
-		return startPrison;
-	}
-
-	/**
-	 * @param start : The time in ms of start prison
-	 */
-	public void setStartPrison(long start) {
-		this.startPrison = start;
-	}
-
-	/**
 	 * @return
 	 */
 	public boolean isProtectionActive() {
 		return isInVisualState(CreatureVisualState.BLINKING);
-	}
-
-	/**
-	 * 检查玩家是否无敌。
-	 * Checks whether the player is invulnerable
-	 *
-	 * @return 是否无敌 / whether invulnerable
-	 */
-	public boolean isInvul() {
-		return invul;
-	}
-
-	/**
-	 * 设置 invulon 玩家。
-	 * Sets invul on player
-	 *
-	 * @param invul - boolean
-	 */
-	public void setInvul(boolean invul) {
-		this.invul = invul;
-	}
-
-	public void setMailbox(Mailbox mailbox) {
-		this.mailbox = mailbox;
-	}
-
-	public Mailbox getMailbox() {
-		return mailbox;
-	}
-
-	/**
-	 * @return the flyController
-	 */
-	public FlyController getFlyController() {
-		return flyController;
-	}
-
-	/**
-	 * @param flyController the flyController to set
-	 */
-	public void setFlyController(FlyController flyController) {
-		this.flyController = flyController;
 	}
 
 	public int getLastOnline() {
@@ -1277,42 +1283,6 @@ public class Player extends Creature {
 			return 0;
 		}
 		return (int) (lastOnline.getTime() / 1000);
-	}
-
-	/**
-	 * @param craftingTask
-	 */
-	public void setCraftingTask(CraftingTask craftingTask) {
-		this.craftingTask = craftingTask;
-	}
-
-	/**
-	 * @return
-	 */
-	public CraftingTask getCraftingTask() {
-		return craftingTask;
-	}
-
-	/**
-	 * @param flightTeleportId
-	 */
-	public void setFlightTeleportId(int flightTeleportId) {
-		this.flightTeleportId = flightTeleportId;
-	}
-
-	/**
-	 * @return flightTeleportId
-	 */
-	public int getFlightTeleportId() {
-		return flightTeleportId;
-	}
-
-	/**
-	 * @param flightDistance
-	 */
-	public void setFlightDistance(int flightDistance) {
-		this.flightDistance = flightDistance;
-
 	}
 
 	/**
@@ -1325,13 +1295,6 @@ public class Player extends Creature {
 		} else {
 			this.flyStartTime = 0;
 		}
-	}
-
-	/**
-	 * @return flightDistance
-	 */
-	public int getFlightDistance() {
-		return flightDistance;
 	}
 
 	/**
@@ -1376,19 +1339,12 @@ public class Player extends Creature {
 			return true;
 		}
 		if (enemy.isInPkMode() || this.isInPkMode()) {
-			if (this.isInSameTeam(enemy)) {
-				return false;
-			} else {
-				return true;
-			}
+			return !this.isInSameTeam(enemy);
 		}
 		if (enemy.isBandit() || this.isBandit()) {
 			return true;
 		}
-		if (canPvP(enemy) || this.getController().isDueling(enemy)) {
-			return true;
-		}
-		return false;
+		return canPvP(enemy) || this.getController().isDueling(enemy);
 	}
 
 	public boolean isAggroIconTo(Player player) {
@@ -1427,7 +1383,7 @@ public class Player extends Creature {
 					// \\//\\//\\//\\//\\//
 					worldId != 400010000 && // Reshanta.
 					// \\//帕内斯特拉//\\// / \\//Panesterra//\\//
-					worldId != 400020000 && // Belus.
+					worldId != 400020000 && // 贝洛斯 / Belus.
 					worldId != 400040000 && // Aspida.
 					worldId != 400050000 && // Atanatos.
 					worldId != 400060000 && // Disillon.
@@ -1483,7 +1439,7 @@ public class Player extends Creature {
 		if (((creature instanceof Player)) && (isInSameTeam((Player) creature))) {
 			return true;
 		}
-		if (((creature instanceof Trap)) && (((Creature) ((Trap) creature).getCreator()).getObjectId() == getObjectId())) {
+		if (((creature instanceof Trap)) && (((Trap) creature).getCreator().getObjectId() == getObjectId())) {
 			return true;
 		}
 		return creature.getVisualState() <= getSeeState();
@@ -1612,39 +1568,6 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the summon
-	 */
-	public Summon getSummon() {
-		return summon;
-	}
-
-	/**
-	 * @param summon the summon to set
-	 */
-	public void setSummon(Summon summon) {
-		this.summon = summon;
-	}
-
-	public SummonedObject<?> getSummonedObj() {
-		return summonedObj;
-	}
-
-	public void setSummonedObj(SummonedObject<?> summonedObj) {
-		this.summonedObj = summonedObj;
-	}
-
-	public void setKisk(Kisk newKisk) {
-		this.kisk = newKisk;
-	}
-
-	/**
-	 * @return
-	 */
-	public Kisk getKisk() {
-		return this.kisk;
-	}
-
-	/**
 	 * @param limits
 	 * @return
 	 */
@@ -1676,13 +1599,6 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the itemCoolDowns
-	 */
-	public Map<Integer, ItemCooldown> getItemCoolDowns() {
-		return itemCoolDowns;
-	}
-
-	/**
 	 * @param delayId
 	 * @param time
 	 * @param useDelay
@@ -1705,39 +1621,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param isGagged the isGagged to set
-	 */
-	public void setGagged(boolean isGagged) {
-		this.isGagged = isGagged;
-	}
-
-	/**
-	 * @return the isGagged
-	 */
-	public boolean isGagged() {
-		return isGagged;
-	}
-
-	public void setQuestFollowingNpc(Npc npc) {
-		questFollowingNpc = npc;
-	}
-
-	public Npc getQuestFollowingNpc() {
-		return questFollowingNpc;
-	}
-
-	/**
 	 * @return isAdminTeleportation
 	 */
 	public boolean getAdminTeleportation() {
 		return isAdminTeleportation;
-	}
-
-	/**
-	 * @param isAdminTeleportation
-	 */
-	public void setAdminTeleportation(boolean isAdminTeleportation) {
-		this.isAdminTeleportation = isAdminTeleportation;
 	}
 
 	public final boolean isCoolDownZero() {
@@ -1754,14 +1641,6 @@ public class Player extends Creature {
 
 	public boolean getResStatus() {
 		return isResByPlayer;
-	}
-
-	public int getResurrectionSkill() {
-		return resurrectionSkill;
-	}
-
-	public void setResurrectionSkill(int resurrectionSkill) {
-		this.resurrectionSkill = resurrectionSkill;
 	}
 
 	public void setIsFlyingBeforeDeath(boolean isActivated) {
@@ -1817,21 +1696,6 @@ public class Player extends Creature {
 		return isInTeam() ? getCurrentTeam().getTeamId() : 0;
 	}
 
-	/**
-	 * @return 传送门冷却列表 / portal cooldown list
-	 */
-	public PortalCooldownList getPortalCooldownList() {
-		return portalCooldownList;
-	}
-
-	public CraftCooldownList getCraftCooldownList() {
-		return craftCooldownList;
-	}
-
-	public HouseObjectCooldownList getHouseObjectCooldownList() {
-		return houseObjectCooldownList;
-	}
-
 	public Protector getProtectorInfo() {
 		return protectorList;
 	}
@@ -1856,18 +1720,6 @@ public class Player extends Creature {
 		return edit_mode;
 	}
 
-	public Npc getPostman() {
-		return postman;
-	}
-
-	public void setPostman(Npc postman) {
-		this.postman = postman;
-	}
-
-	public Account getPlayerAccount() {
-		return playerAccount;
-	}
-
 	/**
 	 * 任务完成。
 	 * Quest completion
@@ -1878,22 +1730,6 @@ public class Player extends Creature {
 			return false;
 		}
 		return qs.getStatus() == QuestStatus.COMPLETE;
-	}
-
-	public long getNextSkillUse() {
-		return nextSkillUse;
-	}
-
-	public void setNextSkillUse(long nextSkillUse) {
-		this.nextSkillUse = nextSkillUse;
-	}
-
-	public long getNextSummonSkillUse() {
-		return nextSummonSkillUse;
-	}
-
-	public void setNextSummonSkillUse(long nextSummonSkillUse) {
-		this.nextSummonSkillUse = nextSummonSkillUse;
 	}
 
 	/**
@@ -1935,20 +1771,6 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the dualEffectValue
-	 */
-	public int getDualEffectValue() {
-		return dualEffectValue;
-	}
-
-	/**
-	 * @param dualEffectValue the dualEffectValue to set
-	 */
-	public void setDualEffectValue(int dualEffectValue) {
-		this.dualEffectValue = dualEffectValue;
-	}
-
-	/**
 	 * @return 复活位置状态 / the Resurrection Positional State
 	 */
 	public boolean isInResPostState() {
@@ -1960,48 +1782,6 @@ public class Player extends Creature {
 	 */
 	public void setResPosState(boolean value) {
 		this.isInResurrectPosState = value;
-	}
-
-	/**
-	 * @param value Resurrection Positional X value to set
-	 */
-	public void setResPosX(float value) {
-		this.resPosX = value;
-	}
-
-	/**
-	 * @return 复活位置 X 值 / the Resurrection Positional X value
-	 */
-	public float getResPosX() {
-		return this.resPosX;
-	}
-
-	/**
-	 * @param value Resurrection Positional Y value to set
-	 */
-	public void setResPosY(float value) {
-		this.resPosY = value;
-	}
-
-	/**
-	 * @return 复活位置 Y 值 / the Resurrection Positional Y value
-	 */
-	public float getResPosY() {
-		return this.resPosY;
-	}
-
-	/**
-	 * @param value Resurrection Positional Z value to set
-	 */
-	public void setResPosZ(float value) {
-		this.resPosZ = value;
-	}
-
-	/**
-	 * @return 复活位置 Z 值 / the Resurrection Positional Z value
-	 */
-	public float getResPosZ() {
-		return this.resPosZ;
 	}
 
 	public boolean isInSiegeWorld() {
@@ -2026,20 +1806,6 @@ public class Player extends Creature {
 		return this.getEffectController().isAbnormalSet(AbnormalState.NOFLY);
 	}
 
-	/**
-	 * @param value 禁消耗飞行值效果状态 / status of NoFpConsum Effect
-	 */
-	public void setUnderNoFPConsum(boolean value) {
-		this.underNoFPConsum = value;
-	}
-
-	/**
-	 * @return true if player is under NoFpConsumEffect
-	 */
-	public boolean isUnderNoFPConsum() {
-		return this.underNoFPConsum;
-	}
-
 	public void setInstanceStartPos(float instanceStartPosX, float instanceStartPosY, float instanceStartPosZ) {
 		this.instanceStartPosX = instanceStartPosX;
 		this.instanceStartPosY = instanceStartPosY;
@@ -2062,44 +1828,6 @@ public class Player extends Creature {
 		return playerAccount.getMembership() >= perm;
 	}
 
-	/**
-	 * @return Returns the emotions.
-	 */
-	public EmotionList getEmotions() {
-		return emotions;
-	}
-
-	/**
-	 * @param emotions The emotions to set.
-	 */
-	public void setEmotions(EmotionList emotions) {
-		this.emotions = emotions;
-	}
-
-	public int getRebirthResurrectPercent() {
-		return rebirthResurrectPercent;
-	}
-
-	public void setRebirthResurrectPercent(int rebirthResurrectPercent) {
-		this.rebirthResurrectPercent = rebirthResurrectPercent;
-	}
-
-	public int getRebirthSkill() {
-		return rebirthSkill;
-	}
-
-	public void setRebirthSkill(int rebirthSkill) {
-		this.rebirthSkill = rebirthSkill;
-	}
-
-	public BindPointPosition getBindPoint() {
-		return bindPoint;
-	}
-
-	public void setBindPoint(BindPointPosition bindPoint) {
-		this.bindPoint = bindPoint;
-	}
-
 	@Override
 	public ItemAttackType getAttackType() {
 		Item weapon = getEquipment().getMainHandWeapon();
@@ -2107,10 +1835,6 @@ public class Player extends Creature {
 			return weapon.getItemTemplate().getAttackType();
 		}
 		return ItemAttackType.PHYSICAL;
-	}
-
-	public long getFlyStartTime() {
-		return this.flyStartTime;
 	}
 
 	public FlyPathEntry getCurrentFlyPath() {
@@ -2123,10 +1847,6 @@ public class Player extends Creature {
 
 	public void setWispable() {
 		this.isWispable = true;
-	}
-
-	public boolean isWispable() {
-		return isWispable;
 	}
 
 	public boolean isInvulnerableWing() {
@@ -2167,54 +1887,12 @@ public class Player extends Creature {
 		}
 	}
 
-	/**
-	 * @return the motions
-	 */
-	public MotionList getMotions() {
-		return motions;
-	}
-
-	/**
-	 * @param motions the motions to set
-	 */
-	public void setMotions(MotionList motions) {
-		this.motions = motions;
-	}
-
 	public void setTransformed(boolean value) {
 		getTransformModel().setActive(value);
 	}
 
 	public boolean isTransformed() {
 		return getTransformModel().isActive();
-	}
-
-	/**
-	 * @return the npcFactions
-	 */
-	public NpcFactions getNpcFactions() {
-		return npcFactions;
-	}
-
-	/**
-	 * @param npcFactions the npcFactions to set
-	 */
-	public void setNpcFactions(NpcFactions npcFactions) {
-		this.npcFactions = npcFactions;
-	}
-
-	/**
-	 * @return the flyReuseTime
-	 */
-	public long getFlyReuseTime() {
-		return flyReuseTime;
-	}
-
-	/**
-	 * @param flyReuseTime the flyReuseTime to set
-	 */
-	public void setFlyReuseTime(long flyReuseTime) {
-		this.flyReuseTime = flyReuseTime;
 	}
 
 	/**
@@ -2282,8 +1960,7 @@ public class Player extends Creature {
 		List<Effect> effects = getEffectController().getAbnormalEffects();
 		for (Effect effect : effects) {
 			for (EffectTemplate template : effect.getEffectTemplates()) {
-				if (template.getEffectid() == 160 && (template instanceof RebirthEffect)) {
-					RebirthEffect rebirthEffect = (RebirthEffect) template;
+				if (template.getEffectid() == 160 && (template instanceof RebirthEffect rebirthEffect)) {
 					setRebirthResurrectPercent(rebirthEffect.getResurrectPercent());
 					setRebirthSkill(rebirthEffect.getSkillId());
 					return true;
@@ -2326,14 +2003,6 @@ public class Player extends Creature {
 
 	public boolean isLooting() {
 		return lootingNpcOid != 0;
-	}
-
-	public void setLootingNpcOid(int lootingNpcOid) {
-		this.lootingNpcOid = lootingNpcOid;
-	}
-
-	public int getLootingNpcOid() {
-		return lootingNpcOid;
 	}
 
 	public final boolean isMentor() {
@@ -2418,16 +2087,8 @@ public class Player extends Creature {
 		return (System.currentTimeMillis() - onlineTime) / 1000;
 	}
 
-	public void setCommandUsed(boolean value) {
-		isCommandUsed = value;
-	}
-
 	public boolean isCommandInUse() {
 		return isCommandUsed;
-	}
-
-	public void setRebirthRevive(boolean result) {
-		rebirthRevive = result;
 	}
 
 	public boolean canUseRebirthRevive() {
@@ -2446,14 +2107,6 @@ public class Player extends Creature {
 		getInventory().decreaseByItemId(subtractedSupplementId, subtractedSupplementsCount);
 		subtractedSupplementsCount = 0;
 		subtractedSupplementId = 0;
-	}
-
-	public int getPortAnimation() {
-		return portAnimation;
-	}
-
-	public void setPortAnimation(int portAnimation) {
-		this.portAnimation = portAnimation;
 	}
 
 	public boolean isSkillDisabled(SkillTemplate template) {
@@ -2503,18 +2156,6 @@ public class Player extends Creature {
 		return 0;
 	}
 
-	public HouseRegistry getHouseRegistry() {
-		return houseRegistry;
-	}
-
-	public void setHouseRegistry(HouseRegistry houseRegistry) {
-		this.houseRegistry = houseRegistry;
-	}
-
-	public byte getBuildingOwnerStates() {
-		return buildingOwnerStates;
-	}
-
 	public boolean isBuildingInState(PlayerHouseOwnerFlags state) {
 		return (buildingOwnerStates & state.getId()) != 0;
 	}
@@ -2535,21 +2176,9 @@ public class Player extends Creature {
 		}
 	}
 
-	public float[] getBattleReturnCoords() {
-		return this.battleReturnCoords;
-	}
-
 	public void setBattleReturnCoords(int mapId, float[] coords) {
 		this.battleReturnMap = mapId;
 		this.battleReturnCoords = coords;
-	}
-
-	public int getBattleReturnMap() {
-		return battleReturnMap;
-	}
-
-	public boolean isInSprintMode() {
-		return isInSprintMode;
 	}
 
 	public void setSprintMode(boolean isInSprintMode) {
@@ -2561,18 +2190,6 @@ public class Player extends Creature {
 			rideObservers = new ArrayList<ActionObserver>(3);
 		}
 		rideObservers.add(observer);
-	}
-
-	public List<ActionObserver> getRideObservers() {
-		return rideObservers;
-	}
-
-	public ItemUseObserver getCraftObserver() {
-		return craftObserver;
-	}
-
-	public void setCraftObserver(ItemUseObserver craftObserver) {
-		this.craftObserver = craftObserver;
 	}
 
 	public String getCustomTag(boolean isForChatCommands) {
@@ -2625,14 +2242,6 @@ public class Player extends Creature {
 		rawKillcount = count;
 	}
 
-	public int getSpreeLevel() {
-		return spreeLevel;
-	}
-
-	public void setSpreeLevel(int value) {
-		spreeLevel = value;
-	}
-
 	public AbsoluteStatOwner getAbsoluteStats() {
 		return absStatsHolder;
 	}
@@ -2645,14 +2254,6 @@ public class Player extends Creature {
 		this.hasBonus = hasBonus;
 	}
 
-	public int getBonusId() {
-		return bonusId;
-	}
-
-	public void setBonusId(int id) {
-		bonusId = id;
-	}
-
 	public boolean hasAbyssBonus() {
 		return hasAbyssBonus;
 	}
@@ -2661,36 +2262,12 @@ public class Player extends Creature {
 		this.hasAbyssBonus = hasAbyssBonus;
 	}
 
-	public int getAbyssId() {
-		return abyssId;
-	}
-
-	public void setAbyssId(int id) {
-		abyssId = id;
-	}
-
 	public boolean isUseRobot() {
 		return robot;
 	}
 
 	public void setUseRobot(boolean robot) {
 		this.robot = robot;
-	}
-
-	public int getRobotId() {
-		return robotId;
-	}
-
-	public void setRobotId(int robotId) {
-		this.robotId = robotId;
-	}
-
-	public int getPlayersBonusId() {
-		return playersBonusId;
-	}
-
-	public void setPlayersBonusId(int id) {
-		playersBonusId = id;
 	}
 
 	public int getTransformedModelId() {
@@ -2717,22 +2294,6 @@ public class Player extends Creature {
 		transformPanelId = id;
 	}
 
-	public boolean isInWindstream() {
-		return this.isInWindstream;
-	}
-
-	public void setInWindstream(boolean value) {
-		this.isInWindstream = value;
-	}
-
-	public int getSilenceReportCount() {
-		return silenceReportCount;
-	}
-
-	public void setSilenceReportCount(int count) {
-		silenceReportCount = count;
-	}
-
 	public int getRndCrazy() {
 		return rndPoint;
 	}
@@ -2741,36 +2302,12 @@ public class Player extends Creature {
 		rndPoint = rnd;
 	}
 
-	public boolean isInCrazy() {
-		return isInCrazy;
-	}
-
-	public void setInCrazy(boolean isInCrazy) {
-		this.isInCrazy = isInCrazy;
-	}
-
 	public int getCrazyKillCount() {
 		return crazyKillcount;
 	}
 
 	public void setCrazyKillCount(int count) {
 		crazyKillcount = count;
-	}
-
-	public int getCrazyLevel() {
-		return crazyLevel;
-	}
-
-	public void setCrazyLevel(int value) {
-		crazyLevel = value;
-	}
-
-	public F2p getF2p() {
-		return f2p;
-	}
-
-	public void setF2p(F2p f2p) {
-		this.f2p = f2p;
 	}
 
 	public PlayerCPList getCP() {
@@ -2797,23 +2334,11 @@ public class Player extends Creature {
 		this.ew = ew;
 	}
 
-	public PlayerWardrobeList getWardrobe() {
-		return wardrobe;
-	}
-
-	public void setWardrobe(PlayerWardrobeList wardrobe) {
-		this.wardrobe = wardrobe;
-	}
-
 	public void setHotTeleObservers(ActionObserver observer) {
 		if (hotTeleObservers == null) {
 			hotTeleObservers = new ArrayList<ActionObserver>(3);
 		}
 		hotTeleObservers.add(observer);
-	}
-
-	public List<ActionObserver> getHotTeleObservers() {
-		return hotTeleObservers;
 	}
 
 	public PlayerUpgradeArcade getUpgradeArcade() {
@@ -2839,48 +2364,8 @@ public class Player extends Creature {
 		this.shugoSweep = ps;
 	}
 
-	public boolean isOnAStation() {
-		return isOnAStation;
-	}
-
-	public void setOnAStation(boolean isOnAStation) {
-		this.isOnAStation = isOnAStation;
-	}
-
-	public int getLinkedSkill() {
-		return linkedSkill;
-	}
-
-	public void setLinkedSkill(int skillId) {
-		this.linkedSkill = skillId;
-	}
-
-	public int getStigmaSet() {
-		return stigmaSet;
-	}
-
-	public void setStigmaSet(int id) {
-		this.stigmaSet = id;
-	}
-
 	public boolean isArchDaeva() {
 		return getCommonData().isArchDaeva();
-	}
-
-	public int getGoldenStarOfLodi() {
-		return goldenStarOfLodi;
-	}
-
-	public void setGoldenStarOfLodi(int goldenStarOfLodi) {
-		this.goldenStarOfLodi = goldenStarOfLodi;
-	}
-
-	public int getUnkPoint1() {
-		return unkPoint1;
-	}
-
-	public void setUnkPoint1(int unkPoint) {
-		this.unkPoint1 = unkPoint;
 	}
 
 	public int getCreativityPoint() {
@@ -2959,22 +2444,6 @@ public class Player extends Creature {
 		playerCommonData.setJoinRequestLegionId(0);
 		playerCommonData.setJoinRequestState(LegionJoinRequestState.NONE);
 		DAOManager.getDAO(PlayerDAO.class).clearJoinRequest(getObjectId());
-	}
-
-	public void setEnchantBoost(boolean boost) {
-		this.enchantBoost = boost;
-	}
-
-	public void setAuthorizeBoost(boolean boost) {
-		this.authorizeBoost = boost;
-	}
-
-	public boolean isEnchantBoost() {
-		return this.enchantBoost;
-	}
-
-	public boolean isAuthorizeBoost() {
-		return this.authorizeBoost;
 	}
 
 	public void setLunaConsumePoint(int point) {
@@ -3071,13 +2540,6 @@ public class Player extends Creature {
 		return maxCountEvent;
 	}
 
-	/**
-	 * @return PVP 系统 / PVP System
-	 */
-	public boolean isBandit() {
-		return this.bandit;
-	}
-
 	/** 设置 bandit / Sets the bandit */
 	public void setBandit(boolean bandit) {
 		this.bandit = bandit;
@@ -3101,11 +2563,6 @@ public class Player extends Creature {
 		arenaKillStreak = killStreak;
 	}
 
-	/** 返回 bandit kill streak / Returns the bandit kill streak */
-	public int getBanditKillStreak() {
-		return banditKillStreak;
-	}
-
 	/** 设置强盗连杀 / setbandit Kill Streak. */
 	public void setbanditKillStreak(int killStreak) {
 		banditKillStreak = killStreak;
@@ -3114,11 +2571,6 @@ public class Player extends Creature {
 	/** 设置 last action / Sets the last action */
 	public void setLastAction() {
 		this.lastAction = System.currentTimeMillis();
-	}
-
-	/** 返回 last action / Returns the last action */
-	public long getLastAction() {
-		return lastAction;
 	}
 
 	/** 返回 prev pos / Returns the prev pos */
@@ -3133,55 +2585,6 @@ public class Player extends Creature {
 		return prevPos;
 	}
 
-	/** 设置 battleground / Sets the battleground */
-	public void setBattleground(Battleground battleground) {
-		this.battleground = battleground;
-	}
-
-	/** 返回 battleground / Returns the battleground */
-	public Battleground getBattleground() {
-		return battleground;
-	}
-
-	/** 设置 total kills / Sets the total kills */
-	public void setTotalKills(int totalKills) {
-		this.totalKills = totalKills;
-	}
-
-	/** 返回 total kills / Returns the total kills */
-	public int getTotalKills() {
-		return totalKills;
-	}
-
-	/** 设置 bg index / Sets the bg index */
-	public void setBgIndex(int bgIndex) {
-		this.bgIndex = bgIndex;
-	}
-
-	/** 返回 bg index / Returns the bg index */
-	public int getBgIndex() {
-		return bgIndex;
-	}
-
-	/** 设置 spectating / Sets the spectating */
-	public void setSpectating(boolean isSpectating) {
-		this.isSpectating = isSpectating;
-	}
-
-	/**
-	 * @return 是否观战 / Whether spectating
-	 */
-	public boolean isSpectating() {
-		return isSpectating;
-	}
-
-	/**
-	 * @return 是否无规则状态 / Whether lawless
-	 */
-	public boolean isLawless() {
-		return lawless;
-	}
-
 	/** 设置 lawless / Sets the lawless */
 	public void setLawless(boolean lawless) {
 		this.lawless = lawless;
@@ -3193,28 +2596,6 @@ public class Player extends Creature {
 				PlayerAllianceService.removePlayer(this);
 			}
 		}
-	}
-
-	/**
-	 * @return 是否离开。 / Whether afk
-	  */
-	public boolean isAfk() {
-		return isAfk;
-	}
-
-	/** 设置 afk / Sets the afk */
-	public void setAfk(boolean isAfk) {
-		this.isAfk = isAfk;
-	}
-
-	/** 是否处于自由混战 / Whether ffa */
-	public boolean isFFA() {
-		return this.isFFA;
-	}
-
-	/** 设置 ffa / Sets the ffa */
-	public void setFFA(boolean isFFA) {
-		this.isFFA = isFFA;
 	}
 
 	/** 发送消息。 / Send message. */
@@ -3264,8 +2645,14 @@ public class Player extends Creature {
 
 	// 竞赛活动部分 / competiton event part
 	private GoldArenaRank arenaGoldrank;
+	/** 获取高塔军阶。 / Returns the tower rank. */
+	@Getter
+	@Setter
 	private TowerOfChallengeRank towerRank;
 	private Arena6V6Ranking arena6v6Rank;
+	/** 返回 tenacity rank / Returns the tenacity rank */
+	@Getter
+	@Setter
 	private ArenaOfTenacityRank tenacityRank;
 
 	/** 返回 arena gold rank / Returns the arena gold rank */
@@ -3278,16 +2665,6 @@ public class Player extends Creature {
 		this.arenaGoldrank = gar;
 	}
 
-	/** 获取高塔军阶。 / Returns the tower rank. */
-	public TowerOfChallengeRank getTowerRank() {
-		return towerRank;
-	}
-
-	/** 设置高塔军阶。 / Sets the tower rank. */
-	public void setTowerRank(TowerOfChallengeRank tr) {
-		this.towerRank = tr;
-	}
-
 	/** 获取6v6排名 / Get 6 v 6 Rank */
 	public Arena6V6Ranking get6v6Rank() {
 		return arena6v6Rank;
@@ -3298,79 +2675,6 @@ public class Player extends Creature {
 		this.arena6v6Rank = ar;
 	}
 
-	/** 返回 tenacity rank / Returns the tenacity rank */
-	public ArenaOfTenacityRank getTenacityRank() {
-		return tenacityRank;
-	}
-
-	/** 设置 tenacity rank / Sets the tenacity rank */
-	public void setTenacityRank(ArenaOfTenacityRank tr) {
-		this.tenacityRank = tr;
-	}
-
-	/**
-	 * @return GM 模式 / GM Mode
-	 */
-	public boolean isGmMode() {
-		return isGmMode;
-	}
-
-	/** 设置 gm mode / Sets the gm mode */
-	public void setGmMode(boolean isGmMode) {
-		this.isGmMode = isGmMode;
-	}
-
-	/**
-	 * @return 活动调用与注册 / EventCaller + Event Reg
-	 */
-	public int getCheckpoints() {
-		return checkpoints;
-	}
-
-	/** 设置 checkpoints / Sets the checkpoints */
-	public void setCheckpoints(int checkPoints) {
-		this.checkpoints = checkPoints;
-	}
-
-	/** 返回数量玩家集合 / Returns the count players */
-	public int getCountPlayers() {
-		return countPlayers;
-	}
-
-	/** 设置 count players / Sets the count players */
-	public void setCountPlayers(int countPlayers) {
-		this.countPlayers = countPlayers;
-	}
-
-	/**
-	 * @return 是否已注册活动 / Whether reged event
-	 */
-	public boolean isRegedEvent() {
-		return isRegedEvent;
-	}
-
-	/** 设置 reged event / Sets the reged event */
-	public void setRegedEvent(boolean isRegedEvent) {
-		this.isRegedEvent = isRegedEvent;
-	}
-
-	/**
-	 * @return 活动是否已开始 / Whether event started
-	 */
-	public boolean isEventStarted() {
-		return isEventStarted;
-	}
-
-	/** 设置 event started / Sets the event started */
-	public void setEventStarted(boolean isEventStarted) {
-		this.isEventStarted = isEventStarted;
-	}
-
-	/** 返回 queued players / Returns the queued players */
-	public List<Player> getQueuedPlayers() {
-		return QueuedPlayers;
-	}
-
 	/** 设置 queued players / Sets the queued players */
 	public void setQueuedPlayers(Player player) {
 		if (QueuedPlayers == null) {
@@ -3379,67 +2683,16 @@ public class Player extends Creature {
 		QueuedPlayers.add(player);
 	}
 
-	/**
-	 * 月华骰子游戏。
-	 * Luna Dice Game
-	 */
-	public int getLunaDiceGame() {
-		return this.LunaDiceGame;
-	}
-
 	/** 设置 luna dice game / Sets the luna dice game */
 	public void setLunaDiceGame(int dice, boolean reset) {
 		if (!reset) {
 			if (dice > this.LunaDiceGame) {
 				this.LunaDiceGame = dice;
 			} else {
-				return;
 			}
 		} else {
 			this.LunaDiceGame = dice;
 		}
-	}
-
-	/** 返回 luna dice game try / Returns the luna dice game try */
-	public int getLunaDiceGameTry() {
-		return this.LunaDiceGameTry;
-	}
-
-	/** 设置 luna dice game try / Sets the luna dice game try */
-	public void setLunaDiceGameTry(int dice) {
-		this.LunaDiceGameTry = dice;
-	}
-
-	/**
-	 * @return 自定义 PK/PVE 模式 / Custom PK / PVE Mode
-	 */
-	public boolean isInPkMode() {
-		return isInPkMode;
-	}
-
-	/** 设置 in pk mode / Sets the in pk mode */
-	public void setInPkMode(boolean isInPkMode) {
-		this.isInPkMode = isInPkMode;
-	}
-
-	/**
-	 * @return 是否处于 PvE 模式 / Whether in PvE mode
-	  */
-	public boolean isInPvEMode() {
-		return isInPvEMode;
-	}
-
-	/** 设置 in pv e mode / Sets the in pv e mode */
-	public void setInPvEMode(boolean isInPvEMode) {
-		this.isInPvEMode = isInPvEMode;
-	}
-
-	/**
-	 * 技能外观列表。
-	 * Skill Skin List
-	 */
-	public SkillSkinList getSkillSkinList() {
-		return skillSkinList;
 	}
 
 	/** 设置技能外观列表。 / Sets the skill skin list. */
@@ -3448,34 +2701,9 @@ public class Player extends Creature {
 		skillSkinList.setOwner(this);
 	}
 
-	/** 是否处于盗贼复仇决斗。 / Whether in a thieves revenge duel. */
-	public boolean isThievesDuel() {
-		return thievesDuel;
-	}
-
-	/** 是否盗贼 / Whether thieves*/
-	public boolean isThieves() {
-		return isThieves;
-	}
-
 	/** 设置 is thieves / Sets the is thieves */
 	public void setIsThieves(boolean isThieves) {
 		this.isThieves = isThieves;
-	}
-
-	/** 设置 thieves / Sets the thieves */
-	public void setThieves(ThievesStatusList thievesStatusList) {
-		this.thieves = thievesStatusList;
-	}
-
-	/** 设置 thieves duel / Sets the thieves duel */
-	public void setThievesDuel(boolean isThieves) {
-		this.thievesDuel = isThieves;
-	}
-
-	/** 返回盗贼 / Returns the thieves*/
-	public ThievesStatusList getThieves() {
-		return thieves;
 	}
 
 	/** 获取守护灵技能点。 / Returns the minion skill points. */
@@ -3490,31 +2718,11 @@ public class Player extends Creature {
 
 	/** 是否为魔法职业 / Whether magical type class */
 	public boolean isMagicalTypeClass() {
-		if (playerCommonData.getPlayerClass() == PlayerClass.MUSE || playerCommonData.getPlayerClass() == PlayerClass.SONGWEAVER || playerCommonData.getPlayerClass() == PlayerClass.CLERIC || playerCommonData.getPlayerClass() == PlayerClass.SORCERER || playerCommonData.getPlayerClass() == PlayerClass.SPIRIT_MASTER || playerCommonData.getPlayerClass() == PlayerClass.AETHERTECH) {
-			return true;
-		}
-		return false;
+		return playerCommonData.getPlayerClass() == PlayerClass.MUSE || playerCommonData.getPlayerClass() == PlayerClass.SONGWEAVER || playerCommonData.getPlayerClass() == PlayerClass.CLERIC || playerCommonData.getPlayerClass() == PlayerClass.SORCERER || playerCommonData.getPlayerClass() == PlayerClass.SPIRIT_MASTER || playerCommonData.getPlayerClass() == PlayerClass.AETHERTECH;
 	}
-
-	private List<DisassembleItem> disassemblyItemLists = new ArrayList<DisassembleItem>();
 
 	/** 返回 disassembly item lists / Returns the disassembly item lists */
-	public List<DisassembleItem> getDisassemblyItemLists() {
-		return disassemblyItemLists;
-	}
-
-	/** 设置 disassembly item lists / Sets the disassembly item lists */
-	public void setDisassemblyItemLists(List<DisassembleItem> disassemblyItemLists) {
-		this.disassemblyItemLists = disassemblyItemLists;
-	}
-
-	/** 是否决斗 / Whether in duel */
-	public boolean isInDuel() {
-		return isInDuel;
-	}
-
-	/** 设置 in duel / Sets the in duel */
-	public void setInDuel(boolean isInDuel) {
-		this.isInDuel = isInDuel;
-	}
+	@Getter
+	@Setter
+	private List<DisassembleItem> disassemblyItemLists = new ArrayList<DisassembleItem>();
 }

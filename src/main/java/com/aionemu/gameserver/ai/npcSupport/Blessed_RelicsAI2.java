@@ -34,7 +34,7 @@ public class Blessed_RelicsAI2 extends NpcAI2
 			"You must have 1 <Prestige Crystal>", ChatType.BRIGHT_YELLOW_CENTER), true);
         }
     }
-	
+
 	/**
 	 * 对话选择处理：消耗一颗威名水晶并对玩家施加威名祝福技能效果。
 	 * Handles dialog selection: consumes one Prestige Crystal and applies the Prestigious Blessing skill effect.
@@ -47,7 +47,7 @@ public class Blessed_RelicsAI2 extends NpcAI2
 				case 831988: //小型祝福遗物 / Minor Blessed Relics.
 				case 831989: //大型祝福遗物 / Major Blessed Relics.
 				case 831990: //高级祝福遗物 / Greater Blessed Relics.
-					GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000 * 1); //威名祝福 / Prestigious Blessing.
+					GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000); //威名祝福 / Prestigious Blessing.
 				break;
 			}
 		}

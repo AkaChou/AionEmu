@@ -12,9 +12,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_PLASTIC_SURGERY extends AionServerPacket {
 
-	private int playerObjId;
-	private byte check_ticket;
-	private byte change_sex;
+	private final int playerObjId;
+	private final byte check_ticket;
+	private final byte change_sex;
 
 	/**
 	 * target player

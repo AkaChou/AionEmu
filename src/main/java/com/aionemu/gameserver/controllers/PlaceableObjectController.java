@@ -50,7 +50,7 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 	 */
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		Player p = (Player) object;
-		ActionObserver observer = (ActionObserver) observed.remove(p.getObjectId());
+		ActionObserver observer = observed.remove(p.getObjectId());
 		if (isOutOfRange) {
 			observer.moved();
 			PacketSendUtility.sendPacket(p, new SM_DELETE_HOUSE_OBJECT((getOwner()).getObjectId()));

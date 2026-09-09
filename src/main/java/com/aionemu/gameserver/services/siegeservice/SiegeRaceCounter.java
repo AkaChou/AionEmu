@@ -18,20 +18,26 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.World;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 攻城种族计数器，按种族累计伤害/AP 并比较排名。
  * Siege race counter accumulating damage/AP by race and ranking them.
  */
+@RequiredArgsConstructor
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();
 	private final Map<Integer, AtomicLong> playerDamageCounter = new LinkedHashMap<Integer, AtomicLong>();
 	private final Map<Integer, AtomicLong> playerAPCounter = new LinkedHashMap<Integer, AtomicLong>();
+	/**
+	 * 返回本计数器所属阵营。
+	 * Returns the race of this counter.
+	 *
+	 * @return 阵营 / siege race
+	 */
+	@Getter
 	private final SiegeRace siegeRace;
-
-	public SiegeRaceCounter(SiegeRace siegeRace) {
-		this.siegeRace = siegeRace;
-	}
 
 	/**
 	 * 累计点数。
@@ -177,16 +183,6 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 */
 	public int compareTo(SiegeRaceCounter o) {
 		return Long.compare(o.getTotalDamage(), getTotalDamage());
-	}
-
-	/**
-	 * 返回本计数器所属阵营。
-	 * Returns the race of this counter.
-	 *
-	 * @return 阵营 / siege race
-	 */
-	public SiegeRace getSiegeRace() {
-		return siegeRace;
 	}
 
 	/**

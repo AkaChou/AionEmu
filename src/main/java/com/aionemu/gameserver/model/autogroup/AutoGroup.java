@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 自动队伍，用于 autogroup 相关逻辑。
@@ -16,21 +17,33 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AutoGroup")
 public class AutoGroup {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 返回副本 ID / Returns the instance id */
+	@Getter
 	@XmlAttribute(required = true)
 	protected int instanceId;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute(name = "name_id")
 	protected int nameId;
 
+	/** 返回标题 ID / Returns the title id */
+	@Getter
 	@XmlAttribute(name = "title_id")
 	protected int titleId;
 
+	/** 返回 min lvl / Returns the min lvl */
+	@Getter
 	@XmlAttribute(name = "min_lvl")
 	protected int minLvl;
 
+	/** 返回 max lvl / Returns the max lvl */
+	@Getter
 	@XmlAttribute(name = "max_lvl")
 	protected int maxLvl;
 
@@ -48,36 +61,6 @@ public class AutoGroup {
 
 	@XmlAttribute(name = "npc_ids")
 	protected List<Integer> npcIds;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回副本 ID / Returns the instance id */
-	public int getInstanceId() {
-		return instanceId;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameId() {
-		return nameId;
-	}
-
-	/** 返回标题 ID / Returns the title id */
-	public int getTitleId() {
-		return titleId;
-	}
-
-	/** 返回 min lvl / Returns the min lvl */
-	public int getMinLvl() {
-		return minLvl;
-	}
-
-	/** 返回 max lvl / Returns the max lvl */
-	public int getMaxLvl() {
-		return maxLvl;
-	}
 
 	/** Whether 登记 fast / Whether register fast */
 	public boolean hasRegisterFast() {

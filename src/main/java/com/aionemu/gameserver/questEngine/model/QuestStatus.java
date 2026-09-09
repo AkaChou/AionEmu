@@ -37,7 +37,7 @@ public enum QuestStatus {
 	LOCKED(6);
 
 	/** 协议/持久化用的状态 ID。 Protocol/persistence status id. */
-	private int id;
+	private final int id;
 
 	/**
 	 * 使用给定 ID 构造状态。
@@ -45,7 +45,7 @@ public enum QuestStatus {
 	 *
 	 * @param id 状态 ID / Status id
 	 */
-	private QuestStatus(int id) {
+	QuestStatus(int id) {
 		this.id = id;
 	}
 

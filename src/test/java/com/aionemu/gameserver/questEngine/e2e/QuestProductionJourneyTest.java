@@ -109,8 +109,8 @@ class QuestProductionJourneyTest {
 		QuestProductionJourneyPlanner.Plan plan = new QuestProductionJourneyPlanner()
 			.plan(definition, oracle).plan();
 		int movieEndIndex = java.util.stream.IntStream.range(0, plan.steps().size())
-			.filter(index -> plan.steps().get(index).transition().event() instanceof QuestEvent.MovieEnd movie
-				&& movie.movieId() == 16)
+			.filter(index -> plan.steps().get(index).transition().event() instanceof QuestEvent.MovieEnd(int movieId)
+				&& movieId == 16)
 			.findFirst().orElseThrow();
 
 		assertTrue(movieEndIndex > 0);

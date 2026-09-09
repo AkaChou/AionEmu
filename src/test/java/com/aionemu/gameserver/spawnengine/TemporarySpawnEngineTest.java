@@ -61,7 +61,7 @@ class TemporarySpawnEngineTest {
 
 		despawn();
 
-		assertTrue(!object.deleted);
+		assertFalse(object.deleted);
 	}
 
 	@Test

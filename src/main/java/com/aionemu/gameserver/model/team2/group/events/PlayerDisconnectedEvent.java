@@ -9,6 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_GROUP_MEMBER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家断线事件（团队2）。
@@ -16,15 +17,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
 
 	private final PlayerGroup group;
 	private final Player player;
-
-	public PlayerDisconnectedEvent(PlayerGroup group, Player player) {
-		this.group = group;
-		this.player = player;
-	}
 
 	/**
 	 * 断线前玩家必须已在队伍中。

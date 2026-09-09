@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 触发即时攻击效果：按魔法伤害结算，并向施法者发送触发提示。
@@ -21,18 +22,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcAtkInstantEffect")
 public class ProcAtkInstantEffect extends DamageEffect {
+	@Getter
 	@XmlAttribute(name = "checkprotector")
 	private boolean checkProtector = true;
+	@Getter
 	@XmlAttribute(name = "weaponboost")
 	private int weaponBoost;
-
-	public boolean isCheckProtector() {
-		return checkProtector;
-	}
-
-	public int getWeaponBoost() {
-		return weaponBoost;
-	}
 
 	/**
 	 * 对目标结算 PROCATKINSTANT 伤害，并在需要时通知施法者。

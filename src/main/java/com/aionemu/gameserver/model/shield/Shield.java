@@ -9,6 +9,7 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
+import lombok.Getter;
 
 /**
  * 护盾模型。
@@ -18,8 +19,12 @@ import com.aionemu.gameserver.world.knownlist.SphereKnownList;
  */
 public class Shield extends VisibleObject {
 
+	/** 获取模板。 / Returns the template. */
+	@Getter
 	private ShieldTemplate template = null;
 	private String name = null;
+	/** 返回 ID / Returns the id */
+	@Getter
 	private int id = 0;
 
 	public Shield(ShieldTemplate template) {
@@ -32,20 +37,10 @@ public class Shield extends VisibleObject {
 		setKnownlist(new SphereKnownList(this, template.getRadius() * 2));
 	}
 
-	/** 获取模板。 / Returns the template. */
-	public ShieldTemplate getTemplate() {
-		return template;
-	}
-
 	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
 	}
 
 	/** 生成。 / Spawn. */

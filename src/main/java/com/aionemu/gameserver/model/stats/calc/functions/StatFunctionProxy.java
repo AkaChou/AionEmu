@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.utils.stats.CalculationType;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 属性函数 Proxy 模型。
@@ -11,9 +13,12 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunction> {
 
 	private final StatOwner owner;
+	/** 返回 proxied function / Returns the proxied function */
+	@Getter
 	private final IStatFunction proxiedFunction;
 	private final StatEnum stat;
 
@@ -21,17 +26,6 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 		this.owner = owner;
 		this.proxiedFunction = statFunction;
 		this.stat = statFunction.getName();
-	}
-
-	public StatFunctionProxy(StatOwner owner, IStatFunction statFunction, StatEnum statEnum) {
-		this.owner = owner;
-		this.proxiedFunction = statFunction;
-		this.stat = statEnum;
-	}
-
-	/** 返回 proxied function / Returns the proxied function */
-	public IStatFunction getProxiedFunction() {
-		return proxiedFunction;
 	}
 
 	/** 返回哈希码。 / Returns hash code. */
@@ -57,13 +51,8 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 		}
 		StatFunctionProxy other = (StatFunctionProxy) obj;
 		if (owner == null) {
-			if (other.owner != null) {
-				return false;
-			}
-		} else if (!owner.equals(other.owner)) {
-			return false;
-		}
-		return true;
+			return other.owner == null;
+		} else return owner.equals(other.owner);
 	}
 
 	/** 比较。 / Compares to another instance. */

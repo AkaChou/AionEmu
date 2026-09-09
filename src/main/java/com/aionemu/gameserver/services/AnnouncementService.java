@@ -39,7 +39,7 @@ public class AnnouncementService {
 	/** 已加载的公告集合。 / Loaded announcements. */
 	private Collection<Announcement> announcements;
 	/** 定时广播任务列表。 / Scheduled broadcast task list. */
-	private List<Future<?>> delays = new ArrayList<Future<?>>();
+	private final List<Future<?>> delays = new ArrayList<Future<?>>();
 
 	/**
 	 * 构造服务并加载公告。
@@ -135,7 +135,7 @@ public class AnnouncementService {
 						}
 					}
 				}
-			}, announce.getDelay() * 1000, announce.getDelay() * 1000));
+			}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));
 		}
 		log.info(I18n.get("log.60ed3a14c1fd", announcements.size()));
 	}

@@ -106,7 +106,7 @@ public class PlayerEffectController extends EffectController {
 	@Override
 	public void updatePlayerEffectIconsImpl() {
 		Collection<Effect> effects = getAbnormalEffectsToShow();
-		PacketSendUtility.sendPacket((Player) getOwner(), new SM_ABNORMAL_STATE(effects, abnormals));
+		PacketSendUtility.sendPacket(getOwner(), new SM_ABNORMAL_STATE(effects, abnormals));
 	}
 
 	/**
@@ -119,9 +119,7 @@ public class PlayerEffectController extends EffectController {
 	private boolean checkDuelCondition(Effect effect) {
 		Creature creature = effect.getEffector();
 		if (creature instanceof Player) {
-			if (!getOwner().isEnemy(creature) && effect.getTargetSlot() == SkillTargetSlot.DEBUFF.ordinal()) {
-				return true;
-			}
+			return !getOwner().isEnemy(creature) && effect.getTargetSlot() == SkillTargetSlot.DEBUFF.ordinal();
 		}
 		return false;
 	}

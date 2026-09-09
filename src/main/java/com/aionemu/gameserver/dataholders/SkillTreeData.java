@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.skillengine.model.SkillLearnTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 技能树数据容器，按职业/阵营/等级哈希与技能 ID 双索引学习模板。
@@ -28,6 +29,13 @@ public class SkillTreeData {
 	@XmlElement(name = "skill")
 	private List<SkillLearnTemplate> skillTemplates;
 
+	/**
+	 * 返回按职业/阵营/等级哈希索引的学习模板映射。
+	 * Returns the learn-template map indexed by class/race/level hash.
+	 *
+	 * @return 哈希到模板列表的映射 / map of hash to template list
+	 */
+	@Getter
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 
@@ -62,16 +70,6 @@ public class SkillTreeData {
 			templatesById.put(template.getSkillId(), value);
 		}
 		value.add(template);
-	}
-
-	/**
-	 * 返回按职业/阵营/等级哈希索引的学习模板映射。
-	 * Returns the learn-template map indexed by class/race/level hash.
-	 *
-	 * @return 哈希到模板列表的映射 / map of hash to template list
-	 */
-	public IntObjectHashMap<ArrayList<SkillLearnTemplate>> getTemplates() {
-		return templates;
 	}
 
 	/**

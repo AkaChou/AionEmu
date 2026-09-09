@@ -53,16 +53,16 @@ public enum PlayerClass {
 	ALL(17);
 
 	@Getter
-	private byte classId;
-	private int idMask;
+	private final byte classId;
+	private final int idMask;
 	@Getter
-	private boolean startingClass;
+	private final boolean startingClass;
 
-	private PlayerClass(int classId) {
+	PlayerClass(int classId) {
 		this(classId, false);
 	}
 
-	private PlayerClass(int classId, boolean startingClass) {
+	PlayerClass(int classId, boolean startingClass) {
 		this.classId = (byte) classId;
 		this.startingClass = startingClass;
 		this.idMask = (int) Math.pow(2, classId);

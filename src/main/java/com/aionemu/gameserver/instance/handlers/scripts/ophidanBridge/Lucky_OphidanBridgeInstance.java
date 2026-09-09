@@ -8,12 +8,8 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -216,7 +212,6 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 			case 235769: // Velkur 奥德施法者 / Velkur Aethercaster.
 			case 235770: // Velkur 奥德祭司 / Velkur Aetherpriest.
 			case 235771: // Velkur 奥德刺客 / Velkur Aetherknife.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Lucky] Ophidan Bridge>");
 				switch (Rnd.get(1, 2)) {
 		            case 1:
 				        spawn(702658, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //修道院箱子。 / Abbey Box.
@@ -240,18 +235,4 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 }

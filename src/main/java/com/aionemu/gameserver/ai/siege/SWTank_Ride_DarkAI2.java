@@ -28,12 +28,12 @@ public class SWTank_Ride_DarkAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -62,13 +62,13 @@ public class SWTank_Ride_DarkAI2 extends NpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
-		GameEngineServices.skillEngine().applyEffectDirectly(21522, player, player, 3600000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(21522, player, player, 3600000);
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

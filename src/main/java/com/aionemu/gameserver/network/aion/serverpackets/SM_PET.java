@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
 import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 宠物动作/状态同步服务端包（多模式：列表、领养、召唤、解散、喂食、心情、功能操作等）。
@@ -22,8 +23,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Primary actionId branches: 0=list, 1=adopt/add, 2=remove, 3=spawn, 4=despawn,
  * 9=feed progress, 10=rename, 12=mood, 13=function ops (dope/loot/cheer, etc.).
  */
+@RequiredArgsConstructor
 public class SM_PET extends AionServerPacket {
-	private int actionId;
+	private final int actionId;
 	private Pet pet;
 	private PetCommonData commonData;
 	private int itemObjectId;
@@ -53,16 +55,6 @@ public class SM_PET extends AionServerPacket {
 		this.itemObjectId = objectId;
 		this.pet = pet;
 		this.commonData = pet.getCommonData();
-	}
-
-	/**
-	 * 仅动作 ID 的构造（无宠物载荷）。
-	 * Action-id-only constructor (no pet payload).
-	 *
-	 * action id
-	 */
-	public SM_PET(int actionId) {
-		this.actionId = actionId;
 	}
 
 	/**
@@ -197,7 +189,7 @@ public class SM_PET extends AionServerPacket {
 				writeD(petCommonData.getMasterObjectId());
 				writeD(0);
 				writeD(0);
-				writeD((int) petCommonData.getBirthday());
+				writeD(petCommonData.getBirthday());
 				writeD(expireTime != 0 ? expireTime - (int) (System.currentTimeMillis() / 1000) : 0);
 				int specialtyCount = 0;
 				if (petTemplate.ContainsFunction(PetFunctionType.WAREHOUSE)) {

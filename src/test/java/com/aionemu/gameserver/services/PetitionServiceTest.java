@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.model.Petition;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -12,6 +9,8 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class PetitionServiceTest {
 
@@ -27,7 +26,7 @@ class PetitionServiceTest {
 
 	@Test
 	void registeredPetitionsUseConcurrentSortedMap() throws ReflectiveOperationException {
-		assertTrue(petitionsField().get(null) instanceof ConcurrentNavigableMap);
+		assertInstanceOf(ConcurrentNavigableMap.class, petitionsField().get(null));
 	}
 
 	@Test

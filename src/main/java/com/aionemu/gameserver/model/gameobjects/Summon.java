@@ -23,6 +23,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 召唤物游戏对象。
@@ -34,12 +36,31 @@ public class Summon extends Creature {
 
 	private static final long NANOS_PER_SECOND = 1_000_000_000L;
 
+	/**
+	 * 设置主人。
+	 * Sets the master.
+	 *
+	 * @param master 主人玩家 / the master to set
+	 */
+	@Setter
 	private Player master;
+	/**
+	 * 返回召唤模式。
+	 * Returns the summon mode.
+	 *
+	 * @return 模式 / the mode
+	 */
+	@Getter
+	@Setter
 	private SummonMode mode = SummonMode.GUARD;
-	private byte level;
+	private final byte level;
 	private int liveTime = 0;
 	private long expirationTimeNanos;
+	/** 设置释放任务 / Sets the release task. */
+	@Setter
 	private Future<?> releaseTask;
+	/** 返回常驻免疫属性 / Returns the always resist element */
+	@Getter
 	private final SkillElement alwaysResistElement;
 
 	/**
@@ -80,11 +101,6 @@ public class Summon extends Creature {
 		};
 	}
 
-	/** 返回常驻免疫属性 / Returns the always resist element */
-	public SkillElement getAlwaysResistElement() {
-		return alwaysResistElement;
-	}
-
 	@Override
 	protected AggroList createAggroList() {
 		return new PlayerAggroList(this);
@@ -100,16 +116,6 @@ public class Summon extends Creature {
 	@Override
 	public Player getMaster() {
 		return master;
-	}
-
-	/**
-	 * 设置主人。
-	 * Sets the master.
-	 *
-	 * @param master 主人玩家 / the master to set
-	 */
-	public void setMaster(Player master) {
-		this.master = master;
 	}
 
 	/** 获取名称。 / Returns the name. */
@@ -162,30 +168,10 @@ public class Summon extends Creature {
 		return (SummonController) super.getController();
 	}
 
-	/**
-	 * 返回召唤模式。
-	 * Returns the summon mode.
-	 *
-	 * @return 模式 / the mode
-	 */
-	public SummonMode getMode() {
-		return mode;
-	}
-
-	/**
-	 * 设置召唤模式。
-	 * Sets the summon mode.
-	 *
-	 * @param mode 要设置的模式 / the mode to set
-	 */
-	public void setMode(SummonMode mode) {
-		this.mode = mode;
-	}
-
 	/** 是否敌对。 / Whether enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
-		return master != null ? master.isEnemy(creature) : false;
+		return master != null && master.isEnemy(creature);
 	}
 
 	/**
@@ -197,7 +183,7 @@ public class Summon extends Creature {
 	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
-		return master != null ? master.isEnemyFrom(npc) : false;
+		return master != null && master.isEnemyFrom(npc);
 	}
 
 	/**
@@ -209,7 +195,7 @@ public class Summon extends Creature {
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
-		return master != null ? master.isEnemyFrom(player) : false;
+		return master != null && master.isEnemyFrom(player);
 	}
 
 	/** 获取部落。 / Returns the tribe. */
@@ -297,11 +283,6 @@ public class Summon extends Creature {
 	void setLiveTime(int liveTime, long currentTimeNanos) {
 		this.liveTime = liveTime;
 		expirationTimeNanos = liveTime > 0 ? currentTimeNanos + liveTime * NANOS_PER_SECOND : 0;
-	}
-
-	/** 设置释放任务 / Sets the release task. */
-	public void setReleaseTask(Future<?> task) {
-		releaseTask = task;
 	}
 
 	/** 取消释放任务 / Cancels the release task. */

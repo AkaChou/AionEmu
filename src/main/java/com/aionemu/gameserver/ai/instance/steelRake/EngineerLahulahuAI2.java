@@ -21,7 +21,7 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 {
 	private boolean isStart = false;
 	private boolean isUsedSkill = false;
-	private int skill = 18153;
+	private final int skill = 18153;
 	private Npc npc;
 	private Npc npc1;
 	private Npc npc2;
@@ -34,7 +34,7 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 	private Npc npc9;
 	private Npc npc10;
 	private Npc npc11;
-	
+
 	/**
 	 * 登记副本内参与战斗的 12 个 NPC。
 	 * Register the 12 NPCs that take part in the fight.
@@ -54,13 +54,13 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 		npc10 = instance.getNpc(281108);
 		npc11 = instance.getNpc(281110);
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 按血量百分比触发阶段技能：95% 时登记 NPC 并开始循环技能，25% 时切换为 18132。
 	 * Trigger phase skills by HP percentage: at 95% register NPCs and start the skill loop, at 25% switch to skill 18132.
@@ -79,14 +79,14 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 			AI2Actions.useSkill(this, 18132);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isStart = false;
 		isUsedSkill = false;
 		super.handleBackHome();
 	}
-	
+
 	private void doSchedule() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -95,7 +95,7 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 			}
 		}, 10000);
 	}
-	
+
 	/**
 	 * 随机从已登记的 NPC 中挑选一组释放技能，10 秒后再次执行。
 	 * Pick a random group of registered NPCs to cast the skill, then repeat after 10 seconds.

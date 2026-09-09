@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.templates.item;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Random;
+import lombok.Getter;
 
 /**
  * 分解产出物品模板：物品 ID 与数量（支持 min-max 范围随机）。
@@ -12,19 +13,23 @@ import java.util.Random;
  */
 @XmlRootElement(name = "create")
 public class DisassembleItem {
+	/** 返回物品 ID / Returns the item id */
+	@Getter
 	@XmlAttribute(name = "itemId")
 	private int ItemId;
 	@XmlAttribute(name = "count")
 	private String Count;
+	/**
+	 * 是否已停用（不再产出）。
+	 * Whether this entry is deprecated.
+	 *
+	 * @return 是否停用 / Whether disuse
+	 */
+	@Getter
 	@XmlAttribute(name = "disuse")
 	private boolean disuse;
 
     private final Random random = new Random();
-
-	/** 返回物品 ID / Returns the item id */
-	public int getItemId() {
-		return ItemId;
-	}
 
     /** 获取计数。 / Returns the count. */
     public int getCount() {
@@ -65,14 +70,4 @@ public class DisassembleItem {
         }
         return random.nextInt((max - min) + 1) + min;
     }
-
-	/**
-	 * 是否已停用（不再产出）。
-	 * Whether this entry is deprecated.
-	 *
-	 * @return 是否停用 / Whether disuse
-	 */
-	public boolean isDisuse() {
-		return disuse;
-	}
 }

@@ -15,6 +15,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * UnSeal 动作模板（静态数据/XML）。
@@ -24,13 +25,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UnSealAction")
 public class UnSealAction extends AbstractItemAction {
+	/** 获取动作。 / Returns the action. */
+	@Getter
 	@XmlAttribute(name = "action")
 	private int action;
-
-	/** 获取动作。 / Returns the action. */
-	public int getAction() {
-		return action;
-	}
 
 	/**
 	 * @return 是否允许执行。 / Whether act

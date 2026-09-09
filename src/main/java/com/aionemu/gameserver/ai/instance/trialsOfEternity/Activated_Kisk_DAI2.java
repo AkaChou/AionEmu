@@ -23,12 +23,12 @@ public class Activated_Kisk_DAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	/**
 	 * 当玩家进入 15 米范围内时激活该传送点并广播系统消息。
 	 * Activates this save point and broadcasts a system message when a player comes within 15 meters.
@@ -53,10 +53,10 @@ public class Activated_Kisk_DAI2 extends NpcAI2
 	 */
 	private void IDEternity03DSavePoint() {
 		AI2Actions.deleteOwner(Activated_Kisk_DAI2.this);
-		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(731734, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(731734, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
     }
-	
+
 	private void announceIDEternity03D() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -68,7 +68,7 @@ public class Activated_Kisk_DAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

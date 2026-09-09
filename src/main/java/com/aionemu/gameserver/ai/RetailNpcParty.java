@@ -3,15 +3,15 @@ package com.aionemu.gameserver.ai;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 真实 NPC Party 的显式成员关系。
  * Explicit member relations of a retail NPC party.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetailNpcParty {
-
-	private RetailNpcParty() {
-	}
 
 	public static List<Npc> members(Npc sender) {
 		if (sender == null || !sender.isSpawned() || sender.getNpcPartyId() == null) {

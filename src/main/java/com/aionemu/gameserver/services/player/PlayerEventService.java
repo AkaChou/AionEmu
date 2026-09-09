@@ -90,7 +90,7 @@ public class PlayerEventService {
 				}
 			}
 		}
-	};
+	}
 
 	private static final class EventAwake implements Visitor<Player> {
 		@Override
@@ -110,7 +110,7 @@ public class PlayerEventService {
 				}
 			}
 		}
-	};
+	}
 
 	/**
 	 * 获取服务单例。

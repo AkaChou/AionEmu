@@ -12,23 +12,15 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import org.apache.commons.lang3.StringUtils;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端发送房屋完整渲染数据（外观部件、门牌、军团徽记等）的服务端包。
  * Server packet that sends full house render data (appearance parts, sign notice, legion emblem, etc.) to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_RENDER extends AionServerPacket {
-	private House house;
-
-	/**
-	 * 使用指定房屋构造渲染包。
-	 * Creates a render packet for the given house.
-	 *
-	 * @param house 待渲染的房屋 / house to render
-	 */
-	public SM_HOUSE_RENDER(House house) {
-		this.house = house;
-	}
+	private final House house;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

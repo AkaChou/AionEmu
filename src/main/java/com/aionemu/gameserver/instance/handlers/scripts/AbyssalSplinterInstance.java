@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +145,6 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 			break;
 			case 216952: //Yamennes Blindsight.
 			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Abyssal Splinter>");
 		        spawn(700934, 326.978f, 729.8414f, 197.7078f, (byte) 16); // 创世宝箱 / Genesis Treasure Box
 		        spawn(700934, 326.5296f, 735.13324f, 197.6681f, (byte) 66); // 创世宝箱 / Genesis Treasure Box
 		        spawn(700934, 329.8462f, 738.41095f, 197.7329f, (byte) 3); // 创世宝箱 / Genesis Treasure Box
@@ -155,7 +153,6 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 			break;
 			case 216960: //Yamennes Painflare.
 			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Abyssal Splinter>");
 		        spawn(700934, 326.978f, 729.8414f, 197.7078f, (byte) 16); // 创世宝箱 / Genesis Treasure Box
 		        spawn(700934, 326.5296f, 735.13324f, 197.6681f, (byte) 66); // 创世宝箱 / Genesis Treasure Box
 		        spawn(700934, 329.8462f, 738.41095f, 197.7329f, (byte) 3); // 创世宝箱 / Genesis Treasure Box
@@ -242,13 +239,6 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 		doors.clear();
 	}
 	
-	private void stopInstanceTask() {
-        for (Future<?> task : abyssalSplinterTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -343,20 +333,6 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
         }, time));
     }
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -396,11 +372,6 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
 	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
 	
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

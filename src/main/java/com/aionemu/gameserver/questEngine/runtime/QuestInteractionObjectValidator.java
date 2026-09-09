@@ -9,25 +9,25 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 类型化 ACTION_ITEM_USE 路由与任务交互对象掉落的启动门禁。 / Startup gate for typed ACTION_ITEM_USE routes and quest interaction-object drops. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestInteractionObjectValidator {
-	private QuestInteractionObjectValidator() {
-	}
-
 	public static void validate(QuestProductionDispatcher dispatcher, IntFunction<String> aiNameByTemplate) {
 		Objects.requireNonNull(dispatcher, "dispatcher");
 		Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
 		for (CompiledQuestDefinition definition : dispatcher.catalogRegistry().executables()) {
 			for (QuestTransition transition : definition.definition().transitions()) {
-				if (!(transition.event() instanceof QuestEvent.CanAct canAct)
-						|| !"ACTION_ITEM_USE".equals(canAct.actionType())) {
+				if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
+						|| !"ACTION_ITEM_USE".equals(actionType)) {
 					continue;
 				}
-				String aiName = aiNameByTemplate.apply(canAct.templateId());
+				String aiName = aiNameByTemplate.apply(templateId);
 				if (aiName == null || aiName.isBlank()) {
 					throw new IllegalStateException("quest " + definition.id() + " ACTION_ITEM_USE template "
-						+ canAct.templateId() + " has no NPC template/AI");
+						+ templateId + " has no NPC template/AI");
 				}
 				if (!"quest_use_item".equals(aiName)) {
 					continue;
@@ -36,17 +36,17 @@ public final class QuestInteractionObjectValidator {
 					.map(QuestTransition::event)
 					.filter(QuestEvent.TalkToNpc.class::isInstance)
 					.map(QuestEvent.TalkToNpc.class::cast)
-					.anyMatch(talk -> talk.npcId() == canAct.templateId());
-				boolean hasDrop = dispatcher.questDrops(canAct.templateId()).stream()
+					.anyMatch(talk -> talk.npcId() == templateId);
+				boolean hasDrop = dispatcher.questDrops(templateId).stream()
 					.anyMatch(drop -> drop.questId() == definition.id());
 				if (!explicitTalk && !hasDrop) {
 					throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
-						+ canAct.templateId() + " has neither TALK route nor catalog drop metadata");
+						+ templateId + " has neither TALK route nor catalog drop metadata");
 				}
 				if (!explicitTalk && (!Objects.equals(transition.sourceNode(), transition.targetNode())
 						|| !transition.actions().isEmpty() || !transition.afterCommit().isEmpty())) {
 					throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
-						+ canAct.templateId() + " requires an explicit TALK route for side effects");
+						+ templateId + " requires an explicit TALK route for side effects");
 				}
 			}
 			validateCatalogDrops(definition, aiNameByTemplate);
@@ -60,9 +60,9 @@ public final class QuestInteractionObjectValidator {
 				continue;
 			}
 			boolean eligible = definition.definition().transitions().stream().anyMatch(transition -> {
-				if (!(transition.event() instanceof QuestEvent.CanAct canAct)
-						|| canAct.templateId() != drop.npcId()
-						|| !"ACTION_ITEM_USE".equals(canAct.actionType())) {
+				if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
+						|| templateId != drop.npcId()
+						|| !"ACTION_ITEM_USE".equals(actionType)) {
 					return false;
 				}
 				QuestNode source = definition.definition().nodes().stream()

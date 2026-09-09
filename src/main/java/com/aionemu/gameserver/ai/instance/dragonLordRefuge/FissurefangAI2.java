@@ -33,15 +33,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class FissurefangAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -50,7 +50,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -79,7 +79,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -109,7 +109,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnCollapsingEarth(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -126,7 +126,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -136,13 +136,13 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();
@@ -150,7 +150,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -163,7 +163,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 		sendMsg(1401151);
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -171,7 +171,7 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}

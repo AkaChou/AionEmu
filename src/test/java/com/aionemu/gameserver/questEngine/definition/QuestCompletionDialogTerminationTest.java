@@ -61,7 +61,7 @@ class QuestCompletionDialogTerminationTest {
 				boolean leavesRewardDialog = transition.afterCommit().stream().anyMatch(action ->
 					action instanceof AfterCommitAction.CloseDialog
 						|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
-						|| action instanceof AfterCommitAction.ShowDialogWindow window && window.dialogId() == 0);
+						|| action instanceof AfterCommitAction.ShowDialogWindow(int dialogId) && dialogId == 0);
 				if (!leavesRewardDialog) {
 					missingDialogEnd.add(compiled.id() + ":" + transition.sourceNode()
 						+ " npc=" + talk.npcId() + " dialog=" + talk.dialogId());

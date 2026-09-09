@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events;
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
@@ -10,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.bonus_service.BoostEventBonus;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.templates.event.BoostEvents;
@@ -26,8 +24,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 @Slf4j
 public class BoostEventService implements StatOwner {
-
-	private static BoostEventBonus bonus;
 
 	private static volatile ObjectProvider<BoostEventService> instanceProvider;
 

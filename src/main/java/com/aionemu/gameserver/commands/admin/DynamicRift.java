@@ -80,7 +80,7 @@ public class DynamicRift extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidDynamicRiftLocationId(Player player, int dynamicRiftId) {
-		if (!GameLocationBootstrapServices.dynamicRiftService().getDynamicRiftLocations().keySet().contains(dynamicRiftId)) {
+		if (!GameLocationBootstrapServices.dynamicRiftService().getDynamicRiftLocations().containsKey(dynamicRiftId)) {
 			PacketSendUtility.sendMessage(player, "Id " + dynamicRiftId + " is invalid");
 			return false;
 		}

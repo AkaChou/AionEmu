@@ -232,7 +232,7 @@ public final class RetailGroupControlEngine {
 		return name.regionMatches(true, 0, prefix, 0, prefix.length());
 	}
 
-	static record MembershipDelta(Set<Integer> entrants, Set<Integer> confirmedLeaves, Set<Integer> pendingLeaves) {
+	record MembershipDelta(Set<Integer> entrants, Set<Integer> confirmedLeaves, Set<Integer> pendingLeaves) {
 	}
 
 	private static final class InstanceState {

@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.HallOfTenacityReward;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.HallOfTenacityPlayerReward;
-import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -33,7 +32,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  *
  * @author Encom
  */
-
 
 @InstanceID(302320000)
 @Slf4j
@@ -51,14 +49,14 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     * 
+     *
      * @param object 可见对象 / visible object
      * @return 结果 / result
      */
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
-		return (HallOfTenacityPlayerReward) instanceReward.getPlayerReward(object);
+		return instanceReward.getPlayerReward(object);
 	}
 
     private boolean containPlayer(Integer object) {
@@ -104,7 +102,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 			getPlayerReward(object).applyBoostMoraleEffect(player);
 			instanceReward.setStartPositions();
 		}
-        //sendEnterPacket(player);
     }
 
     /**
@@ -144,21 +141,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 		instanceReward.clear();
 	}
 
-    private void sendEnterPacket(final Player player) {
-	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
-	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
-            }
-        });
-    }
     /**
      * 启动副本计时/任务。
      * Start instance timer/tasks.
@@ -224,7 +206,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 处理 sendRequest。
      * Handle sendRequest.
-     * 
+     *
      * @param player 玩家 / player
      */
 
@@ -260,7 +242,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     * 
+     *
      * @param race 阵营 / race
      */
 
@@ -299,7 +281,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 向副本内玩家发送消息。
      * Send a message to players in the instance.
-     * 
+     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time

@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -18,14 +17,12 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.util.Map;
@@ -41,7 +38,6 @@ import java.util.Set;
 @InstanceID(300510000)
 public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	/** 击杀数 / kill count */
-	private int kills;
 		/** protectorate / protectorate */
 		private int protectorate;
 		/** start surama event / start surama event */
@@ -113,7 +109,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		switch (npcId) {
 			case 219352: //Invincible Shabokan.
 			case 219353: //Brigade General Chantra.
-			case 219355: //Traitor Kumbanda.
+			case 219355: // 背叛者昆班达 / Traitor Kumbanda.
 			case 219356: //Brigade General Laksyaka.
 			case 219357: //Adjudant Anuhart.
 			case 701541: //Brigade General Tahabata Chest.
@@ -240,7 +236,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				    }
 			    }, 22000);
 		    break;
-		    case 219355: //Traitor Kumbanda.
+		    case 219355: // 背叛者昆班达 / Traitor Kumbanda.
 				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701501, 1063.5973f, 1092.7402f, 787.685f, (byte) 107);
@@ -537,9 +533,6 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		return null;
 	}
 	
-	private boolean isDead(Npc npc) {
-		return (npc == null || npc.getLifeStats().isAlreadyDead());
-	}
 	
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {

@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * Adopt 宠物动作模板（静态数据/XML）。
@@ -11,9 +12,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 
 public class AdoptPetAction extends AbstractItemAction {
+	/** 返回 pet id / Returns the pet id */
+	@Getter
 	@XmlAttribute(name = "petId")
 	private int petId;
 
+	/** 返回 expire minutes / Returns the expire minutes */
+	@Getter
 	@XmlAttribute(name = "minutes")
 	private int expireMinutes;
 
@@ -31,16 +36,6 @@ public class AdoptPetAction extends AbstractItemAction {
 	/** 执行 / act. */
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
-	}
-
-	/** 返回 pet id / Returns the pet id */
-	public int getPetId() {
-		return petId;
-	}
-
-	/** 返回 expire minutes / Returns the expire minutes */
-	public int getExpireMinutes() {
-		return expireMinutes;
 	}
 
 	/**

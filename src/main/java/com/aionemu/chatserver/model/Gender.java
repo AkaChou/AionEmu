@@ -24,7 +24,7 @@ public enum Gender {
      * Gender identifier.
      */
     @Getter
-    private int genderId;
+    private final int genderId;
 
     /**
      * 构造性别枚举。
@@ -32,7 +32,7 @@ public enum Gender {
      *
      * @param genderId 性别 ID / gender id
      */
-    private Gender(int genderId) {
+	Gender(int genderId) {
         this.genderId = genderId;
     }
 

@@ -19,21 +19,21 @@ public enum MAXHP {
 	 * 最大生命公式二次项系数 a。
 	 * Quadratic coefficient a of the max-HP formula.
 	 */
-	private float a;
+	private final float a;
 
 	/**
 	 * 最大生命公式一次项系数 b。
 	 * Linear coefficient b of the max-HP formula.
 	 */
-	private float b;
+	private final float b;
 
 	/**
 	 * 最大生命公式常数项 c。
 	 * Constant coefficient c of the max-HP formula.
 	 */
-	private float c;
+	private final float c;
 
-	private MAXHP(float a, float b, float c) {
+	MAXHP(float a, float b, float c) {
 		this.a = a;
 		this.b = b;
 		this.c = c;

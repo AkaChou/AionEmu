@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.team2.alliance;
 
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
+import lombok.Getter;
 
 /**
  * 玩家联盟队伍，用于团队2相关逻辑。
@@ -10,6 +11,8 @@ import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
  */
 public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMember> {
 
+	/** 获取联盟。 / Returns the alliance. */
+	@Getter
 	private final PlayerAlliance alliance;
 
 	public PlayerAllianceGroup(PlayerAlliance alliance, Integer objId) {
@@ -56,10 +59,5 @@ public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMembe
 			maxLevel = Math.max(maxLevel, member.getLevel());
 		}
 		return maxLevel;
-	}
-
-	/** 获取联盟。 / Returns the alliance. */
-	public PlayerAlliance getAlliance() {
-		return alliance;
 	}
 }

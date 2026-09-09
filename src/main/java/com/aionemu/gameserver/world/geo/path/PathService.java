@@ -323,9 +323,7 @@ public final class PathService implements DisposableBean {
 					x, y, z)) {
 				return false;
 			}
-			if (!hasTerrainClearance(owner.getX(), owner.getY(), owner.getZ(), x, y, z, clearance, terrain)) {
-				return false;
-			}
+			return hasTerrainClearance(owner.getX(), owner.getY(), owner.getZ(), x, y, z, clearance, terrain);
 		}
 		return true;
 	}
@@ -604,6 +602,7 @@ public final class PathService implements DisposableBean {
 			case FAILED -> failed.increment();
 			case TIMEOUT, QUEUE_EXPIRED, REJECTED -> {
 				// 调度层在决定具体原因的位置计数，避免同一请求重复累计。
+				// These are already counted by the scheduler where the concrete reason is decided, avoiding double-counting a request.
 			}
 		}
 	}

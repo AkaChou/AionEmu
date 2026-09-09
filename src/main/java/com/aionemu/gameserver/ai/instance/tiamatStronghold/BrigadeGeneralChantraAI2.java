@@ -24,8 +24,8 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 {
 	private Future<?> trapTask;
 	private boolean isFinalBuff;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
 	@Override
 	protected void handleAttack(Creature creature){
 		super.handleAttack(creature);
@@ -36,7 +36,7 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 			AI2Actions.useSkill(this, 20942);
 		}
 	}
-	
+
 	private void startSkillTask()	{
 		trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -49,16 +49,16 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 			}
 		}, 5000, 40000);
 	}
-	
+
 	private void cancelTask() {
 		if (trapTask != null && !trapTask.isCancelled()) {
 			trapTask.cancel(true);
 		}
 	}
-	
+
 	private void startTrapEvent() {
 		int [] trapNpc = {283092, 283094};
-		final int trap = trapNpc[Rnd.get(0, trapNpc.length -1)]; 
+		final int trap = trapNpc[Rnd.get(0, trapNpc.length -1)];
 		if (getPosition().getWorldMapInstance().getNpc(trap) == null) {
 			spawn(trap, 1031.1f, 466.38f, 445.45f, (byte) 0);
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -75,19 +75,19 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 	  	    }, 5000);
 	    }
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		cancelTask();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		cancelTask();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();

@@ -10,6 +10,8 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import org.springframework.beans.factory.ObjectProvider;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 技能引擎门面：按模板/玩家技能列表创建并应用技能与效果。
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.ObjectProvider;
  *
  * @author ATracer
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SkillEngine {
 
 	/**
@@ -30,14 +33,6 @@ public class SkillEngine {
 	 * Optional Spring provider that may override the static singleton.
 	 */
 	private static volatile ObjectProvider<SkillEngine> instanceProvider;
-
-	/**
-	 * 私有构造，禁止外部直接实例化。
-	 * Private constructor; not for direct instantiation.
-	 */
-	private SkillEngine() {
-
-	}
 
 	/**
 	 * 为玩家已学习技能创建 Skill 实例。

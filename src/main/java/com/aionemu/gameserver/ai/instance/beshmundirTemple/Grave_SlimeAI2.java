@@ -20,12 +20,12 @@ public class Grave_SlimeAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		announceGraveSlime();
-		spawn(281671, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(281671, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+		spawn(281671, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(281671, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void announceGraveSlime() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override

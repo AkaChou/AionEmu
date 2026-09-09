@@ -16,6 +16,7 @@ import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 生物（NPC/玩家/召唤物）的生命值与魔法值统计及恢复逻辑。
@@ -24,9 +25,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public abstract class CreatureLifeStats<T extends Creature> {
+	/** 返回当前生命 / Returns the current hp */
+	@Getter
 	protected int currentHp;
+	/** 返回当前魔法 / Returns the current mp */
+	@Getter
 	protected int currentMp;
+	/**
+	 * @return 是否已死亡。 / Whether already dead
+	 */
+	@Getter
 	protected boolean alreadyDead = false;
+	/** 返回所有者 / Returns the owner*/
+	@Getter
 	protected T owner;
 	private final Lock hpLock = new ReentrantLock();
 	private final Lock mpLock = new ReentrantLock();
@@ -39,21 +50,6 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		this.currentMp = currentMp;
 	}
 
-	/** 返回所有者 / Returns the owner*/
-	public T getOwner() {
-		return owner;
-	}
-
-	/** 返回当前生命 / Returns the current hp */
-	public int getCurrentHp() {
-		return currentHp;
-	}
-
-	/** 返回当前魔法 / Returns the current mp */
-	public int getCurrentMp() {
-		return currentMp;
-	}
-
 	/** 返回最大生命 / Returns the max hp*/
 	public int getMaxHp() {
 		return this.getOwner().getGameStats().getMaxHp().getCurrent();
@@ -62,13 +58,6 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	/** 返回最大魔法 / Returns the max mp*/
 	public int getMaxMp() {
 		return this.getOwner().getGameStats().getMaxMp().getCurrent();
-	}
-
-	/**
-	 * @return 是否已死亡。 / Whether already dead
-	  */
-	public boolean isAlreadyDead() {
-		return alreadyDead;
 	}
 
 	/** Reduce Hp / Reduce Hp */

@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("eastern_shield_generator")
 public class Eastern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -34,7 +34,7 @@ public class Eastern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceEasternShield() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -46,7 +46,7 @@ public class Eastern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

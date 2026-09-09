@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.templates.siegelocation.ArtifactActivation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import lombok.Setter;
 
 /**
  * Artifact 位置，用于要塞相关逻辑。
@@ -17,6 +18,13 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
  */
 public class ArtifactLocation extends SiegeLocation {
 
+	/**
+	 * 设置神器状态。
+	 * Sets the artifact status.
+	 *
+	 * @param status 要设置的状态 / the status to set
+	 */
+	@Setter
 	private ArtifactStatus status;
 
 	public ArtifactLocation() {
@@ -93,15 +101,5 @@ public class ArtifactLocation extends SiegeLocation {
 	 */
 	public ArtifactStatus getStatus() {
 		return status != null ? status : ArtifactStatus.IDLE;
-	}
-
-	/**
-	 * 设置神器状态。
-	 * Sets the artifact status.
-	 *
-	 * @param status 要设置的状态 / the status to set
-	 */
-	public void setStatus(ArtifactStatus status) {
-		this.status = status;
 	}
 }

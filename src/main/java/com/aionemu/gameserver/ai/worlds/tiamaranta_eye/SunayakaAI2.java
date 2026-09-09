@@ -32,7 +32,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 {
 	private boolean canThink = true;
 	private Future<?> sunayakaRageTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	private void simmeringRage() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); // 积攒的怒火 / Simmering Rage.

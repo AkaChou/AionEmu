@@ -14,6 +14,7 @@ import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
 
 /**
  * 场景图内部节点：维护子节点集合，并将子包围体合并以便快速剔除。
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Joshua Slack
  */
 @Slf4j
+@NoArgsConstructor
 public class Node extends Spatial implements Cloneable {
 
 	/**
@@ -36,13 +38,6 @@ public class Node extends Spatial implements Cloneable {
 	protected ArrayList<Spatial> children = new ArrayList<Spatial>(1);
 	/** 碰撞标志。 / Collision flags. */
 	protected short collisionFlags;
-
-	/**
-	 * 默认构造。
-	 * Default constructor.
-	 */
-	public Node() {
-	}
 
 	/**
 	 * 以给定名称构造空子列表节点，碰撞标志默认为 ALL。

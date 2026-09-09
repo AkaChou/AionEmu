@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.controllers.attack;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AttackUtilTest {
 
@@ -75,7 +73,7 @@ class AttackUtilTest {
 	@Test
 	void remembersPeriodicCriticalResultPerEffectPosition() {
 		Effect effect = new ObjenesisStd().newInstance(Effect.class);
-		assertEquals(null, effect.getPeriodicAttackStatus(1));
+		assertNull(effect.getPeriodicAttackStatus(1));
 		effect.setPeriodicAttackStatus(1, AttackStatus.NORMALHIT);
 		assertEquals(AttackStatus.NORMALHIT, effect.getPeriodicAttackStatus(1));
 	}

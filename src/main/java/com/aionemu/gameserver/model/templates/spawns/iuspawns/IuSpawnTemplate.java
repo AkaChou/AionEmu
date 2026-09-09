@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.iu.IuStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * IU 活动刷新点模板（静态数据/XML）。
@@ -13,6 +15,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class IuSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private IuStateType iuType;
 
@@ -25,19 +30,9 @@ public class IuSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回 IU 状态类型 / Returns the iu state type */
 	public IuStateType getIUStateType() {
 		return iuType;
-	}
-
-	/** 设置 id / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置 IU 状态类型 / Sets the iu state type */

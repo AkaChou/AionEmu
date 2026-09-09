@@ -10,6 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 欧比斯服务 Attr 模板（静态数据/XML）。
@@ -22,12 +24,19 @@ public class AbyssServiceAttr {
 	@XmlElement(name = "bonus_attr")
 	protected List<AbyssPenaltyAttr> bonusAttr;
 
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
 
@@ -37,25 +46,5 @@ public class AbyssServiceAttr {
 			bonusAttr = new ArrayList<AbyssPenaltyAttr>();
 		}
 		return bonusAttr;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public int getBuffId() {
-		return buffId;
-	}
-
-	/** 设置 buff id / Sets the buff id */
-	public void setBuffId(int value) {
-		buffId = value;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
 	}
 }

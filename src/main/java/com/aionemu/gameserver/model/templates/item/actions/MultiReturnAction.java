@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.templates.teleport.MultiReturnLocationList;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.services.teleport.MultiReturnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * MultiReturn 动作模板（静态数据/XML）。
@@ -27,13 +28,9 @@ public class MultiReturnAction extends AbstractItemAction {
 	/**
 	 * 6 为天族，7 为魔族。 / 6 for ELYOS, 7 for ASMODIANS.
 	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	/**
 	 * @return 是否允许执行。 / Whether act

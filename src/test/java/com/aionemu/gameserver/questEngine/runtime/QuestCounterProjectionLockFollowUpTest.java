@@ -145,8 +145,8 @@ class QuestCounterProjectionLockFollowUpTest {
 
 	private static QuestTransition killRoute(CompiledQuestDefinition definition, int npcId, Integer priority) {
 		return definition.definition().transitions().stream()
-			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc single
-				? single.npcId() == npcId
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc(int id)
+				? id == npcId
 				: candidate.event().equals(new QuestEvent.KillNpcSet(java.util.Set.of(npcId))))
 			.filter(candidate -> priority == null || candidate.priority() != null
 				&& priority.equals(candidate.priority()))

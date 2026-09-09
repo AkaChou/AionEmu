@@ -70,7 +70,7 @@ public class Mesh {
 	// VertexBuffer>(VertexBuffer.Type.class);
 	// private VertexBuffer[] buffers = new VertexBuffer[BUFFERS_SIZE];
 	/** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal. */
-	private IntMap<VertexBuffer> buffers = new IntMap<VertexBuffer>();
+	private final IntMap<VertexBuffer> buffers = new IntMap<VertexBuffer>();
 	/** 点大小。 / Point size. */
 	private float pointSize = 1;
 	/** 线宽。 / Line width. */

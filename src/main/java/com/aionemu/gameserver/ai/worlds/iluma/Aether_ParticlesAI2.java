@@ -24,13 +24,12 @@ public class Aether_ParticlesAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
 					GameEngineServices.skillEngine().getSkill(player, 22894, 1, player).useNoAnimationSkill(); // 消失技能 / Vanish.
@@ -40,7 +39,7 @@ public class Aether_ParticlesAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

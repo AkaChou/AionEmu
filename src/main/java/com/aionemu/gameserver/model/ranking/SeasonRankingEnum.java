@@ -14,9 +14,9 @@ public enum SeasonRankingEnum {
 	/** 竞技场 6v6 / Arena 6v6 */
 	ARENA_6V6(3);
 
-	private int tableId;
+	private final int tableId;
 
-	private SeasonRankingEnum(int tableId) {
+	SeasonRankingEnum(int tableId) {
 		this.tableId = tableId;
 	}
 

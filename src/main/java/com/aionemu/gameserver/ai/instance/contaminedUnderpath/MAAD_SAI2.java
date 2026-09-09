@@ -16,18 +16,18 @@ import com.aionemu.gameserver.world.WorldPosition;
 @AIName("maad_s")
 public class MAAD_SAI2 extends AggressiveNpcAI2
 {
-	private boolean canThink = true;
-	
+	private final boolean canThink = true;
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {

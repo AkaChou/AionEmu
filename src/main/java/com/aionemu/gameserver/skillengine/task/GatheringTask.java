@@ -24,13 +24,13 @@ public class GatheringTask extends AbstractCraftTask {
 	 * 可采集物模板。
 	 * Gatherable template.
 	 */
-	private GatherableTemplate template;
+	private final GatherableTemplate template;
 
 	/**
 	 * 目标材料。
 	 * Target material.
 	 */
-	private Material material;
+	private final Material material;
 
 	/**
 	 * 构造采集任务。
@@ -93,7 +93,7 @@ public class GatheringTask extends AbstractCraftTask {
 	 */
 	@Override
 	protected void analyzeInteraction() {
-		int critVal = (int) (Rnd.get(55000) / (skillLvlDiff + 1));
+		int critVal = Rnd.get(55000) / (skillLvlDiff + 1);
 		if (critVal < CraftConfig.CRAFT_CHANCE_PURPLE_CRIT) {
 			critType = CraftCritType.PURPLE;
 			currentSuccessValue = maxSuccessValue;
@@ -111,7 +111,7 @@ public class GatheringTask extends AbstractCraftTask {
 			}
 		}
 		double mod = Math.sqrt((double) skillLvlDiff / 450f) * 100f + Rnd.nextGaussian() * 10f;
-		mod -= (double) this.itemQuality.getQualityId();
+		mod -= this.itemQuality.getQualityId();
 		if (mod < 0) {
 			currentFailureValue -= (int) mod;
 		} else {

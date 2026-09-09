@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.stats.enums;
 
+import lombok.Getter;
+
 /**
  * 各职业基础力量值枚举。
  * Baseline power values by player class.
@@ -19,19 +21,10 @@ public enum POWER {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	private int value;
+	@Getter
+	private final int value;
 
-	private POWER(int value) {
+	POWER(int value) {
 		this.value = value;
-	}
-
-	/**
-	 * 获取该职业的基础属性值。
-	 * Returns the baseline attribute value for this class.
-	 *
-	 * @return 基础属性值 / baseline attribute value
-	 */
-	public int getValue() {
-		return value;
 	}
 }

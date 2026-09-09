@@ -25,13 +25,13 @@ import java.util.Map;
 @AIName("kahrun2")
 public class KahrunAI2 extends NpcAI2
 {
-	private Map<Integer, VisibleObject> portal = new LinkedHashMap<Integer, VisibleObject>();
-	
+	private final Map<Integer, VisibleObject> portal = new LinkedHashMap<Integer, VisibleObject>();
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();

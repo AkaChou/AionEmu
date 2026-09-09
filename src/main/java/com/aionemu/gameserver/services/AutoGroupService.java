@@ -65,10 +65,10 @@ import java.util.Map;
 public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
-	private Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
-	private Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
-	private Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
-	private Lock lock = new ReentrantLock();
+	private final Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
+	private final Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
+	private final Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
+	private final Lock lock = new ReentrantLock();
 
 	/**
 	 * 默认构造。
@@ -877,16 +877,12 @@ public class AutoGroupService {
 	}
 
 	private void startPenalty(final Integer obj) {
-		if (penaltys.contains(obj)) {
-			penaltys.remove(obj);
-		}
+		penaltys.remove(obj);
 		penaltys.add(obj);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				if (penaltys.contains(obj)) {
-					penaltys.remove(obj);
-				}
+				penaltys.remove(obj);
 			}
 		}, 10000);
 	}

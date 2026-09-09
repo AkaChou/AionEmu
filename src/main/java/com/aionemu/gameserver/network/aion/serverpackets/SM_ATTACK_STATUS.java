@@ -15,18 +15,18 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ATTACK_STATUS extends AionServerPacket {
 
-	private Creature creature;
-	private Creature attacker;
-	private TYPE type;
-	private int skillId;
-	private int value;
-	private int logId;
+	private final Creature creature;
+	private final Creature attacker;
+	private final TYPE type;
+	private final int skillId;
+	private final int value;
+	private final int logId;
 
 	/**
 	 * 状态变更类型（对应客户端显示通道）。
 	 * Status-change type (maps to the client display channel).
 	 */
-	public static enum TYPE {
+	public enum TYPE {
 
 		NATURAL_HP(3),
 		USED_HP(4), // when skill uses hp as cost parameter
@@ -48,9 +48,9 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		NATURAL_FP(26),
 		AUTO_HEAL_FP(27);
 
-		private int value;
+		private final int value;
 
-		private TYPE(int value) {
+		TYPE(int value) {
 			this.value = value;
 		}
 
@@ -63,7 +63,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 	 * 战斗日志显示类型（决定客户端飘字/日志文案）。
 	 * log wording on the client).
 	 */
-	public static enum LOG {
+	public enum LOG {
 
 		SPELLATK(1),
 		HEAL(3),
@@ -80,9 +80,9 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		REGULAR(189),
 		ATTACK(197); // Old 195 (5.4) 196 (5.6) 197 (5.8)
 
-		private int value;
+		private final int value;
 
-		private LOG(int value) {
+		LOG(int value) {
 			this.value = value;
 		}
 
@@ -150,8 +150,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		writeC(type.getValue());
 		writeC(creature.getLifeStats().getHpPercentage());
 		writeH(skillId);
-		if (attacker instanceof Player) {
-			Player player = (Player) attacker;
+		if (attacker instanceof Player player) {
 			if (player != null) {
 				writeH(player.getSkillSkinList().getSkinId(skillId));
 			} else {

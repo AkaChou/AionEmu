@@ -36,6 +36,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import lombok.Getter;
 
 /**
  * 地图分区：可见对象存放、邻接激活与 Zone 校验。
@@ -50,21 +51,25 @@ public class MapRegion {
 	 * 区域 ID（非世界地图 ID）。
 	 * Region id (not the world map id).
 	 */
+	@Getter
 	private final int regionId;
 	/**
 	 * 所属地图实例。
 	 * Parent world-map instance.
 	 */
+	@Getter
 	private final WorldMapInstance parent;
 	/**
 	 * 邻接区域（含自身）。
 	 * Neighbour regions (includes self).
 	 */
+	@Getter
 	private volatile MapRegion[] neighbours = new MapRegion[0];
 	/**
 	 * 本区域内的可见对象。
 	 * Visible objects in this region.
 	 */
+	@Getter
 	private final Map<Integer, VisibleObject> objects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/** 区域内玩家计数 / player count in this region */
@@ -74,6 +79,7 @@ public class MapRegion {
 	private final AtomicBoolean regionActive = new AtomicBoolean(false);
 
 	/** 区域统计 / zone count */
+	@Getter
 	private final int zoneCount;
 
 	/**
@@ -119,36 +125,6 @@ public class MapRegion {
 	}
 
 	/**
-	 * 返回区域 ID（非世界地图 ID）。
-	 * Return the region id (not world map id).
-	 *
-	 * @return 区域 ID / the region id
-	 */
-	public int getRegionId() {
-		return regionId;
-	}
-
-	/**
-	 * 返回父地图实例。
-	 * Return the parent map instance.
-	 *
-	 * @return 父地图实例 / the parent instance
-	 */
-	public WorldMapInstance getParent() {
-		return parent;
-	}
-
-	/**
-	 * 返回本区域对象表。
-	 * Return the object map of this region.
-	 *
-	 * @return 本区域对象表 / the object map
-	 */
-	public Map<Integer, VisibleObject> getObjects() {
-		return objects;
-	}
-
-	/**
 	 * 对象值快照。
 	 * Snapshot of object values.
 	 *
@@ -169,22 +145,11 @@ public class MapRegion {
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
 		for (VisibleObject obj : getObjectsSnapshot()) {
-			if (obj instanceof StaticDoor) {
-				StaticDoor door = (StaticDoor) obj;
+			if (obj instanceof StaticDoor door) {
 				doors.put(door.getSpawn().getEntityId(), door);
 			}
 		}
 		return doors;
-	}
-
-	/**
-	 * 返回邻接区域数组。
-	 * Return neighbour region array.
-	 *
-	 * @return 邻接区域数组 / the neighbour regions
-	 */
-	public MapRegion[] getNeighbours() {
-		return neighbours;
 	}
 
 	/**
@@ -307,8 +272,7 @@ public class MapRegion {
 	 */
 	private final void activateObjects() {
 		for (VisibleObject visObject : getObjectsSnapshot()) {
-			if (visObject instanceof Creature) {
-				Creature creature = (Creature) visObject;
+			if (visObject instanceof Creature creature) {
 				creature.getAi2().onGeneralEvent(AIEventType.ACTIVATE);
 			}
 		}
@@ -330,12 +294,10 @@ public class MapRegion {
 	 */
 	private void deactivateObjects() {
 		for (VisibleObject visObject : getObjectsSnapshot()) {
-			if (visObject instanceof Creature && !(SiegeConfig.BALAUR_AUTO_ASSAULT && visObject instanceof SiegeNpc || !(visObject instanceof BaseNpc))) { // Tweak
-				Creature creature = (Creature) visObject;
+			if (visObject instanceof Creature creature && !(SiegeConfig.BALAUR_AUTO_ASSAULT && visObject instanceof SiegeNpc || !(visObject instanceof BaseNpc))) { // Tweak
 				creature.getAi2().onGeneralEvent(AIEventType.DEACTIVATE);
 
-				if (creature instanceof Npc) {
-					Npc npc = (Npc) creature;
+				if (creature instanceof Npc npc) {
 					if (npc.getAi2() instanceof NpcAI2) {
 						WalkManager.stopWalking((NpcAI2) npc.getAi2());
 					}
@@ -530,15 +492,5 @@ public class MapRegion {
 			}
 			zoneCategory.add(zone);
 		}
-	}
-
-	/**
-	 * 返回 Zone 数量。
-	 * Return zone count.
-	 *
-	 * @return Zone 数量 / the zone count
-	 */
-	public int getZoneCount() {
-		return zoneCount;
 	}
 }

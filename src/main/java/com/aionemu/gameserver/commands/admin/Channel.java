@@ -45,7 +45,6 @@ public class Channel extends AdminCommand {
 		}
 		catch (Exception e) {
 			PacketSendUtility.sendMessage(player, "Error! Wrong property or value.");
-			return;
 		}
 	}
 

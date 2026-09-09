@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
  */
 public class BrokerContainsExtraFilter extends BrokerFilter {
 
-	private int[] masks;
+	private final int[] masks;
 
 	/**
 	 * @param masks 类别掩码（模板 ID / 10000） / category masks (template id / 10000)

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家变身为召唤物形态时的同步服务端包。
@@ -11,10 +12,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author xTz
  */
+@AllArgsConstructor
 public class SM_TRANSFORM_IN_SUMMON extends AionServerPacket {
 
-	private Player player;
-	private int summonObject;
+	private final Player player;
+	private final int summonObject;
 
 	/**
 	 * 玩家 / player
@@ -22,15 +24,6 @@ public class SM_TRANSFORM_IN_SUMMON extends AionServerPacket {
 	 */
 	public SM_TRANSFORM_IN_SUMMON(Player player, Creature creature) {
 		this(player, creature.getObjectId());
-	}
-
-	/**
-	 * 玩家 / player
-	 * @param creatureObjectId 召唤物对象 ID / summon object id
-	 */
-	public SM_TRANSFORM_IN_SUMMON(Player player, int creatureObjectId) {
-		this.player = player;
-		this.summonObject = creatureObjectId;
 	}
 
 	@Override

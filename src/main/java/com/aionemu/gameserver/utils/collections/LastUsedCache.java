@@ -170,7 +170,7 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 */
 	@Override
 	public CachePair[] getAll() {
-		CachePair p[] = new CachePair[maxSize];
+		CachePair[] p = new CachePair[maxSize];
 		int count = 0;
 
 		synchronized (syncRoot) {
@@ -181,7 +181,7 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 				cur = cur.next;
 			}
 		}
-		CachePair np[] = new CachePair[count];
+		CachePair[] np = new CachePair[count];
 		System.arraycopy(p, 0, np, 0, count);
 		return np;
 	}

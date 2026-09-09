@@ -29,9 +29,8 @@ public class TargetRaceDamageModifier extends ActionModifier {
 		Creature effected = effect.getEffected();
 
 		int newValue = (value + effect.getSkillLevel() * delta);
-		if (effected instanceof Player) {
+		if (effected instanceof Player player) {
 
-			Player player = (Player) effected;
 			switch (skillTargetRace) {
 			case ASMODIANS:
 				if (player.getRace() == Race.ASMODIANS) {
@@ -43,8 +42,7 @@ public class TargetRaceDamageModifier extends ActionModifier {
 					return newValue;
 				}
 			}
-		} else if (effected instanceof Npc) {
-			Npc npc = (Npc) effected;
+		} else if (effected instanceof Npc npc) {
 			if (npc.getObjectTemplate().getRace().toString().equals(skillTargetRace.toString())) {
 				return newValue;
 			} else {
@@ -57,13 +55,11 @@ public class TargetRaceDamageModifier extends ActionModifier {
 	@Override
 	public boolean check(Effect effect) {
 		Creature effected = effect.getEffected();
-		if (effected instanceof Player) {
-			Player player = (Player) effected;
+		if (effected instanceof Player player) {
 			Race race = player.getRace();
 			return race == Race.ASMODIANS && skillTargetRace == Race.ASMODIANS
 					|| race == Race.ELYOS && skillTargetRace == Race.ELYOS;
-		} else if (effected instanceof Npc) {
-			Npc npc = (Npc) effected;
+		} else if (effected instanceof Npc npc) {
 			Race race = npc.getObjectTemplate().getRace();
 			if (race == null) {
 				return false;

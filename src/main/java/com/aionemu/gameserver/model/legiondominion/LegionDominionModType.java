@@ -9,5 +9,5 @@ public enum LegionDominionModType {
 	/** 和平 / Peace. */
 	PEACE,
 	/** 领地 / Dominion. */
-	DOMINION;
+	DOMINION
 }

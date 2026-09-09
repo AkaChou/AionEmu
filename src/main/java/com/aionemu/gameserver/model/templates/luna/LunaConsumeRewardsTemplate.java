@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Luna 消费奖励模板（静态数据/XML）。
@@ -14,8 +15,12 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "luna_consume_reward")
 @XmlAccessorType(XmlAccessType.NONE)
 public class LunaConsumeRewardsTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute
 	protected int id;
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute
 	protected String name;
 	@XmlAttribute
@@ -26,16 +31,6 @@ public class LunaConsumeRewardsTemplate {
 	protected int create_1;
 	@XmlAttribute
 	protected int num_1;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return this.id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
 
 	/** 返回累计消费次数 / Returns the sum count */
 	public int getSumCount() {

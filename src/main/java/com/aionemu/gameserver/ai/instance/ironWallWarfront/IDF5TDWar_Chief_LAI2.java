@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("IDF5TDWar_chief_l")
 public class IDF5TDWar_Chief_LAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -59,7 +59,7 @@ public class IDF5TDWar_Chief_LAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceIDF5TDWarLV01() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override

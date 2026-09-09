@@ -93,7 +93,6 @@ public class Configure extends AdminCommand
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(player, "Error! Wrong property or value.");
-				return;
 			}
 		} else if (command.equalsIgnoreCase("set")) {
 			String fieldName = params[2];

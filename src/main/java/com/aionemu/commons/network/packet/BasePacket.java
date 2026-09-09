@@ -100,7 +100,7 @@ public abstract class BasePacket {
      * 数据包方向类型。
      * Packet direction type.
      */
-    public static enum PacketType {
+    public enum PacketType {
         /** 服务器数据包 / Server packet */
         SERVER("S"),
         /** 客户端数据包 / Client packet */
@@ -114,7 +114,7 @@ public abstract class BasePacket {
          *
          * @param name 短名称 / Short name
          */
-        private PacketType(String name) {
+		PacketType(String name) {
             this.name = name;
         }
 

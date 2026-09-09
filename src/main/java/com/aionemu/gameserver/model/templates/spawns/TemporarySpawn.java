@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
+import lombok.Getter;
 
 /**
  * Temporary 刷新点模板（静态数据/XML）。
@@ -16,16 +17,15 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "TemporarySpawn")
 public class TemporarySpawn {
+	/** 返回刷新时间 / Returns the spawn time*/
+	@Getter
 	@XmlAttribute(name = "spawn_time")
 	private String spawnTime;
 
+	/** 返回消失时间 / Returns the despawn time*/
+	@Getter
 	@XmlAttribute(name = "despawn_time")
 	private String despawnTime;
-
-	/** 返回刷新时间 / Returns the spawn time*/
-	public String getSpawnTime() {
-		return spawnTime;
-	}
 
 	/** 获取刷新小时 / Gets the spawn hour */
 	public Integer geSpawnHour() {
@@ -66,11 +66,6 @@ public class TemporarySpawn {
 			return null;
 		}
 		return Integer.parseInt(result);
-	}
-
-	/** 返回消失时间 / Returns the despawn time*/
-	public String getDespawnTime() {
-		return despawnTime;
 	}
 
 	private boolean isTime(Integer hour, Integer day, Integer month) {
@@ -118,34 +113,23 @@ public class TemporarySpawn {
 				return false;
 			}
 		}
-		if (spawnMonth == null && spawnDay == null && !checkHour(curentHour, spawnHour, despawnHour)) {
-			return false;
-		}
-		return true;
+		return spawnMonth != null || spawnDay != null || checkHour(curentHour, spawnHour, despawnHour);
 	}
 
 	private boolean checkTime(int curentTime, int spawnTime, int despawnTime) {
 		if (spawnTime < despawnTime) {
-			if (!(curentTime >= spawnTime && curentTime <= despawnTime)) {
-				return false;
-			}
+			return curentTime >= spawnTime && curentTime <= despawnTime;
 		} else if (spawnTime > despawnTime) {
-			if (!(curentTime >= spawnTime || curentTime <= despawnTime)) {
-				return false;
-			}
+			return curentTime >= spawnTime || curentTime <= despawnTime;
 		}
 		return true;
 	}
 
 	private boolean checkHour(int curentTime, int spawnTime, int despawnTime) {
 		if (spawnTime < despawnTime) {
-			if (!(curentTime >= spawnTime && curentTime < despawnTime)) {
-				return false;
-			}
+			return curentTime >= spawnTime && curentTime < despawnTime;
 		} else if (spawnTime > despawnTime) {
-			if (!(curentTime >= spawnTime || curentTime < despawnTime)) {
-				return false;
-			}
+			return curentTime >= spawnTime || curentTime < despawnTime;
 		}
 		return true;
 	}

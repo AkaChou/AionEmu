@@ -40,10 +40,10 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	private boolean canThink = true;
 	private Future<?> flamekiteGeistTask;
 	private Future<?> heatventProtectorTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean is50EventStarted = new AtomicBoolean(false);
-	private AtomicBoolean is30EventStarted = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean is50EventStarted = new AtomicBoolean(false);
+	private final AtomicBoolean is30EventStarted = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -69,7 +69,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -79,12 +79,12 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void shareSource() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 20770, 1, getOwner()).useNoAnimationSkill(); //Heatvent Protector.
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
-	
+
 	private void checkPercentage(int percentage) {
 		if (percentage <= 50) {
 			if (is50EventStarted.compareAndSet(false, true)) {
@@ -96,7 +96,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startTornadoTask() {
 		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -128,7 +128,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void startFlamekiteGeistTask() {
 		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -159,7 +159,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnTornado(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -175,7 +175,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private void spawnFlamekiteGeist(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -191,12 +191,12 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -206,25 +206,25 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelTornadoTask() {
 		if (tornadoTask != null && !tornadoTask.isDone()) {
 			tornadoTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelFlamekiteGeistTask() {
 		if (flamekiteGeistTask != null && !flamekiteGeistTask.isDone()) {
 			flamekiteGeistTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelHeatventProtectorTask() {
 		if (heatventProtectorTask != null && !heatventProtectorTask.isDone()) {
 			heatventProtectorTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
@@ -233,7 +233,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			deleteNpcs(instance.getNpcs(855708));
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelTornadoTask();
@@ -249,7 +249,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		spawn(833056, 527.98773f, 154.735f, 1681.8225f, (byte) 105); //Treasure Box.
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -257,7 +257,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelTornadoTask();
@@ -265,7 +265,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		cancelHeatventProtectorTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

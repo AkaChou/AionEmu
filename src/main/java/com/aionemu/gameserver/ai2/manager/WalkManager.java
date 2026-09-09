@@ -43,13 +43,13 @@ public class WalkManager {
 	private static final int MAX_WALK_ATTEMPTS = 10;
 	private static final Map<Integer, Integer> walkAttemptCounts = new ConcurrentHashMap<Integer, Integer>();
 
-	// ========== Z 值检查相关常量 ==========
+	// Z 值检查相关常量 / Constants related to Z-value checks
 	private static final int Z_CHECK_INTERVAL = 10000;
 	private static final float Z_TOLERANCE = 1.0f;
 	private static final float STUCK_DISTANCE_THRESHOLD = 0.5f;
 	private static final int STUCK_CHECK_COUNT = 3;
 
-	// ========== Z 值检查相关集合 ==========
+	// Z 值检查相关集合 / Maps used for Z-value checks
 	private static final Map<Integer, Npc> randomWalkingNpcs = new ConcurrentHashMap<Integer, Npc>();
 	private static final Map<Integer, Float> lastCheckPositions = new ConcurrentHashMap<Integer, Float>();
 	private static final Map<Integer, Integer> stuckCounters = new ConcurrentHashMap<Integer, Integer>();
@@ -125,7 +125,10 @@ public class WalkManager {
 		npcAI.getOwner().getMoveController().moveToNextPoint();
 	}
 
-	/** 移动到指定路径点；到达后不自动选择下一点。 */
+	/**
+	 * 移动到指定路径点；到达后不自动选择下一点。
+	 * Moves to the specified waypoint without auto-selecting the next one on arrival.
+	 */
 	public static boolean startWalkingToWaypoint(NpcAI2 npcAI, WalkerTemplate template, int waypoint) {
 		if (!AIConfig.ACTIVE_NPC_MOVEMENT || !npcAI.isMoveSupported() || template == null
 			|| template.getRouteSteps() == null || waypoint < 0 || waypoint >= template.getRouteSteps().size()) {
@@ -384,7 +387,7 @@ public class WalkManager {
 					}
 				}
 			}
-		}, Rnd.get(AIConfig.MINIMIMUM_DELAY, AIConfig.MAXIMUM_DELAY) * 1000);
+		}, Rnd.get(AIConfig.MINIMIMUM_DELAY, AIConfig.MAXIMUM_DELAY) * 1000L);
 
 		pendingWalkTasks.put(npcObjectId, task);
 	}

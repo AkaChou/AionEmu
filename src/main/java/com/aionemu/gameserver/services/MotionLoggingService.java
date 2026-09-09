@@ -51,7 +51,7 @@ public class MotionLoggingService {
 
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 
-	private Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
+	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
 
 	private boolean advancedLog = false;
 
@@ -265,11 +265,11 @@ public class MotionLoggingService {
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_1H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_2H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_1H, WeaponType.SWORD_1H));
-			// 4.3 版本 / 4.3
+			// 4.3 版本 / version 4.3
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.GUN_1H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.CANNON_2H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.HARP_2H, null));
-			// 4.5 版本 / 4.5
+			// 4.5 版本 / version 4.5
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.KEYBLADE_2H, null));
 
 			// 创建动作时间对象 / create MotionTime
@@ -342,30 +342,30 @@ public class MotionLoggingService {
 		int finalTime = 0;
 		TreeMap<WeaponType, float[]> list = new TreeMap<WeaponType, float[]>();
 
-		float mace1h[] = { 750f, 1500f };
+		float[] mace1h = { 750f, 1500f };
 		list.put(WeaponType.MACE_1H, mace1h);
 
-		float sword1h[] = { 700f, 1400f };
+		float[] sword1h = { 700f, 1400f };
 		list.put(WeaponType.SWORD_1H, sword1h);
 
-		float gun1h[] = { 900f, 1800f };
+		float[] gun1h = { 900f, 1800f };
 		list.put(WeaponType.GUN_1H, gun1h);
 
-		float staff2h[] = { 1000f, 2000f };
+		float[] staff2h = { 1000f, 2000f };
 		list.put(WeaponType.STAFF_2H, staff2h);
 
-		float dagger1h[] = { 600f, 1200f };
+		float[] dagger1h = { 600f, 1200f };
 		list.put(WeaponType.DAGGER_1H, dagger1h);
 
-		float book_orb[] = { 1100f, 2200f };
+		float[] book_orb = { 1100f, 2200f };
 		list.put(WeaponType.BOOK_2H, book_orb);
 		list.put(WeaponType.ORB_2H, book_orb);
 
-		float polearm_cannon[] = { 1400f, 2800f };
+		float[] polearm_cannon = { 1400f, 2800f };
 		list.put(WeaponType.POLEARM_2H, polearm_cannon);
 		list.put(WeaponType.CANNON_2H, polearm_cannon);
 
-		float sword_bow_keyblade_harp[] = { 1200f, 2400f };
+		float[] sword_bow_keyblade_harp = { 1200f, 2400f };
 		list.put(WeaponType.BOW, sword_bow_keyblade_harp);
 		list.put(WeaponType.SWORD_2H, sword_bow_keyblade_harp);
 		list.put(WeaponType.HARP_2H, sword_bow_keyblade_harp);
@@ -590,7 +590,7 @@ public class MotionLoggingService {
 	}
 
 	private class MotionLog {
-		private Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
+		private final Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
 
 		public Map<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
 			return this.motionsForWeapons;
@@ -638,11 +638,11 @@ public class MotionLoggingService {
 	}
 
 	private class SkillTime implements Comparable<SkillTime> {
-		private int skillId;
-		private int attackSpeed;
-		private int clientTime;
-		private Race race;
-		private Gender gender;
+		private final int skillId;
+		private final int attackSpeed;
+		private final int clientTime;
+		private final Race race;
+		private final Gender gender;
 
 		public SkillTime(int skillId, int attackSpeed, Race race, Gender gender, int clientTime) {
 			this.skillId = skillId;
@@ -664,7 +664,7 @@ public class MotionLoggingService {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -682,7 +682,7 @@ public class MotionLoggingService {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -712,10 +712,7 @@ public class MotionLoggingService {
 			if (race != other.race) {
 				return false;
 			}
-			if (skillId != other.skillId) {
-				return false;
-			}
-			return true;
+			return skillId == other.skillId;
 		}
 
 		public int getSkillId() {
@@ -744,7 +741,7 @@ public class MotionLoggingService {
 	}
 
 	private class WeaponTime {
-		private TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<WeaponTypeWrapper, List<Integer>>();
+		private final TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<WeaponTypeWrapper, List<Integer>>();
 		private Race race;
 		private Gender gender;
 

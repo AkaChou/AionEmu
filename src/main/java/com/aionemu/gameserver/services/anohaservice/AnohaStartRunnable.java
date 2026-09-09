@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.AllArgsConstructor;
 
 /**
  * 狂暴阿诺哈活动启动定时任务。
@@ -19,19 +20,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class AnohaStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public AnohaStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行分阶段启动流程。

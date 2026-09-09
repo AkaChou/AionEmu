@@ -153,7 +153,7 @@ public enum QuestDialog {
 	EXCHANGE_COIN(59); // 4.3
 
 	/** 客户端对话框 ID。 Client dialog id. */
-	private int id;
+	private final int id;
 
 	/**
 	 * 使用给定对话框 ID 构造常量。
@@ -161,7 +161,7 @@ public enum QuestDialog {
 	 *
 	 * @param id 对话框 ID / Dialog id
 	 */
-	private QuestDialog(int id) {
+	QuestDialog(int id) {
 		this.id = id;
 	}
 

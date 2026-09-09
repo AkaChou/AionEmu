@@ -26,7 +26,7 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	 * 可过期对象到所属玩家的映射。
 	 * Map of expirable objects to their owning players.
 	 */
-	private Map<IExpirable, Player> expirables = new HashMap<IExpirable, Player>();
+	private final Map<IExpirable, Player> expirables = new HashMap<IExpirable, Player>();
 
 	/**
 	 * 以 1 秒周期构造过期计时任务。

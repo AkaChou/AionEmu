@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 印记效果：在目标上挂载可被爆发消耗的印记。
@@ -16,9 +17,11 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SignetEffect")
 public class SignetEffect extends EffectTemplate {
+	@Getter
 	@XmlAttribute(name = "signet_type", required = true)
 	private int signetType;
 
+	@Getter
 	@XmlAttribute(name = "signet_level", required = true)
 	private int signetLevel;
 
@@ -38,13 +41,5 @@ public class SignetEffect extends EffectTemplate {
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
-	}
-
-	public int getSignetType() {
-		return signetType;
-	}
-
-	public int getSignetLevel() {
-		return signetLevel;
 	}
 }

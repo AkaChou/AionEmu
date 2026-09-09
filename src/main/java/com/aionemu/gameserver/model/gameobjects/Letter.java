@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.sql.Timestamp;
+import lombok.Getter;
 
 /**
  * 信件游戏对象。
@@ -8,28 +9,47 @@ import java.sql.Timestamp;
  */
 
 public class Letter extends AionObject {
-	private int recipientId;
+	/** 返回收件人 ID / Returns the recipient id */
+	@Getter
+	private final int recipientId;
+	/** 返回附带的物品 / Returns the attached item */
+	@Getter
 	private Item attachedItem;
 	private long attachedKinahCount;
 	private long attachedAPCount;
-	private String senderName;
-	private String title;
-	private String message;
+	/** 返回发件人名称 / Returns the sender name */
+	@Getter
+	private final String senderName;
+	/** 获取称号。 / Returns the title. */
+	@Getter
+	private final String title;
+	/** 获取消息。 / Returns the message. */
+	@Getter
+	private final String message;
+	/** 是否未读 / Whether unread */
+	@Getter
 	private boolean unread;
+	/**
+	 * 是否急件。
+	 * Whether the letter is express.
+	 *
+	 * @return 是否急件 / whether express
+	 */
+	@Getter
 	private boolean express;
-	private Timestamp timeStamp;
+	/** 返回时间戳 / Returns the time stamp. */
+	@Getter
+	private final Timestamp timeStamp;
 	private PersistentState persistentState;
+	/** 获取信件类型。 / Returns the letter type. */
+	@Getter
 	private LetterType letterType;
 
 	public Letter(int objId, int recipientId, Item attachedItem, long attachedKinahCount, long attachedAPCount,
 			String title, String message, String senderName, Timestamp timeStamp, boolean unread,
 			LetterType letterType) {
 		super(objId);
-		if (letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD) {
-			this.express = true;
-		} else {
-			this.express = false;
-		}
+		this.express = letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD;
 		this.recipientId = recipientId;
 		this.attachedItem = attachedItem;
 		this.attachedKinahCount = attachedKinahCount;
@@ -49,16 +69,6 @@ public class Letter extends AionObject {
 		return String.valueOf(attachedItem.getItemTemplate().getNameId());
 	}
 
-	/** 返回收件人 ID / Returns the recipient id */
-	public int getRecipientId() {
-		return recipientId;
-	}
-
-	/** 返回附带的物品 / Returns the attached item */
-	public Item getAttachedItem() {
-		return attachedItem;
-	}
-
 	/** 返回附带的基纳 / Returns the attached kinah */
 	public long getAttachedKinah() {
 		return attachedKinahCount;
@@ -69,45 +79,10 @@ public class Letter extends AionObject {
 		return attachedAPCount;
 	}
 
-	/** 获取称号。 / Returns the title. */
-	public String getTitle() {
-		return title;
-	}
-
-	/** 获取消息。 / Returns the message. */
-	public String getMessage() {
-		return message;
-	}
-
-	/** 返回发件人名称 / Returns the sender name */
-	public String getSenderName() {
-		return senderName;
-	}
-
-	/** 获取信件类型。 / Returns the letter type. */
-	public LetterType getLetterType() {
-		return letterType;
-	}
-
-	/** 是否未读 / Whether unread */
-	public boolean isUnread() {
-		return unread;
-	}
-
 	/** 标记为已读 / Marks the letter as read */
 	public void setReadLetter() {
 		this.unread = false;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
-	}
-
-	/**
-	 * 是否急件。
-	 * Whether the letter is express.
-	 *
-	 * @return 是否急件 / whether express
-	 */
-	public boolean isExpress() {
-		return express;
 	}
 
 	/** 设置是否急件 / Sets whether express */
@@ -119,11 +94,7 @@ public class Letter extends AionObject {
 	/** 设置信件类型。 / Sets the letter type. */
 	public void setLetterType(LetterType letterType) {
 		this.letterType = letterType;
-		if (letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD) {
-			this.express = true;
-		} else {
-			this.express = false;
-		}
+		this.express = letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD;
 	}
 
 	/** 返回信件持久化状态 / Returns the letter persistent state */
@@ -173,10 +144,5 @@ public class Letter extends AionObject {
 	/** 设置持久化状态 / Sets the persist state */
 	public void setPersistState(PersistentState state) {
 		this.persistentState = state;
-	}
-
-	/** 返回时间戳 / Returns the time stamp. */
-	public Timestamp getTimeStamp() {
-		return timeStamp;
 	}
 }

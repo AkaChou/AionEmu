@@ -6,23 +6,15 @@ import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步玩家房屋中已生成摆放物列表的服务端包。
  * Server packet that synchronizes the player's spawned house object list to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_OBJECTS extends AionServerPacket {
 	Player player;
-
-	/**
-	 * 构造房屋已生成摆放物列表包。
-	 * Creates a spawned house objects list packet.
-	 *
-	 * 玩家 / player
-	 */
-	public SM_HOUSE_OBJECTS(Player player) {
-		this.player = player;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

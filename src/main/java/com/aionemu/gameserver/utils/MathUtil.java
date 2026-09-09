@@ -430,6 +430,7 @@ public class MathUtil {
 		float offset = object1.getObjectTemplate().getBoundRadius().getCollision()
 				+ object2.getObjectTemplate().getBoundRadius().getCollision();
 		// 修复：移动补偿应该累加，而不是覆盖碰撞半径
+		// Fix: the movement compensation must be added rather than overwrite the collision radius.
 		if (object1.getMoveController().isInMove()) {
 			offset += 3f;
 		}
@@ -582,9 +583,7 @@ public class MathUtil {
 	 */
 	public static boolean isInAnnulus(final VisibleObject obj, Point3D Center, float Radius1, float Radius2) {
 		if (!isInSphere(obj, Center.getX(), Center.getY(), Center.getZ(), Radius2)) {
-			if (isInSphere(obj, Center.getX(), Center.getY(), Center.getZ(), Radius1)) {
-				return true;
-			}
+			return isInSphere(obj, Center.getX(), Center.getY(), Center.getZ(), Radius1);
 		}
 		return false;
 	}

@@ -1,12 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
@@ -22,6 +15,8 @@ import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameStaticDataLifecycleTest {
 
@@ -118,7 +113,7 @@ class GameStaticDataLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(1, loads.get());
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     @Test
@@ -138,7 +133,7 @@ class GameStaticDataLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(2, loads.get());
-        assertEquals(null, lifecycle.getLastFailure());
+		assertNull(lifecycle.getLastFailure());
     }
 
     private static final class RecordingGameStaticDataGateway extends GameStaticDataGateway {

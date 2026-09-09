@@ -23,8 +23,8 @@ public final class FloodManager {
 	 * 错误模式分类（预留）。
 	 * Error mode categories (reserved).
 	 */
-	public static enum ErrorMode {
-		INVALID_OPCODE, BUFFER_UNDER_FLOW, BUFFER_OVER_FLOW, FAILED_READING, FAILED_RUNNING;
+	public enum ErrorMode {
+		INVALID_OPCODE, BUFFER_UNDER_FLOW, BUFFER_OVER_FLOW, FAILED_READING, FAILED_RUNNING
 	}
 
 	/**
@@ -151,7 +151,7 @@ public final class FloodManager {
 	 * 洪泛判定结果。
 	 * Flood evaluation result.
 	 */
-	public static enum Result {
+	public enum Result {
 		ACCEPTED, WARNED, REJECTED;
 
 		/**

@@ -36,7 +36,7 @@ public class SafeMath {
 	 */
 	public static long addSafe(long source, long value) throws OverfowException {
 		if ((source > 0 && value > Long.MAX_VALUE - source) || (source < 0 && value < Long.MIN_VALUE - source)) {
-			throw new OverfowException(source + " + " + value + " = " + ((long) source + (long) value));
+			throw new OverfowException(source + " + " + value + " = " + (source + value));
 		}
 		return source + value;
 	}

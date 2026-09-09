@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * 活动类型枚举。
  * Event Type enumeration.
@@ -25,22 +27,16 @@ public enum EventType {
 	/** 测试基础 4 / Test Basic 4 */
 	TEST_BASIC_4(1 << 7, "test_basic_4");
 
-	private int id;
-	private String theme;
+	/** 返回 ID / Returns the id */
+	@Getter
+	private final int id;
+	/** 返回主题 / Returns the theme */
+	@Getter
+	private final String theme;
 
-	private EventType(int id, String theme) {
+	EventType(int id, String theme) {
 		this.id = id;
 		this.theme = theme;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回主题 / Returns the theme */
-	public String getTheme() {
-		return theme;
 	}
 
 	/** 获取活动类型。 / Returns the event type. */

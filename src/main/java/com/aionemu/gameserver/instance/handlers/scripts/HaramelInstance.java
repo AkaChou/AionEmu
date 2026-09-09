@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
@@ -34,8 +33,8 @@ import java.util.Set;
 public class HaramelInstance extends GeneralInstanceHandler
 {
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-    
+	private final List<Integer> movies = new ArrayList<Integer>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -53,7 +52,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -87,7 +86,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -106,7 +105,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 				sendMovie(player, 457);
 				// 哈梅伦掉落了宝箱。 / Hamerun has dropped a treasure chest.
 				sendMsgByRace(1400713, Race.PC_ALL, 0);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Haramel>");
 			    spawn(700829, 224.137f, 268.608f, 144.898f, (byte) 90); //Ancient Treasure Box.
 				spawn(700852, 223.93062f, 337.5487f, 142.43079f, (byte) 90); //Opened Dimensional Gate.
 				if (player != null) {
@@ -115,13 +113,13 @@ public class HaramelInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private boolean sendMovie(Player player, int movie) {
 		if (player == null || movies.contains(movie)) {
 			return false;
@@ -130,21 +128,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		return true;
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -153,7 +137,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -179,7 +163,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

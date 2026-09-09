@@ -21,6 +21,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITE
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 伊迪安动作模板（静态数据/XML）。
@@ -30,6 +31,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianAction")
 public class IdianAction extends AbstractItemAction {
+	/** 返回 polish set id / Returns the polish set id */
+	@Getter
 	@XmlAttribute(name = "setId")
 	protected int polishSetId;
 
@@ -118,7 +121,7 @@ public class IdianAction extends AbstractItemAction {
 					idianStone.setPersistentState(PersistentState.DELETED);
 					DAOManager.getDAO(ItemStoneListDAO.class).storeIdianStones(idianStone);
 				}
-				idianStone = new IdianStone(parentItemId, PersistentState.NEW, targetItem, bonus.getTemplateNumber(),
+				idianStone = new IdianStone(parentItemId, PersistentState.NEW, targetItem, bonus.templateNumber(),
 						1000000);
 				targetItem.setIdianStone(idianStone);
 				if (targetItem.isEquipped()) {
@@ -127,10 +130,5 @@ public class IdianAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 			}
 		}, 3000);
-	}
-
-	/** 返回 polish set id / Returns the polish set id */
-	public int getPolishSetId() {
-		return polishSetId;
 	}
 }

@@ -49,21 +49,21 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	private boolean think = true;
 	private int curentPercent = 100;
 	private Future<?> specialSkillTask;
-	private List<Integer> percents = new ArrayList<Integer>();
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final List<Integer> percents = new ArrayList<Integer>();
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return think;
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startLifeTask();
 		addPercent();
 	}
-	
+
 	private void startLifeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -79,7 +79,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			}
 		}, 1800000); // 30 分钟 / 30 Minutes.
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -90,7 +90,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private synchronized void checkPercentage(int hpPercentage) {
 		curentPercent = hpPercentage;
 		for (Integer percent : percents) {
@@ -143,12 +143,12 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 						startPhaseTask();
 					break;
 				}
-				percents.remove(percent);		
+				percents.remove(percent);
 				break;
 			}
 		}
 	}
-	
+
 	private void startThinkTask() {
 		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -174,7 +174,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			}
 		}, 20000);
 	}
-	
+
 	private void startPhaseTask() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
 		// 你一定是想找死。那就如你所愿！ / You must want to perish. So be it!
@@ -197,7 +197,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			}
 		}, 4000);
 	}
-	
+
 	private void startSpecialSkillTask() {
 		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -246,13 +246,13 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			}
 		}, 12000);
 	}
-	
+
 	private void cancelSpecialSkillTask() {
 		if (specialSkillTask != null && !specialSkillTask.isDone()) {
 			specialSkillTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteNpcs(final int npcId) {
 		if (getKnownList() != null) {
 			getKnownList().doOnAllNpcs(new Visitor<Npc>() {
@@ -265,7 +265,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			});
 		}
 	}
-	
+
     private int explosiveSacrifice(final int npcId) {
         final AtomicInteger total = new AtomicInteger();
         if (getKnownList() != null) {
@@ -280,19 +280,19 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
         }
         return total.get();
     }
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelThinkTask() {
 		if (thinkTask != null && !thinkTask.isDone()) {
 			thinkTask.cancel(true);
 		}
 	}
-	
+
 	private void rndSpawn(int npcId) {
 		float direction = Rnd.get(0, 199) / 100f;
 		int distance = Rnd.get(1, 25);
@@ -301,12 +301,12 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		WorldPosition p = getPosition();
 		spawn(npcId, 1191.4962f + x1, 360.13733f + y1, 128.5f, p.getHeading());
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
 		Collections.addAll(percents, 90, 84, 79, 75, 72, 70, 67, 59, 53, 47, 44, 43, 39, 35, 30, 26, 23, 21, 16, 11, 6);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelThinkTask();
@@ -315,7 +315,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		// 呃……我……还会回来…… / Urgh… I... shall return...
@@ -341,7 +341,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		AI2Actions.deleteOwner(this);
 		super.handleDied();
 	}
-	
+
 	private void sendBerserkAnohaGuide() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -352,7 +352,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		think = true;
@@ -367,7 +367,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

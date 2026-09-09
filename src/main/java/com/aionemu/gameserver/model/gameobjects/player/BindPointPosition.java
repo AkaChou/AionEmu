@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
 
 /**
  * 绑定点坐标游戏对象。
@@ -10,11 +11,35 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  */
 public class BindPointPosition {
 
-	private int mapId;
-	private float x;
-	private float y;
-	private float z;
-	private byte heading;
+	/**
+	 * @return 地图 ID / the mapId
+	 */
+	@Getter
+	private final int mapId;
+	/**
+	 * @return X 坐标 / the x
+	 */
+	@Getter
+	private final float x;
+	/**
+	 * @return Y 坐标 / the y
+	 */
+	@Getter
+	private final float y;
+	/**
+	 * @return Z 坐标 / the z
+	 */
+	@Getter
+	private final float z;
+	/**
+	 * @return 朝向 / the heading
+	 */
+	@Getter
+	private final byte heading;
+	/**
+	 * @return the persistentState
+	 */
+	@Getter
 	private PersistentState persistentState;
 
 	/**
@@ -31,48 +56,6 @@ public class BindPointPosition {
 		this.z = z;
 		this.heading = heading;
 		this.persistentState = PersistentState.NEW;
-	}
-
-	/**
-	 * @return 地图 ID / the mapId
-	 */
-	public int getMapId() {
-		return mapId;
-	}
-
-	/**
-	 * @return X 坐标 / the x
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * @return Y 坐标 / the y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * @return Z 坐标 / the z
-	 */
-	public float getZ() {
-		return z;
-	}
-
-	/**
-	 * @return 朝向 / the heading
-	 */
-	public byte getHeading() {
-		return heading;
-	}
-
-	/**
-	 * @return the persistentState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/**

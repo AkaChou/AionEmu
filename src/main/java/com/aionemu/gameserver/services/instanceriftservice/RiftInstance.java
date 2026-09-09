@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 副本裂隙活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
  * @author Rinzler (Encom)
  * @param <RL> 裂隙地点类型 / rift location type
  */
+@RequiredArgsConstructor
 public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 绑定地点 / bound location
+	 */
+	@Getter
 	private final RL instanceRiftLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * Concrete open logic.
 	 */
 	protected abstract void startInstanceRift();
-
-	/**
-	 * 绑定裂隙地点。
-	 * Binds the rift location.
-	 *
-	 * @param instanceRiftLocation 裂隙地点 / rift location
-	 */
-	public RiftInstance(RL instanceRiftLocation) {
-		this.instanceRiftLocation = instanceRiftLocation;
-	}
 
 	/**
 	 * 开启裂隙（幂等）。
@@ -99,16 +99,6 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 */
 	public boolean isClosed() {
 		return closed.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
-	 */
-	public RL getInstanceRiftLocation() {
-		return instanceRiftLocation;
 	}
 
 	/**

@@ -13,15 +13,15 @@ import lombok.Getter;
 @Getter
 public class ItemStone implements StatOwner {
 
-	private int itemObjId;
+	private final int itemObjId;
 
-	private int itemId;
+	private final int itemId;
 
 	private int slot;
 
 	private PersistentState persistentState;
 
-	public static enum ItemStoneType {
+	public enum ItemStoneType {
 		/** 魔石 / Manastone */
 		MANASTONE,
 		/** 神石 / Godstone */
@@ -29,7 +29,7 @@ public class ItemStone implements StatOwner {
 		/** 融合石 / Fusionstone */
 		FUSIONSTONE,
 		/** 伊迪安石 / Idian stone */
-		IDIANSTONE;
+		IDIANSTONE
 	}
 
 	/**

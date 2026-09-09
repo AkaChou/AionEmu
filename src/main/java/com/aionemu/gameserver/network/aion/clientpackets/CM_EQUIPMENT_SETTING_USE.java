@@ -71,54 +71,47 @@ public class CM_EQUIPMENT_SETTING_USE extends AionClientPacket {
 		boolean changed = EquipmentSettingUseAction.applyAll(actions, target);
 
 		if (changed) {
-			PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(1404124, new Object[0]));
+			PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(1404124));
 			PacketSendUtility.broadcastPacket(activePlayer,
 					new SM_UPDATE_PLAYER_APPEARANCE(activePlayer.getObjectId(), equipment.getEquippedForApparence()),
 					true);
 		}
 	}
 
-	private static class EquipmentTarget implements EquipmentSettingUseTarget {
-		private final Player player;
-		private final Equipment equipment;
+    private record EquipmentTarget(Player player, Equipment equipment) implements EquipmentSettingUseTarget {
 
-		private EquipmentTarget(Player player, Equipment equipment) {
-			this.player = player;
-			this.equipment = equipment;
-		}
+        @Override
+        public boolean equipItem(int itemObjectId, long slot) {
+            return equipment.equipItem(itemObjectId, slot) != null;
+        }
 
-		@Override
-		public boolean equipItem(int itemObjectId, long slot) {
-			return equipment.equipItem(itemObjectId, slot) != null;
-		}
+        @Override
+        public boolean unEquipItem(int itemObjectId, long slot) {
+            return equipment.unEquipItem(itemObjectId, slot) != null;
+        }
 
-		@Override
-		public boolean unEquipItem(int itemObjectId, long slot) {
-			return equipment.unEquipItem(itemObjectId, slot) != null;
-		}
+        @Override
+        public boolean canSwitchHands() {
+            return !player.getController().hasTask(TaskId.ITEM_USE) || player.getController().getTask(TaskId.ITEM_USE).isDone();
+        }
 
-		@Override
-		public boolean canSwitchHands() {
-			return !player.getController().hasTask(TaskId.ITEM_USE) || player.getController().getTask(TaskId.ITEM_USE).isDone();
-		}
+        @Override
+        public boolean switchHands() {
+            if (!canSwitchHands()) {
+                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANT_EQUIP_ITEM_IN_ACTION);
+                return false;
+            }
+            if (player.getController().isUnderStance()) {
+                player.getController().stopStance();
+            }
+            equipment.switchHands();
+            return true;
+        }
 
-		@Override
-		public boolean switchHands() {
-			if (!canSwitchHands()) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANT_EQUIP_ITEM_IN_ACTION);
-				return false;
-			}
-			if (player.getController().isUnderStance()) {
-				player.getController().stopStance();
-			}
-			equipment.switchHands();
-			return true;
-		}
-
-		@Override
-		public long getEquippedSlot(int itemObjectId) {
-			Item item = equipment.getEquippedItemByObjId(itemObjectId);
-			return item == null ? 0 : item.getEquipmentSlot();
-		}
-	}
+        @Override
+        public long getEquippedSlot(int itemObjectId) {
+            Item item = equipment.getEquippedItemByObjId(itemObjectId);
+            return item == null ? 0 : item.getEquipmentSlot();
+        }
+    }
 }

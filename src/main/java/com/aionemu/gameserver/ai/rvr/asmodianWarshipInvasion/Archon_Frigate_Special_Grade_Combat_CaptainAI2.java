@@ -32,7 +32,7 @@ public class Archon_Frigate_Special_Grade_Combat_CaptainAI2 extends AggressiveNp
 				spawn(240669, 1409.9818f, 1369.7706f, 1336.7855f, (byte) 60); //Suminid.
 			break;
 			case 2:
-				spawn(240670, 1409.9818f, 1369.7706f, 1336.7855f, (byte) 60); //Taina.
+				spawn(240670, 1409.9818f, 1369.7706f, 1336.7855f, (byte) 60); // 塔伊娜 / Taina.
 			break;
 			case 3:
 				spawn(240671, 1409.9818f, 1369.7706f, 1336.7855f, (byte) 60); //Vassad.

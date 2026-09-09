@@ -123,7 +123,7 @@ public class VortexService {
 					stopInvasion(id);
 				}
 			}
-		}, CustomConfig.VORTEX_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.VORTEX_DURATION * 3600 * 1000);
 	}
 
 	/**

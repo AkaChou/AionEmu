@@ -40,20 +40,20 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 	private Future<?> activeEventTask;
 	private Future<?> barrelEventTask;
 	private Future<?> bombEventTask;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private Phase phase = Phase.ACTIVE;
 	private boolean canThink = true;
-	
+
 	private enum Phase {
 		ACTIVE,
 		BOMBS,
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -66,25 +66,25 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			announceOilBarrel();
 		}
 	}
-	
+
 	private void cancelActiveEventTask() {
 		if (activeEventTask != null && !activeEventTask.isDone()) {
 			activeEventTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelBarrelEventTask() {
 		if (barrelEventTask != null && !barrelEventTask.isDone()) {
 			barrelEventTask.cancel(true);
 		}
 	}
-	
+
 	private void cancelBombEventTask() {
 		if (bombEventTask != null && !bombEventTask.isDone()) {
 			bombEventTask.cancel(true);
 		}
 	}
-	
+
 	private void startBarrelEvent() {
 		barrelEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -120,7 +120,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		}, 15000, 15000);
 	}
-	
+
 	private void announceOilBarrel() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -132,7 +132,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceWeakKuhara() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -144,7 +144,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void startBombEvent() {
 		bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -187,7 +187,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		}, 14000);
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc : npcs) {
 			if (npc != null) {
@@ -195,7 +195,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void spawnBombEvent() {
 		MoveBombToBoss(rndSpawnInRange(282396, Rnd.get(0, 2), new Point3D(126.528755f, 274.48883f, 209.81859f)));
 		MoveBombToBoss(rndSpawnInRange(282396, Rnd.get(0, 2), new Point3D(126.528755f, 274.48883f, 209.81859f)));
@@ -206,21 +206,21 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		MoveBombToBoss(rndSpawnInRange(282396, Rnd.get(0, 2), new Point3D(119.23888f, 245.8903f, 209.81859f)));
 		MoveBombToBoss(rndSpawnInRange(282396, Rnd.get(0, 2), new Point3D(119.23888f, 245.8903f, 209.81859f)));
 	}
-	
+
 	private void MoveBombToBoss(final Npc npc) {
 		if (!isAlreadyDead() && !isHome.get() ) {
 			npc.setTarget(getOwner());
 			npc.getMoveController().moveToTargetObject();
 		}
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance, Point3D position) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
 		float y1 = (float) (Math.sin(Math.PI * direction) * distance);
 		return (Npc) spawn(npcId, position.getX() + x1, position.getY() + y1, position.getZ(), (byte) 0);
 	}
-	
+
 	private void startActivEvent() {
 		activeEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -249,7 +249,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			}
 		}, 8000, 14000);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
@@ -257,7 +257,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		cancelBarrelEventTask();
 		cancelBombEventTask();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		isHome.set(true);
@@ -270,7 +270,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().getDoors().get(150).setOpen(true);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelActiveEventTask();

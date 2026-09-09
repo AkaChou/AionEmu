@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.geometry;
 
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import lombok.Getter;
 
 /**
  * 抽象区域，用于几何相关逻辑。
@@ -13,17 +14,19 @@ public abstract class AbstractArea implements Area {
 	 * 区域的最小 Z 值。
 	 * Minimal z of area.
 	 */
+	@Getter
 	private final float minZ;
 
 	/**
 	 * 区域的最大 Z 值。
 	 * Maximal Z of area.
 	 */
+	@Getter
 	private final float maxZ;
 
-	private ZoneName zoneName;
+	private final ZoneName zoneName;
 
-	private int worldId;
+	private final int worldId;
 
 	/**
 	 * 创建带 minZ 和 maxZ 的 AbstractArea。
@@ -133,20 +136,6 @@ public abstract class AbstractArea implements Area {
 			zCoord = getMaxZ();
 		}
 		return new Point3D(closest2d.getX(), closest2d.getY(), zCoord);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public float getMinZ() {
-		return minZ;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public float getMaxZ() {
-		return maxZ;
 	}
 
 	/** 返回世界 ID / Returns the world id */

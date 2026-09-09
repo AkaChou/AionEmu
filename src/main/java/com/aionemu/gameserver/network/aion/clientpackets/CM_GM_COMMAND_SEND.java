@@ -134,7 +134,7 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 			new CmdGiveTitle(admin, params);
 			break;
 		case DELETE_ITEMS:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd.toString());
+			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
 			break;
 		case CHANGECLASS:
 			new CmdChangeClass(admin, params);
@@ -156,7 +156,7 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 			break;
 		case SET_ENCHANTCOUNT:
 			new CmdSetEnchantCount(admin, params);
-			break;			
+			break;
 		case SETINVENTORYGROWTH:
 			new CmdSetInventoryGrowth(admin, params);
 			break;
@@ -168,13 +168,13 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 		case ENCHANT100:
         case SEARCH:
 		case BOOKMARK_ADD:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd.toString());
+			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
 			break;
 		case FREEFLY:
 			PacketSendUtility.sendMessage(admin, "Freefly On");
 			break;
 		default:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd.toString());
+			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
 			break;
 		}
 	}

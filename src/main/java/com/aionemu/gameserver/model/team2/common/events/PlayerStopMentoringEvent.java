@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANK_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家 StopMentoring 活动，用于团队2相关逻辑。
@@ -14,16 +15,12 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public abstract class PlayerStopMentoringEvent<T extends TemporaryPlayerTeam<? extends TeamMember<Player>>>
 		extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	protected final T team;
 	protected final Player player;
-
-	public PlayerStopMentoringEvent(T team, Player player) {
-		this.team = team;
-		this.player = player;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

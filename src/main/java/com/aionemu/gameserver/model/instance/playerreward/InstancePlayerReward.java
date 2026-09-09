@@ -1,11 +1,15 @@
 package com.aionemu.gameserver.model.instance.playerreward;
 
+import lombok.Getter;
+
 /**
  * 副本玩家奖励模型。
  * Instance Player Reward model.
  */
 
 public class InstancePlayerReward {
+	/** 获取点。 / Returns the points. */
+	@Getter
 	private int points;
 	private int playerPvPKills;
 	private int playerMonsterKills;
@@ -18,11 +22,6 @@ public class InstancePlayerReward {
 	/** 返回所有者 / Returns the owner*/
 	public Integer getOwner() {
 		return object;
-	}
-
-	/** 获取点。 / Returns the points. */
-	public int getPoints() {
-		return points;
 	}
 
 	/** 返回 pv p kills / Returns the pv p kills */

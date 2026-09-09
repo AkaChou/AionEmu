@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 玩家 Settings 游戏对象。
@@ -8,19 +11,41 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  *
  * @author ATracer
  */
+@NoArgsConstructor
 public class PlayerSettings {
 
+	/**
+	 * @return the persistentState
+	 */
+	@Getter
+	@Setter
 	private PersistentState persistentState;
 
+	/**
+	 * @return the uiSettings
+	 */
+	@Getter
 	private byte[] uiSettings;
+	/**
+	 * @return the shortcuts
+	 */
+	@Getter
 	private byte[] shortcuts;
+	/**
+	 * @return the houseBuddies
+	 */
+	@Getter
 	private byte[] houseBuddies;
+	/**
+	 * @return the deny
+	 */
+	@Getter
 	private int deny = 0;
+	/**
+	 * @return the display
+	 */
+	@Getter
 	private int display = 0;
-
-	public PlayerSettings() {
-
-	}
 
 	public PlayerSettings(byte[] uiSettings, byte[] shortcuts, byte[] houseBuddies, int deny, int display) {
 		this.uiSettings = uiSettings;
@@ -28,27 +53,6 @@ public class PlayerSettings {
 		this.houseBuddies = houseBuddies;
 		this.deny = deny;
 		this.display = display;
-	}
-
-	/**
-	 * @return the persistentState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
-	/**
-	 * @param persistentState the persistentState to set
-	 */
-	public void setPersistentState(PersistentState persistentState) {
-		this.persistentState = persistentState;
-	}
-
-	/**
-	 * @return the uiSettings
-	 */
-	public byte[] getUiSettings() {
-		return uiSettings;
 	}
 
 	/**
@@ -60,25 +64,11 @@ public class PlayerSettings {
 	}
 
 	/**
-	 * @return the shortcuts
-	 */
-	public byte[] getShortcuts() {
-		return shortcuts;
-	}
-
-	/**
 	 * @param shortcuts the shortcuts to set
 	 */
 	public void setShortcuts(byte[] shortcuts) {
 		this.shortcuts = shortcuts;
 		persistentState = PersistentState.UPDATE_REQUIRED;
-	}
-
-	/**
-	 * @return the houseBuddies
-	 */
-	public byte[] getHouseBuddies() {
-		return houseBuddies;
 	}
 
 	/**
@@ -90,25 +80,11 @@ public class PlayerSettings {
 	}
 
 	/**
-	 * @return the display
-	 */
-	public int getDisplay() {
-		return display;
-	}
-
-	/**
 	 * @param display the display to set
 	 */
 	public void setDisplay(int display) {
 		this.display = display;
 		persistentState = PersistentState.UPDATE_REQUIRED;
-	}
-
-	/**
-	 * @return the deny
-	 */
-	public int getDeny() {
-		return deny;
 	}
 
 	/**
@@ -125,9 +101,6 @@ public class PlayerSettings {
 	public boolean isInDeniedStatus(DeniedStatus deny) {
 		int isDeniedStatus = this.deny & deny.getId();
 
-		if (isDeniedStatus == deny.getId()) {
-			return true;
-		}
-		return false;
+		return isDeniedStatus == deny.getId();
 	}
 }

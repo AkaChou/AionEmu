@@ -1,9 +1,5 @@
 package com.aionemu.boot.config;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -13,6 +9,8 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class LegacyConfigOverridesTest {
 
@@ -130,9 +128,9 @@ class LegacyConfigOverridesTest {
 
             assertFalse(metadata.contains("aion.game.static-data.progress.enabled"));
             assertFalse(metadata.contains("aion.game.static-data.summary-log.enabled"));
-            assertEquals(true, metadata.contains("\"name\": \"aion.game.startup.progress.enabled\""));
+			assertTrue(metadata.contains("\"name\": \"aion.game.startup.progress.enabled\""));
             assertFalse(metadata.contains("aion.game.network.external-ip"));
-            assertEquals(true, metadata.contains("\"name\": \"aion.legacy.game.property\""));
+			assertTrue(metadata.contains("\"name\": \"aion.legacy.game.property\""));
         }
     }
 

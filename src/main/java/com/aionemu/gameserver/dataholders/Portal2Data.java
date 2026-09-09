@@ -39,13 +39,13 @@ public class Portal2Data {
 	protected List<PortalScroll> portalScroll;
 
 	@XmlTransient
-	private IntObjectHashMap<PortalUse> portalUses = new IntObjectHashMap<PortalUse>();
+	private final IntObjectHashMap<PortalUse> portalUses = new IntObjectHashMap<PortalUse>();
 
 	@XmlTransient
-	private IntObjectHashMap<PortalDialog> portalDialogs = new IntObjectHashMap<PortalDialog>();
+	private final IntObjectHashMap<PortalDialog> portalDialogs = new IntObjectHashMap<PortalDialog>();
 
 	@XmlTransient
-	private Map<String, PortalScroll> portalScrolls = new HashMap<String, PortalScroll>();
+	private final Map<String, PortalScroll> portalScrolls = new HashMap<String, PortalScroll>();
 
 	/**
 	 * JAXB 反序列化完成后，将三类传送配置写入对应索引。

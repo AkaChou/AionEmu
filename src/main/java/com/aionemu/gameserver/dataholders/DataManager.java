@@ -191,7 +191,7 @@ public final class DataManager {
      *
      * @return  DataManager 单例（已就绪）/ Returns the ready-to-use DataManager singleton.
      */
-    public static final DataManager getInstance() {
+    public static DataManager getInstance() {
         ObjectProvider<DataManager> provider = instanceProvider;
         DataManager manager = provider == null ? SingletonHolder.instance
                 : provider.getIfAvailable(() -> SingletonHolder.instance);
@@ -489,7 +489,7 @@ public final class DataManager {
     private static void appendThreadDump(StringBuilder report, ThreadMXBean threads, Thread thread) {
         ThreadInfo info = threads.getThreadInfo(thread.getId(), STALL_WATCHDOG_MAX_FRAMES);
         if (info != null) {
-            report.append(info.toString()).append(System.lineSeparator());
+            report.append(info).append(System.lineSeparator());
         }
     }
 

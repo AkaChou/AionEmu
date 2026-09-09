@@ -58,7 +58,7 @@ class Quest1929RetailAlignmentTest {
 			new QuestCondition.MembershipPermission(QuestMembershipPermission.STIGMA_SLOT_QUEST)));
 
 		QuestTransition movie = transitions.stream()
-			.filter(t -> t.event() instanceof QuestEvent.MovieEnd movieEnd && movieEnd.movieId() == 155)
+			.filter(t -> t.event() instanceof QuestEvent.MovieEnd(int movieId) && movieId == 155)
 			.findFirst().orElseThrow();
 		assertEquals("spawned98", movie.targetNode());
 		assertTrue(movie.actions().contains(new QuestAction.SetVariable("step", 98)));

@@ -35,7 +35,7 @@ public class NpcShoutData {
 	protected List<ShoutGroup> shoutGroups;
 
 	@XmlTransient
-	private IntObjectHashMap<Map<Integer, List<NpcShout>>> shoutsByWorldNpcs = new IntObjectHashMap<Map<Integer, List<NpcShout>>>();
+	private final IntObjectHashMap<Map<Integer, List<NpcShout>>> shoutsByWorldNpcs = new IntObjectHashMap<Map<Integer, List<NpcShout>>>();
 
 	@XmlTransient
 	private int count = 0;
@@ -127,9 +127,7 @@ public class NpcShoutData {
 
 		if (worldShouts == null || worldShouts.get(npcId) == null) {
 			worldShouts = shoutsByWorldNpcs.get(worldId);
-			if (worldShouts == null || worldShouts.get(npcId) == null) {
-				return false;
-			}
+			return worldShouts != null && worldShouts.get(npcId) != null;
 		}
 		return true;
 	}

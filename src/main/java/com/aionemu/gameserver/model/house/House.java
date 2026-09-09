@@ -54,6 +54,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 房屋模型。
@@ -63,20 +65,50 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 public class House extends VisibleObject {
 	private HousingLand land;
-	private HouseAddress address;
+	/** 返回 address / Returns the address */
+	@Getter
+	private final HouseAddress address;
+	/** 返回建筑 / Returns the building*/
+	@Getter
+	@Setter
 	private Building building;
-	private String name;
+	private final String name;
 	private int playerObjectId;
+	/** 返回 acquired time / Returns the acquired time */
+	@Getter
+	@Setter
 	private Timestamp acquiredTime;
+	/** 设置 permissions / Sets the permissions */
+	@Setter
 	private int permissions;
+	/** 获取状态。 / Returns the status. */
+	@Getter
 	private HouseStatus status;
+	/**
+	 * @return 是否已缴纳维护费 / whether fee paid
+	 */
+	@Getter
+	@Setter
 	private boolean feePaid = true;
+	/** 返回 next pay / Returns the next pay */
+	@Getter
+	@Setter
 	private Timestamp nextPay;
+	/** 返回 sell started / Returns the sell started */
+	@Getter
+	@Setter
 	private Timestamp sellStarted;
-	private Map<SpawnType, Npc> spawns = new HashMap<SpawnType, Npc>(3);
+	private final Map<SpawnType, Npc> spawns = new HashMap<SpawnType, Npc>(3);
 	private HouseRegistry houseRegistry;
+	/** 返回 house owner info flags / Returns the house owner info flags */
+	@Getter
 	private byte houseOwnerInfoFlags = PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
+	/** 返回 player scripts / Returns the player scripts */
+	@Getter
 	private PlayerScripts playerScripts;
+	/** 获取持久化状态。 / Returns the persistent state. */
+	@Getter
+	@Setter
 	private PersistentState persistentState;
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
@@ -90,7 +122,7 @@ public class House extends VisibleObject {
 
 	public House(int objectId, Building building, HouseAddress address, int instanceId) {
 		super(objectId, new HouseController(), null, null, null);
-		((HouseController) getController()).setOwner(this);
+		getController().setOwner(this);
 		this.address = address;
 		this.building = building;
 		this.name = "HOUSE_" + address.getId();
@@ -138,21 +170,6 @@ public class House extends VisibleObject {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	/** 返回 address / Returns the address */
-	public HouseAddress getAddress() {
-		return address;
-	}
-
-	/** 返回建筑 / Returns the building*/
-	public Building getBuilding() {
-		return building;
-	}
-
-	/** 设置 building / Sets the building */
-	public void setBuilding(Building building) {
-		this.building = building;
 	}
 
 	/** 生成。 / Spawn. */
@@ -263,16 +280,6 @@ public class House extends VisibleObject {
 		fixBuildingStates();
 	}
 
-	/** 返回 acquired time / Returns the acquired time */
-	public Timestamp getAcquiredTime() {
-		return acquiredTime;
-	}
-
-	/** 设置 acquired time / Sets the acquired time */
-	public void setAcquiredTime(Timestamp acquiredTime) {
-		this.acquiredTime = acquiredTime;
-	}
-
 	/** 返回 permissions / Returns the permissions */
 	public int getPermissions() {
 		if (playerObjectId == 0) {
@@ -288,11 +295,6 @@ public class House extends VisibleObject {
 			}
 		}
 		return permissions;
-	}
-
-	/** 设置 permissions / Sets the permissions */
-	public void setPermissions(int permissions) {
-		this.permissions = permissions;
 	}
 
 	/** 返回门状态 / Returns the door state*/
@@ -319,11 +321,6 @@ public class House extends VisibleObject {
 		permissions = HousePermissions.setNoticeState(permissions, noticeState);
 	}
 
-	/** 获取状态。 / Returns the status. */
-	public HouseStatus getStatus() {
-		return status;
-	}
-
 	/** 设置状态。 / Sets the status. */
 	public synchronized void setStatus(HouseStatus status) {
 		if (this.status != status) {
@@ -347,38 +344,6 @@ public class House extends VisibleObject {
 				}
 			}
 		}
-	}
-
-	/**
-	 * @return 是否已缴纳维护费 / whether fee paid
-	 */
-	public boolean isFeePaid() {
-		return feePaid;
-	}
-
-	/** 设置 fee paid / Sets the fee paid */
-	public void setFeePaid(boolean feePaid) {
-		this.feePaid = feePaid;
-	}
-
-	/** 返回 next pay / Returns the next pay */
-	public Timestamp getNextPay() {
-		return nextPay;
-	}
-
-	/** 设置 next pay / Sets the next pay */
-	public void setNextPay(Timestamp nextPay) {
-		this.nextPay = nextPay;
-	}
-
-	/** 返回 sell started / Returns the sell started */
-	public Timestamp getSellStarted() {
-		return sellStarted;
-	}
-
-	/** 设置 sell started / Sets the sell started */
-	public void setSellStarted(Timestamp sellStarted) {
-		this.sellStarted = sellStarted;
 	}
 
 	/**
@@ -499,11 +464,6 @@ public class House extends VisibleObject {
 		return getRegistry().getDefaultPartByType(partType, floor);
 	}
 
-	/** 返回 player scripts / Returns the player scripts */
-	public PlayerScripts getPlayerScripts() {
-		return playerScripts;
-	}
-
 	/** 获取房屋类型。 / Returns the house type. */
 	public HouseType getHouseType() {
 		return HouseType.fromValue(getBuilding().getSize());
@@ -515,21 +475,6 @@ public class House extends VisibleObject {
 		if (houseRegistry != null) {
 			this.houseRegistry.save();
 		}
-	}
-
-	/** 获取持久化状态。 / Returns the persistent state. */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
-	/** 设置持久化状态。 / Sets the persistent state. */
-	public void setPersistentState(PersistentState persistentState) {
-		this.persistentState = persistentState;
-	}
-
-	/** 返回 house owner info flags / Returns the house owner info flags */
-	public byte getHouseOwnerInfoFlags() {
-		return houseOwnerInfoFlags;
 	}
 
 	/**

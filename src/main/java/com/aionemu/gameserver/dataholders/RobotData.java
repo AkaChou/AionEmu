@@ -51,7 +51,7 @@ public class RobotData {
 	 * @return 机器人信息，不存在则为 null / robot info or null
 	 */
 	public RobotInfo getRobotInfo(int npcId) {
-		return (RobotInfo) robotInfos.get(npcId);
+		return robotInfos.get(npcId);
 	}
 
 	/**

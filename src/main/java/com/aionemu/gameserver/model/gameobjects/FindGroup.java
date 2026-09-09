@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
+import lombok.Getter;
 
 /**
  * 寻找队伍游戏对象。
@@ -13,9 +14,26 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
  */
 public class FindGroup {
 
-	private AionObject object;
+	private final AionObject object;
+	/** 获取消息。 / Returns the message. */
+	@Getter
 	private String message;
-	private int groupType, minMembers, instanceId;
+	/** 获取队伍类型。 / Returns the group type. */
+	@Getter
+	private final int groupType;
+	/** 返回最少成员数 / Returns the min members */
+	@Getter
+	private int minMembers;
+	/** 返回副本 ID / Returns the instance id */
+	@Getter
+	private int instanceId;
+	/**
+	 * 返回最后更新时间。
+	 * Returns the last update time.
+	 *
+	 * @return 最后更新时间 / the lastUpdate
+	 */
+	@Getter
 	private int lastUpdate = (int) (System.currentTimeMillis() / 1000);
 
 	public FindGroup(AionObject object, String message, int groupType) {
@@ -24,29 +42,9 @@ public class FindGroup {
 		this.groupType = groupType;
 	}
 
-	/** 获取消息。 / Returns the message. */
-	public String getMessage() {
-		return message;
-	}
-
-	/** 获取队伍类型。 / Returns the group type. */
-	public int getGroupType() {
-		return groupType;
-	}
-
 	/** 返回对象 ID / Returns the object id */
 	public int getObjectId() {
 		return object.getObjectId();
-	}
-
-	/** 返回副本 ID / Returns the instance id */
-	public int getInstanceId() {
-		return instanceId;
-	}
-
-	/** 返回最少成员数 / Returns the min members */
-	public int getMinMembers() {
-		return minMembers;
 	}
 
 	/** 返回职业 ID / Returns the class id */
@@ -113,16 +111,6 @@ public class FindGroup {
 	}
 
 	/**
-	 * 返回最后更新时间。
-	 * Returns the last update time.
-	 *
-	 * @return 最后更新时间 / the lastUpdate
-	 */
-	public int getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
 	 * 返回队伍名称。
 	 * Returns the team name.
 	 *
@@ -130,7 +118,7 @@ public class FindGroup {
 	 */
 	public String getName() {
 		if (object instanceof Player) {
-			return ((Player) object).getName();
+			return object.getName();
 		} else if (object instanceof PlayerAlliance) {
 			return ((PlayerAlliance) object).getLeaderObject().getCommonData().getName();
 		} else if (object instanceof PlayerGroup) {

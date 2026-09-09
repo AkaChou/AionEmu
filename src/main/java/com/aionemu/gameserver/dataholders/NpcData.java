@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * NPC 模板数据容器，持有并索引全部 {@link NpcTemplate}。
@@ -32,7 +33,8 @@ public class NpcData {
 	private List<NpcTemplate> npcs;
 
 	/** 全部 NPC 模板映射 / map containing all npc templates */
-	private IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
+	@Getter
+	private final IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
 
 	/**
 	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放列表。
@@ -65,15 +67,5 @@ public class NpcData {
 	 */
 	public NpcTemplate getNpcTemplate(int id) {
 		return npcData.get(id);
-	}
-
-	/**
-	 * 返回全部 NPC 模板映射。
-	 * Returns the full NPC template map.
-	 *
-	 * @return 模板 ID 到 NPC 模板的映射 / map of template id to NpcTemplate
-	 */
-	public IntObjectHashMap<NpcTemplate> getNpcData() {
-		return npcData;
 	}
 }

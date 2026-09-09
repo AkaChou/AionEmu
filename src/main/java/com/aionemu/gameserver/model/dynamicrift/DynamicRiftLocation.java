@@ -9,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.dynamicrift.DynamicRiftTemplate;
 import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 动态裂隙位置模型。
@@ -17,25 +19,28 @@ import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
  * @author Rinzler (Encom)
  */
 
+@NoArgsConstructor
 public class DynamicRiftLocation {
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
 	protected DynamicRiftTemplate template;
+	/** 返回激活的动态裂隙 / Returns the active dynamic rift */
+	@Getter
 	protected DynamicRift<DynamicRiftLocation> activeDynamicRift;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 返回是否已刷新 / Returns the spawned */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
-
-	public DynamicRiftLocation() {
-	}
 
 	public DynamicRiftLocation(DynamicRiftTemplate template) {
 		this.template = template;
 		this.id = template.getId();
-	}
-
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
 	}
 
 	/** 设置激活的动态裂隙 / Sets the active dynamic rift */
@@ -44,28 +49,8 @@ public class DynamicRiftLocation {
 		this.activeDynamicRift = dynamicRift;
 	}
 
-	/** 返回激活的动态裂隙 / Returns the active dynamic rift */
-	public DynamicRift<DynamicRiftLocation> getActiveDynamicRift() {
-		return activeDynamicRift;
-	}
-
 	/** 获取模板。 / Returns the template. */
 	public final DynamicRiftTemplate getTemplate() {
 		return template;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回是否已刷新 / Returns the spawned */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 }

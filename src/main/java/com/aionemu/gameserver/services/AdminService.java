@@ -26,7 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
 	/** 受限物品 ID 列表 / Restricted item ID list */
-	private List<Integer> list;
+	private final List<Integer> list;
 
 	@Slf4j(topic = "GMITEMRESTRICTION")
 	private static class ItemRestrictionLog {

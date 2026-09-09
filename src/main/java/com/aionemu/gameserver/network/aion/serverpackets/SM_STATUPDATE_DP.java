@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端更新当前 DP（神圣点数）值。
@@ -9,19 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Luno
  */
+@AllArgsConstructor
 public class SM_STATUPDATE_DP extends AionServerPacket {
 
-	private int currentDp;
-
-	/**
-	 * 使用给定参数构造 SM_STATUPDATE_DP 包。
-	 * Creates a SM_STATUPDATE_DP packet with the given parameters.
-	 *
-	 * current dp
-	 */
-	public SM_STATUPDATE_DP(int currentDp) {
-		this.currentDp = currentDp;
-	}
+	private final int currentDp;
 
 	/**
 	 * {@inheritDoc}

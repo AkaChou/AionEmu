@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 制作奖励组：按等级范围索引的制作奖励。
@@ -21,6 +22,10 @@ import java.util.Map;
  */
 public abstract class CraftGroup extends BonusItemGroup {
 
+	/**
+	 * @return the dataHolder
+	 */
+	@Getter
 	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 
@@ -47,13 +52,6 @@ public abstract class CraftGroup extends BonusItemGroup {
 				result.addAll(entry.getValue());
 			}
 		return result.toArray(new ItemRaceEntry[0]);
-	}
-
-	/**
-	 * @return the dataHolder
-	 */
-	public Map<Integer, Map<Range<Integer>, List<CraftReward>>> getDataHolder() {
-		return dataHolder;
 	}
 
 	/**

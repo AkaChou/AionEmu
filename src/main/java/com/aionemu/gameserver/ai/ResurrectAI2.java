@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class ResurrectAI2 extends NpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.
@@ -49,7 +49,7 @@ public class ResurrectAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
@@ -60,10 +60,9 @@ public class ResurrectAI2 extends NpcAI2
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-			final Player player = (Player) creature;
+        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
 			if (MathUtil.isIn3dRange(getOwner(), creature, 20)) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 点击方尖碑可在此绑定。 / You can bind here by clicking the Obelisk.
@@ -72,7 +71,7 @@ public class ResurrectAI2 extends NpcAI2
 			}
         }
     }
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -107,7 +106,7 @@ public class ResurrectAI2 extends NpcAI2
 		}
 		bindHere(player, bindPointTemplate);
 	}
-	
+
 	private void bindHere(Player player, final BindPointTemplate bindPointTemplate) {
 		String price = Integer.toString(bindPointTemplate.getPrice());
 		AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_REGISTER_RESURRECT_POINT, 0, new AI2Request() {
@@ -138,7 +137,7 @@ public class ResurrectAI2 extends NpcAI2
 			}
 		}, price);
 	}
-	
+
 	private void newBind(Player player, final BindPointTemplate bindPointTemplate) {
 		String price = Integer.toString(bindPointTemplate.getPrice());
 		AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_REGISTER_RESURRECT_POINT, 0, new AI2Request() {
@@ -169,7 +168,7 @@ public class ResurrectAI2 extends NpcAI2
 			}
 		}, price);
 	}
-	
+
 	/**
 	 * 是否支持移动。
 	 * Whether movement is supported.

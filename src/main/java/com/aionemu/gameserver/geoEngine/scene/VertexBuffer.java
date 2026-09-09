@@ -19,7 +19,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 缓冲类型，指定其定义的实际属性。
 	 * Type of buffer; specifies the actual attribute it defines.
 	 */
-	public static enum Type {
+	public enum Type {
 
 		/**
 		 * 顶点位置（3 个 float）。
@@ -96,14 +96,14 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 * 第二套纹理坐标。
 		 * Texture coordinate #2.
 		 */
-		TexCoord2;
+		TexCoord2
 	}
 
 	/**
 	 * 缓冲用途提示，可影响是否放入 VRAM，但不保证。
 	 * Usage hint for the buffer; may influence VRAM placement, but no guarantees.
 	 */
-	public static enum Usage {
+	public enum Usage {
 
 		/**
 		 * 网格数据发送一次，极少更新。
@@ -124,14 +124,14 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 * 数据不发送到 GPU，仅 CPU 使用。
 		 * Mesh data is not sent to the GPU at all; CPU only.
 		 */
-		CpuOnly;
+		CpuOnly
 	}
 
 	/**
 	 * 缓冲元素数据格式。
 	 * Data format of buffer elements.
 	 */
-	public static enum Format {
+	public enum Format {
 		// 浮点格式 / Floating point formats
 
 		Half(2), Float(4), Double(8),

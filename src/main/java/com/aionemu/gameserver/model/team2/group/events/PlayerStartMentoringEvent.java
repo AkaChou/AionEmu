@@ -11,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 玩家开始指导事件（团队2）。
@@ -18,15 +19,11 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
 	private final Player player;
-
-	public PlayerStartMentoringEvent(PlayerGroup group, Player player) {
-		this.group = group;
-		this.player = player;
-	}
 
 	/** 处理事件。 / Handle event. */
 	@Override

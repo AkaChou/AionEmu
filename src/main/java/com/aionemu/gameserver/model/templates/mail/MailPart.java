@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
 
 /**
  * 邮件 Part 模板（静态数据/XML）。
@@ -18,17 +19,14 @@ import org.apache.commons.lang3.StringUtils;
 @XmlSeeAlso({ Sender.class, Header.class, Body.class, Tail.class, Title.class })
 public abstract class MailPart extends StringParamList implements IMailFormatter {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id")
 	protected Integer id;
 
 	/** 获取类型。 / Returns the type. */
 	public MailPartType getType() {
 		return MailPartType.CUSTOM;
-	}
-
-	/** 返回 ID / Returns the id */
-	public Integer getId() {
-		return id;
 	}
 
 	/** 返回 formatted string / Returns the formatted string */
@@ -42,7 +40,7 @@ public abstract class MailPart extends StringParamList implements IMailFormatter
 
 		String[] paramValues = new String[getParam().size()];
 		for (int i = 0; i < getParam().size(); i++) {
-			StringParamList.Param param = (StringParamList.Param) getParam().get(i);
+			StringParamList.Param param = getParam().get(i);
 			paramValues[i] = formatter.getParamValue(param.getId());
 		}
 		String joinedParams = StringUtils.join(paramValues, ',');
@@ -60,7 +58,7 @@ public abstract class MailPart extends StringParamList implements IMailFormatter
 	public String getFormattedString(MailPartType partType) {
 		String result = "";
 		if (id > 0) {
-			result = result + id.toString();
+			result = result + id;
 		}
 		return result;
 	}

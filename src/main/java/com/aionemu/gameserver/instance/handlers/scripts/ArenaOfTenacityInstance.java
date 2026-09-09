@@ -48,14 +48,14 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     * 
+     *
      * @param object 可见对象 / visible object
      * @return 结果 / result
      */
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
-		return (HallOfTenacityPlayerReward) instanceReward.getPlayerReward(object);
+		return instanceReward.getPlayerReward(object);
 	}
 
     /**
@@ -223,7 +223,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 打开指定门。
      * Open the given door.
-     * 
+     *
      * @param doorId 门 ID / doorId
      */
 
@@ -246,7 +246,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 向副本内玩家发送消息。
      * Send a message to players in the instance.
-     * 
+     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time

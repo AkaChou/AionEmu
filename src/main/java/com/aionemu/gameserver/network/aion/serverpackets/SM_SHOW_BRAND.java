@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端显示队伍/联盟标记（Brand）。
@@ -9,22 +10,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Sweetkr
  */
+@AllArgsConstructor
 public class SM_SHOW_BRAND extends AionServerPacket {
 
-	private int brandId;
-	private int targetObjectId;
-
-	/**
-	 * 使用给定参数构造 SM_SHOW_BRAND 包。
-	 * Creates a SM_SHOW_BRAND packet with the given parameters.
-	 *
-	 * brand id
-	 * target object id
-	 */
-	public SM_SHOW_BRAND(int brandId, int targetObjectId) {
-		this.brandId = brandId;
-		this.targetObjectId = targetObjectId;
-	}
+	private final int brandId;
+	private final int targetObjectId;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

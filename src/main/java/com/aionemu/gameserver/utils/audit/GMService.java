@@ -54,7 +54,7 @@ public class GMService {
 	 * 在线 GM：objectId → 玩家。
 	 * Online GMs: objectId → player.
 	 */
-	private Map<Integer, Player> gms = new HashMap<Integer, Player>();
+	private final Map<Integer, Player> gms = new HashMap<Integer, Player>();
 	/**
 	 * 返回当前在线 GM 集合。
 	 * Returns the collection of currently online GMs.

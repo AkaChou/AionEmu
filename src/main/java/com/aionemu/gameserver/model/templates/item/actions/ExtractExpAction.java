@@ -13,6 +13,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * Extract 经验动作模板（静态数据/XML）。
@@ -21,15 +24,16 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ExtractExpAction")
+@NoArgsConstructor
 public class ExtractExpAction extends AbstractItemAction {
 	@XmlAttribute(name = "expextractionrate")
 	protected Integer expextractionrate;
 
+	/** 获取奖励。 / Returns the reward. */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "reward")
 	protected Integer reward;
-
-	public ExtractExpAction() {
-	}
 
 	public ExtractExpAction(Integer expextractionrate) {
 		this.expextractionrate = expextractionrate;
@@ -43,16 +47,6 @@ public class ExtractExpAction extends AbstractItemAction {
 	/** 设置比率。 / Sets the rate. */
 	public void setRate(Integer expextractionrate) {
 		this.expextractionrate = expextractionrate;
-	}
-
-	/** 获取奖励。 / Returns the reward. */
-	public Integer getReward() {
-		return reward;
-	}
-
-	/** 设置奖励。 / Sets the reward. */
-	public void setReward(Integer reward) {
-		this.reward = reward;
 	}
 
 	/**

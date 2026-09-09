@@ -80,7 +80,7 @@ public class Conquest extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidConquestLocationId(Player player, int conquestId) {
-		if (!GameLocationBootstrapServices.conquestService().getConquestLocations().keySet().contains(conquestId)) {
+		if (!GameLocationBootstrapServices.conquestService().getConquestLocations().containsKey(conquestId)) {
 			PacketSendUtility.sendMessage(player, "Id " + conquestId + " is invalid");
 			return false;
 		}

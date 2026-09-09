@@ -3,6 +3,8 @@ package com.aionemu.gameserver.controllers;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.world.World;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 可见对象控制器基类，管理对象的生成与消失。
@@ -14,27 +16,9 @@ import com.aionemu.gameserver.world.World;
 public abstract class VisibleObjectController<T extends VisibleObject> {
 
 	/** 控制器所有者对象。 / Owner object of this controller. */
+	@Getter
+	@Setter
 	private T owner;
-
-	/**
-	 * 设置所有者对象。
-	 * Sets the owner object.
-	 *
-	 * owner
-	 */
-	public void setOwner(T owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * 获取所有者对象。
-	 * Gets the owner object.
-	 *
-	 * owner
-	 */
-	public T getOwner() {
-		return owner;
-	}
 
 	/**
 	 * 当另一个可见对象进入本对象视野时回调。
@@ -82,7 +66,6 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	 * Post-spawn hook.
 	 */
 	public void onAfterSpawn() {
-
 	}
 
 	/**

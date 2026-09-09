@@ -3,6 +3,7 @@ package com.aionemu.loginserver.utils;
 
 import com.aionemu.boot.i18n.I18n;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,14 +29,11 @@ public class AccountUtils {
     public static String encodePassword(String password) {
         try {
             MessageDigest messageDiegest = MessageDigest.getInstance("SHA-1");
-            messageDiegest.update(password.getBytes("UTF-8"));
+            messageDiegest.update(password.getBytes(StandardCharsets.UTF_8));
             return Base64.encodeToString(messageDiegest.digest(), false);
         } catch (NoSuchAlgorithmException e) {
             log.error(I18n.get("log.4f2731090659"));
             throw new Error(e);
-        } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.4f2731090659"));
-            throw new Error(e);
         }
-    }
+	}
 }

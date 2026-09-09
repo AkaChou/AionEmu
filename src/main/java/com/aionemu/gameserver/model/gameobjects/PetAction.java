@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * 宠物动作枚举。
@@ -15,7 +16,7 @@ public enum PetAction {
 	/** 心情 / Mood. */
 	MOOD(12), UNKNOWN(255);
 
-	private static Map<Integer, PetAction> petActions;
+	private static final Map<Integer, PetAction> petActions;
 
 	static {
 		petActions = new HashMap<Integer, PetAction>();
@@ -24,15 +25,12 @@ public enum PetAction {
 		}
 	}
 
-	private int actionId;
-
-	private PetAction(int actionId) {
-		this.actionId = actionId;
-	}
-
 	/** 返回动作 ID / Returns the action id */
-	public int getActionId() {
-		return actionId;
+	@Getter
+	private final int actionId;
+
+	PetAction(int actionId) {
+		this.actionId = actionId;
 	}
 
 	/** 按 ID 返回动作 / Returns the action by id */

@@ -39,8 +39,8 @@ class MonsterHuntFamilyDefinitionTest {
 		Map<String, Long> outgoing = kills.stream()
 			.collect(Collectors.groupingBy(QuestTransition::sourceNode, Collectors.counting()));
 		assertEquals(Set.of(2L), outgoing.values().stream().collect(Collectors.toSet()));
-		assertTrue(varsOf(compiled, "started").get("var0") == 0);
-		assertTrue(varsOf(compiled, "k8").get("var0") == 8);
+		assertEquals(0, (int) varsOf(compiled, "started").get("var0"));
+		assertEquals(8, (int) varsOf(compiled, "k8").get("var0"));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ class MonsterHuntFamilyDefinitionTest {
 			int target = varsOf(compiled, kill.targetNode()).get("var0");
 			assertEquals(source + 1, target, kill.sourceNode() + " must advance one kill");
 		}
-		assertTrue(varsOf(compiled, "k9").get("var0") == 9);
+		assertEquals(9, (int) varsOf(compiled, "k9").get("var0"));
 	}
 
 	@Test

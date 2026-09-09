@@ -29,7 +29,7 @@ public enum RestartFrequency {
      * 频率 ID。
      * Frequency identifier.
      */
-    private int id;
+    private final int id;
 
     /**
      * 构造重启频率枚举。
@@ -37,7 +37,7 @@ public enum RestartFrequency {
      *
      * @param id 频率 ID / frequency id
      */
-    private RestartFrequency(int id) {
+	RestartFrequency(int id) {
         this.id = id;
     }
 

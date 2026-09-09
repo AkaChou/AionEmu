@@ -63,7 +63,7 @@ public class cmd_pvp extends PlayerCommand {
             givePvPWelcomeMsg(player, "monPvP");
         }
     }
-		
+
 	  private void monPvP(Player player){
         checkotherEvents(player);
         if (player.getRace() == Race.ASMODIANS  && player.getWorldId() != 220040000 && !player.isInPrison()) { //Beluslan
@@ -71,9 +71,9 @@ public class cmd_pvp extends PlayerCommand {
         } else if (player.getRace() == Race.ELYOS && player.getWorldId() != 220040000 && !player.isInPrison()) {
             goTo(player, WorldMapType.BELUSLAN.getId(), 1883.6552f, 1298.7427f, 428.79642f);
         }
-    } 				
+    }
 
-	
+
     private void wedPvP(Player player){
         checkotherEvents(player);
         if (player.getRace() == Race.ASMODIANS  && player.getWorldId() != 210040000 && !player.isInPrison()) { //Heiron
@@ -81,13 +81,12 @@ public class cmd_pvp extends PlayerCommand {
         } else if (player.getRace() == Race.ELYOS && player.getWorldId() != 210040000 && !player.isInPrison()) {
             goTo(player, WorldMapType.HEIRON.getId(), 1262.2222f, 2283.0647f, 239.9606f);
         }
-    }					
+    }
 
     private void checkotherEvents(Player player){
         if (player.isAttackMode()) {
             PacketSendUtility.sendMessage(player, "You can not use this command during the fight!");
-            return;
-        }
+		}
 	}
     private static void goTo(final Player player, int worldId, float x, float y, float z) {
         WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
@@ -137,7 +136,7 @@ public class cmd_pvp extends PlayerCommand {
                 return;
             }
         }
-		 
+
         if(player.getRace() == Race.ASMODIANS){
             msg = "all the ELYOS :]";
         }else if(player.getRace() == Race.ELYOS){

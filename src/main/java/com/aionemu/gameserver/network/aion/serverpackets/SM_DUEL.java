@@ -3,6 +3,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.model.DuelResult;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 决斗状态包：通知决斗开始（请求者）或决斗结果。
@@ -10,16 +12,13 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author xavier
  */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SM_DUEL extends AionServerPacket {
 
 	private String playerName;
 	private DuelResult result;
 	private int requesterObjId;
-	private int type;
-
-	private SM_DUEL(int type) {
-		this.type = type;
-	}
+	private final int type;
 
 	/**
 	 * 决斗开始通知。

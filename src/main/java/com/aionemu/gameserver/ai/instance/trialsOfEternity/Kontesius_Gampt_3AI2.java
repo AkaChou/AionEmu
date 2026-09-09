@@ -26,21 +26,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Kontesius_Gampt_3AI2 extends AggressiveNpcAI2
 {
 	private boolean canThink = true;
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	/**
 	 * 玩家靠近 10 米内时触发一次散步表演：沿巡逻路径行走并在 20 秒后消失。
 	 * When a player comes within 10 meters, triggers a one-time walking show: walks the patrol path and despawns after 20 seconds.
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -60,7 +59,7 @@ public class Kontesius_Gampt_3AI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}

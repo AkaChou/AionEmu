@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 军团 MemberEx，用于团队相关逻辑。
@@ -19,11 +21,29 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public class LegionMemberEx extends LegionMember {
 
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
+	@Setter
 	private String name;
+	/** 获取玩家职业。 / Returns the player class. */
+	@Getter
+	@Setter
 	private PlayerClass playerClass;
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	private int level;
+	/** 设置最后在线时间。 / Sets the last online time. */
+	@Setter
 	private Timestamp lastOnline;
+	/** 返回世界 ID。 / Returns the world id. */
+	@Getter
+	@Setter
 	private int worldId;
+	/**
+	 * @param online the online to set
+	 */
+	@Getter
+	@Setter
 	private boolean online = false;
 
 	/**
@@ -57,41 +77,11 @@ public class LegionMemberEx extends LegionMember {
 		this.name = name;
 	}
 
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 设置名称。 / Sets the name. */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/** 获取玩家职业。 / Returns the player class. */
-	public PlayerClass getPlayerClass() {
-		return playerClass;
-	}
-
-	/** 设置玩家职业。 / Sets the player class. */
-	public void setPlayerClass(PlayerClass playerClass) {
-		this.playerClass = playerClass;
-	}
-
 	/** 返回最后在线时间。 / Returns the last online time. */
 	public int getLastOnline() {
 		if (lastOnline == null || isOnline())
 			return 0;
 		return (int) (lastOnline.getTime() / 1000);
-	}
-
-	/** 设置最后在线时间。 / Sets the last online time. */
-	public void setLastOnline(Timestamp timestamp) {
-		lastOnline = timestamp;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
 	}
 
 	/**
@@ -120,30 +110,6 @@ public class LegionMemberEx extends LegionMember {
 		}
 
 		this.level = level;
-	}
-
-	/** 返回世界 ID。 / Returns the world id. */
-	public int getWorldId() {
-		return worldId;
-	}
-
-	/** 设置世界 ID。 / Sets the world id. */
-	public void setWorldId(int worldId) {
-		this.worldId = worldId;
-	}
-
-	/**
-	 * @param online the online to set
-	 */
-	public void setOnline(boolean online) {
-		this.online = online;
-	}
-
-	/**
-	 * @return the online
-	 */
-	public boolean isOnline() {
-		return online;
 	}
 
 	/** 是否为相同对象 ID。 / Whether the object ids match. */

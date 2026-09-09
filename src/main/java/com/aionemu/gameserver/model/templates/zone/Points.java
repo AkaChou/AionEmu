@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 点模板（静态数据/XML）。
@@ -17,17 +19,23 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Points")
+@NoArgsConstructor
 public class Points {
 
 	@XmlElement(required = true)
 	protected List<Point2D> point;
+	/**
+	 * @return the top
+	 */
+	@Getter
 	@XmlAttribute(name = "top")
 	protected float top;
+	/**
+	 * @return the bottom
+	 */
+	@Getter
 	@XmlAttribute(name = "bottom")
 	protected float bottom;
-
-	public Points() {
-	}
 
 	public Points(float bottom, float top) {
 		this.bottom = bottom;
@@ -40,19 +48,5 @@ public class Points {
 			point = new ArrayList<Point2D>();
 		}
 		return this.point;
-	}
-
-	/**
-	 * @return the top
-	 */
-	public float getTop() {
-		return top;
-	}
-
-	/**
-	 * @return the bottom
-	 */
-	public float getBottom() {
-		return bottom;
 	}
 }

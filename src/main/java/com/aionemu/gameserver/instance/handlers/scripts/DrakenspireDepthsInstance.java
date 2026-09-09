@@ -58,10 +58,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -108,7 +108,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -119,7 +119,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		    break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -143,7 +143,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			}, 20000);
         }
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -1193,9 +1193,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				}
 				despawnNpc(npc);
 			break;
-			/**
-	 * 若玩家击杀贝里特拉将移出副本！须先移除 3 枚封印再战龙形态。 / If player kill <Beritra> they are removed from instance!!! Coz, player must removed <3 Seal> before fight "Beritra Dragon Form"
-	 */
+			/* 若玩家提前击杀贝里特拉将被移出副本：须先移除 3 枚封印才能挑战龙形态。
+	 * If the player kills Beritra early they are removed from the instance: the 3 seals must be removed
+	 * before the dragon form can be fought. */
 			case 236244: //Beritra.
 			case 236245: //Enraged Beritra.
 			case 236246: //Crazed Beritra.
@@ -1311,7 +1311,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	private void startDrakenspireTimer() {
 		// 贝里特拉变身为龙。 / Beritra transforms into a dragon.
 		sendMsgByRace(1402721, Race.PC_ALL, 0);
@@ -1361,7 +1361,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			}
 		});
     }
-	
+
 	private void spawnIDSealScene01() {
 		// 与盟友一起挺进龙脊深渊。 / Advance into Drakenspire Depths with your allies.
 		sendMsgByRace(1402991, Race.PC_ALL, 10000);
@@ -1376,7 +1376,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
         spawn(pcGuard3, 349.18713f, 192.32655f, 1684.2164f, (byte) 119);
         spawn(pcGuard4, 349.34637f, 173.6827f, 1684.2164f, (byte) 1);
     }
-	
+
 	private void spawnIDSealSceneEnding() {
         final int IDSealSceneEndingQuestNPC = sealSceneRace == Race.ASMODIANS ? 209804 : 209739; //Parsia/Masionel.
 		final int IDSealSceneEndingPCGuard1 = sealSceneRace == Race.ASMODIANS ? 209807 : 209742;
@@ -1389,45 +1389,45 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
         spawn(IDSealSceneEndingPCGuard3, 148.80602f, 521.83466f, 1749.516f, (byte) 45);
 		spawn(IDSealSceneEndingPCGuard4, 148.60063f, 515.0635f, 1749.5034f, (byte) 75);
     }
-	
+
 	private void spawnEmpyreanLordsSiegeWeapon() {
 		final int empyreanLordsSiegeWeapon = sealSceneRace == Race.ASMODIANS ? 702720 : 702719; //Empyrean Lord's Siege Weapon.
 		spawn(empyreanLordsSiegeWeapon, 635.24457f, 890.4639f, 1600.5914f, (byte) 90);
     }
-	
+
 	private void spawnEternalAltarOfTormentEntrance() {
 		SpawnTemplate EnvSkyBoxObject = SpawnEngine.addNewSingleTimeSpawn(301390000, 804697, 635.69067f, 959.46039f, 1615.0714f, (byte) 0);
 		EnvSkyBoxObject.setEntityId(50);
 		objects.put(804697, SpawnEngine.spawnObject(EnvSkyBoxObject, instanceId));
     }
-	
+
 	private void spawnWaveDoor() {
 	    SpawnTemplate AionFXPostGlow = SpawnEngine.addNewSingleTimeSpawn(301390000, 731581, 635.3889f, 784.05261f, 1596.7184f, (byte) 0);
 		AionFXPostGlow.setEntityId(548);
 		objects.put(731581, SpawnEngine.spawnObject(AionFXPostGlow, instanceId));
 	}
-	
+
 	private void moveToSealForward(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	private void spawnIDSeal4ThStageElyos() {
 		moveToSealForward((Npc)spawn(209722, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 632.21173f, 887.62164f, 1600.698f, false);
 		moveToSealForward((Npc)spawn(209722, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 638.4854f, 889.0385f, 1600.6517f, false);
 		moveToSealForward((Npc)spawn(209722, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 638.0168f, 896.49756f, 1600.4114f, false);
 		moveToSealForward((Npc)spawn(209722, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 631.50134f, 895.16174f, 1600.5238f, false);
 	}
-	
+
 	private void spawnIDSeal4ThStageAsmodians() {
 		moveToSealForward((Npc)spawn(209787, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 632.21173f, 887.62164f, 1600.698f, false);
 		moveToSealForward((Npc)spawn(209787, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 638.4854f, 889.0385f, 1600.6517f, false);
 		moveToSealForward((Npc)spawn(209787, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 638.0168f, 896.49756f, 1600.4114f, false);
 		moveToSealForward((Npc)spawn(209787, 636.07764f, 846.96954f, 1599.9142f, (byte) 30), 631.50134f, 895.16174f, 1600.5238f, false);
 	}
-	
+
 	private void raidSeal(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1452,7 +1452,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal1。
 	 * Handle startRaidSeal1.
 	 */
-	
+
 	public void startRaidSeal1() {
 	    raidSeal((Npc)spawn(236204, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236204, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
@@ -1463,7 +1463,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal2。
 	 * Handle startRaidSeal2.
 	 */
-	
+
 	public void startRaidSeal2() {
 	    raidSeal((Npc)spawn(236206, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236206, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
@@ -1473,7 +1473,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal2_1。
 	 * Handle startRaidSeal2_1.
 	 */
-	
+
 	public void startRaidSeal2_1() {
 		raidSeal((Npc)spawn(236206, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236206, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
@@ -1483,7 +1483,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal3。
 	 * Handle startRaidSeal3.
 	 */
-	
+
 	public void startRaidSeal3() {
 	    raidSeal((Npc)spawn(236216, 686.8446f, 823.1334f, 1610.0796f, (byte) 46));
 		raidSeal((Npc)spawn(236216, 689.8247f, 826.4868f, 1610.1107f, (byte) 46));
@@ -1494,7 +1494,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal4。
 	 * Handle startRaidSeal4.
 	 */
-	
+
 	public void startRaidSeal4() {
 		raidSeal((Npc)spawn(236220, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236220, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
@@ -1504,7 +1504,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal5。
 	 * Handle startRaidSeal5.
 	 */
-	
+
 	public void startRaidSeal5() {
 		raidSeal((Npc)spawn(236218, 574.2141f, 879.9431f, 1600.7627f, (byte) 0));
 		raidSeal((Npc)spawn(236218, 574.22955f, 875.5384f, 1601.1173f, (byte) 0));
@@ -1516,7 +1516,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理 startRaidSeal6。
 	 * Handle startRaidSeal6.
 	 */
-	
+
 	public void startRaidSeal6() {
 		raidSeal((Npc)spawn(236217, 576.9567f, 939.24054f, 1620.987f, (byte) 104));
 		raidSeal((Npc)spawn(236217, 573.4911f, 935.99945f, 1621.0607f, (byte) 104));
@@ -1525,7 +1525,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		raidSeal((Npc)spawn(236217, 689.8956f, 929.0121f, 1617.4075f, (byte) 68));
 		raidSeal((Npc)spawn(236238, 688.66656f, 931.058f, 1617.5339f, (byte) 72));
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -1540,7 +1540,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			}
 		});
 	}
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1566,7 +1566,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			}
 		}, time);
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -1582,43 +1582,43 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
             }, delay);
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	protected Npc getNpc(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpc(npcId);
 		}
 		return null;
 	}
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	private boolean isDead(Npc npc) {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1634,11 +1634,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);

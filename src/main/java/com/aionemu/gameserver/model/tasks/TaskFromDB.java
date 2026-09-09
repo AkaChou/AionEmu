@@ -12,13 +12,13 @@ import lombok.Getter;
 @Getter
 public class TaskFromDB {
 
-	private int id;
-	private String name;
-	private String type;
-	private Timestamp lastActivation;
-	private String startTime;
-	private int delay;
-	private String params[];
+	private final int id;
+	private final String name;
+	private final String type;
+	private final Timestamp lastActivation;
+	private final String startTime;
+	private final int delay;
+	private final String[] params;
 
 	/**
 	 * 构造方法。 / Constructor.

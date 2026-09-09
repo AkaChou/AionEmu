@@ -2,6 +2,9 @@ package com.aionemu.gameserver.model.base;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.base.BaseTemplate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 基础位置模型。
@@ -10,12 +13,13 @@ import com.aionemu.gameserver.model.templates.base.BaseTemplate;
  * @author Rinzler
  */
 
+@NoArgsConstructor
 public class BaseLocation {
 	protected BaseTemplate template;
+	/** 获取种族。 / Returns the race. */
+	@Getter
+	@Setter
 	protected Race race = Race.NPC;
-
-	public BaseLocation() {
-	}
 
 	public BaseLocation(BaseTemplate template) {
 		this.template = template;
@@ -34,15 +38,5 @@ public class BaseLocation {
 	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return template.getName();
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 设置种族。 / Sets the race. */
-	public void setRace(Race race) {
-		this.race = race;
 	}
 }

@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * 守护灵模板（静态数据/XML）。
@@ -23,18 +24,26 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 @XmlRootElement(name = "MinionTemplate")
 public class MinionTemplate {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	private String name;
 
 	@XmlAttribute(name = "nameid")
 	private int name_id;
 
+	/** 返回 grade / Returns the grade */
+	@Getter
 	@XmlAttribute(name = "grade")
 	private String grade;
 
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 
@@ -44,6 +53,8 @@ public class MinionTemplate {
 	@XmlAttribute(name = "growthMax")
 	private int growthMax;
 
+	/** 返回 growth cost / Returns the growth cost */
+	@Getter
 	@XmlAttribute(name = "growthCost")
 	private int growthCost;
 
@@ -53,34 +64,18 @@ public class MinionTemplate {
 	@XmlElement(name = "actions")
 	private MinionActions actions;
 
+	/** 获取属性模板。 / Returns the stats template. */
+	@Getter
 	@XmlElement(name = "minionstats")
 	private MinionStatsTemplate statsTemplate;
 
 	@XmlElement(name = "bound")
 	private BoundRadius bound;
 
+	/** 返回 evolved / Returns the evolved */
+	@Getter
 	@XmlElement(name = "evolved")
 	private MinionEvolved evolved;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回 grade / Returns the grade */
-	public String getGrade() {
-		return this.grade;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return this.level;
-	}
 
 	/** 返回 growth pt / Returns the growth pt */
 	public int getGrowthPt() {
@@ -90,11 +85,6 @@ public class MinionTemplate {
 	/** 返回 max growth value / Returns the max growth value */
 	public int getMaxGrowthValue() {
 		return growthMax;
-	}
-
-	/** 返回 growth cost / Returns the growth cost */
-	public int getGrowthCost() {
-		return growthCost;
 	}
 
 	/** 获取修正器。 / Returns the modifiers. */
@@ -110,18 +100,8 @@ public class MinionTemplate {
 		return this.actions;
 	}
 
-	/** 获取属性模板。 / Returns the stats template. */
-	public MinionStatsTemplate getStatsTemplate() {
-		return this.statsTemplate;
-	}
-
 	/** 获取边界半径。 / Returns the bound radius. */
 	public BoundRadius getBoundRadius() {
 		return this.bound;
-	}
-
-	/** 返回 evolved / Returns the evolved */
-	public MinionEvolved getEvolved() {
-		return this.evolved;
 	}
 }

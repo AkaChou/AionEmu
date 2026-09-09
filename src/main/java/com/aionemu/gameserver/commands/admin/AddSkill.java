@@ -48,8 +48,7 @@ public class AddSkill extends AdminCommand {
 			return;
 		}
 
-		if (target instanceof Player) {
-			Player targetpl = (Player) target;
+		if (target instanceof Player targetpl) {
 			targetpl.getSkillList().addSkill(targetpl, skillId, skillLevel);
 			PacketSendUtility.sendMessage(player, "You have success add skill");
 			PacketSendUtility.sendMessage(targetpl, "You have acquire a new skill");

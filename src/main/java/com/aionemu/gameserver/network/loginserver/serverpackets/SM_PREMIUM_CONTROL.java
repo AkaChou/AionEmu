@@ -12,8 +12,8 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
  * @author KID
  */
 public class SM_PREMIUM_CONTROL extends LsServerPacket {
-	private IGRequest request;
-	private long cost;
+	private final IGRequest request;
+	private final long cost;
 
 	/**
 	 * 构造高级点/商城消费控制包。

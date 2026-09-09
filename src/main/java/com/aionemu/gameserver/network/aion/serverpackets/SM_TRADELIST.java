@@ -20,11 +20,11 @@ import com.aionemu.gameserver.services.LimitedItemTradeService;
  */
 public class SM_TRADELIST extends AionServerPacket {
 
-	private Integer playerObj;
-	private int npcObj;
-	private int npcId;
-	private TradeListTemplate tlist;
-	private int buyPriceModifier;
+	private final Integer playerObj;
+	private final int npcObj;
+	private final int npcId;
+	private final TradeListTemplate tlist;
+	private final int buyPriceModifier;
 
 	/**
 	 * 玩家 / player

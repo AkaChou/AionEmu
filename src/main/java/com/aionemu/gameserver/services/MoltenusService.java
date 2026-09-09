@@ -121,7 +121,7 @@ public class MoltenusService {
 			public void run() {
 				stopMoltenus(id);
 			}
-		}, CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.siege;
 
+import lombok.Getter;
+
 /**
  * 要塞刷新点类型枚举。
  * Siege Spawn Type enumeration.
@@ -25,16 +27,13 @@ public enum SiegeSpawnType {
 	/** 种族保护者。 / Race Protector. */
 	RACEPROTECTOR(8);
 
-	private int id;
-
-	private SiegeSpawnType(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * @return 枚举 ID / the id
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	SiegeSpawnType(int id) {
+		this.id = id;
 	}
 }

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.mail;
 
+import lombok.Getter;
+
 /**
  * 邮件消息枚举。
  * Mail Message enumeration.
@@ -14,14 +16,11 @@ public enum MailMessage {
 	/** Mailspam Wait For Some Time / Mailspam Wait For Some Time */
 	MAILSPAM_WAIT_FOR_SOME_TIME(6);
 
-	private int id;
-
-	private MailMessage(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	MailMessage(int id) {
+		this.id = id;
 	}
 }

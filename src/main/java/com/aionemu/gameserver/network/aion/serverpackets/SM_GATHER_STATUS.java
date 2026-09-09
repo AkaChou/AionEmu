@@ -12,9 +12,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_GATHER_STATUS extends AionServerPacket {
 
-	private int status;
-	private int playerobjid;
-	private int gatherableobjid;
+	private final int status;
+	private final int playerobjid;
+	private final int gatherableobjid;
 
 	/**
 	 * @param playerobjid 玩家对象 ID / Player object ID

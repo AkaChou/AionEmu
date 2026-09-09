@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 伊迪安 Stone，用于物品相关逻辑。
@@ -25,8 +26,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class IdianStone extends ItemStone {
 
 	private ActionObserver actionListener;
+	/** 返回 polish charge / Returns the polish charge */
+	@Getter
 	private int polishCharge;
+	/** 返回 polish set id / Returns the polish set id */
+	@Getter
 	private final int polishSetId;
+	/** 返回 polish number / Returns the polish number */
+	@Getter
 	private final int polishNumber;
 	private final Item item;
 	private final ItemTemplate template;
@@ -100,21 +107,6 @@ public class IdianStone extends ItemStone {
 			setPersistentState(PersistentState.DELETED);
 			DAOManager.getDAO(ItemStoneListDAO.class).storeIdianStones(this);
 		}
-	}
-
-	/** 返回 polish number / Returns the polish number */
-	public int getPolishNumber() {
-		return polishNumber;
-	}
-
-	/** 返回 polish set id / Returns the polish set id */
-	public int getPolishSetId() {
-		return polishSetId;
-	}
-
-	/** 返回 polish charge / Returns the polish charge */
-	public int getPolishCharge() {
-		return polishCharge;
 	}
 
 	/** 卸下时 / on Un Equip. */

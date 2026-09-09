@@ -19,7 +19,7 @@ public interface Restrictions {
 	 * @param callingRestriction 调用限制类型 / calling restriction type
 	 * @return true 表示被限制 / true when restricted
 	 */
-	public boolean isRestricted(Player player, Class<? extends Restrictions> callingRestriction);
+	boolean isRestricted(Player player, Class<? extends Restrictions> callingRestriction);
 
 	/**
 	 * 是否允许攻击目标。
@@ -29,7 +29,7 @@ public interface Restrictions {
 	 * @param target 目标 / target
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canAttack(Player player, VisibleObject target);
+	boolean canAttack(Player player, VisibleObject target);
 
 	/**
 	 * 是否允许技能影响目标。
@@ -40,7 +40,7 @@ public interface Restrictions {
 	 * @param skill 技能 / skill
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canAffectBySkill(Player player, VisibleObject target, Skill skill);
+	boolean canAffectBySkill(Player player, VisibleObject target, Skill skill);
 
 	/**
 	 * 是否允许使用技能。
@@ -50,7 +50,7 @@ public interface Restrictions {
 	 * @param skill 技能 / skill
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canUseSkill(Player player, Skill skill);
+	boolean canUseSkill(Player player, Skill skill);
 
 	/**
 	 * 是否允许聊天。
@@ -59,7 +59,7 @@ public interface Restrictions {
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canChat(Player player);
+	boolean canChat(Player player);
 
 	/**
 	 * 是否允许邀请进组。
@@ -69,7 +69,7 @@ public interface Restrictions {
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canInviteToGroup(Player player, Player target);
+	boolean canInviteToGroup(Player player, Player target);
 
 	/**
 	 * 是否允许邀请进联盟。
@@ -79,7 +79,7 @@ public interface Restrictions {
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canInviteToAlliance(Player player, Player target);
+	boolean canInviteToAlliance(Player player, Player target);
 
 	/**
 	 * 是否允许邀请进军团联盟。
@@ -89,7 +89,7 @@ public interface Restrictions {
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canInviteToLeague(Player player, Player target);
+	boolean canInviteToLeague(Player player, Player target);
 
 	/**
 	 * 是否允许更换装备。
@@ -98,7 +98,7 @@ public interface Restrictions {
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canChangeEquip(Player player);
+	boolean canChangeEquip(Player player);
 
 	/**
 	 * 是否允许使用仓库。
@@ -107,7 +107,7 @@ public interface Restrictions {
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canUseWarehouse(Player player);
+	boolean canUseWarehouse(Player player);
 
 	/**
 	 * 是否允许交易。
@@ -116,7 +116,7 @@ public interface Restrictions {
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canTrade(Player player);
+	boolean canTrade(Player player);
 
 	/**
 	 * 是否允许使用物品。
@@ -126,5 +126,5 @@ public interface Restrictions {
 	 * @param item 物品 / item
 	 * @return 允许时为 true / true when allowed
 	 */
-	public boolean canUseItem(Player player, Item item);
+	boolean canUseItem(Player player, Item item);
 }

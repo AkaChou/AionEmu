@@ -26,10 +26,6 @@ public class CM_A_STATION_CHECK extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = this.getConnection().getActivePlayer();
-		if (player.isOnAStation()) {
-			GameFeatureServices.aStationService().checkAStationMove(player, accountId, true);
-		} else {
-			GameFeatureServices.aStationService().checkAStationMove(player, accountId, false);
-		}
+		GameFeatureServices.aStationService().checkAStationMove(player, accountId, player.isOnAStation());
 	}
 }

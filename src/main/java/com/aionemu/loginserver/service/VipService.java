@@ -7,12 +7,14 @@ import com.aionemu.loginserver.dao.VipDAO;
 import com.aionemu.loginserver.model.Vip;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 
 /**
  * 账号 VIP 状态服务：查询、自动启用与缺失账号同步。
  * Account VIP service: lookup, auto-enable and missing-account sync.
  */
 @Slf4j
+@AllArgsConstructor
 public final class VipService {
 
     private final VipDAO dao;
@@ -20,11 +22,6 @@ public final class VipService {
     /** 默认构造（解析 DAO）。 / Default constructor (resolves the DAO). */
     public VipService() {
         this(DAOManager.getDAO(VipDAO.class));
-    }
-
-    /** 以指定 DAO 构造。 / Constructs with the given DAO. */
-    public VipService(VipDAO dao) {
-        this.dao = dao;
     }
 
     /**

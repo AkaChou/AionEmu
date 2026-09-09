@@ -19,13 +19,13 @@ public class JobChannel extends RaceChannel {
      * Player class.
      */
     @Getter
-    private PlayerClass playerClass;
+    private final PlayerClass playerClass;
     /**
      * 性别。
      * Gender.
      */
     @Getter
-    private Gender gender;
+    private final Gender gender;
 
     /**
      * 创建职业频道。

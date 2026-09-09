@@ -27,7 +27,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -59,7 +58,6 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		/** 副本计时器 / timer instance */
 		private Future<?> timerInstance;
 		/** dredgion signal tower / dredgion signal tower */
-		private int dredgionSignalTower;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
@@ -68,10 +66,10 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	private EternalBastionReward instanceReward;
 	// 准备时间。 / Preparation Time.
 		/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
 		/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 1800000; //...30Min
+		private final int instanceTimerSeconds = 1800000; //...30Min
 		/** 灵魂堡垒任务 / bastion task */
 		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	/**
@@ -81,11 +79,11 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	 * @param object 可见对象 / visible object
 	 * @return 结果 / result
 	 */
-	
+
 	protected EternalBastionPlayerReward getPlayerReward(Integer object) {
 		return (EternalBastionPlayerReward) instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
@@ -96,11 +94,11 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new EternalBastionPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -111,7 +109,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -170,7 +168,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -395,14 +393,14 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137)); //Aetheric Power Crystal.
 		storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996)); //Case Shot.
 		storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997)); //Armor-Piercing Shot.
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -427,7 +425,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -540,14 +538,14 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
             }
         }, 1200000)); //20 Minutes.
 	}
-	
+
 	private void moveToForward(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	/**
 	 * Assault Pod
 	 */
@@ -583,7 +581,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		spawn(297352, 626.0661f, 294.24414f, 238.0753f, (byte) 23);
 		spawn(297352, 754.409f, 400.14343f, 243.35422f, (byte) 63);
 	}
-	
+
 	/**
 	 * Pashid Raid Siege Tower
 	 */
@@ -599,7 +597,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		spawn(231113, 620.0381f, 301.13055f, 238.07529f, (byte) 8);
 		spawn(231114, 701.09595f, 399.9889f, 243.35422f, (byte) 82);
 	}
-	
+
 	/**
 	 * Raid Assault
 	 */
@@ -703,14 +701,14 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		moveToForward((Npc)spawn(231113, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
 		moveToForward((Npc)spawn(231114, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21065);
 		effectController.removeEffect(21066);
 		effectController.removeEffect(21141);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -728,7 +726,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -740,12 +738,12 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
 		return instanceTimerSeconds - (int) result;
 	}
-	
+
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -763,7 +761,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private int checkRank(int totalPoints) {
 		if (totalPoints >= 90000) { //Rank S.
 			rank = 1;
@@ -788,17 +786,16 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
         instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <The Eternal Bastion>");
 		sendPacket(0, 0);
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : bastionTask) {
 			if (task != null) {
@@ -806,13 +803,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
-	private void rewardGroup() {
-		for (Player p: instance.getPlayersInside()) {
-			doReward(p);
-		}
-	}
-	
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -865,7 +856,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			AbyssPointsService.addAp(player, playerReward.getScoreAP());
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -925,7 +916,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		final int commander = spawnRace == Race.ASMODIANS ? 209517 : 209516;
         spawn(commander, 748.7025f, 287.65768f, 233.81223f, (byte) 44);
 	}
-	
+
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -952,7 +943,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void startMainInstanceTimer() {
 		if (!timerPrepare.isDone()) {
 			timerPrepare.cancel(false);
@@ -967,19 +958,19 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -996,21 +987,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		stopInstanceTask();
 		doors.clear();
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -1019,7 +996,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1045,7 +1022,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.

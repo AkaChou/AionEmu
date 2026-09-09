@@ -8,20 +8,17 @@ import com.aionemu.gameserver.model.team2.league.LeagueService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ALLIANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_BRAND;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 战团加入事件，用于团队2相关逻辑。
  * League Entered Event for team 2 logic.
  */
 
+@AllArgsConstructor
 public class LeagueEnteredEvent implements Predicate<LeagueMember>, TeamEvent {
 	private final League league;
 	private final PlayerAlliance invitedAlliance;
-
-	public LeagueEnteredEvent(League league, PlayerAlliance alliance) {
-		this.league = league;
-		this.invitedAlliance = alliance;
-	}
 
 	/**
 	 * 检查被邀请联盟是否已在战团中。

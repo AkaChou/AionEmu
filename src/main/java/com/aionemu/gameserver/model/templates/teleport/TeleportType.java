@@ -13,5 +13,5 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum TeleportType {
 	/** 常规 / Regular. */
-	REGULAR, FLIGHT;
+	REGULAR, FLIGHT
 }

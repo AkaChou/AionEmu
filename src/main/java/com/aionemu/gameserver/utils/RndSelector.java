@@ -46,7 +46,7 @@ public class RndSelector<E> {
 		 */
 		@Override
 		public int compareTo(RndNode<T> o) {
-			return this.weight - weight;
+			return 0;
 		}
 	}
 

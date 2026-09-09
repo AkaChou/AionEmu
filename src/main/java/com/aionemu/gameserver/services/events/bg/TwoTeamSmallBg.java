@@ -28,9 +28,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class TwoTeamSmallBg extends Battleground {
 	/** 额外回合/超时任务。 / Extra round/timeout task. */
-	private ScheduledFuture<?> extraTask = null;
+	private final ScheduledFuture<?> extraTask = null;
 	/** 队伍索引 → 回合胜场。 / Team index → round wins. */
-	private Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
 	/** 最大回合数。 / Maximum rounds. */
 	private int maxRounds = 3;
 	/** 已完成回合数。 / Rounds completed. */
@@ -826,7 +826,7 @@ public class TwoTeamSmallBg extends Battleground {
 			public void run() {
 				endTwoTeamMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -850,8 +850,7 @@ public class TwoTeamSmallBg extends Battleground {
 	 */
 	public void onDie(final Player player, Creature lastAttacker) {
 		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player && ((Player) lastAttacker).getObjectId() != player.getObjectId()) {
-			Player killer = (Player) lastAttacker;
+		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			if (killer.getPlayerGroup2() != null) {
 				for (Iterator<Player> iterator = killer.getPlayerGroup2().getMembers().iterator(); iterator.hasNext();) {
 				}
@@ -938,7 +937,7 @@ public class TwoTeamSmallBg extends Battleground {
 			public void run() {
 				endTwoTeamMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override

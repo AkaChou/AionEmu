@@ -28,25 +28,25 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -54,7 +54,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -80,7 +80,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startMiserablyStruggle() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -93,7 +93,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 10000);
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -123,7 +123,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnStickyTrap(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -139,7 +139,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -149,13 +149,13 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		cancelPhaseTask();

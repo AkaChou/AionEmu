@@ -49,7 +49,7 @@ public class SummonKiskEffect extends SummonEffect {
 			public void run() {
 				kisk.getController().onDelete();
 			}
-		}, time * 1000);
+		}, time * 1000L);
 		kisk.getController().addTask(TaskId.DESPAWN, task);
 		player.getController().cancelTask(TaskId.ITEM_USE);
 		GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);

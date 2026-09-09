@@ -30,7 +30,7 @@ public class MotionData {
 	protected List<MotionTime> motionTimes;
 
 	@XmlTransient
-	private Map<String, MotionTime> motionTimesMap = new LinkedHashMap<String, MotionTime>();
+	private final Map<String, MotionTime> motionTimesMap = new LinkedHashMap<String, MotionTime>();
 
 	/**
 	 * JAXB 反序列化完成后，按动作名建立索引。

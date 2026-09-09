@@ -12,9 +12,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_SELL_ITEM extends AionServerPacket
 {
-	private int targetObjectId;
+	private final int targetObjectId;
 	private TradeListTemplate buylist;
-	private int priceModifier;
+	private final int priceModifier;
 	private byte action = 1;
 	private byte unk1 = 0;
 	private byte unk2 = 0;

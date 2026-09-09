@@ -11,6 +11,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillType;
+import lombok.Getter;
 
 /**
  * 伤害效果基类：按物理/魔法类型结算并应用伤害。
@@ -19,6 +20,13 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DamageEffect")
 public abstract class DamageEffect extends EffectTemplate {
+	/**
+	 * 返回伤害结算模式（加值/百分比等）。
+	 * Returns the damage resolution mode (add/percent/etc.).
+	 *
+	 * @return 结算模式 / resolution mode
+	 */
+	@Getter
 	@XmlAttribute
 	protected Func mode = Func.ADD;
 	@XmlAttribute
@@ -86,10 +94,7 @@ public abstract class DamageEffect extends EffectTemplate {
 					criticalProbability, critAddDmg, cannotMiss, shared, false, false);
 			break;
 		case MAGICAL:
-			boolean useKnowledge = true;
-			if (this instanceof ProcAtkInstantEffect) {
-				useKnowledge = false;
-			}
+			boolean useKnowledge = !(this instanceof ProcAtkInstantEffect);
 			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, modifier, getElement(),
 					isMagicBoostApplied(effect), useKnowledge, false, this.getMode(), flatDamage, percentDamage,
 					criticalProbability, critAddDmg, shared, false);
@@ -111,15 +116,5 @@ public abstract class DamageEffect extends EffectTemplate {
 
 	protected boolean isMagicBoostApplied(Effect effect) {
 		return effect.getSkillTemplate().isMboostApplied();
-	}
-
-	/**
-	 * 返回伤害结算模式（加值/百分比等）。
-	 * Returns the damage resolution mode (add/percent/etc.).
-	 *
-	 * @return 结算模式 / resolution mode
-	 */
-	public Func getMode() {
-		return mode;
 	}
 }

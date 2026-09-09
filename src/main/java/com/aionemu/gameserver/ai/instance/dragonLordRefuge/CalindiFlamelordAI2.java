@@ -40,8 +40,8 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	private boolean canThink = true;
 	private Future<?> trapTask;
     private boolean isFinalBuff;
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+
     @Override
     protected void handleAttack(Creature creature) {
 	    super.handleAttack(creature);
@@ -56,7 +56,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		    }
 	    }
     }
-	
+
     private void startSkillTask() {
 	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -69,13 +69,13 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		    }
 	    }, 5000, 80000);
     }
-	
+
     private void cancelTask() {
 	    if (trapTask != null && !trapTask.isCancelled()) {
 		    trapTask.cancel(true);
 	    }
     }
-	
+
     private void startHallucinatoryVictoryEvent() {
 	    if (getPosition().getWorldMapInstance().getNpc(730695) == null) {
 		    AI2Actions.useSkill(this, 20911);
@@ -86,7 +86,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		    rndSpawn(283132, 5);
 	    }
     }
-	
+
     private void blazeEngraving() {
 	    if (Rnd.get(0, 100) < 2 && getPosition().getWorldMapInstance().getNpc(283130) == null) {
 		    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
@@ -97,14 +97,14 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		    spawn(283130, target.getX(), target.getY(), target.getZ(), (byte) 0);
 	    }
     }
-	
+
     private void rndSpawn(int npcId, int count) {
 	    for (int i = 0; i < count; i++) {
 		    SpawnTemplate template = rndSpawnInRange(npcId);
 		    SpawnEngine.spawnObject(template, getPosition().getInstanceId());
 	    }
     }
-	
+
     private SpawnTemplate rndSpawnInRange(int npcId) {
 	    float direction = Rnd.get(0, 199) / 100f;
 	    int range = Rnd.get(5, 20);
@@ -112,7 +112,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	    float y1 = (float) (Math.sin(Math.PI * direction) * range);
 	    return SpawnEngine.addNewSingleTimeSpawn(getPosition().getMapId(), npcId, getPosition().getX() + x1, getPosition().getY() + y1, getPosition().getZ(), getPosition().getHeading());
     }
-	
+
     private Player getRandomTarget() {
 	    List<Player> players = new ArrayList<Player>();
 	    for (Player player : getKnownList().getKnownPlayers().values()) {
@@ -124,7 +124,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		   return null;
 	    return players.get(Rnd.get(players.size()));
     }
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
@@ -133,7 +133,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			deleteNpcs(instance.getNpcs(730695));
 		}
 	}
-	
+
     @Override
     protected void handleDied() {
 		cancelTask();
@@ -146,7 +146,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		sendMsg(1500728);
 		super.handleDied();
     }
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -154,18 +154,18 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
     @Override
     protected void handleDespawned() {
 	    super.handleDespawned();
 	    cancelTask();
     }
-	
+
     @Override
     protected void handleBackHome() {
 	    super.handleBackHome();
@@ -175,7 +175,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	    isHome.set(true);
 		canThink = true;
     }
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}

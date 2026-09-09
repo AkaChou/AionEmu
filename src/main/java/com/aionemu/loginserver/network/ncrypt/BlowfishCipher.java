@@ -160,12 +160,12 @@ public class BlowfishCipher {
      * 运行时 P 数组。
      * Runtime P-array.
      */
-    private int[] pArray;
+    private final int[] pArray;
     /**
      * 运行时 S-box。
      * Runtime S-boxes.
      */
-    private int[][] sBoxes;
+    private final int[][] sBoxes;
 
     /**
      * 使用给定密钥初始化 Blowfish 密码。

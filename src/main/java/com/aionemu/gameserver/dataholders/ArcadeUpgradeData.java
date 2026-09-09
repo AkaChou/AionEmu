@@ -26,7 +26,7 @@ public class ArcadeUpgradeData {
 	@XmlElement(name = "tab")
 	private List<ArcadeTab> arcadeTabTemplate;
 	@XmlTransient
-	private IntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按页签 ID 索引物品列表。

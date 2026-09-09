@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
+import lombok.AllArgsConstructor;
 
 /**
  * 邮件相关服务端包的写入辅助基类。
@@ -16,16 +17,10 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  * @rework Ranastic
  */
 @Slf4j
+@AllArgsConstructor
 public abstract class MailServicePacket extends AionServerPacket {
 	/** 所属玩家 / owning player */
 	protected Player player;
-
-	/**
-	 * 所属玩家 / owning player
-	 */
-	public MailServicePacket(Player player) {
-		this.player = player;
-	}
 
 	/**
 	 * 写入邮件列表。

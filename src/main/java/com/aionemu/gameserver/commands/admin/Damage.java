@@ -39,8 +39,7 @@ public class Damage extends AdminCommand {
 		VisibleObject target = admin.getTarget();
 		if (target == null)
 			PacketSendUtility.sendMessage(admin, "No target selected");
-		else if (target instanceof Creature) {
-			Creature creature = (Creature) target;
+		else if (target instanceof Creature creature) {
 			int dmg;
 			try {
 				String percent = params[0];

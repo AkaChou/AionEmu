@@ -66,7 +66,7 @@ public class ShutdownHook extends Thread {
 	 * 关闭模式：无操作、关服或重启。
 	 * Shutdown mode: none, shut down, or restart.
 	 */
-	public static enum ShutdownMode {
+	public enum ShutdownMode {
 		NONE("terminating"), SHUTDOWN("shutting down"), RESTART("restarting");
 
 		/**
@@ -76,7 +76,7 @@ public class ShutdownHook extends Thread {
 		@Getter
 		private final String text;
 
-		private ShutdownMode(String text) {
+		ShutdownMode(String text) {
 			this.text = text;
 		}
 	}
@@ -184,9 +184,9 @@ public class ShutdownHook extends Thread {
 				}
 
 				if (i > announceInterval) {
-					Thread.sleep(announceInterval * 1000);
+					Thread.sleep(announceInterval * 1000L);
 				} else {
-					Thread.sleep(i * 1000);
+					Thread.sleep(i * 1000L);
 				}
 			} catch (InterruptedException e) {
 				log.warn(I18n.get("shutdown.announce_interrupted"));

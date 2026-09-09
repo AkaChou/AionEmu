@@ -28,7 +28,7 @@ public class AbyssGroupData {
 	protected List<AbyssGroupAttr> abyssGroupattr;
 
 	@XmlTransient
-	private IntObjectHashMap<AbyssGroupAttr> templates = new IntObjectHashMap<AbyssGroupAttr>();
+	private final IntObjectHashMap<AbyssGroupAttr> templates = new IntObjectHashMap<AbyssGroupAttr>();
 
 	/**
 	 * JAXB 反序列化完成后，按 buff ID 建立索引并释放列表。

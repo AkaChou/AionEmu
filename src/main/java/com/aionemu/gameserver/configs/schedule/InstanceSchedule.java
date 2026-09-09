@@ -53,7 +53,7 @@ public class InstanceSchedule {
 		InstanceSchedule is;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/instance_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			is = (InstanceSchedule) JAXBUtil.deserialize(xml, InstanceSchedule.class);
+			is = JAXBUtil.deserialize(xml, InstanceSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize instance", e);
 		}

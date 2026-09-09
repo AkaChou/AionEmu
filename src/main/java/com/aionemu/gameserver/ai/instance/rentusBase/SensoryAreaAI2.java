@@ -23,16 +23,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("sensory_area")
 public class SensoryAreaAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					switch (player.getWorldId()) {
@@ -72,7 +71,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

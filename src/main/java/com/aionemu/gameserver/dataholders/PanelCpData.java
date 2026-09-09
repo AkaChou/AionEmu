@@ -29,10 +29,10 @@ public class PanelCpData {
 	private List<PanelCp> pclist;
 
 	@XmlTransient
-	private IntObjectHashMap<PanelCp> cpData = new IntObjectHashMap<PanelCp>();
+	private final IntObjectHashMap<PanelCp> cpData = new IntObjectHashMap<PanelCp>();
 
 	@XmlTransient
-	private Map<Integer, PanelCp> cpDataMap = new HashMap<Integer, PanelCp>(1);
+	private final Map<Integer, PanelCp> cpDataMap = new HashMap<Integer, PanelCp>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将列表写入双索引映射。

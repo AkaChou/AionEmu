@@ -70,8 +70,7 @@ public abstract class AdminCommand extends ChatCommand {
 		}
 
 		if (LoggingConfig.LOG_GMAUDIT) {
-			if (player.getTarget() != null && player.getTarget() instanceof Creature) {
-				Creature target = (Creature) player.getTarget();
+			if (player.getTarget() != null && player.getTarget() instanceof Creature target) {
 				log.info(I18n.get("log.32147246e963", player.getName(), target.getName(), text));
 			} else {
 				log.info(I18n.get("log.29261bc60f1d", player.getName(), text));

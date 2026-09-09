@@ -27,20 +27,20 @@ import java.util.List;
 @AIName("wardensurama")
 public class Warden_SuramaAI2 extends AggressiveNpcAI2
 {
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		addPercent();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent: percents) {
 			if (hpPercentage <= percent) {
@@ -76,12 +76,12 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{90, 70, 50, 30, 10});
+		Collections.addAll(percents, 90, 70, 50, 30, 10);
 	}
-	
+
 	private void startDranaReactor() {
 		spawn(283173, 1333.9995f, 1176.8633f, 51.493996f, (byte) 37);
 		spawn(283173, 1321.4896f, 1190.6715f, 51.493996f, (byte) 76);
@@ -91,7 +91,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 		spawn(283173, 1330.9470f, 1164.1063f, 51.493996f, (byte) 41);
 		spawn(283174, 1316.3091f, 1170.6173f, 51.799908f, (byte) 98);
 	}
-	
+
 	private void spawnAirWave() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19332, 60, getOwner()).useNoAnimationSkill();
 		spawn(282171, 1316.7438f, 1145.0411f, 51.536953f, (byte) 0, 595);
@@ -103,7 +103,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 		spawn(282427, 1328.2821f, 1182.4735f, 51.375172f, (byte) 0, 722);
 		spawn(282428, 1304.9152f, 1182.2593f, 51.377087f, (byte) 0, 719);
 	}
-	
+
 	private void sendMsg() {
 		// 哈，飞吧小守护者……如果你能的话。 / Ha, fly little Daeva... if you can.
 		sendMsg(1500201, getObjectId(), false, 0);
@@ -118,7 +118,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 		// 管理总监苏拉玛使用崩塌大地。 / Management Director Surama uses Collapsing Earth.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_10, 15000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -137,7 +137,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 		sendMsg(1500196, getObjectId(), false, 0);
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		final WorldPosition p = getPosition();
@@ -155,7 +155,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 		addPercent();
 		super.handleBackHome();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -163,7 +163,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 征服/供奉活动抽象基类。
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @param <CL> 征服地点类型 / conquest location type
  */
 @Slf4j(topic = "com.aionemu.gameserver.services.conquestservice.ConquestOffering")
+@RequiredArgsConstructor
 public abstract class ConquestOffering<CL extends ConquestLocation> {
 
 	private boolean started;
@@ -85,16 +87,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startConquest();
-
-	/**
-	 * 绑定征服地点。
-	 * Binds the conquest location.
-	 *
-	 * location
-	 */
-	public ConquestOffering(CL conquestLocation) {
-		this.conquestLocation = conquestLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。

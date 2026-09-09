@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Func;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 欧比斯 PenaltyAttr 模板（静态数据/XML）。
@@ -16,42 +18,21 @@ import com.aionemu.gameserver.skillengine.change.Func;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbyssPenaltyAttr")
 public class AbyssPenaltyAttr {
+	/** 获取属性。 / Returns the stat. */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected StatEnum stat;
 
+	/** 返回 func / Returns the func */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected Func func;
 
+	/** 获取值。 / Returns the value. */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected int value;
-
-	/** 获取属性。 / Returns the stat. */
-	public StatEnum getStat() {
-		return stat;
-	}
-
-	/** 设置属性。 / Sets the stat. */
-	public void setStat(StatEnum value) {
-		stat = value;
-	}
-
-	/** 返回 func / Returns the func */
-	public Func getFunc() {
-		return func;
-	}
-
-	/** 设置 func / Sets the func */
-	public void setFunc(Func value) {
-		func = value;
-	}
-
-	/** 获取值。 / Returns the value. */
-	public int getValue() {
-		return value;
-	}
-
-	/** 设置值。 / Sets the value. */
-	public void setValue(int value) {
-		this.value = value;
-	}
 }

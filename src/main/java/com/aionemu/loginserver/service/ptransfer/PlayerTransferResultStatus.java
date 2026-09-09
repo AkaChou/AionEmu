@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.service.ptransfer;
 
+import lombok.Getter;
+
 /**
  * 玩家跨服转移结果状态码，用于登录服与游戏服之间的协议响应。
  * Player cross-server transfer result status codes used in login-server ↔ game-server protocol responses.
@@ -16,17 +18,14 @@ public enum PlayerTransferResultStatus {
     ERROR(22),
     /** 通知源服执行转移动作 / instruct the source server to perform the transfer action */
     PERFORM_ACTION(23);
-    private int id;
-
     /**
      * 返回协议状态码数值。
      * Return the protocol status code value.
      *
      * status id
      */
-    public int getId() {
-        return id;
-    }
+    @Getter
+    private final int id;
 
     /**
      * 以协议数值构造枚举常量。

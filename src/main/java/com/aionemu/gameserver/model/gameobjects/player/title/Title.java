@@ -3,6 +3,8 @@ package com.aionemu.gameserver.model.gameobjects.player.title;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.TitleTemplate;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 称号游戏对象。
@@ -10,36 +12,20 @@ import com.aionemu.gameserver.model.templates.TitleTemplate;
  *
  * @author Mr. Poke
  */
+@AllArgsConstructor
 public class Title implements IExpirable {
-
-	private TitleTemplate template;
-	private int id;
-	private int dispearTime;
-
-	/**
-	 * @param template 称号模板 / title template
-	 * @param id 称号 ID / title id
-	 * @param dispearTime 消失时间戳 / disappear timestamp
-	 */
-	public Title(TitleTemplate template, int id, int dispearTime) {
-		this.template = template;
-		this.id = id;
-		this.dispearTime = dispearTime;
-	}
 
 	/**
 	 * @return 称号模板 / the template
 	 */
-	public TitleTemplate getTemplate() {
-		return template;
-	}
-
+	@Getter
+	private final TitleTemplate template;
 	/**
 	 * @return 称号 ID / the id
 	 */
-	public int getId() {
-		return id;
-	}
+	@Getter
+	private final int id;
+	private final int dispearTime;
 
 	/**
 	 * @return 剩余时间 / remaining time

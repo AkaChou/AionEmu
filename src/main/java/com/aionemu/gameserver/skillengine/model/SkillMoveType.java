@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.skillengine.model;
 
+import lombok.Getter;
+
 /**
  * 技能位移类型：击退、拉拽、后移等控制表现编码。
  * Skill move type: knockback, pull, move-behind and related control codes.
@@ -27,18 +29,15 @@ public enum SkillMoveType {
 	/** 新拉拽 / New pull */
 	NEWPULL(54); // 5.1
 
-	private int id;
-
-	private SkillMoveType(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	SkillMoveType(int id) {
+		this.id = id;
 	}
 }

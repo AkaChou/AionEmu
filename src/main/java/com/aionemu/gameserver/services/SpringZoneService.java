@@ -28,7 +28,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class SpringZoneService {
 	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
-	private List<SpringObject> springObjects = new ArrayList<SpringObject>();
+	private final List<SpringObject> springObjects = new ArrayList<SpringObject>();
 
 	/**
 	 * 构造服务：刷出泉水对象并启动定时效果任务。

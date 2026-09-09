@@ -28,8 +28,8 @@ import java.util.List;
 @AIName("boss_windstream")
 public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 {
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-	
+	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -115,7 +115,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 		super.handleDied();
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	private void announceWindBox() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -124,7 +124,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

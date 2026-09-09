@@ -15,7 +15,7 @@ public class Frosty_PetrahulkAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(235916, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Freezing Petrahulk.
+		spawn(235916, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Freezing Petrahulk.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

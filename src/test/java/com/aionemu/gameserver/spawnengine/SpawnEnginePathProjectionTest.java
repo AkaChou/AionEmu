@@ -68,7 +68,7 @@ class SpawnEnginePathProjectionTest {
 		private NpcAI2 ai;
 
 		private TestNpc() {
-			super(0, new NpcController(), null, (NpcTemplate) null);
+			super(0, new NpcController(), null, null);
 		}
 
 		@Override

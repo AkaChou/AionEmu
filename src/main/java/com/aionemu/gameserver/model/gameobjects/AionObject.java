@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.gameobjects;
 
 
 import com.google.common.base.Function;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 所有可交互游戏对象的基类（玩家、NPC、物品等）。
@@ -9,6 +11,7 @@ import com.google.common.base.Function;
  *
  * @author -Nemesiss-, SoulKeeper
  */
+@AllArgsConstructor
 public abstract class AionObject {
 
 	public static Function<AionObject, Integer> OBJECT_TO_ID_TRANSFORMER = new Function<AionObject, Integer>() {
@@ -23,21 +26,8 @@ public abstract class AionObject {
 	 * 所有游戏对象的唯一 ID：物品、玩家、怪物等。
 	 * Unique id, for all game objects such as: items, players, monsters.
 	 */
-	private Integer objectId;
-
-	public AionObject(Integer objId) {
-		this.objectId = objId;
-	}
-
-	/**
-	 * 返回该游戏对象的唯一对象 ID。
-	 * Returns unique ObjectId of AionObject.
-	 *
-	 * @return 对象 ID / object id
-	 */
-	public Integer getObjectId() {
-		return objectId;
-	}
+	@Getter
+	private final Integer objectId;
 
 	/**
 	 * 返回名称的 object.<br>Unique 用于 players , common 用于 NPCs ,物品, etc。 / Returns name of the object.<br> Unique for players, common for NPCs, items, etc

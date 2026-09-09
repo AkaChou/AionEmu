@@ -12,6 +12,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Mesh 列表模板（静态数据/XML）。
@@ -27,6 +28,7 @@ public class MeshList {
 	protected List<MeshMaterial> meshMaterials;
 
 	/** 世界 ID。 / World id. */
+	@Getter
 	@XmlAttribute(name = "world_id", required = true)
 	protected int worldId;
 
@@ -53,11 +55,6 @@ public class MeshList {
 		}
 		meshMaterials.clear();
 		meshMaterials = null;
-	}
-
-	/** 返回世界 ID / Returns the world id */
-	public int getWorldId() {
-		return worldId;
 	}
 
 	/**

@@ -35,17 +35,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Investigative_BastielAI2 extends GeneralNpcAI2
 {
 	private boolean canThink = true;
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 806583: { //Bastiel.
+			case 806583: { // 联盟司令官巴斯提尔 / Bastiel.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -54,7 +54,7 @@ public class Investigative_BastielAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
@@ -69,11 +69,10 @@ public class Investigative_BastielAI2 extends GeneralNpcAI2
         }
 		return true;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 45) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -99,7 +98,7 @@ public class Investigative_BastielAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void killNpc(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			AI2Actions.killSilently(this, npc);

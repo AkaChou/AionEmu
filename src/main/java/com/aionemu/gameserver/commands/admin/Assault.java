@@ -135,7 +135,7 @@ public class Assault extends AdminCommand {
 		if(admin.getTarget() != null)
 			target = (Creature) admin.getTarget();
 		else
-			target = (Creature) admin;
+			target = admin;
 
 		float x = target.getX();
 		float y = target.getY();
@@ -201,7 +201,7 @@ public class Assault extends AdminCommand {
 				}
 				PacketSendUtility.sendMessage(admin, despawnCount + " npc have been deleted.");
 			}
-		}, despawnTime * 1000);
+		}, despawnTime * 1000L);
 	}
 
 	/**

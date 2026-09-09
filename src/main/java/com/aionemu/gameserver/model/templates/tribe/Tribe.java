@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TribeClass;
+import lombok.Getter;
 
 /**
  * 部落模板（静态数据/XML）。
@@ -37,9 +38,13 @@ public class Tribe {
 	@XmlList
 	protected List<TribeClass> support;
 
+	/** 获取基础。 / Returns the base. */
+	@Getter
 	@XmlAttribute
 	protected TribeClass base = TribeClass.NONE;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(required = true)
 	protected TribeClass name;
 
@@ -89,16 +94,6 @@ public class Tribe {
 			support = Collections.emptyList();
 		}
 		return this.support;
-	}
-
-	/** 获取基础。 / Returns the base. */
-	public TribeClass getBase() {
-		return base;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public TribeClass getName() {
-		return name;
 	}
 
 	/** 是否为守卫。 / Whether guard. */

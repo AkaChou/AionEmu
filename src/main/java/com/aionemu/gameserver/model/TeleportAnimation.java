@@ -21,10 +21,10 @@ public enum TeleportAnimation {
 	/** 法师动画 / Mage Animation */
 	MAGE_ANIMATION(8, 10);
 
-	private int startAnimation;
-	private int endAnimation;
+	private final int startAnimation;
+	private final int endAnimation;
 
-	private TeleportAnimation(int startAnimation, int endAnimation) {
+	TeleportAnimation(int startAnimation, int endAnimation) {
 		this.startAnimation = startAnimation;
 		this.endAnimation = endAnimation;
 	}

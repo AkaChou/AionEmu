@@ -11,5 +11,5 @@ public enum BeritraStateType {
 	/** 入侵 / Invasion. */
 	INVASION,
 	/** 和平 / Peace. */
-	PEACE;
+	PEACE
 }

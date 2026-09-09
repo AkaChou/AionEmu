@@ -9,15 +9,15 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 将端到端结果写成稳定 JSONL、汇总 CSV 和中文交接摘要；写入目录由调用方显式指定。
  * Writes stable JSONL, summary CSV, and a Chinese handoff summary to caller-selected directories.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestE2eReportWriter {
-	private QuestE2eReportWriter() {
-	}
-
 	/** 写出计划约定的三个报告文件。 / Writes the three report files required by the plan. */
 	public static void write(List<QuestE2eAuditRow> rows, Path reportDirectory, Path summaryFile) throws IOException {
 		Files.createDirectories(reportDirectory);

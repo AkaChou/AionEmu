@@ -14,7 +14,7 @@ import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_PLAYER_AUTH
  */
 public class CsPacketHandlerFactory {
 
-	private CsPacketHandler handler = new CsPacketHandler();
+	private final CsPacketHandler handler = new CsPacketHandler();
 
 	/**
 	 * 注册聊天服包处理器。

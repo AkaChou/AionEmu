@@ -35,7 +35,7 @@ public class KaramatisInstance extends GeneralInstanceHandler
 	
 	private void belpartanBlessing() {
 		for (Player p: instance.getPlayersInside()) {
-			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(281); //Belpartan's Blessing.
+			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(281); // 贝尔帕尔坦的祝福 / Belpartan's Blessing.
 			Effect e = new Effect(p, p, st, 1, st.getEffectsDuration(9));
 			e.initialize();
 			e.applyEffect();

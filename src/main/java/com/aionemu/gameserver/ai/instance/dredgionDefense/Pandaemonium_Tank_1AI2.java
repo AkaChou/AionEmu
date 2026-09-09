@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai.instance.dredgionDefense;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -29,19 +28,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 {
     private boolean canThink = true;
-	private String walkerId = "302300001";
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -65,28 +62,28 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();
 		super.handleMoveArrived();
 		if (getNpcId() == 220824) { //Pandaemonium Tank A.
 			if (point == 4) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 5) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 10) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 13) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -98,7 +95,7 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void announcePandaemoniumTankA() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -132,14 +129,14 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		announcePandaemoniumTankADie();
-		spawn(834255, 1211.1102f, 1502.938f, 213.83618f, (byte) 6); //Koirunerk.
+		spawn(834255, 1211.1102f, 1502.938f, 213.83618f, (byte) 6); // 科依隆隆 / Koirunerk.
 		super.handleDied();
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}

@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 扩展模板（静态数据/XML）。
@@ -15,22 +16,16 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "Expand")
 public class Expand {
 
-	@XmlAttribute(name = "level", required = true)
-	protected int level;
-	@XmlAttribute(name = "price", required = true)
-	protected int price;
-
 	/**
 	 * @return 扩展等级 / The level
 	 */
-	public int getLevel() {
-		return level;
-	}
-
+	@Getter
+	@XmlAttribute(name = "level", required = true)
+	protected int level;
 	/**
 	 * @return 扩展价格（基纳） / The price
 	 */
-	public int getPrice() {
-		return price;
-	}
+	@Getter
+	@XmlAttribute(name = "price", required = true)
+	protected int price;
 }

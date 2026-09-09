@@ -113,25 +113,10 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 			case 220427: //Reaper Of Adma Castle.
 			    spawn(806205, 532.3307f, 510.2517f, 197.94453f, (byte) 60); //Adma's Fall Exit.
 				spawn(806220, 525.2205f, 510.08893f, 197.72095f, (byte) 44); //Adma Family Coffers.
-			    // 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Adma's Fall>");
 			break;
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

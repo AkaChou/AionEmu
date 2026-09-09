@@ -54,6 +54,8 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 刷新点队伍2模板（静态数据/XML）。
@@ -63,18 +65,37 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 
 public class SpawnGroup2 extends AbstractLockManager {
 
-	private int worldId;
+	/** 返回世界 ID / Returns the world id */
+	@Getter
+	private final int worldId;
+	/** 返回 NPC ID / Returns the npc id */
+	@Getter
 	private int npcId;
+	/** 返回刷新池大小 / Returns the pool */
+	@Getter
 	private int pool;
+	/** 返回难度 ID / Returns the difficult id */
+	@Getter
 	private byte difficultId;
+	/** 返回出生页起点。 / Returns the first matching spawn page. */
+	@Getter
 	private int spawnPage;
+	/** 返回出生页终点（含）。 / Returns the last matching spawn page, inclusive. */
+	@Getter
 	private int spawnPageEnd;
 	private boolean spawnPageRestricted;
+	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
+	@Getter
 	private int initialDelay;
 	private TemporarySpawn temporarySpawn;
+	/** 返回重生时间 / Returns the respawn time */
+	@Getter
+	@Setter
 	private int respawnTime;
+	/** 获取处理器类型。 / Returns the handler type. */
+	@Getter
 	private SpawnHandlerType handlerType;
-	private List<SpawnTemplate> spots = new ArrayList<SpawnTemplate>();
+	private final List<SpawnTemplate> spots = new ArrayList<SpawnTemplate>();
 	private HashMap<Integer, HashMap<SpawnTemplate, Boolean>> poolUsedTemplates;
 
 	public SpawnGroup2(int worldId, Spawn spawn) {
@@ -364,24 +385,9 @@ public class SpawnGroup2 extends AbstractLockManager {
 		spots.add(spawnTemplate);
 	}
 
-	/** 返回世界 ID / Returns the world id */
-	public int getWorldId() {
-		return worldId;
-	}
-
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return npcId;
-	}
-
 	/** 获取临时刷新 / Gets the temporary spawn */
 	public TemporarySpawn geTemporarySpawn() {
 		return temporarySpawn;
-	}
-
-	/** 返回刷新池大小 / Returns the pool */
-	public int getPool() {
-		return pool;
 	}
 
 	/**
@@ -391,26 +397,11 @@ public class SpawnGroup2 extends AbstractLockManager {
 		return pool > 0;
 	}
 
-	/** 返回重生时间 / Returns the respawn time */
-	public int getRespawnTime() {
-		return respawnTime;
-	}
-
-	/** 设置重生时间 / Sets the respawn time */
-	public void setRespawnTime(int respawnTime) {
-		this.respawnTime = respawnTime;
-	}
-
 	/**
 	 * @return 是否为临时刷新 / whether temporary spawn
 	 */
 	public boolean isTemporarySpawn() {
 		return temporarySpawn != null;
-	}
-
-	/** 获取处理器类型。 / Returns the handler type. */
-	public SpawnHandlerType getHandlerType() {
-		return handlerType;
 	}
 
 	/** 返回随机刷新模板 / Returns a random spawn template */
@@ -484,28 +475,8 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
-	/** 返回难度 ID / Returns the difficult id */
-	public byte getDifficultId() {
-		return difficultId;
-	}
-
-	/** 返回出生页起点。 / Returns the first matching spawn page. */
-	public int getSpawnPage() {
-		return spawnPage;
-	}
-
 	/** 是否声明了出生页限制。 / Whether a spawn page restriction is declared. */
 	public boolean hasSpawnPage() {
 		return spawnPageRestricted;
-	}
-
-	/** 返回出生页终点（含）。 / Returns the last matching spawn page, inclusive. */
-	public int getSpawnPageEnd() {
-		return spawnPageEnd;
-	}
-
-	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
-	public int getInitialDelay() {
-		return initialDelay;
 	}
 }

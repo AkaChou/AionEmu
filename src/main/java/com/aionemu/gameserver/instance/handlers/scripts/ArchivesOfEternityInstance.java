@@ -246,25 +246,10 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 				final int ArchivesToCradle = spawnRace == Race.ASMODIANS ? 806057 : 806055;
 				spawn(ArchivesToCradle, 256.28693f, 512.5591f, 468.84964f, (byte) 118);
 				spawn(806153, 245.83438f, 512.4957f, 468.80215f, (byte) 119); //密码背包。 / Cryptograph Cube.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Archives Of Eternity>");
 			break;
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

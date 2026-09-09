@@ -90,6 +90,6 @@ public class RestartTask extends TaskFromDBHandler {
 			public void run() {
 				GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.RESTART);
 			}
-		}, warnCountDown * 1000);
+		}, warnCountDown * 1000L);
 	}
 }

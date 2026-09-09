@@ -14,7 +14,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 public class SM_ATREIAN_BESTIARY_LIST extends AionServerPacket {
 	PlayerABEntry[] allAB;
 	@SuppressWarnings("unused")
-	private Player player;
+	private final Player player;
 
 	/**
 	 * @param player 目标玩家，用于读取其图鉴数据 / player whose bestiary data is sent

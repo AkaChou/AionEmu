@@ -15,27 +15,17 @@ import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.TownService;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端同步玩家房屋所有权与维护状态信息的服务端包。
  * Server packet that synchronizes the player's house ownership and maintenance status to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 
-	private Player player;
-	private House activeHouse;
-
-	/**
-	 * 构造房屋所有者信息包。
-	 * Creates a house owner info packet.
-	 *
-	 * 玩家 / player
-	 * @param activeHouse 当前活跃房屋，可为 null / active house, may be null
-	 */
-	public SM_HOUSE_OWNER_INFO(Player player, House activeHouse) {
-		this.player = player;
-		this.activeHouse = activeHouse;
-	}
+	private final Player player;
+	private final House activeHouse;
 
 	@Override
 	protected void writeImpl(AionConnection con) {
@@ -67,7 +57,7 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 			if (diff < 0) {
 				writeC(0);
 			} else {
-				int weeks = (int) (Math.round(diff / GameHousingServices.maintenanceTask().getPeriod()));
+				int weeks = Math.round(diff / GameHousingServices.maintenanceTask().getPeriod());
 
 				// 检查今天是否为周日（第 7 天） / Check if today is Sunday (day 7)
 				ZonedDateTime now = ZonedDateTime.now();

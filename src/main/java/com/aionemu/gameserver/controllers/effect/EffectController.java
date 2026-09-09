@@ -29,6 +29,9 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 效果控制器，管理生物身上的 buff/debuff、异常状态与驱散逻辑。
@@ -36,8 +39,16 @@ import com.google.common.collect.Collections2;
  *
  * @author ATracer
  */
+@RequiredArgsConstructor
 public class EffectController {
-	private Creature owner;
+	/**
+	 * 返回效果所属生物。
+	 * Returns the creature that owns these effects.
+	 *
+	 * @return 所有者生物 / owner creature
+	 */
+	@Getter
+	private final Creature owner;
 
 	/** 被动效果映射。 / Passive effect map. */
 	protected Map<String, Effect> passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
@@ -51,50 +62,13 @@ public class EffectController {
 	private final Lock lock = new ReentrantLock();
 
 	/** 当前异常状态位掩码。 / Current abnormal-state bit mask. */
+	@Getter
 	protected volatile int abnormals;
 
 	/** 是否处于护盾保护。 / Whether currently under a shield. */
+	@Getter
+	@Setter
 	private boolean isUnderShield = false;
-
-	/**
-	 * 为指定生物构造效果控制器。
-	 * Constructs an effect controller for the given creature.
-	 *
-	 * @param owner 所有者生物 / owner creature
-	 */
-	public EffectController(Creature owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * 返回效果所属生物。
-	 * Returns the creature that owns these effects.
-	 *
-	 * @return 所有者生物 / owner creature
-	 */
-	public Creature getOwner() {
-		return owner;
-	}
-
-	/**
-	 * 是否处于护盾效果保护中。
-	 * Whether the owner is currently under a shield effect.
-	 *
-	 * @return true 若处于护盾中 / true if under shield
-	 */
-	public boolean isUnderShield() {
-		return isUnderShield;
-	}
-
-	/**
-	 * 设置护盾状态标志。
-	 * Sets the under-shield flag.
-	 *
-	 * @param isUnderShield 是否处于护盾中 / whether under shield
-	 */
-	public void setUnderShield(boolean isUnderShield) {
-		this.isUnderShield = isUnderShield;
-	}
 
 	/**
 	 * 添加效果：处理被动叠层、冲突、开关/吟唱/弓星上限后启动并广播。
@@ -775,11 +749,7 @@ public class EffectController {
 	private boolean removePower(Effect effect, int power) {
 		int effectPower = effect.removePower(power);
 
-		if (effectPower <= 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return effectPower <= 0;
 	}
 
 	/**
@@ -1085,16 +1055,6 @@ public class EffectController {
 	public boolean isAbnormalState(AbnormalState id) {
 		int state = abnormals & id.getId();
 		return state > 0 && state <= id.getId();
-	}
-
-	/**
-	 * 返回当前异常状态位掩码。
-	 * Returns the current abnormal-state bit mask.
-	 *
-	 * @return 异常状态掩码 / abnormal mask
-	 */
-	public int getAbnormals() {
-		return abnormals;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 回应战场联盟报名/取消报名结果的服务端包。
@@ -9,18 +10,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author wanke
  */
+@AllArgsConstructor
 public class SM_BATTLEFIELD_UNION_REGISTER extends AionServerPacket {
 	int requestId;
 	boolean isRegister;
-
-	/**
-	 * request id
-	 * true = register, false = unregister。
-	 */
-	public SM_BATTLEFIELD_UNION_REGISTER(int requestId, boolean register) {
-		this.requestId = requestId;
-		this.isRegister = register;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

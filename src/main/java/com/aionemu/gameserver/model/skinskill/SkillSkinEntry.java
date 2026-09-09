@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.skinskill;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 技能外观条目。
@@ -9,15 +11,11 @@ import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class SkillSkinEntry {
 
 	protected final int skinId;
 	protected int skillLevel;
-
-	SkillSkinEntry(int skinId, int skillLevel) {
-		this.skinId = skinId;
-		this.skillLevel = skillLevel;
-	}
 
 	/** 返回皮肤 ID / Returns the skin id */
 	public final int getSkinId() {

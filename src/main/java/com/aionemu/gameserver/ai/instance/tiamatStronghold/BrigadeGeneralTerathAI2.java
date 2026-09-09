@@ -40,9 +40,9 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	private boolean isGravityEvent;
 	private boolean canThink = true;
 
-	private AtomicBoolean isHome = new AtomicBoolean(true);
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private List<Integer> percents = new ArrayList<Integer>();
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final List<Integer> percents = new ArrayList<Integer>();
 
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -195,7 +195,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{90, 70, 50, 30, 25});
+		Collections.addAll(percents, 90, 70, 50, 30, 25);
 	}
 
 	@Override

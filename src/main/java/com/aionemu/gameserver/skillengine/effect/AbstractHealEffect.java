@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
+import lombok.Getter;
 
 /**
  * 治疗类效果基类：按 HP/MP/FP/DP 计算并应用治疗量，支持固定值与百分比。
@@ -24,12 +25,9 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 @XmlType(name = "AbstractHealEffect")
 public abstract class AbstractHealEffect extends EffectTemplate {
 
+	@Getter
 	@XmlAttribute
 	protected boolean percent;
-
-	public boolean isPercent() {
-		return percent;
-	}
 
 	static int capMpHealBoost(int baseValue, int boostedValue) {
 		return (int) Math.min(boostedValue, (long) baseValue * 3);

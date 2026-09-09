@@ -16,7 +16,7 @@ public class SM_FRIEND_LIST extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		FriendList list = con.getActivePlayer().getFriendList();
-		writeH((0 - list.getSize()));
+		writeH((-list.getSize()));
 		writeC(0);
 		for (Friend friend : list) {
 			writeD(friend.getOid());

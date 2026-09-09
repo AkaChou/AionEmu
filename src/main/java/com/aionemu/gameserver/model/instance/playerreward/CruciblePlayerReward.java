@@ -1,26 +1,37 @@
 package com.aionemu.gameserver.model.instance.playerreward;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Crucible 玩家奖励，用于副本相关逻辑。
  * Crucible Player Reward for instance logic.
  */
 
 public class CruciblePlayerReward extends InstancePlayerReward {
+	/** 设置 insignia / Sets the insignia */
+	@Getter
+	@Setter
 	private int insignia;
+	/** 设置刷新点坐标。 / Sets the spawn position. */
+	@Getter
+	@Setter
 	private int spawnPosition;
+	/**
+	 * @return 是否已奖励 / whether rewarded
+	 */
+	@Getter
 	private boolean isRewarded = false;
+	/** 是否玩家离开 / Whether player leave*/
+	@Getter
 	private boolean isPlayerLeave = false;
+	/** 设置 player defeated / Sets the player defeated */
+	@Getter
+	@Setter
 	private boolean isPlayerDefeated = false;
 
 	public CruciblePlayerReward(Integer object) {
 		super(object);
-	}
-
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
-	public boolean isRewarded() {
-		return isRewarded;
 	}
 
 	/** 设置 rewarded / Sets the rewarded */
@@ -28,43 +39,8 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 		isRewarded = true;
 	}
 
-	/** 设置 insignia / Sets the insignia */
-	public void setInsignia(int insignia) {
-		this.insignia = insignia;
-	}
-
-	/** 返回 insignia / Returns the insignia */
-	public int getInsignia() {
-		return insignia;
-	}
-
-	/** 设置刷新点坐标。 / Sets the spawn position. */
-	public void setSpawnPosition(int spawnPosition) {
-		this.spawnPosition = spawnPosition;
-	}
-
-	/** 获取刷新点坐标。 / Returns the spawn position. */
-	public int getSpawnPosition() {
-		return spawnPosition;
-	}
-
-	/** 是否玩家离开 / Whether player leave*/
-	public boolean isPlayerLeave() {
-		return isPlayerLeave;
-	}
-
 	/** 设置玩家离开 / Sets the player leave*/
 	public void setPlayerLeave() {
 		isPlayerLeave = true;
-	}
-
-	/** 设置 player defeated / Sets the player defeated */
-	public void setPlayerDefeated(boolean value) {
-		isPlayerDefeated = value;
-	}
-
-	/** 玩家是否已被击败 / Whether player defeated */
-	public boolean isPlayerDefeated() {
-		return isPlayerDefeated;
 	}
 }

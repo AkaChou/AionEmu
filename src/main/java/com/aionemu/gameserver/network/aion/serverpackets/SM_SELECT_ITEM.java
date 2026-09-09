@@ -15,8 +15,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 @Slf4j
 
 public class SM_SELECT_ITEM extends AionServerPacket {
-	private int uniqueItemId;
-	private List<DisassembleItem> selsetitems;
+	private final int uniqueItemId;
+	private final List<DisassembleItem> selsetitems;
 
 	/**
 	 * 使用给定参数构造 SM_SELECT_ITEM 包。

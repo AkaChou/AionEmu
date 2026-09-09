@@ -32,6 +32,7 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 /**
  * 据点运行时实例，管理占领、首领、袭击与相关广播。
@@ -42,12 +43,40 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class Base<BL extends BaseLocation> {
 	private Npc boss, flag;
 	private boolean started;
+	/**
+	 * 获取据点位置模板。
+	 * Returns the base location template.
+	 *
+	 * base location
+	 */
+	@Getter
 	private final BL baseLocation;
 	private Future<?> startAssault, stopAssault;
-	private List<Race> list = new ArrayList<Race>();
-	private List<Npc> spawned = new ArrayList<Npc>();
-	private List<Npc> attackers = new ArrayList<Npc>();
+	private final List<Race> list = new ArrayList<Race>();
+	/**
+	 * 获取已刷新单位列表。
+	 * Returns the spawned unit list.
+	 *
+	 * @return 已刷新单位 / spawned units
+	 */
+	@Getter
+	private final List<Npc> spawned = new ArrayList<Npc>();
+	/**
+	 * 获取当前袭击单位列表。
+	 * Returns the current attacker list.
+	 *
+	 * attackers
+	 */
+	@Getter
+	private final List<Npc> attackers = new ArrayList<Npc>();
 	private final AtomicBoolean finished = new AtomicBoolean();
+	/**
+	 * 获取首领死亡监听器。
+	 * Returns the boss death listener.
+	 *
+	 * @return 死亡监听器 / death listener
+	 */
+	@Getter
 	private final BaseBossDeathListener baseBossDeathListener = new BaseBossDeathListener(this);
 
 	/**
@@ -129,7 +158,7 @@ public class Base<BL extends BaseLocation> {
 				chooseAttackersRace();
 				sendMsgKiller(getId());
 			}
-		}, Rnd.get(120, 180) * 60000);
+		}, Rnd.get(120, 180) * 60000L);
 	}
 
 	/**
@@ -419,7 +448,7 @@ public class Base<BL extends BaseLocation> {
 					spawnBoss();
 				}
 			}
-		}, Rnd.get(5, 10) * 60000);
+		}, Rnd.get(5, 10) * 60000L);
 	}
 
 	protected void spawnBoss() {
@@ -754,16 +783,6 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	/**
-	 * 获取首领死亡监听器。
-	 * Returns the boss death listener.
-	 *
-	 * @return 死亡监听器 / death listener
-	 */
-	public BaseBossDeathListener getBaseBossDeathListener() {
-		return baseBossDeathListener;
-	}
-
-	/**
 	 * 据点是否已结束。
 	 * Whether the base instance is finished.
 	 *
@@ -771,16 +790,6 @@ public class Base<BL extends BaseLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取据点位置模板。
-	 * Returns the base location template.
-	 *
-	 * base location
-	 */
-	public BL getBaseLocation() {
-		return baseLocation;
 	}
 
 	/**
@@ -811,25 +820,5 @@ public class Base<BL extends BaseLocation> {
 	 */
 	public void setRace(Race race) {
 		baseLocation.setRace(race);
-	}
-
-	/**
-	 * 获取当前袭击单位列表。
-	 * Returns the current attacker list.
-	 *
-	 * attackers
-	 */
-	public List<Npc> getAttackers() {
-		return attackers;
-	}
-
-	/**
-	 * 获取已刷新单位列表。
-	 * Returns the spawned unit list.
-	 *
-	 * @return 已刷新单位 / spawned units
-	 */
-	public List<Npc> getSpawned() {
-		return spawned;
 	}
 }

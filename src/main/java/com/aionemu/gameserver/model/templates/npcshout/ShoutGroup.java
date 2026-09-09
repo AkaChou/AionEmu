@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * NPC 喊话分组模板（静态数据/XML）。
@@ -22,6 +23,12 @@ public class ShoutGroup {
 	@XmlElement(name = "shout_npcs", required = true)
 	protected List<ShoutList> shoutNpcs;
 
+	/**
+	 * 获取 clientAi 属性值。
+	 * Gets the value of the clientAi property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
+	@Getter
 	@XmlAttribute(name = "client_ai")
 	protected String clientAi;
 
@@ -33,15 +40,6 @@ public class ShoutGroup {
 			shoutNpcs = new ArrayList<ShoutList>();
 		}
 		return this.shoutNpcs;
-	}
-
-	/**
-	 * 获取 clientAi 属性值。
-	 * Gets the value of the clientAi property
-	 * @return 可能的对象类型 / possible object is {@link String }
-	 */
-	public String getClientAi() {
-		return clientAi;
 	}
 
 	/** 置空 / make Null. */

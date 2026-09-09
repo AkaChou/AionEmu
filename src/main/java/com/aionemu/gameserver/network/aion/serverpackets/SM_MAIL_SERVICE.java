@@ -16,7 +16,7 @@ import com.aionemu.gameserver.utils.collections.ListSplitter;
  * Server packet for mail-service operations (mailbox state, list, read, attachment, delete, etc.).
  */
 public class SM_MAIL_SERVICE extends MailServicePacket {
-	private int serviceId;
+	private final int serviceId;
 	private Collection<Letter> letters;
 	private int totalCount;
 	private int unreadCount;

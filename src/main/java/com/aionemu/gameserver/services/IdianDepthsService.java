@@ -105,7 +105,7 @@ public class IdianDepthsService {
 			public void run() {
 				stopIdianDepths(id);
 			}
-		}, CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
 	}
 
 	/**

@@ -18,9 +18,9 @@ public class SM_TIME_CHECK extends AionServerPacket {
 
 	// 1.5.x 发送 8 字节 / 1.5.x sending 8 bytes
 
-	private int nanoTime;
-	private int time;
-	private Timestamp dateTime;
+	private final int nanoTime;
+	private final int time;
+	private final Timestamp dateTime;
 
 	/**
 	 * @param nanoTime 客户端上报的纳秒时间 / client-reported nano time

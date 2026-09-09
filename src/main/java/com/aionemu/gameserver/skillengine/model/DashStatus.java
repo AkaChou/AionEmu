@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.skillengine.model;
 
+import lombok.Getter;
+
 /**
  * 冲刺/位移状态：标识技能位移的网络与表现类型。
  * Dash/move status: identifies skill displacement for network and presentation.
@@ -19,18 +21,15 @@ public enum DashStatus {
 	/** 骑乘位移 / Rider move location */
 	RIDERMOVELOC(6);
 
-	private int id;
-
-	private DashStatus(int id) {
-		this.id = id;
-	}
-
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
 	 */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	DashStatus(int id) {
+		this.id = id;
 	}
 }

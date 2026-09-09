@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 住房 NPC 模板（静态数据/XML）。
@@ -15,16 +16,13 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "HousingNpc")
 public class HousingNpc extends PlaceableHouseObject {
 
+	/**
+	 * 获取 npcId 属性值。
+	 * Gets the value of the npcId property
+	 */
+	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
-
-	 /**
-	  * 获取 npcId 属性值。
-	  * Gets the value of the npcId property
-	  */
-	public int getNpcId() {
-		return npcId;
-	}
 
 	/** 返回类型 ID / Returns the type id */
 	@Override

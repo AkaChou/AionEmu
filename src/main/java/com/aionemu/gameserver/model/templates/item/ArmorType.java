@@ -37,9 +37,9 @@ public enum ArmorType {
 	/** 手镯 / Bracelet */
 	BRACELET(new int[] {});
 
-	private int[] requiredSkills;
+	private final int[] requiredSkills;
 
-	private ArmorType(int[] requiredSkills) {
+	ArmorType(int[] requiredSkills) {
 		this.requiredSkills = requiredSkills;
 	}
 

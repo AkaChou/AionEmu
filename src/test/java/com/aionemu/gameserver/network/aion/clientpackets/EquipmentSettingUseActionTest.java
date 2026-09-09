@@ -302,8 +302,8 @@ class EquipmentSettingUseActionTest {
 	void normalInventoryEquipStillUsesEquipAction() {
 		FakeTarget target = new FakeTarget();
 
-		boolean changed = EquipmentSettingUseAction.applyAll(Arrays.asList(
-				new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 2001)), target);
+		boolean changed = EquipmentSettingUseAction.applyAll(List.of(
+			new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 2001)), target);
 
 		assertTrue(changed);
 		assertEquals(1, target.equip);

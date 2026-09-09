@@ -34,9 +34,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -78,16 +75,16 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** ophidan 任务 / ophidan task */
         private final List<Future<?>> ophidanTask = new ArrayList<Future<?>>();
-	
+
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
-        return (EngulfedOphidanBridgePlayerReward) engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
+        return engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
     }
-	
+
     private boolean containPlayer(Integer object) {
         return engulfedOphidanBridgeReward.containPlayer(object);
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -112,7 +109,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164000279, storage.getItemCountByItemId(164000279)); //进阶路线传送卷轴。 / Advance Route Teleport Scroll.
@@ -122,7 +119,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(162000149, storage.getItemCountByItemId(162000149)); //Ambush Scroll.
 		storage.decreaseByItemId(162000147, storage.getItemCountByItemId(162000147)); //Emergency Support Recovery Potion.
 	}
-	
+
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         engulfedOphidanBridgeReward.setInstanceStartTime();
@@ -266,7 +263,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             }
         }, 1800000));
     }
-	
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         engulfedOphidanBridgeReward.setWinnerRace(race);
@@ -274,7 +271,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         reward();
         engulfedOphidanBridgeReward.sendPacket(5, null);
     }
-	
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -288,7 +285,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         }
         sendEnterPacket(player);
     }
-	
+
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -315,7 +312,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-	
+
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -333,7 +330,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             }
         });
     }
-	
+
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
@@ -363,7 +360,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             });
     	}
     }
-	
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -378,7 +375,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         doors = instance.getDoors();
         startInstanceTask();
     }
-	
+
 	protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -392,9 +389,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			int abyssPoint = 3163;
 			int gloryPoint = 150;
 			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
+			playerReward.setRewardAp(abyssPoint);
+            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(engulfedOphidanBridgeReward.getWinnerRace())) {
                 abyssPoint += engulfedOphidanBridgeReward.AbyssReward(true, true);
                 gloryPoint += engulfedOphidanBridgeReward.GloryReward(true, true);
@@ -418,8 +415,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			ItemService.addItem(player, 188052681, 1);
             ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
+            AbyssPointsService.addAp(player, abyssPoint);
+            AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
         }
         for (Npc npc : instance.getNpcs()) {
@@ -441,7 +438,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
     }
-	
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -451,7 +448,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         }
         return 0;
     }
-	
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -467,7 +464,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         engulfedOphidanBridgeReward.portToPosition(player);
         return true;
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -496,31 +493,31 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         updateScore(player, player, -points, false);
         return true;
     }
-	
+
 	private MutableInt getPvpKillsByRace(Race race) {
         return engulfedOphidanBridgeReward.getPvpKillsByRace(race);
     }
-	
+
     private MutableInt getPointsByRace(Race race) {
         return engulfedOphidanBridgeReward.getPointsByRace(race);
     }
-	
+
     private void addPointsByRace(Race race, int points) {
         engulfedOphidanBridgeReward.addPointsByRace(race, points);
     }
-	
+
     private void addPvpKillsByRace(Race race, int points) {
         engulfedOphidanBridgeReward.addPvpKillsByRace(race, points);
     }
-	
+
     private void addPointToPlayer(Player player, int points) {
         engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-	
+
     private void addPvPKillToPlayer(Player player) {
         engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
-	
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -564,7 +561,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             stopInstance(engulfedOphidanBridgeReward.getWinnerRaceByScore());
         }
     }
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -584,7 +581,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			powerGenerator = 4;
 		}
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -607,7 +604,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			break;
 			case 233474: //Defense Post Magus.
 			case 233475: //Defense Post Combatant.
-			case 233476: //Defense Post Scout.	
+			case 233476: //Defense Post Scout.
 			case 233478: //Northern Approach Post Magus.
 			case 233479: //Northern Approach Post Combatant.
 			case 233481: //Southern Approach Post Combatant.
@@ -935,7 +932,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         }
         updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
@@ -946,8 +943,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-		    case 701947: //Elyos Field Gun.
-			case 701949: //Elyos Field Gun.
+		    case 701947: // 可以搭乘的天族大炮 / Elyos Field Gun.
+			case 701949: // 可以搭乘的天族大炮 / Elyos Field Gun.
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    // 你已使用一个破力装置。 / You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
@@ -957,8 +954,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
 				}
             break;
-			case 701948: //Asmodians Field Gun.
-			case 701950: //Asmodians Field Gun.
+			case 701948: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
+			case 701950: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    // 你已使用一个破力装置。 / You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
@@ -1046,19 +1043,19 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -1070,27 +1067,27 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         stopInstanceTask();
         doors.clear();
     }
-	
+
     protected void openFirstDoors() {
         openDoor(176);
 		openDoor(177);
     }
-	
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
             door.setOpen(true);
         }
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1108,7 +1105,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1125,7 +1122,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1151,22 +1148,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
+
     private void stopInstanceTask() {
         for (Future<?> task : ophidanTask) {
 			if (task != null) {
@@ -1174,7 +1156,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -1185,7 +1167,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     public InstanceReward<?> getInstanceReward() {
         return engulfedOphidanBridgeReward;
     }
-	
+
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
@@ -1196,7 +1178,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -1211,7 +1193,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
     }
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1222,7 +1204,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.

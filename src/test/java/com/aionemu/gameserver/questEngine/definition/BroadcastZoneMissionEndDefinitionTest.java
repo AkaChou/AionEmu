@@ -48,8 +48,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event>\n"
 + "      <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522 10523\"/></after-commit></transition>\n"
 + "  </transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		AfterCommitAction action = compiled.definition().transitions().get(1).afterCommit().stream()
 			.filter(AfterCommitAction.BroadcastZoneMissionEnd.class::isInstance).findFirst().orElseThrow();
@@ -90,8 +89,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"SELECTION_DIALOG\">\n"
 + "    <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522\"/></after-commit>\n"
 + "  </npc-complete></transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		QuestTransition completion = compiled.definition().transitions().stream()
 			.filter(transition -> "complete".equals(transition.targetNode()))
@@ -120,8 +118,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"NONE\">\n"
 + "    <after-commit><broadcast-zone-mission-end quest-ids=\"not-a-quest-id\"/></after-commit>\n"
 + "  </npc-complete></transitions>\n"
-+ "</quest-definition>\n"
-+ "").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
++ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
 
 		assertEquals("NPC_COMPLETE_AFTER_COMMIT_INVALID", failure.code());
 	}

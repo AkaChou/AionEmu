@@ -18,10 +18,10 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
  */
 @Slf4j
 public class SM_STATS_INFO extends AionServerPacket {
-	private Player player;
-	private PlayerGameStats pgs;
-	private PlayerLifeStats pls;
-	private PlayerCommonData pcd;
+	private final Player player;
+	private final PlayerGameStats pgs;
+	private final PlayerLifeStats pls;
+	private final PlayerCommonData pcd;
 
 	/**
 	 * 使用给定参数构造 SM_STATS_INFO 包。

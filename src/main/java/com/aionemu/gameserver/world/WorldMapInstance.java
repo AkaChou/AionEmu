@@ -41,6 +41,8 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 世界地图实例：区域划分与对象管理。
@@ -60,6 +62,7 @@ public abstract class WorldMapInstance {
 	 * 父级世界地图。
 	 * Parent world map.
 	 */
+	@Getter
 	private final WorldMap parent;
 	/**
 	 * 活跃区域表。
@@ -83,16 +86,20 @@ public abstract class WorldMapInstance {
 	private final Set<Integer> registeredObjects = ConcurrentHashMap.newKeySet();
 
 	/** 注册的队伍 / registered player group */
+	@Getter
 	private PlayerGroup registeredGroup = null;
 
 	/** 空实例销毁任务 / empty-instance destroy task */
+	@Getter
+	@Setter
 	private Future<?> emptyInstanceTask = null;
 
 	/**
 	 * 实例 ID（频道）。
 	 * Instance id (channel).
 	 */
-	private int instanceId;
+	@Getter
+	private final int instanceId;
 
 	/** 本实例相关任务 ID / quest ids related to this instance */
 	private final List<Integer> questIds = new ArrayList<Integer>();
@@ -107,8 +114,10 @@ public abstract class WorldMapInstance {
 	private Integer soloPlayer;
 
 	/** 注册的联盟 / registered alliance */
+	@Getter
 	private PlayerAlliance registredAlliance;
 	/** 注册的军团联盟 / registered league */
+	@Getter
 	private League registredLeague;
 
 	/**
@@ -133,16 +142,6 @@ public abstract class WorldMapInstance {
 	 */
 	public Integer getMapId() {
 		return getParent().getMapId();
-	}
-
-	/**
-	 * 返回父级世界地图。
-	 * Return the parent world map.
-	 *
-	 * @return 父级世界地图 / the parent map
-	 */
-	public WorldMap getParent() {
-		return parent;
 	}
 
 	/**
@@ -264,8 +263,8 @@ public abstract class WorldMapInstance {
 		synchronized (worldMapObjects) {
 			if (worldMapObjects.containsKey(object.getObjectId())) {
 				throw new DuplicateAionObjectException("Object with templateId "
-						+ String.valueOf(object.getObjectTemplate().getTemplateId()) + " already spawned in the instance "
-						+ String.valueOf(this.getMapId()) + " " + String.valueOf(this.getInstanceId()));
+						+ object.getObjectTemplate().getTemplateId() + " already spawned in the instance "
+						+ this.getMapId() + " " + this.getInstanceId());
 			}
 			worldMapObjects.put(object.getObjectId(), object);
 		}
@@ -340,8 +339,7 @@ public abstract class WorldMapInstance {
 	public Npc getNpc(int npcId) {
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
-			if (obj instanceof Npc) {
-				Npc npc = (Npc) obj;
+			if (obj instanceof Npc npc) {
 				if (npc.getNpcId() == npcId) {
 					return npc;
 				}
@@ -376,8 +374,7 @@ public abstract class WorldMapInstance {
 		List<Npc> npcs = new ArrayList<Npc>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
-			if (obj instanceof Npc) {
-				Npc npc = (Npc) obj;
+			if (obj instanceof Npc npc) {
 				if (npc.getNpcId() == npcId) {
 					npcs.add(npc);
 				}
@@ -413,8 +410,7 @@ public abstract class WorldMapInstance {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
-			if (obj instanceof StaticDoor) {
-				StaticDoor door = (StaticDoor) obj;
+			if (obj instanceof StaticDoor door) {
 				doors.put(door.getSpawn().getEntityId(), door);
 			}
 		}
@@ -432,24 +428,13 @@ public abstract class WorldMapInstance {
 		List<Trap> traps = new ArrayList<Trap>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
-			if (obj instanceof Trap) {
-				Trap t = (Trap) obj;
+			if (obj instanceof Trap t) {
 				if (t.getCreatorId() == p.getObjectId()) {
 					traps.add(t);
 				}
 			}
 		}
 		return traps;
-	}
-
-	/**
-	 * 返回实例 ID。
-	 * Return the instance id.
-	 *
-	 * @return 实例 ID / the instance id
-	 */
-	public int getInstanceId() {
-		return instanceId;
 	}
 
 	/**
@@ -537,26 +522,6 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * 返回注册的联盟。
-	 * Return the registered alliance.
-	 *
-	 * @return 注册的联盟 / the registered alliance
-	 */
-	public PlayerAlliance getRegistredAlliance() {
-		return registredAlliance;
-	}
-
-	/**
-	 * 返回注册的军团联盟。
-	 * Return the registered league.
-	 *
-	 * @return 注册的军团联盟 / the registered league
-	 */
-	public League getRegistredLeague() {
-		return registredLeague;
-	}
-
-	/**
 	 * 注册对象 ID。
 	 * Register an object id.
 	 *
@@ -575,36 +540,6 @@ public abstract class WorldMapInstance {
 	 */
 	public boolean isRegistered(int objectId) {
 		return registeredObjects.contains(objectId);
-	}
-
-	/**
-	 * 返回空实例任务。
-	 * Return the empty-instance task.
-	 *
-	 * @return 空实例任务 / the future task
-	 */
-	public Future<?> getEmptyInstanceTask() {
-		return emptyInstanceTask;
-	}
-
-	/**
-	 * 设置空实例任务。
-	 * Set the empty-instance task.
-	 *
-	 * @param emptyInstanceTask 空实例任务 / the empty-instance task
-	 */
-	public void setEmptyInstanceTask(Future<?> emptyInstanceTask) {
-		this.emptyInstanceTask = emptyInstanceTask;
-	}
-
-	/**
-	 * 返回注册的队伍。
-	 * Return the registered group.
-	 *
-	 * @return 注册的队伍 / the registered group
-	 */
-	public PlayerGroup getRegisteredGroup() {
-		return registeredGroup;
 	}
 
 	/**

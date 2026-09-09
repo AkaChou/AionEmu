@@ -81,7 +81,7 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 				continue;
 			} else if (region > 0 && player.getActiveRegion().getMapId() != region) {
 				continue;
-			} else if ((player.getRace() != activePlayer.getRace()) && (CustomConfig.FACTIONS_SEARCH_MODE == false)) {
+			} else if ((player.getRace() != activePlayer.getRace()) && (!CustomConfig.FACTIONS_SEARCH_MODE)) {
 				continue;
 			} else if (player.getName() == activePlayer.getName()) {
 				continue;

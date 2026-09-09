@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
+import lombok.Getter;
 
 /**
  * 游戏内一张地图及其全部实例的容器。
@@ -21,10 +22,10 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 public class WorldMap {
 
 	/** 地图模板 / map template */
-	private WorldMapTemplate worldMapTemplate;
+	private final WorldMapTemplate worldMapTemplate;
 
 	/** 下一个实例 ID 分配器 / next instance-id allocator */
-	private AtomicInteger nextInstanceId = new AtomicInteger(0);
+	private final AtomicInteger nextInstanceId = new AtomicInteger(0);
 	/**
 	 * 实例表（instanceId → 实例）。
 	 * Instance table (instanceId → instance).
@@ -32,7 +33,8 @@ public class WorldMap {
 	private final Map<Integer, WorldMapInstance> instances = Collections.synchronizedMap(new LinkedHashMap<Integer, WorldMapInstance>());
 
 	/** 所属世界 / owning world */
-	private World world;
+	@Getter
+	private final World world;
 	/** 运行时世界选项位掩码 / runtime world-option bitmask */
 	private int worldOptions;
 
@@ -333,16 +335,6 @@ public class WorldMap {
 			instanceId = 1;
 		}
 		instances.put(instanceId, instance);
-	}
-
-	/**
-	 * 返回所属世界。
-	 * Return the owning world.
-	 *
-	 * @return 所属世界 / the owning world
-	 */
-	public World getWorld() {
-		return world;
 	}
 
 	/**

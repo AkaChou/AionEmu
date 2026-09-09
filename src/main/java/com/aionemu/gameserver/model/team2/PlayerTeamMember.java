@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.model.team2;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 玩家团队 Member，用于团队2相关逻辑。
@@ -8,14 +10,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  *
  * @author ATracer
  */
+@RequiredArgsConstructor
 public class PlayerTeamMember implements TeamMember<Player> {
 
 	final Player player;
+	/** 返回最后在线时间 / Returns the last online time */
+	@Getter
 	private long lastOnlineTime;
-
-	public PlayerTeamMember(Player player) {
-		this.player = player;
-	}
 
 	/** 返回对象 ID / Returns the object id */
 	@Override
@@ -33,11 +34,6 @@ public class PlayerTeamMember implements TeamMember<Player> {
 	@Override
 	public Player getObject() {
 		return player;
-	}
-
-	/** 返回最后在线时间 / Returns the last online time */
-	public long getLastOnlineTime() {
-		return lastOnlineTime;
 	}
 
 	/** 更新最后在线时间 / Update last online time */

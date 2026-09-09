@@ -24,20 +24,20 @@ import com.aionemu.gameserver.world.*;
 @AIName("IDEternity_03_Dimension_Boss_01")
 public class BoliagAI2 extends AggressiveNpcAI2
 {
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		addPercent();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 根据血量百分比触发阶段事件：30% 刷新传送门与小怪，20%/10% 追加刷新小怪。
 	 * Triggers phase events by HP percentage: spawns portals and adds at 30%, more adds at 20% and 10%.
@@ -64,7 +64,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{30});
+		Collections.addAll(percents, 30);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		spawn(246442, 239.03406f, 1008.0827f, 706.75494f, (byte) 45);
         spawn(246442, 234.82101f, 1004.9394f, 706.75494f, (byte) 42);
 	}
-	
+
 	private void spawnBossSum() {
 	    spawn(246442, 222.63515f, 1036.9862f, 706.75494f, (byte) 61);
         spawn(246442, 222.79411f, 1014.1347f, 706.75494f, (byte) 60);
@@ -94,7 +94,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
         spawn(246442, 214.86880f, 1025.4816f, 706.75494f, (byte) 0);
         spawn(246442, 202.80700f, 1025.3514f, 706.75494f, (byte) 0);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -107,7 +107,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		final WorldPosition p = getPosition();
@@ -120,7 +120,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		addPercent();
 		super.handleBackHome();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {

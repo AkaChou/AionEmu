@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
+import lombok.Getter;
 
 /**
  * BoostEvents 模板（静态数据/XML）。
@@ -20,15 +21,23 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 @XmlType(name = "BoostEvents")
 public class BoostEvents {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
+	/** 返回增益 ID / Returns the buff id */
+	@Getter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
+	/** 返回增益值 / Returns the buff value */
+	@Getter
 	@XmlAttribute(name = "buff_value", required = true)
 	protected int buffValue;
 
@@ -39,26 +48,6 @@ public class BoostEvents {
 	@XmlAttribute(name = "end", required = true)
 	@XmlSchemaType(name = "dateTime")
 	protected XMLGregorianCalendar endDate;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
-	public int getBuffId() {
-		return buffId;
-	}
-
-	/** 返回增益值 / Returns the buff value */
-	public int getBuffValue() {
-		return buffValue;
-	}
 
 	/** 返回开始日期 / Returns the start date */
 	public ZonedDateTime getStartDate() {

@@ -1,17 +1,52 @@
 package com.aionemu.gameserver.model.team.legion;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
 /**
  * 军团 Member，用于团队相关逻辑。
  * Legion Member for team logic.
  *
  * @author Simple
  */
+@NoArgsConstructor
 public class LegionMember {
+	/**
+	 * @param objectId the objectId to set
+	 */
+	@Getter
+	@Setter
 	private int objectId = 0;
+	/**
+	 * @param legion the legion to set
+	 */
+	@Getter
+	@Setter
 	protected Legion legion = null;
+	/**
+	 * @param nickname the nickname to set
+	 */
+	@Getter
+	@Setter
 	protected String nickname = "";
+	/**
+	 * @param selfIntro the selfIntro to set
+	 */
+	@Getter
+	@Setter
 	protected String selfIntro = "";
+	/**
+	 * @return the challengeScore
+	 */
+	@Getter
+	@Setter
 	protected int challengeScore;
+	/**
+	 * @param rank the rank to set
+	 */
+	@Getter
+	@Setter
 	protected LegionRank rank = LegionRank.VOLUNTEER;
 
 	/**
@@ -33,41 +68,6 @@ public class LegionMember {
 	}
 
 	/**
-	 * 创建 LegionMemberEx 时调用此构造。
-	 * Called when a LegionMemberEx is created.
-	 */
-	public LegionMember() {
-	}
-
-	/**
-	 * @param legion the legion to set
-	 */
-	public void setLegion(Legion legion) {
-		this.legion = legion;
-	}
-
-	/**
-	 * @return the legion
-	 */
-	public Legion getLegion() {
-		return legion;
-	}
-
-	/**
-	 * @param rank the rank to set
-	 */
-	public void setRank(LegionRank rank) {
-		this.rank = rank;
-	}
-
-	/**
-	 * @return the rank
-	 */
-	public LegionRank getRank() {
-		return rank;
-	}
-
-	/**
 	 * @return 是否军团长 / Whether brigade general
 	 */
 	public boolean isBrigadeGeneral() {
@@ -75,66 +75,10 @@ public class LegionMember {
 	}
 
 	/**
-	 * @param nickname the nickname to set
-	 */
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	/**
-	 * @return the nickname
-	 */
-	public String getNickname() {
-		return nickname;
-	}
-
-	/**
-	 * @param selfIntro the selfIntro to set
-	 */
-	public void setSelfIntro(String selfIntro) {
-		this.selfIntro = selfIntro;
-	}
-
-	/**
-	 * @return the selfIntro
-	 */
-	public String getSelfIntro() {
-		return selfIntro;
-	}
-
-	/**
-	 * @return the challengeScore
-	 */
-	public int getChallengeScore() {
-		return challengeScore;
-	}
-
-	/**
-	 * @param challengeScore the challengeScore to set
-	 */
-	public void setChallengeScore(int challengeScore) {
-		this.challengeScore = challengeScore;
-	}
-
-	/**
 	 * @param amount
 	 */
 	public void increaseChallengeScore(int amount) {
 		this.challengeScore += amount;
-	}
-
-	/**
-	 * @param objectId the objectId to set
-	 */
-	public void setObjectId(int objectId) {
-		this.objectId = objectId;
-	}
-
-	/**
-	 * @return the objectId
-	 */
-	public int getObjectId() {
-		return objectId;
 	}
 
 	/**

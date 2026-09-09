@@ -37,8 +37,8 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 	private int phase = 0;
 	private Future<?> phaseTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -48,7 +48,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 95 && phase < 1) {
 			phase = 1;
@@ -71,7 +71,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			scheduleRush();
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -102,7 +102,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnTimeAccelerator(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -118,26 +118,26 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
 			deleteNpcs(instance.getNpcs(283086)); //Time Accelerator.
 		}
 	}
-	
+
 	private void timeStop() {
 		AI2Actions.useSkill(this, 20725); //Time Stop.
 	}
-	
+
 	private void timeRush() {
 		AI2Actions.useSkill(this, 20727); //Time Rush.
 	}
-	
+
 	private void timeSlow() {
 		AI2Actions.useSkill(this, 20728); //Time Slow.
 	}
-	
+
 	private void scheduleStop() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -146,7 +146,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void scheduleRush() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -155,7 +155,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	private void scheduleSlow() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -164,7 +164,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}
 		}, 5000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelPhaseTask();
@@ -177,12 +177,12 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -192,13 +192,13 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -206,17 +206,17 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;

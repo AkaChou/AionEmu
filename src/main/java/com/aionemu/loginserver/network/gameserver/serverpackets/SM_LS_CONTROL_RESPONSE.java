@@ -15,32 +15,32 @@ public class SM_LS_CONTROL_RESPONSE extends GsServerPacket {
      * 控制指令类型。
      * Control command type.
      */
-    private int type;
+    private final int type;
     /**
      * 执行是否成功。
      * Whether the operation succeeded.
      */
-    private boolean result;
+    private final boolean result;
     /**
      * 目标玩家名。
      * Target player name.
      */
-    private String playerName;
+    private final String playerName;
     /**
      * 附加参数。
      * Extra parameter.
      */
-    private int param;
+    private final int param;
     /**
      * 操作管理员名。
      * Admin name who issued the command.
      */
-    private String adminName;
+    private final String adminName;
     /**
      * 目标账号 ID。
      * Target account id.
      */
-    private int accountId;
+    private final int accountId;
 
     /**
      * 构造登录服控制结果响应包。

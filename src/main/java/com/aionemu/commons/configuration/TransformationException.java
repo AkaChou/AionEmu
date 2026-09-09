@@ -1,5 +1,7 @@
 package com.aionemu.commons.configuration;
 
+import lombok.NoArgsConstructor;
+
 /**
  * 配置值转换异常类，用于处理配置值转换过程中的错误
  * Configuration value transformation exception class for handling errors during value transformation
@@ -9,15 +11,9 @@ package com.aionemu.commons.configuration;
  *
  * @author SunAion
  */
+@NoArgsConstructor
 public class TransformationException extends RuntimeException {
     private static final long serialVersionUID = -6641235751743285902L;
-
-    /**
-     * 创建一个无参数的转换异常
-     * Create a transformation exception with no parameters
-     */
-    public TransformationException() {
-    }
 
     /**
      * 创建一个带有错误消息的转换异常

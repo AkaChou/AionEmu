@@ -17,12 +17,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("Macadamic_Jester")
 public class Macadamic_JesterAI2 extends GeneralNpcAI2
 {
-    private String walkerId = "301500000";
-	
+    private final String walkerId = "301500000";
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();

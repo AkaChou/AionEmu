@@ -15,12 +15,15 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * Netty 客户端传输，主动连接远端并托管通道生命周期。
  * Netty client transport that connects outbound and manages channel lifecycle.
  */
 @Slf4j
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class NettyClient implements ServerTransport {
 
     private final InetSocketAddress address;
@@ -42,22 +45,6 @@ public class NettyClient implements ServerTransport {
      */
     public NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory) {
         this(address, connectionName, connectionFactory, null);
-    }
-
-    /**
-     * 构造客户端（可指定断开连接执行器）。
-     * Construct client with optional disconnection executor.
-     *
-     * @param address 远端地址 / Remote address
-     * @param connectionName 连接名称 / Connection name
-     * @param connectionFactory 连接工厂 / Connection factory
-     * @param disconnectionExecutor 断开连接执行器，null 时用默认线程池 / Disconnection executor, null uses default pool
-     */
-    NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
-        this.address = address;
-        this.connectionName = connectionName;
-        this.connectionFactory = connectionFactory;
-        this.disconnectionExecutor = disconnectionExecutor;
     }
 
     /**

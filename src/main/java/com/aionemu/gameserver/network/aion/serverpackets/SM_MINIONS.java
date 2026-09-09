@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 随从（Minion）多模式操作服务端包。
@@ -23,8 +24,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
 @Slf4j
+@RequiredArgsConstructor
 public class SM_MINIONS extends AionServerPacket {
-	private int action;
+	private final int action;
 	@SuppressWarnings("unused")
 	private int expiredTimeMillis;
 	private int minionSkillPoints;
@@ -42,16 +44,6 @@ public class SM_MINIONS extends AionServerPacket {
 	private boolean isMaterial;
 	private boolean isloot;
 	private int lootNpcId;
-
-	/**
-	 * 仅指定 action 的简单构造。
-	 * Simple constructor with action only.
-	 *
-	 * operation type
-	 */
-	public SM_MINIONS(int action) {
-		this.action = action;
-	}
 
 	/**
 	 * 技能点与自动充能状态（action=11）。

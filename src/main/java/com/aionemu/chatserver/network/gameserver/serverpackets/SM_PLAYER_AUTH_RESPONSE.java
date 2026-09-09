@@ -16,13 +16,13 @@ public class SM_PLAYER_AUTH_RESPONSE extends GsServerPacket {
      * 聊天客户端玩家 ID。
      * Chat client player id.
      */
-    private int playerId;
+    private final int playerId;
 
     /**
      * 聊天认证令牌。
      * Chat authentication token.
      */
-    private byte[] token;
+    private final byte[] token;
 
     /**
      * 根据聊天客户端构造认证应答包。

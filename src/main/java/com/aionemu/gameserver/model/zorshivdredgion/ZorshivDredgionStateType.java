@@ -11,5 +11,5 @@ public enum ZorshivDredgionStateType {
 	/** 登陆。 / Landing. */
 	LANDING,
 	/** 和平。 / Peace. */
-	PEACE;
+	PEACE
 }

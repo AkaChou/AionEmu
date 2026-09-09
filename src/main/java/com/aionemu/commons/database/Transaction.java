@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Transaction {
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * 构造函数，创建一个新的事务

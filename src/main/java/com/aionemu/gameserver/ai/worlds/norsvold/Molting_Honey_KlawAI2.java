@@ -15,7 +15,7 @@ public class Molting_Honey_KlawAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(241843, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Sangor Scout.
+		spawn(241843, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Sangor Scout.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

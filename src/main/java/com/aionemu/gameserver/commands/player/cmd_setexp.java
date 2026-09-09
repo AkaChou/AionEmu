@@ -33,7 +33,7 @@ public class cmd_setexp extends PlayerCommand {
         }
         try {
             double multiplier = Double.parseDouble(params[0]);
-            if (multiplier < 0 || multiplier > 10) { // 限制在0%到1000%之间
+            if (multiplier < 0 || multiplier > 10) { // 限制在 0% 到 1000% 之间 / limited to 0%..1000%
                 PacketSendUtility.sendMessage(player, "Multiplier must be between 0.0 and 10.0.");
                 return;
             }

@@ -8,8 +8,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that forwards custom group data-exchange payloads to the client.
  */
 public class SM_GROUP_DATA_EXCHANGE extends AionServerPacket {
-	private byte[] byteData;
-	private int action;
+	private final byte[] byteData;
+	private final int action;
 	private int unk2;
 
 	/**

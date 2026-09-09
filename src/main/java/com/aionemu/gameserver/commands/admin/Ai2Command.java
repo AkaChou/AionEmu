@@ -80,11 +80,10 @@ public class Ai2Command extends AdminCommand {
 		 */
 		VisibleObject target = player.getTarget();
 
-		if (target == null || !(target instanceof Npc)) {
+		if (target == null || !(target instanceof Npc npc)) {
 			PacketSendUtility.sendMessage(player, "Select target first (Npc only)");
 			return;
 		}
-		Npc npc = (Npc) target;
 
 		if (param0.equals("info")) {
 			PacketSendUtility.sendMessage(player, "Ai name: " + npc.getAi2().getName());

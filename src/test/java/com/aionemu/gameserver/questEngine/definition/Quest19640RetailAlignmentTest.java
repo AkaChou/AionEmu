@@ -37,8 +37,8 @@ class Quest19640RetailAlignmentTest {
 		List<QuestTransition> transitions = definition.transitions();
 		for (int mob : new int[] {215525, 215527}) {
 			assertEquals(10, transitions.stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
-					&& kill.npcId() == mob)
+				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
+					&& npcId == mob)
 				.count());
 		}
 		assertEquals(6, transitions.stream()

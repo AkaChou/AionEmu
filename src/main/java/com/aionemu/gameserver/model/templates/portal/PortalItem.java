@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 传送门物品模板（静态数据/XML）。
@@ -16,31 +17,22 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "PortalItem")
 public class PortalItem {
 
-	@XmlAttribute(name = "id")
-	protected int id;
-	@XmlAttribute(name = "itemid")
-	protected int itemid;
-	@XmlAttribute(name = "quantity")
-	protected int quantity;
-
 	/**
 	 * @return 物品 ID / the id
 	 */
-	public int getId() {
-		return id;
-	}
-
+	@Getter
+	@XmlAttribute(name = "id")
+	protected int id;
 	/**
 	 * @return 物品编号 / the itemid
 	 */
-	public int getItemid() {
-		return itemid;
-	}
-
+	@Getter
+	@XmlAttribute(name = "itemid")
+	protected int itemid;
 	/**
 	 * @return 数量 / the quantity
 	 */
-	public int getQuantity() {
-		return quantity;
-	}
+	@Getter
+	@XmlAttribute(name = "quantity")
+	protected int quantity;
 }

@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
+import lombok.Getter;
 
 /**
  * 守护灵游戏对象。
@@ -19,9 +20,12 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 public class Minion extends VisibleObject {
 
+	/** 返回主人 / Returns the master. */
+	@Getter
 	private final Player master;
-	private MoveController moveController;
+	private final MoveController moveController;
 	private final MinionTemplate minionTemplate;
+	@Getter
 	private final Set<Integer> grantedSkills = new HashSet<>();
 
 	public Minion(MinionTemplate minionTemplate, MinionController controller, MinionCommonData commonData,
@@ -31,11 +35,6 @@ public class Minion extends VisibleObject {
 		this.master = master;
 		this.minionTemplate = minionTemplate;
 		this.moveController = new MinionMoveController();
-	}
-
-	/** 返回主人 / Returns the master. */
-	public Player getMaster() {
-		return master;
 	}
 
 	/** 返回守护灵 ID / Returns the minion id */
@@ -66,9 +65,5 @@ public class Minion extends VisibleObject {
 
 	public void addGrantedSkill(int skillId) {
 		grantedSkills.add(skillId);
-	}
-
-	public Set<Integer> getGrantedSkills() {
-		return grantedSkills;
 	}
 }

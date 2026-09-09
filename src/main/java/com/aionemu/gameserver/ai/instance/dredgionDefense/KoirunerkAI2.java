@@ -27,7 +27,7 @@ public class KoirunerkAI2 extends NpcAI2
 
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 834255: //Koirunerk.
+				case 834255: // 科依隆隆 / Koirunerk.
 					spawn(220824, 1215.3956f, 1500.9556f, 213.83618f, (byte) 97); //Pandaemonium Tank A.
 				break;
 			}

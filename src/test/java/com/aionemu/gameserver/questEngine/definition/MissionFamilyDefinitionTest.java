@@ -181,7 +181,7 @@ class MissionFamilyDefinitionTest {
 		Set<Integer> lumberjacks = Set.of(210096, 210149, 210145, 210146, 210150, 210151, 210092, 210154, 210685);
 		List<QuestTransition> lumberKills = transitions.stream()
 			.filter(t -> t.sourceNode().equals("v1") && t.targetNode().equals("v2")
-				&& t.event() instanceof QuestEvent.KillNpc kill && lumberjacks.contains(kill.npcId())).toList();
+				&& t.event() instanceof QuestEvent.KillNpc(int npcId) && lumberjacks.contains(npcId)).toList();
 		assertEquals(9, lumberKills.size());
 
 		// The sentinel kill chain v8 -> v9 -> v10 -> reward.

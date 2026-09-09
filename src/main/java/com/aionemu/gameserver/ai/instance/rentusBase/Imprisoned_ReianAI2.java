@@ -30,9 +30,9 @@ public class Imprisoned_ReianAI2 extends GeneralNpcAI2
 {
     private String walkerId;
 	private WalkerTemplate template;
-	private AtomicBoolean isSaved = new AtomicBoolean(false);
-    private AtomicBoolean isAsked = new AtomicBoolean(false);
-    
+	private final AtomicBoolean isSaved = new AtomicBoolean(false);
+    private final AtomicBoolean isAsked = new AtomicBoolean(false);
+
 	@Override
 	protected void handleSpawned() {
 		walkerId = getSpawnTemplate().getWalkerId();
@@ -42,7 +42,7 @@ public class Imprisoned_ReianAI2 extends GeneralNpcAI2
 		}
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();
@@ -53,12 +53,11 @@ public class Imprisoned_ReianAI2 extends GeneralNpcAI2
 			AI2Actions.deleteOwner(this);
 		}
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (walkerId != null) {
-			if (creature instanceof Player) {
-				final Player player = (Player) creature;
+			if (creature instanceof Player player) {
 				if (MathUtil.getDistance(getOwner(), player) <= 21) {
 					if (isAsked.compareAndSet(false, true)) {
 						switch (Rnd.get(1, 2)) {
@@ -89,7 +88,7 @@ public class Imprisoned_ReianAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}

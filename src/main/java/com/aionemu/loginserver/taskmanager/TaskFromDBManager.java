@@ -17,7 +17,7 @@ import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 @Slf4j
 public class TaskFromDBManager {
 
-    private ArrayList<TaskFromDBTrigger> tasksList;
+    private final ArrayList<TaskFromDBTrigger> tasksList;
 
     /**
      * 从数据库加载任务列表并初始化触发器。

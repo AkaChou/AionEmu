@@ -22,11 +22,11 @@ public class VershakaStatueAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-			GameEngineServices.skillEngine().applyEffectDirectly(300, player, player, 60000 * 1); //Transformation: Drakan.
+			GameEngineServices.skillEngine().applyEffectDirectly(300, player, player, 60000); // 变身：德拉坎 / Transformation: Drakan.
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;

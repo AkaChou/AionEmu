@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class WeaponHAI2 extends AggressiveNpcAI2
 {
 	private boolean isHome = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		isHome = false;
@@ -31,14 +31,14 @@ public class WeaponHAI2 extends AggressiveNpcAI2
 			getPosition().getWorldMapInstance().getDoors().get(85).setOpen(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 	    isHome = true;
 		getPosition().getWorldMapInstance().getDoors().get(85).setOpen(false);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		getPosition().getWorldMapInstance().getDoors().get(85).setOpen(true);

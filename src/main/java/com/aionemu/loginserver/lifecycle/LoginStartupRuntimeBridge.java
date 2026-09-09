@@ -7,6 +7,7 @@ import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.dao.BannedMacDAO;
+import com.aionemu.loginserver.dao.impl.LoginDAOClassProvider;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginCronServices;
@@ -82,7 +83,7 @@ public class LoginStartupRuntimeBridge {
      * Initialize the DAO manager.
      */
     public void initializeDaos() {
-        DAOManager.init();
+        DAOManager.init(new LoginDAOClassProvider());
     }
 
     /**

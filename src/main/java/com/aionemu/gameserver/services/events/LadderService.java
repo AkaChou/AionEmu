@@ -53,13 +53,13 @@ public class LadderService {
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<LadderService> instanceProvider;
 	/** 活动战场排队列表。 / Event battleground queue list. */
-	private List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	private final List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
 	/** 普通战场排队列表。 / Normal battleground queue list. */
-	private List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	private final List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
 	/** 当前 battleground 映射 bgIdbattleground / Active battleground map (bgId → battleground) */
-	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+	private final Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
 	/** 普通战场与事件引擎关联映射。 / Map linking normal BGs to event engine instances. */
-	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
+	private final Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
 	/** 当前活动战场模板。 / Current event battleground template. */
 	private Battleground eventBg = null;
 	/** 活动报名截止任务。 / Event registration deadline task. */
@@ -75,7 +75,7 @@ public class LadderService {
 	/** 活动队列是否按队伍匹配。 / Whether event queue uses team-based matchmaking. */
 	boolean eventTeamBased = false;
 	/** 排名刷新间隔（分钟）。 / Rank refresh interval in minutes. */
-	private int rankUpdateInterval = 2;
+	private final int rankUpdateInterval = 2;
 
 	/**
 	 * 构造服务并启动周期排名刷新。
@@ -171,10 +171,7 @@ public class LadderService {
 	 * @return 是否在队列中 / whether queued
 	 */
 	public boolean isInQueue(Player player) {
-		if (normalQueueList.contains(player) || eventQueueList.contains(player)) {
-			return true;
-		}
-		return false;
+		return normalQueueList.contains(player) || eventQueueList.contains(player);
 	}
 
 	/**
@@ -284,10 +281,7 @@ public class LadderService {
 	 * @return 是否在队列中 / whether queued
 	 */
 	public boolean isInQueue(PlayerGroup group) {
-		if (normalQueueList.contains(group) || eventQueueList.contains(group)) {
-			return true;
-		}
-		return false;
+		return normalQueueList.contains(group) || eventQueueList.contains(group);
 	}
 
 	/**
@@ -468,16 +462,14 @@ public class LadderService {
 			if (ao == null) {
 				continue;
 			}
-			if (ao instanceof Player) {
-				Player pl = (Player) ao;
+			if (ao instanceof Player pl) {
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
 				if (!pl.isOnline() || pl.getBattleground() != null) {
 					continue;
 				}
-				validGroups.add(Arrays.asList(pl));
+				validGroups.add(List.of(pl));
 				validParticipants.add(pl.getObjectId());
-			} else if (ao instanceof PlayerGroup) {
-				final PlayerGroup group = (PlayerGroup) ao;
+			} else if (ao instanceof PlayerGroup group) {
 				boolean add = true;
 				for (Player pl : group.getMembers()) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
@@ -604,16 +596,14 @@ public class LadderService {
 		List<List<Player>> validGroups = new ArrayList<List<Player>>();
 		List<Integer> validParticipants = new ArrayList<Integer>();
 		for (AionObject ao : queueSnapshot(eventQueueList)) {
-			if (ao != null && ao instanceof Player) {
-				Player pl = (Player) ao;
+			if (ao != null && ao instanceof Player pl) {
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
 				if (!pl.isOnline() || pl.getBattleground() != null) {
 					continue;
 				}
-				validGroups.add(Arrays.asList(pl));
+				validGroups.add(List.of(pl));
 				validParticipants.add(ao.getObjectId());
-			} else if (ao instanceof PlayerGroup) {
-				final PlayerGroup group = (PlayerGroup) ao;
+			} else if (ao instanceof PlayerGroup group) {
 				boolean add = true;
 				for (Player pl : group.getMembers()) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));

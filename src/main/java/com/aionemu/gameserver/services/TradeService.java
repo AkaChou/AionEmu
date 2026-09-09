@@ -566,7 +566,6 @@ public class TradeService {
 			}
 		} catch (NullPointerException e) {
 			log.info(I18n.get("log.b0750906232e", objId));
-			return;
 		}
 	}
 

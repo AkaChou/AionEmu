@@ -8,6 +8,7 @@ import java.util.List;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.RepurchaseService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Repurchase 列表，用于交易相关逻辑。
@@ -15,14 +16,11 @@ import com.aionemu.gameserver.services.RepurchaseService;
  *
  * @author xTz
  */
+@RequiredArgsConstructor
 public class RepurchaseList {
 
 	private final int sellerObjId;
-	private List<Item> repurchases = new ArrayList<Item>();
-
-	public RepurchaseList(int sellerObjId) {
-		this.sellerObjId = sellerObjId;
-	}
+	private final List<Item> repurchases = new ArrayList<Item>();
 
 	/**
 	 * @param player

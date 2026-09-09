@@ -34,11 +34,11 @@ public class SiegeCommand extends AdminCommand {
 	private static final String COMMAND_LIST_SIEGES = "sieges";
 	private static final String COMMAND_CAPTURE = "capture";
 	private static final String COMMAND_ASSAULT = "assault";
-	
+
 	public SiegeCommand() {
 		super("siegecommand");
 	}
-	
+
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
@@ -62,7 +62,7 @@ public class SiegeCommand extends AdminCommand {
 			assault(player, params);
 		}
 	}
-	
+
 	protected void handleStartStopSiege(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -88,15 +88,15 @@ public class SiegeCommand extends AdminCommand {
 			}
 		}
 	}
-	
+
 	protected boolean isValidSiegeLocationId(Player player, int fortressId) {
-		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(fortressId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(fortressId)) {
 			PacketSendUtility.sendMessage(player, "Id " + fortressId + " is invalid");
 			return false;
 		}
 		return true;
 	}
-	
+
 	protected void handleList(Player player, String[] params) {
 		if (params.length != 2) {
 			showHelp(player);
@@ -109,7 +109,7 @@ public class SiegeCommand extends AdminCommand {
 			showHelp(player);
 		}
 	}
-	
+
 	protected void listLocations(Player player) {
 		for (FortressLocation f : GameFeatureServices.siegeService().getFortresses().values()) {
 			PacketSendUtility.sendMessage(player, "Fortress: " + f.getLocationId() + " belongs to " + f.getRace());
@@ -117,7 +117,7 @@ public class SiegeCommand extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Artifact: " + a.getLocationId() + " belongs to " + a.getRace());
 		}
 	}
-	
+
 	protected void listSieges(Player player) {
 		for (Integer i : GameFeatureServices.siegeService().getSiegeLocations().keySet()) {
 			Siege s = GameFeatureServices.siegeService().getSiege(i);
@@ -129,14 +129,14 @@ public class SiegeCommand extends AdminCommand {
 			}
 		}
 	}
-	
+
 	protected void capture(Player player, String[] params) {
 		if (params.length < 3 || !NumberUtils.isCreatable(params[1])) {
 			showHelp(player);
 			return;
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
-		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(siegeLocationId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
@@ -244,7 +244,7 @@ public class SiegeCommand extends AdminCommand {
 		}
 		GameFeatureServices.siegeService().broadcastUpdate(loc);
 	}
-	
+
 	protected void assault(Player player, String[] params) {
 		if (params.length < 2 || (!NumberUtils.isCreatable(params[1]) && !NumberUtils.isCreatable(params[2]))) {
 			showHelp(player);
@@ -252,13 +252,13 @@ public class SiegeCommand extends AdminCommand {
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
 		int delay = NumberUtils.toInt(params[2]);
-		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(siegeLocationId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
 		GameCoreGameplayServices.balaurAssaultService().startAssault(player, siegeLocationId, delay);
 	}
-	
+
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //siegecommand Help\n" + "//siegecommand start|stop <LocationId>\n" + "//siegecommand list locations|sieges\n" + "//siegecommand capture <LocationId> <siegeRaceName|legionName|legionId>\n" + "//siegecommand assault <LocationId> <delaySec>");
 		java.util.Set<Integer> fortressIds = GameFeatureServices.siegeService().getFortresses().keySet();

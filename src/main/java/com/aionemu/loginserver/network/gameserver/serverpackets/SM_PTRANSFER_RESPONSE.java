@@ -19,7 +19,7 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
      * 转移结果状态。
      * Transfer result status.
      */
-    private PlayerTransferResultStatus result;
+    private final PlayerTransferResultStatus result;
     /**
      * 目标账号（SEND_INFO 时使用）。
      * Target account (used for SEND_INFO).

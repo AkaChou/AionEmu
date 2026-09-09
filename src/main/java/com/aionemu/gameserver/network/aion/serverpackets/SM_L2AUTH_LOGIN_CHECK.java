@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 回复客户端 L2 认证登录校验结果的服务端包。
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_L2AUTH_LOGIN_CHECK extends AionServerPacket {
 
 	/**
@@ -16,7 +18,7 @@ public class SM_L2AUTH_LOGIN_CHECK extends AionServerPacket {
 	 */
 	private final boolean ok;
 	private final String accountName;
-	private static byte[] data;
+	private static final byte[] data;
 
 	static {
 		data = hex2Byte("000000000000000101010202020303030404040505050606060707070808080909090A0A0A0B0B0B0C0C0C0D0"
@@ -56,18 +58,6 @@ public class SM_L2AUTH_LOGIN_CHECK extends AionServerPacket {
 				+ "50C0100F069850C01000091850C0A0020DF850C01009022661E01003006860C01006044A83501002037A5350A00F032A7350"
 				+ "100A06FA6350100C0BDA63501001081A7350100E00BA7350100D00FE6110000305EA535050020A8A735010030CFA73501004"
 				+ "0F6A735010040E2C3230100106DC3230100");
-	}
-
-	/**
-	 * 构造 L2 认证登录校验结果包。
-	 * Constructs a L2-auth login check result packet.
-	 *
-	 * @param ok 客户端是否已通过认证 / whether the client is authenticated
-	 * account name
-	 */
-	public SM_L2AUTH_LOGIN_CHECK(boolean ok, String accountName) {
-		this.ok = ok;
-		this.accountName = accountName;
 	}
 
 	/**

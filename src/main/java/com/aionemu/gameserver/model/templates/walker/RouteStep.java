@@ -6,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * RouteStep 模板（静态数据/XML）。
@@ -15,6 +18,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement(name = "routestep")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class RouteStep {
 
 	/** 休息时间（毫秒）/ Rest time in milliseconds */
@@ -34,10 +38,14 @@ public class RouteStep {
 	private float locX;
 
 	/** 路线步序号 / Route step index */
+	@Getter
+	@Setter
 	@XmlAttribute(name = "step", required = true)
 	private int routeStep;
 
 	/** 下一步 / Next step */
+	@Getter
+	@Setter
 	@XmlTransient
 	private RouteStep nextStep;
 
@@ -51,9 +59,6 @@ public class RouteStep {
 		if (time == null) {
 			time = 0;
 		}
-	}
-
-	public RouteStep() {
 	}
 
 	public RouteStep(float x, float y, float z, int restTime) {
@@ -86,25 +91,5 @@ public class RouteStep {
 	/** 返回休息时间 / Returns the rest time */
 	public int getRestTime() {
 		return time;
-	}
-
-	/** 返回下一步 / Returns the next step */
-	public RouteStep getNextStep() {
-		return nextStep;
-	}
-
-	/** 设置下一步 / Sets the next step */
-	public void setNextStep(RouteStep nextStep) {
-		this.nextStep = nextStep;
-	}
-
-	/** 返回路线步序号 / Returns the route step */
-	public int getRouteStep() {
-		return routeStep;
-	}
-
-	/** 设置路线步序号 / Sets the route step */
-	public void setRouteStep(int routeStep) {
-		this.routeStep = routeStep;
 	}
 }

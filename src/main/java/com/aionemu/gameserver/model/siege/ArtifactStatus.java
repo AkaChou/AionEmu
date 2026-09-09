@@ -16,7 +16,7 @@ public enum ArtifactStatus {
 	/** 已激活。 / Activated. */
 	ACTIVATED(3);
 
-	private int id;
+	private final int id;
 
 	ArtifactStatus(int id) {
 		this.id = id;

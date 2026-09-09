@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.team.legion;
 
 import java.sql.Timestamp;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 军团历史记录。
@@ -10,21 +11,12 @@ import lombok.Getter;
  * @author Simple, xTz
  */
 @Getter
+@AllArgsConstructor
 public class LegionHistory {
 
-	private LegionHistoryType legionHistoryType;
+	private final LegionHistoryType legionHistoryType;
 	private String name = "";
-	private Timestamp time;
-	private int tabId;
+	private final Timestamp time;
+	private final int tabId;
 	private String description = "";
-
-	public LegionHistory(LegionHistoryType legionHistoryType, String name, Timestamp time, int tabId,
-			String description) {
-		this.legionHistoryType = legionHistoryType;
-		this.name = name;
-		this.time = time;
-		this.tabId = tabId;
-		this.description = description;
-	}
-
 }

@@ -388,11 +388,7 @@ public class CraftSkillUpdateService {
 	 * @return 是否可继续学习专家 / Whether another expert skill can be learned
 	 */
 	public static boolean canLearnMoreExpertCraftingSkill(Player player) {
-		if (getTotalExpertCraftingSkills(player) + getTotalMasterCraftingSkills(player) < CraftConfig.MAX_EXPERT_CRAFTING_SKILLS) {
-			return true;
-		} else {
-			return false;
-		}
+		return getTotalExpertCraftingSkills(player) + getTotalMasterCraftingSkills(player) < CraftConfig.MAX_EXPERT_CRAFTING_SKILLS;
 	}
 
 	/**
@@ -403,11 +399,7 @@ public class CraftSkillUpdateService {
 	 * @return 是否可继续学习大师 / Whether another master skill can be learned
 	 */
 	public static boolean canLearnMoreMasterCraftingSkill(Player player) {
-		if (getTotalMasterCraftingSkills(player) < CraftConfig.MAX_MASTER_CRAFTING_SKILLS) {
-			return true;
-		} else {
-			return false;
-		}
+		return getTotalMasterCraftingSkills(player) < CraftConfig.MAX_MASTER_CRAFTING_SKILLS;
 	}
 
 	/**

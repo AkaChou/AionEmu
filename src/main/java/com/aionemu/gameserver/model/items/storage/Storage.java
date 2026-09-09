@@ -30,9 +30,9 @@ import java.util.ArrayList;
  */
 public abstract class Storage implements IStorage {
 
-	private ItemStorage itemStorage;
+	private final ItemStorage itemStorage;
 	private Item kinahItem;
-	private StorageType storageType;
+	private final StorageType storageType;
 	private Queue<Item> deletedItems;
 	/**
 	 * 可为 UPDATED 与 UPDATE_REQUIRED 两种类型。 / Can be of 2 types: UPDATED and UPDATE_REQUIRED

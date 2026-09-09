@@ -3,12 +3,15 @@ package com.aionemu.gameserver.geoEngine.math;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 三维向量，提供几何运算（jME 风格流式 API，支持对象池复用）。
  * Three-dimensional vector with geometric operations (jME-style fluent API, object-pool reuse).
  */
 @Slf4j
+@AllArgsConstructor
 public final class Vector3f implements Cloneable, Reusable {
 
 	/** 对象池工厂。 / Object-pool factory. */
@@ -46,12 +49,15 @@ public final class Vector3f implements Cloneable, Reusable {
 			Float.NEGATIVE_INFINITY);
 
 	/** X 分量 / X component */
+	@Getter
 	public float x;
 
 	/** Y 分量 / Y component */
+	@Getter
 	public float y;
 
 	/** Z component / Z component */
+	@Getter
 	public float z;
 
 	/**
@@ -62,20 +68,6 @@ public final class Vector3f implements Cloneable, Reusable {
 		this.z = 0.0f;
 		this.y = 0.0f;
 		this.x = 0.0f;
-	}
-
-	/**
-	 * 用指定分量构造向量。
-	 * Constructs a vector with the given components.
-	 *
-	 * @param x X 分量 / X component
-	 * @param y Y 分量 / Y component
-	 * @param z Z 分量 / Z component
-	 */
-	public Vector3f(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
 	}
 
 	/**
@@ -841,13 +833,12 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * @return 若 equal 则为 true / True if equal
 	 */
 	public boolean equals(Object o) {
-		if (!(o instanceof Vector3f)) {
+		if (!(o instanceof Vector3f comp)) {
 			return false;
 		}
 		if (this == o) {
 			return true;
 		}
-		Vector3f comp = (Vector3f) o;
 		if (Float.compare(this.x, comp.x) != 0) {
 			return false;
 		}
@@ -882,16 +873,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	}
 
 	/**
-	 * 获取 X 分量。
-	 * Gets the X component.
-	 *
-	 * @return X 分量 / X component
-	 */
-	public float getX() {
-		return this.x;
-	}
-
-	/**
 	 * 设置 X 分量。
 	 * Sets the X component.
 	 *
@@ -904,16 +885,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	}
 
 	/**
-	 * 获取 Y 分量。
-	 * Gets the Y component.
-	 *
-	 * @return Y 分量 / Y component
-	 */
-	public float getY() {
-		return this.y;
-	}
-
-	/**
 	 * 设置 Y 分量。
 	 * Sets the Y component.
 	 *
@@ -923,16 +894,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	public Vector3f setY(float y) {
 		this.y = y;
 		return this;
-	}
-
-	/**
-	 * 获取 Z 分量。
-	 * Gets the Z component.
-	 *
-	 * @return Z 分量 / Z component
-	 */
-	public float getZ() {
-		return this.z;
 	}
 
 	/**
@@ -1027,6 +988,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * @param instance 待回收实例 / Instance to recycle
 	 */
 	public static void recycle(Vector3f instance) {
-		FACTORY.recycle((Object) instance);
+		FACTORY.recycle(instance);
 	}
 }

@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 全局掉落 NPC 模板（静态数据/XML）。
@@ -14,11 +15,8 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropNpc")
 public class GlobalDropNpc {
+	/** 返回 NPC ID。 / Returns the npc id. */
+	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
-
-	/** 返回 NPC ID。 / Returns the npc id. */
-	public int getNpcId() {
-		return npcId;
-	}
 }

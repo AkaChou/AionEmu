@@ -31,10 +31,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("tuali")
 public class TualiAI2 extends AggressiveNpcAI2 {
 
-	private AtomicBoolean isStart = new AtomicBoolean(false);
-	private AtomicBoolean isStart65Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart45Event = new AtomicBoolean(false);
-	private AtomicBoolean isStart25Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart = new AtomicBoolean(false);
+	private final AtomicBoolean isStart65Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart45Event = new AtomicBoolean(false);
+	private final AtomicBoolean isStart25Event = new AtomicBoolean(false);
 	private Future<?> task;
 
 	@Override
@@ -156,6 +156,6 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 				AI2Actions.useSkill(TualiAI2.this, 19512 + Rnd.get(5));
 				scheduleSkills();
 			}
-		}, Rnd.get(18, 22) * 1000);
+		}, Rnd.get(18, 22) * 1000L);
 	}
 }

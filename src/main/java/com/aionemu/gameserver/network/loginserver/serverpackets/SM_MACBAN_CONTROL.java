@@ -11,10 +11,10 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
  */
 public class SM_MACBAN_CONTROL extends LsServerPacket {
 
-	private byte type;
-	private String address;
-	private String details;
-	private long time;
+	private final byte type;
+	private final String address;
+	private final String details;
+	private final long time;
 
 	/**
 	 * 构造 MAC 封禁控制包。

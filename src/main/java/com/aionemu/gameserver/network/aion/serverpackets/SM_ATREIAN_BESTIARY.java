@@ -11,10 +11,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ATREIAN_BESTIARY extends AionServerPacket {
 
-	private int id;
-	private int kill;
-	private int isRewardable;
-	private byte level;
+	private final int id;
+	private final int kill;
+	private final int isRewardable;
+	private final byte level;
 
 	/**
 	 * @param id 图鉴条目 ID / bestiary entry id

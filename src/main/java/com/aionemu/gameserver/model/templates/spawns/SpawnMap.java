@@ -31,6 +31,8 @@ import com.aionemu.gameserver.model.templates.spawns.svsspawns.SvsSpawn;
 import com.aionemu.gameserver.model.templates.spawns.towerofeternityspawns.TowerOfEternitySpawn;
 import com.aionemu.gameserver.model.templates.spawns.vortexspawns.VortexSpawn;
 import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.ZorshivDredgionSpawn;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 刷新点地图模板（静态数据/XML）。
@@ -39,6 +41,7 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "SpawnMap")
+@NoArgsConstructor
 public class SpawnMap {
 	@XmlElement(name = "spawn")
 	private List<Spawn> spawns;
@@ -109,19 +112,13 @@ public class SpawnMap {
 	@XmlElement(name = "tower_of_eternity_spawn")
 	private List<TowerOfEternitySpawn> towerOfEternitySpawns;
 
+	/** 返回映射 ID / Returns the map id */
+	@Getter
 	@XmlAttribute(name = "map_id")
 	private int mapId;
 
-	public SpawnMap() {
-	}
-
 	public SpawnMap(int mapId) {
 		this.mapId = mapId;
-	}
-
-	/** 返回映射 ID / Returns the map id */
-	public int getMapId() {
-		return mapId;
 	}
 
 	/** 获取刷新。 / Returns the spawns. */

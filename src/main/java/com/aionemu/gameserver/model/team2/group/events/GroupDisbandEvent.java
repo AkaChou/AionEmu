@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.team2.common.events.AlwaysTrueTeamEvent;
 import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent.LeaveReson;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
 
 /**
  * 队伍解散事件（团队2）。
@@ -12,19 +13,10 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@AllArgsConstructor
 public class GroupDisbandEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
-
-	/**
-	 * 以指定队伍构造解散事件。
-	 * Constructs a disband event for the given group.
-	 *
-	 * @param group 目标队伍 / target group
-	 */
-	public GroupDisbandEvent(PlayerGroup group) {
-		this.group = group;
-	}
 
 	/** 处理事件。 / Handle event. */
 	@Override

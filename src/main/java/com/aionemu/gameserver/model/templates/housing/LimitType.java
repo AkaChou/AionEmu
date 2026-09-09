@@ -32,7 +32,7 @@ public enum LimitType {
 	int[] personalLimits;
 	int[] trialLimits;
 
-	private LimitType(int id, int[] maxPersonalLimits, int[] maxTrialLimits) {
+	LimitType(int id, int[] maxPersonalLimits, int[] maxTrialLimits) {
 		this.id = id;
 		this.personalLimits = maxPersonalLimits;
 		this.trialLimits = maxTrialLimits;

@@ -28,8 +28,8 @@ public class GiveStigma extends PlayerCommand {
         super("givestigma");
     }
 
-    private static int[] elyosStigmaQuests = {1929, 3930, 3931, 3932, 11049, 11276, 11550, 30217};
-    private static int[] asmodianStigmaQuests = {2900, 4934, 4935, 4936, 21049, 21278, 21550, 30317};
+    private static final int[] elyosStigmaQuests = {1929, 3930, 3931, 3932, 11049, 11276, 11550, 30217};
+    private static final int[] asmodianStigmaQuests = {2900, 4934, 4935, 4936, 21049, 21278, 21550, 30317};
 
 
     /**

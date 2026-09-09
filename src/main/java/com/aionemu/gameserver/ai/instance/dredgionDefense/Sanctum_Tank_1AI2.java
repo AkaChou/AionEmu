@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai.instance.dredgionDefense;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -29,19 +28,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 {
     private boolean canThink = true;
-	private String walkerId = "302200001";
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
@@ -65,31 +62,31 @@ public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();
 		super.handleMoveArrived();
 		if (getNpcId() == 220820) { //Sanctum Tank A.
 			if (point == 3) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 6) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 10) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 12) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			} else if (point == 15) {
-				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+				spawn(220810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+				spawn(220814, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -101,7 +98,7 @@ public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceSanctumTankA() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -135,14 +132,14 @@ public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		announceSanctumTankADie();
-		spawn(834305, 1380.8705f, 1689.9844f, 573.12286f, (byte) 0); //Korunerk.
+		spawn(834305, 1380.8705f, 1689.9844f, 573.12286f, (byte) 0); // 科依伦伦 / Korunerk.
 		super.handleDied();
 	}
-	
+
 	private void despawn() {
 		AI2Actions.deleteOwner(this);
 	}

@@ -13,8 +13,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 public class ChainSkills {
 
-	private Map<String, ChainSkill> multiSkills = new LinkedHashMap<String, ChainSkill>();
-	private ChainSkill chainSkill = new ChainSkill("", 0, 0);
+	private final Map<String, ChainSkill> multiSkills = new LinkedHashMap<String, ChainSkill>();
+	private final ChainSkill chainSkill = new ChainSkill("", 0, 0);
 
 	/**
 	 * 获取指定类别的当前连击计数（冷却过期时清零）。
@@ -71,11 +71,7 @@ public class ChainSkills {
 		} else if (chainSkill.getCategory().equals(category)) {
 			useTime = chainSkill.getUseTime();
 		}
-		if ((useTime + time) >= System.currentTimeMillis()) {
-			return true;
-		} else
-
-			return false;
+		return (useTime + time) >= System.currentTimeMillis();
 	}
 
 	/**

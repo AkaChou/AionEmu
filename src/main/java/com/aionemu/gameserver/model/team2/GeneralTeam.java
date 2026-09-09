@@ -130,7 +130,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 	/** 返回成员对象集合 / Returns the members */
 	@Override
 	public Collection<M> getMembers() {
-		return filterMembers(Predicates.<M>alwaysTrue());
+		return filterMembers(Predicates.alwaysTrue());
 	}
 
 	/** 返回队伍人数 / size. */

@@ -17,9 +17,9 @@ public enum DropRewardEnum {
 	MINUS_7(-7, 100);
 
 	/** 掉落奖励百分比 / Drop reward percent */
-	private int dropRewardPercent;
+	private final int dropRewardPercent;
 	/** 等级差 / Level difference */
-	private int levelDifference;
+	private final int levelDifference;
 
 	/**
 	 * 构造掉落奖励条目
@@ -28,7 +28,7 @@ public enum DropRewardEnum {
 	 * Level difference
 	 * @param dropRewardPercent 掉落百分比 / Drop percent
 	 */
-	private DropRewardEnum(int levelDifference, int dropRewardPercent) {
+	DropRewardEnum(int levelDifference, int dropRewardPercent) {
 		this.levelDifference = levelDifference;
 		this.dropRewardPercent = dropRewardPercent;
 	}

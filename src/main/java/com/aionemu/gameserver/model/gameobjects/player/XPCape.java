@@ -22,9 +22,9 @@ public enum XPCape {
 	_76(26600720), _77(28610731), _78(30620742), _79(32630753), _80(34640764), _81(36650775), _82(38660786),
 	_83(40670787);
 
-	private int id;
+	private final int id;
 
-	private XPCape(int id) {
+	XPCape(int id) {
 		this.id = id;
 	}
 

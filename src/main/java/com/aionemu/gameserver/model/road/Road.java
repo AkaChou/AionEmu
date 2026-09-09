@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
+import lombok.Getter;
 
 /**
  * 道路模型。
@@ -19,8 +20,12 @@ import com.aionemu.gameserver.world.knownlist.SphereKnownList;
  */
 public class Road extends VisibleObject {
 
+	/** 获取模板。 / Returns the template. */
+	@Getter
 	private RoadTemplate template = null;
 	private String name = null;
+	/** 返回 plane / Returns the plane */
+	@Getter
 	private Plane3D plane = null;
 	private Point3D center = null;
 	private Point3D p1 = null;
@@ -40,16 +45,6 @@ public class Road extends VisibleObject {
 		this.p2 = new Point3D(template.getP2().getX(), template.getP2().getY(), template.getP2().getZ());
 		this.plane = new Plane3D(center, p1, p2);
 		setKnownlist(new SphereKnownList(this, template.getRadius() * 2));
-	}
-
-	/** 返回 plane / Returns the plane */
-	public Plane3D getPlane() {
-		return plane;
-	}
-
-	/** 获取模板。 / Returns the template. */
-	public RoadTemplate getTemplate() {
-		return template;
 	}
 
 	/** 获取名称。 / Returns the name. */

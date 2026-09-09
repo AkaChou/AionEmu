@@ -35,25 +35,28 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 传送门铸造厂副本实例处理器。
+ * Instance handler for the Linkgate Foundry.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301270000)
 public class LinkgateFoundryInstance extends GeneralInstanceHandler
 {
     private Future<?> linkgateTask;
 	private boolean isStartTimer1 = false;
-	private List<Npc> Drs = new ArrayList<Npc>();
-	private List<Npc> Drs2 = new ArrayList<Npc>();
-	private List<Npc> Drs3 = new ArrayList<Npc>();
-	private List<Npc> TailedBuzzBug = new ArrayList<Npc>();
-	private List<Npc> IrradiatedStog = new ArrayList<Npc>();
-	private List<Npc> VashartiDracuni = new ArrayList<Npc>();
-	private List<Npc> ThecynonBruiser = new ArrayList<Npc>();
-	private List<Npc> IridescentLeowasp = new ArrayList<Npc>();
-	private List<Npc> DementedAshulagen = new ArrayList<Npc>();
-	
+	private final List<Npc> Drs = new ArrayList<Npc>();
+	private final List<Npc> Drs2 = new ArrayList<Npc>();
+	private final List<Npc> Drs3 = new ArrayList<Npc>();
+	private final List<Npc> TailedBuzzBug = new ArrayList<Npc>();
+	private final List<Npc> IrradiatedStog = new ArrayList<Npc>();
+	private final List<Npc> VashartiDracuni = new ArrayList<Npc>();
+	private final List<Npc> ThecynonBruiser = new ArrayList<Npc>();
+	private final List<Npc> IridescentLeowasp = new ArrayList<Npc>();
+	private final List<Npc> DementedAshulagen = new ArrayList<Npc>();
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -90,7 +93,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -106,7 +109,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			//\\//\\//\\//***Dimensional Research Security***\//\\//\\//\\//
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
 			Drs.add((Npc) spawn(233888, 237.69263f, 205.63078f, 311.48178f, (byte) 106));
             Drs.add((Npc) spawn(233888, 200.84613f, 228.59465f, 311.36386f, (byte) 82));
             Drs.add((Npc) spawn(233888, 196.50275f, 205.12178f, 311.4676f, (byte) 23));
@@ -130,14 +133,14 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
             Drs.add((Npc) spawn(233888, 251.5145f, 313.33185f, 392.44107f, (byte) 52));
             Drs.add((Npc) spawn(233888, 286.32993f, 290.0961f, 392.30145f, (byte) 29));
             Drs.add((Npc) spawn(233888, 188.33983f, 302.67587f, 392.42343f, (byte) 111));
-			//\\//\\//\\//***Dimensional Research Security***\//\\//\\//\\//
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
 			Drs2.add((Npc) spawn(233889, 252.57417f, 188.46666f, 311.58368f, (byte) 13));
             Drs2.add((Npc) spawn(233889, 186.80626f, 215.55573f, 311.4676f, (byte) 23));
             Drs2.add((Npc) spawn(233889, 254.27109f, 188.97246f, 352.01318f, (byte) 58));
             Drs2.add((Npc) spawn(233889, 186.01834f, 215.38379f, 351.84723f, (byte) 30));
             Drs2.add((Npc) spawn(233889, 237.50761f, 186.87372f, 392.3759f, (byte) 46));
             Drs2.add((Npc) spawn(233889, 186.02515f, 218.48848f, 392.3669f, (byte) 14));
-			//\\//\\//\\//***Dimensional Research Security***\//\\//\\//\\//
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
 			Drs3.add((Npc) spawn(233890, 288.41348f, 315.20276f, 311.49292f, (byte) 74));
             Drs3.add((Npc) spawn(233890, 251.03166f, 206.34558f, 311.48178f, (byte) 99));
             Drs3.add((Npc) spawn(233890, 210.81549f, 301.42322f, 311.39096f, (byte) 61));
@@ -160,7 +163,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
             Drs3.add((Npc) spawn(233890, 313.33997f, 267.43057f, 392.40585f, (byte) 73));
             Drs3.add((Npc) spawn(233890, 302.81894f, 218.95981f, 392.40195f, (byte) 45));
             Drs3.add((Npc) spawn(233890, 230.5059f, 196.22823f, 392.38034f, (byte) 0));
-			//\\//\\//\\//***Thecynon Bruiser***\//\\//\\//\\//
+			// Thecynon Bruiser 阶段 / Thecynon Bruiser phase
 			ThecynonBruiser.add((Npc) spawn(233891, 198.24977f, 216.42741f, 311.36505f, (byte) 15));
             ThecynonBruiser.add((Npc) spawn(233891, 305.81207f, 252.76137f, 311.4109f, (byte) 18));
             ThecynonBruiser.add((Npc) spawn(233891, 198.1695f, 216.08076f, 351.8517f, (byte) 38));
@@ -168,7 +171,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
             ThecynonBruiser.add((Npc) spawn(233891, 199.60883f, 216.30334f, 392.29834f, (byte) 42));
             ThecynonBruiser.add((Npc) spawn(233891, 289.86395f, 205.12016f, 392.40198f, (byte) 56));
             ThecynonBruiser.add((Npc) spawn(233891, 244.0f, 322.0f, 270.94745f, (byte) 10));
-			//\\//\\//\\//***Irradiated Stog***\//\\//\\//\\//
+			// Irradiated Stog 阶段 / Irradiated Stog phase
 			IrradiatedStog.add((Npc) spawn(233892, 281.15204f, 303.85956f, 311.42645f, (byte) 27));
             IrradiatedStog.add((Npc) spawn(233892, 202.26726f, 292.80936f, 311.39096f, (byte) 61));
             IrradiatedStog.add((Npc) spawn(233892, 288.35504f, 226.83403f, 311.46527f, (byte) 116));
@@ -178,11 +181,11 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
             IrradiatedStog.add((Npc) spawn(233892, 281.62222f, 302.4515f, 392.30148f, (byte) 30));
             IrradiatedStog.add((Npc) spawn(233892, 287.86456f, 226.26303f, 392.33844f, (byte) 119));
             IrradiatedStog.add((Npc) spawn(233892, 200.50499f, 292.2182f, 392.31958f, (byte) 60));
-			//\\//\\//\\//***Iridescent Leowasp***\//\\//\\//\\//
+			// Iridescent Leowasp 阶段 / Iridescent Leowasp phase
 			IridescentLeowasp.add((Npc) spawn(233893, 236.8951f, 314.6218f, 311.5455f, (byte) 40));
             IridescentLeowasp.add((Npc) spawn(233893, 239.98874f, 315.16837f, 351.9074f, (byte) 48));
             IridescentLeowasp.add((Npc) spawn(233893, 238.3112f, 315.24155f, 392.44107f, (byte) 47));
-			//\\//\\//\\//***Demented Ashulagen***\//\\//\\//\\//
+			// Demented Ashulagen 阶段 / Demented Ashulagen phase
 			DementedAshulagen.add((Npc) spawn(233895, 291.9794f, 205.02562f, 311.56903f, (byte) 54));
             DementedAshulagen.add((Npc) spawn(233895, 198.75613f, 311.9456f, 311.49512f, (byte) 118));
             DementedAshulagen.add((Npc) spawn(233895, 298.35406f, 301.52652f, 311.49295f, (byte) 93));
@@ -195,17 +198,17 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
             DementedAshulagen.add((Npc) spawn(233895, 298.99954f, 303.81363f, 392.40564f, (byte) 89));
             DementedAshulagen.add((Npc) spawn(233895, 198.71239f, 312.11276f, 392.42377f, (byte) 119));
             DementedAshulagen.add((Npc) spawn(233895, 243.90527f, 331.27017f, 392.5317f, (byte) 90));
-			//\\//\\//\\//***Tailed Buzz Bug***\//\\//\\//\\//
+			// Tailed Buzz Bug 阶段 / Tailed Buzz Bug phase
 			TailedBuzzBug.add((Npc) spawn(233896, 292.22864f, 302.4627f, 311.42404f, (byte) 100));
             TailedBuzzBug.add((Npc) spawn(233896, 289.6608f, 302.36197f, 351.8988f, (byte) 104));
             TailedBuzzBug.add((Npc) spawn(233896, 290.82986f, 302.63284f, 392.30264f, (byte) 103));
-			//\\//\\//\\//***Vasharti Dracuni***\//\\//\\//\\//
+			// Vasharti Dracuni 阶段 / Vasharti Dracuni phase
 			VashartiDracuni.add((Npc) spawn(233897, 198.85709f, 301.7359f, 311.39212f, (byte) 16));
             VashartiDracuni.add((Npc) spawn(233897, 199.55707f, 300.5287f, 351.85858f, (byte) 16));
             VashartiDracuni.add((Npc) spawn(233897, 197.58377f, 300.5562f, 392.32074f, (byte) 16));
 		}
 	}
-	
+
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -218,12 +221,12 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000196, storage.getItemCountByItemId(185000196)); //Abyss Gap Sealing Key's.
 	}
-	
+
 	private void startLinkgateTimer() {
 		//You have entered the Linkgate Foundry.
 		//Monsters in the lab, except Belsagos, will disappear in 20 minutes.
@@ -243,7 +246,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				//***Dimensional Research Security***//
+				// Dimensional Research Security 阶段 / Dimensional Research Security phase
 				Drs.get(0).getController().onDelete();
 				Drs.get(1).getController().onDelete();
 				Drs.get(2).getController().onDelete();
@@ -267,14 +270,14 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 				Drs.get(20).getController().onDelete();
 				Drs.get(21).getController().onDelete();
 				Drs.get(22).getController().onDelete();
-				//***Dimensional Research Security***//
+				// Dimensional Research Security 阶段 / Dimensional Research Security phase
 				Drs2.get(0).getController().onDelete();
 				Drs2.get(1).getController().onDelete();
 				Drs2.get(2).getController().onDelete();
 				Drs2.get(3).getController().onDelete();
 				Drs2.get(4).getController().onDelete();
 				Drs2.get(5).getController().onDelete();
-				//***Dimensional Research Security***//
+				// Dimensional Research Security 阶段 / Dimensional Research Security phase
 				Drs3.get(0).getController().onDelete();
 				Drs3.get(1).getController().onDelete();
 				Drs3.get(2).getController().onDelete();
@@ -297,7 +300,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 				Drs3.get(19).getController().onDelete();
 				Drs3.get(20).getController().onDelete();
 				Drs3.get(21).getController().onDelete();
-				//***Thecynon Bruiser***//
+				// Thecynon Bruiser 阶段 / Thecynon Bruiser phase
 				ThecynonBruiser.get(0).getController().onDelete();
 				ThecynonBruiser.get(1).getController().onDelete();
 				ThecynonBruiser.get(2).getController().onDelete();
@@ -305,7 +308,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 				ThecynonBruiser.get(4).getController().onDelete();
 				ThecynonBruiser.get(5).getController().onDelete();
 				ThecynonBruiser.get(6).getController().onDelete();
-				//***Irradiated Stog***//
+				// Irradiated Stog 阶段 / Irradiated Stog phase
 				IrradiatedStog.get(0).getController().onDelete();
 				IrradiatedStog.get(1).getController().onDelete();
 				IrradiatedStog.get(2).getController().onDelete();
@@ -315,11 +318,11 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 				IrradiatedStog.get(6).getController().onDelete();
 				IrradiatedStog.get(7).getController().onDelete();
 				IrradiatedStog.get(8).getController().onDelete();
-				//***Iridescent Leowasp***//
+				// Iridescent Leowasp 阶段 / Iridescent Leowasp phase
 				IridescentLeowasp.get(0).getController().onDelete();
 				IridescentLeowasp.get(1).getController().onDelete();
 				IridescentLeowasp.get(2).getController().onDelete();
-				//***Demented Ashulagen***//
+				// Demented Ashulagen 阶段 / Demented Ashulagen phase
 				DementedAshulagen.get(0).getController().onDelete();
 				DementedAshulagen.get(1).getController().onDelete();
 				DementedAshulagen.get(2).getController().onDelete();
@@ -332,34 +335,28 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 				DementedAshulagen.get(9).getController().onDelete();
 				DementedAshulagen.get(10).getController().onDelete();
 				DementedAshulagen.get(11).getController().onDelete();
-				//***Tailed Buzz Bug***//
+				// Tailed Buzz Bug 阶段 / Tailed Buzz Bug phase
 				TailedBuzzBug.get(0).getController().onDelete();
 				TailedBuzzBug.get(1).getController().onDelete();
 				TailedBuzzBug.get(2).getController().onDelete();
-				//***Vasharti Dracuni***//
+				// Vasharti Dracuni 阶段 / Vasharti Dracuni phase
 				VashartiDracuni.get(0).getController().onDelete();
 				VashartiDracuni.get(1).getController().onDelete();
 				VashartiDracuni.get(2).getController().onDelete();
 			}
 		}, 1200000); //20 Minutes.
     }
-	
+
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -368,7 +365,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);

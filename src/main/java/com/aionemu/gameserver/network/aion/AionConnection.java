@@ -50,7 +50,7 @@ public class AionConnection extends AConnection {
 	 * AionConnection 可能的连接状态。
 	 * Possible states of an AionConnection.
 	 */
-	public static enum State {
+	public enum State {
 		/**
 		 * 客户端刚连接。
 		 * Client just connected.
@@ -65,7 +65,7 @@ public class AionConnection extends AConnection {
 		 * 客户端已进入游戏世界。
 		 * Client entered the world.
 		 */
-		IN_GAME;
+		IN_GAME
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class AionConnection extends AConnection {
 	 * 当前在线玩家（已进入游戏）。
 	 * Active player that the owner of this connection is playing.
 	 */
-	private AtomicReference<Player> activePlayer = new AtomicReference<Player>();
+	private final AtomicReference<Player> activePlayer = new AtomicReference<Player>();
 	private String lastPlayerName = "";
 
 	private AionPacketHandler aionPacketHandler;

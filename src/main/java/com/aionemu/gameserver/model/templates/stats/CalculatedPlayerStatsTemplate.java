@@ -2,18 +2,16 @@ package com.aionemu.gameserver.model.templates.stats;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.utils.stats.ClassStats;
+import lombok.AllArgsConstructor;
 
 /**
  * Calculated 玩家属性模板（静态数据/XML）。
  * XML template.
  */
 
+@AllArgsConstructor
 public class CalculatedPlayerStatsTemplate extends PlayerStatsTemplate {
-	private PlayerClass playerClass;
-
-	public CalculatedPlayerStatsTemplate(PlayerClass playerClass) {
-		this.playerClass = playerClass;
-	}
+	private final PlayerClass playerClass;
 
 	/** 返回 accuracy / Returns the accuracy */
 	@Override

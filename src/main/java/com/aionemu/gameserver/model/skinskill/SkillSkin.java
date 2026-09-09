@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * 技能外观模型。
@@ -12,22 +13,16 @@ import lombok.Getter;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class SkillSkin implements IExpirable {
 
 	@Getter
-	private SkillSkinTemplate template;
+	private final SkillSkinTemplate template;
 	@Getter
-	private int id;
+	private final int id;
 	private int dispearTime = 0;
 	@Getter
-	private int isActive;
-
-	public SkillSkin(SkillSkinTemplate template, int id, int dispearTime, int isActive) {
-		this.template = template;
-		this.id = id;
-		this.dispearTime = dispearTime;
-		this.isActive = isActive;
-	}
+	private final int isActive;
 
 	/** 返回剩余时间 / Returns the remaining time */
 	public int getRemainingTime() {

@@ -19,10 +19,10 @@ public class Unfaithful_NtuamuAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
-			spawn(214583, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+			spawn(214583, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 			AI2Actions.deleteOwner(this);
 		}
 	}

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.geoEngine.collision.bih;
 
 import com.aionemu.gameserver.geoEngine.math.FastMath;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.Getter;
 
 /**
  * BIH 树中使用的三角形，缓存三顶点与质心，并提供法线与轴向极值查询。
@@ -17,6 +18,7 @@ public final class BIHTriangle {
 	/** 顶点 C / Vertex C */
 	private final Vector3f pointc = new Vector3f();
 	/** 质心。 / Centroid. */
+	@Getter
 	private final Vector3f center = new Vector3f();
 
 	/**
@@ -63,16 +65,6 @@ public final class BIHTriangle {
 	 */
 	public Vector3f get3() {
 		return pointc;
-	}
-
-	/**
-	 * 返回质心。
-	 * Returns the centroid.
-	 *
-	 * @return 质心 / centroid
-	 */
-	public Vector3f getCenter() {
-		return center;
 	}
 
 	/**

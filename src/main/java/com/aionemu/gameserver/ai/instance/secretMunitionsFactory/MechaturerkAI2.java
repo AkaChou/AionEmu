@@ -17,18 +17,18 @@ import com.aionemu.gameserver.world.WorldPosition;
 @AIName("Mechaturerk")
 public class MechaturerkAI2 extends AggressiveNpcAI2
 {
-	private boolean canThink = true;
-	
+	private final boolean canThink = true;
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
 	/**
 	 * 死亡后随机散布 Mechaturerk 核心，并生成掉落宝箱、通往外界的通道与任务 NPC。
@@ -43,7 +43,7 @@ public class MechaturerkAI2 extends AggressiveNpcAI2
 		spawn(834167, 149.93068f, 255.50876f, 191.8727f, (byte) 6); //Jay.
 		super.handleDied();
 	}
-	
+
 	private void spawnMechaturerkCore(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
@@ -52,7 +52,7 @@ public class MechaturerkAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);

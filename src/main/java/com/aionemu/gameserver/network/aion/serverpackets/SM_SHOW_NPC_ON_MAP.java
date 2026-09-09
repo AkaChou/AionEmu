@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端在地图上高亮显示指定 NPC 位置。
@@ -9,28 +10,14 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Lyahim
  */
+@AllArgsConstructor
 public class SM_SHOW_NPC_ON_MAP extends AionServerPacket {
 
-	private int npcid, worldid;
-	private float x, y, z;
-
-	/**
-	 * 使用给定参数构造 SM_SHOW_NPC_ON_MAP 包。
-	 * Creates a SM_SHOW_NPC_ON_MAP packet with the given parameters.
-	 *
-	 * NPC 模板 ID / npc template id
-	 * world map id
-	 * @param x X 坐标 / x coordinate
-	 * @param y Y 坐标 / y coordinate
-	 * @param z Z 坐标 / z coordinate
-	 */
-	public SM_SHOW_NPC_ON_MAP(int npcid, int worldid, float x, float y, float z) {
-		this.npcid = npcid;
-		this.worldid = worldid;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+	private final int npcid;
+	private final int worldid;
+	private final float x;
+	private final float y;
+	private final float z;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

@@ -26,7 +26,7 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
 
     private int channelId;
     private byte[] content;
-    private BroadcastService broadcastService;
+    private final BroadcastService broadcastService;
 
     /**
      * 构造频道消息客户端包。

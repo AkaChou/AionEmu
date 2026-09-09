@@ -11,6 +11,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEARN_RECIPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RECIPE_DELETE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 配方列表。
@@ -18,20 +20,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *
  * @author MrPoke
  */
+@NoArgsConstructor
 public class RecipeList {
 
+	/** 获取配方列表。 / Returns the recipe list. */
+	@Getter
 	private Set<Integer> recipeList = new HashSet<Integer>();
 
 	public RecipeList(HashSet<Integer> recipeList) {
 		this.recipeList = recipeList;
-	}
-
-	public RecipeList() {
-	}
-
-	/** 获取配方列表。 / Returns the recipe list. */
-	public Set<Integer> getRecipeList() {
-		return recipeList;
 	}
 
 	/** 添加配方。 / Adds recipe. */

@@ -38,8 +38,8 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 		/** hamate isle storeroom treasure box suscess / hamate isle storeroom treasure box suscess */
-		private List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
-	
+		private final List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -79,7 +79,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -111,7 +111,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnHamateIsleStoreroomRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("HAMATE_ISLE_STOREROOM", mapId,
         new Point3D(501.77, 409.53, 94.12),
@@ -119,7 +119,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
         new Point3D(506.26, 409.7, 94.15), 10), instanceId);
         f1.spawn();
     }
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -155,7 +155,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -169,7 +169,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
         HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700473, 628.6996f, 451.98642f, 102.63267f, (byte) 48));
         HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700474, 503.7779f, 630.8419f, 104.54881f, (byte) 90));
 	}
-	
+
 	private void startHamateIsleStoreroomTimer() {
 		hamateIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -186,7 +186,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		}, 900000); //15 Minutes.
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -201,7 +201,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -212,7 +212,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -223,7 +223,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
     private void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000036, storage.getItemCountByItemId(185000036)); //Golden Ruins Of Roah Key.

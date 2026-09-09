@@ -36,7 +36,7 @@ public class SummonTrapEffect extends SummonEffect {
 		if (effect.getEffector().getTarget() == null) {
 			effect.getEffector().setTarget(effect.getEffector());
 		}
-		double radian = Math.toRadians(MathUtil.convertHeadingToDegree((byte) effect.getEffector().getHeading()));
+		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effect.getEffector().getHeading()));
 		float x = effect.getX();
 		float y = effect.getY();
 		float z = effect.getZ();
@@ -64,7 +64,7 @@ public class SummonTrapEffect extends SummonEffect {
 			public void run() {
 				trap.getController().onDelete();
 			}
-		}, time * 1000);
+		}, time * 1000L);
 		trap.getController().addTask(TaskId.DESPAWN, task);
 	}
 

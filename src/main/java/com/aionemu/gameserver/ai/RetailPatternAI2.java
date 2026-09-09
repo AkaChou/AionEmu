@@ -1399,6 +1399,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		getOwner().getMoveController().resetMove();
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
 		// 兜底：若迟迟未到达目标点（卡死/寻路失败），超时后重选
+		// Fallback: if the destination is not reached in time (stuck or pathfinding failure), reselect after the timeout.
 		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source),
 			FLEE_RESELECT_TIMEOUT_MS);
 		actionTasks.add(fleeMoveTask);

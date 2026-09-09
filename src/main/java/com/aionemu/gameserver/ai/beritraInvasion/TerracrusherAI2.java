@@ -35,7 +35,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 		updateTerracrusherLanding();
 		super.handleDied();
 	}
-	
+
 	private void addGpPlayer() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -56,21 +56,20 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceKilledEreshkigal() {
-		Npc npc = (Npc) getOwner();
+		Npc npc = getOwner();
 		final DescriptionId NameId = new DescriptionId(npc.getObjectTemplate().getNameId());
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player players) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					// %0 摧毁了 %0，登陆点已增强。 / %0 has destroyed %0 and the Landing is now enhanced.
 					GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
 				}
 			}
 		});
 	}
-	
+
 	private void updateTerracrusherLanding() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

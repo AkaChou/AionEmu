@@ -64,8 +64,7 @@ public class WeaponCondition extends Condition {
 	 * @return 是否有效 / whether valid
 	 */
 	private boolean isValidWeapon(Creature creature) {
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			return weaponType.contains(player.getEquipment().getMainHandWeaponType());
 		}
 		// 对 NPC 不校验武器，尽管模板中存在。 / for npcs we don't validate weapon, though in templates they are present

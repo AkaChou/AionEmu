@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * 称号模板（静态数据/XML）。
@@ -32,31 +33,22 @@ public class TitleTemplate implements StatOwner {
 	@XmlElement(name = "modifiers", required = false)
 	protected ModifiersTemplate modifiers;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
 
+	/** 返回标题 ID / Returns the title id */
+	@Getter
 	private int titleId;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute(name = "nameId")
 	private int nameId;
 
 	@XmlAttribute(name = "desc")
 	private String description;
-
-	/** 返回标题 ID / Returns the title id */
-	public int getTitleId() {
-		return titleId;
-	}
-
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameId() {
-		return nameId;
-	}
 
 	/** 返回 desc / Returns the desc */
 	public String getDesc() {

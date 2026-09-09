@@ -26,30 +26,46 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 import java.util.LinkedHashMap;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 漩涡位置模型。
  * Vortex Location model.
  */
 
+@NoArgsConstructor
 public class VortexLocation implements ZoneHandler {
+	/** 是否激活。 / Whether Active. */
+	@Getter
 	protected boolean isActive;
+	/** 返回 active vortex / Returns the active vortex */
+	@Getter
 	protected DimensionalVortex<VortexLocation> activeVortex;
+	/** 设置 vortex controller / Sets the vortex controller */
+	@Getter
+	@Setter
 	protected RVController vortexController;
 	protected VortexTemplate template;
+	/** 返回 ID / Returns the id */
+	@Getter
 	protected int id;
 	protected Race offenceRace;
 	protected Race defendsRace;
+	/** 返回 zones / Returns the zones */
+	@Getter
 	protected List<InvasionZoneInstance> zones;
+	/** 返回玩家集合 / Returns the players */
+	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	protected Map<Integer, Kisk> kisks = new LinkedHashMap<Integer, Kisk>();
+	/** 返回已生成的对象列表 / Returns the spawned objects */
+	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	protected HomePoint home;
 	protected ResurrectionPoint resurrection;
 	protected StartPoint start;
-
-	public VortexLocation() {
-	}
 
 	public VortexLocation(VortexTemplate template) {
 		this.template = template;
@@ -62,30 +78,10 @@ public class VortexLocation implements ZoneHandler {
 		this.start = template.getStartPoint();
 	}
 
-	/** 是否激活。 / Whether Active. */
-	public boolean isActive() {
-		return isActive;
-	}
-
 	/** 设置 active vortex / Sets the active vortex */
 	public void setActiveVortex(DimensionalVortex<VortexLocation> vortex) {
 		isActive = vortex != null;
 		this.activeVortex = vortex;
-	}
-
-	/** 返回 active vortex / Returns the active vortex */
-	public DimensionalVortex<VortexLocation> getActiveVortex() {
-		return activeVortex;
-	}
-
-	/** 设置 vortex controller / Sets the vortex controller */
-	public void setVortexController(RVController controller) {
-		this.vortexController = controller;
-	}
-
-	/** 返回 vortex controller / Returns the vortex controller */
-	public RVController getVortexController() {
-		return vortexController;
 	}
 
 	/** 获取模板。 / Returns the template. */
@@ -108,11 +104,6 @@ public class VortexLocation implements ZoneHandler {
 		return start.getStartPoint();
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回 defenders race / Returns the defenders race */
 	public Race getDefendersRace() {
 		return defendsRace;
@@ -131,16 +122,6 @@ public class VortexLocation implements ZoneHandler {
 	/** 返回 invasion world id / Returns the invasion world id */
 	public int getInvasionWorldId() {
 		return start.getWorldId();
-	}
-
-	/** 返回已生成的对象列表 / Returns the spawned objects */
-	public List<VisibleObject> getSpawned() {
-		return spawned;
-	}
-
-	/** 返回玩家集合 / Returns the players */
-	public Map<Integer, Player> getPlayers() {
-		return players;
 	}
 
 	/** 返回 invaders kisks / Returns the invaders kisks */
@@ -195,11 +176,6 @@ public class VortexLocation implements ZoneHandler {
 		return false;
 	}
 
-	/** 返回 zones / Returns the zones */
-	public List<InvasionZoneInstance> getZones() {
-		return zones;
-	}
-
 	/** 进入区域：登记入侵方奇斯克与玩家，激活时加入战斗。 / On zone enter: registers invader kisks and players, joining the vortex when active. */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
@@ -207,8 +183,7 @@ public class VortexLocation implements ZoneHandler {
 			if (creature.getRace().equals(getInvadersRace())) {
 				kisks.put(creature.getObjectId(), (Kisk) creature);
 			}
-		} else if (creature instanceof Player) {
-			Player player = (Player) creature;
+		} else if (creature instanceof Player player) {
 			if (!players.containsKey(player.getObjectId())) {
 				players.put(player.getObjectId(), player);
 				if (isActive()) {
@@ -232,8 +207,7 @@ public class VortexLocation implements ZoneHandler {
 			if (creature instanceof Kisk) {
 				kisks.remove(creature.getObjectId());
 			}
-			if (creature instanceof Player) {
-				final Player player = (Player) creature;
+			if (creature instanceof Player player) {
 				players.remove(player.getObjectId());
 				if (isActive()) {
 					if (player.getRace().equals(getInvadersRace())) {

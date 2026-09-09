@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai.instance.rentusBase;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 
@@ -51,7 +50,4 @@ public class SpilledOilAI2 extends AggressiveNpcAI2
 		}, 3000, 8000);
 	}
 	
-	private void delete() {
-		AI2Actions.deleteOwner(this);
-	}
 }

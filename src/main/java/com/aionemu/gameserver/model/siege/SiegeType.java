@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.siege;
 
+import lombok.Getter;
+
 /**
  * 要塞类型枚举。
  * Siege Type enumeration.
@@ -21,14 +23,11 @@ public enum SiegeType {
 	/** 塔。 / Tower. */
 	TOWER(6);
 
-	private int typeId;
-
-	private SiegeType(int id) {
-		this.typeId = id;
-	}
-
 	/** 返回类型 ID / Returns the type id */
-	public int getTypeId() {
-		return this.typeId;
+	@Getter
+	private final int typeId;
+
+	SiegeType(int id) {
+		this.typeId = id;
 	}
 }

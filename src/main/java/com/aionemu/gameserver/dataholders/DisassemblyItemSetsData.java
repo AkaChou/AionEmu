@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * 拆解物品套装数据容器，按物品 ID 索引拆解分组列表。
@@ -22,11 +23,18 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DisassemblyItemSetsData
 {
+	/**
+	 * 返回原始拆解套装列表。
+	 * Returns the raw disassembly item-set list.
+	 *
+	 * @return 原始分解物品套装列表 / Returns the raw disassembly item-set list.
+	 */
+	@Getter
 	@XmlElement(name = "disassemblyitemset")
 	private List<DisassemblyItemSet> DisassemblyItemSet;
 
 	@XmlTransient
-	private IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<List<DisassembleItemGroups>>();
+	private final IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<List<DisassembleItemGroups>>();
 
 	/**
 	 * JAXB 反序列化完成后，按拆解物品 ID 索引分组列表。
@@ -38,17 +46,6 @@ public class DisassemblyItemSetsData
 		for (DisassemblyItemSet template : DisassemblyItemSet) {
 			disassemblyItemGroups.put(template.getDisassemblyItemId(), template.getDisassembleSetList().getItemGroups());
 		}
-	}
-
-	/**
-	 * 返回原始拆解套装列表。
-	 * Returns the raw disassembly item-set list.
-	 *
-	 * @return 原始分解物品套装列表 / Returns the raw disassembly item-set list.
-	 */
-	public List<DisassemblyItemSet> getDisassemblyItemSet()
-	{
-		return DisassemblyItemSet;
 	}
 
 	/**

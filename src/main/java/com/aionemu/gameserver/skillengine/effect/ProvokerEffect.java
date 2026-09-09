@@ -17,6 +17,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.skillengine.model.ProvokeTarget;
 import com.aionemu.gameserver.utils.PositionUtil;
+import lombok.Getter;
 
 /**
  * 挑衅/反制触发效果：在攻击或受击时按目标类型触发指定技能。
@@ -26,6 +27,7 @@ import com.aionemu.gameserver.utils.PositionUtil;
 @XmlType(name = "ProvokerEffect")
 public class ProvokerEffect extends ShieldEffect {
 
+	@Getter
 	@XmlAttribute(name = "provoke_target")
 	protected ProvokeTarget provokeTarget;
 	@XmlAttribute(name = "skill_id")
@@ -134,10 +136,6 @@ public class ProvokerEffect extends ShieldEffect {
 
 	public int getTriggeredSkillId() {
 		return skillId;
-	}
-
-	public ProvokeTarget getProvokeTarget() {
-		return provokeTarget;
 	}
 
 	public Race getTriggerRace() {

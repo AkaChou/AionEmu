@@ -25,7 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class ItemPacketService {
 
-	public static enum ItemUpdateType {
+	public enum ItemUpdateType {
 		EQUIP_UNEQUIP(-1, false), // 仅内部使用 / internal usage only
 		CHARGE(-2, false), // 仅内部使用 / internal usage only
 		TUNING(76, true), STATS_CHANGE(0, true), // 灵魂治愈师付费、魔石镶嵌、防具/武器/箭矢 / soul healer pay, manastone socketing, armor/weapons/arrows
@@ -44,7 +44,7 @@ public class ItemPacketService {
 		private final int mask;
 		private final boolean sendable;
 
-		private ItemUpdateType(int mask, boolean sendable) {
+		ItemUpdateType(int mask, boolean sendable) {
 			this.mask = mask;
 			this.sendable = sendable;
 		}
@@ -92,7 +92,7 @@ public class ItemPacketService {
 		}
 	}
 
-	public static enum ItemAddType {
+	public enum ItemAddType {
 		PARTIAL_WITH_SLOT(0x07), // 槽位部分内容 / partial content of slot
 		ALL_SLOT(0x13), // 槽位全部内容 / all content of slot
 		BUY(0x1C), ITEM_COLLECT(0x19), // 物品拾取 / Item collect
@@ -101,7 +101,7 @@ public class ItemPacketService {
 
 		private final int mask;
 
-		private ItemAddType(int mask) {
+		ItemAddType(int mask) {
 			this.mask = mask;
 		}
 
@@ -115,13 +115,13 @@ public class ItemPacketService {
 		}
 	}
 
-	public static enum ItemDeleteType {
+	public enum ItemDeleteType {
 		QUEST_REWARD(0), SPLIT(0x04), MOVE(0x14), DISCARD(0x15), USE(0x17), SELL(0x1F), QUEST_COMPLETE(0x31),
 		QUEST_START(0x34), DECOMPOSE(0x66), REGISTER(0x78), COALESCENCE(0xB1);
 
 		private final int mask;
 
-		private ItemDeleteType(int mask) {
+		ItemDeleteType(int mask) {
 			this.mask = mask;
 		}
 

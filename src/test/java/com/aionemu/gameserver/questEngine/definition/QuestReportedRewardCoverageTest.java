@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 覆盖生产目录中所有 Aion 5.8 客户端可实时报告的任务奖励完成合同。
@@ -103,10 +101,10 @@ class QuestReportedRewardCoverageTest {
 				"quest=" + compiled.id() + " action=" + dialogId);
 			assertEquals(1, transition.actions().stream()
 				.filter(QuestAction.CompleteQuest.class::isInstance).count());
-			assertTrue(transition.afterCommit().getFirst() instanceof AfterCommitAction.RefreshPlayerStats);
+			assertInstanceOf(AfterCommitAction.RefreshPlayerStats.class, transition.afterCommit().getFirst());
 			assertEquals(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
 				transition.afterCommit().get(1));
-			assertTrue(transition.afterCommit().getLast() instanceof AfterCommitAction.CloseDialog);
+			assertInstanceOf(AfterCommitAction.CloseDialog.class, transition.afterCommit().getLast());
 			assertFalse(transition.afterCommit().stream().anyMatch(action ->
 				action instanceof AfterCommitAction.ShowQuestDialog
 					|| action instanceof AfterCommitAction.ShowQuestSelectionDialog

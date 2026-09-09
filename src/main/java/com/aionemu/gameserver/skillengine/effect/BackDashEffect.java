@@ -29,7 +29,7 @@ public class BackDashEffect extends DamageEffect {
 	@XmlAttribute(name = "distance")
 	private float distance;
 
-	private float direction = 1;
+	private final float direction = 1;
 
 	/**
 	 * 应用伤害并更新施法者坐标。

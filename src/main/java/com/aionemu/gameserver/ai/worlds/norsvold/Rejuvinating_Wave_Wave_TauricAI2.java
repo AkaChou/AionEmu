@@ -15,7 +15,7 @@ public class Rejuvinating_Wave_Wave_TauricAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(241863, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Youngling Wave Tauric.
+		spawn(241863, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Youngling Wave Tauric.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

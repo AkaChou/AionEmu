@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.world.geo.path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.List;
 
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SpatialPathfinderTest {
 
@@ -42,7 +40,7 @@ class SpatialPathfinderTest {
 		List<float[]> expanded = SpatialPathfinder.findProgressive(0, 0, 0, 80, 0, 0, 4, 15000,
 				(x, y, z) -> true, aroundWideWall);
 
-		assertEquals(null, initial);
+		assertNull(initial);
 		assertNotNull(expanded);
 		assertEquals(80, expanded.getLast()[0]);
 	}

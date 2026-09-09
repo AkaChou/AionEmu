@@ -18,7 +18,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
  * Applies conqueror rank penalty and buff attributes.
  */
 public class ConquerorBuffs implements StatOwner {
-	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
 	private RankRestriction rankRestriction;
 
 	/**

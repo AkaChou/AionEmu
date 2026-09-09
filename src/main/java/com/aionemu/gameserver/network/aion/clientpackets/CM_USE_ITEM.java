@@ -134,8 +134,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 		}
 		for (AbstractItemAction itemAction : itemActions.getItemActions()) {
 			// 放入冷却列表前检查物品是否可用。 / check if the item can be used before placing it on the cooldown list.
-			if (targetHouseObject != null && itemAction instanceof HouseDyeAction) {
-				HouseDyeAction action = (HouseDyeAction) itemAction;
+			if (targetHouseObject != null && itemAction instanceof HouseDyeAction action) {
 				if (action != null && action.canAct(player, item, targetHouseObject)) {
 					actions.add(itemAction);
 				}
@@ -162,24 +161,20 @@ public class CM_USE_ITEM extends AionClientPacket {
 		// 通知物品使用观察者 / notify item use observer
 		player.getObserveController().notifyItemuseObservers(item);
 		for (AbstractItemAction itemAction : actions) {
-			if (targetHouseObject != null && itemAction instanceof HouseDyeAction) {
-				HouseDyeAction action = (HouseDyeAction) itemAction;
+			if (targetHouseObject != null && itemAction instanceof HouseDyeAction action) {
 				action.act(player, item, targetHouseObject);
 			} else if (type == 5) {
-				if (itemAction instanceof InstanceTimeClear) {
-					InstanceTimeClear action = (InstanceTimeClear) itemAction;
+				if (itemAction instanceof InstanceTimeClear action) {
 					int SelectedSyncId = syncId;
 					action.act(player, item, SelectedSyncId);
 				}
 			} else if (type == 6) {
-				if (itemAction instanceof MultiReturnAction) {
-					MultiReturnAction action = (MultiReturnAction) itemAction;
+				if (itemAction instanceof MultiReturnAction action) {
 					int SelectedMapIndex = returnId;
 					action.act(player, item, SelectedMapIndex);
 				}
 			} else if (type == 7) {
-				if (itemAction instanceof DyeAction) {
-					DyeAction action = (DyeAction) itemAction;
+				if (itemAction instanceof DyeAction action) {
 					action.act(player, item, targetItem, customDyeColor);
 				}
 			} else {

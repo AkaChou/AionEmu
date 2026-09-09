@@ -21,5 +21,5 @@ public enum FactionCategory {
 	/** 组合技能 / Combine skill */
 	COMBINESKILL,
 	/** 术古 / Shugo */
-	SHUGO;
+	SHUGO
 }

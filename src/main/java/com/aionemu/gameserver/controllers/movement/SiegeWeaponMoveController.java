@@ -23,7 +23,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	/** Tracked point Z / Tracked point Z */
 	private float pointZ;
 	/** 停止偏移 / Stop offset */
-	private float offset = 0.1f;
+	private final float offset = 0.1f;
 	/** 移动检测偏移阈值 / Move check offset threshold */
 	public static final float MOVE_CHECK_OFFSET = 0.1f;
 

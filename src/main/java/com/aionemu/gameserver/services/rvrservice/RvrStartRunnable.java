@@ -5,6 +5,7 @@ import java.util.Map;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
+import lombok.AllArgsConstructor;
 
 /**
  * 种族对抗（RVR）活动启动定时任务。
@@ -15,19 +16,10 @@ import com.aionemu.gameserver.model.rvr.RvrLocation;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class RvrStartRunnable implements Runnable {
 
 	private final int id;
-
-	/**
-	 * 绑定目标地点 ID。
-	 * Binds the target location id.
-	 *
-	 * @param id 地点 ID / location id
-	 */
-	public RvrStartRunnable(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * 执行分阶段启动流程。

@@ -93,14 +93,14 @@ class ItemServiceSkillEnhanceTest {
 	}
 
 	private static ItemSkillEnhanceData unmarshal(String xml) throws Exception {
-		return ItemSkillEnhanceData.class.cast(JAXBContext.newInstance(ItemSkillEnhanceData.class)
-				.createUnmarshaller().unmarshal(new StringReader(xml)));
+		return (ItemSkillEnhanceData) JAXBContext.newInstance(ItemSkillEnhanceData.class)
+			.createUnmarshaller().unmarshal(new StringReader(xml));
 	}
 
 	private static ItemSkillEnhanceData unmarshal(Path path) throws Exception {
 		try (Reader reader = Files.newBufferedReader(path)) {
-			return ItemSkillEnhanceData.class.cast(JAXBContext.newInstance(ItemSkillEnhanceData.class)
-					.createUnmarshaller().unmarshal(reader));
+			return (ItemSkillEnhanceData) JAXBContext.newInstance(ItemSkillEnhanceData.class)
+				.createUnmarshaller().unmarshal(reader);
 		}
 	}
 

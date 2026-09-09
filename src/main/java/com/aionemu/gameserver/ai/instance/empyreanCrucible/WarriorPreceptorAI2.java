@@ -28,28 +28,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("warrior_preceptor")
 public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isHome = new AtomicBoolean(true);
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private Future<?> task;
-	
+
 	@Override
 	public void handleDespawned() {
 		cancelTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelTask();
 		super.handleDied();
 	}
-	
+
 	@Override
 	public void handleBackHome() {
 		cancelTask();
 		isHome.set(true);
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -57,7 +57,7 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 			startSkillTask();
 		}
 	}
-	
+
 	private void startSkillTask() {
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -70,13 +70,13 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 			}
 		}, 30000, 30000);
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
 		}
 	}
-	
+
 	private void startSkillEvent() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -88,7 +88,7 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 			}
 		}, 6000);
 	}
-	
+
 	private Player getTargetPlayer() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {

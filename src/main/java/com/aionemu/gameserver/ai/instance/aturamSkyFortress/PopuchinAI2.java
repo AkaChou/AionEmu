@@ -34,9 +34,9 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 {
 	private Future<?> bombTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -45,7 +45,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -69,7 +69,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		bombTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -99,7 +99,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 			}
 		}, 20000, 40000);
 	}
-	
+
 	private void spawnShulackBomb(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -122,12 +122,12 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 			}, 1000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -137,13 +137,13 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelBombTaskTask() {
 		if (bombTask != null && !bombTask.isDone()) {
 			bombTask.cancel(true);
 		}
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {
@@ -151,13 +151,13 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelBombTaskTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
@@ -168,7 +168,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().getDoors().get(126).setOpen(true);
 		super.handleBackHome();
 	}
-	
+
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
@@ -176,7 +176,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 			deleteNpcs(instance.getNpcs(217375)); //Shulack Thermo Bomb.
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelBombTaskTask();

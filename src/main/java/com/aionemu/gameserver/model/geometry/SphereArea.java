@@ -161,10 +161,7 @@ public class SphereArea implements Area {
 	/** 矩形相交 / intersects Rectangle. */
 	@Override
 	public boolean intersectsRectangle(RectangleArea area) {
-		if (area.getDistance3D(x, y, z) <= r) {
-			return true;
-		}
-		return false;
+		return area.getDistance3D(x, y, z) <= r;
 	}
 
 	/** 返回世界 ID / Returns the world id */

@@ -56,8 +56,7 @@ public class FixNpc extends AdminCommand
             PacketSendUtility.sendMessage(admin, "You dont have enough rights to use this command!");
             return;
         } if (params.length == 0 && admin.getTarget() != null) {
-			if (admin.getTarget() instanceof Npc) {
-				final Npc target = (Npc) admin.getTarget();
+			if (admin.getTarget() instanceof Npc target) {
 				final SpawnTemplate temp = target.getSpawn();
                 final float adminZ = admin.getZ();
                 List<SpawnGroup2> spawnId = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(admin.getWorldId());
@@ -89,7 +88,7 @@ public class FixNpc extends AdminCommand
                 			}
                         }
                     }, time);
-                    PacketSendUtility.sendMessage(admin, comment.toString() + " [Spawned] ");
+                    PacketSendUtility.sendMessage(admin, comment + " [Spawned] ");
                 }
 			} else {
                 PacketSendUtility.sendMessage(admin, "Only instances of Npc are allowed as target!");
@@ -129,8 +128,7 @@ public class FixNpc extends AdminCommand
                             public void visit(Npc n) {
                                 if (MathUtil.getDistance((int) n.getX(), (int) n.getY(), (int) admin2.getX(), (int) admin2.getY()) < 3) {
                                     npc = n;
-                                    return;
-                                }
+								}
                             }
                         });
                     }
@@ -173,7 +171,7 @@ public class FixNpc extends AdminCommand
                         		PacketSendUtility.sendMessage(admin, "Could not save spawn");
                         	}
                             ++spawned;
-                            PacketSendUtility.sendMessage(admin2, spawned + ". " + comment.toString() + " spawned");
+                            PacketSendUtility.sendMessage(admin2, spawned + ". " + comment + " spawned");
                             npc = null;
                         } else {
                             if (template != null) {

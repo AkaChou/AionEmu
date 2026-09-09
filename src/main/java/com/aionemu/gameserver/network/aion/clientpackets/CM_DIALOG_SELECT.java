@@ -106,8 +106,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			return;
 		}
 		VisibleObject obj = player.getKnownList().getObject(targetObjectId);
-		if (obj != null && obj instanceof Creature) {
-			Creature creature = (Creature) obj;
+		if (obj != null && obj instanceof Creature creature) {
 			if (isSimpleNpcDialogSelection(targetObjectId, dialogId, lastPage, questId) && obj instanceof Npc) {
 				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
 			} else {

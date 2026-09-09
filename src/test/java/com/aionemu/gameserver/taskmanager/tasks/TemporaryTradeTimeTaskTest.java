@@ -1,16 +1,13 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TemporaryTradeTimeTaskTest {
 
@@ -38,7 +35,7 @@ class TemporaryTradeTimeTaskTest {
 		assertFalse(task.hasItem(item));
 		assertFalse(task.canTrade(item, 10));
 		assertEquals(0, item.getTemporaryExchangeTime());
-		assertEquals(null, task.getItem(2));
+		assertNull(task.getItem(2));
 	}
 
 	private static Item newItem(int objectId, int secondsFromNow) {

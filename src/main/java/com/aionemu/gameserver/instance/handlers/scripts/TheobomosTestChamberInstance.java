@@ -119,25 +119,10 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
 			case 220426: //Desecrated Ifrit.
 			    spawn(806206, 298.48328f, 120.17713f, 196.02815f, (byte) 68); //Theobomos Test Chamber Exit.
 				spawn(806221, 284.93094f, 119.47065f, 196.01285f, (byte) 1); //Blood-Sealed Coffer.
-			    // 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Theobomos Test Chamber>");
 			break;
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

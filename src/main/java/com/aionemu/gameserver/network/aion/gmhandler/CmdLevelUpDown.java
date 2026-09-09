@@ -18,10 +18,10 @@ public class CmdLevelUpDown extends AbstractGMHandler {
 	 */
 	public enum LevelUpDownState {
 
-		UP, DOWN;
-	};
+		UP, DOWN
+	}
 
-	private LevelUpDownState state;
+	private final LevelUpDownState state;
 
 	/**
 	 * 创建处理器并立即调整等级。

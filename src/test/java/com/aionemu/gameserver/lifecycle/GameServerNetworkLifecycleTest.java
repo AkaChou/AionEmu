@@ -165,61 +165,47 @@ class GameServerNetworkLifecycleTest {
         }
     }
 
-    private static final class RecordingNetworkPeer implements GameServerNetworkLifecycle.NetworkPeer {
+	private record RecordingNetworkPeer(String name,
+										List<String> events) implements GameServerNetworkLifecycle.NetworkPeer {
 
-        private final String name;
-        private final List<String> events;
-        private RecordingNetworkPeer(String name, List<String> events) {
-            this.name = name;
-            this.events = events;
-        }
+		@Override
+		public void prepareForConnect() {
+			events.add(name + ":prepareForConnect");
+		}
 
-        @Override
-        public void prepareForConnect() {
-            events.add(name + ":prepareForConnect");
-        }
+		@Override
+		public void connect() {
+			events.add(name + ":connect");
+		}
 
-        @Override
-        public void connect() {
-            events.add(name + ":connect");
-        }
+		@Override
+		public void connectAsync() {
+			events.add(name + ":connectAsync");
+		}
 
-        @Override
-        public void connectAsync() {
-            events.add(name + ":connectAsync");
-        }
+		@Override
+		public void disconnect() {
+			events.add(name + ":disconnect");
+		}
+	}
 
-        @Override
-        public void disconnect() {
-            events.add(name + ":disconnect");
-        }
-    }
-
-    private static final class RecordingTransport implements ServerTransport {
-
-        private final String name;
-        private final List<String> events;
-
-        private RecordingTransport(String name, List<String> events) {
-            this.name = name;
-            this.events = events;
-        }
+    private record RecordingTransport(String name, List<String> events) implements ServerTransport {
 
         @Override
-        public void connect() {
-            events.add("transport:connect:" + name);
-        }
+            public void connect() {
+                events.add("transport:connect:" + name);
+            }
 
-        @Override
-        public void shutdown() {
-            events.add("transport:shutdown:" + name);
-        }
+            @Override
+            public void shutdown() {
+                events.add("transport:shutdown:" + name);
+            }
 
-        @Override
-        public int getActiveConnections() {
-            return 0;
+            @Override
+            public int getActiveConnections() {
+                return 0;
+            }
         }
-    }
 
     private static final class IncrementingClock {
 

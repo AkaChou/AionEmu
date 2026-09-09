@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -20,6 +17,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProtectorConquerorServiceTest {
 
@@ -68,10 +67,10 @@ class ProtectorConquerorServiceTest {
 	void liveRankMapsUseConcurrentMapsForScheduledDecayAndKillUpdates() throws Exception {
 		ProtectorConquerorService service = new ProtectorConquerorService();
 
-		assertTrue(field(service, "protectors") instanceof ConcurrentMap);
-		assertTrue(field(service, "conquerors") instanceof ConcurrentMap);
-		assertTrue(field(service, "worldProtectors") instanceof ConcurrentMap);
-		assertTrue(field(service, "worldConqueror") instanceof ConcurrentMap);
+		assertInstanceOf(ConcurrentMap.class, field(service, "protectors"));
+		assertInstanceOf(ConcurrentMap.class, field(service, "conquerors"));
+		assertInstanceOf(ConcurrentMap.class, field(service, "worldProtectors"));
+		assertInstanceOf(ConcurrentMap.class, field(service, "worldConqueror"));
 	}
 
 	private Player player(int objectId) throws ReflectiveOperationException {

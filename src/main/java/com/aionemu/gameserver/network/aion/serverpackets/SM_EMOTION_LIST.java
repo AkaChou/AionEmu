@@ -6,26 +6,16 @@ import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.model.gameobjects.player.emotion.Emotion;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 已解锁表情列表包：下发玩家拥有的表情及剩余时间（会员可全量下发）。
  * Unlocked emotion list: owned emotions and remaining time (members may receive the full set).
  */
+@AllArgsConstructor
 public class SM_EMOTION_LIST extends AionServerPacket {
 	byte action;
 	Collection<Emotion> emotions;
-
-	/**
-	 * 构造已解锁表情列表包。
-	 * Creates an unlocked-emotion list packet.
-	 *
-	 * @param action 列表动作类型 / list action type
-	 * @param emotions 已解锁表情集合 / collection of unlocked emotions
-	 */
-	public SM_EMOTION_LIST(byte action, Collection<Emotion> emotions) {
-		this.action = action;
-		this.emotions = emotions;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

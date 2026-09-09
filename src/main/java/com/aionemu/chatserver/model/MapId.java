@@ -195,7 +195,7 @@ public enum MapId {
      * Map id.
      */
     @Getter
-    private int mapId;
+    private final int mapId;
 
     /**
      * 构造地图 ID 枚举。
@@ -203,7 +203,7 @@ public enum MapId {
      *
      * @param mapId 地图 ID / map id
      */
-    private MapId(int mapId) {
+	MapId(int mapId) {
         this.mapId = mapId;
     }
 

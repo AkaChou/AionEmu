@@ -20,9 +20,9 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 		SEARCHED_ITEMS(0), REGISTERED_ITEMS(1), REGISTER_ITEM(3), SHOW_SETTLED_ICON(5), SETTLED_ITEMS(5),
 		REMOVE_SETTLED_ICON(6), AVE_LOW_HIGH_ITEM(7);
 
-		private int id;
+		private final int id;
 
-		private BrokerPacketType(int id) {
+		BrokerPacketType(int id) {
 			this.id = id;
 		}
 
@@ -31,7 +31,7 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 		}
 	}
 
-	private BrokerPacketType type;
+	private final BrokerPacketType type;
 	private BrokerItem[] brokerItems;
 	private int itemsCount;
 	private int startPage;
@@ -237,7 +237,7 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 			}
 			writeQ(settledItem.getItemCount());
 			writeQ(settledItem.getItemCount());
-			writeD((int) ((settledItem.getSettleTime().getTime() / 60000) & 0xffffffffl));
+			writeD((int) ((settledItem.getSettleTime().getTime() / 60000) & 0xffffffffL));
 			Item item = settledItem.getItem();
 			if (item != null) {
 				ItemInfoBlob.newBlobEntry(ItemBlobType.MANA_SOCKETS, null, item).writeThisBlob(getBuf());

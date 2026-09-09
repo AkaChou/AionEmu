@@ -54,7 +54,7 @@ public class Sys extends AdminCommand {
 
 		if (params[0].equals("info")) {
 			// 时间 / Time
-			PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime().toString());
+			PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime());
 
 			// OS 信息 / OS Infos
 			for (String line : AEInfos.getOSInfo())

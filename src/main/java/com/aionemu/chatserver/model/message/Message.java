@@ -3,11 +3,13 @@ package com.aionemu.chatserver.model.message;
 
 import com.aionemu.boot.i18n.I18n;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.model.channel.Channel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 
 /**
  * 聊天消息模型，包含频道、文本字节与发送者。
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ATracer
  */
 @Slf4j
+@AllArgsConstructor
 public class Message {
 
     /**
@@ -23,7 +26,7 @@ public class Message {
      * Channel this message belongs to.
      */
     @Getter
-    private Channel channel;
+    private final Channel channel;
     /**
      * 消息文本字节（UTF-16LE）。
      * Message text bytes (UTF-16LE).
@@ -35,21 +38,7 @@ public class Message {
      * Message sender.
      */
     @Getter
-    private ChatClient sender;
-
-    /**
-     * 创建聊天消息。
-     * Creates a chat message.
-     *
-     * @param channel 消息所属频道 / message channel
-     * @param text 文本字节 / text bytes
-     * @param sender 消息发送者 / message sender
-     */
-    public Message(Channel channel, byte[] text, ChatClient sender) {
-        this.channel = channel;
-        this.text = text;
-        this.sender = sender;
-    }
+    private final ChatClient sender;
 
     /**
      * 以 UTF-16LE 编码设置消息文本。
@@ -58,12 +47,8 @@ public class Message {
      * @param str 文本内容 / text content
      */
     public void setText(String str) {
-        try {
-            this.text = str.getBytes("utf-16le");
-        } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.bf0194979c60", e));
-        }
-    }
+		this.text = str.getBytes(StandardCharsets.UTF_16LE);
+	}
 
     /**
      * 返回文本字节长度。
@@ -83,7 +68,7 @@ public class Message {
      */
     public String getSenderString() {
         try {
-            String s = new String(sender.getIdentifier(), "UTF-16le");
+            String s = new String(sender.getIdentifier(), StandardCharsets.UTF_16LE);
             int pos = s.indexOf('@');
             s = s.substring(0, pos);
             return s;
@@ -100,7 +85,7 @@ public class Message {
      */
     public String getTextString() {
         try {
-            String s = new String(text, "UTF-16le");
+            String s = new String(text, StandardCharsets.UTF_16LE);
             return s;
         } catch (Exception e) {
             return "";

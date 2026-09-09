@@ -97,7 +97,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Yousummon%0Spirit.Cooldowntimebegins 当其为 unsummoned ,并 takeslonger 当 spirit 为 killed 按 enemy。 / You summon %0 Spirit. Cooldown time begins when it is unsummoned, and takes longer when the spirit is killed by an enemy
+	 * 你召唤了 %0 精灵。精灵被解除召唤时开始计算冷却；被敌人击杀时冷却时间更长。 / You summon %0 Spirit. Cooldown time begins when it is unsummoned, and takes longer when the spirit is killed by an enemy
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUMMON_COOLDOWN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1200012, value0);
@@ -119,7 +119,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_BLIND_BEGIN = new SM_SYSTEM_MESSAGE(1200216);
 
 	/**
-	 * 你：can see again。 / You can see again
+	 * 你恢复视力了。 / You can see again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_BLIND_END = new SM_SYSTEM_MESSAGE(1200217);
 
@@ -248,7 +248,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_ROOT_END = new SM_SYSTEM_MESSAGE(1200241);
 
 	/**
-	 * 你：fell asleep。 / You fell asleep
+	 * 你睡着了。 / You fell asleep
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SLEEP_BEGIN = new SM_SYSTEM_MESSAGE(1200242);
 
@@ -258,7 +258,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SLEEP_END = new SM_SYSTEM_MESSAGE(1200243);
 
 	/**
-	 * 你：have been stunned。 / You have been stunned
+	 * 你被眩晕了。 / You have been stunned
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_STUN_BEGIN = new SM_SYSTEM_MESSAGE(1200244);
 
@@ -294,7 +294,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SNARE_BEGIN = new SM_SYSTEM_MESSAGE(1200250);
 
 	/**
-	 * 你：have normal movement speed。 / You have normal movement speed
+	 * 你的移动速度已恢复正常。 / You have normal movement speed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SNARE_END = new SM_SYSTEM_MESSAGE(1200251);
 
@@ -304,7 +304,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SLOW_BEGIN = new SM_SYSTEM_MESSAGE(1200252);
 
 	/**
-	 * 你：have normal attack speed。 / You have normal attack speed
+	 * 你的攻击速度已恢复正常。 / You have normal attack speed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SLOW_END = new SM_SYSTEM_MESSAGE(1200253);
 
@@ -319,7 +319,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_SPIN_END = new SM_SYSTEM_MESSAGE(1200255);
 
 	/**
-	 * 你：fell down from shock。 / You fell down from shock
+	 * 你因冲击而倒地。 / You fell down from shock
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_STUMBLE_BEGIN = new SM_SYSTEM_MESSAGE(1200256);
 
@@ -359,21 +359,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_EFFECT_PULLED_END = new SM_SYSTEM_MESSAGE(1200263);
 
 	/**
-	 * @param skillname 你：became blinded after using [%SkillName]。 / You became blinded after using [%SkillName]
+	 * 你使用 [%SkillName] 后陷入失明。 / You became blinded after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Blind_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200277, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became confused after using [%SkillName]。 / You became confused after using [%SkillName]
+	 * 你使用 [%SkillName] 后陷入混乱。 / You became confused after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Confuse_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200278, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became diseased after using [%SkillName]。 / You became diseased after using [%SkillName]
+	 * 你使用 [%SkillName] 后染上疾病。 / You became diseased after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Disease_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200279, skillname);
@@ -387,28 +387,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：became paralyzed after using [%SkillName]。 / You became paralyzed after using [%SkillName]
+	 * 你使用 [%SkillName] 后陷入麻痹。 / You became paralyzed after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Paralyze_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200281, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became immobilized after using [%SkillName]。 / You became immobilized after using [%SkillName]
+	 * 你使用 [%SkillName] 后被束缚无法移动。 / You became immobilized after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Root_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200282, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became silenced after using [%SkillName]。 / You became silenced after using [%SkillName]
+	 * 你使用 [%SkillName] 后被沉默。 / You became silenced after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Silence_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200283, skillname);
 	}
 
 	/**
-	 * @param skillname 你：fell asleep after using [%SkillName]。 / You fell asleep after using [%SkillName]
+	 * 你使用 [%SkillName] 后睡着了。 / You fell asleep after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Sleep_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200284, skillname);
@@ -422,28 +422,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：were knocked back from a shock after using [%SkillName]。 / You were knocked back from a shock after using [%SkillName]
+	 * 你使用 [%SkillName] 后受到冲击而被击退。 / You were knocked back from a shock after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stagger_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200286, skillname);
 	}
 
 	/**
-	 * @param skillname 你：fell down from shock after using [%SkillName]。 / You fell down from shock after using [%SkillName]
+	 * 你使用 [%SkillName] 后受到冲击而倒地。 / You fell down from shock after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stumble_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200287, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became stunned after using [%SkillName]。 / You became stunned after using [%SkillName]
+	 * 你使用 [%SkillName] 后被眩晕。 / You became stunned after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stun_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200288, skillname);
 	}
 
 	/**
-	 * 你：can see again。 / You can see again
+	 * 你恢复视力了。 / You can see again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Blind_END_ME_TO_SELF = new SM_SYSTEM_MESSAGE(1200289);
 
@@ -504,7 +504,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 因使用 [%SkillName]，你的掉落率已提高。。
-	  * 你的掉落率 has increased because you used [%SkillName]。 / Your loot rate has increased because you used [%SkillName]
+	  * 你因使用 [%SkillName] 而提升了掉落率。 / Your loot rate has increased because you used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_BoostDropRate_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200301, skillname);
@@ -512,42 +512,42 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 因使用 [%SkillName]，你的视野已缩小。。
-	  * 你的视野 has reduced because you used [%SkillName]。 / Your visual range has reduced because you used [%SkillName]
+	  * 你因使用 [%SkillName] 而缩小了视野范围。 / Your visual range has reduced because you used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OutofSight_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200302, skillname);
 	}
 
 	/**
-	 * @param skillname 你：exchanged your enmity with the spirit's by using [%SkillName]。 / You exchanged your enmity with the spirit's by using [%SkillName]
+	 * 你使用 [%SkillName] 后与精灵交换了仇恨值。 / You exchanged your enmity with the spirit's by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SwitchHostile_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200303, skillname);
 	}
 
 	/**
-	 * @param skillname 你：used [%SkillName]。 / You used [%SkillName]
+	 * 你使用了 [%SkillName]。 / You used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ReturnHome_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200304, skillname);
 	}
 
 	/**
-	 * @param skillname 你：began using [%SkillName]。 / You began using [%SkillName]
+	 * 你开始使用 [%SkillName]。 / You began using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Aura_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200305, skillname);
 	}
 
 	/**
-	 * @param skillname 你：stopped using [%SkillName]。 / You stopped using [%SkillName]
+	 * 你停止使用 [%SkillName]。 / You stopped using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Aura_END_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200306, skillname);
 	}
 
 	/**
-	 * @param skillname 你：used [%SkillName] and became bound。 / You used [%SkillName] and became bound
+	 * 你使用 [%SkillName] 后被绑定。 / You used [%SkillName] and became bound
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bind_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200307, skillname);
@@ -582,14 +582,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：became petrified after using [%SkillName]。 / You became petrified after using [%SkillName]
+	 * 你使用 [%SkillName] 后被石化。 / You became petrified after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Petrification_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200312, skillname);
 	}
 
 	/**
-	 * @param skillname 你：became poisoned after using [%SkillName]。 / You became poisoned after using [%SkillName]
+	 * 你使用 [%SkillName] 后中毒。 / You became poisoned after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Poison_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200313, skillname);
@@ -597,7 +597,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 使用 [%SkillName] 后，你的攻击速度已降低。。
-	  * 你的攻击速度 has decreased after you used [%SkillName]。 / Your attack speed has decreased after you used [%SkillName]
+	  * 你使用 [%SkillName] 后攻击速度降低了。 / Your attack speed has decreased after you used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Slow_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200314, skillname);
@@ -605,7 +605,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 使用 [%SkillName] 后，你的移动速度已降低。。
-	  * 你的移动速度 has decreased after you used [%SkillName]。 / Your movement speed has decreased after you used [%SkillName]
+	  * 你使用 [%SkillName] 后移动速度降低了。 / Your movement speed has decreased after you used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Snare_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200315, skillname);
@@ -657,42 +657,42 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Snare_END_ME_TO_SELF = new SM_SYSTEM_MESSAGE(1200324);
 
 	/**
-	 * @param skillname 你：boosted your block by using [%SkillName]。 / You boosted your block by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的盾防。 / You boosted your block by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysBlock_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200325, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your evasion by using [%SkillName]。 / You boosted your evasion by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的回避。 / You boosted your evasion by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysDodge_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200326, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your accuracy by using [%SkillName]。 / You boosted your accuracy by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的命中。 / You boosted your accuracy by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysHit_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200327, skillname);
 	}
 
 	/**
-	 * @param skillname 你：removed your elemental defense by using [%SkillName]。 / You removed your elemental defense by using [%SkillName]
+	 * 你使用 [%SkillName] 后降低了自己的属性防御。 / You removed your elemental defense by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysNoResist_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200328, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your parry by using [%SkillName]。 / You boosted your parry by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的武器防御。 / You boosted your parry by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysParry_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200329, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your elemental defense by using [%SkillName]。 / You boosted your elemental defense by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的属性防御。 / You boosted your elemental defense by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysResist_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200330, skillname);
@@ -706,28 +706,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：changed your casting speed by using [%SkillName]。 / You changed your casting speed by using [%SkillName]
+	 * 你使用 [%SkillName] 后改变了自己的施法速度。 / You changed your casting speed by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_BoostSkillCastingTime_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200332, skillname);
 	}
 
 	/**
-	 * @param skillname 你：changed your MP consumption by using [%SkillName]。 / You changed your MP consumption by using [%SkillName]
+	 * 你使用 [%SkillName] 后改变了自己的 MP 消耗。 / You changed your MP consumption by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_BoostSkillCost_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200333, skillname);
 	}
 
 	/**
-	 * @param skillname 你：reduced your MP consumption for mantra skills by using [%SkillName]。 / You reduced your MP consumption for mantra skills by using [%SkillName]
+	 * 你使用 [%SkillName] 后降低了真言技能的 MP 消耗。 / You reduced your MP consumption for mantra skills by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_BoostSkillToggleCost_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200334, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your spell skill by using [%SkillName]。 / You boosted your spell skill by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的魔法技能。 / You boosted your spell skill by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_BoostSpellAttackEffect_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200335, skillname);
@@ -748,21 +748,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：inflicted %num0 damage and the rune carve effect on yourself by using [%SkillName]。 / You inflicted %num0 damage and the rune carve effect on yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后对自身造成 %num0 点伤害并施加符文雕刻效果。 / You inflicted %num0 damage and the rune carve effect on yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CarveSignet_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200338, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：received the HP recovery effect by using [%SkillName]。 / You received the HP recovery effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后获得了 HP 恢复效果。 / You received the HP recovery effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CaseHeal_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200339, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CaseHeal_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200340, num0, skillname);
@@ -783,14 +783,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：recovered from the transformation by using [%SkillName]。 / You recovered from the transformation by using [%SkillName]
+	 * 你使用 [%SkillName] 后从变身状态中恢复。 / You recovered from the transformation by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200343, skillname);
 	}
 
 	/**
-	 * 你：recovered HP by %num0 by using [%SkillName]。 / You recovered HP by %num0 by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered HP by %num0 by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200344, num0, skillname);
@@ -812,14 +812,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 使用 [%SkillName] 后，你的恢复量已改变。。
-	  * 你的恢复量 changed after using [%SkillName]。 / Your recovery amount changed after using [%SkillName]
+	  * 你使用 [%SkillName] 后恢复量发生了改变。 / Your recovery amount changed after using [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DeboostHealAmount_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200347, skillname);
 	}
 
 	/**
-	 * 你：transformed yourself into a(n) %0 by using [%SkillName]。 / You transformed yourself into a(n) %0 by using [%SkillName]
+	 * 你使用 [%SkillName] 后变身成了 %0。 / You transformed yourself into a(n) %0 by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Deform_ME_TO_SELF(String value0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200348, value0, skillname);
@@ -841,7 +841,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：will inflict damage on yourself in a moment because you used [%SkillName]。 / You will inflict damage on yourself in a moment because you used [%SkillName]
+	 * 你因使用 [%SkillName] 即将对自身造成伤害。 / You will inflict damage on yourself in a moment because you used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DelayedSpellATK_Instant_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200351, skillname);
@@ -856,7 +856,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：dispelled the magic effect by using [%SkillName]。 / You dispelled the magic effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后解除了魔法效果。 / You dispelled the magic effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Dispel_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200353, skillname);
@@ -870,7 +870,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：suffered %num0 damage and dispelled some of the magical buffs by using [%SkillName]。 / You suffered %num0 damage and dispelled some of the magical buffs by using [%SkillName]
+	 * 你使用 [%SkillName] 后受到 %num0 点伤害，并解除了部分魔法增益。 / You suffered %num0 damage and dispelled some of the magical buffs by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DispelBuffCounterATK_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200355, num0, skillname);
@@ -898,21 +898,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：transferred %num0 DP by using [%SkillName]。 / You transferred %num0 DP by using [%SkillName]
+	 * 你使用 [%SkillName] 转移了 %num0 点 DP。 / You transferred %num0 DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPTransfer_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200359, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：expanded the range of mantra by using [%SkillName]。 / You expanded the range of mantra by using [%SkillName]
+	 * 你使用 [%SkillName] 后扩大了真言技能的范围。 / You expanded the range of mantra by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ExtendAuraRange_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200360, skillname);
 	}
 
 	/**
-	 * @param skillname 你：were forced to crash by using [%SkillName]。 / You were forced to crash by using [%SkillName]
+	 * 你使用 [%SkillName] 后被迫坠落。 / You were forced to crash by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Fall_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200361, skillname);
@@ -942,14 +942,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的飞行时间已由 [%SkillName] 恢复。。
-	  * 你的飞行时间 has been restored by [%SkillName]。 / Your flight time has been restored by [%SkillName]
+	  * 你的飞行时间已通过 [%SkillName] 恢复。 / Your flight time has been restored by [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_FPHeal_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200365, skillname);
 	}
 
 	/**
-	 * 你：increased your flight time by %num0 by using [%SkillName]。 / You increased your flight time by %num0 by using [%SkillName]
+	 * 你使用 [%SkillName] 使飞行时间增加了 %num0。 / You increased your flight time by %num0 by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_FPHeal_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200366, num0, skillname);
@@ -970,28 +970,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200369, num0, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200370, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：converted damage to healing by using [%SkillName]。 / You converted damage to healing by using [%SkillName]
+	 * 你使用 [%SkillName] 后将伤害转化为治疗。 / You converted damage to healing by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnAttacked_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200371, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnAttacked_INTERVAL_ME_TO_SELF(int num0,
 			String skillname) {
@@ -999,14 +999,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：converted death to healing by using [%SkillName]。 / You converted death to healing by using [%SkillName]
+	 * 你使用 [%SkillName] 后将死亡转化为治疗。 / You converted death to healing by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnTargetDead_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200373, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnTargetDead_INTERVAL_ME_TO_SELF(int num0,
 			String skillname) {
@@ -1014,7 +1014,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：hid yourself by using [%SkillName]。 / You hid yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后隐藏了自己。 / You hid yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Hide_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200375, skillname);
@@ -1028,7 +1028,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：made a magical counterattack by using [%SkillName]。 / You made a magical counterattack by using [%SkillName]
+	 * 你使用 [%SkillName] 后发动了魔法反击。 / You made a magical counterattack by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MagicCounterATK_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200377, skillname);
@@ -1049,28 +1049,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP after using [%SkillName]。 / You recovered %num0 MP after using [%SkillName]
+	 * 你使用 [%SkillName] 后恢复了 %num0 点 MP。 / You recovered %num0 MP after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPAttack_Instant_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200380, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：recovered MP by using [%SkillName]。 / You recovered MP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 MP。 / You recovered MP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200381, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200382, num0, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 MP after using [%SkillName]。 / You recovered %num0 MP after using [%SkillName]
+	 * 你使用 [%SkillName] 后恢复了 %num0 点 MP。 / You recovered %num0 MP after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200383, num0, skillname);
@@ -1084,28 +1084,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：boosted your skill by using [%SkillName]。 / You boosted your skill by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的技能。 / You boosted your skill by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OneTimeBoostSkillAttack_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200385, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your critical hit skill by using [%SkillName]。 / You boosted your critical hit skill by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的暴击技能。 / You boosted your critical hit skill by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OneTimeBoostSkillCritical_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200386, skillname);
 	}
 
 	/**
-	 * @param skillname 你：boosted your skill by using [%SkillName]。 / You boosted your skill by using [%SkillName]
+	 * 你使用 [%SkillName] 后提升了自己的技能。 / You boosted your skill by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OneTimeTypeBoostSkillLevel_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200387, skillname);
 	}
 
 	/**
-	 * @param skillname 你：made the spirit use its skills by using [%SkillName]。 / You made the spirit use its skills by using [%SkillName]
+	 * 你使用 [%SkillName] 后让精灵使用了技能。 / You made the spirit use its skills by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PetOrderUseUltraSkill_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200388, skillname);
@@ -1140,21 +1140,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PROCHeal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200393, num0, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 MP after using [%SkillName]。 / You recovered %num0 MP after using [%SkillName]
+	 * 你使用 [%SkillName] 后恢复了 %num0 点 MP。 / You recovered %num0 MP after using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PROCMPHeal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200394, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：protected yourself by using [%SkillName]。 / You protected yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后保护了自己。 / You protected yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Protect_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200395, skillname);
@@ -1168,63 +1168,63 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：received the effect by using [%SkillName]。 / You received the effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后获得了该效果。 / You received the effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Provoker_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200397, skillname);
 	}
 
 	/**
-	 * 你：inflicted %num0 damage and the pull effect on yourself by using [%SkillName]。 / You inflicted %num0 damage and the pull effect on yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后对自身造成 %num0 点伤害并施加拖拽效果。 / You inflicted %num0 damage and the pull effect on yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Pulled_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200398, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：teleported yourself by using [%SkillName]。 / You teleported yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后传送了自己。 / You teleported yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_RandomMoveLoc_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200399, skillname);
 	}
 
 	/**
-	 * @param skillname 你：ensured resurrection by using [%SkillName]。 / You ensured resurrection by using [%SkillName]
+	 * 你使用 [%SkillName] 后获得了复活效果。 / You ensured resurrection by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Rebirth_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200400, skillname);
 	}
 
 	/**
-	 * @param skillname 你：gave yourself the reflection effect by using [%SkillName]。 / You gave yourself the reflection effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后为自己附加了反射效果。 / You gave yourself the reflection effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Reflector_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200401, skillname);
 	}
 
 	/**
-	 * 你：reflected %num0 damage by the effect of [%SkillName]。 / You reflected %num0 damage by the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果反射了 %num0 点伤害。 / You reflected %num0 damage by the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Reflector_INTERVAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200402, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：resurrected yourself by using [%SkillName]。 / You resurrected yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后复活了自己。 / You resurrected yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Resurrect_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200403, skillname);
 	}
 
 	/**
-	 * @param skillname 你：resurrected and telerported yourself by using [%SkillName]。 / You resurrected and telerported yourself by using [%SkillName]
+	 * 你使用 [%SkillName] 后复活并传送了自己。 / You resurrected and telerported yourself by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ResurrectPositional_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200404, skillname);
 	}
 
 	/**
-	 * @param skillname 你：received the see-through effect by using [%SkillName]。 / You received the see-through effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后获得了透视效果。 / You received the see-through effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Search_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200405, skillname);
@@ -1238,7 +1238,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：gave yourself a defense shield by using [%SkillName]。 / You gave yourself a defense shield by using [%SkillName]
+	 * 你使用 [%SkillName] 后为自己附加了保护盾。 / You gave yourself a defense shield by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200407, skillname);
@@ -1266,14 +1266,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：absorb %num0 HP by using [%SkillName]。 / You absorb %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 吸收了 %num0 点 HP。 / You absorb %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SkillATKDrain_Instant_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200411, num0, skillname);
 	}
 
 	/**
-	 * @param skillname 你：received continuous damage due to [%SkillName]。 / You received continuous damage due to [%SkillName]
+	 * 你因 [%SkillName] 持续受到伤害。 / You received continuous damage due to [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATK_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200412, skillname);
@@ -1287,14 +1287,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：absorb %num0 HP by using [%SkillName]。 / You absorb %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 吸收了 %num0 点 HP。 / You absorb %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200414, num0, skillname);
 	}
 
 	/**
-	 * 你：absorb %num0 HP by using [%SkillName]。 / You absorb %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 吸收了 %num0 点 HP。 / You absorb %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_Instant_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200415, num0, skillname);
@@ -1310,7 +1310,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 has been weakened by using [%SkillName]。
-	  * 你的%0 has been weakened by using [%SkillName]。 / Your %0 has been weakened by using [%SkillName]
+	  * 你的 %0 因使用 [%SkillName] 而被削弱。 / Your %0 has been weakened by using [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_StatDown_ME_TO_SELF(String value0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200417, value0, skillname);
@@ -1318,7 +1318,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 has been boosted by using [%SkillName]。
-	  * 你的%0 has been boosted by using [%SkillName]。 / Your %0 has been boosted by using [%SkillName]
+	  * 你的 %0 因使用 [%SkillName] 而得到强化。 / Your %0 has been boosted by using [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_StatUp_ME_TO_SELF(String value0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200418, value0, skillname);
@@ -1326,14 +1326,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 resistance effects are weakened after using [%SkillName]。
-	  * 你的%0 resistance effects are weakened after using [%SkillName]。 / Your %0 resistance effects are weakened after using [%SkillName]
+	  * 你使用 [%SkillName] 后 %0 抗性效果被削弱。 / Your %0 resistance effects are weakened after using [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SubTypeBoostResist_ME_TO_SELF(String value0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200419, value0, skillname);
 	}
 
 	/**
-	 * 你：changed the duration of %0 skills by using [%SkillName]。 / You changed the duration of %0 skills by using [%SkillName]
+	 * 你使用 [%SkillName] 改变了 %0 技能的持续时间。 / You changed the duration of %0 skills by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SubTypeExtendDuration_ME_TO_SELF(String value0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200420, value0, skillname);
@@ -1389,7 +1389,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：exchanged your MP with your HP by using [%SkillName]。 / You exchanged your MP with your HP by using [%SkillName]
+	 * 你使用 [%SkillName] 将 MP 与 HP 互换。 / You exchanged your MP with your HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SwitchHPMP_Instant_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200428, skillname);
@@ -1403,84 +1403,84 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：blinded [%SkillTarget] by using [%SkillName]。 / You blinded [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 陷入失明。 / You blinded [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Blind_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200430, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：confused [%SkillTarget] by using [%SkillName]。 / You confused [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 陷入混乱。 / You confused [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Confuse_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200431, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：diseased [%SkillTarget] by using [%SkillName]。 / You diseased [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 染上疾病。 / You diseased [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Disease_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200432, skilltarget, skillname);
 	}
 
 	/**
-	 * @return 你：made [%SkillTarget] afraid by using [%SkillName]。 / You made [%SkillTarget] afraid by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 陷入恐惧。 / You made [%SkillTarget] afraid by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Fear_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200433, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：paralyzed [%SkillTarget] by using [%SkillName]。 / You paralyzed [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 陷入麻痹。 / You paralyzed [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Paralyze_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200434, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：immobilized [%SkillTarget] by using [%SkillName]。 / You immobilized [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 被束缚无法移动。 / You immobilized [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Root_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200435, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：silenced [%SkillTarget] by using [%SkillName]。 / You silenced [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 陷入沉默。 / You silenced [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Silence_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200436, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：put [%SkillTarget] to sleep by using [%SkillName]。 / You put [%SkillTarget] to sleep by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 入睡。 / You put [%SkillTarget] to sleep by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Sleep_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200437, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：span [%SkillTarget] around by using [%SkillName]。 / You span [%SkillTarget] around by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 旋转。 / You span [%SkillTarget] around by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Spin_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200438, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：knocked [%SkillTarget] back by using [%SkillName]。 / You knocked [%SkillTarget] back by using [%SkillName]
+	 * 你使用 [%SkillName] 击退了 [%SkillTarget]。 / You knocked [%SkillTarget] back by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stagger_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200439, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：knocked [%SkillTarget] over by using [%SkillName]。 / You knocked [%SkillTarget] over by using [%SkillName]
+	 * 你使用 [%SkillName] 击倒了 [%SkillTarget]。 / You knocked [%SkillTarget] over by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stumble_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200440, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：stunned [%SkillTarget] by using [%SkillName]。 / You stunned [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 眩晕。 / You stunned [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Stun_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200441, skilltarget, skillname);
@@ -1598,49 +1598,49 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：exchanged [%SkillTarget]'s enmity with the spirit's by using [%SkillName]。 / You exchanged [%SkillTarget]'s enmity with the spirit's by using [%SkillName]
+	 * 你使用 [%SkillName] 将 [%SkillTarget] 的仇恨值与精灵互换。 / You exchanged [%SkillTarget]'s enmity with the spirit's by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SwitchHostile_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200456, skilltarget, skillname);
 	}
 
 	/**
-	 * @param skillname 你：used [%SkillName]。 / You used [%SkillName]
+	 * 你使用了 [%SkillName]。 / You used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ReturnHome_ME_TO_B(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200457, skillname);
 	}
 
 	/**
-	 * @param skillname 你：start using [%SkillName]。 / You start using [%SkillName]
+	 * 你开始使用 [%SkillName]。 / You start using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Aura_ME_TO_B(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200458, skillname);
 	}
 
 	/**
-	 * @param skillname 你：stop using [%SkillName]。 / You stop using [%SkillName]
+	 * 你停止使用 [%SkillName]。 / You stop using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Aura_END_ME_TO_B(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200459, skillname);
 	}
 
 	/**
-	 * 你：used [%SkillName] and [%SkillTarget] became bound。 / You used [%SkillName] and [%SkillTarget] became bound
+	 * 你使用 [%SkillName] 后 [%SkillTarget] 被绑定。 / You used [%SkillName] and [%SkillTarget] became bound
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bind_ME_TO_B(String skillname, String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200460, skillname, skilltarget);
 	}
 
 	/**
-	 * 你：caused [%SkillTarget] to bleed by using [%SkillName]。 / You caused [%SkillTarget] to bleed by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 流血。 / You caused [%SkillTarget] to bleed by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bleed_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200461, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：cursed [%SkillTarget] by using [%SkillName]。 / You cursed [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 诅咒了 [%SkillTarget]。 / You cursed [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Curse_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200462, skilltarget, skillname);
@@ -1655,7 +1655,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return 因 [%SkillCaster] 使用 [%SkillName]，[%SkillTarget] 被空中束缚。 / [%SkillTarget] became snared in mid-air because [%SkillCaster] used [%SkillName].
+	 * 因 [%SkillCaster] 使用 [%SkillName]，[%SkillTarget] 被空中束缚。 / [%SkillTarget] became snared in mid-air because [%SkillCaster] used [%SkillName].
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OpenAerial_ME_TO_B(String skilltarget, String skillcaster,
 			String skillname) {
@@ -1663,14 +1663,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：petrified [%SkillTarget] by using [%SkillName]。 / You petrified [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 石化。 / You petrified [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Petrification_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200465, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：poisoned [%SkillTarget] by using [%SkillName]。 / You poisoned [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 中毒。 / You poisoned [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Poison_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200466, skilltarget, skillname);
@@ -1708,7 +1708,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 从诅咒状态中恢复。 / [%SkillTarget] recovered from the cursed state
+	 * [%SkillTarget] 从诅咒状态中恢复。 / [%SkillTarget] recovered from the cursed state
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Curse_END_ME_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200471, skilltarget);
@@ -1723,7 +1723,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 从空中束缚中解脱。 / [%SkillTarget] is released from the Aerial Snare
+	 * [%SkillTarget] 从空中束缚中解脱。 / [%SkillTarget] is released from the Aerial Snare
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OpenAerial_END_ME_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200473, skilltarget);
@@ -1746,14 +1746,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 的攻击速度恢复正常。 / [%SkillTarget]'s attack speed is restored to normal
+	 * [%SkillTarget] 的攻击速度恢复正常。 / [%SkillTarget]'s attack speed is restored to normal
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Slow_END_ME_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200476, skilltarget);
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 的移动速度恢复正常。 / [%SkillTarget]'s movement speed is restored to normal
+	 * [%SkillTarget] 的移动速度恢复正常。 / [%SkillTarget]'s movement speed is restored to normal
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Snare_END_ME_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200477, skilltarget);
@@ -1860,7 +1860,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：inflicted %num0 damage and the rune carve effect on [%SkillTarget] by using [%SkillName]。 / You inflicted %num0 damage and the rune carve effect on [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 对 [%SkillTarget] 造成 %num0 点伤害并施加符文雕刻效果。 / You inflicted %num0 damage and the rune carve effect on [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CarveSignet_ME_TO_B(int num0, String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200491, num0, skilltarget, skillname);
@@ -1875,7 +1875,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CaseHeal_INTERVAL_ME_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -1891,7 +1891,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：released [%SkillTarget] from the Aerial Snare by using [%SkillName]。 / You released [%SkillTarget] from the Aerial Snare by using [%SkillName]
+	 * 你使用 [%SkillName] 解除了 [%SkillTarget] 的空中束缚。 / You released [%SkillTarget] from the Aerial Snare by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CloseAerial_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200495, skilltarget, skillname);
@@ -1905,7 +1905,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_INTERVAL_ME_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -1927,7 +1927,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：changed [%SkillTarget]'s recovery amount by using [%SkillName]。 / You changed [%SkillTarget]'s recovery amount by using [%SkillName]
+	 * 你使用 [%SkillName] 改变了 [%SkillTarget] 的恢复量。 / You changed [%SkillTarget]'s recovery amount by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DeboostHealAmount_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200500, skilltarget, skillname);
@@ -1972,7 +1972,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：dispelled the magic effect from [%SkillTarget] by using [%SkillName]。 / You dispelled the magic effect from [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 解除了 [%SkillTarget] 的魔法效果。 / You dispelled the magic effect from [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Dispel_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200506, skilltarget, skillname);
@@ -1986,7 +1986,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：inflicted %num0 damage on [%SkillTarget] and dispelled some of its magical buffs by using [%SkillName]。 / You inflicted %num0 damage on [%SkillTarget] and dispelled some of its magical buffs by using [%SkillName]
+	 * 你使用 [%SkillName] 对 [%SkillTarget] 造成 %num0 点伤害，并解除了其部分魔法增益。 / You inflicted %num0 damage on [%SkillTarget] and dispelled some of its magical buffs by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DispelBuffCounterATK_ME_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -2023,7 +2023,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：expanded [%SkillTarget]'s mantra range by using [%SkillName]。 / You expanded [%SkillTarget]'s mantra range by using [%SkillName]
+	 * 你使用 [%SkillName] 扩大了 [%SkillTarget] 的真言技能范围。 / You expanded [%SkillTarget]'s mantra range by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ExtendAuraRange_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200513, skilltarget, skillname);
@@ -2060,7 +2060,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored [%SkillTarget]'s flight time by using [%SkillName]。 / You restored [%SkillTarget]'s flight time by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] 的飞行时间。 / You restored [%SkillTarget]'s flight time by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_FPHeal_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200518, skilltarget, skillname);
@@ -2099,7 +2099,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_Instant_HEAL_ME_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -2139,7 +2139,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return 你：hid [%SkillTarget] by using [%SkillName]。 / You hid [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 隐藏了 [%SkillTarget]。 / You hid [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Hide_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200528, skilltarget, skillname);
@@ -2154,7 +2154,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return 你：granted [%SkillTarget] a magical counterattack by using [%SkillName]。 / You granted [%SkillTarget] a magical counterattack by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 获得魔法反击效果。 / You granted [%SkillTarget] a magical counterattack by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MagicCounterATK_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200530, skilltarget, skillname);
@@ -2177,7 +2177,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：reduced [%SkillTarget]'s MP by %num0 by using [%SkillName]。 / You reduced [%SkillTarget]'s MP by %num0 by using [%SkillName]
+	 * 你使用 [%SkillName] 减少了 [%SkillTarget] %num0 点 MP。 / You reduced [%SkillTarget]'s MP by %num0 by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPAttack_Instant_ME_TO_B(String skilltarget, int num0,
 			String skillname) {
@@ -2280,7 +2280,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PROCHeal_Instant_HEAL_ME_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -2296,7 +2296,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：protected [%SkillTarget] by using [%SkillName]。 / You protected [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 保护了 [%SkillTarget]。 / You protected [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Protect_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200548, skilltarget, skillname);
@@ -2311,7 +2311,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：affected [%SkillTarget] by using [%SkillName]。 / You affected [%SkillTarget] by using [%SkillName]
+	 * 你使用 [%SkillName] 影响了 [%SkillTarget]。 / You affected [%SkillTarget] by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Provoker_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200550, skilltarget, skillname);
@@ -2332,14 +2332,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：placed [%SkillTarget] in the reserved resurrection state as by using [%SkillName]。 / You placed [%SkillTarget] in the reserved resurrection state as by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 进入预设复活状态。 / You placed [%SkillTarget] in the reserved resurrection state as by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Rebirth_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200553, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：gave [%SkillTarget] the reflection effect by using [%SkillName]。 / You gave [%SkillTarget] the reflection effect by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 获得反射效果。 / You gave [%SkillTarget] the reflection effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Reflector_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200554, skilltarget, skillname);
@@ -2438,7 +2438,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：start to absorb [%SkillTarget]'s HP by using [%SkillName]。 / You start to absorb [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 开始吸收 [%SkillTarget] 的 HP。 / You start to absorb [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200567, skilltarget, skillname);
@@ -2485,7 +2485,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：changed [%SkillTarget]'s %0 skill duration by using [%SkillName]。 / You changed [%SkillTarget]'s %0 skill duration by using [%SkillName]
+	 * 你使用 [%SkillName] 改变了 [%SkillTarget] 的 %0 技能持续时间。 / You changed [%SkillTarget]'s %0 skill duration by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SubTypeExtendDuration_ME_TO_B(String skilltarget, String value0,
 			String skillname) {
@@ -2548,14 +2548,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：caused [%SkillTarget] to exchange MP with HP by using [%SkillName]。 / You caused [%SkillTarget] to exchange MP with HP by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 的 MP 与 HP 互换。 / You caused [%SkillTarget] to exchange MP with HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SwitchHPMP_Instant_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200581, skilltarget, skillname);
 	}
 
 	/**
-	 * 你：changed [%SkillTarget]'s %0 by using [%SkillName]。 / You changed [%SkillTarget]'s %0 by using [%SkillName]
+	 * 你使用 [%SkillName] 改变了 [%SkillTarget] 的 %0。 / You changed [%SkillTarget]'s %0 by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_WeaponStatUp_ME_TO_B(String skilltarget, String value0,
 			String skillname) {
@@ -2612,7 +2612,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * [%SkillCaster] 有放入 you 到 sleep 按 using[%SkillName]。 / [%SkillCaster] has put you to sleep by using [%SkillName]
+	 * [%SkillCaster] 使用 [%SkillName] 使你入睡。 / [%SkillCaster] has put you to sleep by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Sleep_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200590, skillcaster, skillname);
@@ -2647,7 +2647,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：can see again。 / You can see again
+	 * 你恢复视力了。 / You can see again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Blind_END_A_TO_ME = new SM_SYSTEM_MESSAGE(1200595);
 
@@ -2751,7 +2751,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，You became bound。 / You became bound because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你被绑定。 / You became bound because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bind_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200613, skillcaster, skillname);
@@ -2875,7 +2875,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，You received the boost accuracy effect。 / You received the boost accuracy effect because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你获得了命中提升效果。 / You received the boost accuracy effect because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_AlwaysHit_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200633, skillcaster, skillname);
@@ -3068,7 +3068,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，Your magic effect was dispelled。 / Your magic effect was dispelled because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你的魔法效果被解除。 / Your magic effect was dispelled because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Dispel_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200659, skillcaster, skillname);
@@ -3082,7 +3082,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，You suffered %num0 damage and lost some of your magical buffs。 / You suffered %num0 damage and lost some of your magical buffs because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你受到 %num0 点伤害并失去部分魔法增益。 / You suffered %num0 damage and lost some of your magical buffs because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DispelBuffCounterATK_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3111,7 +3111,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received %num0 DP because [%SkillCaster] used [%SkillName]。 / You received %num0 DP because [%SkillCaster] used [%SkillName]
+	 * [%SkillCaster] 对你使用 [%SkillName]，你获得了 %num0 点 DP。 / You received %num0 DP because [%SkillCaster] used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPTransfer_A_TO_ME(int num0, String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200665, num0, skillcaster, skillname);
@@ -3186,7 +3186,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_INTERVAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3194,7 +3194,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_Instant_HEAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3209,7 +3209,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnAttacked_INTERVAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3225,7 +3225,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnTargetDead_INTERVAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3272,7 +3272,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的MP has decreased by %num0 because [%SkillCaster] used [%SkillName]。
-	  * 你的MP has decreased by %num0 because [%SkillCaster] used [%SkillName]。 / Your MP has decreased by %num0 because [%SkillCaster] used [%SkillName]
+	  * [%SkillCaster] 对你使用 [%SkillName]，你的 MP 减少了 %num0。 / Your MP has decreased by %num0 because [%SkillCaster] used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPAttack_Instant_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3287,7 +3287,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 MP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 MP。 / You recovered %num0 MP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_INTERVAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3295,7 +3295,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_Instant_HEAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3375,7 +3375,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 HP。 / You recovered %num0 HP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PROCHeal_Instant_HEAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -3420,14 +3420,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，You teleported。 / You teleported because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你被传送了。 / You teleported because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_RandomMoveLoc_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200705, skillcaster, skillname);
 	}
 
 	/**
-	 * 因 [%SkillCaster] 对你使用 [%SkillName]，You entered the reserved resurrection state。 / You entered the reserved resurrection state because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你进入预设复活状态。 / You entered the reserved resurrection state because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Rebirth_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200706, skillcaster, skillname);
@@ -3449,7 +3449,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：resurrected as [%SkillCaster] used [%SkillName]。 / You resurrected as [%SkillCaster] used [%SkillName]
+	 * 因 [%SkillCaster] 使用 [%SkillName]，你复活了。 / You resurrected as [%SkillCaster] used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Resurrect_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200709, skillcaster, skillname);
@@ -3463,7 +3463,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * [%SkillCaster] 有放入 see - througheffect 在 you 按 using[%SkillName]。 / [%SkillCaster] has put a see-through effect on you by using [%SkillName]
+	 * [%SkillCaster] 使用 [%SkillName] 为你附加了透视效果。 / [%SkillCaster] has put a see-through effect on you by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Search_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200711, skillcaster, skillname);
@@ -3478,7 +3478,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * [%SkillCaster] 有放入 defenseshield 在 you 按 using[%SkillName]。 / [%SkillCaster] has put a defense shield on you by using [%SkillName]
+	 * [%SkillCaster] 使用 [%SkillName] 为你附加了保护盾。 / [%SkillCaster] has put a defense shield on you by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200713, skillcaster, skillname);
@@ -3516,7 +3516,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received continuous damage because [%SkillCaster] used [%SkillName]。 / You received continuous damage because [%SkillCaster] used [%SkillName]
+	 * 你因 [%SkillCaster] 使用 [%SkillName] 而持续受到伤害。 / You received continuous damage because [%SkillCaster] used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATK_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200718, skillcaster, skillname);
@@ -3569,7 +3569,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 resistance effect was weakened because [%SkillCaster] used [%SkillName]。
-	  * 你的%0 resistance effect was weakened because [%SkillCaster] used [%SkillName]。 / Your %0 resistance effect was weakened because [%SkillCaster] used [%SkillName]
+	  * 因 [%SkillCaster] 使用 [%SkillName]，你的 %0 抗性效果被削弱。 / Your %0 resistance effect was weakened because [%SkillCaster] used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SubTypeBoostResist_A_TO_ME(String value0, String skillcaster,
 			String skillname) {
@@ -3578,7 +3578,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 skill duration has changed because [%SkillCaster] used [%SkillName]。
-	  * 你的%0 skill duration has changed because [%SkillCaster] used [%SkillName]。 / Your %0 skill duration has changed because [%SkillCaster] used [%SkillName]
+	  * 因 [%SkillCaster] 使用 [%SkillName]，你的 %0 技能持续时间发生了改变。 / Your %0 skill duration has changed because [%SkillCaster] used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SubTypeExtendDuration_A_TO_ME(String value0, String skillcaster,
 			String skillname) {
@@ -3641,7 +3641,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：exchanged HP with MP because [%SkillCaster] used [%SkillName]。 / You exchanged HP with MP because [%SkillCaster] used [%SkillName]
+	 * 因 [%SkillCaster] 使用 [%SkillName]，你的 HP 与 MP 互换了。 / You exchanged HP with MP because [%SkillCaster] used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SwitchHPMP_Instant_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200734, skillcaster, skillname);
@@ -3649,7 +3649,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 has changed because [%SkillCaster] used [%SkillName]。
-	  * 你的%0 has changed because [%SkillCaster] used [%SkillName]。 / Your %0 has changed because [%SkillCaster] used [%SkillName]
+	  * 因 [%SkillCaster] 使用 [%SkillName]，你的 %0 发生了改变。 / Your %0 has changed because [%SkillCaster] used [%SkillName]
 	  */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_WeaponStatUp_A_TO_ME(String value0, String skillcaster,
 			String skillname) {
@@ -3959,7 +3959,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 解除诅咒状态。 / [%SkillTarget] is released from the cursed state
+	 * [%SkillTarget] 解除了诅咒状态。 / [%SkillTarget] is released from the cursed state
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Curse_END_A_TO_SELF(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200777, skilltarget);
@@ -3974,7 +3974,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 从空中束缚中解脱。 / [%SkillTarget] is released from the Aerial Snare
+	 * [%SkillTarget] 从空中束缚中解脱。 / [%SkillTarget] is released from the Aerial Snare
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OpenAerial_END_A_TO_SELF(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200779, skilltarget);
@@ -3997,14 +3997,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 攻击速度已恢复。 / [%SkillTarget] restored its attack speed
+	 * [%SkillTarget] 的攻击速度已恢复。 / [%SkillTarget] restored its attack speed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Slow_END_A_TO_SELF(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200782, skilltarget);
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 移动速度已恢复。 / [%SkillTarget] restored its movement speed
+	 * [%SkillTarget] 的移动速度已恢复。 / [%SkillTarget] restored its movement speed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Snare_END_A_TO_SELF(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200783, skilltarget);
@@ -4391,7 +4391,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return [%SkillCaster] 因使用 [%SkillName] 进入隐身状态。 / [%SkillCaster] is in the hide state as it used [%SkillName]
+	 * [%SkillCaster] 因使用 [%SkillName] 进入隐身状态。 / [%SkillCaster] is in the hide state as it used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Hide_A_TO_SELF(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200834, skillcaster, skillname);
@@ -4406,7 +4406,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return [%SkillCaster] 因使用 [%SkillName] 进入魔法反击状态。 / [%SkillCaster] is in the magical counterattack state as it used [%SkillName]
+	 * [%SkillCaster] 因使用 [%SkillName] 进入魔法反击状态。 / [%SkillCaster] is in the magical counterattack state as it used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MagicCounterATK_A_TO_SELF(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200836, skillcaster, skillname);
@@ -4429,7 +4429,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * [%SkillCaster] ' sMP 曾 reduced 按 %num0 作为其 used[%SkillName]。 / [%SkillCaster]'s MP was reduced by %num0 as it used [%SkillName]
+	 * [%SkillCaster] 因使用 [%SkillName] 而减少了 %num0 点 MP。 / [%SkillCaster]'s MP was reduced by %num0 as it used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPAttack_Instant_A_TO_SELF(String skillcaster, int num0,
 			String skillname) {
@@ -4584,7 +4584,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * [%SkillCaster] 为在 reservedresurrectionstate 作为其 used[%SkillName]。 / [%SkillCaster] is in the reserved resurrection state as it used [%SkillName]
+	 * [%SkillCaster] 因使用 [%SkillName] 进入预设复活状态。 / [%SkillCaster] is in the reserved resurrection state as it used [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Rebirth_A_TO_SELF(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1200859, skillcaster, skillname);
@@ -5090,7 +5090,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return 因 [%SkillCaster] 使用 [%SkillName]，[%SkillTarget] 被空中束缚。 / [%SkillTarget] became snared in mid-air because [%SkillCaster] used [%SkillName].
+	 * 因 [%SkillCaster] 使用 [%SkillName]，[%SkillTarget] 被空中束缚。 / [%SkillTarget] became snared in mid-air because [%SkillCaster] used [%SkillName].
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OpenAerial_A_TO_B(String skilltarget, String skillcaster,
 			String skillname) {
@@ -5146,7 +5146,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 从诅咒状态中恢复。 / [%SkillTarget] recovered from the cursed state
+	 * [%SkillTarget] 从诅咒状态中恢复。 / [%SkillTarget] recovered from the cursed state
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Curse_END_A_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200930, skilltarget);
@@ -5161,7 +5161,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 解除空中陷阱。 / [%SkillTarget] is released from the aerial snare
+	 * [%SkillTarget] 解除了空中束缚。 / [%SkillTarget] is released from the aerial snare
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_OpenAerial_END_A_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200932, skilltarget);
@@ -5184,14 +5184,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 的攻击速度恢复正常。 / [%SkillTarget]'s attack speed is restored to normal
+	 * [%SkillTarget] 的攻击速度恢复正常。 / [%SkillTarget]'s attack speed is restored to normal
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Slow_END_A_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200935, skilltarget);
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 的移动速度恢复正常。 / [%SkillTarget]'s movement speed is restored to normal
+	 * [%SkillTarget] 的移动速度恢复正常。 / [%SkillTarget]'s movement speed is restored to normal
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Snare_END_A_TO_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1200936, skilltarget);
@@ -6061,14 +6061,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received %num0 bleeding damage due to the effect of [%SkillName]。 / You received %num0 bleeding damage due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果受到 %num0 点流血伤害。 / You received %num0 bleeding damage due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bleed_INTERVAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201043, num0, skillname);
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CaseHeal_INTERVAL_HEAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -6076,14 +6076,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_CaseHeal_INTERVAL_HEAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201045, num0, skillname);
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_INTERVAL_HEAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -6091,7 +6091,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_INTERVAL_HEAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201047, num0, skillname);
@@ -6106,7 +6106,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ConvertHeal_INTERVAL_HEAL_MP_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201049, num0, skillname);
@@ -6173,7 +6173,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_INTERVAL_HEAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -6181,14 +6181,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Heal_INTERVAL_HEAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201059, num0, skillname);
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnAttacked_INTERVAL_HEAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -6196,7 +6196,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnAttacked_INTERVAL_HEAL_TO_ME(int num0,
 			String skillname) {
@@ -6204,7 +6204,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnTargetDead_INTERVAL_HEAL_TO_B(int num0,
 			String skilltarget, String skillname) {
@@ -6212,7 +6212,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_HealCastorOnTargetDead_INTERVAL_HEAL_TO_ME(int num0,
 			String skillname) {
@@ -6243,7 +6243,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_MPHeal_INTERVAL_HEAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201067, num0, skillname);
@@ -6258,7 +6258,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received %num0 poisoning damage due to the effect of [%SkillName]。 / You received %num0 poisoning damage due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果受到 %num0 点中毒伤害。 / You received %num0 poisoning damage due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Poison_INTERVAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201069, num0, skillname);
@@ -6273,7 +6273,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：blocked %num0 damage through the effect of [%SkillName]。 / You blocked %num0 damage through the effect of [%SkillName]
+	 * 你通过 [%SkillName] 的效果格挡了 %num0 点伤害。 / You blocked %num0 damage through the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Protect_INTERVAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201071, num0, skillname);
@@ -6287,7 +6287,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param num0 你：reflected %num0 damage。 / You reflected %num0 damage
+	 * 你反射了 %num0 点伤害。 / You reflected %num0 damage
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Reflector_INTERVAL_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1201073, num0);
@@ -6301,14 +6301,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param num0 你：blocked %num0 damage。 / You blocked %num0 damage
+	 * 你格挡了 %num0 点伤害。 / You blocked %num0 damage
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_INTERVAL_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1201075, num0);
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SkillATKDrain_Instant_INTERVAL_HEAL_TO_B(int num0,
 			String skilltarget, String skillname) {
@@ -6316,7 +6316,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SkillATKDrain_Instant_INTERVAL_HEAL_TO_ME(int num0,
 			String skillname) {
@@ -6381,7 +6381,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：absorbed [%SkillCaster]'s [%SkillName]。 / You absorbed [%SkillCaster]'s [%SkillName]
+	 * 你吸收了 [%SkillCaster] 的 [%SkillName]。 / You absorbed [%SkillCaster]'s [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_ABSORBED_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201086, skillcaster, skillname);
@@ -6402,7 +6402,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：resisted [%SkillCaster]'s [%SkillName]。 / You resisted [%SkillCaster]'s [%SkillName]
+	 * 你抵抗了 [%SkillCaster] 的 [%SkillName]。 / You resisted [%SkillCaster]'s [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_RESISTED_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201089, skillcaster, skillname);
@@ -6505,7 +6505,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：evaded [%SkillCaster]'s [%SkillName]。 / You evaded [%SkillCaster]'s [%SkillName]
+	 * 你回避了 [%SkillCaster] 的 [%SkillName]。 / You evaded [%SkillCaster]'s [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_DODGED_A_TO_ME(String skillcaster, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201103, skillcaster, skillname);
@@ -6519,7 +6519,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：can see again。 / You can see again
+	 * 你恢复视力了。 / You can see again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Blind_END_ME = new SM_SYSTEM_MESSAGE(1201105);
 
@@ -6589,7 +6589,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Bleed_END_ME = new SM_SYSTEM_MESSAGE(1201118);
 
 	/**
-	 * 你：recovered from the cursed state。 / You recovered from the cursed state
+	 * 你从诅咒状态中恢复。 / You recovered from the cursed state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Curse_END_ME = new SM_SYSTEM_MESSAGE(1201119);
 
@@ -6772,7 +6772,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：use [%SkillName]。 / You use [%SkillName]
+	 * 你使用了 [%SkillName]。 / You use [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SummonSkillArea_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201147, skillname);
@@ -6822,7 +6822,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_Instant_INTERVAL_HEAL_TO_B(int num0,
 			String skilltarget, String skillname) {
@@ -6830,7 +6830,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_Instant_INTERVAL_HEAL_TO_ME(int num0,
 			String skillname) {
@@ -6846,7 +6846,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_Instant_INTERVAL_HEAL_MP_TO_ME(int num0,
 			String skillname) {
@@ -6869,7 +6869,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s HP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 HP。 / You restored %num0 of [%SkillTarget]'s HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_INTERVAL_HEAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -6877,7 +6877,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 HP by using [%SkillName]。 / You recovered %num0 HP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 HP。 / You recovered %num0 HP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_INTERVAL_HEAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201161, num0, skillname);
@@ -6892,14 +6892,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SpellATKDrain_INTERVAL_HEAL_MP_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201163, num0, skillname);
 	}
 
 	/**
-	 * Youreceived%num0damage 作为 [%SkillName]youused 在 [%SkillTarget] 曾 reflectedback 在 you。 / You received %num0 damage as the [%SkillName] you used on [%SkillTarget] was reflected back at you
+	 * 你对 [%SkillTarget] 使用的 [%SkillName] 被反弹回你身上，你因此受到 %num0 点伤害。 / You received %num0 damage as the [%SkillName] you used on [%SkillTarget] was reflected back at you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Reflector_PROTECT_SKILL_ME_to_B(int num0, String skillname,
 			String skilltarget) {
@@ -6953,7 +6953,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：blocked the [%SkillName] used by [%SkillCaster] with the protective shield effect。 / You blocked the [%SkillName] used by [%SkillCaster] with the protective shield effect
+	 * 你以防护盾效果格挡了 [%SkillCaster] 使用的 [%SkillName]。 / You blocked the [%SkillName] used by [%SkillCaster] with the protective shield effect
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_PROTECT_SKILL_A_to_ME(String skillname, String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1201171, skillname, skillcaster);
@@ -6968,14 +6968,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget 攻击被施加在 [%SkillTarget] 上的防护盾效果格挡。 / The attack was blocked by the protective shield effect cast on [%SkillTarget]
+	 * 攻击被施加在 [%SkillTarget] 上的防护盾效果格挡。 / The attack was blocked by the protective shield effect cast on [%SkillTarget]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_PROTECT_ME_to_B(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1201173, skilltarget);
 	}
 
 	/**
-	 * @param skillcaster 你：blocked [%SkillCaster]'s attack with the protective shield effect。 / You blocked [%SkillCaster]'s attack with the protective shield effect
+	 * 你以防护盾效果格挡了 [%SkillCaster] 的攻击。 / You blocked [%SkillCaster]'s attack with the protective shield effect
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Shield_PROTECT_A_to_ME(String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1201174, skillcaster);
@@ -6989,7 +6989,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youreceived%num0damageinflicted 在 [%SkillTarget] 按 [%SkillCaster] ' s[%SkillName] , because 的 protectioneffectyoucast 在其。 / You received the %num0 damage inflicted on [%SkillTarget] by [%SkillCaster]'s [%SkillName], because of the protection effect you cast on it
+	 * 因你施加在 [%SkillTarget] 上的保护效果，你承受了 [%SkillCaster] 的 [%SkillName] 造成的 %num0 点伤害。 / You received the %num0 damage inflicted on [%SkillTarget] by [%SkillCaster]'s [%SkillName], because of the protection effect you cast on it
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_protect_PROTECT_SKILL_A_to_B(int num0, String skilltarget,
 			String skillcaster, String skillname) {
@@ -6997,7 +6997,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youreceived%num0damageinflicted 在 [%SkillTarget] 按 [%SkillCaster] , because 的 protectioneffectyoucast 在其。 / You received the %num0 damage inflicted on [%SkillTarget] by [%SkillCaster], because of the protection effect you cast on it
+	 * 因你施加在 [%SkillTarget] 上的保护效果，你承受了 [%SkillCaster] 造成的 %num0 点伤害。 / You received the %num0 damage inflicted on [%SkillTarget] by [%SkillCaster], because of the protection effect you cast on it
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_protect_PROTECT_A_to_B(int num0, String skilltarget,
 			String skillcaster) {
@@ -7053,21 +7053,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param num0 你：recovered %num0 MP。 / You recovered %num0 MP
+	 * 你恢复了 %num0 点 MP。 / You recovered %num0 MP
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_MPHeal_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1201196, num0);
 	}
 
 	/**
-	 * @param num0 你：restored your flight time by %num0。 / You restored your flight time by %num0
+	 * 你的飞行时间恢复了 %num0。 / You restored your flight time by %num0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_FPHeal_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1201197, num0);
 	}
 
 	/**
-	 * @param num0 你：recovered %num0 HP。 / You recovered %num0 HP
+	 * 你恢复了 %num0 点 HP。 / You recovered %num0 HP
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_Heal_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1201198, num0);
@@ -7112,7 +7112,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：released [%SkillTarget]'s spirit by using [%SkillName]。 / You released [%SkillTarget]'s spirit by using [%SkillName]
+	 * 你使用 [%SkillName] 释放了 [%SkillTarget] 的精灵。 / You released [%SkillTarget]'s spirit by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_PetOrderUnSummon_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201204, skilltarget, skillname);
@@ -7172,14 +7172,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：gave yourself an XP bonus by using [%SkillName]。 / You gave yourself an XP bonus by using [%SkillName]
+	 * 你使用 [%SkillName] 为自己附加了经验加成。 / You gave yourself an XP bonus by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_XPBoost_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201212, skillname);
 	}
 
 	/**
-	 * 你：gave [%SkillTarget] an XP bonus by using [%SkillName]。 / You gave [%SkillTarget] an XP bonus by using [%SkillName]
+	 * 你使用 [%SkillName] 为 [%SkillTarget] 附加了经验加成。 / You gave [%SkillTarget] an XP bonus by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_XPBoost_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201213, skilltarget, skillname);
@@ -7208,14 +7208,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：made yourself more resistant to crashing and prohibitions on flying by using [%SkillName]。 / You made yourself more resistant to crashing and prohibitions on flying by using [%SkillName]
+	 * 你使用 [%SkillName] 提升了自己对坠落与飞行禁止的抵抗。 / You made yourself more resistant to crashing and prohibitions on flying by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_InvulnerableWing_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201217, skillname);
 	}
 
 	/**
-	 * 你：gave [%SkillTarget] the crash and flying prohibition resistance effects by using [%SkillName]。 / You gave [%SkillTarget] the crash and flying prohibition resistance effects by using [%SkillName]
+	 * 你使用 [%SkillName] 为 [%SkillTarget] 附加了坠落与飞行禁止抗性效果。 / You gave [%SkillTarget] the crash and flying prohibition resistance effects by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_InvulnerableWing_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201218, skilltarget, skillname);
@@ -7244,7 +7244,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 DP by using [%SkillName]。 / You recovered %num0 DP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 DP。 / You recovered %num0 DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201222, num0, skillname);
@@ -7259,7 +7259,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 DP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 DP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 DP。 / You recovered %num0 DP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_Instant_HEAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -7283,14 +7283,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：recovered some DP by using [%SkillName]。 / You recovered some DP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了一些 DP。 / You recovered some DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_HEAL_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201227, skillname);
 	}
 
 	/**
-	 * 你：restored some of [%SkillTarget]'s DP by using [%SkillName]。 / You restored some of [%SkillTarget]'s DP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] 部分 DP。 / You restored some of [%SkillTarget]'s DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_HEAL_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201228, skilltarget, skillname);
@@ -7320,7 +7320,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：restored %num0 of [%SkillTarget]'s DP by using [%SkillName]。 / You restored %num0 of [%SkillTarget]'s DP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 [%SkillTarget] %num0 点 DP。 / You restored %num0 of [%SkillTarget]'s DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_INTERVAL_TO_B(int num0, String skilltarget,
 			String skillname) {
@@ -7328,14 +7328,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DPHeal_INTERVAL_TO_ME(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201233, num0, skillname);
 	}
 
 	/**
-	 * 你：recovered %num0 DP by using [%SkillName]。 / You recovered %num0 DP by using [%SkillName]
+	 * 你使用 [%SkillName] 恢复了 %num0 点 DP。 / You recovered %num0 DP by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ProcDPHeal_Instant_HEAL_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201234, num0, skillname);
@@ -7350,7 +7350,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 DP because [%SkillCaster] used [%SkillName] on you。 / You recovered %num0 DP because [%SkillCaster] used [%SkillName] on you
+	 * [%SkillCaster] 对你使用 [%SkillName]，你恢复了 %num0 点 DP。 / You recovered %num0 DP because [%SkillCaster] used [%SkillName] on you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ProcDPHeal_Instant_HEAL_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -7374,7 +7374,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：caused [%SkillTarget] to forcibly resurrect at the bind point by using [%SkillName]。 / You caused [%SkillTarget] to forcibly resurrect at the bind point by using [%SkillName]
+	 * 你使用 [%SkillName] 使 [%SkillTarget] 在绑定点强制复活。 / You caused [%SkillTarget] to forcibly resurrect at the bind point by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_ResurrectBase_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201239, skilltarget, skillname);
@@ -7397,7 +7397,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：requested [%SkillTarget] to be summoned by using [%SkillName]。 / You requested [%SkillTarget] to be summoned by using [%SkillName]
+	 * 你使用 [%SkillName] 请求召唤 [%SkillTarget]。 / You requested [%SkillTarget] to be summoned by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_Recall_Instant_ME_TO_B(String skilltarget, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201242, skilltarget, skillname);
@@ -7567,7 +7567,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：received a delayed chain effect by using [%SkillName]。 / You received a delayed chain effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后受到延迟连锁效果。 / You received a delayed chain effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DelayedSkill_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201265, skillname);
@@ -7581,7 +7581,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received a delayed chain effect from [%SkillName] used by [%SkillCaster]。 / You received a delayed chain effect from [%SkillName] used by [%SkillCaster]
+	 * 你受到 [%SkillCaster] 使用的 [%SkillName] 造成的延迟连锁效果。 / You received a delayed chain effect from [%SkillName] used by [%SkillCaster]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_DelayedSkill_A_TO_ME(String skillname, String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1201267, skillname, skillcaster);
@@ -7603,7 +7603,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillname 你：received a periodic chain effect by using [%SkillName]。 / You received a periodic chain effect by using [%SkillName]
+	 * 你使用 [%SkillName] 后受到周期性连锁效果。 / You received a periodic chain effect by using [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_InteralSkill_ME_TO_SELF(String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201270, skillname);
@@ -7617,7 +7617,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received a periodic chain effect from [%SkillName] used by [%SkillCaster]。 / You received a periodic chain effect from [%SkillName] used by [%SkillCaster]
+	 * 你受到 [%SkillCaster] 使用的 [%SkillName] 造成的周期性连锁效果。 / You received a periodic chain effect from [%SkillName] used by [%SkillCaster]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_InteralSkill_A_TO_ME(String skillname, String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1201272, skillname, skillcaster);
@@ -7639,7 +7639,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：suffer %num0 damage from [%SkillName]。 / You suffer %num0 damage from [%SkillName]
+	 * 你受到 [%SkillName] 造成的 %num0 点伤害。 / You suffer %num0 damage from [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_NoReduceSpellATK_Instant_ME_TO_SELF(int num0, String skillname) {
 		return new SM_SYSTEM_MESSAGE(1201275, num0, skillname);
@@ -7654,7 +7654,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：receive %num0 damage from [%SkillCaster]'s [%SkillName] effect。 / You receive %num0 damage from [%SkillCaster]'s [%SkillName] effect
+	 * 你受到 [%SkillCaster] 的 [%SkillName] 效果造成的 %num0 点伤害。 / You receive %num0 damage from [%SkillCaster]'s [%SkillName] effect
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_NoReduceSpellATK_Instant_A_TO_ME(int num0, String skillcaster,
 			String skillname) {
@@ -7686,7 +7686,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：recovered %num0 MP due to the effect of [%SkillName]。 / You recovered %num0 MP due to the effect of [%SkillName]
+	 * 你因 [%SkillName] 的效果恢复了 %num0 点 MP。 / You recovered %num0 MP due to the effect of [%SkillName]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SUCC_SkillATKDrain_Instant_INTERVAL_HEAL_MP_TO_ME(int num0,
 			String skillname) {
@@ -7715,28 +7715,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skillcaster 你：resisted [%SkillCaster]'s magic。 / You resisted [%SkillCaster]'s magic
+	 * 你抵抗了 [%SkillCaster] 的魔法。 / You resisted [%SkillCaster]'s magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_RESISTED_MAGIC_MY(String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1210003, skillcaster);
 	}
 
 	/**
-	 * @param skillcaster 你对 [%SkillCaster] 的魔法免疫。 / You are immune to [%SkillCaster]'s magic
+	 * 你对 [%SkillCaster] 的魔法免疫。 / You are immune to [%SkillCaster]'s magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_IMMUNED_MAGIC_MY(String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1210004, skillcaster);
 	}
 
 	/**
-	 * @param skillcaster 你：absorbed [%SkillCaster]'s magic。 / You absorbed [%SkillCaster]'s magic
+	 * 你吸收了 [%SkillCaster] 的魔法。 / You absorbed [%SkillCaster]'s magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_ABSORBED_MY(String skillcaster) {
 		return new SM_SYSTEM_MESSAGE(1210005, skillcaster);
 	}
 
 	/**
-	 * 你：received %num1 damage from %0。 / You received %num1 damage from %0
+	 * 你受到 %0 造成的 %num1 点伤害。 / You received %num1 damage from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_ENEMY_ATTACK(int num1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1210006, num1, value0);
@@ -7771,21 +7771,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 抵抗了你的魔法。 / [%SkillTarget] resisted your magic
+	 * [%SkillTarget] 抵抗了你的魔法。 / [%SkillTarget] resisted your magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_RESISTED_MAGIC_TARGET(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1210227, skilltarget);
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 免疫你的魔法。 / [%SkillTarget] is immune to your magic
+	 * [%SkillTarget] 对你的魔法免疫。 / [%SkillTarget] is immune to your magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_IMMUNED_MAGIC_TARGET(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1210228, skilltarget);
 	}
 
 	/**
-	 * @param skilltarget [%SkillTarget] 吸收了你的魔法。 / [%SkillTarget] absorbed your magic
+	 * [%SkillTarget] 吸收了你的魔法。 / [%SkillTarget] absorbed your magic
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_ABSORBED_TARGET(String skilltarget) {
 		return new SM_SYSTEM_MESSAGE(1210229, skilltarget);
@@ -8078,12 +8078,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CHANGE_WEAPON = new SM_SYSTEM_MESSAGE(1300000);
 
 	/**
-	 * 你：can use it after registering it on the Quickbar。 / You can use it after registering it on the Quickbar
+	 * 将其登记到快捷栏后即可使用。 / You can use it after registering it on the Quickbar
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NEED_TO_REGIST_SHORTCUT = new SM_SYSTEM_MESSAGE(1300001);
 
 	/**
-	 * 你：do not have much flight time left. Please land on a secure place。 / You do not have much flight time left. Please land on a secure place
+	 * 你的飞行时间所剩不多，请降落在安全的地方。 / You do not have much flight time left. Please land on a secure place
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WARNING_FLY = new SM_SYSTEM_MESSAGE(1300002);
 
@@ -8093,7 +8093,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WARNING_FLY_Notice = new SM_SYSTEM_MESSAGE(1300003);
 
 	/**
-	 * Yousuffereddamage 作为 you 有 submergeddeep 在 water.Please 获取 out 的 water。 / You suffered damage as you have submerged deep in the water. Please get out of the water
+	 * 你因深潜水中而受到伤害，请尽快离开水面。 / You suffered damage as you have submerged deep in the water. Please get out of the water
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WARNING_Swim = new SM_SYSTEM_MESSAGE(1300004);
 
@@ -8108,32 +8108,32 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_TARGET = new SM_SYSTEM_MESSAGE(1300006);
 
 	/**
-	 * Invalid 目标 .You 可仅 use 此在 objects。 / Invalid target. You can only use this on objects
+	 * 目标无效。此技能只能对目标对象使用。 / Invalid target. You can only use this on objects
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_OBJECT_ONLY = new SM_SYSTEM_MESSAGE(1300007);
 
 	/**
-	 * Invalid 目标 .You 可仅 use 此在 NPCs。 / Invalid target. You can only use this on NPCs
+	 * 目标无效。此技能只能对 NPC 使用。 / Invalid target. You can only use this on NPCs
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_NPC_ONLY = new SM_SYSTEM_MESSAGE(1300008);
 
 	/**
-	 * Invalid 目标 .You 可仅 use 此仅在 otherplayers。 / Invalid target. You can only use this only on other players
+	 * 目标无效。此技能只能对其他玩家使用。 / Invalid target. You can only use this only on other players
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_PC_ONLY = new SM_SYSTEM_MESSAGE(1300009);
 
 	/**
-	 * Invalid 目标 .You 可仅 use 此在 spirits。 / Invalid target. You can only use this on spirits
+	 * 目标无效。此技能只能对精灵使用。 / Invalid target. You can only use this on spirits
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_PET_ONLY = new SM_SYSTEM_MESSAGE(1300010);
 
 	/**
-	 * Invalid 目标 .You 可仅 use 此在 group 成员。 / Invalid target. You can only use this on group members
+	 * 目标无效。此技能只能对队伍成员使用。 / Invalid target. You can only use this on group members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_PARTY_ONLY = new SM_SYSTEM_MESSAGE(1300011);
 
 	/**
-	 * 你：can only use this on living targets。 / You can only use this on living targets
+	 * 此技能只能对活着的目标使用。 / You can only use this on living targets
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TARGET_IS_NOT_ALIVE = new SM_SYSTEM_MESSAGE(1300012);
 
@@ -8143,39 +8143,39 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TARGET_IS_NOT_VALID = new SM_SYSTEM_MESSAGE(1300013);
 
 	/**
-	 * 你：do not have enough health to use that skill。 / You do not have enough health to use that skill
+	 * 你的体力不足，无法使用该技能。 / You do not have enough health to use that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NOT_ENOUGH_HP = new SM_SYSTEM_MESSAGE(1300014);
 
 	/**
-	 * 你：do not have enough mana to use that skill。 / You do not have enough mana to use that skill
+	 * 你的魔力不足，无法使用该技能。 / You do not have enough mana to use that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NOT_ENOUGH_MP = new SM_SYSTEM_MESSAGE(1300015);
 
 	/**
-	 * 你：do not have enough DP to use that skill。 / You do not have enough DP to use that skill
+	 * 你的 DP 不足，无法使用该技能。 / You do not have enough DP to use that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NOT_ENOUGH_DP = new SM_SYSTEM_MESSAGE(1300016);
 
 	/**
-	 * You 无法 learndesignbecauseyourskilllevel 为 nothigh 足够。 / You cannot learn the design because your skill level is not high enough
+	 * 你的技能等级不足，无法学习该设计图。 / You cannot learn the design because your skill level is not high enough
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NOT_ENOUGH_DP_LEVEL = new SM_SYSTEM_MESSAGE(1300017);
 
 	/**
-	 * @param value0 你：do not have enough %0 necessary to use the skill。 / You do not have enough %0 necessary to use the skill
+	 * 你没有足够的 %0，无法使用该技能。 / You do not have enough %0 necessary to use the skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_NOT_ENOUGH_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300018, value0);
 	}
 
 	/**
-	 * 你：need to equip another weapon to use that skill。 / You need to equip another weapon to use that skill
+	 * 你需要装备另一把武器才能使用该技能。 / You need to equip another weapon to use that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_WEAPON = new SM_SYSTEM_MESSAGE(1300019);
 
 	/**
-	 * @param value0 你：have not learned the %0 skill。 / You have not learned the %0 skill
+	 * 你尚未学习 %0 技能。 / You have not learned the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_NOT_LEARNED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300020, value0);
@@ -8187,7 +8187,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NOT_READY = new SM_SYSTEM_MESSAGE(1300021);
 
 	/**
-	 * 距离过远：the target to use that skill。 / You are too far from the target to use that skill
+	 * 你与目标的距离过远，无法使用该技能。 / You are too far from the target to use that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TOO_FAR = new SM_SYSTEM_MESSAGE(1300022);
 
@@ -8198,7 +8198,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANCELED = new SM_SYSTEM_MESSAGE(1300023);
 
 	/**
-	 * 你：have failed to use the skill because the target disappeared。 / You have failed to use the skill because the target disappeared
+	 * 因目标消失，技能使用失败。 / You have failed to use the skill because the target disappeared
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TARGET_LOST = new SM_SYSTEM_MESSAGE(1300024);
 
@@ -8208,14 +8208,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TOO_MANY_COOLING = new SM_SYSTEM_MESSAGE(1300025);
 
 	/**
-	 * @param value0 你：cannot do that while you are %0。 / You cannot do that while you are %0
+	 * 你在 %0 状态下无法进行该操作。 / You cannot do that while you are %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300026, value0);
 	}
 
 	/**
-	 * 你：can use the skill only during combat。 / You can use the skill only during combat
+	 * 该技能只能在战斗中使用。 / You can use the skill only during combat
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_NOT_IN_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1300027);
 
@@ -8231,12 +8231,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_FAILED = new SM_SYSTEM_MESSAGE(1300029);
 
 	/**
-	 * 你：cannot use that because there is an obstacle in the way。 / You cannot use that because there is an obstacle in the way
+	 * 前方有障碍物，无法使用该技能。 / You cannot use that because there is an obstacle in the way
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_OBSTACLE = new SM_SYSTEM_MESSAGE(1300030);
 
 	/**
-	 * 你：do not have a proper target for that skill。 / You do not have a proper target for that skill
+	 * 该技能没有合适的目标。 / You do not have a proper target for that skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_FIND_VALID_TARGET = new SM_SYSTEM_MESSAGE(1300031);
 
@@ -8247,17 +8247,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ATTACK_TOO_FAR_FROM_TARGET = new SM_SYSTEM_MESSAGE(1300032);
 
 	/**
-	 * You 无法 attack 作为 there 为 obstacle 在 way。 / You cannot attack as there is an obstacle in the way
+	 * 因途中有障碍物，你无法攻击。 / You cannot attack as there is an obstacle in the way
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ATTACK_OBSTACLE_EXIST = new SM_SYSTEM_MESSAGE(1300033);
 
 	/**
-	 * 你：cannot attack。 / You cannot attack
+	 * 你无法攻击。 / You cannot attack
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ATTACK_CANT_FINT_VALID_TARGET = new SM_SYSTEM_MESSAGE(1300034);
 
 	/**
-	 * @param value0 你：acquired the %0 title as a quest reward。 / You acquired the %0 title as a quest reward
+	 * 你通过任务奖励获得了 %0 称号。 / You acquired the %0 title as a quest reward
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_GET_REWARD_TITLE(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300035, new DescriptionId(value0));
@@ -8282,26 +8282,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId %0 放弃追击。 / %0 gives up the pursuit
+	 * %0 放弃了追击。 / %0 gives up the pursuit
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UI_COMBAT_NPC_RETURN(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300039, calculateNameId(nameId));
 	}
 
 	/**
-	 * @param subzone 你：have discovered [%subzone]。 / You have discovered [%subzone]
+	 * 你发现了 [%subzone]。 / You have discovered [%subzone]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UI_DISCOVERY_NEWZONE(String subzone) {
 		return new SM_SYSTEM_MESSAGE(1300040, subzone);
 	}
 
 	/**
-	 * You 无法移除 equipped 物品 becauseinventory 为 full。 / You cannot remove the equipped item because the inventory is full
+	 * 因背包已满，无法卸下已装备的物品。 / You cannot remove the equipped item because the inventory is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UI_INVENTORY_FULL = new SM_SYSTEM_MESSAGE(1300042);
 
 	/**
-	 * 你：left the group。 / You left the group
+	 * 你离开了队伍。 / You left the group
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_SECEDE = new SM_SYSTEM_MESSAGE(1300043);
 
@@ -8311,7 +8311,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UI_PARTY_DEAD = new SM_SYSTEM_MESSAGE(1300044);
 
 	/**
-	 * You 无法检查 information 在 characters 的 anotherrace。 / You cannot check the information on characters of another race
+	 * 你无法查看其他种族角色的信息。 / You cannot check the information on characters of another race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ASK_PCINFO_OTHER_RACE = new SM_SYSTEM_MESSAGE(1300045);
 
@@ -8321,14 +8321,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ASK_PCINFO_LOGOFF = new SM_SYSTEM_MESSAGE(1300046);
 
 	/**
-	 * @param value0 你：cannot leave the group in %0。 / You cannot leave the group in %0
+	 * 在 %0 状态下你无法离开队伍。 / You cannot leave the group in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_LEAVE_PARTY_DURING_PATH_FLYING(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300047, value0);
 	}
 
 	/**
-	 * @param descriptionId You 无法 use 物品 while%0。 / You cannot use an item while %0
+	 * %0 状态下无法使用该物品。 / You cannot use an item while %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_USE_ITEM_DURING_PATH_FLYING(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300048, descriptionId);
@@ -8342,14 +8342,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：learned %0 (Level %1)。 / You learned %0 (Level %1)
+	 * 你学会了 %0（等级 %1）。 / You learned %0 (Level %1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_LEARNED_NEW_SKILL(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300050, value0, value1);
 	}
 
 	/**
-	 * @param value0 你：stopped using %0。 / You stopped using %0
+	 * 你停止了使用 %0。 / You stopped using %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_TOGGLE_SKILL_TURNED_OFF(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300051, value0);
@@ -8361,7 +8361,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TOGGLE_SKILL_ALREADY_TURNED_OFF = new SM_SYSTEM_MESSAGE(1300052);
 
 	/**
-	 * @param value0 你：stopped using %0 skill。 / You stopped using %0 skill
+	 * 你停止了使用 %0 技能。 / You stopped using %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_MAINTAIN_SKILL_TURNED_OFF(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300053, value0);
@@ -8397,42 +8397,42 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cured the altered state caused by %0 skill。 / You cured the altered state caused by %0 skill
+	 * 你解除了 %0 技能引起的异常状态。 / You cured the altered state caused by %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_TURN_OFF_ABNORMAL_STATUS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300058, value0);
 	}
 
 	/**
-	 * %0skill 曾 cancelled 作为 %1 为已经 undermorepowerfulskill。 / The %0 skill was cancelled as %1 is already under a more powerful skill
+	 * %1 正受到更强大技能的影响，%0 技能被取消。 / The %0 skill was cancelled as %1 is already under a more powerful skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_CONFLICT_WITH_OTHER_SKILL(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300059, value0, value1);
 	}
 
 	/**
-	 * 你：have not learned the skill to equip this weapon。 / You have not learned the skill to equip this weapon
+	 * 你尚未学习装备该武器所需的技能。 / You have not learned the skill to equip this weapon
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_WEAPON_MASTERY_SKILL = new SM_SYSTEM_MESSAGE(1300060);
 
 	/**
-	 * 你：have not learned the skill to equip this armor。 / You have not learned the skill to equip this armor
+	 * 你尚未学习装备该防具所需的技能。 / You have not learned the skill to equip this armor
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_ARMOR_MASTERY_SKILL = new SM_SYSTEM_MESSAGE(1300061);
 
 	/**
-	 * 你：cannot cast spells while silenced。 / You cannot cast spells while silenced
+	 * 沉默状态下你无法施放魔法。 / You cannot cast spells while silenced
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_MAGIC_SKILL_WHILE_SILENCED = new SM_SYSTEM_MESSAGE(
 			1300062);
 
 	/**
-	 * You 无法 usephysicalskillswhile 在 state 的 fear 或 restraint。 / You cannot use physical skills while in a state of fear or restraint
+	 * 在恐惧或束缚状态下你无法使用物理技能。 / You cannot use physical skills while in a state of fear or restraint
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_PHYSICAL_SKILL_IN_FEAR = new SM_SYSTEM_MESSAGE(1300063);
 
 	/**
-	 * 你：cannot use the skill while in an Altered State。 / You cannot use the skill while in an Altered State
+	 * 在异常状态下你无法使用该技能。 / You cannot use the skill while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(1300064);
 
@@ -8443,50 +8443,50 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300065);
 
 	/**
-	 * 你：cannot attack while in an Altered State。 / You cannot attack while in an Altered State
+	 * 在异常状态下你无法攻击。 / You cannot attack while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_ATTACK_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1300066);
 
 	/**
-	 * 你：cannot gather while in an Altered State。 / You cannot gather while in an Altered State
+	 * 在异常状态下你无法采集。 / You cannot gather while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_GATHER_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1300067);
 
 	/**
-	 * You 无法 use 物品 while 在 AlteredState。 / You cannot use the item while in an Altered State
+	 * 在异常状态下你无法使用该物品。 / You cannot use the item while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_USE_ITEM_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1300068);
 
 	/**
-	 * You 无法 equip 物品 while 在 AlteredState。 / You cannot equip the item while in an Altered State
+	 * 在异常状态下你无法装备该物品。 / You cannot equip the item while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_EQUIP_ITEM_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1300069);
 
 	/**
-	 * @param value0 %0skillfailed 作为 there 为已经 toomanyskills 在 effect。 / The %0 skill failed as there are already too many skills in effect
+	 * 因生效中的技能过多，%0 技能施放失败。 / The %0 skill failed as there are already too many skills in effect
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_SLOT_FULL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300070, value0);
 	}
 
 	/**
-	 * @param value0 You 无法 use%0skill 在 your 当前 stance。 / You cannot use the %0 skill in your current stance
+	 * 当前姿态下你无法使用 %0 技能。 / You cannot use the %0 skill in your current stance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_THIS_SKILL_IN_CURRENT_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300071, value0);
 	}
 
 	/**
-	 * 你：already have a spirit following you。 / You already have a spirit following you
+	 * 已经有一只精灵在跟随你。 / You already have a spirit following you
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUMMON_ALREADY_HAVE_A_FOLLOWER = new SM_SYSTEM_MESSAGE(1300072);
 
 	/**
-	 * 作为 spirit 为 toofar , yoursummon 有已 forciblycanceled。 / As the spirit is too far, your summon has been forcibly canceled
+	 * 因精灵距离过远，你的召唤已被强制取消。 / As the spirit is too far, your summon has been forcibly canceled
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUMMON_UNSUMMON_BY_TOO_DISTANCE = new SM_SYSTEM_MESSAGE(1300073);
 
@@ -8496,33 +8496,33 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUMMON_CANT_ORDER_BY_TOO_DISTANCE = new SM_SYSTEM_MESSAGE(1300074);
 
 	/**
-	 * 你：have not learned the Advanced Dual-Wielding skill。 / You have not learned the Advanced Dual-Wielding skill
+	 * 你尚未学习高级双持技能。 / You have not learned the Advanced Dual-Wielding skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_WEAPON_DUEL_SKILL = new SM_SYSTEM_MESSAGE(1300075);
 
 	/**
-	 * 目标无法为 charmed。 / The target cannot be charmed
+	 * 该目标无法被魅惑。 / The target cannot be charmed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_ENSLAVE_TARGET_CANT_BE_ENSLAVED = new SM_SYSTEM_MESSAGE(1300076);
 
 	/**
-	 * 你：have failed to charm the target。 / You have failed to charm the target
+	 * 你魅惑目标失败了。 / You have failed to charm the target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_ENSLAVE_FAILED_TO_ENSLAVE = new SM_SYSTEM_MESSAGE(1300077);
 
 	/**
-	 * 你：have charmed the target。 / You have charmed the target
+	 * 你魅惑了目标。 / You have charmed the target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_ENSLAVE_SUCCEDED_TO_ENSLAVE = new SM_SYSTEM_MESSAGE(1300078);
 
 	/**
-	 * 你：have no dead pets。 / You have no dead pets
+	 * 你没有死亡的宠物。 / You have no dead pets
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_RESURRECT_PET_DONT_HAVE_DEAD_STONE = new SM_SYSTEM_MESSAGE(
 			1300079);
 
 	/**
-	 * Youdonot 有足够基纳到 resurrectCharmStone。 / You do not have enough Kinah to resurrect the Charm Stone
+	 * 你没有足够的基纳来复活魅力石。 / You do not have enough Kinah to resurrect the Charm Stone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_RESURRECT_PET_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300080);
 
@@ -8532,7 +8532,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_RESURRECT_PET_TOO_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300081);
 
 	/**
-	 * 你：have resurrected the pet。 / You have resurrected the pet
+	 * 你复活了宠物。 / You have resurrected the pet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_RESURRECT_PET_SUCCEEDED = new SM_SYSTEM_MESSAGE(1300082);
 
@@ -8543,12 +8543,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300083);
 
 	/**
-	 * 你：cannot transfer XP。 / You cannot transfer XP
+	 * 你无法转移经验值。 / You cannot transfer XP
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_GIVE_EXP_TO_PET_DONT_HAVE_PET = new SM_SYSTEM_MESSAGE(1300084);
 
 	/**
-	 * amount 的 XPyou 有 transferred 到 spirit 为 not 足够。 / The amount of XP you have transferred to the spirit is not enough
+	 * 你转移给精灵的经验值不足。 / The amount of XP you have transferred to the spirit is not enough
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENSLAVE_GIVE_EXP_TO_PET_NOT_ENOUGH_EXP = new SM_SYSTEM_MESSAGE(1300085);
 
@@ -8571,17 +8571,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_SUMMON_IS_NOT_VALID = new SM_SYSTEM_MESSAGE(1300088);
 
 	/**
-	 * 你：cannot use this on enemies。 / You cannot use this on enemies
+	 * 此技能不能对敌人使用。 / You cannot use this on enemies
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_NOTENEMY_ONLY = new SM_SYSTEM_MESSAGE(1300089);
 
 	/**
-	 * 你：can only use this on enemies。 / You can only use this on enemies
+	 * 此技能只能对敌人使用。 / You can only use this on enemies
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_INVALID_TARGET_ENEMY_ONLY = new SM_SYSTEM_MESSAGE(1300090);
 
 	/**
-	 * @param value0 你：cannot duel with %0。 / You cannot duel with %0
+	 * 你无法与 %0 决斗。 / You cannot duel with %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_PARTNER_INVALID(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300091, value0);
@@ -8600,7 +8600,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_DUEL_YOU_ARE_IN_DUEL_ALREADY = new SM_SYSTEM_MESSAGE(1300093);
 
 	/**
-	 * @param value0 你：challenged %0 to a duel。 / You challenged %0 to a duel
+	 * 你向 %0 发起了决斗挑战。 / You challenged %0 to a duel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_REQUEST_TO_PARTNER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300094, value0);
@@ -8626,14 +8626,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：won the duel against %0。 / You won the duel against %0
+	 * 你在与 %0 的决斗中获胜。 / You won the duel against %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_YOU_WIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300098, value0);
 	}
 
 	/**
-	 * @param value0 你：lost the duel against %0。 / You lost the duel against %0
+	 * 你在与 %0 的决斗中落败。 / You lost the duel against %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_YOU_LOSE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300099, value0);
@@ -8654,7 +8654,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot find the user you have challenged to a duel。 / You cannot find the user you have challenged to a duel
+	 * 无法找到你所挑战决斗的对象。 / You cannot find the user you have challenged to a duel
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DUEL_LOST_REQUEST_DUEL_PARTNER = new SM_SYSTEM_MESSAGE(1300102);
 
@@ -8671,59 +8671,59 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot use that on your target。 / You cannot use that on your target
+	 * 此技能无法对当前目标使用。 / You cannot use that on your target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_TO_CURRENT_TARGET = new SM_SYSTEM_MESSAGE(1300105);
 
 	/**
-	 * You 可 use 其仅当 you 为在 Counterattackmode。 / You can use it only when you are in Counterattack mode
+	 * 只有在反击模式下才能使用该技能。 / You can use it only when you are in Counterattack mode
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_IN_NONE_COUNTER_STATUS = new SM_SYSTEM_MESSAGE(1300106);
 
 	/**
-	 * 此 skill 可仅为 used 作为 part 的 ChainSkill。 / This skill can only be used as part of a Chain Skill
+	 * 该技能只能作为连锁技能的一部分使用。 / This skill can only be used as part of a Chain Skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_IN_NONE_CHAINSKILL_STATUS = new SM_SYSTEM_MESSAGE(
 			1300107);
 
 	/**
-	 * You 可仅 cast 在 group 成员谁为 usingSpecialAttack。 / You can only cast that on a group member who is using a Special Attack
+	 * 只能对正在使用特殊攻击的队员施展该技能。 / You can only cast that on a group member who is using a Special Attack
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_CAST_ONLY_TO_MY_PARTY_CASTING_ULTRASKILL = new SM_SYSTEM_MESSAGE(
 			1300108);
 
 	/**
-	 * 你：interrupted the target's skill。 / You interrupted the target's skill
+	 * 你打断了目标正在施展的技能。 / You interrupted the target's skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TARGET_SKILL_CANCELED = new SM_SYSTEM_MESSAGE(1300109);
 
 	/**
-	 * 你：must be equipped with a shield to use this skill。 / You must be equipped with a shield to use this skill
+	 * 使用该技能必须装备盾牌。 / You must be equipped with a shield to use this skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NEED_SHIELD = new SM_SYSTEM_MESSAGE(1300110);
 
 	/**
-	 * 你：must be equipped with an Off-hand Weapon to use the skill。 / You must be equipped with an Off-hand Weapon to use the skill
+	 * 使用该技能必须装备副手武器。 / You must be equipped with an Off-hand Weapon to use the skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NEED_DUAL_WEAPON = new SM_SYSTEM_MESSAGE(1300111);
 
 	/**
-	 * 此 skill 可仅为 used 从 rear 的 youropponent。 / This skill can only be used from the rear of your opponent
+	 * 该技能只能从对手背后使用。 / This skill can only be used from the rear of your opponent
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_USE_TO_TARGETS_BACK_ONLY = new SM_SYSTEM_MESSAGE(1300112);
 
 	/**
-	 * 你：can use this skill only while flying。 / You can use this skill only while flying
+	 * 该技能只能在飞行时使用。 / You can use this skill only while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_RESTRICTION_FLY_ONLY = new SM_SYSTEM_MESSAGE(1300113);
 
 	/**
-	 * 你：cannot use a skill while you are flying。 / You cannot use a skill while you are flying
+	 * 飞行中无法使用技能。 / You cannot use a skill while you are flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_RESTRICTION_NO_FLY = new SM_SYSTEM_MESSAGE(1300114);
 
 	/**
-	 * attacker 或目标为在 differentarea。 / The attacker or the target is in a different area
+	 * 攻击者与目标不在同一区域。 / The attacker or the target is in a different area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ATTACK_INVALID_POSITION = new SM_SYSTEM_MESSAGE(1300115);
 
@@ -8733,47 +8733,47 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ATTACK_IMPROPER_TARGET = new SM_SYSTEM_MESSAGE(1300116);
 
 	/**
-	 * 你：cannot equip the shield as you have not learned the Equip Shield skill。 / You cannot equip the shield as you have not learned the Equip Shield skill
+	 * 你尚未学习盾牌装备技能，无法装备盾牌。 / You cannot equip the shield as you have not learned the Equip Shield skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_NO_SHIELD_MASTERY_SKILL = new SM_SYSTEM_MESSAGE(1300117);
 
 	/**
-	 * You 无法 attack 在 your 当前 stance。 / You cannot attack in your current stance
+	 * 当前姿态下你无法攻击。 / You cannot attack in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_ATTACK_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300118);
 
 	/**
-	 * You 无法 gather 在 your 当前 stance。 / You cannot gather in your current stance
+	 * 当前姿态下你无法采集。 / You cannot gather in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_GATHER_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300119);
 
 	/**
-	 * You 无法 use 物品在 your 当前 stance。 / You cannot use that item in your current stance
+	 * 当前姿态下你无法使用该物品。 / You cannot use that item in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_USE_ITEM_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300120);
 
 	/**
-	 * You 无法 changeyourequipment 在 your 当前 stance。 / You cannot change your equipment in your current stance
+	 * 当前姿态下你无法更换装备。 / You cannot change your equipment in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_EQUIP_ITEM_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300121);
 
 	/**
-	 * You 无法 craft 在 your 当前 stance。 / You cannot craft in your current stance
+	 * 当前姿态下你无法制作。 / You cannot craft in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_COMBINE_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300122);
 
 	/**
-	 * You 无法 useskill 在 your 当前 stance。 / You cannot use that skill in your current stance
+	 * 当前姿态下你无法使用该技能。 / You cannot use that skill in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_CAST_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(1300123);
 
 	/**
-	 * You 无法 changemode 在 your 当前 stance。 / You cannot change mode in your current stance
+	 * 当前姿态下你无法切换模式。 / You cannot change mode in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_CHANGE_MODE__WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300124);
@@ -8784,23 +8784,23 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_TOO_CLOSE = new SM_SYSTEM_MESSAGE(1300125);
 
 	/**
-	 * 你：cannot use the magic passage while flying。 / You cannot use the magic passage while flying
+	 * 飞行中无法使用魔法通道。 / You cannot use the magic passage while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_USE_GROUPGATE_WHEN_FLYING = new SM_SYSTEM_MESSAGE(1300126);
 
 	/**
-	 * 你：can only use that when you have a spirit。 / You can only use that when you have a spirit
+	 * 只有在拥有精灵时才能使用该技能。 / You can only use that when you have a spirit
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_USE_THIS_SKILL_WITHOUT_A_PET = new SM_SYSTEM_MESSAGE(1300127);
 
 	/**
-	 * You 可仅 use 其当 yourspirit 为在 attackmode。 / You can only use it when your spirit is in attack mode
+	 * 只有在精灵处于攻击模式时才能使用该技能。 / You can only use it when your spirit is in attack mode
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_USE_THIS_SKILL_WHEN_PET_IS_NOT_ATTACK_MODE = new SM_SYSTEM_MESSAGE(
 			1300128);
 
 	/**
-	 * 你：use the skill on yourself instead of the currently selected target。 / You use the skill on yourself instead of the currently selected target
+	 * 技能将作用于你自己，而非当前选中的目标。 / You use the skill on yourself instead of the currently selected target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_AUTO_CHANGE_TARGET_TO_MY = new SM_SYSTEM_MESSAGE(1300129);
 
@@ -8812,7 +8812,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300130);
 
 	/**
-	 * 你：cannot use this skill during combat。 / You cannot use this skill during combat
+	 * 战斗中无法使用该技能。 / You cannot use this skill during combat
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_IN_COMBAT_STATE = new SM_SYSTEM_MESSAGE(1300131);
 
@@ -8839,7 +8839,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have withdrawn the challenge to %0 for a duel。 / You have withdrawn the challenge to %0 for a duel
+	 * 你撤回了向 %0 提出的决斗挑战。 / You have withdrawn the challenge to %0 for a duel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_WITHDRAW_REQUEST(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300135, value0);
@@ -8875,47 +8875,47 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 You 无法 requestduel 到 %0 作为玩家为 currentlybusy。 / You cannot request a duel to %0 as the player is currently busy
+	 * %0 正忙，无法向你接受决斗请求。 / You cannot request a duel to %0 as the player is currently busy
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_START_OTHER_IS_BUSY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300140, value0);
 	}
 
 	/**
-	 * 你：cannot learn this skill。 / You cannot learn this skill
+	 * 你无法学习该技能。 / You cannot learn this skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILLLEARNBOOK_CANT_USE_NO_SKILL = new SM_SYSTEM_MESSAGE(1300141);
 
 	/**
-	 * 你：have already learned this skill。 / You have already learned this skill
+	 * 你已经学会了该技能。 / You have already learned this skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILLLEARNBOOK_CANT_USE_ALREADY_HAS_SKILL = new SM_SYSTEM_MESSAGE(
 			1300142);
 
 	/**
-	 * You 无法 use 物品 here。 / You cannot use that item here
+	 * 你无法在这里使用该物品。 / You cannot use that item here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_USE_ITEM_IN_CURRENT_POSITION = new SM_SYSTEM_MESSAGE(
 			1300143);
 
 	/**
-	 * 你：cannot craft here。 / You cannot craft here
+	 * 你无法在这里制作。 / You cannot craft here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_CAN_NOT_COMBINE_IN_CURRENT_POSITION = new SM_SYSTEM_MESSAGE(
 			1300144);
 
 	/**
-	 * 你：cannot gather here。 / You cannot gather here
+	 * 你无法在这里采集。 / You cannot gather here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_GATHER_IN_CURRENT_POSTION = new SM_SYSTEM_MESSAGE(1300145);
 
 	/**
-	 * 你：cannot use the skill here。 / You cannot use the skill here
+	 * 你无法在这里使用该技能。 / You cannot use the skill here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CANT_CAST_IN_CURRENT_POSTION = new SM_SYSTEM_MESSAGE(1300146);
 
 	/**
-	 * You 无法 takeoff 在 your 当前 stance。 / You cannot take off in your current stance
+	 * 当前姿态下你无法起飞。 / You cannot take off in your current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_TAKE_OFF__WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1300147);
@@ -8929,22 +8929,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot use this skill while transformed。 / You cannot use this skill while transformed
+	 * 变身状态下你无法使用该技能。 / You cannot use this skill while transformed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_CAST_IN_SHAPECHANGE = new SM_SYSTEM_MESSAGE(1300149);
 
 	/**
-	 * 你：have no right to use the selected Magic Passage。 / You have no right to use the selected Magic Passage
+	 * 你没有使用所选魔法通道的权限。 / You have no right to use the selected Magic Passage
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_USE_GROUPGATE_NO_RIGHT = new SM_SYSTEM_MESSAGE(1300150);
 
 	/**
-	 * 此 skill 可仅为 used 在 Abyss。 / This skill can only be used in the Abyss
+	 * 该技能只能在欧比斯使用。 / This skill can only be used in the Abyss
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_CAST_IN_NOT_ABYSS_WORLD = new SM_SYSTEM_MESSAGE(1300151);
 
 	/**
-	 * 你：cannot invite any more group members。 / You cannot invite any more group members
+	 * 你无法再邀请更多队员加入。 / You cannot invite any more group members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_ADD_NEW_MEMBER = new SM_SYSTEM_MESSAGE(1300152);
 
@@ -8962,7 +8962,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have become the new group leader。 / You have become the new group leader
+	 * 你成为了新的队长。 / You have become the new group leader
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_YOU_BECOME_NEW_LEADER = new SM_SYSTEM_MESSAGE(1300155);
 
@@ -8972,12 +8972,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ONLY_LEADER_CAN_CHANGE_LOOTING = new SM_SYSTEM_MESSAGE(1300156);
 
 	/**
-	 * 物品 distributionmethod 的 group 有已 changed 到 Manual。 / The item distribution method of the group has been changed to Manual
+	 * 队伍的物品分配方式已改为手动分配。 / The item distribution method of the group has been changed to Manual
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_LOOTING_CHANGED_TO_MANUAL = new SM_SYSTEM_MESSAGE(1300157);
 
 	/**
-	 * 物品 distributionmethod 的 group 有已 changed 到 Auto。 / The item distribution method of the group has been changed to Auto
+	 * 队伍的物品分配方式已改为自动分配。 / The item distribution method of the group has been changed to Auto
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_LOOTING_CHANGED_TO_AUTO = new SM_SYSTEM_MESSAGE(1300158);
 
@@ -9000,17 +9000,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot invite yourself to a group。 / You cannot invite yourself to a group
+	 * 你无法邀请自己加入队伍。 / You cannot invite yourself to a group
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CAN_NOT_INVITE_SELF = new SM_SYSTEM_MESSAGE(1300162);
 
 	/**
-	 * 你：cannot issue an invitation while you are dead。 / You cannot issue an invitation while you are dead
+	 * 死亡状态下无法发出邀请。 / You cannot issue an invitation while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_INVITE_WHEN_DEAD = new SM_SYSTEM_MESSAGE(1300163);
 
 	/**
-	 * selectedgroup 成员为 currently 离线。 / The selected group member is currently offline
+	 * 所选队员当前不在线。 / The selected group member is currently offline
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_OFFLINE_MEMBER = new SM_SYSTEM_MESSAGE(1300164);
 
@@ -9020,7 +9020,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ONLY_LEADER_CAN_BANISH = new SM_SYSTEM_MESSAGE(1300165);
 
 	/**
-	 * You 有已踢出 out 的 group。 / You have been kicked out of the group
+	 * 你被踢出了队伍。 / You have been kicked out of the group
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_YOU_ARE_BANISHED = new SM_SYSTEM_MESSAGE(1300166);
 
@@ -9039,14 +9039,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 anothergroup。 / %0 is already a member of another group
+	 * %0 已是其他队伍的成员。 / %0 is already a member of another group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_HE_IS_ALREADY_MEMBER_OF_OTHER_PARTY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300169, value0);
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 yourgroup。 / %0 is already a member of your group
+	 * %0 已是你的队员。 / %0 is already a member of your group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_HE_IS_ALREADY_MEMBER_OF_OUR_PARTY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300170, value0);
@@ -9063,7 +9063,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_NOT_PARTY_MEMBER = new SM_SYSTEM_MESSAGE(1300172);
 
 	/**
-	 * @param value0 你：have invited %0 to join your group。 / You have invited %0 to join your group
+	 * 你邀请了 %0 加入你的队伍。 / You have invited %0 to join your group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_INVITED_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300173, value0);
@@ -9092,7 +9092,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有已踢出 out 的 yourgroup。 / %0 has been kicked out of your group
+	 * %0 已被踢出你的队伍。 / %0 has been kicked out of your group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_HE_IS_BANISHED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300177, value0);
@@ -9104,12 +9104,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_RARE_LOOTING_CHANGED_TO_MANUAL = new SM_SYSTEM_MESSAGE(1300178);
 
 	/**
-	 * rare 物品 distributionmethod 的 group 有已 changed 到 Auto。 / The rare item distribution method of the group has been changed to Auto
+	 * 队伍的稀有物品分配方式已改为自动分配。 / The rare item distribution method of the group has been changed to Auto
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_RARE_LOOTING_CHANGED_TO_AUTO = new SM_SYSTEM_MESSAGE(1300179);
 
 	/**
-	 * rare 物品 distributionmethod 的 group 有已 changed 到 DiceRoll。 / The rare item distribution method of the group has been changed to Dice Roll
+	 * 队伍的稀有物品分配方式已改为骰子分配。 / The rare item distribution method of the group has been changed to Dice Roll
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_RARE_LOOTING_CHANGED_TO_DICE = new SM_SYSTEM_MESSAGE(1300180);
 
@@ -9126,22 +9126,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 可 rolldiceoncemore 若 rolled 编号为 lessthan100。 / You can roll the dice once more if the rolled number is less than 100
+	 * 掷出的点数小于 100 时可以再掷一次骰子。 / You can roll the dice once more if the rolled number is less than 100
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ITEM_DICE_AGAIN = new SM_SYSTEM_MESSAGE(1300183);
 
 	/**
-	 * 物品 distributionmethod 的 group 有已 changed 到 Free -用于-全部。 / The item distribution method of the group has been changed to Free-for-All
+	 * 队伍的物品分配方式已改为自由拾取。 / The item distribution method of the group has been changed to Free-for-All
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_LOOTING_CHANGED_TO_FREEFORALL = new SM_SYSTEM_MESSAGE(1300184);
 
 	/**
-	 * 物品 distributionmethod 的 group 有已 changed 到 Round - robin。 / The item distribution method of the group has been changed to Round-robin
+	 * 队伍的物品分配方式已改为轮流分配。 / The item distribution method of the group has been changed to Round-robin
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_LOOTING_CHANGED_TO_ROUNDROBIN = new SM_SYSTEM_MESSAGE(1300185);
 
 	/**
-	 * 物品 distributionmethod 的 group 有已 changed 到 GroupLeader。 / The item distribution method of the group has been changed to Group Leader
+	 * 队伍的物品分配方式已改为队长分配。 / The item distribution method of the group has been changed to Group Leader
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_LOOTING_CHANGED_TO_LEADERONLY = new SM_SYSTEM_MESSAGE(1300186);
 
@@ -9154,12 +9154,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 invite 成员的 otherrace。 / You cannot invite members of other race
+	 * 你无法邀请其他种族的成员。 / You cannot invite members of other race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_INVITE_OTHER_RACE = new SM_SYSTEM_MESSAGE(1300188);
 
 	/**
-	 * @param value0 你：have invited %0's group to the alliance。 / You have invited %0's group to the alliance
+	 * 你已邀请 %0 的队伍加入联盟。 / You have invited %0's group to the alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_INVITED_HIS_PARTY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300189, value0);
@@ -9181,35 +9181,35 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 anotheralliance。 / %0 is already a member of another alliance
+	 * %0 已是其他联盟的成员。 / %0 is already a member of another alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_HE_IS_ALREADY_MEMBER_OF_OTHER_ALLIANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300192, value0);
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 youralliance。 / %0 is already a member of your alliance
+	 * %0 已是你的联盟成员。 / %0 is already a member of your alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_HE_IS_ALREADY_MEMBER_OF_OUR_ALLIANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300193, value0);
 	}
 
 	/**
-	 * @param value0 You 无法 invite%0 到 alliance 作为 he 或 she 为 notgroupleader。 / You cannot invite %0 to the alliance as he or she is not a group leader
+	 * %0 不是队长，因此你无法邀请其加入联盟。 / You cannot invite %0 to the alliance as he or she is not a group leader
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CAN_NOT_INVITE_HIM_HE_IS_NOT_PARTY_LEADER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300194, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot invite %0 to the alliance。 / You cannot invite %0 to the alliance
+	 * 你无法邀请 %0 加入联盟。 / You cannot invite %0 to the alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CAN_NOT_INVITE_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300195, value0);
 	}
 
 	/**
-	 * You 无法 inviteanymore 作为 alliance 为 full。 / You cannot invite any more as the alliance is full
+	 * 联盟已满，无法再邀请更多成员。 / You cannot invite any more as the alliance is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CANT_ADD_NEW_MEMBER = new SM_SYSTEM_MESSAGE(1300196);
 
@@ -9234,7 +9234,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的小队已离开联盟。
-	  * 你的小队 has left the 联盟。 / Your group has left the alliance
+	  * 你的队伍已离开联盟。 / Your group has left the alliance
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_MY_PARTY_LEAVE_ALLIANCE = new SM_SYSTEM_MESSAGE(1300200);
 
@@ -9260,7 +9260,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有已踢出 out 的 group 并 thusalliance。 / %0 has been kicked out of the group and thus the alliance
+	 * %0 已被踢出队伍，因而也退出了联盟。 / %0 has been kicked out of the group and thus the alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_HE_IS_BANISHED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300204, value0);
@@ -9280,12 +9280,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_LOOTING_CHANGED_TO_FREE = new SM_SYSTEM_MESSAGE(1300206);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Auto。 / The item distribution method of the alliance has been changed to Auto
+	 * 联盟的物品分配方式已改为自动分配。 / The item distribution method of the alliance has been changed to Auto
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_LOOTING_CHANGED_TO_RANDOM = new SM_SYSTEM_MESSAGE(1300207);
 
 	/**
-	 * @param value0 %0 有已经 requested 物品 distributionmethod 到为 changed。 / %0 has already requested the item distribution method to be changed
+	 * %0 已请求更改物品分配方式。 / %0 has already requested the item distribution method to be changed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CHANGE_LOOT_PROCESSING_HIS_REQUEST(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300208, value0);
@@ -9307,14 +9307,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 ' srequest 到 change 物品 distributionmethod 有已 denied。 / %0's request to change the item distribution method has been denied
+	 * %0 更改物品分配方式的请求已被拒绝。 / %0's request to change the item distribution method has been denied
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CHANGE_LOOT_HE_DENIED_MY_ASK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300211, value0);
 	}
 
 	/**
-	 * 你：asked the alliance Captain to change the item distribution method。 / You asked the alliance Captain to change the item distribution method
+	 * 你已请求联盟队长更改物品分配方式。 / You asked the alliance Captain to change the item distribution method
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_CHANGE_LOOT_ASK_SUBMITTED = new SM_SYSTEM_MESSAGE(1300212);
 
@@ -9326,7 +9326,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：asked the alliance Captain for permission to pick up %0。 / You asked the alliance Captain for permission to pick up %0
+	 * 你已向联盟队长请求拾取 %0 的许可。 / You asked the alliance Captain for permission to pick up %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_PICKUP_ITEM_ASK_SUBMITTED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300214, value0);
@@ -9399,19 +9399,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300224);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Round - robin。 / The item distribution method of the alliance has been changed to Round-robin
+	 * 联盟的物品分配方式已改为轮流分配。 / The item distribution method of the alliance has been changed to Round-robin
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_LOOTING_CHANGED_TO_ROUNDROBIN = new SM_SYSTEM_MESSAGE(
 			1300225);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Captain。 / The item distribution method of the alliance has been changed to Captain
+	 * 联盟的物品分配方式已改为队长分配。 / The item distribution method of the alliance has been changed to Captain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_LOOTING_CHANGED_TO_LEADERONLY = new SM_SYSTEM_MESSAGE(
 			1300226);
 
 	/**
-	 * You 无法 inviteselected 玩家作为 he 或 she 为 toobusy。 / You cannot invite the selected player as he or she is too busy
+	 * 对方正忙，你无法邀请所选玩家。 / You cannot invite the selected player as he or she is too busy
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_INVITE_OTHER_IS_BUSY = new SM_SYSTEM_MESSAGE(1300227);
 
@@ -9437,7 +9437,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CREATE_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300231);
 
 	/**
-	 * You 无法创建军团作为 you 为已经成员的 another 军团。 / You cannot create a Legion as you are already a member of another Legion
+	 * 你已是其他军团的成员，无法创建军团。 / You cannot create a Legion as you are already a member of another Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CREATE_ALREADY_BELONGS_TO_GUILD = new SM_SYSTEM_MESSAGE(1300232);
 
@@ -9447,7 +9447,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CREATE_SAME_GUILD_EXIST = new SM_SYSTEM_MESSAGE(1300233);
 
 	/**
-	 * You 无法创建新军团作为 graceperiodbetweencreatingLegions 有 notexpired。 / You cannot create a new Legion as the grace period between creating Legions has not expired
+	 * 创建军团的宽限期尚未结束，无法创建新军团。 / You cannot create a new Legion as the grace period between creating Legions has not expired
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CREATE_LAST_DAY_CHECK = new SM_SYSTEM_MESSAGE(1300234);
 
@@ -9460,18 +9460,18 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot leave your Legion during a war。 / You cannot leave your Legion during a war
+	 * 战争期间你无法退出军团。 / You cannot leave your Legion during a war
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_CANT_LEAVE_WHILE_WAR = new SM_SYSTEM_MESSAGE(1300236);
 
 	/**
-	 * You 无法 leaveyour 军团 whileusing 军团 Warehouse。 / You cannot leave your Legion while using the Legion Warehouse
+	 * 使用军团仓库期间无法退出军团。 / You cannot leave your Legion while using the Legion Warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_CANT_LEAVE_GUILD_WHILE_USING_WAREHOUSE = new SM_SYSTEM_MESSAGE(
 			1300237);
 
 	/**
-	 * You 无法 leaveyour 军团 unlessyoutransfer 军团长 authority 到 someone 否则。 / You cannot leave your Legion unless you transfer Brigade General authority to someone else
+	 * 除非将军团长权限移交给他人，否则你无法退出军团。 / You cannot leave your Legion unless you transfer Brigade General authority to someone else
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_MASTER_CANT_LEAVE_BEFORE_CHANGE_MASTER = new SM_SYSTEM_MESSAGE(
 			1300238);
@@ -9482,14 +9482,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD = new SM_SYSTEM_MESSAGE(1300239);
 
 	/**
-	 * @param value0 %0 有 left 军团。 / %0 has left the Legion
+	 * %0 已离开军团。 / %0 has left the Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_HE_LEFT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300240, value0);
 	}
 
 	/**
-	 * @param value0 你：have left the %0 Legion。 / You have left the %0 Legion
+	 * 你已离开 %0 军团。 / You have left the %0 Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_DONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300241, value0);
@@ -9501,22 +9501,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_I_AM_NOT_BELONG_TO_GUILD = new SM_SYSTEM_MESSAGE(1300242);
 
 	/**
-	 * You 无法 kickyourselfout 从军团。 / You cannot kick yourself out from a Legion
+	 * 你无法将自己踢出军团。 / You cannot kick yourself out from a Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_CANT_BANISH_SELF = new SM_SYSTEM_MESSAGE(1300243);
 
 	/**
-	 * Youdonot 有 authority 到 kickout 军团成员。 / You do not have the authority to kick out a Legion member
+	 * 你没有将成员踢出军团的权限。 / You do not have the authority to kick out a Legion member
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_DONT_HAVE_RIGHT_TO_BANISH = new SM_SYSTEM_MESSAGE(1300244);
 
 	/**
-	 * You 无法 kick 军团成员 outduringwar。 / You cannot kick a Legion member out during a war
+	 * 战争期间无法将军团成员踢出军团。 / You cannot kick a Legion member out during a war
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_CANT_BAN_MEMBER_WHILE_WAR = new SM_SYSTEM_MESSAGE(1300245);
 
 	/**
-	 * @param value0 你：have been kicked out of the %0 Legion。 / You have been kicked out of the %0 Legion
+	 * 你已被踢出 %0 军团。 / You have been kicked out of the %0 Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_BANISHIED_FROM_GUILD_BY_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300246, value0);
@@ -9531,19 +9531,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为 not 成员的 your 军团。 / %0 is not a member of your Legion
+	 * %0 不是你的军团成员。 / %0 is not a member of your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_BANISH_HE_IS_NOT_MY_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300248, value0);
 	}
 
 	/**
-	 * You 无法 kickout 军团军团长。 / You cannot kick out the Legion Brigade General
+	 * 你无法将军团长踢出军团。 / You cannot kick out the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_CAN_BANISH_MASTER = new SM_SYSTEM_MESSAGE(1300249);
 
 	/**
-	 * You 无法 issue 军团 invitationwhileyou 为 dead。 / You cannot issue a Legion invitation while you are dead
+	 * 死亡状态下无法发出军团邀请。 / You cannot issue a Legion invitation while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CANT_INVITE_WHEN_DEAD = new SM_SYSTEM_MESSAGE(1300250);
 
@@ -9553,41 +9553,41 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_I_AM_NOT_BELONG_TO_GUILD = new SM_SYSTEM_MESSAGE(1300251);
 
 	/**
-	 * You 有 noauthority 到 inviteothers 到军团。 / You have no authority to invite others to the Legion
+	 * 你没有邀请他人加入军团的权限。 / You have no authority to invite others to the Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_DONT_HAVE_RIGHT_TO_INVITE = new SM_SYSTEM_MESSAGE(1300252);
 
 	/**
-	 * There 为 nouser 到 invite 到 your 军团。 / There is no user to invite to your Legion
+	 * 没有可以邀请加入你军团的对象。 / There is no user to invite to your Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_NO_USER_TO_INVITE = new SM_SYSTEM_MESSAGE(1300253);
 
 	/**
-	 * You 无法 inviteyourself 到军团。 / You cannot invite yourself to a Legion
+	 * 你无法邀请自己加入军团。 / You cannot invite yourself to a Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_INVITE_SELF = new SM_SYSTEM_MESSAGE(1300254);
 
 	/**
-	 * @param value0 %0 为已经成员的 your 军团。 / %0 is already a member of your Legion
+	 * %0 已是你的军团成员。 / %0 is already a member of your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_INVITE_HE_IS_MY_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300255, value0);
 	}
 
 	/**
-	 * @param value0 %0 为成员的 another 军团。 / %0 is a member of another Legion
+	 * %0 是其他军团的成员。 / %0 is a member of another Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_INVITE_HE_IS_OTHER_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300256, value0);
 	}
 
 	/**
-	 * There 为 noroom 在军团用于 more 成员。 / There is no room in the Legion for more members
+	 * 军团中没有容纳更多成员的空间。 / There is no room in the Legion for more members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_ADD_MEMBER_ANY_MORE = new SM_SYSTEM_MESSAGE(1300257);
 
 	/**
-	 * @param value0 你：have sent a Legion invitation to %0。 / You have sent a Legion invitation to %0
+	 * 你已向 %0 发出军团邀请。 / You have sent a Legion invitation to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_INVITE_SENT_INVITE_MSG_TO_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300258, value0);
@@ -9602,7 +9602,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有加入 your 军团。 / %0 has joined your Legion
+	 * %0 已加入你的军团。 / %0 has joined your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_INVITE_HE_JOINED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300260, value0);
@@ -9615,12 +9615,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300261);
 
 	/**
-	 * You 无法 changeranks 的军团成员 becauseyou 为 not 军团军团长。 / You cannot change the ranks of Legion members because you are not the Legion Brigade General
+	 * 你不是军团长，无法变更军团成员的军衔。 / You cannot change the ranks of Legion members because you are not the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300262);
 
 	/**
-	 * 军团军团长无法 change 其拥有 rank。 / The Legion Brigade General cannot change its own rank
+	 * 军团长无法变更自己的军衔。 / The Legion Brigade General cannot change its own rank
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_ERROR_SELF = new SM_SYSTEM_MESSAGE(1300263);
 
@@ -9630,14 +9630,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_NO_USER = new SM_SYSTEM_MESSAGE(1300264);
 
 	/**
-	 * @param value0 %0 为 not 成员的 your 军团。 / %0 is not a member of your Legion
+	 * %0 不是你的军团成员。 / %0 is not a member of your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_HE_IS_NOT_MY_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300265, value0);
 	}
 
 	/**
-	 * @param value0 %0 有 become 军团军团长。 / %0 has become the Legion Brigade General
+	 * %0 已成为军团长。 / %0 has become the Legion Brigade General
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_DONE_1_GUILD_MASTER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300266, value0);
@@ -9660,12 +9660,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：do not have the authority to change the Legion Brigade General。 / You do not have the authority to change the Legion Brigade General
+	 * 你没有变更军团长的权限。 / You do not have the authority to change the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300269);
 
 	/**
-	 * You 无法 transferyour 军团长 authority 到离线 user。 / You cannot transfer your Brigade General authority to an offline user
+	 * 无法将你的军团长权限移交给离线用户。 / You cannot transfer your Brigade General authority to an offline user
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_NO_SUCH_USER = new SM_SYSTEM_MESSAGE(1300270);
 
@@ -9675,51 +9675,51 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_ERROR_SELF = new SM_SYSTEM_MESSAGE(1300271);
 
 	/**
-	 * @param value0 %0 为 not 成员的 your 军团。 / %0 is not a member of your Legion
+	 * %0 不是你的军团成员。 / %0 is not a member of your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_NOT_MY_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300272, value0);
 	}
 
 	/**
-	 * @param value0 %0 有 become 军团军团长。 / %0 has become the Legion Brigade General
+	 * %0 已成为军团长。 / %0 has become the Legion Brigade General
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_DONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300273, value0);
 	}
 
 	/**
-	 * 你：cannot join the alliance because you are not the Legion Brigade General。 / You cannot join the alliance because you are not the Legion Brigade General
+	 * 你不是军团长，无法加入联盟。 / You cannot join the alliance because you are not the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_JOIN_CLAN_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300274);
 
 	/**
-	 * You 无法 leavealliancebecauseyou 为 not 军团军团长。 / You cannot leave the alliance because you are not the Legion Brigade General
+	 * 你不是军团长，无法离开联盟。 / You cannot leave the alliance because you are not the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_LEAVE_CLAN_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300275);
 
 	/**
-	 * Youdonot 有 authority 到 modify 军团公告。 / You do not have the authority to modify the Legion Announcement
+	 * 你没有修改军团公告的权限。 / You do not have the authority to modify the Legion Announcement
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WRITE_NOTICE_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300276);
 
 	/**
-	 * 军团公告有已 modified。 / The Legion Announcement has been modified
+	 * 军团公告已被修改。 / The Legion Announcement has been modified
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WRITE_NOTICE_DONE = new SM_SYSTEM_MESSAGE(1300277);
 
 	/**
-	 * Youmust 为军团成员到 use 军团 warehouse。 / You must be a Legion member to use the Legion warehouse
+	 * 必须是军团成员才能使用军团仓库。 / You must be a Legion member to use the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NO_GUILD_TO_DEPOSIT = new SM_SYSTEM_MESSAGE(1300278);
 
 	/**
-	 * 你：cannot use the Legion warehouse。 / You cannot use the Legion warehouse
+	 * 你无法使用军团仓库。 / You cannot use the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_USE_GUILD_STORAGE = new SM_SYSTEM_MESSAGE(1300279);
 
 	/**
-	 * Another 军团成员为 usingwarehouse.Pleasetryagainlater。 / Another Legion member is using the warehouse. Please try again later
+	 * 其他军团成员正在使用仓库，请稍后再试。 / Another Legion member is using the warehouse. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WAREHOUSE_IN_USE = new SM_SYSTEM_MESSAGE(1300280);
 
@@ -9730,12 +9730,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Character Information has been modified。
-	  * 你的Character Information has been modified。 / Your Character Information has been modified
+	  * 你的角色信息已被修改。 / Your Character Information has been modified
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WRITE_INTRO_DONE = new SM_SYSTEM_MESSAGE(1300282);
 
 	/**
-	 * 你：have no authority to change the Legion authority settings。 / You have no authority to change the Legion authority settings
+	 * 你没有更改军团权限设置的权限。 / You have no authority to change the Legion authority settings
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_RIGHT_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300283);
 
@@ -9753,35 +9753,35 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdonot 有足够基纳用于 cancellation。 / You do not have enough Kinah for cancellation
+	 * 你没有足够的基纳用于取消。 / You do not have enough Kinah for cancellation
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CREATE_NOT_ENOUGH_MONEY_1 = new SM_SYSTEM_MESSAGE(1300286);
 
 	/**
-	 * There 为 noroom 在军团用于 more 成员。 / There is no room in the Legion for more members
+	 * 军团中没有容纳更多成员的空间。 / There is no room in the Legion for more members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_JOIN_TO_GUILD_BY_SIZE_LIMIT = new SM_SYSTEM_MESSAGE(
 			1300287);
 
 	/**
-	 * 你：cannot join the Legion。 / You cannot join the Legion
+	 * 你无法加入军团。 / You cannot join the Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_JOIN_TO_GUILD = new SM_SYSTEM_MESSAGE(1300288);
 
 	/**
-	 * You 无法 join 军团作为玩家谁 invitedyou 为 dead。 / You cannot join the Legion as the player who invited you is dead
+	 * 邀请你的玩家已死亡，你无法加入军团。 / You cannot join the Legion as the player who invited you is dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_JOIN_TO_GUILD_INVITOR_IS_DEAD = new SM_SYSTEM_MESSAGE(
 			1300289);
 
 	/**
-	 * Currently , selected 玩家无法为 invited 到 joinyour 军团。 / Currently, the selected player cannot be invited to join your Legion
+	 * 当前所选玩家无法被邀请加入你的军团。 / Currently, the selected player cannot be invited to join your Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CANT_INVITE_WHEN_HE_IS_QUESTION_ASKED = new SM_SYSTEM_MESSAGE(
 			1300290);
 
 	/**
-	 * 目标为 not 有效 .Pleaseselect 玩家。 / The target is not valid. Please select a player
+	 * 目标无效，请选择玩家。 / The target is not valid. Please select a player
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_INCORRECT_TARGET = new SM_SYSTEM_MESSAGE(1300291);
 
@@ -9808,30 +9808,30 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300295);
 
 	/**
-	 * 距离过远：the NPC to cancel the Legion disbanding。 / You are too far from the NPC to cancel the Legion disbanding
+	 * 你与 NPC 的距离过远，无法取消军团解散。 / You are too far from the NPC to cancel the Legion disbanding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_STAYMODE_CANCEL_TOO_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(
 			1300296);
 
 	/**
-	 * 你：cannot disband the Legion during a war。 / You cannot disband the Legion during a war
+	 * 战争期间你无法解散军团。 / You cannot disband the Legion during a war
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_CANT_DISPERSE_WHILE_WAR = new SM_SYSTEM_MESSAGE(1300297);
 
 	/**
-	 * You 无法 disbandyour 军团 whileyou 为 using 军团 warehouse。 / You cannot disband your Legion while you are using the Legion warehouse
+	 * 使用军团仓库期间无法解散军团。 / You cannot disband your Legion while you are using the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_CANT_DISPERSE_GUILD_WHILE_USING_WAREHOUSE = new SM_SYSTEM_MESSAGE(
 			1300298);
 
 	/**
-	 * You 无法 disband 军团有 fortress 或 hideout。 / You cannot disband a Legion that has a fortress or hideout
+	 * 拥有要塞或藏身处的军团无法解散。 / You cannot disband a Legion that has a fortress or hideout
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_CANT_DISPERSE_GULILD_HAVING_HOUSE = new SM_SYSTEM_MESSAGE(
 			1300299);
 
 	/**
-	 * 你：have no authority to disband the Legion。 / You have no authority to disband the Legion
+	 * 你没有解散军团的权限。 / You have no authority to disband the Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_ONLY_MASTER_CAN_DISPERSE = new SM_SYSTEM_MESSAGE(1300300);
 
@@ -9856,7 +9856,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have already requested to disband the Legion。 / You have already requested to disband the Legion
+	 * 你已请求解散军团。 / You have already requested to disband the Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_ALREADY_REQUESTED = new SM_SYSTEM_MESSAGE(1300304);
 
@@ -9866,7 +9866,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_TOO_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300305);
 
 	/**
-	 * You 无法删除 character 加入军团 .Pleasetryagainafter 其有 left 军团或军团为 disbanded。 / You cannot delete a character that joined a Legion. Please try again after it has left the Legion or the Legion is disbanded
+	 * 无法删除已加入军团的角色，请在其退出军团或军团解散后再试。 / You cannot delete a character that joined a Legion. Please try again after it has left the Legion or the Legion is disbanded
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_STAYMODE_CANCEL_1 = new SM_SYSTEM_MESSAGE(1300306);
 
@@ -9877,26 +9877,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_CANCEL = new SM_SYSTEM_MESSAGE(1300307);
 
 	/**
-	 * @param durationday0 解散剩余时间：%DURATIONDAY0 / Time remaining until disbanding: %DURATIONDAY0
+	 * 解散剩余时间：%DURATIONDAY0 / Time remaining until disbanding: %DURATIONDAY0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_TIME(String durationday0) {
 		return new SM_SYSTEM_MESSAGE(1300308, durationday0);
 	}
 
 	/**
-	 * 仅军团军团长可 canceldisbandingmode。 / Only the Legion Brigade General can cancel the disbanding mode
+	 * 只有军团长才能取消解散模式。 / Only the Legion Brigade General can cancel the disbanding mode
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_STAYMODE_CANCEL_ONLY_MASTER_CAN_CANCEL = new SM_SYSTEM_MESSAGE(
 			1300309);
 
 	/**
-	 * 军团为 notwaiting 到为 disbanded。 / The Legion is not waiting to be disbanded
+	 * 该军团并未等待解散。 / The Legion is not waiting to be disbanded
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_STAYMODE_CANCEL_YOUR_GUILD_IS_NOT_DISPERS_REQUESTED = new SM_SYSTEM_MESSAGE(
 			1300310);
 
 	/**
-	 * You 无法 invite 成员的 otherrace。 / You cannot invite members of other race
+	 * 你无法邀请其他种族的成员。 / You cannot invite members of other race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_INVITE_OTHER_RACE = new SM_SYSTEM_MESSAGE(1300311);
 
@@ -9907,45 +9907,45 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300312);
 
 	/**
-	 * 你：have no authority to bestow a title。 / You have no authority to bestow a title
+	 * 你没有授予头衔的权限。 / You have no authority to bestow a title
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_NICKNAME_DONT_HAVE_RIGHT_TO_CHANGE_NICKNAME = new SM_SYSTEM_MESSAGE(
 			1300313);
 
 	/**
-	 * @param value0 %0 为 not 成员的 your 军团。 / %0 is not a member of your Legion
+	 * %0 不是你的军团成员。 / %0 is not a member of your Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_NICKNAME_HE_IS_NOT_MY_GUILD_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300314, value0);
 	}
 
 	/**
-	 * 仅军团军团长可 request 到 raiselevel。 / Only the Legion Brigade General can request to raise the level
+	 * 只有军团长才能请求提升军团等级。 / Only the Legion Brigade General can request to raise the level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1300315);
 
 	/**
-	 * 军团为已经在 highestlevel。 / The Legion is already at the highest level
+	 * 军团已达到最高等级。 / The Legion is already at the highest level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_CANT_LEVEL_UP = new SM_SYSTEM_MESSAGE(1300316);
 
 	/**
-	 * 你：do not have enough Contribution Points。 / You do not have enough Contribution Points
+	 * 你的贡献点数不足。 / You do not have enough Contribution Points
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_POINT = new SM_SYSTEM_MESSAGE(1300317);
 
 	/**
-	 * Your 军团 doesnot 有足够成员。 / Your Legion does not have enough members
+	 * 你的军团成员数不足。 / Your Legion does not have enough members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_MEMBER = new SM_SYSTEM_MESSAGE(1300318);
 
 	/**
-	 * 你：do not have enough Kinah。 / You do not have enough Kinah
+	 * 你的基纳不足。 / You do not have enough Kinah
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300319);
 
 	/**
-	 * @param value0 Your 军团为 now 在 level%0。 / Your Legion is now at level %0
+	 * 你的军团现在是 %0 级。 / Your Legion is now at level %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_LEVEL_DONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300320, value0);
@@ -9958,7 +9958,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300321);
 
 	/**
-	 * 你：do not have the authority to use the Legion warehouse。 / You do not have the authority to use the Legion warehouse
+	 * 你没有使用军团仓库的权限。 / You do not have the authority to use the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WAREHOUSE_NO_RIGHT = new SM_SYSTEM_MESSAGE(1300322);
 
@@ -9969,12 +9969,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WAREHOUSE_IN_LOADING = new SM_SYSTEM_MESSAGE(1300323);
 
 	/**
-	 * Your 军团 doesnot 有足够 funds。 / Your Legion does not have enough funds
+	 * 你的军团资金不足。 / Your Legion does not have enough funds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WAREHOUSE_NOT_ENOUGH_FUND = new SM_SYSTEM_MESSAGE(1300324);
 
 	/**
-	 * 目标为 busy 并无法为 invited 在 moment。 / The target is busy and cannot be invited at the moment
+	 * 对方正忙，暂时无法被邀请。 / The target is busy and cannot be invited at the moment
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_OTHER_IS_BUSY = new SM_SYSTEM_MESSAGE(1300325);
 
@@ -9990,48 +9990,48 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300327);
 
 	/**
-	 * You 无法 joinanother 军团 whilewaiting 用于 your 军团到为 created。 / You cannot join another Legion while waiting for your Legion to be created
+	 * 等待军团创建期间无法加入其他军团。 / You cannot join another Legion while waiting for your Legion to be created
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_YOU_ARE_WAITING_FOR_GUILD_CREATE = new SM_SYSTEM_MESSAGE(
 			1300328);
 
 	/**
-	 * 军团 you 曾到 joinnolonger 存在。 / The Legion you were to join no longer exists
+	 * 你要加入的军团已不存在。 / The Legion you were to join no longer exists
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_JOIN_NOT_EXISTS = new SM_SYSTEM_MESSAGE(1300329);
 
 	/**
-	 * @param value0 你：nominated %0 as the next Legion Brigade General。 / You nominated %0 as the next Legion Brigade General
+	 * 你提名 %0 为下一任军团长。 / You nominated %0 as the next Legion Brigade General
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_SENT_OFFER_MSG_TO_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300330, value0);
 	}
 
 	/**
-	 * You 无法 requestselected 玩家到 become 军团军团长。 / You cannot request the selected player to become the Legion Brigade General
+	 * 你无法请求所选玩家担任军团长。 / You cannot request the selected player to become the Legion Brigade General
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_SENT_CANT_OFFER_WHEN_HE_IS_QUESTION_ASKED = new SM_SYSTEM_MESSAGE(
 			1300331);
 
 	/**
-	 * @param value0 %0 有 declined 到 become 军团军团长。 / %0 has declined to become the Legion Brigade General
+	 * %0 已拒绝担任军团长。 / %0 has declined to become the Legion Brigade General
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MASTER_HE_DECLINE_YOUR_OFFER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300332, value0);
 	}
 
 	/**
-	 * 你：cannot use the Legion warehouse during the disbandment waiting period。 / You cannot use the Legion warehouse during the disbandment waiting period
+	 * 军团解散等待期内无法使用军团仓库。 / You cannot use the Legion warehouse during the disbandment waiting period
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WAREHOUSE_CANT_USE_WHILE_DISPERSE = new SM_SYSTEM_MESSAGE(1300333);
 
 	/**
-	 * Limitededition 物品为全部 soldout。 / Limited edition items are all sold out
+	 * 限定版物品已全部售罄。 / Limited edition items are all sold out
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_ITEM_SOLD_OUT = new SM_SYSTEM_MESSAGE(1300334);
 
 	/**
-	 * 你：cannot buy this item。 / You cannot buy this item
+	 * 你无法购买该物品。 / You cannot buy this item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_USER_BUY_FAILED = new SM_SYSTEM_MESSAGE(1300335);
 
@@ -10055,12 +10055,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_TOO_FAR_TO_TRADE = new SM_SYSTEM_MESSAGE(1300338);
 
 	/**
-	 * Youdonot 有足够基纳到 buy 物品。 / You do not have enough Kinah to buy the item
+	 * 你的基纳不足，无法购买该物品。 / You do not have enough Kinah to buy the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_NOT_ENOUGH_MONEY_TO_BUY_ITEM = new SM_SYSTEM_MESSAGE(1300339);
 
 	/**
-	 * 你：have bought the item。 / You have bought the item
+	 * 你已购买该物品。 / You have bought the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_USER_BOUGHT_ITEMS = new SM_SYSTEM_MESSAGE(1300340);
 
@@ -10080,7 +10080,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_PRICE_CHANGED_RETRY_PLEASE = new SM_SYSTEM_MESSAGE(1300343);
 
 	/**
-	 * @param value0 %0 为 not 物品可 sold。 / %0 is not an item that can be sold
+	 * %0 是无法出售的物品。 / %0 is not an item that can be sold
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BUY_SELL_ITEM_CAN_NOT_BE_SELLED_TO_NPC(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300344, value0);
@@ -10102,33 +10102,33 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_YOU_ARE_ALREADY_EXCHANGING = new SM_SYSTEM_MESSAGE(1300347);
 
 	/**
-	 * 你：cannot trade while you are invisible。 / You cannot trade while you are invisible
+	 * 隐身状态下你无法进行交易。 / You cannot trade while you are invisible
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_CANT_EXCHANGE_WHILE_INVISIBLE = new SM_SYSTEM_MESSAGE(1300348);
 
 	/**
-	 * 你：cannot trade with an invisible player。 / You cannot trade with an invisible player
+	 * 你无法与处于隐身状态的玩家交易。 / You cannot trade with an invisible player
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_CANT_EXCHANGE_WITH_INVISIBLE_USER = new SM_SYSTEM_MESSAGE(
 			1300349);
 
 	/**
-	 * You 无法 trade 作为 you 为 overburdened 带物品。 / You cannot trade as you are overburdened with items
+	 * 你携带的物品过多，无法交易。 / You cannot trade as you are overburdened with items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_TOO_HEAVY_TO_TRADE = new SM_SYSTEM_MESSAGE(1300350);
 
 	/**
-	 * 你：have no one to trade with。 / You have no one to trade with
+	 * 没有可交易的对象。 / You have no one to trade with
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_NO_ONE_TO_EXCHANGE = new SM_SYSTEM_MESSAGE(1300351);
 
 	/**
-	 * 距离过远：the target to trade。 / You are too far from the target to trade
+	 * 你与目标的距离过远，无法交易。 / You are too far from the target to trade
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_TOO_FAR_TO_EXCHANGE = new SM_SYSTEM_MESSAGE(1300352);
 
 	/**
-	 * @param value0 你：sent a trade message to %0。 / You sent a trade message to %0
+	 * 你已向 %0 发送交易请求。 / You sent a trade message to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EXCHANGE_ASKED_EXCHANGE_TO_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300353, value0);
@@ -10142,7 +10142,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 目标为已经 trading 带 someone 否则。 / The target is already trading with someone else
+	 * 对方正在与他人交易。 / The target is already trading with someone else
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_PARTNER_IS_EXCHANGING_WITH_OTHER = new SM_SYSTEM_MESSAGE(
 			1300355);
@@ -10155,7 +10155,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 trade 带目标作为目标为 carryingtoomany 物品。 / You cannot trade with the target as the target is carrying too many items
+	 * 对方携带的物品过多，无法与其交易。 / You cannot trade with the target as the target is carrying too many items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTNER_TOO_HEAVY_TO_EXCHANGE = new SM_SYSTEM_MESSAGE(1300357);
 
@@ -10168,13 +10168,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 trade 带目标作为 you 为 carryingtoomany 物品。 / You cannot trade with the target as you are carrying too many items
+	 * 你携带的物品过多，无法与对方交易。 / You cannot trade with the target as you are carrying too many items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_CANT_EXCHANGE_HEAVY_TO_ADD_EXCHANGE_ITEM = new SM_SYSTEM_MESSAGE(
 			1300359);
 
 	/**
-	 * @param value0 You 无法 trade 作为目标已经有 limitedpossession 物品 %0。 / You cannot trade as the target already has the limited possession item %0
+	 * 对方已持有受限物品 %0，无法交易。 / You cannot trade as the target already has the limited possession item %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EXCHANGE_CANT_EXCHANGE_PARTNER_HAS_LORE_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300360, value0);
@@ -10186,7 +10186,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_COMPLETE = new SM_SYSTEM_MESSAGE(1300361);
 
 	/**
-	 * other 玩家有 pressedLock 列表 button。 / The other player has pressed the Lock List button
+	 * 对方按下了锁定列表按钮。 / The other player has pressed the Lock List button
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_OTHER_PRESSED_CHECK = new SM_SYSTEM_MESSAGE(1300362);
 
@@ -10208,7 +10208,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_CANT_SELL_EQUIPPED_ITEM = new SM_SYSTEM_MESSAGE(1300365);
 
 	/**
-	 * You 无法 tradeanymore 作为 yourinventory 为 full。 / You cannot trade any more as your inventory is full
+	 * 你的背包已满，无法继续交易。 / You cannot trade any more as your inventory is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_FULL_INVENTORY = new SM_SYSTEM_MESSAGE(1300366);
 
@@ -10218,7 +10218,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_FULL_BASKET = new SM_SYSTEM_MESSAGE(1300367);
 
 	/**
-	 * 此物品无法为 registered。 / This item cannot be registered
+	 * 该物品无法被登记。 / This item cannot be registered
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_CAN_NOT_REGISTER_ITEM = new SM_SYSTEM_MESSAGE(1300368);
 
@@ -10228,7 +10228,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_ITEM_CAN_NOT_BE_EXCHANGED = new SM_SYSTEM_MESSAGE(1300369);
 
 	/**
-	 * @param i 你：cannot use the selected item until you reach the %0 rank。 / You cannot use the selected item until you reach the %0 rank
+	 * 达到 %0 军衔后才能使用所选物品。 / You cannot use the selected item until you reach the %0 rank
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_RANK(int i) {
 		return new SM_SYSTEM_MESSAGE(1300370, new DescriptionId(i));
@@ -10236,19 +10236,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Class cannot use the selected item。
-	  * 你的Class cannot use the selected item。 / Your Class cannot use the selected item
+	  * 你的职业无法使用所选物品。 / Your Class cannot use the selected item
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_CLASS = new SM_SYSTEM_MESSAGE(1300371);
 
 	/**
-	 * 你：cannot use %1 until you reach level %0。 / You cannot use %1 until you reach level %0
+	 * 达到 %0 等级后才能使用 %1。 / You cannot use %1 until you reach level %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_TOO_LOW_LEVEL_MUST_BE_THIS_LEVEL(int value1, int value0) {
 		return new SM_SYSTEM_MESSAGE(1300372, value0, new DescriptionId(value1));
 	}
 
 	/**
-	 * Yourrace 无法 use 此物品。 / Your race cannot use this item
+	 * 你的种族无法使用该物品。 / Your race cannot use this item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_RACE = new SM_SYSTEM_MESSAGE(1300373);
 
@@ -10259,7 +10259,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_NATION = new SM_SYSTEM_MESSAGE(1300374);
 
 	/**
-	 * 此物品无法为 used 按 yourgender。 / This item cannot be used by your gender
+	 * 你的性别无法使用该物品。 / This item cannot be used by your gender
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_GENDER = new SM_SYSTEM_MESSAGE(1300375);
 
@@ -10269,7 +10269,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TOO_HEAVY = new SM_SYSTEM_MESSAGE(1300376);
 
 	/**
-	 * Another 玩家有 firstchance 到 pickup 此物品。 / Another player has the first chance to pick up this item
+	 * 其他玩家对该物品拥有优先拾取权。 / Another player has the first chance to pick up this item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PICKUP_ITEM_FAILED_NOT_MY_ITEM = new SM_SYSTEM_MESSAGE(1300377);
 
@@ -10279,17 +10279,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PICKUP_ITEM_FAILED_TOO_FAR = new SM_SYSTEM_MESSAGE(1300378);
 
 	/**
-	 * You 无法放入 downanymore 物品在此 place。 / You cannot put down any more items at this place
+	 * 你无法在此处再放下更多物品。 / You cannot put down any more items at this place
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_DROP_THE_LOC = new SM_SYSTEM_MESSAGE(1300379);
 
 	/**
-	 * 你：cannot discard equipped items。 / You cannot discard equipped items
+	 * 无法丢弃已装备的物品。 / You cannot discard equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_DROP_WORN = new SM_SYSTEM_MESSAGE(1300380);
 
 	/**
-	 * @param value0 你：cannot discard %0。 / You cannot discard %0
+	 * 你无法丢弃 %0。 / You cannot discard %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNBREAKABLE_ITEM(DescriptionId value0) {
 		return new SM_SYSTEM_MESSAGE(1300381, value0);
@@ -10303,7 +10303,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot give equipped items。 / You cannot give equipped items
+	 * 无法赠送已装备的物品。 / You cannot give equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_GIVE_WORN = new SM_SYSTEM_MESSAGE(1300383);
 
@@ -10313,28 +10313,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TOO_HEAVY_TO_ATTACK = new SM_SYSTEM_MESSAGE(1300384);
 
 	/**
-	 * @param value0 你：ate %0。 / You ate %0
+	 * 你吃掉了 %0。 / You ate %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EAT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300385, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot equip %0。 / You cannot equip %0
+	 * 你无法装备 %0。 / You cannot equip %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANT_EQUIP(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300386, value0);
 	}
 
 	/**
-	 * @param value0 你：do not buy %0。 / You do not buy %0
+	 * 你无法购买 %0。 / You do not buy %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SELL_TO_NPC_NO_INTEREST_IN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300387, value0);
 	}
 
 	/**
-	 * 你：do not have enough Kinah。 / You do not have enough Kinah
+	 * 你的基纳不足。 / You do not have enough Kinah
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300388);
 
@@ -10365,21 +10365,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CAN_NOT_BUY_LORE_ITEM = new SM_SYSTEM_MESSAGE(1300392);
 
 	/**
-	 * @param value0 你：cannot use %0。 / You cannot use %0
+	 * 你无法使用 %0。 / You cannot use %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANT_USE_ITEM(DescriptionId value0) {
 		return new SM_SYSTEM_MESSAGE(1300393, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot use %0 as you have already used it to its maximum usage count。 / You cannot use %0 as you have already used it to its maximum usage count
+	 * %0 已用尽使用次数，无法继续使用。 / You cannot use %0 as you have already used it to its maximum usage count
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANT_USE_ITEM_OUT_OF_USABLE_COUNT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300394, value0);
 	}
 
 	/**
-	 * @param value0 You 无法 use%0 到 maximumusage 数量作为物品为 currentlyequipped。 / You cannot use %0 to the maximum usage count as the item is currently equipped
+	 * 该物品正处于装备状态，无法将其使用至最大次数。 / You cannot use %0 to the maximum usage count as the item is currently equipped
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANT_USE_WORN_ITEM_OUT_OF_USABLE_COUNT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300395, value0);
@@ -10393,32 +10393,32 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：do not have a weapon to modify the appearance of。 / You do not have a weapon to modify the appearance of
+	 * 你没有可用于外观改造的武器。 / You do not have a weapon to modify the appearance of
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ERROR_CHANGE_WEAPON_SKIN__THERE_IS_NO_WEAPON = new SM_SYSTEM_MESSAGE(
 			1300398);
 
 	/**
-	 * You 无法 modifyappearance 的 selected 物品作为其为 notweapon。 / You cannot modify the appearance of the selected item as it is not a weapon
+	 * 所选物品不是武器，无法进行外观改造。 / You cannot modify the appearance of the selected item as it is not a weapon
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ERROR_CHANGE_WEAPON_SKIN__SELECTED_ITEM_IS_NOT_WEAPON = new SM_SYSTEM_MESSAGE(
 			1300399);
 
 	/**
-	 * 你：can only modify the appearance of the weapon to another of the same type。 / You can only modify the appearance of the weapon to another of the same type
+	 * 只能将武器外观改造为同类型的其他武器。 / You can only modify the appearance of the weapon to another of the same type
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ERROR_CHANGE_WEAPON_SKIN__DIFFERENT_WEAPON_TYPE = new SM_SYSTEM_MESSAGE(
 			1300400);
 
 	/**
-	 * 你：have equipped the Stigma Stone and acquired the %0 skill (Level %1)。 / You have equipped the Stigma Stone and acquired the %0 skill (Level %1)
+	 * 你已镶嵌烙印之石并获得 %0 技能（%1 级）。 / You have equipped the Stigma Stone and acquired the %0 skill (Level %1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_YOU_CAN_USE_THIS_SKILL_BY_STIGMA_STONE(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300401, value0, value1);
 	}
 
 	/**
-	 * You 有 removedStigmaStone , butyou 可仍然 use%0skill ( Level%1 )作为 you 为 equipped 带 anotherstone。 / You have removed the Stigma Stone, but you can still use the %0 skill (Level %1) as you are equipped with another stone
+	 * 你已移除烙印之石，但由于装备着另一颗烙印之石，仍可使用 %0 技能（%1 级）。 / You have removed the Stigma Stone, but you can still use the %0 skill (Level %1) as you are equipped with another stone
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_AFTER_UNEQUIP_STONE_YOU_CAN_USE_THIS_SKILL_LEVEL_BY_OTHER_STONE(
 			String value0, String value1) {
@@ -10426,40 +10426,40 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have removed the Stigma Stone and can no longer use the %0 skill。 / You have removed the Stigma Stone and can no longer use the %0 skill
+	 * 你已移除烙印之石，无法再使用 %0 技能。 / You have removed the Stigma Stone and can no longer use the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_YOU_CANNOT_USE_THIS_SKILL_AFTER_UNEQUIP_STIGMA_STONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300403, value0);
 	}
 
 	/**
-	 * 你：need help from a Stigma Master to equip the Stigma Stone。 / You need help from a Stigma Master to equip the Stigma Stone
+	 * 需要烙印之石名人的协助才能镶嵌烙印之石。 / You need help from a Stigma Master to equip the Stigma Stone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_STIGMA_TO_EQUIP_STONE_TALK_WITH_STIGMA_NPC = new SM_SYSTEM_MESSAGE(
 			1300404);
 
 	/**
-	 * 你：need help from a Stigma Master to remove the Stigma Stone。 / You need help from a Stigma Master to remove the Stigma Stone
+	 * 需要烙印之石名人的协助才能移除烙印之石。 / You need help from a Stigma Master to remove the Stigma Stone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_STIGMA_TO_UNEQUIP_STONE_TALK_WITH_STIGMA_NPC = new SM_SYSTEM_MESSAGE(
 			1300405);
 
 	/**
-	 * @param value0 你：need %0 Stigma Shard(s) to equip this Stone。 / You need %0 Stigma Shard(s) to equip this Stone
+	 * 镶嵌这颗烙印之石需要 %0 个烙印之石碎片。 / You need %0 Stigma Shard(s) to equip this Stone
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_CANNT_EQUIP_STONE_OUT_OF_AVAILABLE_STIGMA_POINT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300406, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot equip that Stigma Stone because you have not learned the %0 skill。 / You cannot equip that Stigma Stone because you have not learned the %0 skill
+	 * 你尚未学习 %0 技能，无法镶嵌该烙印之石。 / You cannot equip that Stigma Stone because you have not learned the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_CANNT_EQUIP_STONE_YOU_DO_NOT_HAVE_THIS_SKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300407, value0);
 	}
 
 	/**
-	 * There 为 noStigma 槽位可用。 / There is no Stigma slot available
+	 * 没有可用的烙印之石槽位。 / There is no Stigma slot available
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_STIGMA_SLOT_IS_NOT_OPENED = new SM_SYSTEM_MESSAGE(1300408);
 
@@ -10471,7 +10471,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法移除 StigmaStonebecause%1 为前置条件用于 %0thStigmaStone。 / You cannot remove the Stigma Stone because %1 is a prerequisite for the %0th Stigma Stone
+	 * %1 是第 %0 颗烙印之石的前置条件，因此无法移除该烙印之石。 / You cannot remove the Stigma Stone because %1 is a prerequisite for the %0th Stigma Stone
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_CANNT_UNEQUIP_STONE_OTHER_STONE_NEED_ITS_SKILL(String value1,
 			String value0) {
@@ -10479,7 +10479,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param num0sp 你：have spent %num0sp。 / You have spent %num0sp
+	 * 你已消耗 %num0sp。 / You have spent %num0sp
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_EXHAUST(int num0sp) {
 		return new SM_SYSTEM_MESSAGE(1300411, num0sp);
@@ -10493,12 +10493,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdonot 有足够基纳到 equipStigmaStone。 / You do not have enough Kinah to equip the Stigma Stone
+	 * 你的基纳不足，无法镶嵌烙印之石。 / You do not have enough Kinah to equip the Stigma Stone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_STIGMA_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300413);
 
 	/**
-	 * @param value0 你：can no longer use the %0 skill acquired through the Stigma Stone。 / You can no longer use the %0 skill acquired through the Stigma Stone
+	 * 你无法再使用通过烙印之石习得的 %0 技能。 / You can no longer use the %0 skill acquired through the Stigma Stone
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_NOT_USABLE_SKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300414, value0);
@@ -10520,12 +10520,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_TOO_MANY_ITEMS_WAREHOUSE = new SM_SYSTEM_MESSAGE(1300417);
 
 	/**
-	 * 你：cannot store this in the warehouse。 / You cannot store this in the warehouse
+	 * 无法将该物品存入仓库。 / You cannot store this in the warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_CANT_DEPOSIT_ITEM = new SM_SYSTEM_MESSAGE(1300418);
 
 	/**
-	 * 距离过远：the NPC。 / You are too far from the NPC
+	 * 你与 NPC 的距离过远。 / You are too far from the NPC
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_TOO_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300419);
 
@@ -10540,14 +10540,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_DEPOSIT_FULL_BASKET = new SM_SYSTEM_MESSAGE(1300421);
 
 	/**
-	 * @param descriptionId You 无法有此物品作为 you 已经有 limitedpossession 物品 %0%。 / You cannot have this item as you already have the limited possession item %0%
+	 * 你已经持有受限物品 %0，无法再拥有该物品。 / You cannot have this item as you already have the limited possession item %0%
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CAN_NOT_GET_LORE_ITEM(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300422, descriptionId);
 	}
 
 	/**
-	 * @param value0 你：have used %0。 / You have used %0
+	 * 你已使用 %0。 / You have used %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_USE_ITEM(DescriptionId value0) {
 		return new SM_SYSTEM_MESSAGE(1300423, value0);
@@ -10567,19 +10567,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_NO_DROP_ITEM = new SM_SYSTEM_MESSAGE(1300425);
 
 	/**
-	 * You 无法 use 物品 here。 / You cannot use that item here
+	 * 你无法在这里使用该物品。 / You cannot use that item here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_INVALID_LOCATION = new SM_SYSTEM_MESSAGE(1300426);
 
 	/**
-	 * @param id 你：have cancelled using the item。 / You have cancelled using the item
+	 * 你已取消使用该物品。 / You have cancelled using the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_CANCELED(DescriptionId id) {
 		return new SM_SYSTEM_MESSAGE(1300427, id);
 	}
 
 	/**
-	 * other 玩家为 carryingtoomany 物品。 / The other player is carrying too many items
+	 * 对方携带的物品过多。 / The other player is carrying too many items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_PARTNER_HAS_TOON_MANY_ITEMS_INVENTORY = new SM_SYSTEM_MESSAGE(
 			1300428);
@@ -10592,7 +10592,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的背包无法再扩展。
-	  * 你的背包 cannot be further expanded。 / Your cube cannot be further expanded
+	  * 你的背包无法再扩充。 / Your cube cannot be further expanded
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_EXTEND_INVENTORY_CANT_EXTEND_MORE = new SM_SYSTEM_MESSAGE(1300430);
 
@@ -10620,7 +10620,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的账号仓库无法再扩展。
-	  * 你的账号 仓库 cannot be further expanded。 / Your account warehouse cannot be further expanded
+	  * 你的账号仓库无法再扩充。 / Your account warehouse cannot be further expanded
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_EXTEND_ACCOUNT_WAREHOUSE_CANT_EXTEND_MORE = new SM_SYSTEM_MESSAGE(
 			1300434);
@@ -10689,7 +10689,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的背包无法再通过任务升级。
-	  * 你的背包 cannot be upgraded any further through quests。 / Your cube cannot be upgraded any further through quests
+	  * 你的背包无法再通过任务扩充。 / Your cube cannot be upgraded any further through quests
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_EXTEND_INVENTORY_CANT_EXTEND_MORE_BY_QUEST = new SM_SYSTEM_MESSAGE(
 			1300442);
@@ -10719,33 +10719,33 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youmust 有在 least 一个空 space 在 yourcubebeforeyou 可 extract 物品。 / You must have at least one empty space in your cube before you can extract an item
+	 * 提取物品前，你的背包中必须至少留有一个空格。 / You must have at least one empty space in your cube before you can extract an item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DECOMPOSE_ITEM_INVENTORY_IS_FULL = new SM_SYSTEM_MESSAGE(1300447);
 
 	/**
-	 * @param value0 你：have failed to extract from %0。 / You have failed to extract from %0
+	 * 从 %0 提取失败。 / You have failed to extract from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DECOMPOSE_ITEM_FAILED(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300448, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param value0 你：have successfully extracted from %0。 / You have successfully extracted from %0
+	 * 你已成功从 %0 提取。 / You have successfully extracted from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DECOMPOSE_ITEM_SUCCEED(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300449, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param nameId 你：have cancelled the extraction from %0。 / You have cancelled the extraction from %0
+	 * 你已取消从 %0 提取。 / You have cancelled the extraction from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DECOMPOSE_ITEM_CANCELED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300450, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param value0 你：cannot extract item in %0。 / You cannot extract item in %0
+	 * 你无法在 %0 中提取物品。 / You cannot extract item in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DECOMPOSE_ITEM_INVALID_STANCE(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300451, new DescriptionId(value0));
@@ -10764,35 +10764,35 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId %0 无法再强化。 / %0 cannot be enchanted any more
+	 * %0 无法再强化。 / %0 cannot be enchanted any more
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ENCHANT_ITEM_IT_CAN_NOT_BE_ENCHANTED_MORE_TIME(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300454, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param nameId 你：have successfully enchanted %0。 / You have successfully enchanted %0
+	 * 你已成功强化 %0。 / You have successfully enchanted %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ENCHANT_ITEM_SUCCEED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300455, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param descriptionId 你：have failed to enchant %0。 / You have failed to enchant %0
+	 * 强化 %0 失败。 / You have failed to enchant %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ENCHANT_ITEM_FAILED(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300456, descriptionId);
 	}
 
 	/**
-	 * @param nameId 你：have cancelled the enchanting of %0。 / You have cancelled the enchanting of %0
+	 * 你已取消强化 %0。 / You have cancelled the enchanting of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ENCHANT_ITEM_CANCELED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300457, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param value0 You 无法 enchant 物品在 %0。 / You cannot enchant items in %0
+	 * 你无法在 %0 中强化物品。 / You cannot enchant items in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ENCHANT_ITEM_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300458, value0);
@@ -10819,42 +10819,42 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param descriptionId 你：have succeeded in the manastone socketing of %0。 / You have succeeded in the manastone socketing of %0
+	 * 你已成功为 %0 镶嵌魔石。 / You have succeeded in the manastone socketing of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_OPTION_SUCCEED(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300462, descriptionId);
 	}
 
 	/**
-	 * @param descriptionId 你：have failed in the manastone socketing of %0。 / You have failed in the manastone socketing of %0
+	 * 为 %0 镶嵌魔石失败。 / You have failed in the manastone socketing of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_OPTION_FAILED(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300463, descriptionId);
 	}
 
 	/**
-	 * @param value0 你：have cancelled the manastone socketing of %0。 / You have cancelled the manastone socketing of %0
+	 * 你已取消为 %0 镶嵌魔石。 / You have cancelled the manastone socketing of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_OPTION_CANCELED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300464, value0);
 	}
 
 	/**
-	 * @param value0 全部 manastones 曾 socketed 在 %0 有 disappeared。 / All manastones that were socketed in %0 have disappeared
+	 * 镶嵌在 %0 上的全部魔石均已消失。 / All manastones that were socketed in %0 have disappeared
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_OPTION_ALL_OPTION_REMOVED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300465, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot socket manastones while %0。 / You cannot socket manastones while %0
+	 * %0 状态下无法镶嵌魔石。 / You cannot socket manastones while %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_OPTION_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300466, value0);
 	}
 
 	/**
-	 * 距离过远：the NPC to remove the manastone。 / You are too far from the NPC to remove the manastone
+	 * 你与 NPC 的距离过远，无法移除魔石。 / You are too far from the NPC to remove the manastone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300467);
 
@@ -10864,7 +10864,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_NO_TARGET_ITEM = new SM_SYSTEM_MESSAGE(1300468);
 
 	/**
-	 * @param value0 Manastonesocketing / removal 为 notpossible 用于物品 %0。 / Manastone socketing / removal is not possible for the item %0
+	 * %0 无法进行魔石的镶嵌或移除。 / Manastone socketing and removal is not possible for the item %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_IT_CAN_NOT_BE_GIVEN_OPTION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300469, value0);
@@ -10879,40 +10879,40 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 目标槽位 on0notsocketed 魔石 / The target slot on %0 is not socketed with a manastone
+	 * %0 的目标槽位未镶嵌魔石。 / The target slot on %0 is not socketed with a manastone
 	 */
 	public static SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_INVALID_OPTION_SLOT_NUMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300471, value0);
 	}
 
 	/**
-	 * @param value0 Youdonot 有足够基纳到移除 manastone 从 %0。 / You do not have enough Kinah to remove the manastone from %0
+	 * 你的基纳不足，无法从 %0 移除魔石。 / You do not have enough Kinah to remove the manastone from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_NOT_ENOUGH_GOLD(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300472, value0);
 	}
 
 	/**
-	 * @param value0 你：have removed the manastone from %0。 / You have removed the manastone from %0
+	 * 你已从 %0 移除魔石。 / You have removed the manastone from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_SUCCEED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300473, value0);
 	}
 
 	/**
-	 * @param value0 You 无法移除 manastones 从物品在 %0。 / You cannot remove manastones from items in %0
+	 * 你无法移除 %0 中物品所镶嵌的魔石。 / You cannot remove manastones from items in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_REMOVE_ITEM_OPTION_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300474, value0);
 	}
 
 	/**
-	 * 距离过远：the NPC to modify the appearance of the item。 / You are too far from the NPC to modify the appearance of the item
+	 * 你与 NPC 的距离过远，无法进行外观改造。 / You are too far from the NPC to modify the appearance of the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300475);
 
 	/**
-	 * 你：must be at least level 20 before you can modify the appearance of items。 / You must be at least level 20 before you can modify the appearance of items
+	 * 进行物品外观改造需要达到 20 级。 / You must be at least level 20 before you can modify the appearance of items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_PC_LEVEL_LIMIT = new SM_SYSTEM_MESSAGE(1300476);
 
@@ -10944,49 +10944,49 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param descriptionId Youdonot 有足够基纳到 modifyappearance 的 %0。 / You do not have enough Kinah to modify the appearance of %0
+	 * 你的基纳不足，无法改造 %0 的外观。 / You do not have enough Kinah to modify the appearance of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_NOT_ENOUGH_GOLD(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300481, descriptionId);
 	}
 
 	/**
-	 * @param value0 You 有 failed 到 modifyappearance 的物品作为 youcouldnot 移除 skin 物品 %0。 / You have failed to modify the appearance of the item as you could not remove the skin item %0
+	 * 因无法移除外观材料 %0，物品外观改造失败。 / You have failed to modify the appearance of the item as you could not remove the skin item %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_CAN_NOT_REMOVE_SKIN_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300482, value0);
 	}
 
 	/**
-	 * @param descriptionId 你：have modified the appearance of %0。 / You have modified the appearance of %0
+	 * 你已改造 %0 的外观。 / You have modified the appearance of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_SUCCEED(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300483, descriptionId);
 	}
 
 	/**
-	 * @param value0 You 无法 modifyappearance 的物品在 %0。 / You cannot modify the appearance of items in %0
+	 * 你无法在 %0 中改造物品外观。 / You cannot modify the appearance of items in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHANGE_ITEM_SKIN_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300484, value0);
 	}
 
 	/**
-	 * @param value0 你：have successfully soul-bound %0。 / You have successfully soul-bound %0
+	 * 你已成功对 %0 进行灵魂刻印。 / You have successfully soul-bound %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SOUL_BOUND_ITEM_SUCCEED(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300485, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param value0 你：have failed to soul-bind %0。 / You have failed to soul-bind %0
+	 * 对 %0 的灵魂刻印失败。 / You have failed to soul-bind %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SOUL_BOUND_ITEM_FAILED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300486, value0);
 	}
 
 	/**
-	 * @param value0 你：cancelled the soul-binding of %0。 / You cancelled the soul-binding of %0
+	 * 你已取消对 %0 的灵魂刻印。 / You cancelled the soul-binding of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SOUL_BOUND_ITEM_CANCELED(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300487, new DescriptionId(value0));
@@ -10998,54 +10998,54 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SOUL_BOUND_CLOSE_OTHER_MSG_BOX_AND_RETRY = new SM_SYSTEM_MESSAGE(1300488);
 
 	/**
-	 * @param value0 You 无法 soul -绑定物品 while%0。 / You cannot soul-bind an item while %0
+	 * %0 状态下无法进行灵魂刻印。 / You cannot soul-bind an item while %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SOUL_BOUND_INVALID_STANCE(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300489, new DescriptionId(value0));
 	}
 
 	/**
-	 * 你：do not have a Power Shard equipped。 / You do not have a Power Shard equipped
+	 * 你没有装备能量碎片。 / You do not have a Power Shard equipped
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WEAPON_BOOST_NO_BOOSTER_EQUIPED = new SM_SYSTEM_MESSAGE(1300490);
 
 	/**
-	 * 你：activate the Power Shard。 / You activate the Power Shard
+	 * 你激活了能量碎片。 / You activate the Power Shard
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WEAPON_BOOST_BOOST_MODE_STARTED = new SM_SYSTEM_MESSAGE(1300491);
 
 	/**
-	 * 你：deactivate the Power Shard。 / You deactivate the Power Shard
+	 * 你取消了能量碎片。 / You deactivate the Power Shard
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WEAPON_BOOST_BOOST_MODE_ENDED = new SM_SYSTEM_MESSAGE(1300492);
 
 	/**
-	 * 你：cannot use the item。 / You cannot use the item
+	 * 你无法使用该物品。 / You cannot use the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_IS_NOT_USABLE = new SM_SYSTEM_MESSAGE(1300493);
 
 	/**
-	 * You 无法 use 物品作为其 cooldowntime 有 notexpiredyet。 / You cannot use the item as its cooldown time has not expired yet
+	 * 该物品的冷却时间尚未结束，无法使用。 / You cannot use the item as its cooldown time has not expired yet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_CANT_USE_UNTIL_DELAY_TIME = new SM_SYSTEM_MESSAGE(1300494);
 
 	/**
-	 * Youmust 为 next 到 postbox 并 click 其到 usepostservice。 / You must be next to a postbox and click it to use the post service
+	 * 必须靠近邮箱并点击后，才能使用邮件服务。 / You must be next to a postbox and click it to use the post service
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_CLICK_POSTBOX_TO_USE = new SM_SYSTEM_MESSAGE(1300495);
 
 	/**
-	 * 你：cannot mail equipped items。 / You cannot mail equipped items
+	 * 无法邮寄已装备的物品。 / You cannot mail equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_SEND_CAN_NOT_SEND_EQUIPPED_ITEM = new SM_SYSTEM_MESSAGE(1300496);
 
 	/**
-	 * You 无法 mail 物品为 nottradable。 / You cannot mail items that are not tradable
+	 * 无法邮寄不可交易的物品。 / You cannot mail items that are not tradable
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_SEND_ITEM_CAN_NOT_BE_EXCHANGED = new SM_SYSTEM_MESSAGE(1300497);
 
 	/**
-	 * You 无法 mail 物品 you 有已经 used。 / You cannot mail items that you have already used
+	 * 无法邮寄已使用过的物品。 / You cannot mail items that you have already used
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_SEND_USED_ITEM = new SM_SYSTEM_MESSAGE(1300498);
 
@@ -11062,70 +11062,70 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300500);
 
 	/**
-	 * 距离过远：the NPC to add abilities to the item。 / You are too far from the NPC to add abilities to the item
+	 * 你与 NPC 的距离过远，无法为物品附加能力。 / You are too far from the NPC to add abilities to the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GIVE_ITEM_PROC_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300501);
 
 	/**
-	 * Failed 到 find 目标物品到添加 ability 到。 / Failed to find the target item to add the ability to
+	 * 未能找到要附加能力的目标物品。 / Failed to find the target item to add the ability to
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_NO_TARGET_ITEM = new SM_SYSTEM_MESSAGE(1300502);
 
 	/**
-	 * You 无法添加 ability 到 equipped 物品。 / You cannot add an ability to equipped items
+	 * 无法为已装备的物品附加能力。 / You cannot add an ability to equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_CANNOT_GIVE_PROC_TO_EQUIPPED_ITEM = new SM_SYSTEM_MESSAGE(
 			1300503);
 
 	/**
-	 * @param value0 %0 为 not 物品 you 可添加 ability 到。 / %0 is not an item you can add ability to
+	 * %0 是无法附加能力的物品。 / %0 is not an item you can add ability to
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_NOT_PROC_GIVABLE_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300504, value0);
 	}
 
 	/**
-	 * 无法 find 物品到添加 ability 到。 / Cannot find the item to add ability to
+	 * 无法找到要附加能力的物品。 / Cannot find the item to add ability to
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_NO_PROC_GIVE_ITEM = new SM_SYSTEM_MESSAGE(1300505);
 
 	/**
-	 * @param value0 %0 为 not 物品 you 可添加 ability 到。 / %0 is not an item you can add ability to
+	 * %0 是无法附加能力的物品。 / %0 is not an item you can add ability to
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_NOT_PROC_GIVE_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300506, value0);
 	}
 
 	/**
-	 * @param descriptionId Youdonot 有足够基纳到添加 ability 到 %0。 / You do not have enough Kinah to add ability to %0
+	 * 你的基纳不足，无法为 %0 附加能力。 / You do not have enough Kinah to add ability to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_NOT_ENOUGH_MONEY(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300507, descriptionId);
 	}
 
 	/**
-	 * @param descriptionId 你：have successfully added ability to %0。 / You have successfully added ability to %0
+	 * 你已成功为 %0 附加能力。 / You have successfully added ability to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_ENCHANTED_TARGET_ITEM(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300508, descriptionId);
 	}
 
 	/**
-	 * @param value0 你：cannot socket godstones while %0。 / You cannot socket godstones while %0
+	 * %0 状态下无法镶嵌神石。 / You cannot socket godstones while %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GIVE_ITEM_PROC_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300509, value0);
 	}
 
 	/**
-	 * @param value0 你：have removed the dye from %0。 / You have removed the dye from %0
+	 * 你已从 %0 移除染料。 / You have removed the dye from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ITEM_COLOR_REMOVE_SUCCEED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300510, value0);
 	}
 
 	/**
-	 * 你：have dyed %0 %1。 / You have dyed %0 %1
+	 * 你把 %0 染成了 %1。 / You have dyed %0 %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ITEM_COLOR_CHANGE_SUCCEED(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300511, value0, value1);
@@ -11139,22 +11139,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 物品有 not 已 dyed。 / The item has not been dyed
+	 * 该物品尚未染色。 / The item has not been dyed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_COLOR_REMOVE_ERROR_CANNOTREMOVE = new SM_SYSTEM_MESSAGE(1300513);
 
 	/**
-	 * 物品无法为 found。 / The item cannot be found
+	 * 无法找到该物品。 / The item cannot be found
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_COLOR_ERROR = new SM_SYSTEM_MESSAGE(1300514);
 
 	/**
-	 * 你：cannot dye equipped items。 / You cannot dye equipped items
+	 * 无法为已装备的物品染色。 / You cannot dye equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_COLOR_CANNOT_CHANGE_EQUIPPED_ITEM = new SM_SYSTEM_MESSAGE(1300515);
 
 	/**
-	 * 目标为 busy 并无法 trade 在 moment。 / The target is busy and cannot trade at the moment
+	 * 对方正忙，暂时无法交易。 / The target is busy and cannot trade at the moment
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXCHANGE_START_OHER_IS_BUSY = new SM_SYSTEM_MESSAGE(1300516);
 
@@ -11215,12 +11215,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你已经a member。 / You are already a member
+	 * 你已是该组织成员。 / You are already a member
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FACTION_CAN_NOT_JOIN = new SM_SYSTEM_MESSAGE(1300525);
 
 	/**
-	 * @param value0 你：have left %0。 / You have left %0
+	 * 你已离开 %0。 / You have left %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FACTION_LEAVE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300526, value0);
@@ -11252,7 +11252,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TOO_SHORT_PETITION_MSG = new SM_SYSTEM_MESSAGE(1300538);
 
 	/**
-	 * @param value0 SupportPetition 有已 received.receipt 编号为 %0。 / The Support Petition has been received. The receipt number is %0
+	 * 客服请求已受理，受理编号为 %0。 / The Support Petition has been received. The receipt number is %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SUBMIT_PETITION_OK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300539, value0);
@@ -11303,19 +11303,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Support request has failed. Please try again later。
-	  * 你的Support request has failed. Please try again later。 / Your Support request has failed. Please try again later
+	  * 客服请求失败，请稍后再试。 / Your Support request has failed. Please try again later
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_SUBMIT_PETITION_FAILED = new SM_SYSTEM_MESSAGE(1300546);
 
 	/**
-	 * You 有 usedupyourdailyquota 的 %num0SupportPetitions.You 无法 makeanymoreinquiries 带此 accounttoday。 / You have used up your daily quota of %num0 Support Petitions. You cannot make any more inquiries with this account today
+	 * 你已用完每日 %num0 次客服请求额度，今天无法再用此账号发起请求。 / You have used up your daily quota of %num0 Support Petitions. You cannot make any more inquiries with this account today
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SUBMIT_PETITION_FAILED_OUT_OF_QUOTA(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300547, num0);
 	}
 
 	/**
-	 * SupportPetition 有已经已 received.Pleasewait 用于 reply。 / A Support Petition has already been received. Please wait for a reply
+	 * 已有客服请求被受理，请等待回复。 / A Support Petition has already been received. Please wait for a reply
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SUBMIT_PETITION_FAILED_ALREADY_SUBMITTED = new SM_SYSTEM_MESSAGE(1300548);
 
@@ -11356,7 +11356,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cancelled the proxy petition request for %0。 / You cancelled the proxy petition request for %0
+	 * 你取消了 %0 的代理请求。 / You cancelled the proxy petition request for %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANCEL_PETITION_OK_TO_GM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300554, value0);
@@ -11408,7 +11408,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你不in a consultation with the GM。 / You are not in a consultation with the GM
+	 * 你未在与 GM 的咨询会话中。 / You are not in a consultation with the GM
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NOT_IN_PETITION_CHAT = new SM_SYSTEM_MESSAGE(1300562);
 
@@ -11437,54 +11437,54 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_PARTY_LEADER_ONLY = new SM_SYSTEM_MESSAGE(1300566);
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 yourgroup 有 %0 或 more 成员。 / You can only receive this quest when your group has %0 or more members
+	 * 你的队伍达到 %0 人或以上时才能接受此任务。 / You can only receive this quest when your group has %0 or more members
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_PARTY_SIZE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300567, value0);
 	}
 
 	/**
-	 * 仅军团军团长可 receivequest。 / Only the Legion Brigade General can receive the quest
+	 * 只有军团长才能接受此任务。 / Only the Legion Brigade General can receive the quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_GUILD_MASTER_ONLY = new SM_SYSTEM_MESSAGE(1300568);
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 level 的 your 军团为 %0 或 above。 / You can only receive this quest when the level of your Legion is %0 or above
+	 * 你的军团等级达到 %0 级或以上时才能接受此任务。 / You can only receive this quest when the level of your Legion is %0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_GUILD_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300569, value0);
 	}
 
 	/**
-	 * @param num0 You 可仅 receive 此 quest 当军团 Point 的 your 军团为 %num0 或 above。 / You can only receive this quest when the Legion Point of your Legion is %num0 or above
+	 * 你的军团积分达到 %num0 或以上时才能接受此任务。 / You can only receive this quest when the Legion Point of your Legion is %num0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_GUILD_EXP(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300570, num0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 yourlevel 为 %0 或 above。 / You can only receive this quest when your level is %0 or above
+	 * 你的等级达到 %0 或以上时才能接受此任务。 / You can only receive this quest when your level is %0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_MIN_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300571, value0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 yourlevel 为 %0 或 below。 / You can only receive this quest when your level is %0 or below
+	 * 你的等级达到 %0 或以下时才能接受此任务。 / You can only receive this quest when your level is %0 or below
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_MAX_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300572, value0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 yourrank 为 %0 或 above。 / You can only receive this quest when your rank is %0 or above
+	 * 你的军衔达到 %0 或以上时才能接受此任务。 / You can only receive this quest when your rank is %0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_MIN_RANK(int value0) {
 		return new SM_SYSTEM_MESSAGE(1300573, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 yourproductionjobrank 为 %0 或 above。 / You can only receive this quest when your production job rank is %0 or above
+	 * 你的制作技能等级达到 %0 或以上时才能接受此任务。 / You can only receive this quest when your production job rank is %0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_TS_RANK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300574, value0);
@@ -11525,160 +11525,160 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_CLASS = new SM_SYSTEM_MESSAGE(1300580);
 
 	/**
-	 * @param value0 你：must have the %0 voice to receive this quest。 / You must have the %0 voice to receive this quest
+	 * 必须拥有 %0 嗓音才能接受此任务。 / You must have the %0 voice to receive this quest
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_VOICE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300581, value0);
 	}
 
 	/**
-	 * @param num0 You 可仅 receive 此 quest 当 youneed%num0 或 lessXP 到 reachnextlevel。 / You can only receive this quest when you need %num0 or less XP to reach the next level
+	 * 距离升到下一级所需经验不超过 %num0 时才能接受此任务。 / You can only receive this quest when you need %num0 or less XP to reach the next level
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_EXP_TO_NEXT_LEVEL(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300582, num0);
 	}
 
 	/**
-	 * @param num0 You 可仅 receive 此 quest 当 yourStigmaPoint 为 %num0 或 above。 / You can only receive this quest when your Stigma Point is %num0 or above
+	 * 你的烙印点数达到 %num0 或以上时才能接受此任务。 / You can only receive this quest when your Stigma Point is %num0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_STIGMA_PT(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300583, num0);
 	}
 
 	/**
-	 * @param num0 You 可仅 receive 此 quest 当 yourPVPpoint 为 %num0 或 more。 / You can only receive this quest when your PVP point is %num0 or more
+	 * 你的 PVP 点数达到 %num0 或以上时才能接受此任务。 / You can only receive this quest when your PVP point is %num0 or more
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_PVP_PT(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300584, num0);
 	}
 
 	/**
-	 * You 可仅 receive 此 quest 当 %0 ' sfavortowardyou 为 %num1 或 above。 / You can only receive this quest when %0's favor toward you is %num1 or above
+	 * %0 对你的好感度达到 %num1 或以上时才能接受此任务。 / You can only receive this quest when %0's favor toward you is %num1 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_FAVOR(String value0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1300585, value0, num1);
 	}
 
 	/**
-	 * You 可仅 receive 此 quest 当 yourFaction 带 %0 为 %num1 或 higher。 / You can only receive this quest when your Faction with %0 is %num1 or higher
+	 * 你与 %0 的势力关系达到 %num1 或以上时才能接受此任务。 / You can only receive this quest when your Faction with %0 is %num1 or higher
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_FACTION(String value0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1300586, value0, num1);
 	}
 
 	/**
-	 * @param num0 You 可仅 receive 此 quest 当 yourNationalContributePoint 为 %num0 或 more。 / You can only receive this quest when your National Contribute Point is %num0 or more
+	 * 你的国家贡献点数达到 %num0 或以上时才能接受此任务。 / You can only receive this quest when your National Contribute Point is %num0 or more
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_NATION_PT(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300587, num0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 you 有 %0title。 / You can only receive this quest when you have the %0 title
+	 * 必须拥有 %0 称号才能接受此任务。 / You can only receive this quest when you have the %0 title
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_TITLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300588, value0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 you 有 %0skill。 / You can only receive this quest when you have the %0 skill
+	 * 必须拥有 %0 技能才能接受此任务。 / You can only receive this quest when you have the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_SKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300589, value0);
 	}
 
 	/**
-	 * You 可仅 accept 此 quest 当 you 有 level%1%0skill。 / You can only accept this quest when you have level %1 %0 skill
+	 * 必须拥有 %1 级 %0 技能才能接受此任务。 / You can only accept this quest when you have level %1 %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_SKILL_LEVEL(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1300590, value1, value0);
 	}
 
 	/**
-	 * 你不in the altered state required to receive this quest。 / You are not in the altered state required to receive this quest
+	 * 你未处于接受此任务所需的异常状态。 / You are not in the altered state required to receive this quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_ABNORMAL_STATUS = new SM_SYSTEM_MESSAGE(1300591);
 
 	/**
-	 * @param num0 Youmust 有 played 用于 total 的在 least%num0hours 到 receive 此 quest。 / You must have played for a total of at least %num0 hours to receive this quest
+	 * 累计游戏时间达到 %num0 小时以上才能接受此任务。 / You must have played for a total of at least %num0 hours to receive this quest
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_PLAY_TIME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300592, num0);
 	}
 
 	/**
-	 * @param descriptionId You 可仅 receive 此 quest 当 you 为 equipped 带 %0。 / You can only receive this quest when you are equipped with %0
+	 * 只有装备 %0 时才能接受此任务。 / You can only receive this quest when you are equipped with %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_EQUIP_ITEM(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300593, descriptionId);
 	}
 
 	/**
-	 * @param descriptionId You 可仅 receive 此 quest 当 you 有 %0 在 yourinventory。 / You can only receive this quest when you have %0 in your inventory
+	 * 背包中拥有 %0 时才能接受此任务。 / You can only receive this quest when you have %0 in your inventory
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_INVENTORY_ITEM(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1300594, descriptionId);
 	}
 
 	/**
-	 * @param value0 Youmust 为成员的 %0NPC 军团到 receive 此 quest。 / You must be a member of the %0 NPC Legion to receive this quest
+	 * 必须是 %0 NPC 军团成员才能接受此任务。 / You must be a member of the %0 NPC Legion to receive this quest
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_NPC_GUILD(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300595, value0);
 	}
 
 	/**
-	 * @param value0 You 可仅 receive 此 quest 当 you 有 completed%0quest。 / You can only receive this quest when you have completed the %0 quest
+	 * 只有完成 %0 任务后才能接受此任务。 / You can only receive this quest when you have completed the %0 quest
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_FINISHED_QUEST(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300596, value0);
 	}
 
 	/**
-	 * You 无法 receivequestyou 为已经 working 在。 / You cannot receive a quest that you are already working on
+	 * 无法接受正在进行中的任务。 / You cannot receive a quest that you are already working on
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_WORKING_QUEST = new SM_SYSTEM_MESSAGE(1300597);
 
 	/**
-	 * 你：cannot receive quests while you are dead。 / You cannot receive quests while you are dead
+	 * 死亡状态下无法接受任务。 / You cannot receive quests while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_DIE = new SM_SYSTEM_MESSAGE(1300598);
 
 	/**
-	 * @param value0 你：can do the %0 quest only once。 / You can do the %0 quest only once
+	 * %0 任务只能完成一次。 / You can do the %0 quest only once
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_NONE_REPEATABLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300599, value0);
 	}
 
 	/**
-	 * 你：can do the %0 quest only %1 times。 / You can do the %0 quest only %1 times
+	 * %0 任务只能完成 %1 次。 / You can do the %0 quest only %1 times
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_MAX_REPEAT_COUNT(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300600, value0, value1);
 	}
 
 	/**
-	 * You 无法获取 questrewardwhileyou 为 dead。 / You cannot get a quest reward while you are dead
+	 * 死亡状态下无法领取任务奖励。 / You cannot get a quest reward while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_GET_REWARD_ERROR_DEAD = new SM_SYSTEM_MESSAGE(1300601);
 
 	/**
-	 * You 无法获取 questreward 作为 you 不有 %0%0s。 / You cannot get the quest reward as you don't have %0 %0s
+	 * 你缺少 %0，无法领取任务奖励。 / You cannot get the quest reward as you don't have %0 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_GET_REWARD_ERROR_NO_QUEST_ITEM_SINGLE(String value0, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1300602, value0, value0s);
 	}
 
 	/**
-	 * You 无法 receivequestreward 作为 youdonot 有 %1%0。 / You cannot receive the quest reward as you do not have %1 %0
+	 * 你缺少 %1 个 %0，无法领取任务奖励。 / You cannot receive the quest reward as you do not have %1 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_GET_REWARD_ERROR_NO_QUEST_ITEM_MULTIPLE(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1300603, value1, value0);
 	}
 
 	/**
-	 * @param value0 You 无法 destroy%0because 其为 used 在" %1 " quest 无法为 abandonedoncestarted。 / You cannot destroy %0 because it is used in the "%1" quest which cannot be abandoned once started
+	 * %0 用于“%1”任务，该任务一旦开始便无法放弃，因此无法销毁 %0。 / You cannot destroy %0 because it is used in the "%1" quest which cannot be abandoned once started
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_IMPOSSIBLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300604, value0);
@@ -11706,28 +11706,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_SYSTEMMSG_QUEST = new SM_SYSTEM_MESSAGE(1300608);
 
 	/**
-	 * @return %1[获得]%2 %0 / %1[acquire]%2 %0
+	 * %1[获得]%2 %0 / %1[acquire]%2 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_QIMSG_ACQUIRE() {
 		return new SM_SYSTEM_MESSAGE(1300609);
 	}
 
 	/**
-	 * @return %1[失败]%2 %0 / %1[fail]%2 %0
+	 * %1[失败]%2 %0 / %1[fail]%2 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_QIMSG_GIVEUP() {
 		return new SM_SYSTEM_MESSAGE(1300610);
 	}
 
 	/**
-	 * @return %1[更新]%2 %0 / %1[update]%2 %0
+	 * %1[更新]%2 %0 / %1[update]%2 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_QIMSG_UPDATE() {
 		return new SM_SYSTEM_MESSAGE(1300611);
 	}
 
 	/**
-	 * @return %1[完成]%2 %0 / %1[complete]%2 %0
+	 * %1[完成]%2 %0 / %1[complete]%2 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_QUEST_QIMSG_COMPLETE() {
 		return new SM_SYSTEM_MESSAGE(1300612);
@@ -11790,12 +11790,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot learn this design。 / You cannot learn this design
+	 * 你无法学习该设计图。 / You cannot learn this design
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_RECIPEITEM_CANT_USE_NO_RECIPE = new SM_SYSTEM_MESSAGE(1300621);
 
 	/**
-	 * 你：cannot receive any more quests。 / You cannot receive any more quests
+	 * 你无法再接受更多任务。 / You cannot receive any more quests
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ACQUIRE_ERROR_MAX_NORMAL = new SM_SYSTEM_MESSAGE(1300622);
 
@@ -11855,19 +11855,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_NOTHING_HAPPEN = new SM_SYSTEM_MESSAGE(1300630);
 
 	/**
-	 * 你：cannot use teleport here。 / You cannot use teleport here
+	 * 你无法在这里使用传送。 / You cannot use teleport here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NO_TELEPORT = new SM_SYSTEM_MESSAGE(1300631);
 
 	/**
-	 * @param value0 你：have unblocked %0。 / You have unblocked %0
+	 * 你已解除对 %0 的屏蔽。 / You have unblocked %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ONE_INCLUDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300632, value0);
 	}
 
 	/**
-	 * @param value0 你：have blocked %0。 / You have blocked %0
+	 * 你已屏蔽 %0。 / You have blocked %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ONE_EXCLUDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300633, value0);
@@ -11886,21 +11886,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_NO_EXCLUDES = new SM_SYSTEM_MESSAGE(1300635);
 
 	/**
-	 * @param value0 你：have excluded %0。 / You have excluded %0
+	 * 你已将 %0 加入除外名单。 / You have excluded %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ONE_NO_LONGER_INCLUDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300636, value0);
 	}
 
 	/**
-	 * @param value0 你：have listed %0 as a friend。 / You have listed %0 as a friend
+	 * 你已将 %0 加为好友。 / You have listed %0 as a friend
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ONE_IS_INCLUDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300637, value0);
 	}
 
 	/**
-	 * 你：have too many users listed as friends。 / You have too many users listed as friends
+	 * 你的好友数量已达上限。 / You have too many users listed as friends
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TOO_MANY_INCLUDE = new SM_SYSTEM_MESSAGE(1300638);
 
@@ -11912,7 +11912,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have no chat friends。 / You have no chat friends
+	 * 你没有聊天好友。 / You have no chat friends
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NO_INCLUDES = new SM_SYSTEM_MESSAGE(1300640);
 
@@ -11932,14 +11932,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0m 请勿刷屏。禁言 %0 分钟。 / Please do not flood chat. Blocked for %0m
+	 * 请勿刷屏，你已被禁言 %0 分钟。 / Please do not flood chat. Blocked for %0m
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_DISABLED_FOR(String value0m) {
 		return new SM_SYSTEM_MESSAGE(1300643, value0m);
 	}
 
 	/**
-	 * 你：may now chat again。 / You may now chat again
+	 * 你现在可以重新发言了。 / You may now chat again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CAN_CHAT_NOW = new SM_SYSTEM_MESSAGE(1300644);
 
@@ -11949,39 +11949,39 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GLOBAL_CHAT_DISABLED_FOR = new SM_SYSTEM_MESSAGE(1300645);
 
 	/**
-	 * You 无法创建 generalchannel 在 yourdiscretion。 / You cannot create a general channel at your discretion
+	 * 你无法按自己的意愿创建通用频道。 / You cannot create a general channel at your discretion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_MAKE_GENERALCHANNEL = new SM_SYSTEM_MESSAGE(1300646);
 
 	/**
-	 * @param nameId %0 有已经已 sold。 / %0 has already been sold
+	 * %0 已售出。 / %0 has already been sold
 	 */
 	public static SM_SYSTEM_MESSAGE STR_VENDOR_SOLD_OUT(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1300647, new DescriptionId(nameId));
 	}
 
 	/**
-	 * Youdonot 有足够基纳到 payfee。 / You do not have enough Kinah to pay the fee
+	 * 你的基纳不足，无法支付费用。 / You do not have enough Kinah to pay the fee
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1300648);
 
 	/**
-	 * You 无法 registeranymore 物品作为 there 为 nospace 可用。 / You cannot register any more items as there is no space available
+	 * 没有可用空间，无法再登记物品。 / You cannot register any more items as there is no space available
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_FULL_ITEM = new SM_SYSTEM_MESSAGE(1300649);
 
 	/**
-	 * You 无法 register 物品有已经已 used。 / You cannot register items that have already been used
+	 * 无法登记已使用过的物品。 / You cannot register items that have already been used
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_REGISTER_USED_ITEM = new SM_SYSTEM_MESSAGE(1300650);
 
 	/**
-	 * 你：cannot register equipped items。 / You cannot register equipped items
+	 * 无法登记已装备的物品。 / You cannot register equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_REGISTER_EQUIPPED_ITEM = new SM_SYSTEM_MESSAGE(1300651);
 
 	/**
-	 * You 无法列表 untradeable 物品。 / You cannot list an untradeable item
+	 * 无法上架不可交易的物品。 / You cannot list an untradeable item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_REGISTER_CANNOT_BE_EXCHANGED = new SM_SYSTEM_MESSAGE(1300652);
 
@@ -11991,17 +11991,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_REGISTER_FULL_BASKET = new SM_SYSTEM_MESSAGE(1300653);
 
 	/**
-	 * You 无法 continuetrading 作为 yourinventory 为 full。 / You cannot continue trading as your inventory is full
+	 * 背包已满，无法继续交易。 / You cannot continue trading as your inventory is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_FULL_INVENTORY = new SM_SYSTEM_MESSAGE(1300654);
 
 	/**
-	 * 你：cannot register this item。 / You cannot register this item
+	 * 无法登记该物品。 / You cannot register this item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_CAN_NOT_REGISTER_ITEM = new SM_SYSTEM_MESSAGE(1300655);
 
 	/**
-	 * 此物品为已经 registered。 / This item is already registered
+	 * 该物品已被登记。 / This item is already registered
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_ALREADY_REGISTERED = new SM_SYSTEM_MESSAGE(1300656);
 
@@ -12011,12 +12011,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DEFAULT_ADVERTISE_MSG = new SM_SYSTEM_MESSAGE(1300657);
 
 	/**
-	 * 你：start doing business at your private store。 / You start doing business at your private store
+	 * 你开始经营个人商店。 / You start doing business at your private store
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_START = new SM_SYSTEM_MESSAGE(1300658);
 
 	/**
-	 * 你：stop doing business at your private store。 / You stop doing business at your private store
+	 * 你停止经营个人商店。 / You stop doing business at your private store
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_END = new SM_SYSTEM_MESSAGE(1300659);
 
@@ -12026,17 +12026,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CAN_NOT_SELL_EQUIPED_ITEM = new SM_SYSTEM_MESSAGE(1300660);
 
 	/**
-	 * You 无法 sell 物品无法为 traded 带 otherusers。 / You cannot sell items that cannot be traded with other users
+	 * 无法出售无法与其他玩家交易的物品。 / You cannot sell items that cannot be traded with other users
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CANNOT_BE_EXCHANGED = new SM_SYSTEM_MESSAGE(1300661);
 
 	/**
-	 * 你：cannot sell used items。 / You cannot sell used items
+	 * 无法出售已使用过的物品。 / You cannot sell used items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CAN_NOT_SELL_USED_ITEM = new SM_SYSTEM_MESSAGE(1300662);
 
 	/**
-	 * 你：cannot open a private store while fighting。 / You cannot open a private store while fighting
+	 * 战斗中无法开设个人商店。 / You cannot open a private store while fighting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DISABLED_IN_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1300663);
 
@@ -12046,7 +12046,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CLOSED_FOR_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1300664);
 
 	/**
-	 * @param value0 %0 有已经已 sold。 / %0 has already been sold
+	 * %0 已售出。 / %0 has already been sold
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_SOLD_OUT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300665, value0);
@@ -12058,12 +12058,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_FULL_BASKET = new SM_SYSTEM_MESSAGE(1300666);
 
 	/**
-	 * 你：have not opened Quickbar No.2。 / You have not opened Quickbar No.2
+	 * 你尚未开启 2 号快捷栏。 / You have not opened Quickbar No.2
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUICKBAR_NOT_OPEN_SECONDBAR = new SM_SYSTEM_MESSAGE(1300667);
 
 	/**
-	 * 你：have not opened Quickbar No.3。 / You have not opened Quickbar No.3
+	 * 你尚未开启 3 号快捷栏。 / You have not opened Quickbar No.3
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUICKBAR_NOT_OPEN_THIRDBAR = new SM_SYSTEM_MESSAGE(1300668);
 
@@ -12073,7 +12073,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_DEATH_NOT_REGISTERED_RESURRECT_POINT = new SM_SYSTEM_MESSAGE(1300669);
 
 	/**
-	 * @param subzone 你已绑定在 [%subzone]。 / You are now bound at [%subzone]
+	 * 你已绑定在 [%subzone]。 / You are now bound at [%subzone]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DEATH_REGISTER_RESURRECT_POINT(String subzone) {
 		return new SM_SYSTEM_MESSAGE(1300670, subzone);
@@ -12086,17 +12086,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1300671);
 
 	/**
-	 * Youdonot 有足够基纳到 recoveryourXP。 / You do not have enough Kinah to recover your XP
+	 * 你的基纳不足，无法恢复经验值。 / You do not have enough Kinah to recover your XP
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_RECOVER_EXPERIENCE_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1300672);
 
 	/**
-	 * 距离过远：a healer to receive Soul Healing。 / You are too far from a healer to receive Soul Healing
+	 * 你距治愈师过远，无法接受灵魂治愈。 / You are too far from a healer to receive Soul Healing
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_RECOVER_EXPERIENCE_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300673);
 
 	/**
-	 * 你：received Soul Healing。 / You received Soul Healing
+	 * 你接受了灵魂治愈。 / You received Soul Healing
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SUCCESS_RECOVER_EXPERIENCE = new SM_SYSTEM_MESSAGE(1300674);
 
@@ -12106,13 +12106,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PVPZONE_CANNOT_MOVE_PVPZONE_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300675);
 
 	/**
-	 * 你：cannot change the PVP zone because you have no means to move。 / You cannot change the PVP zone because you have no means to move
+	 * 你没有移动手段，无法变更 PVP 区域。 / You cannot change the PVP zone because you have no means to move
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PVPZONE_CANNOT_MOVE_PVPZONE_NPC_NOT_CORRECT = new SM_SYSTEM_MESSAGE(
 			1300676);
 
 	/**
-	 * 目标为 invalid.Pleaseselect 玩家。 / The target is invalid. Please select a player
+	 * 目标无效，请选择玩家。 / The target is invalid. Please select a player
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ASSISTKEY_INCORRECT_TARGET = new SM_SYSTEM_MESSAGE(1300677);
 
@@ -12142,12 +12142,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_WORLDMAP_INFO = new SM_SYSTEM_MESSAGE(1300681);
 
 	/**
-	 * 你：do not have any XP to recover。 / You do not have any XP to recover
+	 * 你没有可恢复的经验值。 / You do not have any XP to recover
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DONOT_HAVE_RECOVER_EXPERIENCE = new SM_SYSTEM_MESSAGE(1300682);
 
 	/**
-	 * 你：can respond to the survey only in this server。 / You can respond to the survey only in this server
+	 * 只能在本服务器参与该问卷调查。 / You can respond to the survey only in this server
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_POLL_ANSWER_IS_NOT_ORG_SERVER = new SM_SYSTEM_MESSAGE(1300683);
 
@@ -12157,39 +12157,39 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_FIND_POLL = new SM_SYSTEM_MESSAGE(1300684);
 
 	/**
-	 * You 有已经 responded 到此 survey。 / You have already responded to this survey
+	 * 你已经参与过该问卷调查。 / You have already responded to this survey
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ALREADY_ANSWER_THIS_POLL = new SM_SYSTEM_MESSAGE(1300685);
 
 	/**
-	 * Youdonot 有足够基纳到 register 此 location 作为绑定 point。 / You do not have enough Kinah to register this location as a bind point
+	 * 你的基纳不足，无法将此地点登记为绑定点。 / You do not have enough Kinah to register this location as a bind point
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_RESURRECT_POINT_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(
 			1300686);
 
 	/**
-	 * You 无法绑定从 here。 / You cannot bind from here
+	 * 无法从这里绑定。 / You cannot bind from here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_RESURRECT_POINT_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(
 			1300687);
 
 	/**
-	 * You 有已经 bound 在此 location。 / You have already bound at this location
+	 * 你已在该地点绑定。 / You have already bound at this location
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ALREADY_REGISTER_THIS_RESURRECT_POINT = new SM_SYSTEM_MESSAGE(1300688);
 
 	/**
-	 * Youdonot 有足够基纳用于 teleport。 / You do not have enough Kinah for teleport
+	 * 你的基纳不足，无法传送。 / You do not have enough Kinah for teleport
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_MOVE_TO_AIRPORT_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1300689);
 
 	/**
-	 * You 无法 use 其作为所需 quest 有 not 已 completed。 / You cannot use it as the required quest has not been completed
+	 * 所需任务尚未完成，无法使用。 / You cannot use it as the required quest has not been completed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST = new SM_SYSTEM_MESSAGE(1300690);
 
 	/**
-	 * 你：cannot move to that destination。 / You cannot move to that destination
+	 * 你无法移动到该目的地。 / You cannot move to that destination
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_MOVE_TO_AIRPORT_NO_ROUTE = new SM_SYSTEM_MESSAGE(1300691);
 
@@ -12199,12 +12199,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_MOVE_TO_AIRPORT_WRONG_NPC = new SM_SYSTEM_MESSAGE(1300692);
 
 	/**
-	 * 距离过远：the NPC to teleport。 / You are too far from the NPC to teleport
+	 * 你与 NPC 的距离过远，无法传送。 / You are too far from the NPC to teleport
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_MOVE_TO_AIRPORT_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300693);
 
 	/**
-	 * 你：can bind here by clicking the Obelisk。 / You can bind here by clicking the Obelisk
+	 * 点击方尖碑即可在此处绑定。 / You can bind here by clicking the Obelisk
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_NOTIFY_RESURRECT_POINT = new SM_SYSTEM_MESSAGE(1300694);
 
@@ -12214,12 +12214,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_OTHER_USER_USE_RESURRECT_SKILL_ALREADY = new SM_SYSTEM_MESSAGE(1300695);
 
 	/**
-	 * You 无法 teleport 到绑定 pointwhileflying。 / You cannot teleport to a bind point while flying
+	 * 飞行中无法传送到绑定点。 / You cannot teleport to a bind point while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_AIRPORT_WHEN_FLYING = new SM_SYSTEM_MESSAGE(1300696);
 
 	/**
-	 * server 为 beingshutdown 用于更新。 / The server is being shut down for an update
+	 * 服务器因更新正在关闭。 / The server is being shut down for an update
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SHUTDOWN_REASON_UPDATE = new SM_SYSTEM_MESSAGE(1300697);
 
@@ -12242,7 +12242,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_KICK_ANOTHER_USER_TRY_LOGIN = new SM_SYSTEM_MESSAGE(1300700);
 
 	/**
-	 * Youdonot 有足够基纳到 useartifact。 / You do not have enough Kinah to use the artifact
+	 * 你的基纳不足，无法使用遗物。 / You do not have enough Kinah to use the artifact
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ARTIFACT_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1300701);
 
@@ -12252,12 +12252,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ARTIFACT_OUT_OF_ORDER = new SM_SYSTEM_MESSAGE(1300702);
 
 	/**
-	 * 你：have no authority to use the Artifact。 / You have no authority to use the Artifact
+	 * 你没有使用遗物的权限。 / You have no authority to use the Artifact
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ARTIFACT_HAVE_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(1300703);
 
 	/**
-	 * 你：cannot use the Artifact from this place。 / You cannot use the Artifact from this place
+	 * 你无法从此处使用遗物。 / You cannot use the Artifact from this place
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ARTIFACT_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300704);
 
@@ -12267,12 +12267,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_ARTIFACT_IS_NOT_ARTIFACT = new SM_SYSTEM_MESSAGE(1300705);
 
 	/**
-	 * 你：have no authority to go through the door。 / You have no authority to go through the door
+	 * 你没有通过该门的权限。 / You have no authority to go through the door
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DOOR_HAVE_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(1300706);
 
 	/**
-	 * 你：cannot use the door from here。 / You cannot use the door from here
+	 * 你无法从此处使用该门。 / You cannot use the door from here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DOOR_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300707);
 
@@ -12298,17 +12298,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_RECEIVE_MAIL = new SM_SYSTEM_MESSAGE(1300711);
 
 	/**
-	 * 全部物品为已经 confirmed.You 无法 registeranymore 物品。 / All items are already confirmed. You cannot register any more items
+	 * 物品已全部确认，无法再登记更多物品。 / All items are already confirmed. You cannot register any more items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EXCHANGE_ALREADY_READY = new SM_SYSTEM_MESSAGE(1300712);
 
 	/**
-	 * You 无法 split 物品在 inventoryduringtrade。 / You cannot split items in the inventory during a trade
+	 * 交易中无法拆分背包中的物品。 / You cannot split items in the inventory during a trade
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INVENTORY_SPLIT_DURING_TRADE = new SM_SYSTEM_MESSAGE(1300713);
 
 	/**
-	 * 你：cannot open the private store on a moving object。 / You cannot open the private store on a moving object
+	 * 无法在移动中的物体上开设个人商店。 / You cannot open the private store on a moving object
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DISABLED_IN_MOVING_OBJECT = new SM_SYSTEM_MESSAGE(1300714);
 
@@ -12318,17 +12318,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_NO_PORTAL = new SM_SYSTEM_MESSAGE(1300715);
 
 	/**
-	 * 你：cannot use a Rift here。 / You cannot use a Rift here
+	 * 无法在这里使用裂隙。 / You cannot use a Rift here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300716);
 
 	/**
-	 * 你：cannot use a Rift at your level。 / You cannot use a Rift at your level
+	 * 你的等级无法使用裂隙。 / You cannot use a Rift at your level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_LEVEL_LIMIT = new SM_SYSTEM_MESSAGE(1300717);
 
 	/**
-	 * Rift 有已经 hadmaximum 编号的 peopletravelthrough 其。 / The Rift has already had the maximum number of people travel through it
+	 * 通过裂隙的人数已达上限。 / The Rift has already had the maximum number of people travel through it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_USE_COUNT_LIMIT = new SM_SYSTEM_MESSAGE(1300718);
 
@@ -12352,14 +12352,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_KEY_ITEM = new SM_SYSTEM_MESSAGE(1300721);
 
 	/**
-	 * @param value0 你：need %0 to open the door。 / You need %0 to open the door
+	 * 你需要 %0 才能开门。 / You need %0 to open the door
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_OPEN_DOOR_NEED_NAMED_KEY_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300722, value0);
 	}
 
 	/**
-	 * 你：need a key to open the door。 / You need a key to open the door
+	 * 你需要一把钥匙才能开门。 / You need a key to open the door
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_OPEN_DOOR_NEED_KEY_ITEM = new SM_SYSTEM_MESSAGE(1300723);
 
@@ -12369,22 +12369,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_RETURN_MAIL_FROM = new SM_SYSTEM_MESSAGE(1300724);
 
 	/**
-	 * Your 物品有已 returned 作为 salesperiod 有 ended。 / Your item has been returned as the sales period has ended
+	 * 因销售期限已过，你的物品已被返还。 / Your item has been returned as the sales period has ended
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_RETURN_MAIL_CONTENT = new SM_SYSTEM_MESSAGE(1300725);
 
 	/**
-	 * 你：have no authority to use it as you are not a member of the Conquering Legion。 / You have no authority to use it as you are not a member of the Conquering Legion
+	 * 你不是征服军团成员，没有使用权限。 / You have no authority to use it as you are not a member of the Conquering Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DOOR_REPAIR_HAVE_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(1300726);
 
 	/**
-	 * You 无法 use 作为 cooldowntime 有 notexpiredyet。 / You cannot use that as the cooldown time has not expired yet
+	 * 冷却时间尚未结束，无法使用。 / You cannot use that as the cooldown time has not expired yet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DOOR_REPAIR_OUT_OF_COOLTIME = new SM_SYSTEM_MESSAGE(1300727);
 
 	/**
-	 * 你：do not have enough items needed for repair. The fee is %0 (per %1)。 / You do not have enough items needed for repair. The fee is %0 (per %1)
+	 * 你没有足够的修理材料。费用为 %0（每 %1）。 / You do not have enough items needed for repair. The fee is %0 (per %1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_USE_DOOR_REPAIR_NOT_ENOUGH_FEE(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300728, value0, value1);
@@ -12424,22 +12424,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TP_LF2_TP0_L_TOLF1A = new SM_SYSTEM_MESSAGE(1300734);
 
 	/**
-	 * 你：cannot use any items while flying。 / You cannot use any items while flying
+	 * 飞行中无法使用任何物品。 / You cannot use any items while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FLYING_DISABLE_1 = new SM_SYSTEM_MESSAGE(1300735);
 
 	/**
-	 * 你：cannot use the skill while flying。 / You cannot use the skill while flying
+	 * 飞行中无法使用该技能。 / You cannot use the skill while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FLYING_DISABLE_2 = new SM_SYSTEM_MESSAGE(1300736);
 
 	/**
-	 * 你：have died。 / You have died
+	 * 你已死亡。 / You have died
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DEATH_MESSAGE_ME = new SM_SYSTEM_MESSAGE(1300737);
 
 	/**
-	 * 你：have resurrected。 / You have resurrected
+	 * 你已复活。 / You have resurrected
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_REBIRTH_MASSAGE_ME = new SM_SYSTEM_MESSAGE(1300738);
 
@@ -12474,21 +12474,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_RESURRECT_DIALOG__BIND = new SM_SYSTEM_MESSAGE(1300743);
 
 	/**
-	 * @param value0 其 will 为 cancelled 若 youdonotpress 其在 %0minutes。 / It will be cancelled if you do not press it in %0 minutes
+	 * 若 %0 分钟内没有确认，将会被取消。 / It will be cancelled if you do not press it in %0 minutes
 	 */
 	public static SM_SYSTEM_MESSAGE STR_RESURRECTOTHER_DIALOG__5MIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300744, value0);
 	}
 
 	/**
-	 * @param value0 其 will 为 cancelled 若 youdonotpress 其在 %0minutes。 / It will be cancelled if you do not press it in %0 minutes
+	 * 若 %0 分钟内没有确认，将会被取消。 / It will be cancelled if you do not press it in %0 minutes
 	 */
 	public static SM_SYSTEM_MESSAGE STR_RESURRECT_DIALOG__5MIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300745, value0);
 	}
 
 	/**
-	 * @param value0 Youwill 为 resurrected 在 registered 绑定 point 若 youdonotpress 其在 %0minutes。 / You will be resurrected at the registered bind point if you do not press it in %0 minutes
+	 * 若 %0 分钟内没有确认，你将在已登记的绑定点复活。 / You will be resurrected at the registered bind point if you do not press it in %0 minutes
 	 */
 	public static SM_SYSTEM_MESSAGE STR_RESURRECT_DIALOG__30MIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300746, value0);
@@ -12549,7 +12549,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot quit the game during the battle。 / You cannot quit the game during the battle
+	 * 战斗中无法退出游戏。 / You cannot quit the game during the battle
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_QUIT = new SM_SYSTEM_MESSAGE(1300755);
 
@@ -12560,7 +12560,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIGHT_SIDE_DIRECT_PORTAL_OPEN = new SM_SYSTEM_MESSAGE(1300756);
 
 	/**
-	 * @param num0 你：spent %num0 Kinah。 / You spent %num0 Kinah
+	 * 你花费了 %num0 基纳。 / You spent %num0 Kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_USEMONEY(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300757, num0);
@@ -12572,24 +12572,24 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TITLE_TRADE_FAIL = new SM_SYSTEM_MESSAGE(1300758);
 
 	/**
-	 * 你：do not have enough Kinah。 / You do not have enough Kinah
+	 * 你的基纳不足。 / You do not have enough Kinah
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300759);
 
 	/**
-	 * @param num0 You 可列表 up 到 %num0 物品。 / You can list up to %num0 items
+	 * 你最多可以上架 %num0 个物品。 / You can list up to %num0 items
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_EXCEED_MAX_ITEM_COUNT(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300760, num0);
 	}
 
 	/**
-	 * 此物品无法为 traded。 / This item cannot be traded
+	 * 该物品无法交易。 / This item cannot be traded
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_EXCHANGE = new SM_SYSTEM_MESSAGE(1300761);
 
 	/**
-	 * You 无法 trade 作为 yourinventory 为 full。 / You cannot trade as your inventory is full
+	 * 背包已满，无法交易。 / You cannot trade as your inventory is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FULL_INVENTORY = new SM_SYSTEM_MESSAGE(1300762);
 
@@ -12599,7 +12599,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FULL_BASKET = new SM_SYSTEM_MESSAGE(1300763);
 
 	/**
-	 * 你：already have this limited possession item。 / You already have this limited possession item
+	 * 你已经拥有该受限物品。 / You already have this limited possession item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_OWNED_LORE_ITEM = new SM_SYSTEM_MESSAGE(1300764);
 
@@ -12614,17 +12614,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_MSG_TITLE_REGISTER_ERROR = new SM_SYSTEM_MESSAGE(1300766);
 
 	/**
-	 * Youdonot 有足够基纳到 payfee。 / You do not have enough Kinah to pay the fee
+	 * 你的基纳不足，无法支付费用。 / You do not have enough Kinah to pay the fee
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_MSG_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1300767);
 
 	/**
-	 * 你：entered the PvP zone。 / You entered the PvP zone
+	 * 你进入了 PVP 区域。 / You entered the PvP zone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PVP_ZONE_ENTERED = new SM_SYSTEM_MESSAGE(1300768);
 
 	/**
-	 * 你：left the PvP zone。 / You left the PvP zone
+	 * 你离开了 PVP 区域。 / You left the PvP zone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PVP_ZONE_EXITED = new SM_SYSTEM_MESSAGE(1300769);
 
@@ -12639,7 +12639,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_DUEL_STOP = new SM_SYSTEM_MESSAGE(1300771);
 
 	/**
-	 * 你：cannot destroy equipped items。 / You cannot destroy equipped items
+	 * 无法销毁已装备的物品。 / You cannot destroy equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_DESTROY_EQUIP_ITEM = new SM_SYSTEM_MESSAGE(1300772);
 
@@ -12712,49 +12712,49 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have purchased %0。 / You have purchased %0
+	 * 你已购买 %0。 / You have purchased %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_BUY_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300784, value0);
 	}
 
 	/**
-	 * 你：have purchased %1 %0s。 / You have purchased %1 %0s
+	 * 你已购买 %1 个 %0。 / You have purchased %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_BUY_ITEM_MULTI(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1300785, value1, value0s);
 	}
 
 	/**
-	 * @param value0 你：have sold %0。 / You have sold %0
+	 * 你已出售 %0。 / You have sold %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SELL_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300786, value0);
 	}
 
 	/**
-	 * 你：have sold %1 %0s。 / You have sold %1 %0s
+	 * 你已出售 %1 个 %0。 / You have sold %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SELL_ITEM_MULTI(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1300787, value1, value0s);
 	}
 
 	/**
-	 * @param value0 你：have crafted %0。 / You have crafted %0
+	 * 你已制作 %0。 / You have crafted %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBINE_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300788, value0);
 	}
 
 	/**
-	 * 你：have crafted %1 %0s。 / You have crafted %1 %0s
+	 * 你已制作 %1 个 %0。 / You have crafted %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBINE_ITEM_MULTI(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1300789, value1, value0s);
 	}
 
 	/**
-	 * @param value0 %0 有已 sold。 / %0 has been sold
+	 * %0 已售出。 / %0 has been sold
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SOLDOUT_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300790, value0);
@@ -12768,14 +12768,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have discarded %0。 / You have discarded %0
+	 * 你已丢弃 %0。 / You have discarded %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DISCARD_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300792, value0);
 	}
 
 	/**
-	 * 你：have discarded %1 %0s。 / You have discarded %1 %0s
+	 * 你已丢弃 %1 个 %0。 / You have discarded %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DISCARD_ITEM_MULTI(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1300793, value1, value0s);
@@ -12805,12 +12805,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PETITION_STATUS_NO_SUBMIT = new SM_SYSTEM_MESSAGE(1300797);
 
 	/**
-	 * 你：cannot open a private store while flying。 / You cannot open a private store while flying
+	 * 飞行中无法开设个人商店。 / You cannot open a private store while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DISABLED_IN_FLY_MODE = new SM_SYSTEM_MESSAGE(1300798);
 
 	/**
-	 * 你：cannot open a private store while hiding。 / You cannot open a private store while hiding
+	 * 隐身状态下无法开设个人商店。 / You cannot open a private store while hiding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DISABLED_IN_HIDDEN_MODE = new SM_SYSTEM_MESSAGE(1401969);
 
@@ -12820,18 +12820,18 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CLOSED_FOR_HIDDEN_MODE = new SM_SYSTEM_MESSAGE(1401970);
 
 	/**
-	 * 你：cannot use this Kisk。 / You cannot use this Kisk
+	 * 你无法使用该结界石。 / You cannot use this Kisk
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(
 			1300799);
 
 	/**
-	 * 你：cannot use the Kisk here。 / You cannot use the Kisk here
+	 * 无法在这里使用结界石。 / You cannot use the Kisk here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_BINDSTONE_FAR_FROM_NPC = new SM_SYSTEM_MESSAGE(1300800);
 
 	/**
-	 * 你：cannot use the Kisk。 / You cannot use the Kisk
+	 * 你无法使用结界石。 / You cannot use the Kisk
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_BINDSTONE_NOT_BINDSTONE = new SM_SYSTEM_MESSAGE(1300801);
 
@@ -12848,19 +12848,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_IS_REMOVED = new SM_SYSTEM_MESSAGE(1300803);
 
 	/**
-	 * You 无法 installKisk 作为其为 tooclose 到 Artifact。 / You cannot install the Kisk as it is too close to an Artifact
+	 * 结界石距离遗物过近，无法安装。 / You cannot install the Kisk as it is too close to an Artifact
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_BINDSTONE_ITEM_NOT_PROPER_AREA = new SM_SYSTEM_MESSAGE(
 			1300804);
 
 	/**
-	 * You 可仅 useKisk 当 PvP 为在。 / You can only use the Kisk when the PvP is On
+	 * 只有 PVP 开启时才能使用结界石。 / You can only use the Kisk when the PvP is On
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_BINDSTONE_ITEM_NOT_PROPER_TIME = new SM_SYSTEM_MESSAGE(
 			1300805);
 
 	/**
-	 * 你：cannot use a Kisk while flying。 / You cannot use a Kisk while flying
+	 * 飞行中无法使用结界石。 / You cannot use a Kisk while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_BINDSTONE_ITEM_WHILE_FLYING = new SM_SYSTEM_MESSAGE(1300806);
 
@@ -12896,7 +12896,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_INGAME_BLOCK_DISABLE_NO_CHAT = new SM_SYSTEM_MESSAGE(1300811);
 
 	/**
-	 * 你：now allowed to open a private store。 / You now allowed to open a private store
+	 * 你现在可以开设个人商店了。 / You now allowed to open a private store
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_INGAME_BLOCK_DISABLE_NO_SHOP = new SM_SYSTEM_MESSAGE(1300812);
 
@@ -12962,17 +12962,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_INVALID_TARGET = new SM_SYSTEM_MESSAGE(1300823);
 
 	/**
-	 * You 无法 use 此 menu 当 you 为 dead。 / You cannot use this menu when you are dead
+	 * 死亡状态下无法使用该菜单。 / You cannot use this menu when you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_IN_DEAD_STATE = new SM_SYSTEM_MESSAGE(1300824);
 
 	/**
-	 * You 无法 destroy 物品 whileyou 为 corpse。 / You cannot destroy items while you are a corpse
+	 * 死亡状态下无法销毁物品。 / You cannot destroy items while you are a corpse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DEAD_BODY_CANT_DESTROY_ITEM = new SM_SYSTEM_MESSAGE(1300825);
 
 	/**
-	 * 你：cannot use certain chat functions while you are dead。 / You cannot use certain chat functions while you are dead
+	 * 死亡状态下无法使用部分聊天功能。 / You cannot use certain chat functions while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_CHAT_IN_DEAD_STATE = new SM_SYSTEM_MESSAGE(1300826);
 
@@ -13004,12 +13004,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_LOOT_FAIL_ONLOOTING = new SM_SYSTEM_MESSAGE(1300829);
 
 	/**
-	 * 距离过远：the target。 / You are too far from the target
+	 * 你与目标的距离过远。 / You are too far from the target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOOT_FAIL_TOO_FAR = new SM_SYSTEM_MESSAGE(1300830);
 
 	/**
-	 * Youdonot 有足够基纳到 expandcube。 / You do not have enough Kinah to expand the cube
+	 * 你的基纳不足，无法扩充背包。 / You do not have enough Kinah to expand the cube
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_EXPAND_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1300831);
 
@@ -13027,12 +13027,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：must pass the Expert promotion test in order to be promoted。 / You must pass the Expert promotion test in order to be promoted
+	 * 必须通过专家升级考试才能晋升。 / You must pass the Expert promotion test in order to be promoted
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_CANT_EXTEND_MONEY = new SM_SYSTEM_MESSAGE(1300834);
 
 	/**
-	 * Upload 的军团 emblemfile 到 server 成功。 / Upload of the Legion emblem file to the server successful
+	 * 军团徽章文件已成功上传至服务器。 / Upload of the Legion emblem file to the server successful
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_WARN_SUCCESS_UPLOAD_EMBLEM = new SM_SYSTEM_MESSAGE(1300835);
 
@@ -13068,21 +13068,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_PENALTY_DEFEND = new SM_SYSTEM_MESSAGE(1300841);
 
 	/**
-	 * @param value0 你：have joined the %0 Channel。 / You have joined the %0 Channel
+	 * 你已加入 %0 频道。 / You have joined the %0 Channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_JOIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300842, value0);
 	}
 
 	/**
-	 * @param value0 你：have left the %0 Channel。 / You have left the %0 Channel
+	 * 你已离开 %0 频道。 / You have left the %0 Channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_LEAVE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300843, value0);
 	}
 
 	/**
-	 * @param value0 你：have created the %0 Channel。 / You have created the %0 Channel
+	 * 你已创建 %0 频道。 / You have created the %0 Channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_CREATE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300844, value0);
@@ -13097,7 +13097,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot open or join any more private channels。 / You cannot open or join any more private channels
+	 * 你无法再开启或加入更多私人频道。 / You cannot open or join any more private channels
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CREATE_FAILED_MAXROOM = new SM_SYSTEM_MESSAGE(1300846);
 
@@ -13107,17 +13107,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CREATE_FAILED_WRONG_PASSWORD = new SM_SYSTEM_MESSAGE(1300847);
 
 	/**
-	 * Youdonot 有足够 DP 用于 conversion。 / You do not have enough DP for conversion
+	 * 你的 DP 不足，无法进行转换。 / You do not have enough DP for conversion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CONVERT_SKILL_NOT_ENOUGH_DP = new SM_SYSTEM_MESSAGE(1300848);
 
 	/**
-	 * 你：must have learned the skill to activate it。 / You must have learned the skill to activate it
+	 * 必须先学会该技能才能激活它。 / You must have learned the skill to activate it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_MSG_CANT_WORK = new SM_SYSTEM_MESSAGE(1300849);
 
 	/**
-	 * You 有加入 privatechannel%1 在 Channel%0.Confirm 若 youselectedchannel 在 chattingtaboption。 / You have joined the private channel %1 at Channel %0. Confirm if you selected the channel in the chatting tab option
+	 * 你已加入 %0 频道的私人频道 %1，请在聊天选项卡中确认所选频道。 / You have joined the private channel %1 at Channel %0. Confirm if you selected the channel in the chatting tab option
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CAHT_ROOM_JOIN_SUCCESS(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1300850, value1, value0);
@@ -13129,7 +13129,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_FAIL_ROOM_NOT_FOUND = new SM_SYSTEM_MESSAGE(1300851);
 
 	/**
-	 * You 无法 enterprivatechannel 作为其为 full。 / You cannot enter the private channel as it is full
+	 * 私人频道已满，无法进入。 / You cannot enter the private channel as it is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_FAIL_TOO_MANY_ROOM = new SM_SYSTEM_MESSAGE(1300852);
 
@@ -13139,14 +13139,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_FAIL_BANNED_USER = new SM_SYSTEM_MESSAGE(1300853);
 
 	/**
-	 * Youneed 到 enterpassword 到 joinprivatechannel%0.Pleaseenter 其 accurately ,在 format 的' /JoinChannel[ChannelName][password] '。 / You need to enter a password to join the private channel %0. Please enter it accurately, in the format of '/JoinChannel [ChannelName] [password]'
+	 * 加入私人频道 %0 需要输入密码，请按 /JoinChannel [频道名称] [密码] 的格式准确输入。 / You need to enter a password to join the private channel %0. Please enter it accurately, in the format of '/JoinChannel [ChannelName] [password]'
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_FAIL_WRONG_PASSWORD(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300854, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot enter the private channel (%0) as it is full。 / You cannot enter the private channel (%0) as it is full
+	 * 私人频道（%0）已满，无法进入。 / You cannot enter the private channel (%0) as it is full
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_FAIL_ROOM_FULL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300855, value0);
@@ -13161,14 +13161,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有加入 privatechannel%1 在 Channel%0.Confirm 若 youselectedchannel 在 chattingtaboption。 / You have joined the private channel %1 at Channel %0. Confirm if you selected the channel in the chatting tab option
+	 * 你已加入 %0 频道的私人频道 %1，请在聊天选项卡中确认所选频道。 / You have joined the private channel %1 at Channel %0. Confirm if you selected the channel in the chatting tab option
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_JOIN_NOTIFY_SELF(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1300857, value1, value0);
 	}
 
 	/**
-	 * @param value0 你不in the private channel %0。 / You are not in the private channel %0
+	 * 你不在私人频道 %0 中。 / You are not in the private channel %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_LEAVE_FAIL_NOT_A_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300858, value0);
@@ -13183,7 +13183,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have left the private channel %0。 / You have left the private channel %0
+	 * 你已离开私人频道 %0。 / You have left the private channel %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_LEAVE_SUCCESS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300860, value0);
@@ -13198,7 +13198,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have no authority。 / You have no authority
+	 * 你没有权限。 / You have no authority
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_ADMIN_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(1300862);
 
@@ -13208,14 +13208,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_MEMBER_VOID = new SM_SYSTEM_MESSAGE(1300863);
 
 	/**
-	 * @param value0 %0 有已踢出 out 的 privatechannel。 / %0 has been kicked out of the private channel
+	 * %0 已被踢出私人频道。 / %0 has been kicked out of the private channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_BAN_MEMBER_BANNED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300864, value0);
 	}
 
 	/**
-	 * @param value0 你：have been kicked out of the private channel %0。 / You have been kicked out of the private channel %0
+	 * 你已被踢出私人频道 %0。 / You have been kicked out of the private channel %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_BAN_SELF_BANNED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300865, value0);
@@ -13243,24 +13243,24 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_INVALID_CHANNEL_NAME = new SM_SYSTEM_MESSAGE(1300868);
 
 	/**
-	 * You 有已踢出 out。 / You have been kicked out
+	 * 你已被踢出。 / You have been kicked out
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_KICKED_OUT = new SM_SYSTEM_MESSAGE(1300869);
 
 	/**
-	 * @param value0 %0 有已 deleted 从 Ban 列表。 / %0 has been deleted from the Ban List
+	 * %0 已从屏蔽名单中删除。 / %0 has been deleted from the Ban List
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_ROOM_UNBAN_SUCCESS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300870, value0);
 	}
 
 	/**
-	 * channel 有已设置作为 public。 / The channel has been set as public
+	 * 该频道已设置为公开频道。 / The channel has been set as public
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_PROPERTYCHANGE_TOPUBLIC = new SM_SYSTEM_MESSAGE(1300871);
 
 	/**
-	 * channel 有已设置作为 private。 / The channel has been set as private
+	 * 该频道已设置为私人频道。 / The channel has been set as private
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_PROPERTYCHANGE_TOPRIVATE = new SM_SYSTEM_MESSAGE(1300872);
 
@@ -13294,7 +13294,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_HELP = new SM_SYSTEM_MESSAGE(1300875);
 
 	/**
-	 * 你：cannot learn a design written in an incomprehensible language。 / You cannot learn a design written in an incomprehensible language
+	 * 无法学习用无法理解的语言写成的设计图。 / You cannot learn a design written in an incomprehensible language
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFTRECIPE_RACE_CHECK = new SM_SYSTEM_MESSAGE(1300876);
 
@@ -13309,12 +13309,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_POSTMAN_UNABLE_IN_COOLTIME = new SM_SYSTEM_MESSAGE(1300878);
 
 	/**
-	 * 你：cannot call a courierwhile flying。 / You cannot call a courierwhile flying
+	 * 飞行中无法召唤信使。 / You cannot call a courierwhile flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_POSTMAN_UNABLE_IN_FLIGHT = new SM_SYSTEM_MESSAGE(1300879);
 
 	/**
-	 * 你：cannot call a courier here。 / You cannot call a courier here
+	 * 无法在这里召唤信使。 / You cannot call a courier here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_POSTMAN_UNABLE_POSITION = new SM_SYSTEM_MESSAGE(1300880);
 
@@ -13329,7 +13329,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_NO_OFFLINE_CHARACTER = new SM_SYSTEM_MESSAGE(1300882);
 
 	/**
-	 * character 为已经在 yourFriends 列表。 / The character is already on your Friends List
+	 * 该角色已在你的好友列表中。 / The character is already on your Friends List
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_ALREADY_IN_LIST = new SM_SYSTEM_MESSAGE(1300883);
 
@@ -13340,7 +13340,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_NO_BLOCKED_CHARACTER = new SM_SYSTEM_MESSAGE(1300884);
 
 	/**
-	 * @param value0 你：have added %0 to your Friends List。 / You have added %0 to your Friends List
+	 * 你已将 %0 加为好友。 / You have added %0 to your Friends List
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BUDDYLIST_ADD_BUDDY_ACCEPTED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300885, value0);
@@ -13360,7 +13360,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_LIST_FULL = new SM_SYSTEM_MESSAGE(1300887);
 
 	/**
-	 * @param value0 你：have removed %0 from your Friends List。 / You have removed %0 from your Friends List
+	 * 你已将 %0 从好友列表中删除。 / You have removed %0 from your Friends List
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BUDDYLIST_REMOVE_CHARACTER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300888, value0);
@@ -13381,12 +13381,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 blockcharacter 谁为 currently 在 yourFriends 列表。 / You cannot block a character who is currently on your Friends List
+	 * 无法屏蔽当前位于你好友列表中的角色。 / You cannot block a character who is currently on your Friends List
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BLOCKLIST_NO_BUDDY = new SM_SYSTEM_MESSAGE(1300891);
 
 	/**
-	 * @param value0 你：have blocked %0。 / You have blocked %0
+	 * 你已屏蔽 %0。 / You have blocked %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BLOCKLIST_ADD_BLOCKED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300892, value0);
@@ -13408,7 +13408,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BLOCKLIST_ENTER_CHARACTER_NAME = new SM_SYSTEM_MESSAGE(1300895);
 
 	/**
-	 * @param value0 你：have unblocked %0。 / You have unblocked %0
+	 * 你已解除对 %0 的屏蔽。 / You have unblocked %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BLOCKLIST_REMOVE_FROM_LIST(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300896, value0);
@@ -13421,7 +13421,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BLOCKLIST_NOT_IN_LIST = new SM_SYSTEM_MESSAGE(1300897);
 
 	/**
-	 * 你：must level up to raise your skill level。 / You must level up to raise your skill level
+	 * 必须提升角色等级才能提升技能等级。 / You must level up to raise your skill level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_INFO_MAXPOINT_UP = new SM_SYSTEM_MESSAGE(1300898);
 
@@ -13445,12 +13445,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have been disconnected from the server。 / You have been disconnected from the server
+	 * 你已与服务器断开连接。 / You have been disconnected from the server
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_AUTH_CONNECTION_LOST = new SM_SYSTEM_MESSAGE(1300902);
 
 	/**
-	 * privatechannel 带相同名称已经存在。 / A private channel with the same name already exists
+	 * 相同名称的私人频道已存在。 / A private channel with the same name already exists
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_ROOM_EXISTS = new SM_SYSTEM_MESSAGE(1300903);
 
@@ -13460,7 +13460,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CHANNEL_EXISTS = new SM_SYSTEM_MESSAGE(1300904);
 
 	/**
-	 * 你：have already joined the private channel。 / You have already joined the private channel
+	 * 你已加入该私人频道。 / You have already joined the private channel
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_ALREADY_JOINED_CHANNEL = new SM_SYSTEM_MESSAGE(1300905);
 
@@ -13471,12 +13471,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_ALREADY_BANNED_MEMBER = new SM_SYSTEM_MESSAGE(1300906);
 
 	/**
-	 * 你：cannot kick yourself out of the channel。 / You cannot kick yourself out of the channel
+	 * 你无法将自己踢出频道。 / You cannot kick yourself out of the channel
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CANNOT_BAN_SELF = new SM_SYSTEM_MESSAGE(1300907);
 
 	/**
-	 * 你：cannot nominate yourself as a room master。 / You cannot nominate yourself as a room master
+	 * 你无法将自己任命为房主。 / You cannot nominate yourself as a room master
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CANNOT_PROMOTE_SELF = new SM_SYSTEM_MESSAGE(1300908);
 
@@ -13508,12 +13508,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BLOCKLIST_LIST_FULL = new SM_SYSTEM_MESSAGE(1300912);
 
 	/**
-	 * 你：cannot block yourself。 / You cannot block yourself
+	 * 你无法屏蔽自己。 / You cannot block yourself
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BLOCKLIST_CANNOT_BLOCK_SELF = new SM_SYSTEM_MESSAGE(1300913);
 
 	/**
-	 * 你：cannot use a Macro yet。 / You cannot use a Macro yet
+	 * 你还无法使用宏。 / You cannot use a Macro yet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_READY_TO_USE = new SM_SYSTEM_MESSAGE(1300914);
 
@@ -13534,7 +13534,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有 deletedyou 从其 Friends 列表。 / %0 has deleted you from their Friends List
+	 * %0 已将你从好友列表中删除。 / %0 has deleted you from their Friends List
 	 */
 	public static SM_SYSTEM_MESSAGE STR_NOTIFY_DELETE_BUDDY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300917, value0);
@@ -13554,7 +13554,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 equip 或移除物品 while 在 action。 / You cannot equip or remove items while in action
+	 * 行动中无法装备或移除物品。 / You cannot equip or remove items while in action
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_EQUIP_ITEM_IN_ACTION = new SM_SYSTEM_MESSAGE(1300920);
 
@@ -13583,27 +13583,27 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TOOLTIP_PETITION_MESSAGE_NOTICE = new SM_SYSTEM_MESSAGE(1300924);
 
 	/**
-	 * 你in a chat with the GM。 / You are in a chat with the GM
+	 * 你正在与 GM 聊天。 / You are in a chat with the GM
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PETITION_CHAT_MESSAGE = new SM_SYSTEM_MESSAGE(1300925);
 
 	/**
-	 * 宏:无法 find 物品。 / Macro: Cannot find the item
+	 * 宏：无法找到物品。 / Macro: Cannot find the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_FIND_ITEM = new SM_SYSTEM_MESSAGE(1300926);
 
 	/**
-	 * 你：do not have enough Abyss Points。 / You do not have enough Abyss Points
+	 * 你的欧比斯点数不足。 / You do not have enough Abyss Points
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_ABYSSPOINT = new SM_SYSTEM_MESSAGE(1300927);
 
 	/**
-	 * 你：cannot change the channel during a battle。 / You cannot change the channel during a battle
+	 * 战斗中无法更换频道。 / You cannot change the channel during a battle
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_CHANGE_CHANNEL_IN_COMBAT = new SM_SYSTEM_MESSAGE(1300928);
 
 	/**
-	 * 你：cannot change the channel now。 / You cannot change the channel now
+	 * 现在无法更换频道。 / You cannot change the channel now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_CHANGE_CHANNEL_NOW = new SM_SYSTEM_MESSAGE(1300929);
 
@@ -13625,12 +13625,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAR_PUNISH_END_TIME = new SM_SYSTEM_MESSAGE(1300932);
 
 	/**
-	 * 宏: There 为 no 物品 registered 在 Quickbar。 / Macro: There is no item registered in the Quickbar
+	 * 宏：快捷栏中没有已登记的物品。 / Macro: There is no item registered in the Quickbar
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_FIND_SHORTCUT = new SM_SYSTEM_MESSAGE(1300933);
 
 	/**
-	 * 宏:无法 find 目标。 / Macro: Cannot find the target
+	 * 宏：无法找到目标。 / Macro: Cannot find the target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_FIND_TARGET = new SM_SYSTEM_MESSAGE(1300934);
 
@@ -13640,14 +13640,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_PARSE = new SM_SYSTEM_MESSAGE(1300935);
 
 	/**
-	 * @param value0m 请勿刷屏。禁言 %0 分钟。 / Please do not flood chat. Blocked for %0m
+	 * 请勿刷屏，你已被禁言 %0 分钟。 / Please do not flood chat. Blocked for %0m
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_FLOODING_BLOCKED_1(String value0m) {
 		return new SM_SYSTEM_MESSAGE(1300936, value0m);
 	}
 
 	/**
-	 * 你：can use the Channel: %0 only once every %1 seconds. Time Remaining: %2 seconds。 / You can use the Channel: %0 only once every %1 seconds. Time Remaining: %2 seconds
+	 * 频道：%0 每 %1 秒只能使用一次。剩余时间：%2 秒。 / You can use the Channel: %0 only once every %1 seconds. Time Remaining: %2 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_FLOODING_BLOCKED_2(String value0, String value1, String value2) {
 		return new SM_SYSTEM_MESSAGE(1300937, value0, value1, value2);
@@ -13667,48 +13667,48 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_CHANNELNAME_SIZE_LIMIT = new SM_SYSTEM_MESSAGE(1300939);
 
 	/**
-	 * You 无法 resurrect 目标 due 到其 insufficientAbyssPoints。 / You cannot resurrect the target due to its insufficient Abyss Points
+	 * 对方欧比斯点数不足，你无法复活该目标。 / You cannot resurrect the target due to its insufficient Abyss Points
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ABYSS_RESURRECT_FAILED = new SM_SYSTEM_MESSAGE(1300940);
 
 	/**
-	 * 你：have too few Abyss points to continue the battle。 / You have too few Abyss points to continue the battle
+	 * 你的欧比斯点数过少，无法继续战斗。 / You have too few Abyss points to continue the battle
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ABYSS_RESURRECT = new SM_SYSTEM_MESSAGE(1300941);
 
 	/**
-	 * 相同物品为已经 registered。 / The same item is already registered
+	 * 相同物品已被登记。 / The same item is already registered
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_ALREAY_REGIST_ITEM = new SM_SYSTEM_MESSAGE(1300942);
 
 	/**
-	 * 你：cannot register items in the private store while equipped with Stigma。 / You cannot register items in the private store while equipped with Stigma
+	 * 装备着烙印之石时无法在个人商店登记物品。 / You cannot register items in the private store while equipped with Stigma
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CANNOT_REGIST_DURING_STIGMA = new SM_SYSTEM_MESSAGE(
 			1300943);
 
 	/**
-	 * You 无法 register 物品作为 you 为已经 sellingother 物品。 / You cannot register items as you are already selling other items
+	 * 你正在出售其他物品，无法再登记物品。 / You cannot register items as you are already selling other items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_CANNOT_REGIST_DURING_SELLING = new SM_SYSTEM_MESSAGE(
 			1300944);
 
 	/**
-	 * @param value0 Youreceived%0 物品作为 reward 用于 survey。 / You received %0 item as reward for the survey
+	 * 你因参与问卷调查获得了 %0 物品奖励。 / You received %0 item as reward for the survey
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_POLL_REWARD_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300945, value0);
 	}
 
 	/**
-	 * Youreceived%num1%0 物品作为 reward 用于 survey。 / You received %num1 %0 items as reward for the survey
+	 * 你因参与问卷调查获得了 %num1 个 %0 物品奖励。 / You received %num1 %0 items as reward for the survey
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_POLL_REWARD_ITEM_MULTI(int num1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1300946, num1, value0);
 	}
 
 	/**
-	 * @param num0 Youreceived%num0 基纳作为 reward 用于 survey。 / You received %num0 Kinah as reward for the survey
+	 * 你因参与问卷调查获得了 %num0 基纳奖励。 / You received %num0 Kinah as reward for the survey
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_POLL_REWARD_MONEY(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300947, num0);
@@ -13735,7 +13735,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_VOICE_FINISH_FAILED = new SM_SYSTEM_MESSAGE(1300951);
 
 	/**
-	 * 你：cannot use private channels before you change your Class。 / You cannot use private channels before you change your Class
+	 * 转职前无法使用私人频道。 / You cannot use private channels before you change your Class
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_REQUIREMENT_UNFULLFILLED = new SM_SYSTEM_MESSAGE(1300952);
 
@@ -13767,17 +13767,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_ROOM_PASSWORD_DELETED = new SM_SYSTEM_MESSAGE(1300955);
 
 	/**
-	 * You 可仅发送 mails 到 otherusers 的 yourrace。 / You can only send mails to other users of your race
+	 * 只能向同种族的其他用户发送邮件。 / You can only send mails to other users of your race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_MSG_DIFFERENT_RACE = new SM_SYSTEM_MESSAGE(1300958);
 
 	/**
-	 * You 无法 fly 在此 area。 / You cannot fly in this area
+	 * 无法在此区域飞行。 / You cannot fly in this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FLYING_FORBIDDEN_ZONE = new SM_SYSTEM_MESSAGE(1300959);
 
 	/**
-	 * You 无法 fly 在此 area。 / You cannot fly in this area
+	 * 无法在此区域飞行。 / You cannot fly in this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FLYING_FORBIDDEN_HERE = new SM_SYSTEM_MESSAGE(1300960);
 
@@ -13797,12 +13797,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_APPLY_OPTION_WHEN_RESTART = new SM_SYSTEM_MESSAGE(1300963);
 
 	/**
-	 * You 无法 usespecialcharacters 在 channel 名称并 password。 / You cannot use special characters in channel name and password
+	 * 频道名称与密码中不能使用特殊字符。 / You cannot use special characters in channel name and password
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_INVALID_CHANNEL_NAME_SPECIAL_LETTER = new SM_SYSTEM_MESSAGE(1300964);
 
 	/**
-	 * @param num0 你：used %num0 Abyss Points。 / You used %num0 Abyss Points
+	 * 你消耗了 %num0 欧比斯点数。 / You used %num0 Abyss Points
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_USE_ABYSSPOINT(int num0) {
 		return new SM_SYSTEM_MESSAGE(1300965, num0);
@@ -13816,14 +13816,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have received an alliance invitation from %0。 / You have received an alliance invitation from %0
+	 * 你收到了来自 %0 的联盟邀请。 / You have received an alliance invitation from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_INVITE_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300967, value0);
 	}
 
 	/**
-	 * You 有 invited%0 ' sgroup 到 alliance.%0 ' sgroup 有 total 的 %1 成员。 / You have invited %0's group to the alliance. %0's group has a total of %1 members
+	 * 你已邀请 %0 的队伍加入联盟，%0 的队伍共有 %1 名成员。 / You have invited %0's group to the alliance. %0's group has a total of %1 members
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_INVITE_PARTY(String value0, String value2, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300968, value0, value2, value1);
@@ -13838,14 +13838,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的小队收到了来自 %0 的联盟邀请。
-	  * 你的小队 has received an 联盟 invitation from %0。 / Your group has received an alliance invitation from %0
+	  * 你的队伍收到了来自 %0 的联盟邀请。 / Your group has received an alliance invitation from %0
 	  */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_INVITE_PARTY_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300970, value0);
 	}
 
 	/**
-	 * @param value0 你：have declined %0's invitation to join the alliance。 / You have declined %0's invitation to join the alliance
+	 * 你已拒绝 %0 的联盟邀请。 / You have declined %0's invitation to join the alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_REJECT_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300971, value0);
@@ -13867,7 +13867,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 anotheralliance。 / %0 is already a member of another alliance
+	 * %0 已是其他联盟的成员。 / %0 is already a member of another alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_ALREADY_OTHER_FORCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300974, value0);
@@ -13879,12 +13879,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_INVITE_FAILED_NOT_ENOUGH_SLOT = new SM_SYSTEM_MESSAGE(1300975);
 
 	/**
-	 * 你：have no authority in the alliance。 / You have no authority in the alliance
+	 * 你在联盟中没有权限。 / You have no authority in the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_RIGHT_NOT_HAVE = new SM_SYSTEM_MESSAGE(1300976);
 
 	/**
-	 * 你：have left the alliance。 / You have left the alliance
+	 * 你已离开联盟。 / You have left the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LEAVE_ME = new SM_SYSTEM_MESSAGE(1300977);
 
@@ -13928,7 +13928,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * alliance 有 disbandeddue 到 lack 的成员。 / The alliance has disbanded due to a lack of members
+	 * 联盟因成员不足而解散。 / The alliance has disbanded due to a lack of members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_DISPERSED = new SM_SYSTEM_MESSAGE(1300983);
 
@@ -13940,7 +13940,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有已 demoted 到成员从 viceCaptain。 / %0 has been demoted to member from vice Captain
+	 * %0 已从副队长降为成员。 / %0 has been demoted to member from vice Captain
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_DEMOTE_MANAGER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1300985, value0);
@@ -13955,12 +13955,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有 failed 到 changealliancegroup 作为 anotherperson 为已经 trying 到 change 其 .Pleasetryagainlater。 / You have failed to change the alliance group as another person is already trying to change it. Please try again later
+	 * 因他人正在尝试变更联盟队伍，变更失败，请稍后再试。 / You have failed to change the alliance group as another person is already trying to change it. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_GROUP_FAILED_ALREADY_CHANGED = new SM_SYSTEM_MESSAGE(1300987);
 
 	/**
-	 * 你：have failed to change the group because there was no group to change。 / You have failed to change the group because there was no group to change
+	 * 没有可变更的队伍，变更失败。 / You have failed to change the group because there was no group to change
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_GROUP_FAILED_ALREADY_LEAVE = new SM_SYSTEM_MESSAGE(1300988);
 
@@ -13978,7 +13978,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 全部 alliance 成员为 ready。 / All alliance members are ready
+	 * 全体联盟成员已就绪。 / All alliance members are ready
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CHECK_COMPLETE = new SM_SYSTEM_MESSAGE(1300991);
 
@@ -13998,12 +13998,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CHECK_DENIED = new SM_SYSTEM_MESSAGE(1300994);
 
 	/**
-	 * 你：cancelled the request to check the readiness of the alliance。 / You cancelled the request to check the readiness of the alliance
+	 * 你取消了联盟就绪确认请求。 / You cancelled the request to check the readiness of the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CHECK_CANCEL = new SM_SYSTEM_MESSAGE(1300995);
 
 	/**
-	 * You 无法 inviteanymore 成员到 alliance。 / You cannot invite any more members to the alliance
+	 * 无法再邀请更多成员加入联盟。 / You cannot invite any more members to the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_ADD_NEW_MEMBER = new SM_SYSTEM_MESSAGE(1300996);
 
@@ -14030,17 +14030,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_ONLY_LEADER_CAN_CHANGE_LOOTING = new SM_SYSTEM_MESSAGE(1301000);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Manual。 / The item distribution method of the alliance has been changed to Manual
+	 * 联盟的物品分配方式已改为手动分配。 / The item distribution method of the alliance has been changed to Manual
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LOOTING_CHANGED_TO_MANUAL = new SM_SYSTEM_MESSAGE(1301001);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Auto。 / The item distribution method of the alliance has been changed to Auto
+	 * 联盟的物品分配方式已改为自动分配。 / The item distribution method of the alliance has been changed to Auto
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LOOTING_CHANGED_TO_AUTO = new SM_SYSTEM_MESSAGE(1301002);
 
 	/**
-	 * There 为 no 目标到 invite 到 alliance。 / There is no target to invite to the alliance
+	 * 没有可邀请加入联盟的目标。 / There is no target to invite to the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_NO_USER_TO_INVITE = new SM_SYSTEM_MESSAGE(1301003);
 
@@ -14058,17 +14058,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot invite yourself to the alliance。 / You cannot invite yourself to the alliance
+	 * 你无法邀请自己加入联盟。 / You cannot invite yourself to the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CAN_NOT_INVITE_SELF = new SM_SYSTEM_MESSAGE(1301006);
 
 	/**
-	 * 你：cannot issue invitations while you are dead。 / You cannot issue invitations while you are dead
+	 * 死亡状态下无法发出邀请。 / You cannot issue invitations while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_INVITE_WHEN_DEAD = new SM_SYSTEM_MESSAGE(1301007);
 
 	/**
-	 * selectedalliance 成员为 currently 离线。 / The selected alliance member is currently offline
+	 * 所选联盟成员当前不在线。 / The selected alliance member is currently offline
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_OFFLINE_MEMBER = new SM_SYSTEM_MESSAGE(1301008);
 
@@ -14078,7 +14078,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_ONLY_LEADER_CAN_BANISH = new SM_SYSTEM_MESSAGE(1301009);
 
 	/**
-	 * You 有已踢出 out 的 alliance。 / You have been kicked out of the alliance
+	 * 你已被踢出联盟。 / You have been kicked out of the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_YOU_ARE_BANISHED = new SM_SYSTEM_MESSAGE(1301010);
 
@@ -14105,19 +14105,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 youralliance。 / %0 is already a member of your alliance
+	 * %0 已是你的联盟成员。 / %0 is already a member of your alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_HE_IS_ALREADY_MEMBER_OF_OUR_FORCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1301014, value0);
 	}
 
 	/**
-	 * 你不in an alliance。 / You are not in an alliance
+	 * 你不在联盟中。 / You are not in an alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_YOU_ARE_NOT_FORCE_MEMBER = new SM_SYSTEM_MESSAGE(1301015);
 
 	/**
-	 * 你不an alliance member。 / You are not an alliance member
+	 * 你不是联盟成员。 / You are not an alliance member
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_NOT_FORCE_MEMBER = new SM_SYSTEM_MESSAGE(1301016);
 
@@ -14151,7 +14151,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有已踢出 out 的 alliance。 / %0 has been kicked out of the alliance
+	 * %0 已被踢出联盟。 / %0 has been kicked out of the alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_HE_IS_BANISHED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1301021, value0);
@@ -14163,7 +14163,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_RARE_LOOTING_CHANGED_TO_MANUAL = new SM_SYSTEM_MESSAGE(1301022);
 
 	/**
-	 * rare 物品 distributionmethod 的 alliance 有已 changed 到 Auto。 / The rare item distribution method of the alliance has been changed to Auto
+	 * 联盟的稀有物品分配方式已改为自动分配。 / The rare item distribution method of the alliance has been changed to Auto
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_RARE_LOOTING_CHANGED_TO_AUTO = new SM_SYSTEM_MESSAGE(1301023);
 
@@ -14185,7 +14185,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 可 rolldiceoncemore 若 rolled 编号为 lessthan100。 / You can roll the dice once more if the rolled number is less than 100
+	 * 掷出的点数小于 100 时可以再掷一次骰子。 / You can roll the dice once more if the rolled number is less than 100
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_ITEM_DICE_AGAIN = new SM_SYSTEM_MESSAGE(1301027);
 
@@ -14195,24 +14195,24 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LOOTING_CHANGED_TO_FREEFORALL = new SM_SYSTEM_MESSAGE(1301028);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Round - robin。 / The item distribution method of the alliance has been changed to Round-robin
+	 * 联盟的物品分配方式已改为轮流分配。 / The item distribution method of the alliance has been changed to Round-robin
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LOOTING_CHANGED_TO_ROUNDROBIN = new SM_SYSTEM_MESSAGE(1301029);
 
 	/**
-	 * 物品 distributionmethod 的 alliance 有已 changed 到 Captain。 / The item distribution method of the alliance has been changed to Captain
+	 * 联盟的物品分配方式已改为队长分配。 / The item distribution method of the alliance has been changed to Captain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_LOOTING_CHANGED_TO_LEADERONLY = new SM_SYSTEM_MESSAGE(1301030);
 
 	/**
-	 * @param value0 %0 有已踢出 out 的 arena。 / %0 has been kicked out of the arena
+	 * %0 已被踢出竞技场。 / %0 has been kicked out of the arena
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PvPZONE_OUT_MESSAGE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1301031, value0);
 	}
 
 	/**
-	 * 你：cannot fly while you are banned from flying。 / You cannot fly while you are banned from flying
+	 * 你处于禁止飞行状态，无法飞行。 / You cannot fly while you are banned from flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_FLY_NOW_DUE_TO_NOFLY = new SM_SYSTEM_MESSAGE(1301032);
 
@@ -14249,7 +14249,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 军团 lost%1。 / %0 Legion lost %1
+	 * %0 军团失去了 %1。 / %0 Legion lost %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_GUILD_CASTLE_TAKEN(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1301037, value0, value1);
@@ -14279,14 +14279,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param descriptionId %0 现可攻击。 / %0 is now vulnerable
+	 * %0 现在可以被攻击。 / %0 is now vulnerable
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_PVP_ON(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1301040, descriptionId);
 	}
 
 	/**
-	 * @param descriptionId %0 不再易受攻击。 / %0 is no longer vulnerable
+	 * %0 不再易受攻击。 / %0 is no longer vulnerable
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_PVP_OFF(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1301041, descriptionId);
@@ -14311,7 +14311,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ABYSS_CARRIER_SPAWN = new SM_SYSTEM_MESSAGE(1301044);
 
 	/**
-	 * 无法 find 目标到 use 物品。 / Cannot find the target to use the item
+	 * 无法找到使用该物品的目标。 / Cannot find the target to use the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_CANT_FIND_VALID_TARGET = new SM_SYSTEM_MESSAGE(1301045);
 
@@ -14323,7 +14323,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId %0 物品有已 sold 按 broker。 / The %0 item has been sold by the broker
+	 * %0 物品已通过拍卖行售出。 / The %0 item has been sold by the broker
 	 */
 	public static SM_SYSTEM_MESSAGE STR_VENDOR_REGISTER_SOLD_OUT(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1301047, new DescriptionId(nameId));
@@ -14377,34 +14377,34 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ABYSS_BOSS_ATTACKED = new SM_SYSTEM_MESSAGE(1301055);
 
 	/**
-	 * You 无法 startgliding 作为 you 为 movingtooslowly。 / You cannot start gliding as you are moving too slowly
+	 * 你移动得过慢，无法开始滑翔。 / You cannot start gliding as you are moving too slowly
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GLIDE_NOT_ENOUGH_SPEED_FOR_GLIDE = new SM_SYSTEM_MESSAGE(1301056);
 
 	/**
-	 * 你：cannot start gliding while in an Altered State。 / You cannot start gliding while in an Altered State
+	 * 在异常状态下无法开始滑翔。 / You cannot start gliding while in an Altered State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GLIDE_CANNOT_GLIDE_ABNORMAL_STATUS = new SM_SYSTEM_MESSAGE(1301057);
 
 	/**
-	 * 你：cannot change to the combat mode while gliding。 / You cannot change to the combat mode while gliding
+	 * 滑翔中无法切换为战斗模式。 / You cannot change to the combat mode while gliding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GLIDE_CANNOT_GLIDE_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1301058);
 
 	/**
-	 * 你：can glide when you become a Daeva。 / You can glide when you become a Daeva
+	 * 成为守护者后即可滑翔。 / You can glide when you become a Daeva
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GLIDE_ONLY_DEVA_CAN = new SM_SYSTEM_MESSAGE(1301059);
 
 	/**
-	 * @param value0 你：do not have enough mana to continue using %0。 / You do not have enough mana to continue using %0
+	 * 你的魔力不足，无法继续使用 %0。 / You do not have enough mana to continue using %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_INSUFFICIENT_COST_FOR_TOGGLE_SKILLL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1301060, value0);
 	}
 
 	/**
-	 * You 无法 appointanymorevicecaptains.alliance 可有 maximum 的 4。 / You cannot appoint any more vice captains. The alliance can have a maximum of 4
+	 * 无法再任命副队长，联盟最多可有 4 名副队长。 / You cannot appoint any more vice captains. The alliance can have a maximum of 4
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANNOT_PROMOTE_MANAGER = new SM_SYSTEM_MESSAGE(1301061);
 
@@ -14422,7 +14422,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_SAME_EFFECT_ALREADY_TAKEN = new SM_SYSTEM_MESSAGE(1301063);
 
 	/**
-	 * @param value0 你：declined %0's challenge for a duel。 / You declined %0's challenge for a duel
+	 * 你已拒绝 %0 的决斗挑战。 / You declined %0's challenge for a duel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DUEL_REJECT_DUEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1301064, value0);
@@ -14454,7 +14454,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have too many users blocked from chatting with you。 / You have too many users blocked from chatting with you
+	 * 被你屏蔽聊天的人数已达上限。 / You have too many users blocked from chatting with you
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TOO_MANY_EXCLUDE = new SM_SYSTEM_MESSAGE(1310003);
 
@@ -14487,29 +14487,29 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_BILLING_SERVER_DOWN = new SM_SYSTEM_MESSAGE(1310008);
 
 	/**
-	 * @param value0 你：disabled chatting for %0。 / You disabled chatting for %0
+	 * 你已对 %0 禁用聊天。 / You disabled chatting for %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_DISABLED_OTHER_CHAT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1310009, value0);
 	}
 
 	/**
-	 * 此为 Assist 目标 Key.Use 其 afteryou 有 selected 目标。 / This is an Assist Target Key. Use it after you have selected a target
+	 * 这是协助目标键，请在选中目标后使用。 / This is an Assist Target Key. Use it after you have selected a target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ASSISTKEY_THIS_IS_ASSISTKEY = new SM_SYSTEM_MESSAGE(1310010);
 
 	/**
-	 * PleaseuserightNPC 用于 yourrace 到 register 物品。 / Please use the right NPC for your race to register items
+	 * 请使用适合你种族的 NPC 登记物品。 / Please use the right NPC for your race to register items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_RACECHECK = new SM_SYSTEM_MESSAGE(1310011);
 
 	/**
-	 * 你：cannot chat while you are dead。 / You cannot chat while you are dead
+	 * 死亡状态下无法聊天。 / You cannot chat while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_CHAT_AT_DIE = new SM_SYSTEM_MESSAGE(1310012);
 
 	/**
-	 * @param value0 你：cannot quit during a battle. Canceling in %0 seconds。 / You cannot quit during a battle. Canceling in %0 seconds
+	 * 战斗中无法退出，将在 %0 秒后取消。 / You cannot quit during a battle. Canceling in %0 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_QUIT_DURING_BATTLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1310013, value0);
@@ -14533,13 +14533,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_KICK_BANNED = new SM_SYSTEM_MESSAGE(1310016);
 
 	/**
-	 * 你：have been disconnected from the server。 / You have been disconnected from the server
+	 * 你已与服务器断开连接。 / You have been disconnected from the server
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_KICK_CHARACTER = new SM_SYSTEM_MESSAGE(1310017);
 
 	 /**
 	  * 你的World access time limit has been exceeded。
-	  * 你的World access time limit has been exceeded。 / Your World access time limit has been exceeded
+	  * 你的世界访问时间限制已用尽。 / Your World access time limit has been exceeded
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_KICK_ABOUT_TO_PLAY_TIMER_EXPIRED = new SM_SYSTEM_MESSAGE(1310018);
 
@@ -14561,7 +14561,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1310021);
 
 	/**
-	 * 你：do not have enough credit left in the account。 / You do not have enough credit left in the account
+	 * 你的账号余额不足。 / You do not have enough credit left in the account
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_NOT_PAID = new SM_SYSTEM_MESSAGE(1310022);
 
@@ -14629,7 +14629,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_CHAR_NOT_EXIST = new SM_SYSTEM_MESSAGE(1310034);
 
 	/**
-	 * character 为已经设置到为 deleted。 / That character is already set to be deleted
+	 * 该角色已设置为待删除状态。 / That character is already set to be deleted
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_CHAR_ALREADY_DELETED = new SM_SYSTEM_MESSAGE(1310035);
 
@@ -14639,12 +14639,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_FAILED_TO_CREATE_CHAR = new SM_SYSTEM_MESSAGE(1310036);
 
 	/**
-	 * character 带名称已经存在。 / A character with that name already exists
+	 * 已存在同名角色。 / A character with that name already exists
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_CHARACTER_EXIST = new SM_SYSTEM_MESSAGE(1310037);
 
 	/**
-	 * You 无法创建 anymorecharacters 在此 server。 / You cannot create any more characters on this server
+	 * 你无法在此服务器创建更多角色。 / You cannot create any more characters on this server
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_NO_AVAILABLE_SLOT = new SM_SYSTEM_MESSAGE(1310038);
 
@@ -14671,7 +14671,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_ALREADY_PLAYING = new SM_SYSTEM_MESSAGE(1310042);
 
 	/**
-	 * You 无法创建 anymorecharacters 在 account。 / You cannot create any more characters on that account
+	 * 你无法在该账号上创建更多角色。 / You cannot create any more characters on that account
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_MAX_CHAR_COUNT = new SM_SYSTEM_MESSAGE(1310043);
 
@@ -14708,7 +14708,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_LOGIN_ERROR_INTERNAL_SERVER_ERROR = new SM_SYSTEM_MESSAGE(1310049);
 
 	/**
-	 * You 有已 disconnected 从 server 按 request 的 PlayNCHomepage。 / You have been disconnected from the server by request of the PlayNC Homepage
+	 * 应 PlayNC 官网请求，你已与服务器断开连接。 / You have been disconnected from the server by request of the PlayNC Homepage
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_L2AUTH_S_KICKED_BY_WEB = new SM_SYSTEM_MESSAGE(1310050);
 
@@ -14749,7 +14749,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_L2AUTH_S_NOT_PAID = new SM_SYSTEM_MESSAGE(1310057);
 
 	/**
-	 * You 有 usedupyourallocatedtime 并 there 为 notimeleft 在此 account。 / You have used up your allocated time and there is no time left on this account
+	 * 该账号的分配时间已用尽，没有剩余时间。 / You have used up your allocated time and there is no time left on this account
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_L2AUTH_S_NO_SPECIFICTIME = new SM_SYSTEM_MESSAGE(1310058);
 
@@ -14759,17 +14759,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_L2AUTH_S_SYSTEM_ERROR = new SM_SYSTEM_MESSAGE(1310059);
 
 	/**
-	 * You 无法 openprivate 商店在 arena。 / You cannot open a private store in the arena
+	 * 无法在竞技场开设个人商店。 / You cannot open a private store in the arena
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PvPZONE_CANNOT_OPEN_MARKET = new SM_SYSTEM_MESSAGE(1310060);
 
 	/**
-	 * 你：cannot continue unless you stop flying。 / You cannot continue unless you stop flying
+	 * 除非停止飞行，否则无法继续。 / You cannot continue unless you stop flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_CANNOT_PROCESS_IN_FLIGHT = new SM_SYSTEM_MESSAGE(1310061);
 
 	/**
-	 * @param num0 你：have gained %num0 Abyss Points。 / You have gained %num0 Abyss Points
+	 * 你获得了 %num0 欧比斯点数。 / You have gained %num0 Abyss Points
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_ABYSS_POINT_GAIN(int num0) {
 		return new SM_SYSTEM_MESSAGE(1320000, num0);
@@ -14811,7 +14811,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 军团 lost%1。 / %0 Legion lost %1
+	 * %0 军团失去了 %1。 / %0 Legion lost %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_EVENT_LOSE_FORT(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1320005, value0, value1);
@@ -14824,24 +14824,24 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 skill level is not high enough。
-	  * 你的%0 skill level is not high enough。 / Your %0 skill level is not high enough
+	  * 你的 %0 技能等级不足。 / Your %0 skill level is not high enough
 	  */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_OUT_OF_SKILL_POINT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330001, value0);
 	}
 
 	/**
-	 * 距离过远：the object to gather it。 / You are too far from the object to gather it
+	 * 你离采集对象过远。 / You are too far from the object to gather it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_TOO_FAR_FROM_GATHER_SOURCE = new SM_SYSTEM_MESSAGE(1330002);
 
 	/**
-	 * You 无法 gather 作为 there 为 obstaclesblockingway。 / You cannot gather as there are obstacles blocking the way
+	 * 因障碍物挡住去路，你无法采集。 / You cannot gather as there are obstacles blocking the way
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_OBSTACLE_EXIST = new SM_SYSTEM_MESSAGE(1330003);
 
 	/**
-	 * @param value0 你：have learned the %0 skill。 / You have learned the %0 skill
+	 * 你已学会 %0 技能。 / You have learned the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_LEARNED_NEW_GATHER_SKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330004, value0);
@@ -14849,34 +14849,34 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 skill has been upgraded to %1 points。
-	  * 你的%0 skill has been upgraded to %1 points。 / Your %0 skill has been upgraded to %1 points
+	  * 你的 %0 技能已升级至 %1 点。 / Your %0 skill has been upgraded to %1 points
 	  */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_SKILL_POINT_UP(String skillName, int newLevel) {
 		return new SM_SYSTEM_MESSAGE(1330005, skillName, newLevel);
 	}
 
 	/**
-	 * 你：do not have the basic gathering tools。 / You do not have the basic gathering tools
+	 * 你没有基础采集工具。 / You do not have the basic gathering tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_NO_TOOL_1_BASIC = new SM_SYSTEM_MESSAGE(1330006);
 
 	/**
-	 * 你：do not have the harvesting tools。 / You do not have the harvesting tools
+	 * 你没有收获工具。 / You do not have the harvesting tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_NO_TOOL_2_GATHER = new SM_SYSTEM_MESSAGE(1330007);
 
 	/**
-	 * 你：do not have the mining tools。 / You do not have the mining tools
+	 * 你没有采矿工具。 / You do not have the mining tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_NO_TOOL_3_MINING = new SM_SYSTEM_MESSAGE(1330008);
 
 	/**
-	 * 你：do not have the fishing tools。 / You do not have the fishing tools
+	 * 你没有钓鱼工具。 / You do not have the fishing tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_NO_TOOL_4_FISHING = new SM_SYSTEM_MESSAGE(1330009);
 
 	/**
-	 * 你：do not have the forestry tools。 / You do not have the forestry tools
+	 * 你没有伐木工具。 / You do not have the forestry tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_NO_TOOL_5_FORESTRY = new SM_SYSTEM_MESSAGE(1330010);
 
@@ -14916,28 +14916,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have gathered %0。 / You have gathered %0
+	 * 你采集到了 %0。 / You have gathered %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_SUCCESS_1_BASIC(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330016, value0);
 	}
 
 	/**
-	 * @param value0 你：have harvested %0。 / You have harvested %0
+	 * 你收获了 %0。 / You have harvested %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_SUCCESS_2_GATHER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330017, value0);
 	}
 
 	/**
-	 * @param value0 你：have mined %0。 / You have mined %0
+	 * 你采掘到了 %0。 / You have mined %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_SUCCESS_3_MINING(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330018, value0);
 	}
 
 	/**
-	 * @param value0 你：have caught %0。 / You have caught %0
+	 * 你钓到了 %0。 / You have caught %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_SUCCESS_4_FISHING(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330019, value0);
@@ -14951,102 +14951,102 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have failed to gather %0。 / You have failed to gather %0
+	 * 你采集 %0 失败。 / You have failed to gather %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_FAIL_1_BASIC(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330021, value0);
 	}
 
 	/**
-	 * @param value0 你：have failed to harvest %0。 / You have failed to harvest %0
+	 * 你收获 %0 失败。 / You have failed to harvest %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_FAIL_2_GATHER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330022, value0);
 	}
 
 	/**
-	 * @param value0 你：have failed to mine %0。 / You have failed to mine %0
+	 * 你采掘 %0 失败。 / You have failed to mine %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_FAIL_3_MINING(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330023, value0);
 	}
 
 	/**
-	 * @param value0 你：have failed to catch %0。 / You have failed to catch %0
+	 * 你垂钓 %0 失败。 / You have failed to catch %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_FAIL_4_FISHING(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330024, value0);
 	}
 
 	/**
-	 * @param value0 你：have failed to acquire %0。 / You have failed to acquire %0
+	 * 你获取 %0 失败。 / You have failed to acquire %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_FAIL_5_FORESTRY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330025, value0);
 	}
 
 	/**
-	 * 你：have stopped gathering。 / You have stopped gathering
+	 * 你已停止采集。 / You have stopped gathering
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANCEL_1_BASIC = new SM_SYSTEM_MESSAGE(1330026);
 
 	/**
-	 * 你：have stopped harvesting。 / You have stopped harvesting
+	 * 你已停止收获。 / You have stopped harvesting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANCEL_2_GATHER = new SM_SYSTEM_MESSAGE(1330027);
 
 	/**
-	 * 你：have stopped mining。 / You have stopped mining
+	 * 你已停止采掘。 / You have stopped mining
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANCEL_3_MINING = new SM_SYSTEM_MESSAGE(1330028);
 
 	/**
-	 * 你：have stopped fishing。 / You have stopped fishing
+	 * 你已停止垂钓。 / You have stopped fishing
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANCEL_4_FISHING = new SM_SYSTEM_MESSAGE(1330029);
 
 	/**
-	 * 你：have stopped felling。 / You have stopped felling
+	 * 你已停止伐木。 / You have stopped felling
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANCEL_5_FORESTRY = new SM_SYSTEM_MESSAGE(1330030);
 
 	/**
-	 * 你：must be equipped with the basic gathering tools。 / You must be equipped with the basic gathering tools
+	 * 必须装备基础采集工具。 / You must be equipped with the basic gathering tools
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_EQUIP_1_BASIC = new SM_SYSTEM_MESSAGE(1330031);
 
 	/**
-	 * 你：must be equipped with a hoe。 / You must be equipped with a hoe
+	 * 必须装备锄头。 / You must be equipped with a hoe
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_EQUIP_2_GATHER = new SM_SYSTEM_MESSAGE(1330032);
 
 	/**
-	 * 你：must be equipped with a pick。 / You must be equipped with a pick
+	 * 必须装备镐。 / You must be equipped with a pick
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_EQUIP_3_MINING = new SM_SYSTEM_MESSAGE(1330033);
 
 	/**
-	 * 你：must be equipped with a fishing rod。 / You must be equipped with a fishing rod
+	 * 必须装备钓鱼竿。 / You must be equipped with a fishing rod
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_EQUIP_4_FISHING = new SM_SYSTEM_MESSAGE(1330034);
 
 	/**
-	 * 你：must be equipped with an axe。 / You must be equipped with an axe
+	 * 必须装备斧头。 / You must be equipped with an axe
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_EQUIP_5_FORESTRY = new SM_SYSTEM_MESSAGE(1330035);
 
 	/**
-	 * Youmust 有在 least 一个 freespace 在 yourcube 到 gather。 / You must have at least one free space in your cube to gather
+	 * 背包中必须至少留有一个空格才能采集。 / You must have at least one free space in your cube to gather
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_INVENTORY_IS_FULL = new SM_SYSTEM_MESSAGE(1330036);
 
 	/**
-	 * Youmust 有在 least 一个 freespace 在 yourcube 到 craft。 / You must have at least one free space in your cube to craft
+	 * 背包中必须至少留有一个空格才能制作。 / You must have at least one free space in your cube to craft
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_INVENTORY_IS_FULL = new SM_SYSTEM_MESSAGE(1330037);
 
 	/**
-	 * 你：cannot craft while in an altered state。 / You cannot craft while in an altered state
+	 * 异常状态下无法制作。 / You cannot craft while in an altered state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_CAN_NOT_COMBINE_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1330038);
@@ -15057,21 +15057,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_ALREADY_COMBINING = new SM_SYSTEM_MESSAGE(1330039);
 
 	/**
-	 * @param value0 距离过远：%0 to craft。 / You are too far from %0 to craft
+	 * 你距 %0 过远，无法制作。 / You are too far from %0 to craft
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_TOO_FAR_FROM_TOOL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330040, value0);
 	}
 
 	/**
-	 * @param value0 You 无法 craft 作为 youdonot 有 %0。 / You cannot craft as you do not have %0
+	 * 你没有 %0，无法制作。 / You cannot craft as you do not have %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_DO_NOT_HAVE_TOOL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330041, value0);
 	}
 
 	/**
-	 * @param value0 你：cannot start crafting as you have not learned the %0 skill。 / You cannot start crafting as you have not learned the %0 skill
+	 * 你尚未学习 %0 技能，无法开始制作。 / You cannot start crafting as you have not learned the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_CANT_USE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330042, value0);
@@ -15084,26 +15084,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 skill is not good enough yet。
-	  * 你的%0 skill is not good enough yet。 / Your %0 skill is not good enough yet
+	  * 你的 %0 技能还不够熟练。 / Your %0 skill is not good enough yet
 	  */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_OUT_OF_SKILL_POINT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330044, value0);
 	}
 
 	/**
-	 * 你：cannot craft as you do not have a required item。 / You cannot craft as you do not have a required item
+	 * 缺少所需材料，无法制作。 / You cannot craft as you do not have a required item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_NO_COMPONENT_ITEM_IN_RECIPE = new SM_SYSTEM_MESSAGE(1330045);
 
 	/**
-	 * @param value0 You 无法 craft 作为 youdonot 有 %0。 / You cannot craft as you do not have %0
+	 * 你没有 %0，无法制作。 / You cannot craft as you do not have %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_NO_COMPONENT_ITEM_SINGLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330046, value0);
 	}
 
 	/**
-	 * You 无法 craft 作为 youdonot 有 %num1%0。 / You cannot craft as you do not have %num1 %0
+	 * 你没有 %num1 个 %0，无法制作。 / You cannot craft as you do not have %num1 %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_NO_COMPONENT_ITEM_MULTIPLE(int num1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1330047, num1, value0);
@@ -15117,26 +15117,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have crafted %0。 / You have crafted %0
+	 * 你已制作 %0。 / You have crafted %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_SUCCESS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330049, value0);
 	}
 
 	/**
-	 * @param value0 你：have failed to craft %0。 / You have failed to craft %0
+	 * 制作 %0 失败。 / You have failed to craft %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_FAIL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330050, value0);
 	}
 
 	/**
-	 * 你：stopped crafting。 / You stopped crafting
+	 * 你已停止制作。 / You stopped crafting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMBINE_CANCEL = new SM_SYSTEM_MESSAGE(1330051);
 
 	/**
-	 * @param value0 你：must have learned the %0 skill to use this tool。 / You must have learned the %0 skill to use this tool
+	 * 使用该工具必须先学会 %0 技能。 / You must have learned the %0 skill to use this tool
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_CANT_USE_TOOL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330052, value0);
@@ -15144,26 +15144,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的%0 skill has been upgraded to %1 points。
-	  * 你的%0 skill has been upgraded to %1 points。 / Your %0 skill has been upgraded to %1 points
+	  * 你的 %0 技能已升级至 %1 点。 / Your %0 skill has been upgraded to %1 points
 	  */
 	public static SM_SYSTEM_MESSAGE STR_COMBINE_SKILL_POINT_UP(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1330053, value0, value1);
 	}
 
 	/**
-	 * @param value0 你：must learn the %0 skill to start gathering。 / You must learn the %0 skill to start gathering
+	 * 必须学会 %0 技能才能开始采集。 / You must learn the %0 skill to start gathering
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GATHER_LEARN_SKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1330054, value0);
 	}
 
 	/**
-	 * You 无法 startcrafting 作为 there 为 obstaclesblockingway。 / You cannot start crafting as there are obstacles blocking the way
+	 * 因障碍物挡住去路，无法开始制作。 / You cannot start crafting as there are obstacles blocking the way
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_OBSTACLE_EXIST = new SM_SYSTEM_MESSAGE(1330055);
 
 	/**
-	 * 你：cannot craft while in combat。 / You cannot craft while in combat
+	 * 战斗中无法制作。 / You cannot craft while in combat
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_DISABLED_IN_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1330056);
 
@@ -15173,36 +15173,36 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_CLOSED_FOR_COMBAT_MODE = new SM_SYSTEM_MESSAGE(1330057);
 
 	/**
-	 * 你：have gathered successfully。 / You have gathered successfully
+	 * 你采集成功。 / You have gathered successfully
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHERING_SUCCESS_GETEXP = new SM_SYSTEM_MESSAGE(1330058);
 
 	/**
-	 * 你：have crafted successfully。 / You have crafted successfully
+	 * 你制作成功。 / You have crafted successfully
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_SUCCESS_GETEXP = new SM_SYSTEM_MESSAGE(1330059);
 
 	/**
-	 * 你：have already learned this design。 / You have already learned this design
+	 * 你已经学过该设计图。 / You have already learned this design
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_RECIPE_LEARNED_ALREADY = new SM_SYSTEM_MESSAGE(1330060);
 
 	/**
-	 * 你：have learned %0。 / You have learned %0
+	 * 你已学会 %0。 / You have learned %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CRAFT_RECIPE_LEARN(int value0, String name) {
 		return new SM_SYSTEM_MESSAGE(1330061, "[recipe_ex:" + value0 + ";" + name + "]");
 	}
 
 	/**
-	 * @param i 你：cannot learn the design because you have not learned the %0 skill。 / You cannot learn the design because you have not learned the %0 skill
+	 * 你尚未学习 %0 技能，无法学习该设计图。 / You cannot learn the design because you have not learned the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CRAFT_RECIPE_CANT_LEARN_SKILL(int i) {
 		return new SM_SYSTEM_MESSAGE(1330062, new DescriptionId(i));
 	}
 
 	/**
-	 * You 无法 learndesignbecauseyourskilllevel 为 nothigh 足够。 / You cannot learn the design because your skill level is not high enough
+	 * 你的技能等级不足，无法学习该设计图。 / You cannot learn the design because your skill level is not high enough
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_RECIPE_CANT_LEARN_SKILLPOINT = new SM_SYSTEM_MESSAGE(1330063);
 
@@ -15219,7 +15219,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA = new SM_SYSTEM_MESSAGE(1330065);
 
 	/**
-	 * 你a Daeva now. Leave this resource for Humans to use。 / You are a Daeva now. Leave this resource for Humans to use
+	 * 你已是守护者，请把这些资源留给人类使用。 / You are a Daeva now. Leave this resource for Humans to use
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_INCORRECT_SKILL = new SM_SYSTEM_MESSAGE(1330066);
 
@@ -15238,29 +15238,29 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot be promoted any more。 / You cannot be promoted any more
+	 * 你无法再晋升了。 / You cannot be promoted any more
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_COMBINE_CBT_CAP = new SM_SYSTEM_MESSAGE(1330069);
 
 	/**
-	 * 你：cannot be promoted any more。 / You cannot be promoted any more
+	 * 你无法再晋升了。 / You cannot be promoted any more
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GATHER_CBT_CAP = new SM_SYSTEM_MESSAGE(1330070);
 
 	/**
-	 * 你：cannot gather while afflicted with an altered state。 / You cannot gather while afflicted with an altered state
+	 * 处于异常状态时无法采集。 / You cannot gather while afflicted with an altered state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_EXTRACT_GATHER_WHILE_IN_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(
 			1330071);
 
 	/**
-	 * You 无法 gatherwhile 在当前 stance。 / You cannot gather while in the current stance
+	 * 当前姿态下无法采集。 / You cannot gather while in the current stance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_EXTRACT_GATHER_WHILE_IN_CURRENT_STANCE = new SM_SYSTEM_MESSAGE(
 			1330072);
 
 	/**
-	 * 你：cannot gather while in the current position。 / You cannot gather while in the current position
+	 * 当前位置无法采集。 / You cannot gather while in the current position
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_EXTRACT_GATHER_IN_CURRENT_POSITION = new SM_SYSTEM_MESSAGE(
 			1330073);
@@ -15271,79 +15271,79 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_OCCUPIED_BY_OTHER = new SM_SYSTEM_MESSAGE(1330074);
 
 	/**
-	 * 距离过远：the target to gather it。 / You are too far from the target to gather it
+	 * 你离目标过远，无法采集。 / You are too far from the target to gather it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_TOO_FAR_FROM_GATHER_SOURCE = new SM_SYSTEM_MESSAGE(
 			1330075);
 
 	/**
-	 * 你：cannot gather because an obstacle is in the way。 / You cannot gather because an obstacle is in the way
+	 * 因有障碍物挡路，你无法采集。 / You cannot gather because an obstacle is in the way
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_OBSTACLE_EXIST = new SM_SYSTEM_MESSAGE(1330076);
 
 	/**
-	 * @param nameId 你：have started gathering %0。 / You have started gathering %0
+	 * 你开始采集 %0。 / You have started gathering %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_START_1_BASIC(DescriptionId nameId) {
 		return new SM_SYSTEM_MESSAGE(1330077, nameId);
 	}
 
 	/**
-	 * @param nameId 你：have gathered %0。 / You have gathered %0
+	 * 你采集到了 %0。 / You have gathered %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_SUCCESS_1_BASIC(DescriptionId nameId) {
 		return new SM_SYSTEM_MESSAGE(1330078, nameId);
 	}
 
 	/**
-	 * @param nameId 你：have failed to gather %0。 / You have failed to gather %0
+	 * 你采集 %0 失败。 / You have failed to gather %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_FAIL_1_BASIC(DescriptionId nameId) {
 		return new SM_SYSTEM_MESSAGE(1330079, nameId);
 	}
 
 	/**
-	 * 你：have stopped gathering。 / You have stopped gathering
+	 * 你已停止采集。 / You have stopped gathering
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_CANCEL_1_BASIC = new SM_SYSTEM_MESSAGE(1330080);
 
 	/**
-	 * 你：cannot gather unless there is at least one free space in your cube。 / You cannot gather unless there is at least one free space in your cube
+	 * 背包中必须至少留有一个空格才能采集。 / You cannot gather unless there is at least one free space in your cube
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHER_INVENTORY_IS_FULL = new SM_SYSTEM_MESSAGE(1330081);
 
 	/**
-	 * 你：have gained experience from gathering。 / You have gained experience from gathering
+	 * 你通过采集获得了经验值。 / You have gained experience from gathering
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHERING_SUCCESS_GETEXP = new SM_SYSTEM_MESSAGE(1330082);
 
 	/**
-	 * You 无法 use 物品 until 其 gatheringtimerexpires。 / You cannot use the item until its gathering timer expires
+	 * 采集计时结束前无法使用该物品。 / You cannot use the item until its gathering timer expires
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EXTRACT_GATHERING_CANT_USE_UNTIL_DELAY_TIME = new SM_SYSTEM_MESSAGE(
 			1330083);
 
 	/**
-	 * 你：have died。 / You have died
+	 * 你已死亡。 / You have died
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_DEATH = new SM_SYSTEM_MESSAGE(1340000);
 
 	/**
-	 * @param value0 你：were killed by %0's attack。 / You were killed by %0's attack
+	 * 你被 %0 的攻击杀死。 / You were killed by %0's attack
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PvPZONE_MY_DEATH_TO_B(String value0) {
 		return new SM_SYSTEM_MESSAGE(1340001, value0);
 	}
 
 	/**
-	 * @param value0 你：were killed by %0's attack。 / You were killed by %0's attack
+	 * 你被 %0 的攻击杀死。 / You were killed by %0's attack
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_DEATH_TO_B(String value0) {
 		return new SM_SYSTEM_MESSAGE(1340002, value0);
 	}
 
 	/**
-	 * @param value0 %0 有 died。 / %0 has died
+	 * %0 已死亡。 / %0 has died
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_FRIENDLY_DEATH(String value0) {
 		return new SM_SYSTEM_MESSAGE(1350000, value0);
@@ -15357,14 +15357,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有 died。 / %0 has died
+	 * %0 已死亡。 / %0 has died
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_HOSTILE_DEATH(String value0) {
 		return new SM_SYSTEM_MESSAGE(1360000, value0);
 	}
 
 	/**
-	 * @param value0 你：have defeated %0。 / You have defeated %0
+	 * 你已击败 %0。 / You have defeated %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PvPZONE_HOSTILE_DEATH_TO_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1360001, value0);
@@ -15379,7 +15379,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have defeated %0。 / You have defeated %0
+	 * 你已击败 %0。 / You have defeated %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_HOSTILE_DEATH_TO_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1360003, value0);
@@ -15394,7 +15394,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0。 / You have gained %num1 XP from %0
+	 * 你从 %0 获得了 %num1 点经验值。 / You have gained %num1 XP from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP(String value0, long num1) {
 		return new SM_SYSTEM_MESSAGE(1370000, value0, num1);
@@ -15405,14 +15405,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have earned %0 XP。 / You have earned %0 XP
+	 * 你获得了 %0 点经验值。 / You have earned %0 XP
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_EXP_GAIN(String value0) {
 		return new SM_SYSTEM_MESSAGE(1370001, value0);
 	}
 
 	/**
-	 * @param num0 你：have gained %num0 XP。 / You have gained %num0 XP
+	 * 你获得了 %num0 点经验值。 / You have gained %num0 XP
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP2(long num0) {
 		return new SM_SYSTEM_MESSAGE(1370002, num0);
@@ -15435,21 +15435,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdistributed%1 基纳 each 到 %0 成员。 / You distributed %1 Kinah each to %0 members
+	 * 你向 %0 名成员每人分配了 %1 基纳。 / You distributed %1 Kinah each to %0 members
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_DISTRIBUTE_GOLD(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1380000, value1, value0);
 	}
 
 	/**
-	 * @param num0 你：have earned %num0 Kinah。 / You have earned %num0 Kinah
+	 * 你获得了 %num0 基纳。 / You have earned %num0 Kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GETMONEY(int num0) {
 		return new SM_SYSTEM_MESSAGE(1380001, num0);
 	}
 
 	/**
-	 * @param num0 你：received a refund of %num0 Kinah。 / You received a refund of %num0 Kinah
+	 * 你收到了 %num0 基纳的退款。 / You received a refund of %num0 Kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_REFUND_MONEY_SYSTEM(int num0) {
 		return new SM_SYSTEM_MESSAGE(1380002, num0);
@@ -15494,25 +15494,25 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have acquired %num1 %0(s)。 / You have acquired %num1 %0(s)
+	 * 你获得了 %num1 个 %0。 / You have acquired %num1 %0(s)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_ITEM_MULTI(int num1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1390005, num1, value0s);
 	}
 
 	/**
-	 * 你：cannot close the Craft window while crafting。 / You cannot close the Craft window while crafting
+	 * 制作中无法关闭制作窗口。 / You cannot close the Craft window while crafting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_CLOSE_MAKING_DIALOG_DURING_COMBINE = new SM_SYSTEM_MESSAGE(
 			1390105);
 
 	/**
-	 * 你：cannot change target while crafting。 / You cannot change target while crafting
+	 * 制作中无法切换目标。 / You cannot change target while crafting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_SELECT_TARGET_DURING_COMBINE = new SM_SYSTEM_MESSAGE(1390106);
 
 	/**
-	 * 你：cannot open a private store while fighting。 / You cannot open a private store while fighting
+	 * 战斗中无法开设个人商店。 / You cannot open a private store while fighting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DISABLED_IN_EXCHANGE = new SM_SYSTEM_MESSAGE(1390107);
 
@@ -15522,7 +15522,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_MEMBER_CANT_ORGANIZE_FORCE = new SM_SYSTEM_MESSAGE(1390108);
 
 	/**
-	 * You 无法 organizealliance 按 invitingyour 拥有 group 成员。 / You cannot organize an alliance by inviting your own group members
+	 * 无法通过邀请自己队伍成员的方式来组建联盟。 / You cannot organize an alliance by inviting your own group members
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_ORGANIZE_FORCE_INVITED_PARTY_MEMBER = new SM_SYSTEM_MESSAGE(
 			1390109);
@@ -15544,7 +15544,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_MSG_RECIPIENT_UNKNOWN = new SM_SYSTEM_MESSAGE(1390112);
 
 	/**
-	 * @param value0 You 无法发送 mail 到 %0becausehis / hermailbox 为 full。 / You cannot send a mail to %0 because his/her mailbox is full
+	 * 你无法向 %0 发送邮件，因为对方的邮箱已满。 / You cannot send a mail to %0 because his/her mailbox is full
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MAIL_MSG_RECIPIENT_MAILBOX_FULL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390113, value0);
@@ -15601,14 +15601,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：started using the %0 skill。 / You started using the %0 skill
+	 * 你开始使用 %0 技能。 / You started using the %0 skill
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_TOGGLE_SKILL_TURNED_ON(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390121, value0);
 	}
 
 	/**
-	 * @param value0 你：have entered zone channel %0。 / You have entered zone channel %0
+	 * 你进入了区域频道 %0。 / You have entered zone channel %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TELEPORT_ZONECHANNEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390122, value0);
@@ -15628,13 +15628,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：did not set Your Note。 / You did not set Your Note
+	 * 你尚未设置个性签名。 / You did not set Your Note
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOSET_TODAY_WORDS = new SM_SYSTEM_MESSAGE(1390125);
 
 	 /**
 	  * 你的Note has been cleared。
-	  * 你的Note has been cleared。 / Your Note has been cleared
+	  * 你的个性签名已被清除。 / Your Note has been cleared
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CLEAR_TODAY_WORDS = new SM_SYSTEM_MESSAGE(1390126);
 
@@ -15644,7 +15644,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOSET_GUILD_NOTICE = new SM_SYSTEM_MESSAGE(1390127);
 
 	/**
-	 * 军团公告有已 cleared。 / Legion Announcement has been cleared
+	 * 军团公告已被清除。 / Legion Announcement has been cleared
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CLEAR_GUILD_NOTICE = new SM_SYSTEM_MESSAGE(1390128);
 
@@ -15654,7 +15654,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOSET_GUILD_MEMBER_INTRO = new SM_SYSTEM_MESSAGE(1390129);
 
 	/**
-	 * Your 自我介绍有已 cleared。 / Your Self Intro has been cleared
+	 * 你的自我介绍已被清除。 / Your Self Intro has been cleared
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CLEAR_GUILD_MEMBER_INTRO = new SM_SYSTEM_MESSAGE(1390130);
 
@@ -15666,7 +15666,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：resisted %0's attack。 / You resisted %0's attack
+	 * 你抵抗了 %0 的攻击。 / You resisted %0's attack
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_RESISTED_A_TO_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390132, value0);
@@ -15680,21 +15680,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：changed the connection status to %0。 / You changed the connection status to %0
+	 * 你将连接状态改为 %0。 / You changed the connection status to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CONNECTION_STATUS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390134, value0);
 	}
 
 	/**
-	 * @param value0 你：changed the group to the %0 state。 / You changed the group to the %0 state
+	 * 你把队伍状态改成了 %0。 / You changed the group to the %0 state
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_MY_PARTY_STATE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390135, value0);
 	}
 
 	/**
-	 * 你：have no authority to modify the Legion emblem。 / You have no authority to modify the Legion emblem
+	 * 你没有修改军团徽章的权限。 / You have no authority to modify the Legion emblem
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_EMBLEM_DONT_HAVE_RIGHT = new SM_SYSTEM_MESSAGE(1390136);
 
@@ -15705,7 +15705,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_EMBLEM = new SM_SYSTEM_MESSAGE(1390137);
 
 	/**
-	 * Pleaseenter 名称的成员到 changerank。 / Please enter the name of the member to change the rank
+	 * 请输入要变更军衔的成员名称。 / Please enter the name of the member to change the rank
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_NO_NAME = new SM_SYSTEM_MESSAGE(1390138);
 
@@ -15716,7 +15716,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_INCORRECT_RIGHT = new SM_SYSTEM_MESSAGE(1390139);
 
 	/**
-	 * 你：cannot use a Rift while flying。 / You cannot use a Rift while flying
+	 * 飞行中无法使用裂隙。 / You cannot use a Rift while flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_WHILE_FLYING = new SM_SYSTEM_MESSAGE(1390140);
 
@@ -15737,12 +15737,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你Tired, and the XP or item rewards gained are reduced to 50% of normal. Please log out and take a break for your health。 / You are Tired, and the XP or item rewards gained are reduced to 50% of normal. Please log out and take a break for your health
+	 * 你处于疲劳状态，获得的经验值与物品奖励减少为原来的 50%，请退出游戏休息，注意健康。 / You are Tired, and the XP or item rewards gained are reduced to 50% of normal. Please log out and take a break for your health
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TIRED_REMAIN_PLAYTIME = new SM_SYSTEM_MESSAGE(1390143);
 
 	/**
-	 * 你Exhausted, and the XP or item rewards gained are reduced to 0%. Please log out and take a break for your health. It will be returned to normal when the accumulated logout time reaches 5 hours。 / You are Exhausted, and the XP or item rewards gained are reduced to 0%. Please log out and take a break for your health. It will be returned to normal when the accumulated logout time reaches 5 hours
+	 * 你处于精疲力竭状态，获得的经验值与物品奖励为 0%，请退出游戏休息，注意健康。 / You are Exhausted, and the XP or item rewards gained are reduced to 0%. Please log out and take a break for your health. It will be returned to normal when the accumulated logout time reaches 5 hours
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PENALTY_REMAIN_PLAYTIME = new SM_SYSTEM_MESSAGE(1390144);
 
@@ -15761,27 +15761,27 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdonot 有足够基纳到 payfee。 / You do not have enough Kinah to pay the fee
+	 * 你的基纳不足，无法支付费用。 / You do not have enough Kinah to pay the fee
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_SEND_MAIL_NOT_ENOUGH_FEE = new SM_SYSTEM_MESSAGE(1390147);
 
 	/**
-	 * 你：do not have the authority to use the Alert Chat。 / You do not have the authority to use the Alert Chat
+	 * 你没有使用警示聊天的权限。 / You do not have the authority to use the Alert Chat
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NO_AUTHORITY = new SM_SYSTEM_MESSAGE(1390148);
 
 	/**
-	 * 你：do not have enough space in the inventory。 / You do not have enough space in the inventory
+	 * 你的背包空间不足。 / You do not have enough space in the inventory
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_WAREHOUSE_FULL_INVENTORY = new SM_SYSTEM_MESSAGE(1390149);
 
 	/**
-	 * 你：cannot use items while crafting。 / You cannot use items while crafting
+	 * 制作中无法使用物品。 / You cannot use items while crafting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_USE_ITEM_DURING_COMBINE = new SM_SYSTEM_MESSAGE(1390150);
 
 	/**
-	 * 你：cannot use the entrance to the enemy territory。 / You cannot use the entrance to the enemy territory
+	 * 你无法使用通向敌国领土的入口。 / You cannot use the entrance to the enemy territory
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_TELEPORT_OPPOSITE_RACIAL = new SM_SYSTEM_MESSAGE(1390151);
 
@@ -15791,14 +15791,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_TELEPORT_TO_ABYSS = new SM_SYSTEM_MESSAGE(1390152);
 
 	/**
-	 * @param value0 名称 must 为 entered 在 form 的 [%0character 名称 ]。 / The name must be entered in the form of [%0 character name]
+	 * 名称必须以 [%0 角色名称] 的形式输入。 / The name must be entered in the form of [%0 character name]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CHAT_CMD_NEED_NAME_FIELD(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390153, value0);
 	}
 
 	/**
-	 * You 无法 useskill 在当前 form。 / You cannot use the skill in the current form
+	 * 当前形态下无法使用该技能。 / You cannot use the skill in the current form
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_SKILL_CAN_NOT_CAST_IN_THIS_FORM = new SM_SYSTEM_MESSAGE(1390154);
 
@@ -15813,37 +15813,37 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youcouldnot 移除 skilleffect 作为 yourDispelskilllevel 为 toolow。 / You could not remove the skill effect as your Dispel skill level is too low
+	 * 你的解除技能等级过低，无法移除技能效果。 / You could not remove the skill effect as your Dispel skill level is too low
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_DISPELLEVEL = new SM_SYSTEM_MESSAGE(1390156);
 
 	/**
-	 * Youcouldnot 移除全部 skilleffects 作为 youdonot 有 sufficientDispelskill 数量。 / You could not remove all the skill effects as you do not have sufficient Dispel skill count
+	 * 你的解除技能次数不足，无法移除全部技能效果。 / You could not remove all the skill effects as you do not have sufficient Dispel skill count
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_DISPELCOUNT = new SM_SYSTEM_MESSAGE(1390157);
 
 	/**
-	 * Kiskyouregistered 作为 resurrection 绑定 point 有已 destroyed。 / The Kisk you registered as a resurrection bind point has been destroyed
+	 * 你登记为复活点的结界石已被摧毁。 / The Kisk you registered as a resurrection bind point has been destroyed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_DESTROYED = new SM_SYSTEM_MESSAGE(1390158);
 
 	/**
-	 * Youregistered 当前 location 作为 resurrection 绑定 point。 / You registered the current location as a resurrection bind point
+	 * 你已将当前位置登记为复活点。 / You registered the current location as a resurrection bind point
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_REGISTER = new SM_SYSTEM_MESSAGE(1390159);
 
 	/**
-	 * You 可 install 仅一个 Kisk 在 time。 / You can install only one Kisk at a time
+	 * 同一时间只能安装一个结界石。 / You can install only one Kisk at a time
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_ALREADY_INSTALLED = new SM_SYSTEM_MESSAGE(1390160);
 
 	/**
-	 * You 有已经 bound 在此 location。 / You have already bound at this location
+	 * 你已在该地点绑定。 / You have already bound at this location
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_ALREADY_REGISTERED = new SM_SYSTEM_MESSAGE(1390161);
 
 	/**
-	 * 你：rolled the dice and got %0 (max. %num1)。 / You rolled the dice and got %0 (max. %num1)
+	 * 你掷出了 %0 点（最大 %num1）。 / You rolled the dice and got %0 (max. %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DICE_RESULT_ME(int value0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1390162, value0, num1);
@@ -15858,7 +15858,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：gave up rolling the dice。 / You gave up rolling the dice
+	 * 你放弃了掷骰子。 / You gave up rolling the dice
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DICE_GIVEUP_ME = new SM_SYSTEM_MESSAGE(1390164);
 
@@ -15870,7 +15870,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Kisk you registered 正遭受攻击。 / The Kisk you registered is under attack
+	 * 你登记的结界石正遭到攻击。 / The Kisk you registered is under attack
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BINDSTONE_IS_ATTACKED = new SM_SYSTEM_MESSAGE(1390166);
 
@@ -15911,22 +15911,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1390172);
 
 	/**
-	 * You 无法添加 anymore 在 quality 物品 distribution 列表 .Pleasetryagainlater。 / You cannot add any more on the quality item distribution list. Please try again later
+	 * 优质物品分配列表中已无法再添加项目，请稍后再试。 / You cannot add any more on the quality item distribution list. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LOOTING_LIMIT_NUMBER = new SM_SYSTEM_MESSAGE(1390173);
 
 	/**
-	 * group ' squality 物品 distributionrules 有已 changed 到 Normal。 / The group's quality item distribution rules have been changed to Normal
+	 * 队伍的优质物品分配规则已改为普通分配。 / The group's quality item distribution rules have been changed to Normal
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_LOOTING_CHANGED_TO_DEFAULT = new SM_SYSTEM_MESSAGE(1390174);
 
 	/**
-	 * alliance ' squality 物品 distributionrules 有已 changed 到 Normal。 / The alliance's quality item distribution rules have been changed to Normal
+	 * 联盟的优质物品分配规则已改为普通分配。 / The alliance's quality item distribution rules have been changed to Normal
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FORCE_LOOTING_CHANGED_TO_DEFAULT = new SM_SYSTEM_MESSAGE(1390175);
 
 	/**
-	 * group ' squality 物品 distributionrules 有已 changed 到 DiceRoll。 / The group's quality item distribution rules have been changed to Dice Roll
+	 * 队伍的优质物品分配规则已改为掷骰分配。 / The group's quality item distribution rules have been changed to Dice Roll
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_LOOTING_CHANGED_TO_DICE = new SM_SYSTEM_MESSAGE(1390176);
 
@@ -15936,17 +15936,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FORCE_LOOTING_CHANGED_TO_DICE = new SM_SYSTEM_MESSAGE(1390177);
 
 	/**
-	 * group ' squality 物品 distributionrules 有已 changed 到 Bidding。 / The group's quality item distribution rules have been changed to Bidding
+	 * 队伍的优质物品分配规则已改为竞拍分配。 / The group's quality item distribution rules have been changed to Bidding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_LOOTING_CHANGED_TO_PAY = new SM_SYSTEM_MESSAGE(1390178);
 
 	/**
-	 * alliance ' squality 物品 distributionrules 有已 changed 到 Bidding。 / The alliance's quality item distribution rules have been changed to Bidding
+	 * 联盟的优质物品分配规则已改为竞拍分配。 / The alliance's quality item distribution rules have been changed to Bidding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FORCE_LOOTING_CHANGED_TO_PAY = new SM_SYSTEM_MESSAGE(1390179);
 
 	/**
-	 * @param descriptionId 你现已成为 %0 的所有者。 / You are now the owner of %0
+	 * 你现在是 %0 的所有者。 / You are now the owner of %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LOOT_GET_ITEM_ME(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1390180, descriptionId);
@@ -15960,7 +15960,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 acquire 物品 becausethere 为 nospace 在 inventory。 / You cannot acquire the item because there is no space in the inventory
+	 * 因背包没有空间，无法获得物品。 / You cannot acquire the item because there is no space in the inventory
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DICE_INVEN_ERROR = new SM_SYSTEM_MESSAGE(1390182);
 
@@ -15979,7 +15979,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param highestValue Yourbid 曾成功并 %num0 基纳有已 deducted。 / Your bid was successful and %num0 Kinah has been deducted
+	 * 你的竞标成功，已扣除 %num0 基纳。 / Your bid was successful and %num0 Kinah has been deducted
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PAY_ACCOUNT_ME(long highestValue) {
 		return new SM_SYSTEM_MESSAGE(1390185, highestValue);
@@ -15993,14 +15993,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %num0 基纳为 distributed%num2 基纳 each 到 %1 成员。 / %num0 Kinah is distributed %num2 Kinah each to %1 members
+	 * %num0 基纳已分配完毕，%1 名成员各获得 %num2 基纳。 / %num0 Kinah is distributed %num2 Kinah each to %1 members
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PAY_DISTRIBUTE(long highestValue, int num2, long distributeKinah) {
 		return new SM_SYSTEM_MESSAGE(1390187, highestValue, num2, distributeKinah);
 	}
 
 	/**
-	 * @param value0 你：pause %0 temporarily。 / You pause %0 temporarily
+	 * 你暂时停止了 %0。 / You pause %0 temporarily
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LOOT_PAUSE_START_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390188, value0);
@@ -16033,7 +16033,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LOOT_PAUSE_CALCEL = new SM_SYSTEM_MESSAGE(1390192);
 
 	/**
-	 * @param value0 你：rolled the dice and got a %0 (1~%1)。 / You rolled the dice and got a %0 (1~%1)
+	 * 你掷出了 %0 点（1~%1）。 / You rolled the dice and got a %0 (1~%1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DICE_RESULT_EX_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390193, value0);
@@ -16069,7 +16069,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：can use it only after the cooldown time is over。 / You can use it only after the cooldown time is over
+	 * 冷却时间结束后才能使用。 / You can use it only after the cooldown time is over
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ARTIFACT_COOL_TIME = new SM_SYSTEM_MESSAGE(1390198);
 
@@ -16123,7 +16123,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have captured the %0 Artifact。 / You have captured the %0 Artifact
+	 * 你已占领 %0 遗物。 / You have captured the %0 Artifact
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ARTIFACT_WIN_FORT_TO_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390207, value0);
@@ -16155,7 +16155,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_JUNK_DISTRIBUTE_OF = new SM_SYSTEM_MESSAGE(1390211);
 
 	/**
-	 * You 无法 disbandyour 军团 whileyou 有物品或 moneyleft 在军团 warehouse。 / You cannot disband your Legion while you have items or money left in the Legion warehouse
+	 * 军团仓库中仍有物品或资金时无法解散军团。 / You cannot disband your Legion while you have items or money left in the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_DISPERSE_CANT_DISPERSE_GUILD_STORE_ITEM_IN_WAREHOUSE = new SM_SYSTEM_MESSAGE(
 			1390212);
@@ -16168,54 +16168,54 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have played for %0 hour(s). Please take a break。 / You have played for %0 hour(s). Please take a break
+	 * 你已连续游戏 %0 小时，请适当休息。 / You have played for %0 hour(s). Please take a break
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_NOTIFY_PLAYING_TIME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390214, value0);
 	}
 
 	/**
-	 * @param value0 你：have joined the %0 Legion。 / You have joined the %0 Legion
+	 * 你已加入 %0 军团。 / You have joined the %0 Legion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_INVITE_I_JOINED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390215, value0);
 	}
 
 	/**
-	 * @param num0 你：recovered %num0 HP。 / You recovered %num0 HP
+	 * 你恢复了 %num0 点 HP。 / You recovered %num0 HP
 	 */
 	public static SM_SYSTEM_MESSAGE _STR_MSG_Heal_TO_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1390216, num0);
 	}
 
 	/**
-	 * @param value0 You 可仅 buy 一个 %0。 / You can only buy one %0
+	 * %0 只能购买一个。 / You can only buy one %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CAN_BUY_ONLY_ONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390217, value0);
 	}
 
 	/**
-	 * @param value0 Registering%0 在 quality 物品 distribution 列表。 / Registering %0 on the quality item distribution list
+	 * 正在将 %0 登记到优质物品分配列表。 / Registering %0 on the quality item distribution list
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LOOT_LISTING_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390218, value0);
 	}
 
 	/**
-	 * @param descriptionId %0 是待分配的优质物品之一。 / %0 is one of the quality items waiting to be distributed
+	 * %0 是待分配的优质物品之一。 / %0 is one of the quality items waiting to be distributed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LOOT_ALREADY_DISTRIBUTING_ITEM(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1390219, descriptionId);
 	}
 
 	/**
-	 * 你：do not have the ownership of this item。 / You do not have the ownership of this item
+	 * 你不是该物品的所有者。 / You do not have the ownership of this item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LOOT_ANOTHER_OWNER_ITEM = new SM_SYSTEM_MESSAGE(1390220);
 
 	/**
-	 * @param descriptionId %0 技能难度过低，等级不再提升。 / The skill level for the %0 skill does not increase as the difficulty is too low
+	 * %0 技能因难度过低，等级不再提升。 / The skill level for the %0 skill does not increase as the difficulty is too low
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DONT_GET_PRODUCTION_EXP(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1390221, descriptionId);
@@ -16234,14 +16234,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1390223);
 
 	/**
-	 * @param value0 你：have sent a friend request to %0。 / You have sent a friend request to %0
+	 * 你已向 %0 发送好友请求。 / You have sent a friend request to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BUDDY_REQUEST_ADD(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390224, value0);
 	}
 
 	/**
-	 * 你：cannot connect to the game during the character reservation period。 / You cannot connect to the game during the character reservation period
+	 * 角色预留期内无法连接游戏。 / You cannot connect to the game during the character reservation period
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ERROR_WORLD_CONNECTION_FAIL_BY_CHAR_RES = new SM_SYSTEM_MESSAGE(1390225);
 
@@ -16256,7 +16256,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PAY_ALL_GIVEUP = new SM_SYSTEM_MESSAGE(1390227);
 
 	/**
-	 * 你：gave up the Bidding。 / You gave up the Bidding
+	 * 你放弃了竞拍。 / You gave up the Bidding
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PAY_GIVEUP_ME = new SM_SYSTEM_MESSAGE(1390228);
 
@@ -16268,7 +16268,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cannot use this function in %0。 / You cannot use this function in %0
+	 * 你无法在 %0 中使用此功能。 / You cannot use this function in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DISABLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390230, value0);
@@ -16283,14 +16283,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Abyss Rank has changed to %0。
-	  * 你的Abyss Rank has changed to %0。 / Your Abyss Rank has changed to %0
+	  * 你的欧比斯等级已变为 %0。 / Your Abyss Rank has changed to %0
 	  */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_CHANGE_RANK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390232, value0);
 	}
 
 	/**
-	 * You 无法为 promoted 作为 yourskilllevel 为 toolow。 / You cannot be promoted as your skill level is too low
+	 * 你的技能等级过低，无法晋升。 / You cannot be promoted as your skill level is too low
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_RANK_UP = new SM_SYSTEM_MESSAGE(1390233);
 
@@ -16307,7 +16307,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have learned the skill, %0 (Level - %1)。 / You have learned the skill, %0 (Level - %1)
+	 * 你已学会技能 %0（%1 级）。 / You have learned the skill, %0 (Level - %1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_SKILL_LEARNED_ABYSS_SKILL(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1390236, value0, value1);
@@ -16324,31 +16324,31 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ENTER_SPLIT_GOLD = new SM_SYSTEM_MESSAGE(1390238);
 
 	/**
-	 * 你：give up the Bidding as you do not have enough Kinah。 / You give up the Bidding as you do not have enough Kinah
+	 * 你的基纳不足，放弃竞拍。 / You give up the Bidding as you do not have enough Kinah
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PAY_NOT_ENOUGH_MONEY = new SM_SYSTEM_MESSAGE(1390239);
 
 	/**
-	 * You 无法 join 军团作为玩家谁 invitedyou 为 nolonger 成员的军团。 / You cannot join the Legion as the player who invited you is no longer a member of the Legion
+	 * 邀请你的玩家已不再是该军团成员，你无法加入军团。 / You cannot join the Legion as the player who invited you is no longer a member of the Legion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_INVITE_CAN_NOT_JOIN_TO_GUILD_INVITOR_IS_LEFT = new SM_SYSTEM_MESSAGE(
 			1390240);
 
 	/**
-	 * You 无法 kickout 军团成员的 equal 或 higherrank。 / You cannot kick out a Legion member of equal or higher rank
+	 * 无法将同等或更高军衔的军团成员踢出军团。 / You cannot kick out a Legion member of equal or higher rank
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GUILD_BANISH_CAN_NOT_BANISH_SAME_MEMBER_RANK = new SM_SYSTEM_MESSAGE(
 			1390241);
 
 	/**
-	 * @param value0 你：have acquired the %0 title。 / You have acquired the %0 title
+	 * 你已获得 %0 称号。 / You have acquired the %0 title
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_CASH_TITLE(int value0) {
 		return new SM_SYSTEM_MESSAGE(1390242, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param value0 你：have acquired the %0 emote。 / You have acquired the %0 emote
+	 * 你已获得 %0 表情。 / You have acquired the %0 emote
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_CASH_SOCIALACTION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1390243, value0);
@@ -16375,7 +16375,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DELETE_CASH_XPBOOST_BY_TIMEOUT = new SM_SYSTEM_MESSAGE(1390246);
 
 	/**
-	 * Youdistributed%num0 基纳到 %num1people , givingeach%num2 基纳。 / You distributed %num0 Kinah to %num1 people, giving each %num2 Kinah
+	 * 你把 %num0 基纳分配给了 %num1 人，每人获得 %num2 基纳。 / You distributed %num0 Kinah to %num1 people, giving each %num2 Kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SPLIT_ME_TO_B(int num0, int num1, int num2) {
 		return new SM_SYSTEM_MESSAGE(1390247, num0, num1, num2);
@@ -16412,17 +16412,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot be promoted anymore as you are an Expert。 / You cannot be promoted anymore as you are an Expert
+	 * 你已是专家，无法再晋升。 / You cannot be promoted anymore as you are an Expert
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_RANK_UP_MASTER = new SM_SYSTEM_MESSAGE(1390252);
 
 	/**
-	 * 你：cannot be promoted anymore as you are at the highest rank。 / You cannot be promoted anymore as you are at the highest rank
+	 * 你已达到最高等级，无法再晋升。 / You cannot be promoted anymore as you are at the highest rank
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_RANK_UP_GATHERING = new SM_SYSTEM_MESSAGE(1390253);
 
 	/**
-	 * 你：have not acquired this quest。 / You have not acquired this quest
+	 * 你尚未接受该任务。 / You have not acquired this quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_OPEN_QUEST_LINK = new SM_SYSTEM_MESSAGE(1390254);
 
@@ -16437,7 +16437,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ENTER_ONLY_PARTY_DON = new SM_SYSTEM_MESSAGE(1390256);
 
 	/**
-	 * 你：do not have enough Medals。 / You do not have enough Medals
+	 * 你的勋章不足。 / You do not have enough Medals
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_MEDAL = new SM_SYSTEM_MESSAGE(1390257);
 
@@ -16470,12 +16470,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have joined the group。 / You have joined the group
+	 * 你已加入队伍。 / You have joined the group
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ENTERED_PARTY = new SM_SYSTEM_MESSAGE(1390262);
 
 	/**
-	 * 你：have joined the alliance。 / You have joined the alliance
+	 * 你已加入联盟。 / You have joined the alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_ENTERED_FORCE = new SM_SYSTEM_MESSAGE(1390263);
 
@@ -16485,7 +16485,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_QUEST_ANOTHER_SINGLE_STEP_NOT_COMPLETED = new SM_SYSTEM_MESSAGE(1390264);
 
 	/**
-	 * 你：cannot join once it has started。 / You cannot join once it has started
+	 * 活动开始后无法加入。 / You cannot join once it has started
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_LOCKED = new SM_SYSTEM_MESSAGE(1390265);
 
@@ -16506,7 +16506,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：rolled the highest。 / You rolled the highest
+	 * 你掷出了最高点。 / You rolled the highest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GET_ITEM_PARTYNOTICE_DICE_WIN = new SM_SYSTEM_MESSAGE(1390268);
 
@@ -16564,12 +16564,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：shout "%0"。 / You shout "%0"
+	 * 你大喊：“%0”。 / You shout "%0"
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CMD_SHOUT_INPUT = new SM_SYSTEM_MESSAGE(1400004);
 
 	/**
-	 * 你：shout for help。 / You shout for help
+	 * 你大声呼救。 / You shout for help
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CMD_SHOUT_INPUT1 = new SM_SYSTEM_MESSAGE(1400005);
 
@@ -16588,7 +16588,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：Whisper to %1: %0。 / You Whisper to %1: %0
+	 * 你对 %1 悄悄说：%0。 / You Whisper to %1: %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CMD_WHISHPER_INPUT(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1400008, value1, value0);
@@ -16604,7 +16604,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的小队已加入 %0 的联盟。
-	  * 你的小队 has joined %0's 联盟。 / Your group has joined %0's alliance
+	  * 你的队伍已加入 %0 的联盟。 / Your group has joined %0's alliance
 	  */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_ENTER_WITH_PARTY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400010, value0);
@@ -16642,12 +16642,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的小队已加入联盟。
-	  * 你的小队 has joined the 联盟。 / Your group has joined the alliance
+	  * 你的队伍已加入联盟。 / Your group has joined the alliance
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_MY_PARTY_ENTERED_ALLIANCE = new SM_SYSTEM_MESSAGE(1400015);
 
 	/**
-	 * 你：have joined a group belonging to an alliance。 / You have joined a group belonging to an alliance
+	 * 你加入了属于联盟的队伍。 / You have joined a group belonging to an alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_ALLIANCE_ENTERY_PARTY_AND_ALLIANCE = new SM_SYSTEM_MESSAGE(1400016);
 
@@ -16660,7 +16660,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have joined %0's allliance。 / You have joined %0's allliance
+	 * 你已加入 %0 的联盟。 / You have joined %0's allliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FORCE_ENTER_MEMBER(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400018, value0);
@@ -16687,12 +16687,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot use a Rift。 / You cannot use a Rift
+	 * 你无法使用裂隙。 / You cannot use a Rift
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL = new SM_SYSTEM_MESSAGE(1400022);
 
 	/**
-	 * %0%1%2 有 died 在 %3。 / %0 %1 %2 has died in %3
+	 * %0 %1 %2 在 %3 中死亡。 / %0 %1 %2 has died in %3
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_ORDER_RANKER_DIE(Player victim, DescriptionId rankDescId) {
 		return new SM_SYSTEM_MESSAGE(1400023, victim.getRace().getRaceDescriptionId(), rankDescId, victim.getName(),
@@ -16701,7 +16701,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 continuebattle 作为 you 有 insufficientAbyssPoints.Youwill 为 resurrected 在 %1 若 nothing 为 enteredwithin%0minutes。 / You cannot continue the battle as you have insufficient Abyss Points. You will be resurrected at %1 if nothing is entered within %0 minutes
+	 * 你的欧比斯点数不足，无法继续战斗。若 %0 分钟内未输入任何指令，你将在 %1 处复活。 / You cannot continue the battle as you have insufficient Abyss Points. You will be resurrected at %1 if nothing is entered within %0 minutes
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_RESURRECT_HERE_BY_ABYSS_POINT_ZERO(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1400024, value1, value0);
@@ -16716,7 +16716,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have obtained %0 from the Internet Cafe Event。 / You have obtained %0 from the Internet Cafe Event
+	 * 你通过网吧活动获得了 %0。 / You have obtained %0 from the Internet Cafe Event
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_PCBANG_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400026, value0);
@@ -16737,21 +16737,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：may enter %WORLDNAME0 again after %1 hour(s)。 / You may enter %WORLDNAME0 again after %1 hour(s)
+	 * %1 小时后才能再次进入 %WORLDNAME0。 / You may enter %WORLDNAME0 again after %1 hour(s)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ENTER_INSTANCE_COOL_TIME_HOUR(String worldname0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400029, worldname0, value1);
 	}
 
 	/**
-	 * 你：may enter %WORLDNAME0 again after %1 minute(s)。 / You may enter %WORLDNAME0 again after %1 minute(s)
+	 * %1 分钟后才能再次进入 %WORLDNAME0。 / You may enter %WORLDNAME0 again after %1 minute(s)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ENTER_INSTANCE_COOL_TIME_MIN(String worldname0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400030, worldname0, value1);
 	}
 
 	/**
-	 * @param value0 你：can enter %0 area now。 / You can enter %0 area now
+	 * 你现在可以进入 %0 区域。 / You can enter %0 area now
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CAN_ENTER_INSTANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400031, value0);
@@ -16777,7 +16777,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 gainanyAbyssPoints 用于 while 作为 you 有 gainedtoomanyAbyssPoints 在 tooshortperiod 的 time。 / You cannot gain any Abyss Points for a while as you have gained too many Abyss Points in too short a period of time
+	 * 因在过短时间内获得过多欧比斯点数，你暂时无法再获得欧比斯点数。 / You cannot gain any Abyss Points for a while as you have gained too many Abyss Points in too short a period of time
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GET_AP_TIMEBASE_LIMIT = new SM_SYSTEM_MESSAGE(1400035);
 
@@ -16789,14 +16789,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：may enter %0 again after %1 hour(s)。 / You may enter %0 again after %1 hour(s)
+	 * %1 小时后才能再次进入 %0。 / You may enter %0 again after %1 hour(s)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ENTER_INSTANCE_COOL_TIME_HOUR_CLIENT(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400037, value0, value1);
 	}
 
 	/**
-	 * 你：may enter %0 again after %1 minute(s)。 / You may enter %0 again after %1 minute(s)
+	 * %1 分钟后才能再次进入 %0。 / You may enter %0 again after %1 minute(s)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ENTER_INSTANCE_COOL_TIME_MIN_CLIENT(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400038, value0, value1);
@@ -16809,12 +16809,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_REGIST = new SM_SYSTEM_MESSAGE(1400039);
 
 	/**
-	 * 你：cannot register any more Macro。 / You cannot register any more Macro
+	 * 你无法再登记更多宏。 / You cannot register any more Macro
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MACRO_MSG_CANNOT_REGIST = new SM_SYSTEM_MESSAGE(1400040);
 
 	/**
-	 * You 无法获取 anyAbyssPoint 从当前目标用于 while。 / You cannot get any Abyss Point from the current target for a while
+	 * 你暂时无法从当前目标获得欧比斯点数。 / You cannot get any Abyss Point from the current target for a while
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GET_AP_TARGET_LIMIT = new SM_SYSTEM_MESSAGE(1400041);
 
@@ -16855,7 +16855,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BLOCK_PC_ROOM_COMPLAIN = new SM_SYSTEM_MESSAGE(1400047);
 
 	/**
-	 * @return 剩余游戏时间 %*0，预付额度剩余 %1。 / The playing time remaining is %*0, and there are %1 items of pre-paid credits left
+	 * 剩余游戏时间 %*0，预付点数剩余 %1。 / The playing time remaining is %*0, and there are %1 items of pre-paid credits left
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_REMAIN_PLAYTIME_WITH_RESERVATION(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400048, value0, value1);
@@ -16869,7 +16869,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have %*0 playing time remaining. Pre-paid credit will be applied afterward。 / You have %*0 playing time remaining. Pre-paid credit will be applied afterward
+	 * 你的剩余游戏时间为 %*0，之后将使用预付点数。 / You have %*0 playing time remaining. Pre-paid credit will be applied afterward
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ALARM_REMAIN_PLAYTIME_WITH_RESERVATION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400050, value0);
@@ -16951,7 +16951,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACT_STATE_DEFAULT = new SM_SYSTEM_MESSAGE(1400064);
 
 	/**
-	 * You 无法 register 物品的 otherraces。 / You cannot register items of other races
+	 * 无法登记其他种族的物品。 / You cannot register items of other races
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_OTHER_RACE = new SM_SYSTEM_MESSAGE(1400065);
 
@@ -16967,14 +16967,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_STIGMA_ALREADY_EQUIP_STONE = new SM_SYSTEM_MESSAGE(1400067);
 
 	/**
-	 * 你：must wait %DURATIONTIME0 to use the channel change function. Time Remaining: %DURATIONTIME1。 / You must wait %DURATIONTIME0 to use the channel change function. Time Remaining: %DURATIONTIME1
+	 * 必须等待 %DURATIONTIME0 才能使用频道切换功能。剩余时间：%DURATIONTIME1。 / You must wait %DURATIONTIME0 to use the channel change function. Time Remaining: %DURATIONTIME1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_REMAIN_CHANGE_CHANNEL_COOLTIME(String durationtime0, String durationtime1) {
 		return new SM_SYSTEM_MESSAGE(1400068, durationtime0, durationtime1);
 	}
 
 	/**
-	 * Youentered 到 Phase%num0Restrictionstatebecauseautohuntingreports 有 accumulated.You 可检查 RestrictionPhase 并 ReleaseTime 按 typing ' /Restriction ' command。 / You entered into the Phase %num0 Restriction state because the auto hunting reports have accumulated. You can check the Restriction Phase and the Release Time by typing the '/Restriction' command
+	 * 因自动狩猎举报累计，你已进入第 %num0 阶段限制状态，可查看限制阶段及解除时间。 / You entered into the Phase %num0 Restriction state because the auto hunting reports have accumulated. You can check the Restriction Phase and the Release Time by typing the '/Restriction' command
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_UPGRADE_LEVEL(int num0) {
 		return new SM_SYSTEM_MESSAGE(1400069, num0);
@@ -16988,50 +16988,50 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你当前at Phase 1 Restriction State, and will be released in %0 minutes. While not affecting your game play in anyway, a continued accumulation of reports will however raise the Restriction Phase and will limit your gaining of XP and items。 / You are currently at Phase 1 Restriction State, and will be released in %0 minutes. While not affecting your game play in anyway, a continued accumulation of reports will however raise the Restriction Phase and will limit your gaining of XP and items
+	 * 你当前处于第 1 阶段限制状态，将在 %0 分钟后解除，该状态不影响正常游戏。 / You are currently at Phase 1 Restriction State, and will be released in %0 minutes. While not affecting your game play in anyway, a continued accumulation of reports will however raise the Restriction Phase and will limit your gaining of XP and items
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_INFO_1_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400071, value0);
 	}
 
 	/**
-	 * 你当前in Phase 2 Restriction State, and will be downgraded to Phase 1 in %0 minutes. You now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been decreased. You will face greater restrictions if reports continue to accumulate。 / You are currently in Phase 2 Restriction State, and will be downgraded to Phase 1 in %0 minutes. You now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been decreased. You will face greater restrictions if reports continue to accumulate
+	 * 你当前处于第 2 阶段限制状态，将在 %0 分钟后降为第 1 阶段，期间获得的经验值、基纳等将会减少。 / You are currently in Phase 2 Restriction State, and will be downgraded to Phase 1 in %0 minutes. You now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been decreased. You will face greater restrictions if reports continue to accumulate
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_INFO_2_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400072, value0);
 	}
 
 	/**
-	 * 你当前in Phase 3 Restriction State and will be downgraded to Phase 2 in %0 minutes. You cannot acquire any loot, and you now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been significantly decreased. You are banned from joining a Group or Alliance. You will face greater restrictions if reports continue to accumulate。 / You are currently in Phase 3 Restriction State and will be downgraded to Phase 2 in %0 minutes. You cannot acquire any loot, and you now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been significantly decreased. You are banned from joining a Group or Alliance. You will face greater restrictions if reports continue to accumulate
+	 * 你当前处于第 3 阶段限制状态，将在 %0 分钟后降为第 2 阶段，期间无法拾取战利品。 / You are currently in Phase 3 Restriction State and will be downgraded to Phase 2 in %0 minutes. You cannot acquire any loot, and you now receive less XP, Kinah and Abyss Points, and the chance of successful gathering and extraction has been significantly decreased. You are banned from joining a Group or Alliance. You will face greater restrictions if reports continue to accumulate
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_INFO_3_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400073, value0);
 	}
 
 	/**
-	 * 你当前at Phase 4 Restriction State and will be downgraded to Phase 3 in %0 minutes. You cannot acquire any loot, XP, Kinah, or Abyss Points, and are unable to gather or extract any items. You are also banned from joining a Group or Alliance。 / You are currently at Phase 4 Restriction State and will be downgraded to Phase 3 in %0 minutes. You cannot acquire any loot, XP, Kinah, or Abyss Points, and are unable to gather or extract any items. You are also banned from joining a Group or Alliance
+	 * 你当前处于第 4 阶段限制状态，将在 %0 分钟后降为第 3 阶段，期间无法获得战利品、经验值、基纳等。 / You are currently at Phase 4 Restriction State and will be downgraded to Phase 3 in %0 minutes. You cannot acquire any loot, XP, Kinah, or Abyss Points, and are unable to gather or extract any items. You are also banned from joining a Group or Alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_INFO_4_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400074, value0);
 	}
 
 	/**
-	 * 你：have consumed all equipped Power Shards。 / You have consumed all equipped Power Shards
+	 * 你装备的能量碎片已全部耗尽。 / You have consumed all equipped Power Shards
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WEAPON_BOOST_MODE_BURN_OUT = new SM_SYSTEM_MESSAGE(1400075);
 
 	/**
-	 * 你in normal state。 / You are in normal state
+	 * 你处于正常状态。 / You are in normal state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_INFO_NORMAL = new SM_SYSTEM_MESSAGE(1400076);
 
 	/**
-	 * You 无法删除 letterbecause 物品或基纳为 attached。 / You cannot delete the letter because items or Kinah are attached
+	 * 因附有物品或基纳，无法删除该邮件。 / You cannot delete the letter because items or Kinah are attached
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MAIL_ITEM_DEL_DENIED = new SM_SYSTEM_MESSAGE(1400077);
 
 	/**
-	 * 你：cannot open a private store while trading。 / You cannot open a private store while trading
+	 * 交易中无法开设个人商店。 / You cannot open a private store while trading
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_OPEN_STORE_DURING_CRAFTING = new SM_SYSTEM_MESSAGE(1400078);
 
@@ -17046,7 +17046,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ASF_MOVE_TYPE_WALK = new SM_SYSTEM_MESSAGE(1400080);
 
 	/**
-	 * using 技能 / using a skill
+	 * 正在使用技能。 / using a skill
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ASF_CASTING_SKILL = new SM_SYSTEM_MESSAGE(1400081);
 
@@ -17056,7 +17056,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ASF_GLIDE = new SM_SYSTEM_MESSAGE(1400082);
 
 	/**
-	 * Youreturned 到 normalstate 作为 youplayedfair 用于 certainperiod 的 time.Pleasecontinue 到 playgame 在 propermanner。 / You returned to the normal state as you played fair for a certain period of time. Please continue to play the game in a proper manner
+	 * 因你在一段时间内正常游戏，已恢复为正常状态，请继续以正当方式游戏。 / You returned to the normal state as you played fair for a certain period of time. Please continue to play the game in a proper manner
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_DEGRADE_NORMAL_LEVEL = new SM_SYSTEM_MESSAGE(1400083);
 
@@ -17069,66 +17069,66 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot send auto hunting reports right now。 / You cannot send auto hunting reports right now
+	 * 现在无法发送自动狩猎举报。 / You cannot send auto hunting reports right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ACCUSE = new SM_SYSTEM_MESSAGE(1400085);
 
 	/**
-	 * You 无法 reportautohunting 在当前 region。 / You cannot report auto hunting in the current region
+	 * 无法在当前区域举报自动狩猎。 / You cannot report auto hunting in the current region
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ACCUSE_CITY = new SM_SYSTEM_MESSAGE(1400086);
 
 	/**
-	 * @param value0 你：cannot issue commands in %0。 / You cannot issue commands in %0
+	 * 你无法在 %0 中下达指令。 / You cannot issue commands in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SUMMON_CANT_ORDER_BY_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400087, value0);
 	}
 
 	/**
-	 * 你：have already learned this emote。 / You have already learned this emote
+	 * 你已经学会该表情。 / You have already learned this emote
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_SOCIALACTION_ALREADY_HAS_SKILL = new SM_SYSTEM_MESSAGE(1400088);
 
 	/**
-	 * 此物品有 not 已 appearancemodified。 / This item has not been appearance modified
+	 * 该物品尚未进行外观改造。 / This item has not been appearance modified
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CHANGE_ITEM_SKIN_CANNOT_INVALID_ITEM = new SM_SYSTEM_MESSAGE(1400089);
 
 	/**
-	 * You 无法 report 作为 you 有 exceeded 编号的 autohuntingreportsallowed。 / You cannot report as you have exceeded the number of auto hunting reports allowed
+	 * 你已超过允许的自动狩猎举报次数，无法再举报。 / You cannot report as you have exceeded the number of auto hunting reports allowed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_CANT_SUBMIT_BY_NO_COUNT = new SM_SYSTEM_MESSAGE(1400090);
 
 	/**
-	 * @param value0 你：currently have %0 auto hunting reports left。 / You currently have %0 auto hunting reports left
+	 * 你目前还有 %0 次自动狩猎举报次数。 / You currently have %0 auto hunting reports left
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_COUNT_INFO(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400091, value0);
 	}
 
 	/**
-	 * selecteduser 无法为 invited 到 group 或 force。 / The selected user cannot be invited to a group or a force
+	 * 所选用户无法被邀请加入队伍或部队。 / The selected user cannot be invited to a group or a force
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_CANT_BE_INVITED = new SM_SYSTEM_MESSAGE(1400092);
 
 	/**
-	 * You 有已 reportedtoomanytimes ,并无法 issueinvitation。 / You have been reported too many times, and cannot issue an invitation
+	 * 你被举报次数过多，无法发出邀请。 / You have been reported too many times, and cannot issue an invitation
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_CANT_INVITE_OTHER = new SM_SYSTEM_MESSAGE(1400093);
 
 	/**
-	 * You 无法 joingroup 作为 you 有已 reportedtoomanytimes 用于 autohunting。 / You cannot join the group as you have been reported too many times for auto hunting
+	 * 因自动狩猎被举报次数过多，你无法加入队伍。 / You cannot join the group as you have been reported too many times for auto hunting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_CANT_JOIN_PARTY = new SM_SYSTEM_MESSAGE(1400094);
 
 	/**
-	 * You 无法 joinAlliance 作为 you 有已 reportedtoomanytimes 用于 autohunting。 / You cannot join the Alliance as you have been reported too many times for auto hunting
+	 * 因自动狩猎被举报次数过多，你无法加入联盟。 / You cannot join the Alliance as you have been reported too many times for auto hunting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_CANT_JOIN_FORCE = new SM_SYSTEM_MESSAGE(1400095);
 
 	/**
-	 * You 无法 usemanastone 在 selected 物品作为 manastonelevel 为 toohigh。 / You cannot use the manastone on the selected item as the manastone level is too high
+	 * 魔石等级过高，无法用于所选物品。 / You cannot use the manastone on the selected item as the manastone level is too high
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GIVE_ITEM_OPTION_CANT_FOR_TOO_HIGH_LEVEL = new SM_SYSTEM_MESSAGE(
 			1400096);
@@ -17148,7 +17148,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：declined %0's summoning。 / You declined %0's summoning
+	 * 你已拒绝 %0 的召唤。 / You declined %0's summoning
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_Recall_Reject_EFFECT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400099, value0);
@@ -17169,7 +17169,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 You 无法 summon%0 作为 you 为已经 under 相同 effect。 / You cannot summon %0 as you are already under the same effect
+	 * 你已处于相同效果之下，无法召唤 %0。 / You cannot summon %0 as you are already under the same effect
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_Recall_DUPLICATE_EFFECT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400102, value0);
@@ -17190,22 +17190,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_GIFT_SUCCESS = new SM_SYSTEM_MESSAGE(1400104);
 
 	/**
-	 * 你：have failed to purchase the item。 / You have failed to purchase the item
+	 * 你购买物品失败。 / You have failed to purchase the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_ERROR = new SM_SYSTEM_MESSAGE(1400105);
 
 	/**
-	 * 你：have chosen an invalid target to give the gift。 / You have chosen an invalid target to give the gift
+	 * 你选择的赠送礼物目标无效。 / You have chosen an invalid target to give the gift
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_NO_USER_TO_GIFT = new SM_SYSTEM_MESSAGE(1400106);
 
 	/**
-	 * 物品为 not 在列表。 / The item is not on the list
+	 * 该物品不在列表中。 / The item is not on the list
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_INVALID_GOODS = new SM_SYSTEM_MESSAGE(1400107);
 
 	/**
-	 * 你：do not have enough Cash Points。 / You do not have enough Cash Points
+	 * 你的现金点数不足。 / You do not have enough Cash Points
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_NOT_ENOUGH_POINT = new SM_SYSTEM_MESSAGE(1400108);
 
@@ -17223,39 +17223,39 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Class cannot purchase the selected item。
-	  * 你的Class cannot purchase the selected item。 / Your Class cannot purchase the selected item
+	  * 你的职业无法购买所选物品。 / Your Class cannot purchase the selected item
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_INVALID_CLASS = new SM_SYSTEM_MESSAGE(1400111);
 
 	/**
-	 * 你：already have the selected title。 / You already have the selected title
+	 * 你已经拥有所选称号。 / You already have the selected title
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_DUPLICATED_TITLE = new SM_SYSTEM_MESSAGE(1400112);
 
 	/**
-	 * 你：already have the selected emote。 / You already have the selected emote
+	 * 你已经拥有所选表情。 / You already have the selected emote
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_DUPLICATED_SOCIAL = new SM_SYSTEM_MESSAGE(1400113);
 
 	/**
-	 * 你：have purchased the cube expansion item。 / You have purchased the cube expansion item
+	 * 你已购买背包扩充道具。 / You have purchased the cube expansion item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_DUPLICATED_CUBE = new SM_SYSTEM_MESSAGE(1400114);
 
 	/**
-	 * @param value0 You 无法 register 作为 you 为 not%0。 / You cannot register as you are not %0
+	 * 你不是 %0，无法登记。 / You cannot register as you are not %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_BINDSTONE_CANNOT_FOR_INVALID_RIGHT(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400115, value0);
 	}
 
 	/**
-	 * 你：cannot give gifts to yourself。 / You cannot give gifts to yourself
+	 * 你无法给自己赠送礼物。 / You cannot give gifts to yourself
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_CANNOT_GIVE_TO_ME = new SM_SYSTEM_MESSAGE(1400116);
 
 	/**
-	 * @param value0 You 无法发送 letter 到 %0becauseyou 有已 blocked 按玩家。 / You cannot send the letter to %0 because you have been blocked by the player
+	 * 你已被对方屏蔽，无法向 %0 发送信件。 / You cannot send the letter to %0 because you have been blocked by the player
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_MAIL_CANT_FOR_YOU_EXCLUDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400117, value0);
@@ -17269,12 +17269,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot remove a registered item。 / You cannot remove a registered item
+	 * 无法移除已登记的物品。 / You cannot remove a registered item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EXCHANGE_CANNOT_UNREGISTER_ITEM = new SM_SYSTEM_MESSAGE(1400119);
 
 	/**
-	 * You 无法 registeramount 的基纳为 lowerthanregisteredamount。 / You cannot register an amount of Kinah that is lower than the registered amount
+	 * 登记的基纳金额不能低于已登记的金额。 / You cannot register an amount of Kinah that is lower than the registered amount
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EXCHANGE_CANNOT_DECREASE_MONEY = new SM_SYSTEM_MESSAGE(1400120);
 
@@ -17285,29 +17285,29 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ERROR_WORLD_LOCAL_CODE_FAIL = new SM_SYSTEM_MESSAGE(1400121);
 
 	/**
-	 * You 无法获取 anyPVPXP 从当前目标用于 while。 / You cannot get any PVP XP from the current target for a while
+	 * 你暂时无法从当前目标获得 PVP 经验值。 / You cannot get any PVP XP from the current target for a while
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GET_PVP_EXP_TARGET_LIMIT = new SM_SYSTEM_MESSAGE(1400122);
 
 	/**
-	 * You 无法获取 anyPVPXP 用于 while 作为 you 有 gainedtoomanyPVPXP 在 tooshortperiod 的 time。 / You cannot get any PVP XP for a while as you have gained too many PVP XP in too short a period of time
+	 * 因在过短时间内获得过多 PVP 经验值，你暂时无法获得 PVP 经验值。 / You cannot get any PVP XP for a while as you have gained too many PVP XP in too short a period of time
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GET_PVP_EXP_TIMEBASE_LIMIT = new SM_SYSTEM_MESSAGE(1400123);
 
 	/**
-	 * You 无法 register 目标作为 yourFriend 作为 you 有已 blocked 按玩家。 / You cannot register the target as your Friend as you have been blocked by the player
+	 * 你已被对方屏蔽，无法将其加为好友。 / You cannot register the target as your Friend as you have been blocked by the player
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_CANNOT_BLOCK_ME = new SM_SYSTEM_MESSAGE(1400124);
 
 	/**
-	 * 你：rolled the dice and got a %num0 (max. %num1)。 / You rolled the dice and got a %num0 (max. %num1)
+	 * 你掷出了 %num0 点（最大 %num1）。 / You rolled the dice and got a %num0 (max. %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PARTY_ITEM_DICE_CUSTOM_ME(int num0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1400125, num0, num1);
 	}
 
 	/**
-	 * 你：rolled the dice and got a %num0 (max. %num1)。 / You rolled the dice and got a %num0 (max. %num1)
+	 * 你掷出了 %num0 点（最大 %num1）。 / You rolled the dice and got a %num0 (max. %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DICE_CUSTOM_ME(int num0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1400126, num0, num1);
@@ -17322,27 +17322,27 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 invite 玩家到 force 作为 groupleader 的玩家为在 InstancedZone。 / You cannot invite the player to the force as the group leader of the player is in an Instanced Zone
+	 * 因对方的队长位于副本区域中，无法邀请该玩家加入部队。 / You cannot invite the player to the force as the group leader of the player is in an Instanced Zone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_INVITE_WHEN_HE_IS_IN_INSTANCE = new SM_SYSTEM_MESSAGE(1400128);
 
 	/**
-	 * You 无法 useselectedfunction 在当前 restrictionphase。 / You cannot use the selected function in the current restriction phase
+	 * 当前限制阶段无法使用所选功能。 / You cannot use the selected function in the current restriction phase
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ACCUSE_TARGET_IS_NOT_VALID = new SM_SYSTEM_MESSAGE(1400129);
 
 	/**
-	 * You 无法 preview 此物品作为其可仅为 used 按 oppositesex ,。 / You cannot preview this item as it can only be used by the opposite sex,
+	 * 该物品仅限异性使用，无法预览。 / You cannot preview this item as it can only be used by the opposite sex,
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PREVIEW_INVALID_GENDER = new SM_SYSTEM_MESSAGE(1400130);
 
 	/**
-	 * You 有物品( s ) left 到 settle 在 Broker。 / You have item(s) left to settle at the Broker
+	 * 拍卖行中还有待结算的物品。 / You have item(s) left to settle at the Broker
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_VENDOR_ACCOUNT_IS_NOT_EMPTY = new SM_SYSTEM_MESSAGE(1400131);
 
 	/**
-	 * 你：cannot use a Rift until the curse is removed。 / You cannot use a Rift until the curse is removed
+	 * 诅咒解除前无法使用裂隙。 / You cannot use a Rift until the curse is removed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_BY_SLAYER = new SM_SYSTEM_MESSAGE(1400132);
 
@@ -17355,21 +17355,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have sold %0。 / You have sold %0
+	 * 你已出售 %0。 / You have sold %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PERSONAL_SHOP_SELL_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400134, value0);
 	}
 
 	/**
-	 * 你：have sold %num1 %0s。 / You have sold %num1 %0s
+	 * 你已出售 %num1 个 %0。 / You have sold %num1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PERSONAL_SHOP_SELL_ITEM_MULTI(int num1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1400135, num1, value0s);
 	}
 
 	/**
-	 * 你：can now use the chatting functions again。 / You can now use the chatting functions again
+	 * 你现在可以重新使用聊天功能了。 / You can now use the chatting functions again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CAN_CHAT_NOW = new SM_SYSTEM_MESSAGE(1400136);
 
@@ -17456,14 +17456,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cannot use a Rift until the %0 is removed。 / You cannot use a Rift until the %0 is removed
+	 * %0 被解除前无法使用裂隙。 / You cannot use a Rift until the %0 is removed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_USE_DIRECT_PORTAL_BY_SLAYER_GRADE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400149, value0);
 	}
 
 	/**
-	 * 仅军团军团长可 changehis 军团名称。 / Only the Legion Brigade General can change his Legion name
+	 * 只有军团长才能更改军团名称。 / Only the Legion Brigade General can change his Legion name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_ERROR_ONLY_MASTER_CAN_CHANGE_NAME = new SM_SYSTEM_MESSAGE(
 			1400150);
@@ -17479,34 +17479,34 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_ERROR_WRONG_INPUT = new SM_SYSTEM_MESSAGE(1400152);
 
 	/**
-	 * character 名称为已经在 use.Enteranother 名称。 / The character name is already in use. Enter another name
+	 * 该角色名已被占用，请输入其他名称。 / The character name is already in use. Enter another name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_CHAR_NAME_ERROR_SAME_YOUR_NAME = new SM_SYSTEM_MESSAGE(1400153);
 
 	/**
-	 * 军团名称为已经在 use.Enteranother 名称。 / The Legion name is already in use. Enter another name
+	 * 该军团名已被占用，请输入其他名称。 / The Legion name is already in use. Enter another name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_ERROR_SAME_YOUR_NAME = new SM_SYSTEM_MESSAGE(1400154);
 
 	/**
-	 * character 为 using 名称 .Enteranother 名称。 / A character is using the name. Enter another name
+	 * 该名称已被角色使用，请输入其他名称。 / A character is using the name. Enter another name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_CHAR_NAME_ALREADY_EXIST = new SM_SYSTEM_MESSAGE(1400155);
 
 	/**
-	 * 军团为 using 名称 .Enteranother 名称。 / A Legion is using the name. Enter another name
+	 * 该名称已被军团使用，请输入其他名称。 / A Legion is using the name. Enter another name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_ALREADY_EXIST = new SM_SYSTEM_MESSAGE(1400156);
 
 	/**
-	 * @param value0 character 名称有已 changed 到 %0。 / The character name has been changed to %0
+	 * 角色名已改为 %0。 / The character name has been changed to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_EDIT_CHAR_NAME_SUCCESS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400157, value0);
 	}
 
 	/**
-	 * @param value0 军团名称有已 changed 到 %0。 / The Legion name has been changed to %0
+	 * 军团名已改为 %0。 / The Legion name has been changed to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_SUCCESS(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400158, value0);
@@ -17520,18 +17520,18 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 change 军团名称 whileoccupyingfortress 或 Artifact。 / You cannot change the Legion name while occupying the fortress or Artifact
+	 * 占领要塞或遗物期间无法更改军团名称。 / You cannot change the Legion name while occupying the fortress or Artifact
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_CANT_FOR_HAVING_HOUSE = new SM_SYSTEM_MESSAGE(
 			1400160);
 
 	/**
-	 * You 可 neithertalk 带 NPCsnoruseanyusefulfunctions 在 your 当前 RestrictionPhase。 / You can neither talk with NPCs nor use any useful functions in your current Restriction Phase
+	 * 在当前限制阶段，你既无法与 NPC 交谈，也无法使用实用功能。 / You can neither talk with NPCs nor use any useful functions in your current Restriction Phase
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOT_CANNOT_USE_NPC_UTILITY = new SM_SYSTEM_MESSAGE(1400161);
 
 	/**
-	 * You 无法 trade 带 othercharacters 在 your 当前 RestrictionPhase。 / You cannot trade with other characters in your current Restriction Phase
+	 * 在当前限制阶段，你无法与其他角色交易。 / You cannot trade with other characters in your current Restriction Phase
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOT_CANNOT_USE_PC_TRADE = new SM_SYSTEM_MESSAGE(1400162);
 
@@ -17556,7 +17556,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_USE_PC_TRADE_TO_BOT = new SM_SYSTEM_MESSAGE(1400166);
 
 	/**
-	 * You 无法 glide 在此 area。 / You cannot glide in this area
+	 * 无法在此区域滑翔。 / You cannot glide in this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOGLIDE_AREA = new SM_SYSTEM_MESSAGE(1400167);
 
@@ -17566,25 +17566,25 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOGLIDE_AREA_STOP = new SM_SYSTEM_MESSAGE(1400168);
 
 	/**
-	 * @param durationtime0 已登记 Kisk 剩余有效时间：%DURATIONTIME0 / The remaining active time of the registered Kisk is %DURATIONTIME0
+	 * 已登记结界石的剩余有效时间：%DURATIONTIME0 / The remaining active time of the registered Kisk is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_BINDSTONE_WARNING_REMAIN_TIME(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400169, durationtime0);
 	}
 
 	/**
-	 * You 无法 change 名称的军团 duringdisbandingmode。 / You cannot change the name of the Legion during the disbanding mode
+	 * 军团解散模式期间无法更改军团名称。 / You cannot change the name of the Legion during the disbanding mode
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EDIT_GUILD_NAME_CANT_FOR_DISPERSING_GUILD = new SM_SYSTEM_MESSAGE(
 			1400170);
 
 	/**
-	 * You 无法 reportautohunting 在当前 region。 / You cannot report auto hunting in the current region
+	 * 无法在当前区域举报自动狩猎。 / You cannot report auto hunting in the current region
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ACCUSE_IN_THIS_ZONE = new SM_SYSTEM_MESSAGE(1400171);
 
 	/**
-	 * 你：have purchased the warehouse expansion item。 / You have purchased the warehouse expansion item
+	 * 你已购买仓库扩充道具。 / You have purchased the warehouse expansion item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INGAMESHOP_DUPLICATED_WAREHOUSE = new SM_SYSTEM_MESSAGE(1400172);
 
@@ -17594,7 +17594,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_HOST = new SM_SYSTEM_MESSAGE(1400173);
 
 	/**
-	 * 作为 yourcharacter 名称有 changed , you 为 removed 从全部加入 channels。 / As your character name has changed, you are removed from all joined channels
+	 * 因角色名已变更，你已从所有已加入的频道中移除。 / As your character name has changed, you are removed from all joined channels
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_CHAR_NAME_CHANGED1 = new SM_SYSTEM_MESSAGE(1400174);
 
@@ -17609,33 +17609,33 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_PARTY = new SM_SYSTEM_MESSAGE(1400176);
 
 	/**
-	 * @param value0 You 可 nolongeruse%0 作为编号的 allowedusage 有已 reached。 / You can no longer use %0 as the number of allowed usage has been reached
+	 * 允许使用次数已达上限，你无法再使用 %0。 / You can no longer use %0 as the number of allowed usage has been reached
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_USE_DUPLICATED_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400177, value0);
 	}
 
 	/**
-	 * 你：may reenter %WORLDNAME1 after %DURATIONTIME0 has passed。 / You may reenter %WORLDNAME1 after %DURATIONTIME0 has passed
+	 * 经过 %DURATIONTIME0 后即可再次进入 %WORLDNAME1。 / You may reenter %WORLDNAME1 after %DURATIONTIME0 has passed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_COOL_TIME_REMAIN(String worldname1, String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400178, worldname1, durationtime0);
 	}
 
 	/**
-	 * 你：cannot enter the selected Instanced Zone at your level。 / You cannot enter the selected Instanced Zone at your level
+	 * 你的等级无法进入所选副本区域。 / You cannot enter the selected Instanced Zone at your level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_ENTER_LEVEL = new SM_SYSTEM_MESSAGE(1400179);
 
 	/**
-	 * %num0 玩家 limit 的 %WORLDNAME1 有已 exceeded。 / The %num0 player limit of %WORLDNAME1 has been exceeded
+	 * %WORLDNAME1 的 %num0 人上限已满。 / The %num0 player limit of %WORLDNAME1 has been exceeded
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_TOO_MANY_MEMBERS(int num0, String worldname1) {
 		return new SM_SYSTEM_MESSAGE(1400180, num0, worldname1);
 	}
 
 	/**
-	 * @param worldname0 你：have already applied to enter %WORLDNAME0。 / You have already applied to enter %WORLDNAME0
+	 * 你已申请进入 %WORLDNAME0。 / You have already applied to enter %WORLDNAME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_ALREADY_REGISTERED(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400181, worldname0);
@@ -17647,14 +17647,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_NOT_LEADER = new SM_SYSTEM_MESSAGE(1400182);
 
 	/**
-	 * @param value0 你：aborted entering %0. You can apply again after 10 seconds。 / You aborted entering %0. You can apply again after 10 seconds
+	 * 你已取消进入 %0，10 秒后可重新申请。 / You aborted entering %0. You can apply again after 10 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REGISTER_CANCELED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400183, value0);
 	}
 
 	/**
-	 * @param value0 Youabortedentering0Youcan 尝试再次后10seconds / You aborted entering %0. You can try again after 10 seconds
+	 * 你已取消进入 %0，10 秒后可重试。 / You aborted entering %0. You can try again after 10 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_ENTER_GIVEUP(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400184, value0);
@@ -17666,7 +17666,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_ENTER_STATE = new SM_SYSTEM_MESSAGE(1400185);
 
 	/**
-	 * 你：have failed to make an entry application。 / You have failed to make an entry application
+	 * 进入申请失败。 / You have failed to make an entry application
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_ENTER_NOTICE = new SM_SYSTEM_MESSAGE(1400186);
 
@@ -17685,21 +17685,21 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have applied to join %0's group。 / You have applied to join %0's group
+	 * 你已申请加入 %0 的队伍。 / You have applied to join %0's group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PARTY_MATCH_JUST_SENT_APPLY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400189, value0);
 	}
 
 	/**
-	 * @param value0 你：have invited %0 to join your group。 / You have invited %0 to join your group
+	 * 你已邀请 %0 加入你的队伍。 / You have invited %0 to join your group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PARTY_MATCH_JUST_INVITE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400190, value0);
 	}
 
 	/**
-	 * @param value0 你：have applied to join %0's alliance。 / You have applied to join %0's alliance
+	 * 你已申请加入 %0 的联盟。 / You have applied to join %0's alliance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_FORCE_MATCH_JUST_SENT_APPLY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400191, value0);
@@ -17713,18 +17713,18 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 玩家为已经 beingresurrected。 / That player is already being resurrected
+	 * 该玩家正在被复活。 / That player is already being resurrected
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_OTHER_USER_USE_RESURRECTDEBUFF_SKILL_ALREADY = new SM_SYSTEM_MESSAGE(
 			1400193);
 
 	/**
-	 * 你：have successfully made an entry application。 / You have successfully made an entry application
+	 * 你已成功提交进入申请。 / You have successfully made an entry application
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REGISTER_SUCCESS = new SM_SYSTEM_MESSAGE(1400194);
 
 	/**
-	 * @param durationtime0 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
+	 * 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REMAIN_TIME(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400195, durationtime0);
@@ -17757,35 +17757,35 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_MATCH_NOT_EXIST = new SM_SYSTEM_MESSAGE(1400200);
 
 	/**
-	 * %num0 玩家 limit 的 %WORLDNAME1 有已 exceeded。 / The %num0 player limit of %WORLDNAME1 has been exceeded
+	 * %WORLDNAME1 的 %num0 人上限已满。 / The %num0 player limit of %WORLDNAME1 has been exceeded
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANNOT_ENTER_INSTANCE_MAX_COUNT(int num0, String worldname1) {
 		return new SM_SYSTEM_MESSAGE(1400201, num0, worldname1);
 	}
 
 	/**
-	 * @param durationtime0 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
+	 * 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REMAIN_TIME_60(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400202, durationtime0);
 	}
 
 	/**
-	 * @param durationtime0 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
+	 * 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REMAIN_TIME_30(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400203, durationtime0);
 	}
 
 	/**
-	 * @param durationtime0 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
+	 * 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REMAIN_TIME_10(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400204, durationtime0);
 	}
 
 	/**
-	 * @param durationtime0 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
+	 * 剩余攻击时间 %DURATIONTIME0。 / The attack time remaining is %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REMAIN_TIME_5(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400205, durationtime0);
@@ -17805,53 +17805,53 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 preview 此物品作为其可仅为 used 按 otherrace。 / You cannot preview this item as it can only be used by the other race
+	 * 该物品仅限其他种族使用，无法预览。 / You cannot preview this item as it can only be used by the other race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PREVIEW_INVALID_RACE = new SM_SYSTEM_MESSAGE(1400208);
 
 	/**
-	 * You 无法 preview 此物品作为 you 可' tuse 此 appearancemodifying 物品。 / You cannot preview this item as you can't use this appearance modifying item
+	 * 你无法使用该外观改造物品，无法预览。 / You cannot preview this item as you can't use this appearance modifying item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PREVIEW_INVALID_COSMETIC = new SM_SYSTEM_MESSAGE(1400209);
 
 	/**
-	 * You 无法 preview 此物品作为 there 为 noappearanceimage。 / You cannot preview this item as there is no appearance image
+	 * 该物品没有外观图像，无法预览。 / You cannot preview this item as there is no appearance image
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PREVIEW_NO_EXIST_COSMETIC_DATA = new SM_SYSTEM_MESSAGE(1400210);
 
 	/**
-	 * There 为 noGreaterStigma 槽位可用。 / There is no Greater Stigma slot available
+	 * 没有可用的大烙印之石槽位。 / There is no Greater Stigma slot available
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ENHANCED1_STIGMA_SLOT_IS_NOT_OPENED = new SM_SYSTEM_MESSAGE(1400211);
 
 	/**
-	 * You 无法 useinvite , leave 或 kickcommandsrelated 到 yourgroup 或 force 在此 region。 / You cannot use invite, leave or kick commands related to your group or force in this region
+	 * 在此区域无法使用与你队伍或部队相关的邀请、离开或踢人指令。 / You cannot use invite, leave or kick commands related to your group or force in this region
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1400212);
 
 	/**
-	 * @param value0 Youmustfirstlearn 前置条件 skill 到 equip%0。 / You must first learn the prerequisite skill to equip %0
+	 * 必须首先学习前置技能才能装备 %0。 / You must first learn the prerequisite skill to equip %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_TO_EQUIP_STONE_LEARN_PRESKILL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400213, value0);
 	}
 
 	/**
-	 * 你：cannot deactivate %0 as it is a prerequisite skill of %1。 / You cannot deactivate %0 as it is a prerequisite skill of %1
+	 * %0 是 %1 的前置技能，无法取消激活。 / You cannot deactivate %0 as it is a prerequisite skill of %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_STIGMA_CANT_UNEQUIP_STONE_FOR_AFTERSKILL(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400214, value0, value1);
 	}
 
 	/**
-	 * @param value0 You 已经 applied 到 join%0 ' sgroup.Youmayapply 用于 RecruitGrouponceevery15seconds。 / You already applied to join %0's group. You may apply for Recruit Group once every 15 seconds
+	 * 你已申请加入 %0 的队伍，招募小队每 15 秒可申请一次。 / You already applied to join %0's group. You may apply for Recruit Group once every 15 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PARTY_MATCH_ALREADY_SENT_APPLY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400215, value0);
 	}
 
 	/**
-	 * You 已经 applied 到 join%0 ' sforce.Youmayapply 用于 RecruitAllianceonceevery15seconds。 / You already applied to join %0's force. You may apply for Recruit Alliance once every 15 seconds
+	 * 你已申请加入 %0 的部队，招募联盟每 15 秒可申请一次。 / You already applied to join %0's force. You may apply for Recruit Alliance once every 15 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_FORCE_MATCH_ALREADY_SENT_APPLY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400216, value0);
@@ -17868,12 +17868,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FORCE_MATCH_DECLINED = new SM_SYSTEM_MESSAGE(1400218);
 
 	/**
-	 * 你：cannot enter as you do not have the required item。 / You cannot enter as you do not have the required item
+	 * 你没有所需物品，无法进入。 / You cannot enter as you do not have the required item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_ENTER_WITHOUT_ITEM = new SM_SYSTEM_MESSAGE(1400219);
 
 	/**
-	 * You 不有物品 needed 用于 entry.Please 检查,并 ask 用于 accessagain。 / You don't have the item needed for entry. Please check, and ask for access again
+	 * 你没有进入所需的物品，请确认后再申请进入。 / You don't have the item needed for entry. Please check, and ask for access again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_ENTER_WITHOUT_ITEM_TRY_LATER = new SM_SYSTEM_MESSAGE(
 			1401056);
@@ -17976,7 +17976,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1400234);
 
 	/**
-	 * @param worldname0 You 无法 enter%WORLDNAME0 作为 entrytime 有 expired。 / You cannot enter %WORLDNAME0 as the entry time has expired
+	 * 进入时间已过，你无法进入 %WORLDNAME0。 / You cannot enter %WORLDNAME0 as the entry time has expired
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_ENTER_FOR_TIMEOVER(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400235, worldname0);
@@ -17990,40 +17990,40 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 points from %0。 / You have gained %num1 points from %0
+	 * 你从 %0 获得了 %num1 点。 / You have gained %num1 points from %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_SCORE(int score, int objectNameId) {
 		return new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(objectNameId * 2 + 1), score);
 	}
 
 	/**
-	 * You 无法 openprivate 商店在此 region。 / You cannot open a private store in this region
+	 * 无法在此区域开设个人商店。 / You cannot open a private store in this region
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_OPEN_STORE_IN_THIS_ZONE = new SM_SYSTEM_MESSAGE(1400238);
 
 	/**
-	 * @param value0 你：have joined the %0 region channel。 / You have joined the %0 region channel
+	 * 你已加入 %0 区域频道。 / You have joined the %0 region channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_JOIN_ZONE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400239, value0);
 	}
 
 	/**
-	 * @param value0 你：have joined the %0 trade channel。 / You have joined the %0 trade channel
+	 * 你已加入 %0 交易频道。 / You have joined the %0 trade channel
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CHAT_CHANNEL_JOIN_TRADE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400240, value0);
 	}
 
 	/**
-	 * @param value0 你：have already sent an Unavailable message to %0。 / You have already sent an Unavailable message to %0
+	 * 你已向 %0 发送过“无法加入”消息。 / You have already sent an Unavailable message to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PARTY_MATCH_ALREADY_SENT_DECLINE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400241, value0);
 	}
 
 	/**
-	 * @param value0 你：have already sent a Reject Alliance message to %0。 / You have already sent a Reject Alliance message to %0
+	 * 你已向 %0 发送过“拒绝联盟”消息。 / You have already sent a Reject Alliance message to %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_FORCE_MATCH_ALREADY_SENT_DECLINE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400242, value0);
@@ -18053,7 +18053,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 registerbecauselimit 的 characters 可 register 在 Kisk 有已 reached。 / You cannot register because the limit of characters that can register on the Kisk has been reached
+	 * 登记到结界石的角色数已达上限，无法再登记。 / You cannot register because the limit of characters that can register on the Kisk has been reached
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_REGISTER_BINDSTONE_FULL = new SM_SYSTEM_MESSAGE(1400247);
 
@@ -18089,7 +18089,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_PORTAL_TIME = new SM_SYSTEM_MESSAGE(1400253);
 
 	/**
-	 * @param value0 你：may only battle %0 within the given time limit。 / You may only battle %0 within the given time limit
+	 * 你只能在时限内与 %0 战斗。 / You may only battle %0 within the given time limit
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_BATTLE_TIME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400254, value0);
@@ -18104,12 +18104,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 无法 gainanymoreAbyssPointsbecauseyoureachedmaximumAbyssPointsyou 可获取用于 your 当前 level。 / You cannot gain any more Abyss Points because you reached the maximum Abyss Points you can get for your current level
+	 * 你已达到当前等级可获得的最大欧比斯点数，无法再获得更多。 / You cannot gain any more Abyss Points because you reached the maximum Abyss Points you can get for your current level
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANNOT_GET_AP_LEVELBASE_LIMIT = new SM_SYSTEM_MESSAGE(1400256);
 
 	/**
-	 * 你：may only battle Tahabata Pyrelord within the given time limit。 / You may only battle Tahabata Pyrelord within the given time limit
+	 * 你只能在时限内与 Tahabata Pyrelord 战斗。 / You may only battle Tahabata Pyrelord within the given time limit
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_S_RANK_BATTLE_TIME = new SM_SYSTEM_MESSAGE(1400257);
 
@@ -18119,7 +18119,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_S_RANK_BATTLE_END = new SM_SYSTEM_MESSAGE(1400258);
 
 	/**
-	 * 你：may only battle Lord of Flame Calindi within the given time limit。 / You may only battle Lord of Flame Calindi within the given time limit
+	 * 你只能在时限内与火焰领主卡林迪战斗。 / You may only battle Lord of Flame Calindi within the given time limit
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_A_RANK_BATTLE_TIME = new SM_SYSTEM_MESSAGE(1400259);
 
@@ -18129,7 +18129,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_A_RANK_BATTLE_END = new SM_SYSTEM_MESSAGE(1400260);
 
 	/**
-	 * @param durationtime0 连接将于 %DURATIONTIME0 后超时，请休息。 / Connection will time out in %DURATIONTIME0. Please take a break
+	 * 连接将于 %DURATIONTIME0 后超时，请休息。 / Connection will time out in %DURATIONTIME0. Please take a break
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_USER_KICKED_BY_TIMEOUT(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400261, durationtime0);
@@ -18174,19 +18174,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param durationtime0 You 曾 poisonedduringextraction 并无法 extract 用于 %DURATIONTIME0。 / You were poisoned during extraction and cannot extract for %DURATIONTIME0
+	 * 你提取时中了毒，%DURATIONTIME0 内无法提取。 / You were poisoned during extraction and cannot extract for %DURATIONTIME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CAPTCHA_RESTRICTED(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400268, durationtime0);
 	}
 
 	/**
-	 * 你：have recovered from poisoning and can extract again。 / You have recovered from poisoning and can extract again
+	 * 你已从中毒状态恢复，可以重新提取了。 / You have recovered from poisoning and can extract again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CAPTCHA_RECOVERED = new SM_SYSTEM_MESSAGE(1400269);
 
 	/**
-	 * 你：chanted a spell to cleanse the poison from your body. You can now extract again。 / You chanted a spell to cleanse the poison from your body. You can now extract again
+	 * 你吟唱咒语清除了体内的毒素，现在可以重新提取了。 / You chanted a spell to cleanse the poison from your body. You can now extract again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CAPTCHA_UNRESTRICT = new SM_SYSTEM_MESSAGE(1400270);
 
@@ -18203,7 +18203,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CAPTCHA_UNRESTRICT_FAILED = new SM_SYSTEM_MESSAGE(1400272);
 
 	/**
-	 * @param durationtime0 你当前中毒，无法采集（剩余时间：%DURATIONTIME0）。 / You are currently poisoned and unable to extract. (Time remaining: %DURATIONTIME0)
+	 * 你当前处于中毒状态，无法提取（剩余时间：%DURATIONTIME0）。 / You are currently poisoned and unable to extract. (Time remaining: %DURATIONTIME0)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CAPTCHA_REMAIN_RESTRICT_TIME(String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400273, durationtime0);
@@ -18228,19 +18228,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_PORTAL_OPEN_IDDF3_Dragon = new SM_SYSTEM_MESSAGE(1400276);
 
 	/**
-	 * @param num0 你：gained %num0 points。 / You gained %num0 points
+	 * 你获得了 %num0 点。 / You gained %num0 points
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_SCORE_FOR_ENEMY(int num0) {
 		return new SM_SYSTEM_MESSAGE(1400277, num0);
 	}
 
 	/**
-	 * 你：cannot fly while your pet is banned from flying。 / You cannot fly while your pet is banned from flying
+	 * 宠物被禁止飞行期间你无法飞行。 / You cannot fly while your pet is banned from flying
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_FLY_NOW_DUE_TO_NOFLY_FROM_PET = new SM_SYSTEM_MESSAGE(1400278);
 
 	/**
-	 * You 无法 extract 从 equipped 物品。 / You cannot extract from equipped items
+	 * 无法从已装备的物品中提取。 / You cannot extract from equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DECOMPOSE_EQUIP_ITEM_CAN_NOT_BE_DECOMPOSED = new SM_SYSTEM_MESSAGE(
 			1400279);
@@ -18253,7 +18253,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：do not have enough Jewels of Eternity to buy the item。 / You do not have enough Jewels of Eternity to buy the item
+	 * 你的永恒宝石不足，无法购买该物品。 / You do not have enough Jewels of Eternity to buy the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_BUY_SELL_NOT_ENOUGH_AIONJEWELS_TO_BUY_ITEM = new SM_SYSTEM_MESSAGE(
 			1400281);
@@ -18273,17 +18273,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：must pass the Expert test in order to be promoted。 / You must pass the Expert test in order to be promoted
+	 * 必须通过专家考试才能晋升。 / You must pass the Expert test in order to be promoted
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHER_CANT_EXTEND_MASTER = new SM_SYSTEM_MESSAGE(1400284);
 
 	/**
-	 * 你：must pass the Artisan test in order to be promoted。 / You must pass the Artisan test in order to be promoted
+	 * 必须通过达人考试才能晋升。 / You must pass the Artisan test in order to be promoted
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_CANT_EXTEND_HIGH_MASTER = new SM_SYSTEM_MESSAGE(1400285);
 
 	/**
-	 * 你：must pass the Master test in order to be promoted。 / You must pass the Master test in order to be promoted
+	 * 必须通过大师考试才能晋升。 / You must pass the Master test in order to be promoted
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CRAFT_CANT_EXTEND_GRAND_MASTER = new SM_SYSTEM_MESSAGE(1400286);
 
@@ -18367,7 +18367,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 军团 lost%1。 / %0 Legion lost %1
+	 * %0 军团失去了 %1。 / %0 Legion lost %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FIELDABYSS_GUILD_CASTLE_TAKEN(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400299, value0, value1);
@@ -18533,7 +18533,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0value %0% 处于危险！ / %0% is in danger!
+	 * %0% 正处于危险之中！ / %0% is in danger!
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FIELDABYSS_BARRIER_ATSTAKE(String value0value) {
 		return new SM_SYSTEM_MESSAGE(1400326, value0value);
@@ -18567,19 +18567,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_DARKUNDERPASS_DESPAWN = new SM_SYSTEM_MESSAGE(1400331);
 
 	/**
-	 * You 无法 extractbecauseyoudonot 有物品所需用于 Essencetapping。 / You cannot extract because you do not have the item required for Essencetapping
+	 * 你没有精华萃取所需的物品，无法提取。 / You cannot extract because you do not have the item required for Essencetapping
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GATHERING_REQUIRE_ITEM = new SM_SYSTEM_MESSAGE(1400332);
 
 	/**
-	 * @param value0 你：used %0。 / You used %0
+	 * 你使用了 %0。 / You used %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_USE_CASH_TYPE_ITEM1(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400333, value0);
 	}
 
 	/**
-	 * 你：used %1 %0s。 / You used %1 %0s
+	 * 你使用了 %1 个 %0。 / You used %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_USE_CASH_TYPE_ITEM2(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1400334, value1, value0s);
@@ -18601,7 +18601,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdonot 有足够基纳到 combine%0 并 %1。 / You do not have enough Kinah to combine %0 and %1
+	 * 你的基纳不足，无法组合 %0 与 %1。 / You do not have enough Kinah to combine %0 and %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_COMPOUND_ERROR_NOT_ENOUGH_MONEY(int i, int j) {
 		return new SM_SYSTEM_MESSAGE(1400337, new DescriptionId(i), new DescriptionId(j));
@@ -18638,7 +18638,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Energy of Repose %num2)。 / You have gained %num1 XP from %0 (Energy of Repose %num2)
+	 * 你从 %0 获得了 %num1 点经验值（安息能量 %num2）。 / You have gained %num1 XP from %0 (Energy of Repose %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_VITAL_BONUS(String value0, long num1, long num2) {
 		return new SM_SYSTEM_MESSAGE(1400342, value0, num1, num2);
@@ -18649,7 +18649,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Energy of Salvation %num2)。 / You have gained %num1 XP from %0 (Energy of Salvation %num2)
+	 * 你从 %0 获得了 %num1 点经验值（救济能量 %num2）。 / You have gained %num1 XP from %0 (Energy of Salvation %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_MAKEUP_BONUS(String value0, long num1, long num2) {
 		return new SM_SYSTEM_MESSAGE(1400343, value0, num1, num2);
@@ -18660,7 +18660,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Energy of Repose %num2, Energy of Salvation %num3)。 / You have gained %num1 XP from %0 (Energy of Repose %num2, Energy of Salvation %num3)
+	 * 你从 %0 获得了 %num1 点经验值（安息能量 %num2，救济能量 %num3）。 / You have gained %num1 XP from %0 (Energy of Repose %num2, Energy of Salvation %num3)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_VITAL_MAKEUP_BONUS(String value0, long num1, long num2, long num3) {
 		return new SM_SYSTEM_MESSAGE(1400344, value0, num1, num2, num3);
@@ -18672,49 +18672,49 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %0 (Energy of Repose %num1)。 / You have gained %0 (Energy of Repose %num1)
+	 * 你获得了 %0（安息能量 %num1）。 / You have gained %0 (Energy of Repose %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_EXP_GAIN_VITAL_BONUS(String value0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1400345, value0, num1);
 	}
 
 	/**
-	 * 你：have gained %0 (Energy of Salvation %num1)。 / You have gained %0 (Energy of Salvation %num1)
+	 * 你获得了 %0（救济能量 %num1）。 / You have gained %0 (Energy of Salvation %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_EXP_GAIN_MAKEUP_BONUS(String value0, int num1) {
 		return new SM_SYSTEM_MESSAGE(1400346, value0, num1);
 	}
 
 	/**
-	 * 你：have gained %0 (Energy of Repose %num1, Energy of Salvation %num2)。 / You have gained %0 (Energy of Repose %num1, Energy of Salvation %num2)
+	 * 你获得了 %0（安息能量 %num1，救济能量 %num2）。 / You have gained %0 (Energy of Repose %num1, Energy of Salvation %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_COMBAT_MY_EXP_GAIN_VITAL_MAKEUP_BONUS(String value0, int num1, int num2) {
 		return new SM_SYSTEM_MESSAGE(1400347, value0, num1, num2);
 	}
 
 	/**
-	 * 你：have gained %num0 XP (Energy of Repose %num1)。 / You have gained %num0 XP (Energy of Repose %num1)
+	 * 你获得了 %num0 点经验值（安息能量 %num1）。 / You have gained %num0 XP (Energy of Repose %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP2_VITAL_BONUS(long num0, long num1) {
 		return new SM_SYSTEM_MESSAGE(1400348, num0, num1);
 	}
 
 	/**
-	 * 你：have gained %num0 XP (Energy of Salvation %num1)。 / You have gained %num0 XP (Energy of Salvation %num1)
+	 * 你获得了 %num0 点经验值（救济能量 %num1）。 / You have gained %num0 XP (Energy of Salvation %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP2_MAKEUP_BONUS(long num0, long num1) {
 		return new SM_SYSTEM_MESSAGE(1400349, num0, num1);
 	}
 
 	/**
-	 * 你：have gained %num0 XP (Energy of Repose %num1, Energy of Salvation %num2)。 / You have gained %num0 XP (Energy of Repose %num1, Energy of Salvation %num2)
+	 * 你获得了 %num0 点经验值（安息能量 %num1，救济能量 %num2）。 / You have gained %num0 XP (Energy of Repose %num1, Energy of Salvation %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP2_VITAL_MAKEUP_BONUS(long num0, long num1, long num2) {
 		return new SM_SYSTEM_MESSAGE(1400350, num0, num1, num2);
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Energy of Repose %num2 and Golden Vinna Scent %num3)。 / You have gained %num1 XP from %0 (Energy of Repose %num2 and Golden Vinna Scent %num3)
+	 * 你从 %0 获得了 %num1 点经验值（安息能量 %num2 与金色维纳香气 %num3）。 / You have gained %num1 XP from %0 (Energy of Repose %num2 and Golden Vinna Scent %num3)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_VITAL_ABSOLUTEEXP_BONUS_DESC(DescriptionId value0, long num1, long num2,
 			long num3) {
@@ -18722,7 +18722,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有 gained%num1XP 从 %0 ( Energy 的 Repose%num2 , Energy 的 Relief%num3 ,并 GoldenVinnaScent%num4 )。 / You have gained %num1 XP from %0 (Energy of Repose %num2, Energy of Relief %num3, and Golden Vinna Scent %num4)
+	 * 你从 %0 获得了 %num1 点经验值（安息能量 %num2，恢复能量 %num3 与金色维纳香气 %num4）。 / You have gained %num1 XP from %0 (Energy of Repose %num2, Energy of Relief %num3, and Golden Vinna Scent %num4)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_VITAL_MAKEUP_ABSOLUTEEXP_BONUS(DescriptionId value0, long num1,
 			long num2, long num3, long num4) {
@@ -18730,7 +18730,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Golden Vinna Scent %num2)。 / You have gained %num1 XP from %0 (Golden Vinna Scent %num2)
+	 * 你从 %0 获得了 %num1 点经验值（金色维纳香气 %num2）。 / You have gained %num1 XP from %0 (Golden Vinna Scent %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_ABSOLUTEEXP_BONUS_DESC(DescriptionId value0, long num1, long num2) {
 		return new SM_SYSTEM_MESSAGE(1402616, value0, num1, num2);
@@ -18742,7 +18742,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num1 XP from %0 (Golden Vinna Scent %num2)。 / You have gained %num1 XP from %0 (Golden Vinna Scent %num2)
+	 * 你从 %0 获得了 %num1 点经验值（金色维纳香气 %num2）。 / You have gained %num1 XP from %0 (Golden Vinna Scent %num2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP_ABSOLUTEEXP_BONUS(String value0, long num1, long num2) {
 		return new SM_SYSTEM_MESSAGE(1402616, value0, num1, num2);
@@ -18753,40 +18753,40 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：have gained %num0 XP (Golden Vinna Scent %num1)。 / You have gained %num0 XP (Golden Vinna Scent %num1)
+	 * 你获得了 %num0 点经验值（金色维纳香气 %num1）。 / You have gained %num0 XP (Golden Vinna Scent %num1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GET_EXP2_ABSOLUTEEXP_BONUS(long num0, long num1) {
 		return new SM_SYSTEM_MESSAGE(1402630, num0, num1);
 	}
 
 	/**
-	 * 你：have selected more items than there are remaining。 / You have selected more items than there are remaining
+	 * 你选择的数量超过了剩余数量。 / You have selected more items than there are remaining
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIMITED_SALE_CANT_SELECT_OVER_ITEMS = new SM_SYSTEM_MESSAGE(1400351);
 
 	/**
-	 * 此物品为 nolonger 可用。 / This item is no longer available
+	 * 该物品已不再可用。 / This item is no longer available
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIMITED_SALE_CANT_SELECT_NO_ITEMS = new SM_SYSTEM_MESSAGE(1400352);
 
 	/**
-	 * You 无法 purchase 物品 becauseyou 有 exceededpurchaselimit。 / You cannot purchase the item because you have exceeded the purchase limit
+	 * 你已超过购买限额，无法购买该物品。 / You cannot purchase the item because you have exceeded the purchase limit
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIMITED_BUYING_CANT_SELECT_NO_ITEMS = new SM_SYSTEM_MESSAGE(1400353);
 
 	/**
-	 * 你：have selected more than the purchase limit of the item。 / You have selected more than the purchase limit of the item
+	 * 你选择的数量超过了该物品的购买限额。 / You have selected more than the purchase limit of the item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIMITED_BUYING_CANT_SELECT_OVER_ITEMS = new SM_SYSTEM_MESSAGE(
 			1400354);
 
 	/**
-	 * Youcannotstorethis 物品 in 军团仓库 / You cannot store this item in the Legion warehouse
+	 * 无法将该物品存入军团仓库。 / You cannot store this item in the Legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WAREHOUSE_CANT_LEGION_DEPOSIT = new SM_SYSTEM_MESSAGE(1400355);
 
 	/**
-	 * Youcannotstorethis 物品 in 账号仓库 / You cannot store this item in the account warehouse
+	 * 无法将该物品存入账号仓库。 / You cannot store this item in the account warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WAREHOUSE_CANT_ACCOUNT_DEPOSIT = new SM_SYSTEM_MESSAGE(1400356);
 
@@ -18821,13 +18821,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：can only enter after the Group Leader has created the instance。 / You can only enter after the Group Leader has created the instance
+	 * 只有队长创建副本后才能进入。 / You can only enter after the Group Leader has created the instance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_DUNGEON_CANT_ENTER_NOT_OPENED = new SM_SYSTEM_MESSAGE(
 			1400361);
 
 	/**
-	 * 你：can only use this item in a cube。 / You can only use this item in a cube
+	 * 该物品只能在背包中使用。 / You can only use this item in a cube
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_REQUIRE_IN_INVENTORY = new SM_SYSTEM_MESSAGE(1400362);
 
@@ -18838,12 +18838,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DECOMPRESS_INVENTORY_IS_FULL = new SM_SYSTEM_MESSAGE(1400363);
 
 	/**
-	 * 你：cannot combine different weapon types。 / You cannot combine different weapon types
+	 * 无法组合不同类型的武器。 / You cannot combine different weapon types
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMPOUND_ERROR_DIFFERENT_TYPE = new SM_SYSTEM_MESSAGE(1400364);
 
 	/**
-	 * 此物品无法为 registered 用于 comparison。 / This item cannot be registered for comparison
+	 * 该物品无法登记进行比较。 / This item cannot be registered for comparison
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMPOUND_ERROR_NOT_COMPARABLE_ITEM = new SM_SYSTEM_MESSAGE(1400365);
 
@@ -18854,7 +18854,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDTP_FANATIC_Die_Keynamed = new SM_SYSTEM_MESSAGE(1400366);
 
 	/**
-	 * 你：can now enter the Chamber of Unity。 / You can now enter the Chamber of Unity
+	 * 你现在可以进入团结殿堂了。 / You can now enter the Chamber of Unity
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDTP_FANATIC_DieAll_Keynamed = new SM_SYSTEM_MESSAGE(1400367);
 
@@ -18882,7 +18882,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 此 modification 无法为 completed 作为 %0 并 %1 有相同 appearance。 / This modification cannot be completed as %0 and %1 have the same appearance
+	 * %0 与 %1 外观相同，无法完成该改造。 / This modification cannot be completed as %0 and %1 have the same appearance
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANT_CHANGE_SAME_ITEM_SKIN(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400371, value0, value1);
@@ -18912,12 +18912,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有 senttoomanymails 在 once 并有已 termporarilyblocked.Pleasetryagainlater。 / You have sent too many mails at once and have been termporarily blocked. Please try again later
+	 * 你一次性发送的邮件过多，已被暂时限制，请稍后再试。 / You have sent too many mails at once and have been termporarily blocked. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_SEND_OVER_MAILS = new SM_SYSTEM_MESSAGE(1400375);
 
 	/**
-	 * @param value0 你：do not have enough %0 to gather。 / You do not have enough %0 to gather
+	 * 你没有足够的 %0，无法采集。 / You do not have enough %0 to gather
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_GATHERING_B_ITEM_CHECK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400376, value0);
@@ -19000,19 +19000,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LIMIT_SALE_TEST_DESC03 = new SM_SYSTEM_MESSAGE(1400390);
 
 	/**
-	 * @param value0 此消息为用于 testing%0 ' slimitedsale。 / This message is for testing %0's limited sale
+	 * 此消息用于测试 %0 的限量销售。 / This message is for testing %0's limited sale
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LIMIT_SALE_TEST_DESC04(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400391, value0);
 	}
 
 	/**
-	 * Yourrequest 有已 registered 在 RecruitGroup 成员列表。 / Your request has been registered on the Recruit Group Member List
+	 * 你的请求已登记到招募小队成员列表。 / Your request has been registered on the Recruit Group Member List
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_MATCH_OFFER_PARTY_POSTED = new SM_SYSTEM_MESSAGE(1400392);
 
 	/**
-	 * Yourrequest 有已 registered 在 Apply 用于 Group 列表。 / Your request has been registered on the Apply For Group List
+	 * 你的请求已登记到队伍申请列表。 / Your request has been registered on the Apply For Group List
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_MATCH_SEEK_PARTY_POSTED = new SM_SYSTEM_MESSAGE(1400393);
 
@@ -19201,7 +19201,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_DEATHBLOW_COUNT_100 = new SM_SYSTEM_MESSAGE(1400426);
 
 	/**
-	 * You 有 failed 到 useEmpyreanAvatar.Youwillneed 到 gatherpower 并 summon 其 again。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again
+	 * 你使用天界化身失败，需要重新积蓄力量后再召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_DEATHBLOW_FAIL = new SM_SYSTEM_MESSAGE(1400427);
 
@@ -19217,12 +19217,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON = new SM_SYSTEM_MESSAGE(1400429);
 
 	/**
-	 * 你：may use the Sphere of Mirage again。 / You may use the Sphere of Mirage again
+	 * 你可以再次使用幻影之球了。 / You may use the Sphere of Mirage again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT = new SM_SYSTEM_MESSAGE(1400430);
 
 	/**
-	 * 你：need more people to activate the Sphere of Mirage。 / You need more people to activate the Sphere of Mirage
+	 * 需要更多人来激活幻影之球。 / You need more people to activate the Sphere of Mirage
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_CANT_USE_OBJECT_NOT_ENOUGH_MEMBER = new SM_SYSTEM_MESSAGE(
 			1400431);
@@ -19256,26 +19256,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot join this race。 / You cannot join this race
+	 * 你无法加入该种族。 / You cannot join this race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FACTION_JOIN_ERROR_RACE = new SM_SYSTEM_MESSAGE(1400437);
 
 	/**
-	 * @param value0 You 可仅 join 当 yourlevel 为 %0 或 above。 / You can only join when your level is %0 or above
+	 * 你的等级达到 %0 或以上时才能加入。 / You can only join when your level is %0 or above
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FACTION_JOIN_ERROR_MIN_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400438, value0);
 	}
 
 	/**
-	 * @param value0 %0 为 sellingmaterials 到创建物品的 CraftingMasters。 / %0 is selling materials to create the items of Crafting Masters
+	 * %0 正在出售制作大师制作物品所需的材料。 / %0 is selling materials to create the items of Crafting Masters
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LIMIT_SALE_M_EPIC_SHOP_DESC01(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400439, value0);
 	}
 
 	/**
-	 * @param value0 %0 为 sellingmaterials 到创建物品的 CraftingMasters。 / %0 is selling materials to create the items of Crafting Masters
+	 * %0 正在出售制作大师制作物品所需的材料。 / %0 is selling materials to create the items of Crafting Masters
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LIMIT_SALE_M_EPIC_SHOP_DESC02(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400440, value0);
@@ -19321,14 +19321,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1400447);
 
 	/**
-	 * 你：used %1 %0s。 / You used %1 %0s
+	 * 你使用了 %1 个 %0。 / You used %1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_USE_ITEM_MULTI(String value1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1400448, value1, value0s);
 	}
 
 	/**
-	 * 你in normal state。 / You are in normal state
+	 * 你处于正常状态。 / You are in normal state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FATIGUE_INFO_0_LEVEL = new SM_SYSTEM_MESSAGE(1400449);
 
@@ -19343,14 +19343,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FATIGUE_INFO_2_LEVEL = new SM_SYSTEM_MESSAGE(1400451);
 
 	/**
-	 * @param value0 你：have opened the %0。 / You have opened the %0
+	 * 你已打开 %0。 / You have opened the %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNCOMPRESS_COMPRESSED_ITEM_SUCCEEDED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400452, value0);
 	}
 
 	/**
-	 * @param value0 你：have stopped opening the %0 bundle。 / You have stopped opening the %0 bundle
+	 * 你已停止开启 %0 捆包。 / You have stopped opening the %0 bundle
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNCOMPRESS_COMPRESSED_ITEM_CANCELED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400453, value0);
@@ -19520,13 +19520,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：can only acquire daily quests once per day。 / You can only acquire daily quests once per day
+	 * 每日任务每天只能领取一次。 / You can only acquire daily quests once per day
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FACTION_CAN_NOT_RECEIVE_QUEST_TWICE_A_DAY = new SM_SYSTEM_MESSAGE(
 			1400483);
 
 	/**
-	 * @param value0 距离过远：%0 to issue an order。 / You are too far from %0 to issue an order
+	 * 你距 %0 过远，无法下达指令。 / You are too far from %0 to issue an order
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MERCENARY_CANT_ORDER_BY_TOO_DISTANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400484, value0);
@@ -19548,92 +19548,92 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_120M = new SM_SYSTEM_MESSAGE(1400487);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 1 hour and 30 minutes。 / You will be removed from Sematariux's Hideout in 1 hour and 30 minutes
+	 * 你将在 1 小时 30 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 1 hour and 30 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_90M = new SM_SYSTEM_MESSAGE(1400488);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 1 hour。 / You will be removed from Sematariux's Hideout in 1 hour
+	 * 你将在 1 小时后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 1 hour
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_60M = new SM_SYSTEM_MESSAGE(1400489);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 30 minutes。 / You will be removed from Sematariux's Hideout in 30 minutes
+	 * 你将在 30 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 30 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_30M = new SM_SYSTEM_MESSAGE(1400490);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 15 minutes。 / You will be removed from Sematariux's Hideout in 15 minutes
+	 * 你将在 15 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 15 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_15M = new SM_SYSTEM_MESSAGE(1400491);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 10 minutes。 / You will be removed from Sematariux's Hideout in 10 minutes
+	 * 你将在 10 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 10 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_10M = new SM_SYSTEM_MESSAGE(1400492);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 5 minutes。 / You will be removed from Sematariux's Hideout in 5 minutes
+	 * 你将在 5 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 5 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_5M = new SM_SYSTEM_MESSAGE(1400493);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 3 minutes。 / You will be removed from Sematariux's Hideout in 3 minutes
+	 * 你将在 3 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 3 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_3M = new SM_SYSTEM_MESSAGE(1400494);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 2 minutes。 / You will be removed from Sematariux's Hideout in 2 minutes
+	 * 你将在 2 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 2 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_2M = new SM_SYSTEM_MESSAGE(1400495);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 1 minute。 / You will be removed from Sematariux's Hideout in 1 minute
+	 * 你将在 1 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 1 minute
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_1M = new SM_SYSTEM_MESSAGE(1400496);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 30 seconds。 / You will be removed from Sematariux's Hideout in 30 seconds
+	 * 你将在 30 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 30 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_30S = new SM_SYSTEM_MESSAGE(1400497);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 15 seconds。 / You will be removed from Sematariux's Hideout in 15 seconds
+	 * 你将在 15 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 15 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_15S = new SM_SYSTEM_MESSAGE(1400498);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 10 seconds。 / You will be removed from Sematariux's Hideout in 10 seconds
+	 * 你将在 10 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 10 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_10S = new SM_SYSTEM_MESSAGE(1400499);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 5 seconds。 / You will be removed from Sematariux's Hideout in 5 seconds
+	 * 你将在 5 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 5 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_5S = new SM_SYSTEM_MESSAGE(1400500);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 4 seconds。 / You will be removed from Sematariux's Hideout in 4 seconds
+	 * 你将在 4 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 4 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_4S = new SM_SYSTEM_MESSAGE(1400501);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 3 seconds。 / You will be removed from Sematariux's Hideout in 3 seconds
+	 * 你将在 3 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 3 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_3S = new SM_SYSTEM_MESSAGE(1400502);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 2 seconds。 / You will be removed from Sematariux's Hideout in 2 seconds
+	 * 你将在 2 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 2 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_2S = new SM_SYSTEM_MESSAGE(1400503);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 1 second。 / You will be removed from Sematariux's Hideout in 1 second
+	 * 你将在 1 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 1 second
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_1S = new SM_SYSTEM_MESSAGE(1400504);
 
 	/**
-	 * 你：have been forcibly removed from Sematariux's Hideout by Sematariux's defensive magic。 / You have been forcibly removed from Sematariux's Hideout by Sematariux's defensive magic
+	 * 你已被塞玛塔里克斯藏身处的防御魔法强制移出。 / You have been forcibly removed from Sematariux's Hideout by Sematariux's defensive magic
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_OUT_TIMER_0S = new SM_SYSTEM_MESSAGE(1400505);
 
@@ -19643,92 +19643,92 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_120M = new SM_SYSTEM_MESSAGE(1400506);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 1 hour and 30 minutes。 / You will be removed from Padmarashka's Cave in 1 hour and 30 minutes
+	 * 你将在 1 小时 30 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour and 30 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_90M = new SM_SYSTEM_MESSAGE(1400507);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 1 hour。 / You will be removed from Padmarashka's Cave in 1 hour
+	 * 你将在 1 小时后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_60M = new SM_SYSTEM_MESSAGE(1400508);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 30 minutes。 / You will be removed from Padmarashka's Cave in 30 minutes
+	 * 你将在 30 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 30 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_30M = new SM_SYSTEM_MESSAGE(1400509);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 15 minutes。 / You will be removed from Padmarashka's Cave in 15 minutes
+	 * 你将在 15 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 15 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_15M = new SM_SYSTEM_MESSAGE(1400510);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 10 minutes。 / You will be removed from Padmarashka's Cave in 10 minutes
+	 * 你将在 10 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 10 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_10M = new SM_SYSTEM_MESSAGE(1400511);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 5 minutes。 / You will be removed from Padmarashka's Cave in 5 minutes
+	 * 你将在 5 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 5 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_5M = new SM_SYSTEM_MESSAGE(1400512);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 3 minutes。 / You will be removed from Padmarashka's Cave in 3 minutes
+	 * 你将在 3 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 3 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_3M = new SM_SYSTEM_MESSAGE(1400513);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 2 minutes。 / You will be removed from Padmarashka's Cave in 2 minutes
+	 * 你将在 2 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 2 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_2M = new SM_SYSTEM_MESSAGE(1400514);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 1 minute。 / You will be removed from Padmarashka's Cave in 1 minute
+	 * 你将在 1 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 1 minute
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_1M = new SM_SYSTEM_MESSAGE(1400515);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 30 seconds。 / You will be removed from Padmarashka's Cave in 30 seconds
+	 * 你将在 30 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 30 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_30S = new SM_SYSTEM_MESSAGE(1400516);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 15 seconds。 / You will be removed from Padmarashka's Cave in 15 seconds
+	 * 你将在 15 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 15 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_15S = new SM_SYSTEM_MESSAGE(1400517);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 10 seconds。 / You will be removed from Padmarashka's Cave in 10 seconds
+	 * 你将在 10 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 10 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_10S = new SM_SYSTEM_MESSAGE(1400518);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 5 seconds。 / You will be removed from Padmarashka's Cave in 5 seconds
+	 * 你将在 5 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 5 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_5S = new SM_SYSTEM_MESSAGE(1400519);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 4 seconds。 / You will be removed from Padmarashka's Cave in 4 seconds
+	 * 你将在 4 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 4 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_4S = new SM_SYSTEM_MESSAGE(1400520);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 3 seconds。 / You will be removed from Padmarashka's Cave in 3 seconds
+	 * 你将在 3 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 3 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_3S = new SM_SYSTEM_MESSAGE(1400521);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 2 seconds。 / You will be removed from Padmarashka's Cave in 2 seconds
+	 * 你将在 2 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 2 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_2S = new SM_SYSTEM_MESSAGE(1400522);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 1 second。 / You will be removed from Padmarashka's Cave in 1 second
+	 * 你将在 1 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 1 second
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_1S = new SM_SYSTEM_MESSAGE(1400523);
 
 	/**
-	 * 你：have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic。 / You have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic
+	 * 你已被帕德玛拉夏卡洞穴的防御魔法强制移出。 / You have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_OUT_TIMER_0S = new SM_SYSTEM_MESSAGE(1400524);
 
@@ -19748,7 +19748,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_START_1 = new SM_SYSTEM_MESSAGE(1400527);
 
 	/**
-	 * 你：have leapt into certain death!。 / You have leapt into certain death!
+	 * 你跳入了必死的境地！ / You have leapt into certain death!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_START_1 = new SM_SYSTEM_MESSAGE(1400528);
 
@@ -19818,7 +19818,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_START_3 = new SM_SYSTEM_MESSAGE(1400541);
 
 	/**
-	 * 你：will never see the light of day again!。 / You will never see the light of day again!
+	 * 你将再也见不到光明了！ / You will never see the light of day again!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_START_4 = new SM_SYSTEM_MESSAGE(1400542);
 
@@ -19830,12 +19830,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：must be in an Alliance to access this area。 / You must be in an Alliance to access this area
+	 * 必须处于联盟中才能进入该区域。 / You must be in an Alliance to access this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ENTER_ONLY_FORCE_DON = new SM_SYSTEM_MESSAGE(1400544);
 
 	/**
-	 * 你：must be in an League to access this area。 / You must be in an League to access this area
+	 * 必须处于联军中才能进入该区域。 / You must be in an League to access this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ENTER_ONLY_UNION_DON = new SM_SYSTEM_MESSAGE(1401251);
 
@@ -19908,7 +19908,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 为 not 目标 you 可 trade%1 带。 / %0 is not a target you can trade %1 with
+	 * %0 不是你可以用来交易 %1 的目标。 / %0 is not a target you can trade %1 with
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_WRONG_EXCHANGE_TARGET(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400554, value0, value1);
@@ -19930,14 +19930,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：do not have enough %0。 / You do not have enough %0
+	 * 你的 %0 不足。 / You do not have enough %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_TRADE_MONEY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400557, value0);
 	}
 
 	/**
-	 * You 有 invited%0 ' salliance 到 AllianceLeague.%0 ' salliance 有 total 的 %1 成员。 / You have invited %0's alliance to the Alliance League. %0's alliance has a total of %1 members
+	 * 你已邀请 %0 的联盟加入联军，%0 的联盟共有 %1 名成员。 / You have invited %0's alliance to the Alliance League. %0's alliance has a total of %1 members
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_INVITE_HIM(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400558, value0, value1);
@@ -19952,7 +19952,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的联盟已加入 %0 的战团。
-	  * 你的联盟 has joined %0's 联盟 League。 / Your alliance has joined %0's Alliance League
+	  * 你的联盟已加入 %0 的联军。 / Your alliance has joined %0's Alliance League
 	  */
 	public static SM_SYSTEM_MESSAGE STR_UNION_ENTER_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400560, value0);
@@ -19966,7 +19966,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：have declined %0's invitation to join the Alliance League。 / You have declined %0's invitation to join the Alliance League
+	 * 你已拒绝 %0 加入联军的邀请。 / You have declined %0's invitation to join the Alliance League
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_REJECT_ME(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400562, value0);
@@ -19980,19 +19980,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 为已经成员的 anotherAllianceLeague。 / %0 is already a member of another Alliance League
+	 * %0 已是其他联军的成员。 / %0 is already a member of another Alliance League
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_ALREADY_OTHER_UNION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400564, value0);
 	}
 
 	/**
-	 * You 无法 inviteanymore 作为 AllianceLeague 为 full。 / You cannot invite anymore as the Alliance League is full
+	 * 联军已满，无法再邀请更多成员。 / You cannot invite anymore as the Alliance League is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_ADD_NEW_MEMBER = new SM_SYSTEM_MESSAGE(1400565);
 
 	/**
-	 * You 有不有 permission 到 invitepeople 到 League。 / You have don't have permission to invite people to the League
+	 * 你没有邀请他人加入联军的权限。 / You have don't have permission to invite people to the League
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_LEADER_CAN_INVITE = new SM_SYSTEM_MESSAGE(1400566);
 
@@ -20004,22 +20004,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot invite your own alliance。 / You cannot invite your own alliance
+	 * 你无法邀请自己的联盟。 / You cannot invite your own alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_INVITE_SELF = new SM_SYSTEM_MESSAGE(1400568);
 
 	/**
-	 * 玩家 youinvited 到 AllianceLeague 为 currently 离线。 / The player you invited to the Alliance League is currently offline
+	 * 你邀请加入联军的那位玩家当前不在线。 / The player you invited to the Alliance League is currently offline
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_OFFLINE_MEMBER = new SM_SYSTEM_MESSAGE(1400569);
 
 	/**
-	 * 你：cannot use the Alliance League invitation function while you are dead。 / You cannot use the Alliance League invitation function while you are dead
+	 * 死亡状态下无法使用联军邀请功能。 / You cannot use the Alliance League invitation function while you are dead
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_INVITE_WHEN_DEAD = new SM_SYSTEM_MESSAGE(1400570);
 
 	/**
-	 * 你：have left the Alliance League。 / You have left the Alliance League
+	 * 你已离开联军。 / You have left the Alliance League
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_LEAVE_ME = new SM_SYSTEM_MESSAGE(1400571);
 
@@ -20036,7 +20036,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_LEADER_CAN_LEAVE = new SM_SYSTEM_MESSAGE(1400573);
 
 	/**
-	 * @param value0 你：have expelled %0's alliance from the Alliance League。 / You have expelled %0's alliance from the Alliance League
+	 * 你已将 %0 的联盟从联军中逐出。 / You have expelled %0's alliance from the Alliance League
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_BAN_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400574, value0);
@@ -20064,17 +20064,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_LEADER_CAN_BAN = new SM_SYSTEM_MESSAGE(1400577);
 
 	/**
-	 * You 无法移除 your 拥有 Alliance。 / You cannot remove your own Alliance
+	 * 你无法移除自己的联盟。 / You cannot remove your own Alliance
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_BAN_SELF = new SM_SYSTEM_MESSAGE(1400578);
 
 	/**
-	 * AllianceLeague 有 disbandeddue 到 insufficient 编号的 alliances。 / The Alliance League has disbanded due to an insufficient number of alliances
+	 * 因联盟数量不足，联军已解散。 / The Alliance League has disbanded due to an insufficient number of alliances
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_DISPERSED = new SM_SYSTEM_MESSAGE(1400579);
 
 	/**
-	 * 你：transferred the league leadership to %0. From now on, %0 is the league leader。 / You transferred the league leadership to %0. From now on, %0 is the league leader
+	 * 你已将联军指挥权移交给 %0，从现在起 %0 是联军指挥。 / You transferred the league leadership to %0. From now on, %0 is the league leader
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_CHANGE_LEADER(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400580, value0, value1);
@@ -20098,7 +20098,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_LEADER_CAN_CHANGE_LEADER = new SM_SYSTEM_MESSAGE(1400583);
 
 	/**
-	 * 你：cannot transfer the league leadership to someone who isn't an alliance captain。 / You cannot transfer the league leadership to someone who isn't an alliance captain
+	 * 无法将联军指挥权移交给非联盟队长的人。 / You cannot transfer the league leadership to someone who isn't an alliance captain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_CAN_CHANGE_LEADER_TO_FORCE_LEADER = new SM_SYSTEM_MESSAGE(
 			1400584);
@@ -20109,7 +20109,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_CHANGE_LEADER_SELF = new SM_SYSTEM_MESSAGE(1400585);
 
 	/**
-	 * You 无法 transferleadership 到玩家 outsideyourLeague。 / You cannot transfer the leadership to a player outside your League
+	 * 无法将指挥权移交给联军之外的玩家。 / You cannot transfer the leadership to a player outside your League
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_CHANGE_LEADER_OTHER_UNION = new SM_SYSTEM_MESSAGE(1400586);
 
@@ -20126,26 +20126,26 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param num0 alliance 编号有已 changed 到 %num0。 / The alliance number has been changed to %num0
+	 * 联盟编号已改为 %num0。 / The alliance number has been changed to %num0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_CHANGE_FORCE_NUMBER_ME(int num0) {
 		return new SM_SYSTEM_MESSAGE(1400589, num0);
 	}
 
 	/**
-	 * alliance 编号的 %0 有已 changed 到 %num0。 / The alliance number of %0 has been changed to %num0
+	 * %0 的联盟编号已改为 %num0。 / The alliance number of %0 has been changed to %num0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_CHANGE_FORCE_NUMBER_HIM(String value0, int num0) {
 		return new SM_SYSTEM_MESSAGE(1400590, value0, num0);
 	}
 
 	/**
-	 * You 无法 change 其到 unclaimedalliance 编号。 / You cannot change it to an unclaimed alliance number
+	 * 无法将其改为未被占用的联盟编号。 / You cannot change it to an unclaimed alliance number
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_CHANGE_FORCE_NUMBER = new SM_SYSTEM_MESSAGE(1400591);
 
 	/**
-	 * 你：cannot change the league leader's alliance number。 / You cannot change the league leader's alliance number
+	 * 无法变更联军指挥所在联盟的编号。 / You cannot change the league leader's alliance number
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_CANT_CHANGE_LEADER_NUMBER = new SM_SYSTEM_MESSAGE(1400592);
 
@@ -20174,14 +20174,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_SHIELD_B_SPAWN_IDAB1_Dreadgion01 = new SM_SYSTEM_MESSAGE(1400596);
 
 	/**
-	 * 你：can use Screen Capture once every %0 seconds. Time Remaining: %1 seconds。 / You can use Screen Capture once every %0 seconds. Time Remaining: %1 seconds
+	 * 截图功能每 %0 秒可使用一次，剩余时间：%1 秒。 / You can use Screen Capture once every %0 seconds. Time Remaining: %1 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_REMAIN_PRINT_SCREEN_COOLTIME(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400600, value0, value1);
 	}
 
 	/**
-	 * 你不in an League。 / You are not in an League
+	 * 你不在联军中。 / You are not in an League
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_YOU_ARE_NOT_UNION_MEMBER = new SM_SYSTEM_MESSAGE(1400601);
 
@@ -20191,7 +20191,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_CAN_BAN_FORCE_LEADER = new SM_SYSTEM_MESSAGE(1400602);
 
 	/**
-	 * @param value0 selected 目标为已经成员的 anotherforceleague。 / The selected target is already a member of another force league
+	 * 所选目标已是其他部队联军的成员。 / The selected target is already a member of another force league
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNION_ALREADY_MY_UNION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400603, value0);
@@ -20248,7 +20248,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_RaidShowTime_Phase4 = new SM_SYSTEM_MESSAGE(1400613);
 
 	/**
-	 * You 无法 invitesomeone 谁 doesn ' tbelong 到 alliance 到 league。 / You cannot invite someone who doesn't belong to an alliance to the league
+	 * 无法邀请不属于联盟的玩家加入联军。 / You cannot invite someone who doesn't belong to an alliance to the league
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_UNION_ONLY_INVITE_FORCE_MEMBER = new SM_SYSTEM_MESSAGE(1400614);
 
@@ -20355,7 +20355,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 可保存一个的 twoReiansimprisoned 在 cocoon。 / You can save one of the two Reians imprisoned in the cocoon
+	 * 你可以解救茧中被囚禁的两名莱恩之一。 / You can save one of the two Reians imprisoned in the cocoon
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDELIM_Cocoon_Yell = new SM_SYSTEM_MESSAGE(1400630);
 
@@ -20406,19 +20406,19 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 
 	 /**
 	  * 你的Favorites list is full。
-	  * 你的Favorites list已满。 / Your Favorites list is full
+	  * 你的收藏列表已满。 / Your Favorites list is full
 	  */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_COMBINE_FAVORIT_LIST_FULL = new SM_SYSTEM_MESSAGE(1400639);
 
 	/**
-	 * @param worldname0 你：have entered %WORLDNAME0. Your allies are barred from joining you。 / You have entered %WORLDNAME0. Your allies are barred from joining you
+	 * 你已进入 %WORLDNAME0，你的盟友无法加入。 / You have entered %WORLDNAME0. Your allies are barred from joining you
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_DUNGEON_OPENED_FOR_SELF(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400640, worldname0);
 	}
 
 	/**
-	 * 你：have successfully entered the area, consuming one of your permitted entries。 / You have successfully entered the area, consuming one of your permitted entries
+	 * 你已成功进入该区域，消耗了一次允许进入的次数。 / You have successfully entered the area, consuming one of your permitted entries
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_DUNGEON_COUNT_USE = new SM_SYSTEM_MESSAGE(1402084);
 
@@ -20439,14 +20439,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PET_NOT_AVALIABE_NAME = new SM_SYSTEM_MESSAGE(1400643);
 
 	/**
-	 * @param value0 你：abandoned %0。 / You abandoned %0
+	 * 你已放弃 %0。 / You abandoned %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PET_ABANDON_PET_COMPLETE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400644, value0);
 	}
 
 	/**
-	 * @param value0 你：summoned %0。 / You summoned %0
+	 * 你已召唤 %0。 / You summoned %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PET_SUMMONED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400645, value0);
@@ -20466,7 +20466,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1400647);
 
 	/**
-	 * 你：cannot combine equipped items。 / You cannot combine equipped items
+	 * 无法组合已装备的物品。 / You cannot combine equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMPOUND_ERROR_EQUIPED_ITEM = new SM_SYSTEM_MESSAGE(1400648);
 
@@ -20476,12 +20476,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BARD_BUFF_LIFE = new SM_SYSTEM_MESSAGE(1400649);
 
 	/**
-	 * 你：feel all your muscles becoming harder。 / You feel all your muscles becoming harder
+	 * 你感觉浑身的肌肉变得更强健了。 / You feel all your muscles becoming harder
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BARD_BUFF_PROTECTION = new SM_SYSTEM_MESSAGE(1400650);
 
 	/**
-	 * 你：already have the selected pet。 / You already have the selected pet
+	 * 你已经拥有所选宠物。 / You already have the selected pet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_ALREADY_TAMED_PET = new SM_SYSTEM_MESSAGE(1400651);
 
@@ -20497,32 +20497,32 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_SKILL = new SM_SYSTEM_MESSAGE(1400653);
 
 	/**
-	 * 你：can use a Silver Blade Rotan to destroy the rock door leading to the Temple Vault。 / You can use a Silver Blade Rotan to destroy the rock door leading to the Temple Vault
+	 * 你可以使用银刃罗坦摧毁通往神殿金库的石门。 / You can use a Silver Blade Rotan to destroy the rock door leading to the Temple Vault
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_DOOR = new SM_SYSTEM_MESSAGE(1400654);
 
 	/**
-	 * 你：have acquired the 'Cool Water' effect from the garden fountain。 / You have acquired the 'Cool Water' effect from the garden fountain
+	 * 你从庭园喷泉获得了“清凉之水”效果。 / You have acquired the 'Cool Water' effect from the garden fountain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_BUFF_01 = new SM_SYSTEM_MESSAGE(1400655);
 
 	/**
-	 * 你：have acquired the 'Sweet Fruit' effect from the fruit basket。 / You have acquired the 'Sweet Fruit' effect from the fruit basket
+	 * 你从水果篮获得了“甜果”效果。 / You have acquired the 'Sweet Fruit' effect from the fruit basket
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_BUFF_02 = new SM_SYSTEM_MESSAGE(1400656);
 
 	/**
-	 * 你：have acquired the 'Tasty Meat' effect from the Porgus Barbecue。 / You have acquired the 'Tasty Meat' effect from the Porgus Barbecue
+	 * 你从波尔古斯烤肉获得了“美味烤肉”效果。 / You have acquired the 'Tasty Meat' effect from the Porgus Barbecue
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_BUFF_03 = new SM_SYSTEM_MESSAGE(1400657);
 
 	/**
-	 * 你：have acquired the 'Prophet's Blessing' effect from the Prophet's Tower。 / You have acquired the 'Prophet's Blessing' effect from the Prophet's Tower
+	 * 你从预言者之塔获得了“预言者祝福”效果。 / You have acquired the 'Prophet's Blessing' effect from the Prophet's Tower
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_BUFF_04 = new SM_SYSTEM_MESSAGE(1400658);
 
 	/**
-	 * 你：sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry。 / You sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry
+	 * 你察觉到塔洛克之根中的动静，若不抓紧将无法与他会面。 / You sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDELIM_HYAS_SPAWN_INFO = new SM_SYSTEM_MESSAGE(1400659);
 
@@ -20532,7 +20532,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDELIM_GAS_INFO = new SM_SYSTEM_MESSAGE(1400660);
 
 	/**
-	 * @param worldname0 你：must leave your group or alliance to enter %WORLDNAME0。 / You must leave your group or alliance to enter %WORLDNAME0
+	 * 必须离开你的队伍或联盟才能进入 %WORLDNAME0。 / You must leave your group or alliance to enter %WORLDNAME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_DUNGEON_NEED_SOLO(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1403080, worldname0);
@@ -20544,67 +20544,67 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_30M = new SM_SYSTEM_MESSAGE(1400661);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 25 minutes。 / You will be removed from Sematariux's Hideout in 25 minutes
+	 * 你将在 25 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 25 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_25M = new SM_SYSTEM_MESSAGE(1400662);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 20 minutes。 / You will be removed from Sematariux's Hideout in 20 minutes
+	 * 你将在 20 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 20 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_20M = new SM_SYSTEM_MESSAGE(1400663);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 15 minutes。 / You will be removed from Sematariux's Hideout in 15 minutes
+	 * 你将在 15 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 15 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_15M = new SM_SYSTEM_MESSAGE(1400664);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 10 minutes。 / You will be removed from Sematariux's Hideout in 10 minutes
+	 * 你将在 10 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 10 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_10M = new SM_SYSTEM_MESSAGE(1400665);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 5 minutes。 / You will be removed from Sematariux's Hideout in 5 minutes
+	 * 你将在 5 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 5 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_5M = new SM_SYSTEM_MESSAGE(1400666);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 4 minutes。 / You will be removed from Sematariux's Hideout in 4 minutes
+	 * 你将在 4 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 4 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_4M = new SM_SYSTEM_MESSAGE(1400667);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 3 minutes。 / You will be removed from Sematariux's Hideout in 3 minutes
+	 * 你将在 3 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 3 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_3M = new SM_SYSTEM_MESSAGE(1400668);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 2 minutes。 / You will be removed from Sematariux's Hideout in 2 minutes
+	 * 你将在 2 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 2 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_2M = new SM_SYSTEM_MESSAGE(1400669);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 1 minute。 / You will be removed from Sematariux's Hideout in 1 minute
+	 * 你将在 1 分钟后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 1 minute
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_1M = new SM_SYSTEM_MESSAGE(1400670);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 30 seconds。 / You will be removed from Sematariux's Hideout in 30 seconds
+	 * 你将在 30 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 30 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_30S = new SM_SYSTEM_MESSAGE(1400671);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 15 seconds。 / You will be removed from Sematariux's Hideout in 15 seconds
+	 * 你将在 15 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 15 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_15S = new SM_SYSTEM_MESSAGE(1400672);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 10 seconds。 / You will be removed from Sematariux's Hideout in 10 seconds
+	 * 你将在 10 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 10 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_10S = new SM_SYSTEM_MESSAGE(1400673);
 
 	/**
-	 * 你：will be removed from Sematariux's Hideout in 5 seconds。 / You will be removed from Sematariux's Hideout in 5 seconds
+	 * 你将在 5 秒后被移出塞玛塔里克斯藏身处。 / You will be removed from Sematariux's Hideout in 5 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF4_DRAMATA_KILLED_OUT_TIMER_5S = new SM_SYSTEM_MESSAGE(1400674);
 
@@ -20614,67 +20614,67 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_30M = new SM_SYSTEM_MESSAGE(1400675);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 25 minutes。 / You will be removed from Padmarashka's Cave in 25 minutes
+	 * 你将在 25 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 25 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_25M = new SM_SYSTEM_MESSAGE(1400676);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 20 minutes。 / You will be removed from Padmarashka's Cave in 20 minutes
+	 * 你将在 20 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 20 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_20M = new SM_SYSTEM_MESSAGE(1400677);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 15 minutes。 / You will be removed from Padmarashka's Cave in 15 minutes
+	 * 你将在 15 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 15 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_15M = new SM_SYSTEM_MESSAGE(1400678);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 10 minutes。 / You will be removed from Padmarashka's Cave in 10 minutes
+	 * 你将在 10 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 10 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_10M = new SM_SYSTEM_MESSAGE(1400679);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 5 minutes。 / You will be removed from Padmarashka's Cave in 5 minutes
+	 * 你将在 5 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 5 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_5M = new SM_SYSTEM_MESSAGE(1400680);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 4 minutes。 / You will be removed from Padmarashka's Cave in 4 minutes
+	 * 你将在 4 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 4 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_4M = new SM_SYSTEM_MESSAGE(1400681);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 3 minutes。 / You will be removed from Padmarashka's Cave in 3 minutes
+	 * 你将在 3 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 3 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_3M = new SM_SYSTEM_MESSAGE(1400682);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 2 minutes。 / You will be removed from Padmarashka's Cave in 2 minutes
+	 * 你将在 2 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 2 minutes
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_2M = new SM_SYSTEM_MESSAGE(1400683);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 1 minute。 / You will be removed from Padmarashka's Cave in 1 minute
+	 * 你将在 1 分钟后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 1 minute
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_1M = new SM_SYSTEM_MESSAGE(1400684);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 30 seconds。 / You will be removed from Padmarashka's Cave in 30 seconds
+	 * 你将在 30 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 30 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_30S = new SM_SYSTEM_MESSAGE(1400685);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 15 seconds。 / You will be removed from Padmarashka's Cave in 15 seconds
+	 * 你将在 15 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 15 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_15S = new SM_SYSTEM_MESSAGE(1400686);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 10 seconds。 / You will be removed from Padmarashka's Cave in 10 seconds
+	 * 你将在 10 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 10 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_10S = new SM_SYSTEM_MESSAGE(1400687);
 
 	/**
-	 * 你：will be removed from Padmarashka's Cave in 5 seconds。 / You will be removed from Padmarashka's Cave in 5 seconds
+	 * 你将在 5 秒后被移出帕德玛拉夏卡洞穴。 / You will be removed from Padmarashka's Cave in 5 seconds
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_5S = new SM_SYSTEM_MESSAGE(1400688);
 
@@ -20694,7 +20694,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_Artifact_Die_03 = new SM_SYSTEM_MESSAGE(1400691);
 
 	/**
-	 * 你：may change a pet's name once every %DURATIONTIME1 (Time remaining: %DURATIONTIME0)。 / You may change a pet's name once every %DURATIONTIME1 (Time remaining: %DURATIONTIME0)
+	 * 宠物改名每 %DURATIONTIME1 可进行一次（剩余时间：%DURATIONTIME0）。 / You may change a pet's name once every %DURATIONTIME1 (Time remaining: %DURATIONTIME0)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_NAME_CHANGE_DELAY(String durationtime1, String durationtime0) {
 		return new SM_SYSTEM_MESSAGE(1400692, durationtime1, durationtime0);
@@ -20707,12 +20707,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_NAME_CHANGED = new SM_SYSTEM_MESSAGE(1400693);
 
 	/**
-	 * You 已经有 pet 的相同名称 .Pleasechooseanother 名称。 / You already have a pet of the same name. Please choose another name
+	 * 你已经拥有同名宠物，请另选一个名字。 / You already have a pet of the same name. Please choose another name
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_EXISTING_NAME = new SM_SYSTEM_MESSAGE(1400694);
 
 	/**
-	 * 你：cannot feed it right now。 / You cannot feed it right now
+	 * 现在无法喂食。 / You cannot feed it right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_FEED_CANT_NOW = new SM_SYSTEM_MESSAGE(1400695);
 
@@ -20724,31 +20724,31 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：received %0: %1。 / You received %0: %1
+	 * 你收到了 %0：%1。 / You received %0: %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_PET_TAME_COMPLETE(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400697, value0, value1);
 	}
 
 	/**
-	 * @param value0 你：cannot feed your pet %0。 / You cannot feed your pet %0
+	 * 你无法给宠物喂食 %0。 / You cannot feed your pet %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSGBOX_TOYPET_FEED_CANT_FEED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400698, value0);
 	}
 
 	/**
-	 * 距离过远：your pet to feed it。 / You are too far from your pet to feed it
+	 * 你离宠物过远，无法喂食。 / You are too far from your pet to feed it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSGBOX_TOYPET_FEED_CANT_FEED_TOO_FAR = new SM_SYSTEM_MESSAGE(1400699);
 
 	/**
-	 * 你：cannot feed your pet while moving。 / You cannot feed your pet while moving
+	 * 移动中无法给宠物喂食。 / You cannot feed your pet while moving
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSGBOX_TOYPET_FEED_CANT_FEED_WHEN_MOVING = new SM_SYSTEM_MESSAGE(1400700);
 
 	/**
-	 * You 有 obtainedobject 带 greatpower. 用于 quickaccess , drag 物品从 yourCube 到 yourQuickbar。 / You have obtained an object with great power. For quick access, drag the item from your Cube to your Quickbar
+	 * 你获得了蕴含强大力量的物品。为便于快速使用，请将该物品从背包拖到快捷栏。 / You have obtained an object with great power. For quick access, drag the item from your Cube to your Quickbar
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCROMEDE_SKILL_01 = new SM_SYSTEM_MESSAGE(1400701);
 
@@ -20760,22 +20760,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有 obtained 新物品从 selected 目标。 / You have obtained a new item from the selected target
+	 * 你从所选目标获得了新物品。 / You have obtained a new item from the selected target
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GET_QUEST_ITEM = new SM_SYSTEM_MESSAGE(1400703);
 
 	/**
-	 * 你：must destroy the enemies of Taloc. It allows you to acquire objects with great power。 / You must destroy the enemies of Taloc. It allows you to acquire objects with great power
+	 * 你必须消灭塔洛克的敌人，这样才能获得蕴含强大力量的物品。 / You must destroy the enemies of Taloc. It allows you to acquire objects with great power
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NOTICE_LOOT_SKILL_ITEM = new SM_SYSTEM_MESSAGE(1400704);
 
 	/**
-	 * 你：cannot kick yourself out of the channel。 / You cannot kick yourself out of the channel
+	 * 你无法将自己踢出频道。 / You cannot kick yourself out of the channel
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_BAN_SELF = new SM_SYSTEM_MESSAGE(1400705);
 
 	/**
-	 * 你：cannot kick yourself out of the channel。 / You cannot kick yourself out of the channel
+	 * 你无法将自己踢出频道。 / You cannot kick yourself out of the channel
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_BAN_SELF = new SM_SYSTEM_MESSAGE(1400706);
 
@@ -20790,7 +20790,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_CHANGE_LEADER_SELF = new SM_SYSTEM_MESSAGE(1400708);
 
 	/**
-	 * You 无法 use 其 becauseversion 的 yourpackage 为 toolow。 / You cannot use it because the version of your package is too low
+	 * 你的客户端版本过低，无法使用该功能。 / You cannot use it because the version of your package is too low
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_NO_RIGHT_PACKAGE_VERSION = new SM_SYSTEM_MESSAGE(1400709);
 
@@ -20808,7 +20808,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber
+	 * 你必须在时限内击败守护者，才能唤醒沉睡中的帕德玛拉夏卡。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_GUARDIAN_START = new SM_SYSTEM_MESSAGE(1400711);
 
@@ -20823,14 +20823,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDNOVICE_HAMEROON_TREASUREBOX_SPAWN = new SM_SYSTEM_MESSAGE(1400713);
 
 	/**
-	 * @param value0 你：have failed to reclaim %0。 / You have failed to reclaim %0
+	 * 你取回 %0 失败。 / You have failed to reclaim %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_RETURN_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400714, value0);
 	}
 
 	/**
-	 * 你：have failed to reclaim %num1 %0s。 / You have failed to reclaim %num1 %0s
+	 * 你取回 %num1 个 %0 失败。 / You have failed to reclaim %num1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_RETURN_ITEM_MULTI(int num1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1400715, num1, value0s);
@@ -20844,22 +20844,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 无法 find 物品到 combine。 / Cannot find the item to combine
+	 * 无法找到要组合的物品。 / Cannot find the item to combine
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMPOUND_ITEM_NO_TARGET_ITEM = new SM_SYSTEM_MESSAGE(1400717);
 
 	/**
-	 * 无法 find 物品到移除 combination 从。 / Cannot find the item to remove the combination from
+	 * 无法找到要解除组合的物品。 / Cannot find the item to remove the combination from
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_DECOMPOUND_ITEM_NO_TARGET_ITEM = new SM_SYSTEM_MESSAGE(1400718);
 
 	/**
-	 * 你：cannot expel the alliance captain。 / You cannot expel the alliance captain
+	 * 你无法逐出联盟队长。 / You cannot expel the alliance captain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_BANISH_LEADER = new SM_SYSTEM_MESSAGE(1400719);
 
 	/**
-	 * 你：cannot appoint yourself as an alliance vice captain。 / You cannot appoint yourself as an alliance vice captain
+	 * 你无法将自己任命为联盟副队长。 / You cannot appoint yourself as an alliance vice captain
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_PROMOTE_MANAGER_SELF = new SM_SYSTEM_MESSAGE(1400720);
 
@@ -20869,12 +20869,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_PROMOTE_MANAGER_AGAIN = new SM_SYSTEM_MESSAGE(1400721);
 
 	/**
-	 * You 无法 demoteyourself 到 alliance 成员。 / You cannot demote yourself to an alliance member
+	 * 你无法将自己降为联盟成员。 / You cannot demote yourself to an alliance member
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_DEMOTE_MANAGER_SELF = new SM_SYSTEM_MESSAGE(1400722);
 
 	/**
-	 * 你：cannot demote an alliance member。 / You cannot demote an alliance member
+	 * 无法将联盟成员降级。 / You cannot demote an alliance member
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_CANT_DEMOTE_MANAGER_AGAIN = new SM_SYSTEM_MESSAGE(1400723);
 
@@ -20924,38 +20924,38 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_NmdDH_Wakeup = new SM_SYSTEM_MESSAGE(1400732);
 
 	/**
-	 * @param value0 你：cannot summon a pet in %0。 / You cannot summon a pet in %0
+	 * 无法在 %0 中召唤宠物。 / You cannot summon a pet in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_SUMMON_STATE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400733, value0);
 	}
 
 	/**
-	 * 你in an altered state and cannot summon a pet。 / You are in an altered state and cannot summon a pet
+	 * 你处于异常状态，无法召唤宠物。 / You are in an altered state and cannot summon a pet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_SUMMON_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(1400734);
 
 	/**
-	 * @param value0 你：cannot dismiss a pet in %0。 / You cannot dismiss a pet in %0
+	 * 无法在 %0 中收回宠物。 / You cannot dismiss a pet in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_UNSUMMON_STATE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400735, value0);
 	}
 
 	/**
-	 * 你in an altered state and cannot dismiss a pet。 / You are in an altered state and cannot dismiss a pet
+	 * 你处于异常状态，无法收回宠物。 / You are in an altered state and cannot dismiss a pet
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_UNSUMMON_ABNORMAL_STATE = new SM_SYSTEM_MESSAGE(1400736);
 
 	/**
-	 * @param value0 你：must be at least level %0 to perform extraction。 / You must be at least level %0 to perform extraction
+	 * 进行提取至少需要达到 %0 级。 / You must be at least level %0 to perform extraction
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_GATHERING_B_LEVEL_CHECK(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400737, value0);
 	}
 
 	/**
-	 * 物品 couldn ' t 为 registereddue 到 change 在 fees。 / Item couldn't be registered due to a change in the fees
+	 * 因费用发生变动，物品登记失败。 / Item couldn't be registered due to a change in the fees
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_CAN_NOT_REGISTER_ITEM_FEE_CHANGED = new SM_SYSTEM_MESSAGE(1400738);
 
@@ -20971,12 +20971,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON_DF = new SM_SYSTEM_MESSAGE(1400740);
 
 	/**
-	 * 你：may use the Sphere of Destiny again。 / You may use the Sphere of Destiny again
+	 * 你可以再次使用命运之球了。 / You may use the Sphere of Destiny again
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT_DF = new SM_SYSTEM_MESSAGE(1400741);
 
 	/**
-	 * 你：need more people to activate the Sphere of Destiny。 / You need more people to activate the Sphere of Destiny
+	 * 需要更多人来激活命运之球。 / You need more people to activate the Sphere of Destiny
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GODELITE_BUFF_CANT_USE_OBJECT_NOT_ENOUGH_MEMBER_DF = new SM_SYSTEM_MESSAGE(
 			1400742);
@@ -20987,13 +20987,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_GET_COMBINE_EXP_GRAND_MASTER = new SM_SYSTEM_MESSAGE(1400743);
 
 	/**
-	 * 你：cannot modify equipped items。 / You cannot modify equipped items
+	 * 无法改造已装备的物品。 / You cannot modify equipped items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CHANGE_ITEM_SKIN_CANT_CHANGE_EQUIPED_ITEM_SKIN = new SM_SYSTEM_MESSAGE(
 			1400744);
 
 	/**
-	 * You 无法 preview 物品 you 无法 equip。 / You cannot preview an item that you cannot equip
+	 * 无法预览无法装备的物品。 / You cannot preview an item that you cannot equip
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CHANGE_ITEM_SKIN_PREVIEW_INVALID_COSMETIC = new SM_SYSTEM_MESSAGE(
 			1400745);
@@ -21014,12 +21014,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Underpass_Nephilim_Raid_Recall = new SM_SYSTEM_MESSAGE(1400748);
 
 	/**
-	 * 你：do not have the authority to make this decision。 / You do not have the authority to make this decision
+	 * 你没有做出该决定的权限。 / You do not have the authority to make this decision
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PARTY_FORCE_NO_RIGHT_TO_DECIDE = new SM_SYSTEM_MESSAGE(1400749);
 
 	/**
-	 * You 无法 buy 物品 you 有 registeredyourself。 / You cannot buy an item you have registered yourself
+	 * 无法购买自己登记的物品。 / You cannot buy an item you have registered yourself
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_VENDOR_CAN_NOT_BUY_MY_REGISTER_ITEM = new SM_SYSTEM_MESSAGE(1400750);
 
@@ -21054,22 +21054,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_RAGOS_INFO = new SM_SYSTEM_MESSAGE(1400756);
 
 	/**
-	 * 你：must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear
+	 * 必须击败阿芙拉内、萨拉斯瓦蒂、拉克什米与宁巴尔卡，才能让巴卡尔玛指挥官现身。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOSS_SPAWN_IDDF3_DRAGON_1 = new SM_SYSTEM_MESSAGE(1400757);
 
 	/**
-	 * 你：must kill 3 more Adjutants to make Commander Bakarma appear。 / You must kill 3 more Adjutants to make Commander Bakarma appear
+	 * 还需击败 3 名副官才能让巴卡尔玛指挥官现身。 / You must kill 3 more Adjutants to make Commander Bakarma appear
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOSS_SPAWN_IDDF3_DRAGON_2 = new SM_SYSTEM_MESSAGE(1400758);
 
 	/**
-	 * 你：must kill 2 more Adjutants to make Commander Bakarma appear。 / You must kill 2 more Adjutants to make Commander Bakarma appear
+	 * 还需击败 2 名副官才能让巴卡尔玛指挥官现身。 / You must kill 2 more Adjutants to make Commander Bakarma appear
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOSS_SPAWN_IDDF3_DRAGON_3 = new SM_SYSTEM_MESSAGE(1400759);
 
 	/**
-	 * 你：must kill 1 more Adjutant to make Commander Bakarma appear。 / You must kill 1 more Adjutant to make Commander Bakarma appear
+	 * 还需击败 1 名副官才能让巴卡尔玛指挥官现身。 / You must kill 1 more Adjutant to make Commander Bakarma appear
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_BOSS_SPAWN_IDDF3_DRAGON_4 = new SM_SYSTEM_MESSAGE(1400760);
 
@@ -21094,7 +21094,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你no longer a Mentor。 / You are no longer a Mentor
+	 * 你不再是导师了。 / You are no longer a Mentor
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MENTOR_END = new SM_SYSTEM_MESSAGE(1400764);
 
@@ -21106,14 +21106,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param worldname0 你：cannot enter %WORLDNAME0 with a Mentor in your group。 / You cannot enter %WORLDNAME0 with a Mentor in your group
+	 * 队伍中有导师时无法进入 %WORLDNAME0。 / You cannot enter %WORLDNAME0 with a Mentor in your group
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_MENTOR_CANT_ENTER(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400766, worldname0);
 	}
 
 	/**
-	 * @param worldname0 你：were forced to leave %WORLDNAME0 because you stopped Mentoring。 / You were forced to leave %WORLDNAME0 because you stopped Mentoring
+	 * 因你停止了导师指导，你被强制移出 %WORLDNAME0。 / You were forced to leave %WORLDNAME0 because you stopped Mentoring
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_MENTOR_END_BANISH(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400767, worldname0);
@@ -21128,42 +21128,42 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param worldname0 你：cannot become a Mentor in %WORLDNAME0。 / You cannot become a Mentor in %WORLDNAME0
+	 * 无法在 %WORLDNAME0 中成为导师。 / You cannot become a Mentor in %WORLDNAME0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_BE_MENTOR(String worldname0) {
 		return new SM_SYSTEM_MESSAGE(1400769, worldname0);
 	}
 
 	/**
-	 * @param value0 你：have left %0 because of the level limit。 / You have left %0 because of the level limit
+	 * 因等级限制，你已离开 %0。 / You have left %0 because of the level limit
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FACTION_LEAVE_BY_LEVEL_LIMIT(int value0) {
 		return new SM_SYSTEM_MESSAGE(1400770, new DescriptionId(value0));
 	}
 
 	/**
-	 * @param value0 None 的 yourgroup 成员 meetlevelrequirement 用于 %0。 / None of your group members meet the level requirement for %0
+	 * 队伍中没有成员满足 %0 的等级要求。 / None of your group members meet the level requirement for %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DONT_KILL_COUNT_BY_WRONG_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400771, value0);
 	}
 
 	/**
-	 * @param value0 None 的 yourgroup 成员 meetlevelrequirement 用于 %0。 / None of your group members meet the level requirement for %0
+	 * 队伍中没有成员满足 %0 的等级要求。 / None of your group members meet the level requirement for %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DONT_DROP_ITEM_BY_WRONG_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400772, value0);
 	}
 
 	/**
-	 * @param value1 你：cannot use %1 while Mentoring。 / You cannot use %1 while Mentoring
+	 * 导师指导期间无法使用 %1。 / You cannot use %1 while Mentoring
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DONT_USE_ITEM_BY_NOT_MENTOR(String value1) {
 		return new SM_SYSTEM_MESSAGE(1400773, value1);
 	}
 
 	/**
-	 * @param value1 你：cannot use %1 while Mentoring。 / You cannot use %1 while Mentoring
+	 * 导师指导期间无法使用 %1。 / You cannot use %1 while Mentoring
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DONT_USE_ITEM_BY_NOT_MENTEE(String value1) {
 		return new SM_SYSTEM_MESSAGE(1400774, value1);
@@ -21175,7 +21175,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_01 = new SM_SYSTEM_MESSAGE(1400775);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels10 - 19。 / You cannot open it because there are no users of levels 10 - 19
+	 * 没有 10-19 级的用户，无法开启。 / You cannot open it because there are no users of levels 10 - 19
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_02 = new SM_SYSTEM_MESSAGE(1400776);
 
@@ -21200,7 +21200,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_06 = new SM_SYSTEM_MESSAGE(1400780);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels20 - 29。 / You cannot open it because there are no users of levels 20 - 29
+	 * 没有 20-29 级的用户，无法开启。 / You cannot open it because there are no users of levels 20 - 29
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_07 = new SM_SYSTEM_MESSAGE(1400781);
 
@@ -21215,7 +21215,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_09 = new SM_SYSTEM_MESSAGE(1400783);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels30 - 39。 / You cannot open it because there are no users of levels 30 - 39
+	 * 没有 30-39 级的用户，无法开启。 / You cannot open it because there are no users of levels 30 - 39
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Li_10 = new SM_SYSTEM_MESSAGE(1400784);
 
@@ -21230,7 +21230,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_01 = new SM_SYSTEM_MESSAGE(1400786);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels10 - 19。 / You cannot open it because there are no users of levels 10 - 19
+	 * 没有 10-19 级的用户，无法开启。 / You cannot open it because there are no users of levels 10 - 19
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_02 = new SM_SYSTEM_MESSAGE(1400787);
 
@@ -21255,7 +21255,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_06 = new SM_SYSTEM_MESSAGE(1400791);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels20 - 29。 / You cannot open it because there are no users of levels 20 - 29
+	 * 没有 20-29 级的用户，无法开启。 / You cannot open it because there are no users of levels 20 - 29
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_07 = new SM_SYSTEM_MESSAGE(1400792);
 
@@ -21270,7 +21270,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_09 = new SM_SYSTEM_MESSAGE(1400794);
 
 	/**
-	 * You 无法 open 其 becausethere 为 nousers 的 levels30 - 39。 / You cannot open it because there are no users of levels 30 - 39
+	 * 没有 30-39 级的用户，无法开启。 / You cannot open it because there are no users of levels 30 - 39
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_10 = new SM_SYSTEM_MESSAGE(1400795);
 
@@ -21327,14 +21327,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 You 可有仅 %0 物品 pendingunsealing 在 time。 / You can have only %0 items pending unsealing at a time
+	 * 同一时间最多只能有 %0 件物品等待解除封印。 / You can have only %0 items pending unsealing at a time
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_STATUS_UNSEALMAX(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400805, value0);
 	}
 
 	/**
-	 * @param nameId %0 已进入解除封印等待，需 7 天。 / %0 is now pending unsealing. This will take 7 days
+	 * %0 已进入解除封印等待，这需要 7 天。 / %0 is now pending unsealing. This will take 7 days
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_STATUS_UNSEALWAIT_START(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400806, new DescriptionId(nameId));
@@ -21348,111 +21348,111 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId %0 已解除封印。 / %0 is unsealed
+	 * %0 已解除封印。 / %0 is unsealed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_STATUS_UNSEALDONE(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400808, new DescriptionId(nameId));
 	}
 
 	/**
-	 * You 无法 trade , enhance , destroy , sell , extract ,或 soulbindsealed 物品,并其 takes%0days 到 unsealthemcompletely。 / You cannot trade, enhance, destroy, sell, extract, or soulbind sealed items, and it takes %0 days to unseal them completely
+	 * 封印中的物品无法交易、强化、销毁、出售、提取或灵魂刻印，完全解除封印需要 %0 天。 / You cannot trade, enhance, destroy, sell, extract, or soulbind sealed items, and it takes %0 days to unseal them completely
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_START(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400809, value0);
 	}
 
 	/**
-	 * You 无法 seal 物品为已经 sealed。 / You cannot seal an item that is already sealed
+	 * 无法封印已处于封印状态的物品。 / You cannot seal an item that is already sealed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_RESEAL = new SM_SYSTEM_MESSAGE(1400810);
 
 	/**
-	 * 你：cannot trade sealed items。 / You cannot trade sealed items
+	 * 无法交易封印中的物品。 / You cannot trade sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_TRADE = new SM_SYSTEM_MESSAGE(1400811);
 
 	/**
-	 * You 无法 sellsealed 物品在 private 商店。 / You cannot sell sealed items in a private store
+	 * 无法在个人商店出售封印中的物品。 / You cannot sell sealed items in a private store
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_SHOP = new SM_SYSTEM_MESSAGE(1400812);
 
 	/**
-	 * You 无法 sellsealed 物品在 Broker。 / You cannot sell sealed items at the Broker
+	 * 无法在拍卖行出售封印中的物品。 / You cannot sell sealed items at the Broker
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_AUCTION = new SM_SYSTEM_MESSAGE(1400813);
 
 	/**
-	 * 你：cannot mail sealed items。 / You cannot mail sealed items
+	 * 无法邮寄封印中的物品。 / You cannot mail sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_MAIL = new SM_SYSTEM_MESSAGE(1400814);
 
 	/**
-	 * 你：cannot store sealed items in the account warehouse。 / You cannot store sealed items in the account warehouse
+	 * 无法将封印中的物品存入账号仓库。 / You cannot store sealed items in the account warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_ACCOUNT = new SM_SYSTEM_MESSAGE(1400815);
 
 	/**
-	 * 你：cannot store sealed items in the legion warehouse。 / You cannot store sealed items in the legion warehouse
+	 * 无法将封印中的物品存入军团仓库。 / You cannot store sealed items in the legion warehouse
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_GUILD = new SM_SYSTEM_MESSAGE(1400816);
 
 	/**
-	 * You 无法 enhancesealed 物品带 enchantmentstones。 / You cannot enhance sealed items with enchantment stones
+	 * 无法使用强化石强化封印中的物品。 / You cannot enhance sealed items with enchantment stones
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_UP = new SM_SYSTEM_MESSAGE(1400817);
 
 	/**
-	 * You 无法 enhancesealed 物品带 manastones。 / You cannot enhance sealed items with manastones
+	 * 无法使用魔石强化封印中的物品。 / You cannot enhance sealed items with manastones
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_UP_MSTONE = new SM_SYSTEM_MESSAGE(1400818);
 
 	/**
-	 * You 无法 enhancesealed 物品带 godstones。 / You cannot enhance sealed items with godstones
+	 * 无法使用神石强化封印中的物品。 / You cannot enhance sealed items with godstones
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_UP_GSTONE = new SM_SYSTEM_MESSAGE(1400819);
 
 	/**
-	 * You 无法 modifyappearance 的 sealed 物品。 / You cannot modify the appearance of sealed items
+	 * 无法改造封印中物品的外观。 / You cannot modify the appearance of sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_LOOKCHANGE = new SM_SYSTEM_MESSAGE(1400820);
 
 	/**
-	 * 你：cannot combine sealed items。 / You cannot combine sealed items
+	 * 无法组合封印中的物品。 / You cannot combine sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_MERGE = new SM_SYSTEM_MESSAGE(1400821);
 
 	/**
-	 * 你：cannot destroy sealed items。 / You cannot destroy sealed items
+	 * 无法销毁封印中的物品。 / You cannot destroy sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_DESTROY = new SM_SYSTEM_MESSAGE(1400822);
 
 	/**
-	 * 你：cannot sell sealed items。 / You cannot sell sealed items
+	 * 无法出售封印中的物品。 / You cannot sell sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_SELL = new SM_SYSTEM_MESSAGE(1400823);
 
 	/**
-	 * 你：cannot extract sealed items。 / You cannot extract sealed items
+	 * 无法从封印中的物品提取。 / You cannot extract sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_EXTRACT = new SM_SYSTEM_MESSAGE(1400824);
 
 	/**
-	 * You 无法移除 manastones 从 sealed 物品。 / You cannot remove manastones from sealed items
+	 * 无法移除封印中物品所镶嵌的魔石。 / You cannot remove manastones from sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_REMOVE = new SM_SYSTEM_MESSAGE(1400825);
 
 	/**
-	 * 你：must unseal your items to complete that quest。 / You must unseal your items to complete that quest
+	 * 必须解除物品封印才能完成该任务。 / You must unseal your items to complete that quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_QUESTFINISH = new SM_SYSTEM_MESSAGE(1400826);
 
 	/**
-	 * 你：cannot stack sealed items。 / You cannot stack sealed items
+	 * 封印中的物品无法堆叠。 / You cannot stack sealed items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_OVERLAP = new SM_SYSTEM_MESSAGE(1400827);
 
 	/**
-	 * @param nameId You 无法 use%0whileyou 为 waiting 用于 morethan3 物品到为 unsealed。 / You cannot use %0 while you are waiting for more than 3 items to be unsealed
+	 * 等待解除封印的物品超过 3 件时无法使用 %0。 / You cannot use %0 while you are waiting for more than 3 items to be unsealed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_MAXWAIT(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400828, new DescriptionId(nameId));
@@ -21466,7 +21466,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId You 无法 use%0 在物品为 pendingunsealing。 / You cannot use %0 on an item that is pending unsealing
+	 * 无法对正在解除封印的物品使用 %0。 / You cannot use %0 on an item that is pending unsealing
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_ALREADYUNSEAL(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400830, new DescriptionId(nameId));
@@ -21499,7 +21499,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_SCROLLDESTROY = new SM_SYSTEM_MESSAGE(1400834);
 
 	/**
-	 * 你：cannot use sealed consumable items。 / You cannot use sealed consumable items
+	 * 无法使用封印中的消耗品。 / You cannot use sealed consumable items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_CANTUSE = new SM_SYSTEM_MESSAGE(1400835);
 
@@ -21516,7 +21516,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_SELECT_LEADER_LOOTING_BY_MENTOR = new SM_SYSTEM_MESSAGE(1400837);
 
 	/**
-	 * You 无法为 Mentorbecause 全部 otherGroup 成员为 Mentors。 / You cannot be a Mentor because all the other Group Members are Mentors
+	 * 队伍中其他成员均为导师，你无法成为导师。 / You cannot be a Mentor because all the other Group Members are Mentors
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_BE_MENTOR_BY_LAST_MENTEE = new SM_SYSTEM_MESSAGE(1400838);
 
@@ -21526,12 +21526,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LEADER_LOOTING_IS_UNAVAILABLE = new SM_SYSTEM_MESSAGE(1400839);
 
 	/**
-	 * You 有 stoppedMentoringbecauselowestlevelgroup 成员 must 为在 least10levelslowerthanyou。 / You have stopped Mentoring because the lowest level group member must be at least 10 levels lower than you
+	 * 因队伍中最低等级的成员必须比你低至少 10 级，导师指导已停止。 / You have stopped Mentoring because the lowest level group member must be at least 10 levels lower than you
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_BE_MENTOR_BY_LEVEL_LIMIT = new SM_SYSTEM_MESSAGE(1400840);
 
 	/**
-	 * 你：have stopped Mentoring because no group members need your help。 / You have stopped Mentoring because no group members need your help
+	 * 因没有需要你帮助的队员，导师指导已停止。 / You have stopped Mentoring because no group members need your help
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MENTOR_PARTY_END_BY_LEAVE_ALL_MENTEE = new SM_SYSTEM_MESSAGE(1400841);
 
@@ -21542,50 +21542,50 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MENTOR_PARTY_END_BY_CONVERT_BY_FORCE = new SM_SYSTEM_MESSAGE(1400842);
 
 	/**
-	 * You 无法 joingroup/alliancebecauseyourcharacter 名称为 invalid。 / You cannot join the group/alliance because your character name is invalid
+	 * 因角色名无效，无法加入队伍或联盟。 / You cannot join the group/alliance because your character name is invalid
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_JOIN_PARTY_FORCE_NOT_NORMAL_CHAR_NAME = new SM_SYSTEM_MESSAGE(
 			1400843);
 
 	/**
-	 * @param nameId 你：cannot seal %0。 / You cannot seal %0
+	 * 你无法封印 %0。 / You cannot seal %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_START_FAIL1(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400844, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param nameId 你：cannot seal %0 while it is equipped。 / You cannot seal %0 while it is equipped
+	 * %0 处于装备状态，无法封印。 / You cannot seal %0 while it is equipped
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_START_FAIL2(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400845, new DescriptionId(nameId));
 	}
 
 	/**
-	 * 你：cannot seal a quest item。 / You cannot seal a quest item
+	 * 无法封印任务物品。 / You cannot seal a quest item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_START_FAIL3 = new SM_SYSTEM_MESSAGE(1400846);
 
 	/**
-	 * @param nameId %0 无法解除组合。 / %0 cannot break the combination
+	 * %0 无法解除组合。 / %0 cannot break the combination
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_WARNING_DICOMPOSITION(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400847, new DescriptionId(nameId));
 	}
 
 	/**
-	 * You 可仅 Mentorgroup 成员在 least10levelsbelowyou。 / You can only Mentor a group member at least 10 levels below you
+	 * 只能指导等级比你低至少 10 级的队员。 / You can only Mentor a group member at least 10 levels below you
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MENTOR_CANT_START_WITHOUT_MENTOR_TARGET = new SM_SYSTEM_MESSAGE(
 			1400848);
 
 	/**
-	 * You 可仅为 Mentor 当 you ' re 在 group。 / You can only be a Mentor when you're in a group
+	 * 只有在队伍中才能成为导师。 / You can only be a Mentor when you're in a group
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MENTOR_CANT_START_WHEN_NOT_IN_PARTY = new SM_SYSTEM_MESSAGE(1400849);
 
 	/**
-	 * Youbelong 到 MentorGroup.Use[/RecruitMentor[yourtexthere]]command 到 post 消息到 <RecruitMentorGroup>。 / You belong to a Mentor Group. Use the [/Recruit Mentor [your text here]] command to post a message to <Recruit Mentor Group>
+	 * 你属于导师小队。使用 [/Recruit Mentor [your text here]] 指令可向 <Recruit Mentor Group> 频道发布消息。 / You belong to a Mentor Group. Use the [/Recruit Mentor [your text here]] command to post a message to <Recruit Mentor Group>
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_REGISTER_NORMAL_PARTY_IN_MENTOR_PARTY = new SM_SYSTEM_MESSAGE(
 			1400850);
@@ -21602,36 +21602,36 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1400852);
 
 	/**
-	 * You 无法 combine 物品为 temporarilytradable。 / You cannot combine items that are temporarily tradable
+	 * 无法组合暂时可交易的物品。 / You cannot combine items that are temporarily tradable
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_COMPOUND_ERROR_TEMPORARY_EXCHANGE_ITEM = new SM_SYSTEM_MESSAGE(1400853);
 
 	/**
-	 * 你：can receive the daily quest。 / You can receive the daily quest
+	 * 你可以接受每日任务。 / You can receive the daily quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_QUEST_LIMIT_RESET_DAILY = new SM_SYSTEM_MESSAGE(1400854);
 
 	/**
-	 * @param value0 你：can receive the daily quest again at %0 in the morning。 / You can receive the daily quest again at %0 in the morning
+	 * 你可以在早上 %0 时重新接受每日任务。 / You can receive the daily quest again at %0 in the morning
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_QUEST_LIMIT_START_DAILY(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400855, value0);
 	}
 
 	/**
-	 * 你：can receive the weekly quest。 / You can receive the weekly quest
+	 * 你可以接受每周任务。 / You can receive the weekly quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_QUEST_LIMIT_RESET_WEEK = new SM_SYSTEM_MESSAGE(1400856);
 
 	/**
-	 * 你：can receive the weekly quest again at %1 in the morning on %0。 / You can receive the weekly quest again at %1 in the morning on %0
+	 * 你可以在 %0 早上 %1 时重新接受每周任务。 / You can receive the weekly quest again at %1 in the morning on %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_QUEST_LIMIT_START_WEEK(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1400857, value1, value0);
 	}
 
 	/**
-	 * 你：cannot soul bind a sealed item。 / You cannot soul bind a sealed item
+	 * 无法对封印中的物品进行灵魂刻印。 / You cannot soul bind a sealed item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_CANT_SOUL_BIND = new SM_SYSTEM_MESSAGE(1400858);
 
@@ -21643,7 +21643,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cannot continue the quest with %0 equipped。 / You cannot continue the quest with %0 equipped
+	 * 装备着 %0 时无法继续该任务。 / You cannot continue the quest with %0 equipped
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_QUEST_ERROR_UNEQUIP_QUEST_ITEM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400860, value0);
@@ -21670,7 +21670,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Da_13 = new SM_SYSTEM_MESSAGE(1400864);
 
 	/**
-	 * @param value0 你：check how %0 feels。 / You check how %0 feels
+	 * 你检查了 %0 的状态。 / You check how %0 feels
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PET_CONDITION_CARE_01(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400865, value0);
@@ -21698,14 +21698,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：ask %0 to search the area。 / You ask %0 to search the area
+	 * 你请 %0 搜索该区域。 / You ask %0 to search the area
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_PET_CONDITION_SEARCH_01(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400869, value0);
 	}
 
 	/**
-	 * 你：cannot issue a command when your cube is full。 / You cannot issue a command when your cube is full
+	 * 背包已满时无法下达指令。 / You cannot issue a command when your cube is full
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PET_CONDITION_REWARD_FULL_INVEN = new SM_SYSTEM_MESSAGE(1400870);
 
@@ -21717,12 +21717,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot glide while you are transformed。 / You cannot glide while you are transformed
+	 * 变身状态下无法滑翔。 / You cannot glide while you are transformed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_GLIDE_CANNOT_GLIDE_POLYMORPH_STATUS = new SM_SYSTEM_MESSAGE(1400872);
 
 	/**
-	 * 你：cannot fly while you are transformed。 / You cannot fly while you are transformed
+	 * 变身状态下无法飞行。 / You cannot fly while you are transformed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FLY_CANNOT_FLY_POLYMORPH_STATUS = new SM_SYSTEM_MESSAGE(1400873);
 
@@ -21732,7 +21732,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DOPING_PET_CANNOT_USE = new SM_SYSTEM_MESSAGE(1400874);
 
 	/**
-	 * You 无法列表 unusable 物品。 / You cannot list an unusable item
+	 * 无法上架不可使用的物品。 / You cannot list an unusable item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DOPING_PET_MESSAGE02 = new SM_SYSTEM_MESSAGE(1400875);
 
@@ -21747,7 +21747,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LOOTING_PET_MESSAGE02 = new SM_SYSTEM_MESSAGE(1400877);
 
 	/**
-	 * You 无法 usePetLootfunction 当 group 为 usingFree -用于-全部 lootsetting。 / You cannot use the Pet Loot function when the group is using the Free-for-All loot setting
+	 * 队伍使用自由拾取战利品设置时无法使用宠物拾取功能。 / You cannot use the Pet Loot function when the group is using the Free-for-All loot setting
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LOOTING_PET_MESSAGE03 = new SM_SYSTEM_MESSAGE(1400878);
 
@@ -21804,7 +21804,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 你：cannot condition %0。 / You cannot condition %0
+	 * 你无法强化 %0。 / You cannot condition %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_FAIL_NOT_CHARGEABLE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400888, value0);
@@ -21834,7 +21834,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_ALL_COMPLETE = new SM_SYSTEM_MESSAGE(1400892);
 
 	/**
-	 * %0 有已 conditioned 到 level%1 ,并物品' sstats 有 changed。 / %0 has been conditioned to level %1, and the item's stats have changed
+	 * %0 已强化至 %1 级，物品属性已随之改变。 / %0 has been conditioned to level %1, and the item's stats have changed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_LEVEL_DOWN(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400893, value0, value1);
@@ -21869,7 +21869,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TIRED_REMAIN_PLAYTIME_CHINA_2 = new SM_SYSTEM_MESSAGE(1400898);
 
 	/**
-	 * 你：can't acquire any quest while fatigued. Please take a break until your fatigue level decreases, and then resume play。 / You can't acquire any quest while fatigued. Please take a break until your fatigue level decreases, and then resume play
+	 * 疲劳状态下无法接受任务，请休息至疲劳度降低后再继续游戏。 / You can't acquire any quest while fatigued. Please take a break until your fatigue level decreases, and then resume play
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CANT_ACQUIRE_QUEST_FATIGUE = new SM_SYSTEM_MESSAGE(1400899);
 
@@ -21879,7 +21879,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CANT_PROCEED_QUEST_FATIGUE = new SM_SYSTEM_MESSAGE(1400900);
 
 	/**
-	 * @param nameId %0 有已 sealed 按 GM.You 无法移除此 seal。 / %0 has been sealed by a GM. You cannot remove this seal
+	 * %0 已被 GM 封印，你无法解除该封印。 / %0 has been sealed by a GM. You cannot remove this seal
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_SEAL_STATUS_GMSEAL_UNSEAL_IMPOSSIBLE(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400901, new DescriptionId(nameId));
@@ -21894,38 +21894,38 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 有 become 军团成员。 / %0 has become a Legion Member
+	 * %0 已成为军团成员。 / %0 has become a Legion Member
 	 */
 	public static SM_SYSTEM_MESSAGE STR_GUILD_CHANGE_MEMBER_RANK_DONE_GUILD_NEWBIE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400903, value0);
 	}
 
 	/**
-	 * Youmay 为 unable 到 usecertainskills 或物品在此 area。 / You may be unable to use certain skills or items in this area
+	 * 在此区域可能无法使用某些技能或物品。 / You may be unable to use certain skills or items in this area
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ENTERED_SKILL_ITEM_RESTRICTED_AREA = new SM_SYSTEM_MESSAGE(1400904);
 
 	/**
-	 * 你：cannot use %1 in %0。 / You cannot use %1 in %0
+	 * 无法在 %0 中使用 %1。 / You cannot use %1 in %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_SKILL_ITEM_RESTRICTED_AREA(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1400905, value1, value0);
 	}
 
 	/**
-	 * 你：cannot use %1 until you reach level %0。 / You cannot use %1 until you reach level %0
+	 * 达到 %0 级后才能使用 %1。 / You cannot use %1 until you reach level %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_CANNOT_USE_ITEM_TOO_LOW_GUILD_LEVEL(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1400906, value1, value0);
 	}
 
 	/**
-	 * 你：have already learned this motion。 / You have already learned this motion
+	 * 你已经学会该动作。 / You have already learned this motion
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CUSTOMANIMATION_ALREADY_HAS_MOTION = new SM_SYSTEM_MESSAGE(1400907);
 
 	/**
-	 * @param value0 %0 有已 conditioned.You 无法 condition 其 further。 / %0 has been conditioned. You cannot condition it further
+	 * %0 已被强化，无法再进一步强化。 / %0 has been conditioned. You cannot condition it further
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_FAIL_ALREADY_FULLY_CHARGED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400908, value0);
@@ -21957,17 +21957,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDStation_HugenNM_04 = new SM_SYSTEM_MESSAGE(1400913);
 
 	/**
-	 * Youpet 为 sulky 并可' tfeelbetteruntilyouinteract 带其。 / You pet is sulky and can't feel better until you interact with it
+	 * 你的宠物在闹别扭，只有与它互动才能好转。 / You pet is sulky and can't feel better until you interact with it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_PET_CONDITION_CARE_END = new SM_SYSTEM_MESSAGE(1400914);
 
 	/**
-	 * 你：need the aid of a Mentor to open it。 / You need the aid of a Mentor to open it
+	 * 开启它需要导师的协助。 / You need the aid of a Mentor to open it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Ask_Mentor = new SM_SYSTEM_MESSAGE(1400915);
 
 	/**
-	 * Youneedaid 的 lowerlevelGroup 成员到 open 其。 / You need the aid of a lower level Group Member to open it
+	 * 开启它需要低等级队员的协助。 / You need the aid of a lower level Group Member to open it
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DailyQuest_Ask_Mentee = new SM_SYSTEM_MESSAGE(1400916);
 
@@ -22032,35 +22032,35 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDStation_Doping_02 = new SM_SYSTEM_MESSAGE(1400927);
 
 	/**
-	 * @param round 第 %0 轮开始！ / Round %0 begins!
+	 * 第 %0 轮开始！ / Round %0 begins!
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_START_ROUND_IDARENA(int round) {
 		return new SM_SYSTEM_MESSAGE(1400928, round);
 	}
 
 	/**
-	 * @param round 你：have eliminated all enemies in Round %0。 / You have eliminated all enemies in Round %0
+	 * 你已消灭第 %0 轮的所有敌人。 / You have eliminated all enemies in Round %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_COMPLETE_ROUND_IDARENA(int round) {
 		return new SM_SYSTEM_MESSAGE(1400929, round);
 	}
 
 	/**
-	 * @param stage 你：have passed Stage %0!。 / You have passed Stage %0!
+	 * 你通过了第 %0 阶段！ / You have passed Stage %0!
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_COMPLETE_STAGE_IDARENA(int stage) {
 		return new SM_SYSTEM_MESSAGE(1400930, stage);
 	}
 
 	/**
-	 * 你：join Stage %0 Round %1!。 / You join Stage %0 Round %1!
+	 * 你进入了第 %0 阶段第 %1 轮！ / You join Stage %0 Round %1!
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_JOIN_ROUND_IDARENA(int stage, int round) {
 		return new SM_SYSTEM_MESSAGE(1400931, stage, round);
 	}
 
 	/**
-	 * 你：failed the training and have been sent to the Ready Room。 / You failed the training and have been sent to the Ready Room
+	 * 你训练失败，已被送回准备室。 / You failed the training and have been sent to the Ready Room
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_MOVE_BIRTHAREA_ME_IDARENA = new SM_SYSTEM_MESSAGE(1400932);
 
@@ -22080,24 +22080,24 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot use that because the wind has weakened。 / You cannot use that because the wind has weakened
+	 * 因风力减弱，无法使用。 / You cannot use that because the wind has weakened
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WindPathOff = new SM_SYSTEM_MESSAGE(1400935);
 
 	/**
-	 * 你：cannot re-enter the Crucible until the cooldown time has expired。 / You cannot re-enter the Crucible until the cooldown time has expired
+	 * 冷却时间结束前无法重新进入熔炉。 / You cannot re-enter the Crucible until the cooldown time has expired
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANNOT_REENTER_INSTANCE_IDARENA = new SM_SYSTEM_MESSAGE(1400936);
 
 	/**
-	 * 你：have acquired %num1 %0s。 / You have acquired %num1 %0s
+	 * 你获得了 %num1 个 %0。 / You have acquired %num1 %0s
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_GET_COIN_MULTI_IDARENA(int num1, String value0s) {
 		return new SM_SYSTEM_MESSAGE(1400937, num1, value0s);
 	}
 
 	/**
-	 * 你：have %0 kinah left in your daily sell limit, and this transaction would exceed that。 / You have %0 kinah left in your daily sell limit, and this transaction would exceed that
+	 * 你今日的出售限额还剩 %0 基纳，本次交易将超出该限额。 / You have %0 kinah left in your daily sell limit, and this transaction would exceed that
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_SELL_NPC(long value0) {
 		return new SM_SYSTEM_MESSAGE(1400938, value0);
@@ -22123,7 +22123,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_PARTNER_SHOP = new SM_SYSTEM_MESSAGE(1400941);
 
 	/**
-	 * @param value0 You 有 reacheddailyPrivate 商店 tradinglimit 的 %0 基纳, sotrade 无法为 completed。 / You have reached the daily Private Store trading limit of %0 Kinah, so the trade cannot be completed
+	 * 你已达到个人商店每日交易上限 %0 基纳，交易无法完成。 / You have reached the daily Private Store trading limit of %0 Kinah, so the trade cannot be completed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_OWN_SHOP(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400942, value0);
@@ -22135,28 +22135,28 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_PARTNER_TRADE = new SM_SYSTEM_MESSAGE(1400943);
 
 	/**
-	 * @param value0 You 有 reacheddailyTradinglimit 的 %0 基纳, sotrade 无法为 completed。 / You have reached the daily Trading limit of %0 Kinah, so the trade cannot be completed
+	 * 你已达到每日交易上限 %0 基纳，交易无法完成。 / You have reached the daily Trading limit of %0 Kinah, so the trade cannot be completed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_OWN_TRADE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400944, value0);
 	}
 
 	/**
-	 * @param value0 You 有 reacheddailyBrokerlimit 的 %0 基纳, so 物品无法为 listed。 / You have reached the daily Broker limit of %0 Kinah, so the item cannot be listed
+	 * 你已达到每日拍卖行交易上限 %0 基纳，物品无法上架。 / You have reached the daily Broker limit of %0 Kinah, so the item cannot be listed
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_SELL_AUCTION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400945, value0);
 	}
 
 	/**
-	 * @param value0 You 有 reacheddailyMailattachmentlimit 的 %0 基纳, so 基纳无法为 sent。 / You have reached the daily Mail attachment limit of %0 Kinah, so the kinah cannot be sent
+	 * 你已达到每日邮件附件限额 %0 基纳，无法发送基纳。 / You have reached the daily Mail attachment limit of %0 Kinah, so the kinah cannot be sent
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_SEND_MAIL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400946, value0);
 	}
 
 	/**
-	 * @param value0 You 有 reacheddailyMailattachmentlimit 的 %0 基纳, soyou 无法 receive 此基纳。 / You have reached the daily Mail attachment limit of %0 Kinah, so you cannot receive this kinah
+	 * 你已达到每日邮件附件限额 %0 基纳，无法接收该基纳。 / You have reached the daily Mail attachment limit of %0 Kinah, so you cannot receive this kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_RECEIVE_MAIL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400947, value0);
@@ -22184,12 +22184,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_PARTNER_TRADE_LIMIT = new SM_SYSTEM_MESSAGE(1400950);
 
 	/**
-	 * 你：have reached the daily Trading limit, so the trade cannot be completed。 / You have reached the daily Trading limit, so the trade cannot be completed
+	 * 你已达到每日交易上限，交易无法完成。 / You have reached the daily Trading limit, so the trade cannot be completed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DAY_CANNOT_OWN_TRADE_LIMIT = new SM_SYSTEM_MESSAGE(1400951);
 
 	/**
-	 * @param value0 你：have invited %0 to join the Mini Game。 / You have invited %0 to join the Mini Game
+	 * 你已邀请 %0 加入迷你游戏。 / You have invited %0 to join the Mini Game
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_TOWER_DEFENCE_INVITED_HIM(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400952, value0);
@@ -22241,17 +22241,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_ENCHANT_ASSISTANT_CANNOT_FIND = new SM_SYSTEM_MESSAGE(1400959);
 
 	/**
-	 * 你：cannot use sealed Supplements。 / You cannot use sealed Supplements
+	 * 无法使用封印中的补给品。 / You cannot use sealed Supplements
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_ENCHANT_ASSISTANT_SEALED = new SM_SYSTEM_MESSAGE(1400960);
 
 	/**
-	 * 你：cannot use those Supplements。 / You cannot use those Supplements
+	 * 无法使用那些补给品。 / You cannot use those Supplements
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_ENCHANT_ASSISTANT_NO_RIGHT_ITEM = new SM_SYSTEM_MESSAGE(1400961);
 
 	/**
-	 * @param player %0 退出训练并离开了天族 / 魔族试炼场。 / %0 dropped out of training and left the Empyrean Crucible
+	 * %0 退出训练并离开了天界试炼场。 / 魔族试炼场。 / %0 dropped out of training and left the Empyrean Crucible
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_FRIENDLY_LEAVE_IDARENA(String player) {
 		return new SM_SYSTEM_MESSAGE(1400962, player);
@@ -22271,7 +22271,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Youdonot 有足够基纳到 condition 物品。 / You do not have enough kinah to condition that item
+	 * 你的基纳不足，无法强化该物品。 / You do not have enough kinah to condition that item
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_CHARGE_NOT_ENOUGH_GOLD = new SM_SYSTEM_MESSAGE(1400965);
 
@@ -22283,7 +22283,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * You 有 reachedmaximumFatigue ,并 so 可 obtain 仅 limitedXP , AP ,并物品。 / You have reached maximum Fatigue, and so can obtain only limited XP, AP, and items
+	 * 你已达到疲劳上限，只能获得有限的 XP、AP 与物品。 / You have reached maximum Fatigue, and so can obtain only limited XP, AP, and items
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FATIGUE_STATE_INFO_STATE_CHANGE = new SM_SYSTEM_MESSAGE(1400967);
 
@@ -22293,12 +22293,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FATIGUE_STATE_INFO = new SM_SYSTEM_MESSAGE(1400968);
 
 	/**
-	 * 你：feel refreshed, and your Fatigue is gone。 / You feel refreshed, and your Fatigue is gone
+	 * 你感到精神焕发，疲劳已消除。 / You feel refreshed, and your Fatigue is gone
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_FATIGUE_RESET = new SM_SYSTEM_MESSAGE(1400969);
 
 	/**
-	 * @param value0 你：cannot extract items while %0。 / You cannot extract items while %0
+	 * %0 状态下无法提取物品。 / You cannot extract items while %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_INVALID_STANCE(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400970, value0);
@@ -22347,7 +22347,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S6_ResurBox1_01 = new SM_SYSTEM_MESSAGE(1400977);
 
 	/**
-	 * 你：can earn an additional reward if you catch the Saam King。 / You can earn an additional reward if you catch the Saam King
+	 * 抓获萨姆之王可获得额外奖励。 / You can earn an additional reward if you catch the Saam King
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S2_SAAM_CTRL_01 = new SM_SYSTEM_MESSAGE(1400978);
 
@@ -22382,7 +22382,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S9_DuskDraky_55_Ah_01 = new SM_SYSTEM_MESSAGE(1400984);
 
 	/**
-	 * @param value0 你：must be under level %0 to join。 / You must be under level %0 to join
+	 * 你的等级必须低于 %0 级才能加入。 / You must be under level %0 to join
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FACTION_JOIN_ERROR_MAX_LEVEL(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400985, value0);
@@ -22424,12 +22424,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S9_DuskDraky_55_Ah_02 = new SM_SYSTEM_MESSAGE(1400992);
 
 	/**
-	 * 你：must have a Mentor with you in order to complete this quest。 / You must have a Mentor with you in order to complete this quest
+	 * 完成此任务必须有导师陪同。 / You must have a Mentor with you in order to complete this quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_KILL_COUNT_WITHOUT_MENTOR = new SM_SYSTEM_MESSAGE(1400993);
 
 	/**
-	 * 你：must be Mentoring someone in order to complete this quest。 / You must be Mentoring someone in order to complete this quest
+	 * 完成此任务必须正在指导他人。 / You must be Mentoring someone in order to complete this quest
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_KILL_COUNT_WITHOUT_MENTEE = new SM_SYSTEM_MESSAGE(1400994);
 
@@ -22578,7 +22578,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_REGISTER_MENTOR_PARTY_IN_FORCE = new SM_SYSTEM_MESSAGE(1401022);
 
 	/**
-	 * 你：failed to purchase the item. Please try again later。 / You failed to purchase the item. Please try again later
+	 * 购买物品失败，请稍后再试。 / You failed to purchase the item. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CASH_PURCHASE_ERROR_FAILED_RECEIVING_PRODUCT = new SM_SYSTEM_MESSAGE(
 			1401025);
@@ -22589,7 +22589,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CASH_PURCHASE_ERROR_INVALID_PRODUCT = new SM_SYSTEM_MESSAGE(1401026);
 
 	/**
-	 * @param value0 你：have acquired the %0 motion。 / You have acquired the %0 motion
+	 * 你已获得 %0 动作。 / You have acquired the %0 motion
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_CASH_CUSTOMIZE_MOTION(String value0) {
 		return new SM_SYSTEM_MESSAGE(1401029, value0);
@@ -22623,27 +22623,27 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CASH_PURCHASE_ERROR_NOT_ENOUGH_SPACE = new SM_SYSTEM_MESSAGE(1401039);
 
 	/**
-	 * 你：cannot summon a pet here。 / You cannot summon a pet here
+	 * 无法在这里召唤宠物。 / You cannot summon a pet here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_SUMMON_MOVING_STATE = new SM_SYSTEM_MESSAGE(1401040);
 
 	/**
-	 * 你：cannot fight a duel here。 / You cannot fight a duel here
+	 * 无法在这里决斗。 / You cannot fight a duel here
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DUEL_CANT_IN_THIS_ZONE = new SM_SYSTEM_MESSAGE(1401047);
 
 	/**
-	 * 你：have been disconnected from the Bid Withdrawal Server. Please try again later。 / You have been disconnected from the Bid Withdrawal Server. Please try again later
+	 * 你与撤回竞标服务器断开连接，请稍后再试。 / You have been disconnected from the Bid Withdrawal Server. Please try again later
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_ITEM_BILLING_SERVER_DOWN_SA2 = new SM_SYSTEM_MESSAGE(1401051);
 
 	/**
-	 * 你：can not verify Pet Status in the current state。 / You can not verify Pet Status in the current state
+	 * 当前状态下无法确认宠物状态。 / You can not verify Pet Status in the current state
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_SHOPOPEN_STATE = new SM_SYSTEM_MESSAGE(1401052);
 
 	/**
-	 * 你：have already requested entry into %WORLDNAME0 (Difficulty: %1)。 / You have already requested entry into %WORLDNAME0 (Difficulty: %1)
+	 * 你已申请进入 %WORLDNAME0（难度：%1）。 / You have already requested entry into %WORLDNAME0 (Difficulty: %1)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_ALREADY_REGISTERED_WITH_DIFFICULTY(String worldname0,
 			String value1) {
@@ -22651,12 +22651,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot make more entry requests。 / You cannot make more entry requests
+	 * 你无法提交更多进入申请。 / You cannot make more entry requests
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_INSTANCE_NO_MORE_REGISTER = new SM_SYSTEM_MESSAGE(1401054);
 
 	/**
-	 * 你：have aborted entering %0 (Difficulty: %1). You may apply again in 10 seconds。 / You have aborted entering %0 (Difficulty: %1). You may apply again in 10 seconds
+	 * 你已取消进入 %0（难度：%1），10 秒后可重新申请。 / You have aborted entering %0 (Difficulty: %1). You may apply again in 10 seconds
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_REGISTER_CANCELED_WTH_DIFFICULTY(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1401055, value0, value1);
@@ -22677,33 +22677,33 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_REINFORCE_MEMBER = new SM_SYSTEM_MESSAGE(1401058);
 
 	/**
-	 * You 无法 usecommandsInvite 到 Group 或 Invite 到军团 rightnow。 / You cannot use the commands Invite to Group or Invite to Legion right now
+	 * 现在无法使用邀请加入队伍或军团指令。 / You cannot use the commands Invite to Group or Invite to Legion right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_INVITE_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1401059);
 
 	/**
-	 * 你：cannot use the commands Assign Group Leader and Make Alliance Captain right now。 / You cannot use the commands Assign Group Leader and Make Alliance Captain right now
+	 * 现在无法使用指定队长与任命联盟队长指令。 / You cannot use the commands Assign Group Leader and Make Alliance Captain right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_CHANGE_LEADER_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(
 			1401060);
 
 	/**
-	 * 你：cannot use the commands Leave Group or Leave Alliance right now。 / You cannot use the commands Leave Group or Leave Alliance right now
+	 * 现在无法使用离开队伍或离开联盟指令。 / You cannot use the commands Leave Group or Leave Alliance right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_QUIT_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1401061);
 
 	/**
-	 * 你：cannot use the commands Ban Group or Ban from Alliance right now。 / You cannot use the commands Ban Group or Ban from Alliance right now
+	 * 现在无法使用踢出队伍或从联盟除名指令。 / You cannot use the commands Ban Group or Ban from Alliance right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_BANISH_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1401062);
 
 	/**
-	 * You 无法 usecommandsDistributeCash 到 Group 或 DistributeCash 到 Alliancesettingsrightnow。 / You cannot use the commands Distribute Cash to Group or Distribute Cash to Alliance settings right now
+	 * 现在无法使用向队伍或联盟分配现金的设置指令。 / You cannot use the commands Distribute Cash to Group or Distribute Cash to Alliance settings right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_LOOT_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1401063);
 
 	/**
-	 * You 无法 changegroup 或 alliance 成员 rightnow。 / You cannot change group or alliance members right now
+	 * 现在无法变更队伍或联盟成员。 / You cannot change group or alliance members right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_ARRANGE_MEMBER_FORCE_COMMAND = new SM_SYSTEM_MESSAGE(
 			1401064);
@@ -22734,17 +22734,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDArena_Solo_SB1_HideSucc_BROADCAST = new SM_SYSTEM_MESSAGE(1401071);
 
 	/**
-	 * You 有 eliminated 全部的 DukakiCooks 并 successfullyrescuedPoppy !。 / You have eliminated all of the Dukaki Cooks and successfully rescued Poppy!
+	 * 你已消灭全部杜卡基厨师并成功救出波比！ / You have eliminated all of the Dukaki Cooks and successfully rescued Poppy!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDArena_Solo_SB1_Succ_BROADCAST = new SM_SYSTEM_MESSAGE(1401072);
 
 	/**
-	 * 你：already have a pet of this type。 / You already have a pet of this type
+	 * 你已经拥有该类型的宠物。 / You already have a pet of this type
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_CANT_USE_ALREADY_HAS_PET = new SM_SYSTEM_MESSAGE(1401073);
 
 	/**
-	 * You 已经有 packpet 带此 functionality。 / You already have a pack pet with this functionality
+	 * 你已经拥有具有该功能的背包宠物。 / You already have a pack pet with this functionality
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_TOYPET_ALREADY_SAME_WAREHOUSE_PET = new SM_SYSTEM_MESSAGE(1401074);
 
@@ -22779,7 +22779,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_IDArena_Solo_S4_System5 = new SM_SYSTEM_MESSAGE(1401086);
 
 	/**
-	 * 你：cannot use the commands /RecruitGroupMember or /RecruitAllianceMember right now。 / You cannot use the commands /RecruitGroupMember or /RecruitAllianceMember right now
+	 * 现在无法使用 /RecruitGroupMember 或 /RecruitAllianceMember 指令。 / You cannot use the commands /RecruitGroupMember or /RecruitAllianceMember right now
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_INSTANCE_CANT_POST_PARTY_COMMAND = new SM_SYSTEM_MESSAGE(1401098);
 
@@ -22794,7 +22794,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DONT_GET_COMBINETASK_MASTER = new SM_SYSTEM_MESSAGE(1401182);
 
 	/**
-	 * 目标无法为 inviteddue 到 dungeonentryrequirements。 / The target cannot be invited due to dungeon entry requirements
+	 * 因副本进入条件限制，无法邀请该目标。 / The target cannot be invited due to dungeon entry requirements
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_ADD_INSTANCE_MAX_MEMBER = new SM_SYSTEM_MESSAGE(1404119);
 
@@ -22802,29 +22802,29 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	 * UI 区域消息 / UI Zone messages
 	 */
 	/**
-	 * 你：have already learned this title。 / You have already learned this title
+	 * 你已经学会该称号。 / You have already learned this title
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TOOLTIP_LEARNED_TITLE = new SM_SYSTEM_MESSAGE(901714);
 
 	/**
-	 * @param value0 你：do not have enough %0。 / You do not have enough %0
+	 * 你的 %0 不足。 / You do not have enough %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_INGAMESHOP_NOT_ENOUGH_CASH(String value0) {
 		return new SM_SYSTEM_MESSAGE(901706, value0);
 	}
 
 	/**
-	 * 你：have already learned this emote。 / You have already learned this emote
+	 * 你已经学会该表情。 / You have already learned this emote
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TOOLTIP_LEARNED_EMOTION = new SM_SYSTEM_MESSAGE(901713);
 
 	/**
-	 * You 可仅 use 此当 you 有 PlasticSurgeryTicket。 / You can only use this when you have a Plastic Surgery Ticket
+	 * 只有拥有整容券时才能使用该功能。 / You can only use this when you have a Plastic Surgery Ticket
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EDIT_CHAR_ALL_CANT_NO_ITEM = new SM_SYSTEM_MESSAGE(901752);
 
 	/**
-	 * You 可仅 use 此当 you 有 GenderSwitchTicket。 / You can only use this when you have a Gender Switch Ticket
+	 * 只有拥有性别转换券时才能使用该功能。 / You can only use this when you have a Gender Switch Ticket
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_EDIT_CHAR_GENDER_CANT_NO_ITEM = new SM_SYSTEM_MESSAGE(901754);
 
@@ -22841,7 +22841,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_BUDDYLIST_BUSY = new SM_SYSTEM_MESSAGE(900847);
 
 	/**
-	 * @param num0 You 不有足够基纳 . 其 costs%num0 基纳。 / You don't have enough Kinah. It costs %num0 Kinah
+	 * 你的基纳不足，需要 %num0 基纳。 / You don't have enough Kinah. It costs %num0 Kinah
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_NOT_ENOUGH_KINA(long num0) {
 		return new SM_SYSTEM_MESSAGE(901285, num0);
@@ -22852,7 +22852,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 你：cannot use it because you belong to a different race。 / You cannot use it because you belong to a different race
+	 * 因你属于不同种族，无法使用。 / You cannot use it because you belong to a different race
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MOVE_PORTAL_ERROR_INVALID_RACE = new SM_SYSTEM_MESSAGE(901354);
 
@@ -23116,7 +23116,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param nameId Idian 强化43 / Idian Enchant 4.3
+	 * 伊甸强化 4.3 / Idian Enchant 4.3
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_POLISH_SUCCEED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1401650, new DescriptionId(nameId));
@@ -23134,7 +23134,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_POLISH_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401750);
 
 	/**
-	 * @param nameId 淬炼 / Tempering
+	 * 淬炼 / Tempering
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_AUTHORIZE_CANCEL(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1402147, new DescriptionId(nameId));
@@ -23197,7 +23197,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_5S = new SM_SYSTEM_MESSAGE(1401788);
 
 	/**
-	 * 你：successfully enchanted %0 by + %num1。 / You successfully enchanted %0 by + %num1
+	 * 你成功将 %0 强化至 +%num1。 / You successfully enchanted %0 by + %num1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ENCHANT_ITEM_SUCCEED_NEW(DescriptionId descriptionId, int value0) {
 		return new SM_SYSTEM_MESSAGE(1401681, descriptionId, value0);
@@ -23282,7 +23282,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1402572);
 
 	public static SM_SYSTEM_MESSAGE STR_ITEM_UPGRADE_MSG_UPGRADE_SUCCESS(DescriptionId nameId, DescriptionId nameId2) {
-		return new SM_SYSTEM_MESSAGE(1402579, new Object[] { nameId, nameId2 });
+		return new SM_SYSTEM_MESSAGE(1402579, nameId, nameId2);
 	}
 
 	public static SM_SYSTEM_MESSAGE STR_REGISTER_ITEM_MSG_UPGRADE_CANNOT(DescriptionId descriptionId) {
@@ -23470,14 +23470,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_F2P_MSG_PACK_EXPIRED = new SM_SYSTEM_MESSAGE(1700042);
 
 	/**
-	 * @param nameId 你：have opened the %0。 / You have opened the %0
+	 * 你已打开 %0。 / You have opened the %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNCOMPRESS_COMPRESSED_ITEM_SUCCEEDED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400452, new DescriptionId(nameId));
 	}
 
 	/**
-	 * @param nameId 你：have stopped opening the %0 bundle。 / You have stopped opening the %0 bundle
+	 * 你已停止开启 %0 捆包。 / You have stopped opening the %0 bundle
 	 */
 	public static SM_SYSTEM_MESSAGE STR_UNCOMPRESS_COMPRESSED_ITEM_CANCELED(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1400453, new DescriptionId(nameId));
@@ -23618,7 +23618,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param descriptionId 烙印之石强化48 / [Stigma Enchant] 4.8
+	 * 烙印之石强化 4.8 / [Stigma Enchant] 4.8
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_STIGMA_ENCHANT_SUCCESS(DescriptionId descriptionId) {
 		return new SM_SYSTEM_MESSAGE(1402930, descriptionId);
@@ -24210,7 +24210,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param points [伯丁之星 5.1] / [Berdin's Star 5.1]
+	 * 伯丁之星 5.1 / [Berdin's Star 5.1]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_EXP_ABSOLUTEEXP_BONUS_50(long points) {
 		return new SM_SYSTEM_MESSAGE(1403335, points);
@@ -24231,7 +24231,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param percent 欧比斯 Favor53 / [Abyss Favor 5.3]
+	 * 欧比斯恩宠 5.3 / [Abyss Favor 5.3]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CHARGE_ABSOLUTEAPPOINT(int percent) {
 		return new SM_SYSTEM_MESSAGE(1404028, percent);
@@ -24616,7 +24616,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_MONSTER_ACHIEVEMENT_COMPLETION2 = new SM_SYSTEM_MESSAGE(1404074);
 
 	/**
-	 * @param exp [随从 5.5] / [Minions 5.5]
+	 * 随从 5.5 / [Minions 5.5]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_FAMILIAR_MSG_RESULT_GROWTH(int exp) {
 		return new SM_SYSTEM_MESSAGE(1404367, exp);
@@ -24644,7 +24644,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_COSTUME_SKILL_ALREADY_HAS_COSTUME = new SM_SYSTEM_MESSAGE(1403683);
 
 	/**
-	 * @param nameId [神圣能量] / [Holy Energy]
+	 * 神圣能量 / [Holy Energy]
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_GET_HCOIN_07(int nameId) {
 		return new SM_SYSTEM_MESSAGE(1401496, new DescriptionId(nameId));
@@ -24718,7 +24718,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_ENCHANT_EQUIPED = new SM_SYSTEM_MESSAGE(1403358);
 
 	/**
-	 * 游戏内自定义消息（多语言 L10n）。 / Кастомные сообщения в Игре - Чтобы сообщения были на разном языке (L10n)
+	 * 游戏内自定义消息（多语言 L10n）。 / Custom in-game messages so they can be shown in different languages (L10n)
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Sunayaka_Spawn_v1 = new SM_SYSTEM_MESSAGE(1404567);
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Sunayaka_DeSpawn_v1 = new SM_SYSTEM_MESSAGE(1404568);
@@ -24735,7 +24735,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Haramel_FinishInstance_v1 = new SM_SYSTEM_MESSAGE(1404579);
 
 	/**
-	 * 游戏内自定义消息（多语言 L10n）。 / Кастомные сообщения в Игре - Чтобы сообщения были на разном языке (L10n)
+	 * 游戏内自定义消息（多语言 L10n）。 / Custom in-game messages so they can be shown in different languages (L10n)
 	 */
 
 	private final int code;

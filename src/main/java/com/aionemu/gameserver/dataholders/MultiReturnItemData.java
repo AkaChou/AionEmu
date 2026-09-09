@@ -27,9 +27,9 @@ public class MultiReturnItemData {
 	private List<MultiReturn> ItemList;
 
 	@XmlTransient
-	private IntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new IntObjectHashMap<>();
 	@XmlTransient
-	private IntObjectHashMap<MultiReturn> itemsById = new IntObjectHashMap<>();
+	private final IntObjectHashMap<MultiReturn> itemsById = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按物品 ID 建立返回地点与模板索引。

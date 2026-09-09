@@ -23,12 +23,12 @@ public class Core_Of_Knowledge_Bind_PointAI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		checkDistance(this, creature);
 	}
-	
+
 	private void checkDistance(NpcAI2 ai, Creature creature) {
 		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
@@ -36,19 +36,19 @@ public class Core_Of_Knowledge_Bind_PointAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		announceCoreOfKnowledge();
 	}
-	
+
 	private void CoreOfKnowledgeBindPoint() {
 		AI2Actions.deleteOwner(Core_Of_Knowledge_Bind_PointAI2.this);
-		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(730844, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 知识之核传送点 / Core Of Knowledge Bind Point.
+		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
+		spawn(730844, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // 知识之核传送点 / Core Of Knowledge Bind Point.
     }
-	
+
 	private void announceCoreOfKnowledge() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -60,7 +60,7 @@ public class Core_Of_Knowledge_Bind_PointAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

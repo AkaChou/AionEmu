@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端广播角色改名结果。
@@ -9,25 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Rhys2002
  */
+@AllArgsConstructor
 public class SM_RENAME extends AionServerPacket {
 
-	private int playerObjectId;
-	private String oldName;
-	private String newName;
-
-	/**
-	 * 使用给定参数构造 SM_RENAME 包。
-	 * Creates a SM_RENAME packet with the given parameters.
-	 *
-	 * player object id
-	 * old name
-	 * new name
-	 */
-	public SM_RENAME(int playerObjectId, String oldName, String newName) {
-		this.playerObjectId = playerObjectId;
-		this.oldName = oldName;
-		this.newName = newName;
-	}
+	private final int playerObjectId;
+	private final String oldName;
+	private final String newName;
 
 	/**
 	 * {@inheritDoc}

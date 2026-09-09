@@ -1,25 +1,33 @@
 package com.aionemu.gameserver.model.instance.playerreward;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * StonespearReach 玩家奖励，用于副本相关逻辑。
  * Stonespear Reach Player Reward for instance logic.
  */
 
 public class StonespearReachPlayerReward extends InstancePlayerReward {
+	/** 返回 score ap / Returns the score ap */
+	@Getter
+	@Setter
 	private int scoreAP;
+	/** 返回 ceramium / Returns the ceramium */
+	@Getter
+	@Setter
 	private int ceramium;
+	/**
+	 * @return 是否已奖励 / whether rewarded
+	 */
+	@Getter
 	private boolean isRewarded = false;
+	/** 是否玩家离开 / Whether player leave*/
+	@Getter
 	private boolean isPlayerLeave = false;
 
 	public StonespearReachPlayerReward(Integer object) {
 		super(object);
-	}
-
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
-	public boolean isRewarded() {
-		return isRewarded;
 	}
 
 	/** 设置 rewarded / Sets the rewarded */
@@ -27,33 +35,8 @@ public class StonespearReachPlayerReward extends InstancePlayerReward {
 		isRewarded = true;
 	}
 
-	/** 是否玩家离开 / Whether player leave*/
-	public boolean isPlayerLeave() {
-		return isPlayerLeave;
-	}
-
 	/** 设置玩家离开 / Sets the player leave*/
 	public void setPlayerLeave() {
 		isPlayerLeave = true;
-	}
-
-	/** 返回 score ap / Returns the score ap */
-	public int getScoreAP() {
-		return scoreAP;
-	}
-
-	/** 设置 score ap / Sets the score ap */
-	public void setScoreAP(int ap) {
-		this.scoreAP = ap;
-	}
-
-	/** 返回 ceramium / Returns the ceramium */
-	public int getCeramium() {
-		return ceramium;
-	}
-
-	/** 设置 ceramium / Sets the ceramium */
-	public void setCeramium(int ceramium) {
-		this.ceramium = ceramium;
 	}
 }

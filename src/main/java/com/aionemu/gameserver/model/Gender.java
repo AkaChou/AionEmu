@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
+import lombok.Getter;
 
 /**
  * 性别枚举。
@@ -28,22 +29,13 @@ public enum Gender {
 	/**
 	 * 性别 ID / id of gender
 	 */
-	private int genderId;
+	@Getter
+	private final int genderId;
 
 	/**
 	 * 构造方法。 / Constructor.
 	 */
-	private Gender(int genderId) {
+	Gender(int genderId) {
 		this.genderId = genderId;
-	}
-
-	/**
-	 * 返回该性别 ID。
-	 * Get id of this gender.
-	 * 
-	 * @return gender id
-	 */
-	public int getGenderId() {
-		return genderId;
 	}
 }

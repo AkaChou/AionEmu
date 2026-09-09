@@ -19,14 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -210,9 +203,7 @@ public final class QuestDefinitionXmlCompiler {
 			return Set.of();
 		}
 		Set<String> result = new HashSet<>();
-		for (String token : value.trim().split("\\s+")) {
-			result.add(token);
-		}
+		Collections.addAll(result, value.trim().split("\\s+"));
 		return result;
 	}
 

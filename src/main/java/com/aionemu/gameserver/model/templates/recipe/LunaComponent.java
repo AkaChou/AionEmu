@@ -22,6 +22,6 @@ public class LunaComponent {
 
 	/** 返回组件列表 / Returns the components */
 	public Collection<LunaComponentElement> getComponents() {
-		return luna_component != null ? luna_component : Collections.<LunaComponentElement>emptyList();
+		return luna_component != null ? luna_component : Collections.emptyList();
 	}
 }

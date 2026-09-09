@@ -42,8 +42,8 @@ class Quest1149ClientDialogAlignmentTest {
 			talk(transitions, "started", QuestDialogAction.FINISH_DIALOG).afterCommit());
 
 		assertFalse(transitions.stream().flatMap(transition -> transition.afterCommit().stream())
-			.anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog page
-				&& page.dialogId() == QuestDialogAction.ASK_QUEST_ACCEPT.id()));
+			.anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog(int dialogId)
+				&& dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()));
 	}
 
 	@Test

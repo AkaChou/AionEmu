@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects;
 
+import lombok.Getter;
+
 /**
  * 信件类型枚举。
  * Letter Type enumeration.
@@ -9,15 +11,12 @@ public enum LetterType {
 	/** 普通 / Normal. */
 	NORMAL(0), EXPRESS(1), BLACKCLOUD(2);
 
-	private int id;
-
-	private LetterType(int id) {
-		this.id = id;
-	}
-
 	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
+	@Getter
+	private final int id;
+
+	LetterType(int id) {
+		this.id = id;
 	}
 
 	/** 按 ID 返回信件类型 / Returns the letter type by id */

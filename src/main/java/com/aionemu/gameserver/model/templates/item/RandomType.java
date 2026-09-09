@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
+import lombok.Getter;
 
 /**
  * Random 类型枚举。
@@ -26,17 +27,14 @@ public enum RandomType {
 	/** 碎石宝石 / Chunk Gemstone */
 	CHUNK_GEMSTONE, SCROLLS, POTION;
 
+	/** 获取等级。 / Returns the level. */
+	@Getter
 	private int level;
 
-	private RandomType() {
+	RandomType() {
 	}
 
-	private RandomType(int level) {
+	RandomType(int level) {
 		this.level = level;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
 	}
 }

@@ -13,6 +13,8 @@ import java.util.TimeZone;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 基于 Java 8 Time API 的日期时间工具，应用 GSConfig 时区并尽量保留日历字段。
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Rolandas
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateTimeUtil {
 
 	/**
@@ -33,14 +36,6 @@ public final class DateTimeUtil {
 	 * Whether the configured zone is active.
 	 */
 	private static boolean useConfiguredZone = false;
-
-	/**
-	 * 工具类私有构造。
-	 * Private constructor for utility class.
-	 */
-	private DateTimeUtil() {
-		// 工具类的私有构造方法 / Private constructor for utility class
-	}
 
 	/**
 	 * 初始化：从 GSConfig 加载时区。

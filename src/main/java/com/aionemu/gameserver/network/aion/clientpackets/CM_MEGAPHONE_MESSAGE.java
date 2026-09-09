@@ -66,7 +66,7 @@ public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
 		}
 		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (players.hasNext()) {
-			Player player = (Player) players.next();
+			Player player = players.next();
 			if (this.isAll) {
 				PacketSendUtility.sendPacket(player,
 						new SM_MEGAPHONE_MESSAGE(activePlayer, this.chatMessage, item.getItemId(), this.isAll));

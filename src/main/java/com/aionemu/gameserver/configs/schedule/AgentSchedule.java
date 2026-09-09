@@ -53,7 +53,7 @@ public class AgentSchedule {
 		AgentSchedule as;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/agent_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			as = (AgentSchedule) JAXBUtil.deserialize(xml, AgentSchedule.class);
+			as = JAXBUtil.deserialize(xml, AgentSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize agent", e);
 		}

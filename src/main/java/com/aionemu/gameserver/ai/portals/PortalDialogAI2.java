@@ -164,21 +164,21 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 804619: // 幸运达努阿尔遗迹守卫。 / Lucky Danuar Reliquary Gatekeeper.
 				case 804620: // 幸运奥菲丹桥守卫。 / Lucky Ophidan Bridge Gatekeeper.
 				case 804621: // 达努阿尔遗迹。 / Danuar Reliquary.
-				case 832991: // 被占领的伦图斯基地 [天族]。
-				case 832992: // 被占领的伦图斯基地 [魔族]。
-				case 730721: // 封印的达努阿尔秘境 - 银色庄园 [天族]。
-				case 730722: // 封印的达努阿尔秘境 - 银色庄园 [魔族]。
-				case 833024: // 石矛地域 [天族]。
-				case 833025: // 石矛地域 [魔族]。
-				case 833043: // 石矛地域 [天族]。
-				case 833044: // 石矛地域 [魔族]。
-				case 833045: // 石矛地域 [天族]。
-				case 833046: // 石矛地域 [魔族]。
+				case 832991: // 被占领的伦图斯基地 [天族]。 / Occupied Rentus Base [Elyos].
+				case 832992: // 被占领的伦图斯基地 [魔族]。 / Occupied Rentus Base [Asmodians].
+				case 730721: // 封印的达努阿尔秘境 - 银色庄园 [天族]。 / Sealed Danuar Mysticarium - Silver Garden [Elyos].
+				case 730722: // 封印的达努阿尔秘境 - 银色庄园 [魔族]。 / Sealed Danuar Mysticarium - Silver Garden [Asmodians].
+				case 833024: // 石矛地域 [天族]。 / Stonespear Reach [Elyos].
+				case 833025: // 石矛地域 [魔族]。 / Stonespear Reach [Asmodians].
+				case 833043: // 石矛地域 [天族]。 / Stonespear Reach [Elyos].
+				case 833044: // 石矛地域 [魔族]。 / Stonespear Reach [Asmodians].
+				case 833045: // 石矛地域 [天族]。 / Stonespear Reach [Elyos].
+				case 833046: // 石矛地域 [魔族]。 / Stonespear Reach [Asmodians].
 				case 835609: //IDTransform_NPC_Entrance_PC
 				case 835610: //IDStation_NPC_Entrance_PC
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10, 0));
 				break;
-				case 731549: // 被占领的符文安息处。
+				case 731549: // 被占领的符文安息处。 / Seized Danuar Sanctuary.
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
 						    // 进入被占领的符文安息处。 / Enter Seized Danuar Sanctuary.
@@ -194,7 +194,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 731570: // 符文安息处。
+				case 731570: // 符文安息处。 / Danuar Sanctuary.
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
 						    // 进入符文安息处。 / Enter Danuar Sanctuary.
@@ -210,7 +210,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832995: // 提亚马特要塞 [天族]。
+				case 832995: // 提亚马特要塞 [天族]。 / Tiamat Stronghold [Elyos].
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
 						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
@@ -220,7 +220,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832996: // 提亚马特要塞 [魔族]。
+				case 832996: // 提亚马特要塞 [魔族]。 / Tiamat Stronghold [Asmodians].
 				    switch (player.getWorldId()) {
 						case 220080000: //Enshar.
 						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
@@ -230,7 +230,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832997: // [痛苦] 龙主避难所。
+				case 832997: // [痛苦] 龙主避难所。 / [Anguished] Dragon Lord's Refuge.
 				    switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
 						    // 进入痛苦龙主避难所。 / Enter the Anguished Dragon Lord's Refuge.
@@ -246,7 +246,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832998: // 龙主避难所。
+				case 832998: // 龙主避难所。 / Dragon Lord's Refuge.
 					switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
 						    // 进入龙主避难所。 / Enter Dragon Lord's Refuge.

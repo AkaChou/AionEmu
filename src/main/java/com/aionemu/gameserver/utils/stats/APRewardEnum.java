@@ -48,10 +48,10 @@ public enum APRewardEnum {
 	SUPREME_COMMANDER(18, 6.25f);
 
 	/** 玩家军衔 ID / Player rank id */
-	private int playerRank;
+	private final int playerRank;
 
 	/** AP 奖励百分比 / AP reward percent */
-	private float rewardPercent;
+	private final float rewardPercent;
 
 	/**
 	 * 构造 AP 奖励条目
@@ -60,7 +60,7 @@ public enum APRewardEnum {
 	 * Rank id
 	 * @param rewardPercent 奖励百分比 / Reward percent
 	 */
-	private APRewardEnum(int playerRank, float rewardPercent) {
+	APRewardEnum(int playerRank, float rewardPercent) {
 		this.playerRank = playerRank;
 		this.rewardPercent = rewardPercent;
 	}

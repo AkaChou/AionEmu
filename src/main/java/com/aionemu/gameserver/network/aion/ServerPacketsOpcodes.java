@@ -12,7 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
  * Server packet opcode registry: Class → opcode map with duplicate checks at startup.
  */
 public class ServerPacketsOpcodes {
-	private static Map<Class<? extends AionServerPacket>, Integer> opcodes = new HashMap<Class<? extends AionServerPacket>, Integer>();
+	private static final Map<Class<? extends AionServerPacket>, Integer> opcodes = new HashMap<Class<? extends AionServerPacket>, Integer>();
 
 	static {
 		Set<Integer> idSet = new HashSet<Integer>();
@@ -135,7 +135,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_FRIEND_RESPONSE.class, 0xDB, idSet); // 5.8
 		addPacketOpcode(SM_GROUP_INFO.class, 0x5A, idSet); // 5.8
 		addPacketOpcode(SM_GROUP_MEMBER_INFO.class, 0x5b, idSet); // 5.8
-		addPacketOpcode(SM_SHOW_BRAND.class, 0xFB, idSet); // 5.6, 0xfa 5.8 
+		addPacketOpcode(SM_SHOW_BRAND.class, 0xFB, idSet); // 5.6, 0xfa 5.8
 		addPacketOpcode(SM_DIE.class, 0xC1, idSet); // 5.8
 		addPacketOpcode(SM_LOOT_ITEMLIST.class, 0xce, idSet); // 5.8
 		addPacketOpcode(SM_LEGION_INFO.class, 0x6E, idSet); // 5.8

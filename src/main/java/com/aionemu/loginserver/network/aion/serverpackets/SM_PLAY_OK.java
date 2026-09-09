@@ -26,7 +26,7 @@ public class SM_PLAY_OK extends AionServerPacket {
      * 目标游戏服 ID。
      * Target game-server id.
      */
-    private int serverId;
+    private final int serverId;
 
     /**
      * 构造 SM_PLAY_OK 包。
@@ -37,8 +37,8 @@ public class SM_PLAY_OK extends AionServerPacket {
      */
     public SM_PLAY_OK(SessionKey key, byte serverId) {
         super(0x07);
-        this.playOk1 = key.playOk1;
-        this.playOk2 = key.playOk2;
+        this.playOk1 = key.playOk1();
+        this.playOk2 = key.playOk2();
         this.serverId = serverId;
     }
 

@@ -20,8 +20,8 @@ public class LeagueLeftEvent extends AlwaysTrueTeamEvent implements Predicate<Le
 	private final PlayerAlliance alliance;
 	private final LeaveReson reason;
 
-	public static enum LeaveReson {
-		LEAVE, EXPEL, DISBAND;
+	public enum LeaveReson {
+		LEAVE, EXPEL, DISBAND
 	}
 
 	public LeagueLeftEvent(League league, PlayerAlliance alliance) {

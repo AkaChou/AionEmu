@@ -21,7 +21,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 @Slf4j
 public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 
-	private Collection<EventsWindow> active_events_packet;
+	private final Collection<EventsWindow> active_events_packet;
 
 	/**
 	 * 按活跃活动集合构造条目列表包（拷贝副本保持顺序）。

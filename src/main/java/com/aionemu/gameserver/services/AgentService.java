@@ -118,7 +118,7 @@ public class AgentService {
 			public void run() {
 				stopAgentFight(id);
 			}
-		}, CustomConfig.AGENT_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.AGENT_DURATION * 3600 * 1000);
 	}
 
 	/**

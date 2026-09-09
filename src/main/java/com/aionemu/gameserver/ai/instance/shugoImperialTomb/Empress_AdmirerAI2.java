@@ -32,13 +32,13 @@ public class Empress_AdmirerAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 831111: //Empress Admirer.
+				case 831111: // A地区NPC战斗开始 / Empress Admirer.
 					startTombWaveB1();
 					// 掠夺者来袭。守卫女皇纪念碑！ / Pillagers incoming. Guard the Empress' Monument!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401583));
-					spawn(831130, 340.27893f, 426.2435f, 294.7574f, (byte) 56); //Crown Prince's Monument.
-					spawn(831304, 337.75626f, 415.45035f, 294.76086f, (byte) 56); //Empress' Monument.
-					spawn(831305, 342.7412f, 436.7674f, 294.75598f, (byte) 56); //Empress' Monument.
+					spawn(831130, 340.27893f, 426.2435f, 294.7574f, (byte) 56); // 皇太子的石碑 / Crown Prince's Monument.
+					spawn(831304, 337.75626f, 415.45035f, 294.76086f, (byte) 56); // 皇后的石碑 / Empress' Monument.
+					spawn(831305, 342.7412f, 436.7674f, 294.75598f, (byte) 56); // 皇后的石碑 / Empress' Monument.
 				break;
 			}
 		}

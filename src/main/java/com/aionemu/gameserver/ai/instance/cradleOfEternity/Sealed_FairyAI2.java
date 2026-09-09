@@ -27,7 +27,7 @@ public class Sealed_FairyAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
         }
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
@@ -35,8 +35,8 @@ public class Sealed_FairyAI2 extends NpcAI2
 			    case 834009: // 封印的妖精 / Sealed Fairy.
 				    // 离开花园后，希尔法女王的力量将消失。 / Once you leave the garden, the Sylfae Queen’s power will disappear.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_41, 5000);
-					GameEngineServices.skillEngine().applyEffectDirectly(21340, player, player, 3600000 * 1); // 封印的妖精 / Sealed Fairy.
-					GameEngineServices.skillEngine().applyEffectDirectly(21344, player, player, 3600000 * 1); // 魅惑幻象 / Beguiling Visions.
+					GameEngineServices.skillEngine().applyEffectDirectly(21340, player, player, 3600000); // 封印的妖精 / Sealed Fairy.
+					GameEngineServices.skillEngine().applyEffectDirectly(21344, player, player, 3600000); // 魅惑幻象 / Beguiling Visions.
 			    break;
 			}
 		}

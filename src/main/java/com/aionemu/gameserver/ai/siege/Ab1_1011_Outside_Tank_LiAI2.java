@@ -28,12 +28,12 @@ public class Ab1_1011_Outside_Tank_LiAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -62,13 +62,13 @@ public class Ab1_1011_Outside_Tank_LiAI2 extends NpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
-		GameEngineServices.skillEngine().applyEffectDirectly(21592, player, player, 7200000 * 1); //Board The Weapon.
+		GameEngineServices.skillEngine().applyEffectDirectly(21592, player, player, 7200000); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

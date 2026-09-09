@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 月华模板（静态数据/XML）。
@@ -24,9 +25,13 @@ public class LunaTemplate {
 	protected List<LunaComponent> luna_component_panel_4;
 	protected List<LunaComponent> luna_component_panel_5;
 
+	/** 返回最大制作数量 / Returns the max production count */
+	@Getter
 	@XmlAttribute(name = "max_production_count")
 	protected Integer maxProductionCount;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
@@ -42,12 +47,16 @@ public class LunaTemplate {
 	@XmlAttribute
 	protected int productid;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute
 	protected Race race;
 
 	@XmlAttribute
 	protected int itemid;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute
 	protected int nameid;
 
@@ -114,33 +123,13 @@ public class LunaTemplate {
 		return productid;
 	}
 
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
 	/** 返回物品 ID / Returns the item id */
 	public Integer getItemid() {
 		return itemid;
 	}
 
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameid() {
-		return nameid;
-	}
-
 	/** 返回 ID / Returns the id */
 	public Integer getId() {
 		return id;
-	}
-
-	/** 返回最大制作数量 / Returns the max production count */
-	public Integer getMaxProductionCount() {
-		return maxProductionCount;
 	}
 }

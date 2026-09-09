@@ -38,9 +38,9 @@ public class DuelService {
 	private static volatile ObjectProvider<DuelService> instanceProvider;
 
 	/** 玩家对象 ID 决斗配对映射 / Duel pair map of player object ids */
-	private Map<Integer, Integer> duels;
+	private final Map<Integer, Integer> duels;
 	/** 决斗超时任务映射。 / Duel timeout task map. */
-	private Map<Integer, Future<?>> timeOutTask;
+	private final Map<Integer, Future<?>> timeOutTask;
 
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。

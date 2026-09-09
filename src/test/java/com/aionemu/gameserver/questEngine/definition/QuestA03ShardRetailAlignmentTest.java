@@ -95,10 +95,10 @@ class QuestA03ShardRetailAlignmentTest {
 			List<QuestTransition> transitions = load(questId).definition().transitions();
 			Set<Integer> killNpcs = new HashSet<>();
 			for (QuestTransition transition : transitions) {
-				if (transition.event() instanceof QuestEvent.KillNpc kill) {
-					killNpcs.add(kill.npcId());
-				} else if (transition.event() instanceof QuestEvent.KillNpcSet set) {
-					killNpcs.addAll(set.npcIds());
+				if (transition.event() instanceof QuestEvent.KillNpc(int npcId)) {
+					killNpcs.add(npcId);
+				} else if (transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
+					killNpcs.addAll(npcIds);
 				}
 			}
 			assertEquals(expectedNpcs, killNpcs, "kill-npc targets of " + questId);

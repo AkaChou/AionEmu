@@ -165,7 +165,7 @@ class ShutdownHookTest {
         private NpcController controller;
 
         private TestNpc() {
-            super(0, new NpcController(), null, (NpcTemplate) null);
+            super(0, new NpcController(), null, null);
         }
 
         @Override

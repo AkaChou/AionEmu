@@ -26,7 +26,7 @@ public enum TeamCommand {
 	/** 联盟军团驱逐 / League expel */
 	LEAGUE_EXPEL(30);
 
-	private static Map<Integer, TeamCommand> teamCommands;
+	private static final Map<Integer, TeamCommand> teamCommands;
 
 	static {
 		teamCommands = new HashMap<Integer, TeamCommand>();
@@ -37,7 +37,7 @@ public enum TeamCommand {
 
 	private final int commandCode;
 
-	private TeamCommand(int commandCode) {
+	TeamCommand(int commandCode) {
 		this.commandCode = commandCode;
 	}
 

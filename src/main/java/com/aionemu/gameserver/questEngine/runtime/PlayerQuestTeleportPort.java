@@ -65,15 +65,15 @@ public final class PlayerQuestTeleportPort implements QuestTeleportPort {
 			return false;
 		}
 		int instanceId;
-		if (instanceTarget instanceof QuestInstanceTarget.Fixed fixed) {
-			instanceId = fixed.instanceId();
-		} else if (instanceTarget instanceof QuestInstanceTarget.NextAvailable next) {
+		if (instanceTarget instanceof QuestInstanceTarget.Fixed(int instanceId1)) {
+			instanceId = instanceId1;
+		} else if (instanceTarget instanceof QuestInstanceTarget.NextAvailable(int id)) {
 			// 优先复用玩家已注册的实例；否则分配下一个可用实例并把玩家注册进去。
 			// Reuse the player's registered instance first; otherwise allocate the next available one and register the player.
-			WorldMapInstance registered = InstanceService.getRegisteredInstance(next.worldId(), player.getObjectId());
+			WorldMapInstance registered = InstanceService.getRegisteredInstance(id, player.getObjectId());
 			WorldMapInstance instance = registered != null
 				? registered
-				: InstanceService.getNextAvailableInstance(next.worldId());
+				: InstanceService.getNextAvailableInstance(id);
 			if (registered == null) {
 				InstanceService.registerPlayerWithInstance(instance, player);
 			}

@@ -118,23 +118,23 @@ public class EnchantService {
 		}
 		int number = 0;
 		switch (quality) {
-		case 0: // JUNK.
-		case 1: // COMMON.
+		case 0: // 垃圾 / JUNK.
+		case 1: // 普通 / COMMON.
 			number = Rnd.get(50, 80);
 			break;
-		case 2: // RARE.
+		case 2: // 稀有 / RARE.
 			number = Rnd.get(80, 160);
 			break;
-		case 3: // LEGEND.
+		case 3: // 传颂 / LEGEND.
 			number = Rnd.get(160, 320);
 			break;
-		case 4: // UNIQUE.
+		case 4: // 唯一 / UNIQUE.
 			number = Rnd.get(320, 640);
 			break;
-		case 5: // EPIC.
+		case 5: // 史诗 / EPIC.
 			number = Rnd.get(640, 880);
 			break;
-		case 6: // MYTHIC.
+		case 6: // 神话 / MYTHIC.
 		case 7:
 			number = Rnd.get(880, 1000);
 			break;
@@ -176,11 +176,7 @@ public class EnchantService {
 		int estimaKinah = 34323;
 		int chance = 100 - targetItem.getEnchantLevel();
 		final boolean isEstimaSuccess;
-		if (chance >= 60) {
-			isEstimaSuccess = true;
-		} else {
-			isEstimaSuccess = false;
-		}
+		isEstimaSuccess = chance >= 60;
 		if (player.getInventory().getKinah() < estimaKinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
 			return;
@@ -346,7 +342,7 @@ public class EnchantService {
 	 * @param result 是否成功 / success flag
 	 */
 	public static void enchantItemAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int currentEnchant, boolean result) {
-        int oldEnchant = currentEnchant; 
+        int oldEnchant = currentEnchant;
 		int addLevel = Rnd.get(1, 2);
 		int critLevel = Rnd.get(1, 2);
 		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
@@ -489,7 +485,7 @@ public class EnchantService {
 			}
 		}
 		if (result) {
-            int realIncrease = currentEnchant - oldEnchant; 
+            int realIncrease = currentEnchant - oldEnchant;
 			if (critLevel != 0) {
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_ITEM_SUCCEED_NEW(new DescriptionId(targetItem.getNameId()), realIncrease));
 			} else {

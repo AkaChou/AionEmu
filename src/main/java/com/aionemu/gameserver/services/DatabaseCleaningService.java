@@ -25,7 +25,7 @@ public class DatabaseCleaningService {
 
 	private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
 	/** 玩家 DAO / Player DAO */
-	private PlayerDAO dao = (PlayerDAO) DAOManager.getDAO(PlayerDAO.class);
+	private final PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
 
 	/** 安全最小清理周期（天）。 / Security minimum cleaning period in days. */
 	private final int SECURITY_MINIMUM_PERIOD = 30;

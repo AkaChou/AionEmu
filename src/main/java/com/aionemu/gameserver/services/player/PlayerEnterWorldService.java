@@ -199,11 +199,11 @@ public final class PlayerEnterWorldService {
 	 * @param objectId 角色对象 ID / character object id
 	 * @param client 客户端连接 / client connection
 	 */
-	public static final void startEnterWorld(final int objectId, final AionConnection client) {
+	public static void startEnterWorld(final int objectId, final AionConnection client) {
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
 		Timestamp lastOnline = playerAccData.getPlayerCommonData().getLastOnline();
 		if (lastOnline != null && client.getAccount().getAccessLevel() < AdminConfig.GM_LEVEL) {
-			if (System.currentTimeMillis() - lastOnline.getTime() < (GSConfig.CHARACTER_REENTRY_TIME * 1000)) {
+			if (System.currentTimeMillis() - lastOnline.getTime() < (GSConfig.CHARACTER_REENTRY_TIME * 1000L)) {
 				client.sendPacket(new SM_ENTER_WORLD_CHECK((byte) 6)); // 20 sec time
 				return;
 			}
@@ -231,7 +231,7 @@ public final class PlayerEnterWorldService {
 	 * character object id
 	 * connection
 	 */
-	private static final void showPasskey(final int objectId, final AionConnection client) {
+	private static void showPasskey(final int objectId, final AionConnection client) {
 		client.getAccount().getCharacterPasskey().setConnectType(ConnectType.ENTER);
 		client.getAccount().getCharacterPasskey().setObjectId(objectId);
 		boolean isExistPasskey = DAOManager.getDAO(PlayerPasskeyDAO.class).existCheckPlayerPasskey(client.getAccount().getId());
@@ -249,7 +249,7 @@ public final class PlayerEnterWorldService {
 	 * character object id
 	 * connection
 	 */
-	private static final void validateAndEnterWorld(final int objectId, final AionConnection client) {
+	private static void validateAndEnterWorld(final int objectId, final AionConnection client) {
 		if (!pendingEnterWorld.add(objectId)) {
 			log.warn(I18n.get("log.aa24e7c29056", objectId));
 			return;
@@ -286,7 +286,7 @@ public final class PlayerEnterWorldService {
 	 * connection
 	 * character object id
 	 */
-	public static final void enterWorld(AionConnection client, int objectId) {
+	public static void enterWorld(AionConnection client, int objectId) {
 		Account account = client.getAccount();
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
 		if (playerAccData == null) {
@@ -749,8 +749,8 @@ public final class PlayerEnterWorldService {
 	 * @param player 玩家 / player
 	 */
 	public static void reschedulePeriodicSaveTasks(Player player) {
-		player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
-		player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
+		player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000L, PeriodicSaveConfig.PLAYER_GENERAL * 1000L));
+		player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000L, PeriodicSaveConfig.PLAYER_ITEMS * 1000L));
 	}
 
 	/**
@@ -759,7 +759,7 @@ public final class PlayerEnterWorldService {
 	 *
 	 * @param player 玩家 / player
 	 */
-	public static final void abyssLightLogon(final Player player) {
+	public static void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
@@ -777,7 +777,7 @@ public final class PlayerEnterWorldService {
 	 *
 	 * @param player 玩家 / player
 	 */
-	public static final void abyssDarkLogon(final Player player) {
+	public static void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
@@ -876,7 +876,7 @@ public final class PlayerEnterWorldService {
 	 *
 	 * 玩家 / player
 	 */
-	public static final void LoginServerInfo(Player player) {
+	public static void LoginServerInfo(Player player) {
 		float pvpAttackRatio = player.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO, 0).getCurrent();
 		float pvpDefenseRatio = player.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO, 0).getCurrent();
 		float pvpAttackPhyscRatio = player.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO_PHYSICAL, 0).getCurrent();

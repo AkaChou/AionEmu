@@ -9,6 +9,7 @@ import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 城镇刷新点模板（静态数据/XML）。
@@ -19,11 +20,15 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "town_spawn")
 public class TownSpawn {
 
+	/**
+	 * @return the townId
+	 */
+	@Getter
 	@XmlAttribute(name = "town_id")
 	private int townId;
 	@XmlElement(name = "town_level")
 	private List<TownLevel> townLevels;
-	private Map<Integer, TownLevel> townLevelsData = new HashMap<Integer, TownLevel>();
+	private final Map<Integer, TownLevel> townLevelsData = new HashMap<Integer, TownLevel>();
 
 	/**
 	 * 反序列化后将城镇等级列表转为按等级索引的映射。
@@ -40,13 +45,6 @@ public class TownSpawn {
 		}
 		townLevels.clear();
 		townLevels = null;
-	}
-
-	/**
-	 * @return the townId
-	 */
-	public int getTownId() {
-		return townId;
 	}
 
 	/** 返回 spawns for level / Returns the spawns for level */

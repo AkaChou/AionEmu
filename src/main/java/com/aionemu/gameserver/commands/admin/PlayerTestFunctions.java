@@ -72,11 +72,10 @@ public class PlayerTestFunctions extends AdminCommand
 		if (target == null) {
 			PacketSendUtility.sendMessage(player, "No target selected");
 			return;
-		} if (!(target instanceof Creature)) {
+		} if (!(target instanceof Creature creature)) {
 			PacketSendUtility.sendMessage(player, "Target has to be Creature!");
 			return;
 		}
-		Creature creature = (Creature) target;
 		Player targetPlayer = (Player) creature;
 		int values1 = NumberUtils.toInt(params[1]);
 		if (COMMAND_PROTECTOR.equalsIgnoreCase(params[0])) {

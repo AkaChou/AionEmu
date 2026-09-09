@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端通知欧比斯着陆点等级变化的服务端包。
@@ -9,24 +10,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author wanke
  */
+@AllArgsConstructor
 public class SM_ABYSS_LANDING_LEVEL extends AionServerPacket {
-	private int id;
-	private int level;
-	private int newLevel;
-
-	/**
-	 * 构造着陆点等级变化通知包。
-	 * Creates a landing level-change notification packet.
-	 *
-	 * @param id 着陆点 ID / landing location id
-	 * previous level
-	 * new level
-	 */
-	public SM_ABYSS_LANDING_LEVEL(int id, int level, int newLevel) {
-		this.id = id;
-		this.level = level;
-		this.newLevel = newLevel;
-	}
+	private final int id;
+	private final int level;
+	private final int newLevel;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

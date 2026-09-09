@@ -28,10 +28,10 @@ public class AbyssOpData {
 	private List<AbyssOp> aolist;
 
 	@XmlTransient
-	private IntObjectHashMap<AbyssOp> opData = new IntObjectHashMap<AbyssOp>();
+	private final IntObjectHashMap<AbyssOp> opData = new IntObjectHashMap<AbyssOp>();
 
 	@XmlTransient
-	private Map<Integer, AbyssOp> opDataMap = new HashMap<Integer, AbyssOp>(1);
+	private final Map<Integer, AbyssOp> opDataMap = new HashMap<Integer, AbyssOp>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将列表写入双索引映射。

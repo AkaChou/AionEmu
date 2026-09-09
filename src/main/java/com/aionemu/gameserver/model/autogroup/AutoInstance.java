@@ -126,9 +126,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	@Override
 	public void unregister(Player player) {
 		Integer obj = player.getObjectId();
-		if (players.containsKey(obj)) {
-			players.remove(obj);
-		}
+		players.remove(obj);
 	}
 
 	/** 清空。 / Clear. */

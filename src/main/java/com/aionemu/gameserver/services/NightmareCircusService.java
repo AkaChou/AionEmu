@@ -117,7 +117,7 @@ public class NightmareCircusService {
 			public void run() {
 				stopNightmareCircus(id);
 			}
-		}, CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
 	}
 
 	/**

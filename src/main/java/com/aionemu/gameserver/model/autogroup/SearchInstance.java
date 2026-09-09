@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * Search 副本，用于 autogroup 相关逻辑。
@@ -12,9 +13,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 
 public class SearchInstance {
-	private long registrationTime = System.currentTimeMillis();
-	private int instanceMaskId;
-	private EntryRequestType ert;
+	private final long registrationTime = System.currentTimeMillis();
+	/** 返回副本掩码 ID / Returns the instance mask id */
+	@Getter
+	private final int instanceMaskId;
+	private final EntryRequestType ert;
+	/** 返回成员数 / Returns the members */
+	@Getter
 	private List<Integer> members;
 
 	public SearchInstance(int instanceMaskId, EntryRequestType ert, Collection<Player> members) {
@@ -26,16 +31,6 @@ public class SearchInstance {
 				this.members.add(member.getObjectId());
 			}
 		}
-	}
-
-	/** 返回成员数 / Returns the members */
-	public List<Integer> getMembers() {
-		return members;
-	}
-
-	/** 返回副本掩码 ID / Returns the instance mask id */
-	public int getInstanceMaskId() {
-		return instanceMaskId;
 	}
 
 	/** 返回剩余时间 / Returns the remaining time */

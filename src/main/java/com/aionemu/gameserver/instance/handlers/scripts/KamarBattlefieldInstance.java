@@ -81,12 +81,12 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * @param player 玩家 / player
      * @return 结果 / result
      */
-    
+
     protected KamarBattlefieldPlayerReward getPlayerReward(Player player) {
         kamarBattlefieldReward.regPlayerReward(player);
-        return (KamarBattlefieldPlayerReward) kamarBattlefieldReward.getPlayerReward(player.getObjectId());
+        return kamarBattlefieldReward.getPlayerReward(player.getObjectId());
     }
-	
+
     private boolean containPlayer(Integer object) {
         return kamarBattlefieldReward.containPlayer(object);
     }
@@ -94,7 +94,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * 启动副本计时/任务。
      * Start instance timer/tasks.
      */
-	
+
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         kamarBattlefieldReward.setInstanceStartTime();
@@ -344,10 +344,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     * 
+     *
      * @param race 阵营 / race
      */
-	
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         kamarBattlefieldReward.setWinnerRace(race);
@@ -355,7 +355,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         reward();
         kamarBattlefieldReward.sendPacket(5, null);
     }
-	
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -369,7 +369,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         }
         sendEnterPacket(player);
     }
-	
+
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -396,7 +396,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
-	
+
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
             /**
@@ -414,7 +414,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             }
         });
     }
-	
+
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
@@ -444,7 +444,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             });
     	}
     }
-	
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -486,7 +486,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * 处理 reward。
      * Handle reward.
      */
-	
+
     protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
         int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
@@ -500,9 +500,9 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			int abyssPoint = 3163;
 			int gloryPoint = 150;
 			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
+			playerReward.setRewardAp(abyssPoint);
+            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(kamarBattlefieldReward.getWinnerRace())) {
                 abyssPoint += kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace()));
                 gloryPoint += kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace()));
@@ -529,8 +529,8 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			ItemService.addItem(player, 188052660, 1);
             ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
+            AbyssPointsService.addAp(player, abyssPoint);
+            AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
             QuestEnv env = new QuestEnv(null, player, 0, 0);
             GameEngineServices.questEngine().onKamarReward(env);
@@ -554,7 +554,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
     }
-    
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 90000) {
@@ -564,7 +564,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         }
         return 0;
     }
-	
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
@@ -580,7 +580,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         kamarBattlefieldReward.portToPosition(player);
         return true;
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -609,47 +609,44 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         updateScore(player, player, -points, false);
         return true;
     }
-	
+
 	private boolean isVargaKilled(Race PlayerRace) {
-    	if (PlayerRace == RaceKilledVarga) {
-    		return true;
-    	}
-    	return false;
-    }
-	
+		return PlayerRace == RaceKilledVarga;
+	}
+
 	private MutableInt getPvpKillsByRace(Race race) {
         return kamarBattlefieldReward.getPvpKillsByRace(race);
     }
-	
+
     private MutableInt getPointsByRace(Race race) {
         return kamarBattlefieldReward.getPointsByRace(race);
     }
-	
+
     private void addPointsByRace(Race race, int points) {
         kamarBattlefieldReward.addPointsByRace(race, points);
     }
-	
+
     private void addPvpKillsByRace(Race race, int points) {
         kamarBattlefieldReward.addPvpKillsByRace(race, points);
     }
-	
+
     private void addPointToPlayer(Player player, int points) {
         kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPoints(points);
     }
-	
+
     private void addPvPKillToPlayer(Player player) {
         kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
     /**
      * 处理 updateScore。
      * Handle updateScore.
-     * 
+     *
      * @param player 玩家 / player
      * @param target 目标 / target
      * @param points 分数 / points
      * @param pvpKill PVP 击杀 / pvpKill
      */
-	
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
             return;
@@ -711,7 +708,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 		updateScore(player, npc, points, false);
 		return true;
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -750,11 +747,11 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
                 point = 140;
 				despawnNpc(npc);
             break;
-			case 701909: //Elyos Cannon.
+			case 701909: // 天族陷阱型加农炮 / Elyos Cannon.
                 point = 225;
 				despawnNpc(npc);
             break;
-			case 701910: //Asmodian Cannon.
+			case 701910: // 魔族陷阱型加农炮 / Asmodian Cannon.
                 point = 225;
 				despawnNpc(npc);
             break;
@@ -814,7 +811,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         }
         updateScore(mostPlayerDamage, npc, point, false);
     }
-	
+
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
@@ -838,16 +835,16 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             case 730880: //Reian Guardian Statue.
                 point = 200;
             break;
-			case 801766: //Reian Prisoner.
-			case 801767: //Reian Prisoner.
-			case 801768: //Reian Prisoner.
-			case 801818: //Reian Prisoner.
-			case 801819: //Reian Prisoner.
-			case 801820: //Reian Prisoner.
-			case 801821: //Reian Prisoner.
+			case 801766: // 鸢族俘虏 / Reian Prisoner.
+			case 801767: // 鸢族俘虏 / Reian Prisoner.
+			case 801768: // 鸢族俘虏 / Reian Prisoner.
+			case 801818: // 鸢族俘虏 / Reian Prisoner.
+			case 801819: // 鸢族俘虏 / Reian Prisoner.
+			case 801820: // 鸢族俘虏 / Reian Prisoner.
+			case 801821: // 鸢族俘虏 / Reian Prisoner.
                 point = 225;
             break;
-			case 801903: //Garnon.
+			case 801903: // 加尔南 / Garnon.
                 point = 1500;
             break;
 			case 701906: //Reian Supply Items.
@@ -910,14 +907,14 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         }
         updateScore(player, npc, point, false);
     }
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21403);
 		effectController.removeEffect(21404);
 		effectController.removeEffect(21731);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -932,7 +929,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 		playerReward.endBoostMoraleEffect(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -943,13 +940,13 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -965,7 +962,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * 处理 openFirstDoors。
      * Handle openFirstDoors.
      */
-	
+
     protected void openFirstDoors() {
         openDoor(4);
 		openDoor(5);
@@ -977,10 +974,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     /**
      * 打开指定门。
      * Open the given door.
-     * 
+     *
      * @param doorId 门 ID / doorId
      */
-	
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
@@ -990,7 +987,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -998,14 +995,14 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * @param h 朝向 / h
      * @param time 时间 / time
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -1015,14 +1012,14 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -1033,7 +1030,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1054,7 +1051,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -1063,7 +1060,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1083,12 +1080,12 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     /**
      * 处理 sendMsgByRace。
      * Handle sendMsgByRace.
-     * 
+     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
      */
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1114,7 +1111,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     private void stopInstanceTask() {
         for (Future<?> task : kamarTask) {
 			if (task != null) {
@@ -1122,7 +1119,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
@@ -1133,7 +1130,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     public InstanceReward<?> getInstanceReward() {
         return kamarBattlefieldReward;
     }
-	
+
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
@@ -1144,7 +1141,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-	
+
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.

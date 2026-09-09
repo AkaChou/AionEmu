@@ -2,6 +2,8 @@ package com.aionemu.gameserver.world;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 世界中对象的位置：地图、区域、坐标与朝向。
@@ -24,18 +26,25 @@ public class WorldPosition {
 	}
 
 	/** 地图 ID / map id */
+	@Setter
 	private int mapId;
 	/** 所在地图区域 / map region */
 	private MapRegion mapRegion;
 	/** 世界 X / world X */
+	@Getter
 	private float x;
 	/** 世界 Y / world Y */
+	@Getter
 	private float y;
 	/** 世界 Z / world Z */
+	@Getter
+	@Setter
 	private float z;
 	/** 朝向，0–120（120 等价于 0） / heading, 0–120 (120 equals 0) */
+	@Getter
 	private byte heading;
 	/** 是否已生成（可见） / whether spawned (visible) */
+	@Getter
 	private boolean isSpawned = false;
 
 	/**
@@ -48,46 +57,6 @@ public class WorldPosition {
 		if (mapId == 0)
 			log.warn(I18n.get("log.c35fe2659e5e", this.toString()));
 		return mapId;
-	}
-
-	/**
-	 * 设置地图 ID。
-	 * Set the map id.
-	 *
-	 * @param mapId 地图 ID / the map id
-	 */
-	public void setMapId(int mapId) {
-		this.mapId = mapId;
-	}
-
-	/**
-	 * 返回世界坐标 X。
-	 * Return world X.
-	 *
-	 * @return X
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * 返回世界坐标 Y。
-	 * Return world Y.
-	 *
-	 * @return Y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * 返回世界坐标 Z。
-	 * Return world Z.
-	 *
-	 * @return Z
-	 */
-	public float getZ() {
-		return z;
 	}
 
 	/**
@@ -141,16 +110,6 @@ public class WorldPosition {
 	}
 
 	/**
-	 * 返回朝向。
-	 * Return heading.
-	 *
-	 * @return 朝向 / the heading
-	 */
-	public byte getHeading() {
-		return heading;
-	}
-
-	/**
 	 * 返回所属 {@link World}。
 	 * Return the owning {@link World}.
 	 *
@@ -168,16 +127,6 @@ public class WorldPosition {
 	 */
 	public WorldMapInstance getWorldMapInstance() {
 		return mapRegion.getParent();
-	}
-
-	/**
-	 * 对象是否已生成。
-	 * Whether the object is spawned.
-	 *
-	 * @return 已生成返回 true / true if spawned
-	 */
-	public boolean isSpawned() {
-		return isSpawned;
 	}
 
 	/**
@@ -222,16 +171,6 @@ public class WorldPosition {
 		if (newHeading != null) {
 			heading = newHeading;
 		}
-	}
-
-	/**
-	 * 设置 Z 坐标。
-	 * Set Z coordinate.
-	 *
-	 * @param z 坐标 Z / Z coordinate
-	 */
-	public void setZ(float z) {
-		this.z = z;
 	}
 
 	/**

@@ -56,8 +56,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 		Race race = null;
 		Npc boss = base.getBoss();
 		AionObject winner = base.getBoss().getAggroList().getMostDamage();
-		if (winner instanceof Creature) {
-			final Creature kill = (Creature) winner;
+		if (winner instanceof Creature kill) {
 			applyBaseBuff();
 			// 检查 kill 是否为 Player 类型。
 			// Check if kill is of Player type.
@@ -69,8 +68,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 				race = kill.getRace();
 			}
 			announceCapture(null, kill);
-		} else if (winner instanceof TemporaryPlayerTeam) {
-			final TemporaryPlayerTeam team = (TemporaryPlayerTeam) winner;
+		} else if (winner instanceof TemporaryPlayerTeam team) {
 			applyBaseBuff();
 			if (team.getRace().isPlayerRace()) {
 				base.setRace(team.getRace());
@@ -194,7 +192,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 		case 600100000: // Levinshor.
 			HTMLService.sendGuideHtml(player, "adventurers_base2");
 			break;
-		case 400020000: // Belus.
+		case 400020000: // 贝洛斯 / Belus.
 		case 400040000: // Aspida.
 		case 400050000: // Atanatos.
 		case 400060000: // Disillon.

@@ -6,12 +6,14 @@ import java.nio.FloatBuffer;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 
 /**
  * 3×3 矩阵，用于旋转与线性变换；支持对象池复用。
  * 3×3 matrix for rotation and linear transforms; supports object-pool reuse.
  */
 @Slf4j
+@AllArgsConstructor
 public final class Matrix3f implements Cloneable, Reusable {
 	/** 对象工厂，用于矩阵实例池化。 / Object factory for pooling matrix instances. */
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
@@ -21,23 +23,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 		}
 	};
 	/** 第 0 行 0 列元素。 / Element at row 0, column 0. */
-	protected float m00;
+	float m00;
 	/** 第 0 行 1 列元素。 / Element at row 0, column 1. */
-	protected float m01;
+	float m01;
 	/** 第 0 行 2 列元素。 / Element at row 0, column 2. */
-	protected float m02;
+	float m02;
 	/** 第 1 行 0 列元素。 / Element at row 1, column 0. */
-	protected float m10;
+	float m10;
 	/** 第 1 行 1 列元素。 / Element at row 1, column 1. */
-	protected float m11;
+	float m11;
 	/** 第 1 行 2 列元素。 / Element at row 1, column 2. */
-	protected float m12;
+	float m12;
 	/** 第 2 行 0 列元素。 / Element at row 2, column 0. */
-	protected float m20;
+	float m20;
 	/** 第 2 行 1 列元素。 / Element at row 2, column 1. */
-	protected float m21;
+	float m21;
 	/** 第 2 行 2 列元素。 / Element at row 2, column 2. */
-	protected float m22;
+	float m22;
 
 	/**
 	 * 构造单位矩阵。
@@ -45,32 +47,6 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 */
 	public Matrix3f() {
 		this.loadIdentity();
-	}
-
-	/**
-	 * 按给定 9 个元素构造矩阵（行主序）。
-	 * Constructs a matrix from the given 9 elements (row-major).
-	 *
-	 * @param m00 第 0 行 0 列 / row 0 col 0
-	 * @param m01 第 0 行 1 列 / row 0 col 1
-	 * @param m02 第 0 行 2 列 / row 0 col 2
-	 * @param m10 第 1 行 0 列 / row 1 col 0
-	 * @param m11 第 1 行 1 列 / row 1 col 1
-	 * @param m12 第 1 行 2 列 / row 1 col 2
-	 * @param m20 第 2 行 0 列 / row 2 col 0
-	 * @param m21 第 2 行 1 列 / row 2 col 1
-	 * @param m22 第 2 行 2 列 / row 2 col 2
-	 */
-	public Matrix3f(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
-		this.m00 = m00;
-		this.m01 = m01;
-		this.m02 = m02;
-		this.m10 = m10;
-		this.m11 = m11;
-		this.m12 = m12;
-		this.m20 = m20;
-		this.m21 = m21;
-		this.m22 = m22;
 	}
 
 	/**
@@ -1017,29 +993,28 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @return 多行字符串 / multi-line string
 	 */
 	public String toString() {
-		StringBuffer result = new StringBuffer("Matrix3f\n[\n");
-		result.append(" ");
-		result.append(this.m00);
-		result.append("  ");
-		result.append(this.m01);
-		result.append("  ");
-		result.append(this.m02);
-		result.append(" \n");
-		result.append(" ");
-		result.append(this.m10);
-		result.append("  ");
-		result.append(this.m11);
-		result.append("  ");
-		result.append(this.m12);
-		result.append(" \n");
-		result.append(" ");
-		result.append(this.m20);
-		result.append("  ");
-		result.append(this.m21);
-		result.append("  ");
-		result.append(this.m22);
-		result.append(" \n]");
-		return result.toString();
+		String result = "Matrix3f\n[\n" + " " +
+			this.m00 +
+			"  " +
+			this.m01 +
+			"  " +
+			this.m02 +
+			" \n" +
+			" " +
+			this.m10 +
+			"  " +
+			this.m11 +
+			"  " +
+			this.m12 +
+			" \n" +
+			" " +
+			this.m20 +
+			"  " +
+			this.m21 +
+			"  " +
+			this.m22 +
+			" \n]";
+		return result;
 	}
 
 	/**
@@ -1070,13 +1045,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @return 元素全等则为 true / true if all elements match
 	 */
 	public boolean equals(Object o) {
-		if (!(o instanceof Matrix3f) || o == null) {
+		if (!(o instanceof Matrix3f comp) || o == null) {
 			return false;
 		}
 		if (this == o) {
 			return true;
 		}
-		Matrix3f comp = (Matrix3f) o;
 		if (Float.compare(this.m00, comp.m00) != 0) {
 			return false;
 		}
@@ -1214,7 +1188,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param mat 待检测矩阵 / matrix to test
 	 * @return 近似单位矩阵则为 true / true if approximately identity
 	 */
-	static final boolean equalIdentity(Matrix3f mat) {
+	static boolean equalIdentity(Matrix3f mat) {
 		if ((double) Math.abs(mat.m00 - 1.0f) > 1.0E-4) {
 			return false;
 		}
@@ -1281,6 +1255,6 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param instance 待回收实例 / instance to recycle
 	 */
 	public static void recycle(Matrix3f instance) {
-		FACTORY.recycle((Object) instance);
+		FACTORY.recycle(instance);
 	}
 }

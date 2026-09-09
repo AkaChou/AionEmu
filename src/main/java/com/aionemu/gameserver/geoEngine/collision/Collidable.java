@@ -18,5 +18,5 @@ public interface Collidable {
 	 * @return 检测到的碰撞次数 / how many collisions were found
 	 * @throws UnsupportedCollisionException 不支持的可碰撞对象组合 / unsupported collidable pair
 	 */
-	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException;
+	int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException;
 }

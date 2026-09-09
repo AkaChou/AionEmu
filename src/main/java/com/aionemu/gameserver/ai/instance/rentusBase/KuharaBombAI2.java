@@ -22,8 +22,8 @@ public class KuharaBombAI2 extends AggressiveNpcAI2
 {
 	private Npc kuharaTheVolatile1;
 	private Npc kuharaTheVolatile2;
-	private AtomicBoolean isDestroyed = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isDestroyed = new AtomicBoolean(false);
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -31,7 +31,7 @@ public class KuharaBombAI2 extends AggressiveNpcAI2
 		kuharaTheVolatile1 = getPosition().getWorldMapInstance().getNpc(217311); // 狂暴的库哈拉 / Kuhara The Volatile.
 		kuharaTheVolatile2 = getPosition().getWorldMapInstance().getNpc(236298); // 狂暴的库哈拉 / Kuhara The Volatile.
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		if (isDestroyed.compareAndSet(false, true)) {

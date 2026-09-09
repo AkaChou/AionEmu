@@ -37,8 +37,8 @@ public class PriestAI2 extends AggressiveNpcAI2
 	private final Object servantLock = new Object();
 	private boolean canSpawnServants;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -46,7 +46,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (getServantNpcId(getNpcId()) == 0) {
 			return;
@@ -59,7 +59,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 			startPhaseTask();
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		synchronized (servantLock) {
 			canSpawnServants = true;
@@ -94,7 +94,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 			}, 3000, 15000);
 		}
 	}
-	
+
 	private void spawnServant(Player player) {
 		synchronized (servantLock) {
 			int servantNpcId = getServantNpcId(getNpcId());
@@ -116,16 +116,16 @@ public class PriestAI2 extends AggressiveNpcAI2
 			default -> 0;
 		};
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -135,13 +135,13 @@ public class PriestAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -325,12 +325,12 @@ public class PriestAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	private void anuhartBravery() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); //Survival Instinct.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
@@ -344,13 +344,13 @@ public class PriestAI2 extends AggressiveNpcAI2
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		stopPhaseAndDeleteHelpers();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
@@ -366,7 +366,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 			deleteHelpers();
 		}
 	}
-	
+
 	private void deleteHelpers() {
 		for (Npc npc: getPosition().getWorldMapInstance().getNpcs()) {
 			if (isOwnedServant(npc, getOwner())) {
@@ -378,7 +378,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 	static boolean isOwnedServant(Npc npc, Npc owner) {
 		return npc instanceof Servant && owner.equals(((Servant) npc).getCreator());
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		stopPhaseAndDeleteHelpers();

@@ -35,8 +35,7 @@ public class ChargeCondition extends Condition {
 	@Override
 	public boolean validate(Stat2 env, IStatFunction statFunction) {
 		StatOwner owner = statFunction.getOwner();
-		if (owner instanceof Item) {
-			Item item = (Item) owner;
+		if (owner instanceof Item item) {
 			return item.getChargeLevel() >= level;
 		}
 		return false;

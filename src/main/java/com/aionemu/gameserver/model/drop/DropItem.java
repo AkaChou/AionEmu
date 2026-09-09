@@ -7,6 +7,8 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 掉落物品模型。
@@ -16,17 +18,61 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
  */
 public class DropItem {
 
+	/**
+	 * @return 索引 / the index
+	 */
+	@Getter
+	@Setter
 	private int index = 0;
+	/**
+	 * @return 数量 / the count
+	 */
+	@Getter
+	@Setter
 	private long count = 0;
+	/**
+	 * @return 掉落模板 / the dropTemplate
+	 */
+	@Getter
 	private final Drop dropTemplate;
-	private List<Integer> playerObjIds = new ArrayList<>();
+	/**
+	 * @return 玩家对象 ID 列表 / the playerObjId
+	 */
+	@Getter
+	private final List<Integer> playerObjIds = new ArrayList<>();
+	/**
+	 * @return 是否自由拾取 / whether free for all
+	 */
+	@Getter
 	private boolean isFreeForAll = false;
+	/**
+	 * @return 最高出价 / highestValue
+	 */
+	@Getter
+	@Setter
 	private long highestValue = 0;
+	/**
+	 * @param winningPlayer 要设置的中奖玩家 / the winningPlayer to set
+	 */
+	@Setter
 	private Player winningPlayer = null;
+	/**
+	 * @return 是否已中奖但未拾取 / whether won but not collected
+	 */
+	@Getter
 	private boolean isItemWonNotCollected = false;
+	/**
+	 * @return 是否分配物品 / whether to distribute the item
+	 */
+	@Getter
 	private boolean isDistributeItem = false;
+	/** 返回 npc obj / Returns the npc obj */
+	@Getter
+	@Setter
 	private int npcObj;
 
+	/** 返回 optional socket / Returns the optional socket */
+	@Getter
 	private int optionalSocket = 0;
 
 	public DropItem(Drop dropTemplate) {
@@ -44,48 +90,6 @@ public class DropItem {
 	 */
 	public void calculateCount() {
 		count = Rnd.get(dropTemplate.getMinAmount(), dropTemplate.getMaxAmount());
-	}
-
-	/**
-	 * @return 索引 / the index
-	 */
-	public int getIndex() {
-		return index;
-	}
-
-	/**
-	 * @param index 要设置的索引 / the index to set
-	 */
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	/**
-	 * @return 数量 / the count
-	 */
-	public long getCount() {
-		return count;
-	}
-
-	/**
-	 * @param count 要设置的数量 / the count to set
-	 */
-	public void setCount(long count) {
-		this.count = count;
-	}
-
-	/**
-	 * @return 掉落模板 / the dropTemplate
-	 */
-	public Drop getDropTemplate() {
-		return dropTemplate;
-	}
-
-	/**
-	 * @return 玩家对象 ID 列表 / the playerObjId
-	 */
-	public List<Integer> getPlayerObjIds() {
-		return playerObjIds;
 	}
 
 	/** 是否可查看掉落物 / Whether view drop item */
@@ -110,35 +114,6 @@ public class DropItem {
 	}
 
 	/**
-	 * @return 是否自由拾取 / whether free for all
-	 */
-	public boolean isFreeForAll() {
-		return isFreeForAll;
-	}
-
-	/**
-	 * @return 最高出价 / highestValue
-	 */
-	public long getHighestValue() {
-		return highestValue;
-	}
-
-	/**
-	 * @param highestValue 要设置的最高出价 / the highestValue to set
-	 */
-	public void setHighestValue(long highestValue) {
-		this.highestValue = highestValue;
-	}
-
-	/**
-	 * @param winningPlayer 要设置的中奖玩家 / the winningPlayer to set
-	 */
-	public void setWinningPlayer(Player winningPlayer) {
-		this.winningPlayer = winningPlayer;
-
-	}
-
-	/**
 	 * @return 中奖玩家 / the winningPlayer
 	 */
 	public Player getWinningPlayer() {
@@ -159,39 +134,10 @@ public class DropItem {
 	}
 
 	/**
-	 * @return 是否已中奖但未拾取 / whether won but not collected
-	 */
-	public boolean isItemWonNotCollected() {
-		return isItemWonNotCollected;
-	}
-
-	/**
 	 * @param isDistributeItem 是否分配物品 / whether to distribute the item
 	 */
 	public void isDistributeItem(boolean isDistributeItem) {
 		this.isDistributeItem = isDistributeItem;
-	}
-
-	/**
-	 * @return 是否分配物品 / whether to distribute the item
-	 */
-	public boolean isDistributeItem() {
-		return isDistributeItem;
-	}
-
-	/** 返回 npc obj / Returns the npc obj */
-	public int getNpcObj() {
-		return npcObj;
-	}
-
-	/** 设置 npc obj / Sets the npc obj */
-	public void setNpcObj(int npcObj) {
-		this.npcObj = npcObj;
-	}
-
-	/** 返回 optional socket / Returns the optional socket */
-	public int getOptionalSocket() {
-		return optionalSocket;
 	}
 
 	/**

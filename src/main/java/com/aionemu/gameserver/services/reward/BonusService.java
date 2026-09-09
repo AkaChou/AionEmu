@@ -26,6 +26,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.model.templates.rewards.CraftItem;
 import com.aionemu.gameserver.model.templates.rewards.MedalItem;
+import lombok.NoArgsConstructor;
 
 /**
  * 任务/活动加成奖励服务，按加成类型从物品组中随机抽取奖励。
@@ -34,19 +35,12 @@ import com.aionemu.gameserver.model.templates.rewards.MedalItem;
  * @author Rolandas
  */
 @Slf4j
+@NoArgsConstructor
 public class BonusService {
 
-	private static BonusService instance = new BonusService();
+	private static final BonusService instance = new BonusService();
 	private static volatile ObjectProvider<BonusService> instanceProvider;
 	private ItemGroupsData itemGroups = DataManager.ITEM_GROUPS_DATA;
-
-	/**
-	 * 默认构造。
-	 * Default constructor.
-	 */
-	public BonusService() {
-
-	}
 
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地实例）。
@@ -101,7 +95,7 @@ public class BonusService {
 		case FOOD:
 			return itemGroups.getFoodGroups();
 		case GATHER:
-			return (BonusItemGroup[]) ArrayUtils.addAll(itemGroups.getOreGroups(), itemGroups.getGatherGroups());
+			return ArrayUtils.addAll(itemGroups.getOreGroups(), itemGroups.getGatherGroups());
 		case MANASTONE:
 			return itemGroups.getManastoneGroups();
 		case MEDICINE:

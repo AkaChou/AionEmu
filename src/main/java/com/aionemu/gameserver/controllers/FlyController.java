@@ -12,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 玩家飞行控制器，管理飞行、滑翔状态切换与飞行冷却。
@@ -20,14 +21,15 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
  * @author ATracer
  */
 @Slf4j
+@RequiredArgsConstructor
 public class FlyController {
 
 	/** 飞行复用冷却时间（毫秒）。 / Fly reuse cooldown in milliseconds. */
 	private static final long FLY_REUSE_TIME = 10000;
 	/** 关联玩家。 / Associated player. */
-	private Player player;
+	private final Player player;
 	/** 异常状态导致无法移动时停止滑翔的观察者。 / Observer that stops gliding when an abnormal state prevents movement. */
-	private ActionObserver glideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
+	private final ActionObserver glideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
 
 		public void abnormalsetted(AbnormalState state) {
 			if ((state.getId() & AbnormalState.CANT_MOVE_STATE.getId()) > 0 && !player.isInvulnerableWing()) {
@@ -35,16 +37,6 @@ public class FlyController {
 			}
 		}
 	};
-
-	/**
-	 * 为指定玩家构造飞行控制器。
-	 * Constructs a fly controller for the given player.
-	 *
-	 * associated player
-	 */
-	public FlyController(Player player) {
-		this.player = player;
-	}
 
 	/**
 	 * 停止滑翔；若未在飞行则恢复 FP 并可选择收起翅膀。

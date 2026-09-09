@@ -33,20 +33,20 @@ public class HyperionAI2 extends AggressiveNpcAI2
 {
 	private int castc = 0;
 	private Future<?> Cast;
-	private boolean canThink = true;
-	private List<Integer> percents = new ArrayList<Integer>();
-	
+	private final boolean canThink = true;
+	private final List<Integer> percents = new ArrayList<Integer>();
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void spawnIdeResonator() {
 		// 伊德谐振器正在为希佩里安充能。 / Ide Resonators are charging the Hyperion.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charging, 0);
@@ -165,12 +165,12 @@ public class HyperionAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[]{99, 85, 80, 70, 60, 55, 54, 50, 46, 45, 40, 35, 25, 23, 20, 18, 10, 8, 5, 3});
+		Collections.addAll(percents, 99, 85, 80, 70, 60, 55, 54, 50, 46, 45, 40, 35, 25, 23, 20, 18, 10, 8, 5, 3);
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent: percents) {
 			if (hpPercentage <= percent) {
@@ -261,7 +261,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void startCast() {
 		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -271,13 +271,13 @@ public class HyperionAI2 extends AggressiveNpcAI2
 				Cast1();
 				castc++;
 			}
-		}, 1 * 1000 * 1, 5 * 1000 * 1);
+		}, 1000, 5 * 1000);
     }
-	
+
 	private void Cast1() {
 		AI2Actions.useSkill(this, 21241);
 	}
-	
+
 	private void startCast2() {
 		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -287,9 +287,9 @@ public class HyperionAI2 extends AggressiveNpcAI2
 				Cast2();
 				castc++;
 			}
-		}, 1 * 1000 * 1, 3 * 1000 * 1);
+		}, 1000, 3 * 1000);
     }
-	
+
 	private void Cast2() {
 		switch (castc) {
 		    case 1:
@@ -300,7 +300,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void startCast3() {
 		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -310,9 +310,9 @@ public class HyperionAI2 extends AggressiveNpcAI2
 				Cast3();
 				castc++;
 			}
-		}, 1 * 1000 * 1, 3 * 1000 * 1);
+		}, 1000, 3 * 1000);
     }
-	
+
 	private void Cast3() {
 		switch (castc) {
 		    case 0:
@@ -329,7 +329,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void startCast4() {
 		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -339,9 +339,9 @@ public class HyperionAI2 extends AggressiveNpcAI2
 				Cast4();
 				castc++;
 			}
-		}, 1 * 1000 * 1, 3 * 1000 * 1);
+		}, 1000, 3 * 1000);
     }
-	
+
 	private void Cast4() {
 		switch (castc) {
 		    case 0:
@@ -355,7 +355,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void startCast5() {
 		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
@@ -365,9 +365,9 @@ public class HyperionAI2 extends AggressiveNpcAI2
 				Cast5();
 				castc++;
 			}
-		}, 1 * 1000 * 1, 5 * 1000 * 1);
+		}, 1000, 5 * 1000);
     }
-	
+
 	private void Cast5() {
 		switch (castc) {
 		    case 1:
@@ -378,20 +378,20 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		    break;
 		}
 	}
-	
+
 	private void rushInfinityShard(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	private void firstWaveEvent() {
 		rushInfinityShard((Npc)spawn(231103, 123.10f, 145.36f, 112.12f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(231103, 123.26f, 130.70f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(231103, 135.74f, 129.67f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 	}
-	
+
 	private void secondWaveEvent() {
 		rushInfinityShard((Npc)spawn(231096, 123.10f, 145.36f, 112.12f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(231097, 123.26f, 130.70f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
@@ -399,7 +399,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		rushInfinityShard((Npc)spawn(233297, 123.26f, 130.70f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(233298, 135.26f, 117.27f, 116.74f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 	}
-	
+
 	private void thirdWaveEvent() {
 		rushInfinityShard((Npc)spawn(231103, 139.07f, 142.46f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(231103, 135.26f, 117.27f, 116.74f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
@@ -407,7 +407,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		rushInfinityShard((Npc)spawn(233297, 139.07f, 142.46f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 		rushInfinityShard((Npc)spawn(233298, 135.74f, 129.67f, 112.17f, (byte) 0), 133.75711f, 137.96413f, 112.17429f, false);
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		final WorldPosition p = getPosition();
@@ -420,19 +420,19 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		addPercent();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		addPercent();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		percents.clear();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -451,7 +451,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {

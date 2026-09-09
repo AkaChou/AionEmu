@@ -224,7 +224,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		if (titleList == null) {
 			throw new SQLException("player has no title list: " + snapshot.playerId());
 		}
-		int titleId = (int) reward.id();
+		int titleId = reward.id();
 		if (titleList.contains(titleId)) {
 			return;
 		}

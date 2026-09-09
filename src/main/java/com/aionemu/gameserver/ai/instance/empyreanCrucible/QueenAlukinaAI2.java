@@ -27,41 +27,41 @@ import java.util.concurrent.Future;
 @AIName("alukina_emp")
 public class QueenAlukinaAI2 extends AggressiveNpcAI2
 {
-	private List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<Integer>();
 	private Future<?> task;
-	
+
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
 		addPercents();
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		cancelTask();
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelTask();
 		super.handleDied();
 	}
-	
+
 	@Override
 	public void handleBackHome() {
 		addPercents();
 		cancelTask();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void startEvent(int percent) {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
 		switch (percent) {
@@ -91,12 +91,12 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isCancelled())
 			task.cancel(true);
 	}
-	
+
 	private void scheduleSkill(final int skillId , int delay) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -107,7 +107,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 			}
 		}, delay);
 	}
-	
+
 	private void checkPercentage(int percentage) {
 		for (Integer percent : percents) {
 			if (percentage <= percent) {
@@ -117,9 +117,9 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void addPercents() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[] {75, 50, 25});
+		Collections.addAll(percents, 75, 50, 25);
 	}
 }

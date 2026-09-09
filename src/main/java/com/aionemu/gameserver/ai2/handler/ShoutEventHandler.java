@@ -140,7 +140,6 @@ public final class ShoutEventHandler {
 					npc.getNpcId(), ShoutEventType.ATTACK_BEGIN, null, 0);
 			GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 			shouts.clear();
-			return;
 		}
 	}
 

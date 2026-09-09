@@ -11,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_BRAND;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 玩家上线事件。
@@ -18,16 +19,12 @@ import com.google.common.base.Predicate;
  *
  * @author ATracer
  */
+@RequiredArgsConstructor
 public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predicate<PlayerAllianceMember> {
 
 	private final PlayerAlliance alliance;
 	private final Player connected;
 	private PlayerAllianceMember connectedMember;
-
-	public PlayerConnectedEvent(PlayerAlliance alliance, Player player) {
-		this.alliance = alliance;
-		this.connected = player;
-	}
 
 	/** 处理活动。 / Handle event. */
 	@Override

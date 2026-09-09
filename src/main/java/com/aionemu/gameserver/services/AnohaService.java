@@ -57,7 +57,7 @@ public class AnohaService {
 	private Map<Integer, AnohaLocation> anoha;
 
 	// 狂暴阿诺哈 4.7 / Berserk Anoha 4.7
-	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
+	private final Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
 
 	private final ConcurrentMap<Integer, BerserkAnoha<?>> activeAnoha = new ConcurrentHashMap<Integer, BerserkAnoha<?>>();
 
@@ -126,7 +126,7 @@ public class AnohaService {
 			public void run() {
 				stopAnoha(id);
 			}
-		}, CustomConfig.ANOHA_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.ANOHA_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -279,11 +279,11 @@ public class AnohaService {
 	    if (player.getLevel() < 75) {
             return;
         }
-        
+
         if (player == null || !player.isSpawned()) {
             return;
         }
-        
+
         String message = "Berserk Anoha has appeared. Do you want to fight ?";
         RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
             @Override
@@ -292,12 +292,12 @@ public class AnohaService {
                     TeleportService2.teleportTo(responder, 600090000, 813.6149f, 503.42126f, 143.75f, (byte) 72);
                 }
             }
-            
+
             @Override
             public void denyRequest(Creature requester, Player responder) {
             }
         };
-        
+
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {

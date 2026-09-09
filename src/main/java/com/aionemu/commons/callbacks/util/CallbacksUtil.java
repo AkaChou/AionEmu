@@ -30,9 +30,8 @@ public class CallbacksUtil {
 
         while(i$.hasNext()) {
             Object o = i$.next();
-            if (o instanceof AnnotationsAttribute) {
-                AnnotationsAttribute attribute = (AnnotationsAttribute)o;
-                if (attribute.getAnnotation(annotation.getName()) != null) {
+            if (o instanceof AnnotationsAttribute attribute) {
+				if (attribute.getAnnotation(annotation.getName()) != null) {
                     return true;
                 }
             }
@@ -49,9 +48,8 @@ public class CallbacksUtil {
      * @return 回调的优先级值，值越小优先级越高 / Priority value of the callback, lower value means higher priority
      */
     public static int getCallbackPriority(Callback callback) {
-        if (callback instanceof CallbackPriority) {
-            CallbackPriority instancePriority = (CallbackPriority)callback;
-            return 0 - instancePriority.getPriority();
+        if (callback instanceof CallbackPriority instancePriority) {
+			return -instancePriority.getPriority();
         } else {
             return 0;
         }
@@ -70,7 +68,7 @@ public class CallbacksUtil {
             int i = 0;
 
             for(int n = list.size(); i < n; ++i) {
-                Callback c = (Callback)list.get(i);
+                Callback c = list.get(i);
                 int cPrio = getCallbackPriority(c);
                 if (callbackPriority < cPrio) {
                     list.add(i, callback);

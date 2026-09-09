@@ -31,8 +31,7 @@ public class TalkEventHandler {
 	 */
 	public static void onTalk(NpcAI2 npcAI, Creature creature) {
 		onSimpleTalk(npcAI, creature);
-		if (creature instanceof Player) {
-			Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (GameEngineServices.questEngine().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
 				return;
 			}

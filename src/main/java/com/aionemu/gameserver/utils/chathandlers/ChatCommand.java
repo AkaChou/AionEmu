@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 聊天命令基类，封装别名、权限等级与执行入口。
@@ -13,13 +14,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author KID
  */
 @Slf4j
+@RequiredArgsConstructor
 public abstract class ChatCommand {
 
 	/**
 	 * 命令别名（不含前缀）。
 	 * Command alias (without prefix).
 	 */
-	private String alias;
+	private final String alias;
 
 	/**
 	 * 所需访问等级。
@@ -32,16 +34,6 @@ public abstract class ChatCommand {
 	 * Empty params array used when no arguments are provided.
 	 */
 	static final String[] EMPTY_PARAMS = new String[] {};
-
-	/**
-	 * 以给定别名构造命令。
-	 * Construct a command with the given alias.
-	 *
-	 * @param alias 命令别名 / Command alias
-	 */
-	public ChatCommand(String alias) {
-		this.alias = alias;
-	}
 
 	/**
 	 * 安全执行命令，异常时记录日志并回调 onFail。

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 昵称可用性检查响应服务端包。
@@ -12,20 +13,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_NICKNAME_CHECK_RESPONSE extends AionServerPacket {
 
 	/** 响应状态值 / response status value */
 	private final int value;
-
-	/**
-	 * 构造昵称检查响应包。
-	 * Builds a nickname-check response packet.
-	 *
-	 * @param value 响应状态值 / response status value
-	 */
-	public SM_NICKNAME_CHECK_RESPONSE(int value) {
-		this.value = value;
-	}
 
 	/**
 	 * {@inheritDoc}

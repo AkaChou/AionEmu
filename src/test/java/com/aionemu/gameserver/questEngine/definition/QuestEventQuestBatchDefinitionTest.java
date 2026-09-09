@@ -116,7 +116,7 @@ class QuestEventQuestBatchDefinitionTest {
 		assertEquals(1, metadata.repeatPolicy().maxRepeatCount());
 		assertTrue(metadata.cannotShare());
 		assertTrue(metadata.itemRequirements().isEmpty(), "Fayrefolk quests have no collectibles");
-		assertEquals(List.of(new QuestReward("ITEM", rewardItem, (long) rewardCount)), metadata.rewards());
+		assertEquals(List.of(new QuestReward("ITEM", rewardItem, rewardCount)), metadata.rewards());
 		assertEquals(Set.of(npcId), definition.transitions().stream()
 			.filter(t -> t.event() instanceof QuestEvent.TalkToNpc)
 			.map(t -> ((QuestEvent.TalkToNpc) t.event()).npcId())

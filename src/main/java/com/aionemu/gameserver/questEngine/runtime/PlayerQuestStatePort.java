@@ -87,6 +87,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 		Player player = players.find(playerId);
 		if (player == null) {
 			// 提交已成功但玩家已登出:内存无对象可发布,数据库值已是正确投影,重登时恢复。
+			// The commit already succeeded but the player logged out: no in-memory object can be published, the database already holds the correct projection and it is restored on re-login.
 			pending.remove(key, committed);
 			return;
 		}

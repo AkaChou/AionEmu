@@ -80,7 +80,6 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 					if (!targetPlayer.getCommonData().isOnline()) {
 						sendPacket(new SM_FRIEND_RESPONSE(targetName, SM_FRIEND_RESPONSE.TARGET_OFFLINE));
 					} else if (activePlayer.getFriendList().isFull() || responder.getFriendList().isFull()) {
-						return;
 					} else {
 						SocialService.makeFriends((Player) requester, responder);
 					}

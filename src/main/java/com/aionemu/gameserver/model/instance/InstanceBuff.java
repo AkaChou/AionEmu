@@ -25,8 +25,8 @@ import com.aionemu.gameserver.skillengine.change.Func;
 public class InstanceBuff implements StatOwner {
 
 	private Future<?> task;
-	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
-	private InstanceBonusAttr instanceBonusAttr;
+	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final InstanceBonusAttr instanceBonusAttr;
 	private long startTime;
 
 	public InstanceBuff(int buffId) {
@@ -125,7 +125,7 @@ public class InstanceBuff implements StatOwner {
 
 	private class InstanceBuffTask implements Runnable {
 
-		private Player player;
+		private final Player player;
 
 		public InstanceBuffTask(Player player) {
 			this.player = player;

@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.agent.AgentStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 代理人刷新点模板（静态数据/XML）。
@@ -13,6 +15,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class AgentSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private AgentStateType agentType;
 
@@ -25,19 +30,9 @@ public class AgentSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回代理状态类型 / Returns the agent state type */
 	public AgentStateType getAStateType() {
 		return agentType;
-	}
-
-	/** 设置 ID / Sets the id */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置代理状态类型 / Sets the agent state type */

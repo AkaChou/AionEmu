@@ -108,7 +108,7 @@ public class IuService {
 			public void run() {
 				stopConcert(id);
 			}
-		}, CustomConfig.IU_DURATION * 3600 * 1000);
+		}, (long) CustomConfig.IU_DURATION * 3600 * 1000);
 	}
 
 	/**

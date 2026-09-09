@@ -11,15 +11,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
-import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.summons.*;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -54,12 +51,12 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** taloc 任务 / taloc task */
 		private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
 		/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-    
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -73,7 +70,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		doors.get(49).setOpen(true);
 		spawnHugeInsectEgg();
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -114,7 +111,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -151,7 +148,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -174,7 +171,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -216,7 +213,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 				ItemService.addItem(player, 188900011, 1); //Blessing Box Of Growth V.
 				ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
-                spawn(799503, 539.94135f, 813.3849f, 1377.4283f, (byte) 27); //Taloc's Mirage.
+                spawn(799503, 539.94135f, 813.3849f, 1377.4283f, (byte) 27); // 卡斯帕的幻影 / Taloc's Mirage.
 				sp(700741, 636.35999f, 769.53003f, 1387.38f, (byte) 0, 92, 0, 0, null); //Purified Fragment Of Aion Tower.
             break;
 			case 700739: //Cracked Huge Insect Egg.
@@ -231,13 +228,13 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void spawnHugeInsectEgg() {
 	    SpawnTemplate IDElim2FEntity = SpawnEngine.addNewSingleTimeSpawn(300190000, 700738, 653.63f, 838.66998f, 1304.72f, (byte) 0);
 		IDElim2FEntity.setEntityId(90);
 		objects.put(700738, SpawnEngine.spawnObject(IDElim2FEntity, instanceId));
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -260,14 +257,14 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			sendMsgByRace(1400630, Race.PC_ALL, 8000);
 		}
     }
-	
+
     private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -282,7 +279,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			SummonsService.release(player.getSummon(), UnsummonType.UNSPECIFIED, false);
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -297,56 +294,49 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			SummonsService.release(player.getSummon(), UnsummonType.UNSPECIFIED, false);
 		}
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-		storage.decreaseByItemId(182215618, storage.getItemCountByItemId(182215618)); //Taloc Fruit.
-		storage.decreaseByItemId(182215593, storage.getItemCountByItemId(182215593)); //Taloc Fruit.
-		storage.decreaseByItemId(182215619, storage.getItemCountByItemId(182215619)); //Taloc's Tears.
-		storage.decreaseByItemId(182215592, storage.getItemCountByItemId(182215592)); //Taloc's Tears.
+		storage.decreaseByItemId(182215618, storage.getItemCountByItemId(182215618)); // 卡斯帕的果实 / Taloc Fruit.
+		storage.decreaseByItemId(182215593, storage.getItemCountByItemId(182215593)); // 卡斯帕的果实 / Taloc Fruit.
+		storage.decreaseByItemId(182215619, storage.getItemCountByItemId(182215619)); // 卡斯帕的泪水 / Taloc's Tears.
+		storage.decreaseByItemId(182215592, storage.getItemCountByItemId(182215592)); // 卡斯帕的泪水 / Taloc's Tears.
 		storage.decreaseByItemId(164000137, storage.getItemCountByItemId(164000137)); //Shishir's Powerstone.
 		storage.decreaseByItemId(164000138, storage.getItemCountByItemId(164000138)); //Gellmar's Wardstone.
 		storage.decreaseByItemId(164000139, storage.getItemCountByItemId(164000139)); //Neith's Sleepstone.
 	}
-	
+
 	private void addTalocFruitE(Player player) {
-	    ItemService.addItem(player, 182215618, 1); //Taloc Fruit.
+	    ItemService.addItem(player, 182215618, 1); // 卡斯帕的果实 / Taloc Fruit.
     }
 	private void addTalocTearsE(Player player) {
-        ItemService.addItem(player, 182215619, 1); //Taloc's Tears.
+        ItemService.addItem(player, 182215619, 1); // 卡斯帕的泪水 / Taloc's Tears.
     }
 	private void addTalocFruitA(Player player) {
-		ItemService.addItem(player, 182215593, 1); //Taloc Fruit.
+		ItemService.addItem(player, 182215593, 1); // 卡斯帕的果实 / Taloc Fruit.
     }
 	private void addTalocTearsA(Player player) {
-        ItemService.addItem(player, 182215592, 1); //Taloc's Tears.
+        ItemService.addItem(player, 182215592, 1); // 卡斯帕的泪水 / Taloc's Tears.
     }
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(10251); //Taloc Fruit.
-		effectController.removeEffect(10252); //Taloc Fruit.
+		effectController.removeEffect(10251); // 卡斯帕的果实 / Taloc Fruit.
+		effectController.removeEffect(10252); // 卡斯帕的果实 / Taloc Fruit.
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : talocTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
+
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -358,14 +348,14 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 * @param h 朝向 / h
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -375,14 +365,14 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -393,7 +383,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -414,7 +404,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -423,7 +413,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -440,7 +430,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -463,7 +453,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -489,7 +479,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

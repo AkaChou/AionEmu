@@ -110,7 +110,6 @@ public class DisassemblyAction extends AbstractItemAction
 			player.setDisassemblyItemLists(finalItemCollection);
 			// 发送含全部可选物品的 S 包 / we send the S packet with all Selectable Items
 			PacketSendUtility.sendPacket(player, new SM_SELECT_ITEM(finalItemCollection, parentItem.getObjectId().intValue()));
-			return;
 		} else { // Normal DisassemblyBox
 			// 发送 S_USE_ITEM 使用动画包。 / send the S_USE_ITEM packet
 			PacketSendUtility.broadcastPacketAndReceive(player,

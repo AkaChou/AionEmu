@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 征服刷新点模板（静态数据/XML）。
@@ -13,6 +15,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
  */
 
 public class ConquestSpawnTemplate extends SpawnTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
+	@Setter
 	private int id;
 	private ConquestStateType conquestType;
 
@@ -25,19 +30,9 @@ public class ConquestSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
 	/** 返回占领状态类型。 / Returns the occupation state type. */
 	public ConquestStateType getOStateType() {
 		return conquestType;
-	}
-
-	/** 设置 ID。 / Sets the id. */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/** 设置占领状态类型。 / Sets the occupation state type. */

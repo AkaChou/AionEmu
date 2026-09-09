@@ -28,7 +28,7 @@ public class BeritraData {
 	private List<BeritraTemplate> beritraTemplates;
 
 	@XmlTransient
-	private Map<Integer, BeritraLocation> beritra = new LinkedHashMap<Integer, BeritraLocation>();
+	private final Map<Integer, BeritraLocation> beritra = new LinkedHashMap<Integer, BeritraLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 索引。

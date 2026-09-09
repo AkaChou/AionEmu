@@ -26,9 +26,9 @@ public class AutoGroupData {
 	@XmlElement(name = "auto_group")
 	protected List<AutoGroup> autoGroup;
 	@XmlTransient
-	private IntObjectHashMap<AutoGroup> autoGroupByInstanceId = new IntObjectHashMap<AutoGroup>();
+	private final IntObjectHashMap<AutoGroup> autoGroupByInstanceId = new IntObjectHashMap<AutoGroup>();
 	@XmlTransient
-	private IntObjectHashMap<AutoGroup> autoGroupByNpcId = new IntObjectHashMap<AutoGroup>();
+	private final IntObjectHashMap<AutoGroup> autoGroupByNpcId = new IntObjectHashMap<AutoGroup>();
 
 	/**
 	 * JAXB 反序列化完成后，按实例 ID 与 NPC ID 建立双索引并释放列表。

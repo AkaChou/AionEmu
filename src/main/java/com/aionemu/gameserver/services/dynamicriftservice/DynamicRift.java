@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 动态裂隙活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
  * @author Rinzler (Encom)
  * @param <DL> 动态裂隙地点类型 / Dynamic Rift location type
  */
+@RequiredArgsConstructor
 public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * @return 动态裂隙地点 / dynamic rift location
+	 */
+	@Getter
 	private final DL dynamicRiftLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startDynamicRift();
-
-	/**
-	 * 绑定动态裂隙地点。
-	 * Binds the Dynamic Rift location.
-	 *
-	 * @param dynamicRiftLocation 动态裂隙地点 / dynamic rift location
-	 */
-	public DynamicRift(DL dynamicRiftLocation) {
-		this.dynamicRiftLocation = dynamicRiftLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 */
 	public boolean isClosed() {
 		return closed.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * @return 动态裂隙地点 / dynamic rift location
-	 */
-	public DL getDynamicRiftLocation() {
-		return dynamicRiftLocation;
 	}
 
 	/**

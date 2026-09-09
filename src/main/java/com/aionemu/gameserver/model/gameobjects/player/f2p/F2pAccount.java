@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.gameobjects.player.f2p;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Setter;
 
 /**
  * F2p 账号游戏对象。
@@ -11,6 +12,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class F2pAccount implements IExpirable {
 	private int deleteTime = 0;
+	/** 设置 active / Sets the active */
+	@Setter
 	private boolean active = false;
 
 	public F2pAccount(int deletionTime) {
@@ -33,11 +36,6 @@ public class F2pAccount implements IExpirable {
 	/** 返回当前 / Returns the active */
 	public boolean getActive() {
 		return active;
-	}
-
-	/** 设置 active / Sets the active */
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	/** 到期结束 / Expire End */

@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import lombok.Getter;
 
 /**
  * 不可减免的瞬时法术攻击：按配置直接结算魔法伤害（可百分比）。
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlType(name = "NoReduceSpellATKInstantEffect")
 public class NoReduceSpellATKInstantEffect extends DamageEffect {
 
+	@Getter
 	@XmlAttribute
 	protected boolean percent;
 	@XmlAttribute
@@ -47,10 +49,6 @@ public class NoReduceSpellATKInstantEffect extends DamageEffect {
 			}
 		}
 		return Math.max(1, damage);
-	}
-
-	public boolean isPercent() {
-		return percent;
 	}
 
 	public int getMaxDamage() {

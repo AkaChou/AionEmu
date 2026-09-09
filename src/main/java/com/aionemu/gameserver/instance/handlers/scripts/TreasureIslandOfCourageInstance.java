@@ -92,7 +92,7 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 打开指定门。
 	 * Open the given door.
-	 * 
+	 *
 	 * @param doorId 门 ID / doorId
 	 */
 
@@ -115,25 +115,25 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		switch (npc.getNpcId()) {
 			case 835544: // Ancient Hero's Shoe
 			case 835592:
-				GameEngineServices.skillEngine().applyEffectDirectly(11277, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11277, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
-			case 835545: // Ancient Hero's Shield
+			case 835545: // 古代英雄之盾 / Ancient Hero's Shield
 			case 835593:
-				GameEngineServices.skillEngine().applyEffectDirectly(11278, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11278, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835546: // Ancient Hero's Trap
 			case 835594:
-				GameEngineServices.skillEngine().applyEffectDirectly(11279, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11279, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835547: // Ancient Hero's Hook
 			case 835794:
-				GameEngineServices.skillEngine().applyEffectDirectly(11280, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11280, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;

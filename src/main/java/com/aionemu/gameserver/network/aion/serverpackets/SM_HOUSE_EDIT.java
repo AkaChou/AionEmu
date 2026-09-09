@@ -6,27 +6,19 @@ import com.aionemu.gameserver.model.gameobjects.UseableItemObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 通知客户端房屋编辑操作结果的服务端包（添加、移除、放置、删除等）。
  * Server packet that notifies the client of house edit action results (add, remove, place, delete, etc.).
  */
+@RequiredArgsConstructor
 public class SM_HOUSE_EDIT extends AionServerPacket {
-	private int action;
+	private final int action;
 	private int storeId;
 	private int itemObjectId;
 	private float x, y, z;
 	private int rotation;
-
-	/**
-	 * 构造仅含动作类型的房屋编辑包。
-	 * Creates a house edit packet with action type only.
-	 *
-	 * @param action 编辑动作类型 / edit action type
-	 */
-	public SM_HOUSE_EDIT(int action) {
-		this.action = action;
-	}
 
 	/**
 	 * 构造含仓库与物品对象 ID 的房屋编辑包（添加/移除等）。

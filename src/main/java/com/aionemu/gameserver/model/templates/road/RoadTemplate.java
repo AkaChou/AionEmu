@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.utils3d.Point3D;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 道路模板（静态数据/XML）。
@@ -16,67 +18,43 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Road")
+@NoArgsConstructor
 public class RoadTemplate {
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
+	/** 获取地图。 / Returns the map. */
+	@Getter
 	@XmlAttribute(name = "map")
 	protected int map;
 
+	/** 获取半径。 / Returns the radius. */
+	@Getter
 	@XmlAttribute(name = "radius")
 	protected float radius;
 
+	/** 返回居中 / Returns the center. */
+	@Getter
 	@XmlElement(name = "center")
 	protected RoadPoint center;
 
+	/** 返回 p 1 / Returns the p 1 */
+	@Getter
 	@XmlElement(name = "p1")
 	protected RoadPoint p1;
 
+	/** 返回 p 2 / Returns the p 2 */
+	@Getter
 	@XmlElement(name = "p2")
 	protected RoadPoint p2;
 
+	/** 返回 road exit / Returns the road exit */
+	@Getter
 	@XmlElement(name = "roadexit")
 	protected RoadExit roadExit;
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 获取地图。 / Returns the map. */
-	public int getMap() {
-		return map;
-	}
-
-	/** 获取半径。 / Returns the radius. */
-	public float getRadius() {
-		return radius;
-	}
-
-	/** 返回居中 / Returns the center. */
-	public RoadPoint getCenter() {
-		return center;
-	}
-
-	/** 返回 p 1 / Returns the p 1 */
-	public RoadPoint getP1() {
-		return p1;
-	}
-
-	/** 返回 p 2 / Returns the p 2 */
-	public RoadPoint getP2() {
-		return p2;
-	}
-
-	/** 返回 road exit / Returns the road exit */
-	public RoadExit getRoadExit() {
-		return roadExit;
-	}
-
-	public RoadTemplate() {
-
-	};
 
 	public RoadTemplate(String name, int mapId, Point3D center, Point3D p1, Point3D p2) {
 		this.name = name;

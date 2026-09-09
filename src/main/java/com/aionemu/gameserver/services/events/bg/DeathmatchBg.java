@@ -805,7 +805,7 @@ public class DeathmatchBg extends Battleground {
 			public void run() {
 				endDeathmatch();
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -842,8 +842,7 @@ public class DeathmatchBg extends Battleground {
 			super.specAnnounce(player.getName() + "'s killing ended!");
 		}
 		player.setKillStreak(0);
-		if (lastAttacker instanceof Player && ((Player) lastAttacker).getObjectId() != player.getObjectId()) {
-			Player killer = (Player) lastAttacker;
+		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			killer.setKillStreak(killer.getKillStreak() + 1);
 			if (killer.getKillStreak() > 1) {
 				for (Player pl : super.getPlayers()) {
@@ -950,7 +949,7 @@ public class DeathmatchBg extends Battleground {
 						AbyssPointsService.addGp(pl, 25);
 					}
 				} else {
-					super.getLadderDAO().addRating(pl, -super.K_VALUE / 20);
+					getLadderDAO().addRating(pl, -super.K_VALUE / 20);
 				}
 			}
 			super.specAnnounce(

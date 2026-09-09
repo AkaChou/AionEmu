@@ -7,6 +7,8 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Func;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 宠物惩罚属性模板（静态数据/XML）。
@@ -17,42 +19,21 @@ import com.aionemu.gameserver.skillengine.change.Func;
 @XmlType(name = "PetPenaltyAttr")
 public class PetPenaltyAttr {
 
+	/** 获取属性。 / Returns the stat. */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected StatEnum stat;
 
+	/** 返回加成函数 / Returns the func */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected Func func;
 
+	/** 获取值。 / Returns the value. */
+	@Getter
+	@Setter
 	@XmlAttribute(required = true)
 	protected int value;
-
-	/** 获取属性。 / Returns the stat. */
-	public StatEnum getStat() {
-		return stat;
-	}
-
-	/** 设置属性。 / Sets the stat. */
-	public void setStat(StatEnum value) {
-		this.stat = value;
-	}
-
-	/** 返回加成函数 / Returns the func */
-	public Func getFunc() {
-		return func;
-	}
-
-	/** 设置加成函数 / Sets the func */
-	public void setFunc(Func value) {
-		this.func = value;
-	}
-
-	/** 获取值。 / Returns the value. */
-	public int getValue() {
-		return value;
-	}
-
-	/** 设置值。 / Sets the value. */
-	public void setValue(int value) {
-		this.value = value;
-	}
 }

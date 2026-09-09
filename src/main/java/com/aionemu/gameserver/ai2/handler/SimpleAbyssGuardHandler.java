@@ -46,7 +46,7 @@ public class SimpleAbyssGuardHandler {
 	 * @param creature 待检查生物 / creature to evaluate
 	 */
 	protected static void checkAggro(NpcAI2 ai, Creature creature) {
-		if (!(creature instanceof Npc)) {
+		if (!(creature instanceof Npc npc)) {
 			CreatureEventHandler.checkAggro(ai, creature);
 			return;
 		}
@@ -54,7 +54,6 @@ public class SimpleAbyssGuardHandler {
 		if (creature.getLifeStats().isAlreadyDead() || !owner.canSee(creature)) {
 			return;
 		}
-		Npc npc = ((Npc) creature);
 		if (npc.getNpcType() != NpcType.ATTACKABLE && npc.getNpcType() != NpcType.AGGRESSIVE || npc.getLevel() < 2) {
 			return;
 		}

@@ -7,23 +7,15 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 向客户端生成/同步单个房屋摆放物的服务端包。
  * Server packet that spawns or synchronizes a single house object to the client.
  */
+@AllArgsConstructor
 public class SM_HOUSE_OBJECT extends AionServerPacket {
 	HouseObject<?> houseObject;
-
-	/**
-	 * 构造单个房屋摆放物同步包。
-	 * Creates a single house object sync packet.
-	 *
-	 * @param owner 房屋摆放物 / house object
-	 */
-	public SM_HOUSE_OBJECT(HouseObject<?> owner) {
-		this.houseObject = owner;
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

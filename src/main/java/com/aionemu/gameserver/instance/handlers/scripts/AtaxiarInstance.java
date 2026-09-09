@@ -35,7 +35,7 @@ public class AtaxiarInstance extends GeneralInstanceHandler
 	
 	private void shieldOfHagen() {
 		for (Player p: instance.getPlayersInside()) {
-			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(257); //Shield Of Hagen.
+			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(257); // 哈根的盾牌 / Shield Of Hagen.
 			Effect e = new Effect(p, p, st, 1, st.getEffectsDuration(9));
 			e.initialize();
 			e.applyEffect();

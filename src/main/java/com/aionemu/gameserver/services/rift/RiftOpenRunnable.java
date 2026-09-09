@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.RiftService;
+import lombok.AllArgsConstructor;
 
 /**
  * 裂隙开启定时任务，按世界 ID 打开对应裂隙并向玩家广播状态。
@@ -13,18 +14,9 @@ import com.aionemu.gameserver.services.RiftService;
  *
  * @author Rinzler (Encom)
  */
+@AllArgsConstructor
 public class RiftOpenRunnable implements Runnable {
 	private final int worldId;
-
-	/**
-	 * 构造指定世界的裂隙开启任务。
-	 * Create an open-rift task for the given world.
-	 *
-	 * @param worldId 世界地图 ID / World map id
-	 */
-	public RiftOpenRunnable(int worldId) {
-		this.worldId = worldId;
-	}
 
 	/**
 	 * 打开该世界全部裂隙位置并发送裂隙信息。

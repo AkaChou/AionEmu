@@ -79,47 +79,47 @@ public class QuestEngine implements GameEngine {
 	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	/** NPC 关联任务索引 / NPC-related quest index */
-	private IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
+	private final IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
 	/** 物品使用关联任务 / Item-use related quests */
-	private IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
 	/** 房屋物品关联任务 / House-item related quests */
-	private IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
 	/** 获得物品关联任务 / Item-obtain related quests */
-	private IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<IntArrayList>();
 	/** 区域任务结束监听列表 / Zone-mission-end listeners */
-	private IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
+	private final IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
 	/** 升级监听列表 / Level-up listeners */
-	private IntArrayList questOnLevelUp = new IntArrayList();
+	private final IntArrayList questOnLevelUp = new IntArrayList();
 	/** 死亡监听列表 / Death listeners */
-	private IntArrayList questOnDie = new IntArrayList();
+	private final IntArrayList questOnDie = new IntArrayList();
 	/** 登出监听列表 / Logout listeners */
-	private IntArrayList questOnLogOut = new IntArrayList();
+	private final IntArrayList questOnLogOut = new IntArrayList();
 	/** 进入世界监听列表 / Enter-world listeners */
-	private IntArrayList questOnEnterWorld = new IntArrayList();
+	private final IntArrayList questOnEnterWorld = new IntArrayList();
 	/** 进入区域监听 / Enter-zone listeners */
-	private Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private final Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<ZoneName, IntArrayList>();
 	/** 离开区域监听 / Leave-zone listeners */
-	private Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private final Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<ZoneName, IntArrayList>();
 	/** 穿过飞行环监听 / Pass-flying-ring listeners */
-	private Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<String, IntArrayList>();
+	private final Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<String, IntArrayList>();
 	/** 动画结束监听 / Movie-end listeners */
-	private IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
 	/** 计时器结束监听 / Timer-end listeners */
-	private List<Integer> questOnTimerEnd = new ArrayList<Integer>();
+	private final List<Integer> questOnTimerEnd = new ArrayList<Integer>();
 	/** 隐形计时器结束监听 / Invisible-timer-end listeners */
-	private List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
+	private final List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
 	/** 击杀军衔玩家监听 / Kill-ranked listeners */
-	private Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<AbyssRankEnum, IntArrayList>();
+	private final Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<AbyssRankEnum, IntArrayList>();
 	/** 世界内击杀监听 / Kill-in-world listeners */
-	private Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<Integer, IntArrayList>();
+	private final Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<Integer, IntArrayList>();
 	/** 使用技能监听 / Skill-use listeners */
-	private IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
 	/** 对话框 ID → 枚举映射 / dialogId → enum map */
-	private Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
+	private final Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
 	/** 制作失败监听 / Fail-craft listeners */
-	private Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
 	/** 装备物品监听 / Equip-item listeners */
-	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
+	private final Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
 	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
 	private ScheduledFuture<?> messageSendingTask;
 	/** Fully composed production ports used by typed quest execution. */
@@ -138,27 +138,27 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 	/** 可行动作监听 / Can-act listeners */
-	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
 	/** 挖掘号奖励监听 / Dredgion reward listeners */
-	private List<Integer> questOnDredgionReward = new ArrayList<Integer>();
+	private final List<Integer> questOnDredgionReward = new ArrayList<Integer>();
 	/** 卡玛尔奖励监听 / Kamar reward listeners */
-	private List<Integer> questOnKamarReward = new ArrayList<Integer>();
+	private final List<Integer> questOnKamarReward = new ArrayList<Integer>();
 	/** 欧菲丹奖励监听 / Ophidan reward listeners */
-	private List<Integer> questOnOphidanReward = new ArrayList<Integer>();
+	private final List<Integer> questOnOphidanReward = new ArrayList<Integer>();
 	/** 堡垒奖励监听 / Bastion reward listeners */
-	private List<Integer> questOnBastionReward = new ArrayList<Integer>();
+	private final List<Integer> questOnBastionReward = new ArrayList<Integer>();
 	/** 奖励加成监听 / Bonus-apply listeners */
-	private Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<BonusType, IntArrayList>();
+	private final Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<BonusType, IntArrayList>();
 	/** 跟随到达目标监听 / Reach-target listeners */
-	private IntArrayList reachTarget = new IntArrayList();
+	private final IntArrayList reachTarget = new IntArrayList();
 	/** 跟随丢失目标监听 / Lost-target listeners */
-	private IntArrayList lostTarget = new IntArrayList();
+	private final IntArrayList lostTarget = new IntArrayList();
 	/** 进入风道监听 / Enter-windstream listeners */
-	private IntArrayList questOnEnterWindStream = new IntArrayList();
+	private final IntArrayList questOnEnterWindStream = new IntArrayList();
 	/** 骑乘动作监听 / Ride-action listeners */
-	private IntArrayList questRideAction = new IntArrayList();
+	private final IntArrayList questRideAction = new IntArrayList();
 	/** 创造力点数监听 / Creativity-point listeners */
-	private IntArrayList questOnCreativityPoint = new IntArrayList();
+	private final IntArrayList questOnCreativityPoint = new IntArrayList();
 
 	/**
 	 * 创建任务引擎实例。
@@ -304,11 +304,10 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否处理成功（异常时 false） / Whether successful ({@code false} on error)
 	 */
 	public boolean onKill(QuestEnv env) {
-		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc)) {
+		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
 		}
 		try {
-			Npc npc = (Npc) env.getVisibleObject();
 			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
 			QuestProductionDispatcher typed = productionDispatcher;
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
@@ -334,11 +333,10 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onAttack(QuestEnv env) {
-		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc)) {
+		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
 		}
 		try {
-			Npc npc = (Npc) env.getVisibleObject();
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAttackEvent();
@@ -1347,7 +1345,7 @@ public class QuestEngine implements GameEngine {
 			itemRelatedQuests.add(questId);
 			questHouseItems.put(itemId, itemRelatedQuests);
 		} else {
-			((IntArrayList) questHouseItems.get(itemId)).add(questId);
+			questHouseItems.get(itemId).add(questId);
 		}
 	}
 
@@ -1982,10 +1980,10 @@ public class QuestEngine implements GameEngine {
 							.anyMatch(projection -> projection.status() == QuestStatus.NONE)) {
 						questNpc.addOnQuestStart(definition.id());
 					}
-				} else if (transition.event() instanceof QuestEvent.KillNpc kill) {
-					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
-					} else if (transition.event() instanceof QuestEvent.KillNpcSet kills) {
-						for (int npcId : kills.npcIds()) {
+				} else if (transition.event() instanceof QuestEvent.KillNpc(int npcId1)) {
+					registerQuestNpc(npcId1).addOnKillEvent(definition.id());
+					} else if (transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
+						for (int npcId : npcIds) {
 							registerQuestNpc(npcId).addOnKillEvent(definition.id());
 						}
 				} else if (transition.event() instanceof QuestEvent.AttackNpc attack) {
@@ -1994,11 +1992,11 @@ public class QuestEngine implements GameEngine {
 					registerCanAct(definition.id(), canAct.templateId());
 				} else if (transition.event() instanceof QuestEvent.UseItem use) {
 					registerQuestItem(use.itemId(), definition.id());
-				} else if (transition.event() instanceof QuestEvent.GetItem get) {
+				} else if (transition.event() instanceof QuestEvent.GetItem(int id)) {
 					// Keep the obtain-event index in sync with the typed catalog. The
 					// runtime dispatcher remains authoritative; this index only lets
 					// the legacy loop skip typed owners safely.
-					registerGetingItem(get.itemId(), definition.id());
+					registerGetingItem(id, definition.id());
 				} else if (transition.event() instanceof QuestEvent.CollectItem collect) {
 					// Collection routes share the item-obtain ingress while retaining
 					// their own event type for count matching.
@@ -2017,14 +2015,14 @@ public class QuestEngine implements GameEngine {
 					registerAddOnReachTargetEvent(definition.id());
 				} else if (transition.event() instanceof QuestEvent.NpcLostTarget) {
 					registerAddOnLostTargetEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.MovieEnd movie) {
-					registerOnMovieEndQuest(movie.movieId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.MovieEnd(int movieId)) {
+					registerOnMovieEndQuest(movieId, definition.id());
 				} else if (transition.event() instanceof QuestEvent.ZoneMissionEnd) {
 					registerOnEnterZoneMissionEnd(definition.id());
 				} else if (transition.event() instanceof QuestEvent.InvisibleTimerEnd) {
 					registerOnInvisibleTimerEnd(definition.id());
-				} else if (transition.event() instanceof QuestEvent.EquipItem equip) {
-					registerOnEquipItem(equip.itemId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.EquipItem(int itemId)) {
+					registerOnEquipItem(itemId, definition.id());
 				}
 			}
 		}

@@ -11,6 +11,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.springframework.beans.factory.ObjectProvider;
+import lombok.Getter;
 
 /**
  * 战场联盟服务，管理攻城期间联盟注册与进出。
@@ -22,7 +23,21 @@ public class BattlefieldUnionService {
 	private static final BattlefieldUnionService instance = new BattlefieldUnionService();
 	private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
 
+	/**
+	 * 返回当前已注册人数。
+	 * Returns the current registered size.
+	 *
+	 * @return 已注册人数 / registered size
+	 */
+	@Getter
 	public int size = 0;
+	/**
+	 * 返回联盟人数上限。
+	 * Returns the maximum registered size.
+	 *
+	 * @return 人数上限 / max size
+	 */
+	@Getter
 	public int maxSize = 24;
 	public int requestId = 0;
 	public int activeSiegeId;
@@ -121,26 +136,6 @@ public class BattlefieldUnionService {
 		PacketSendUtility.sendPacket(player, new SM_BATTLEFIELD_UNION_REGISTER(requestId, true));
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404004));
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404005));
-	}
-
-	/**
-	 * 返回当前已注册人数。
-	 * Returns the current registered size.
-	 *
-	 * @return 已注册人数 / registered size
-	 */
-	public int getSize() {
-		return size;
-	}
-
-	/**
-	 * 返回联盟人数上限。
-	 * Returns the maximum registered size.
-	 *
-	 * @return 人数上限 / max size
-	 */
-	public int getMaxSize() {
-		return maxSize;
 	}
 
 	/**

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import lombok.AllArgsConstructor;
 
 /**
  * 更新仓库中单件物品信息的服务端包。
@@ -16,25 +17,13 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
  * @author kosyachok
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_WAREHOUSE_UPDATE_ITEM extends AionServerPacket {
 
-	private Player player;
-	private Item item;
-	private int warehouseType;
-	private ItemUpdateType updateType;
-
-	/**
-	 * 玩家 / player
-	 * @param item          更新的物品 / updated item
-	 * warehouse type
-	 * update type
-	 */
-	public SM_WAREHOUSE_UPDATE_ITEM(Player player, Item item, int warehouseType, ItemUpdateType updateType) {
-		this.player = player;
-		this.item = item;
-		this.warehouseType = warehouseType;
-		this.updateType = updateType;
-	}
+	private final Player player;
+	private final Item item;
+	private final int warehouseType;
+	private final ItemUpdateType updateType;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

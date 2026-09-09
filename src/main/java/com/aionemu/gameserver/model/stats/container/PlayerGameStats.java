@@ -23,6 +23,8 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 import org.apache.commons.lang3.ArrayUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家的游戏属性：含装备/魔石加成与速度缓存。
@@ -34,8 +36,17 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 
 	private int cachedSpeed;
 	private int cachedAttackSpeed;
+	/** 返回最大伤害概率 / Returns the max damage chance*/
+	@Getter
+	@Setter
 	private int maxDamageChance;
+	/** 返回 min damage ratio / Returns the min damage ratio */
+	@Getter
+	@Setter
 	private float minDamageRatio;
+	/** 返回 skill efficiency / Returns the skill efficiency */
+	@Getter
+	@Setter
 	private float skillEfficiency;
 
 	/**
@@ -77,7 +88,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getMaxHp() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		Stat2 stat = getStat(StatEnum.MAXHP, pst.getMaxHp());
-		int HVIT = ((Player) owner).getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
+		int HVIT = owner.getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
 		int MaxHpCalculation = Math.round(19118 * HVIT / (825.0F + HVIT));
 		stat.addToBonus(MaxHpCalculation);
 		return stat;
@@ -88,7 +99,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getMaxMp() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		Stat2 stat = getStat(StatEnum.MAXMP, pst.getMaxMp());
-		int HWIL = ((Player) owner).getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
+		int HWIL = owner.getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
 		int MaxMpCalculation = Math.round(20540 * HWIL / (825.0F + HWIL));
 		stat.addToBonus(MaxMpCalculation);
 		return stat;
@@ -97,10 +108,10 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 strike resist / Returns the strike resist */
 	public Stat2 getStrikeResist() {
 		Stat2 stat = getStat(StatEnum.PHYSICAL_CRITICAL_RESIST, 0);
-		int HDEX = ((Player) owner).getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
+		int HDEX = owner.getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
 		int Pcrculation = Math.round(1144 * HDEX / (187.0F + HDEX));
 		stat.addToBonus(Pcrculation);
-		return stat;		
+		return stat;
 	}
 
 	/** 返回 strike fort / Returns the strike fort */
@@ -114,9 +125,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		int Pclass = owner.getPlayerClass().getClassId();
 		if (Pclass == 7 || Pclass == 8 || Pclass == 10) {
 			base = 50;
-		}		
+		}
 		Stat2 stat = getStat(StatEnum.MAGICAL_CRITICAL_RESIST, base);
-		int HWIL = ((Player) owner).getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
+		int HWIL = owner.getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
 		int MCrCalculation = Math.round(1236 * HWIL / (376.0F + HWIL));
 		stat.addToBonus(MCrCalculation);
 		return stat;
@@ -164,9 +175,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getBCastingTime() {
 		int base = 0;
 		int casterClass = owner.getPlayerClass().getClassId();
-		if (casterClass == 7 || // Sorcerer.
-				casterClass == 8 || // Spirit-Master.
-				casterClass == 16) { // Songweaver.
+		if (casterClass == 7 || // 魔道星 / Sorcerer.
+				casterClass == 8 || // 精灵星 / Spirit-Master.
+				casterClass == 16) { // 吟游星 / Songweaver.
 			base = 800;
 		}
 		return getStat(StatEnum.BOOST_CASTING_TIME, base);
@@ -178,15 +189,15 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		int base = 0;
 		int sorcerer1 = owner.getPlayerClass().getClassId();
 		int spiritMaster1 = owner.getPlayerClass().getClassId();
-		int HDEX = ((Player) owner).getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
-		int ConcentrationCalculation = Math.round(471 * HDEX / (825.0F + HDEX));		
+		int HDEX = owner.getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
+		int ConcentrationCalculation = Math.round(471 * HDEX / (825.0F + HDEX));
 		if (sorcerer1 == 7) {
 			base = 25;
 		} else if (spiritMaster1 == 8 && owner.getLevel() >= 56) {
 			base = 100;
 		}
 		Stat2 stat = getStat(StatEnum.CONCENTRATION, base);
-		stat.addToBonus(ConcentrationCalculation);				
+		stat.addToBonus(ConcentrationCalculation);
 		return stat;
 	}
 
@@ -250,8 +261,8 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getPDef() {
 		int base = 0;
 		Stat2 stats = getStat(StatEnum.PHYSICAL_DEFENSE, base);
-		int HSTR = ((Player) owner).getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
-		int phyDefCalculation = Math.round(3440 * HSTR / (135.0F + HSTR));		
+		int HSTR = owner.getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
+		int phyDefCalculation = Math.round(3440 * HSTR / (135.0F + HSTR));
 		int gunslinger = owner.getPlayerClass().getClassId();
 		int aethertech = owner.getPlayerClass().getClassId();
 		if (gunslinger == 14) {
@@ -272,9 +283,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			base = 30;
 		}
 		Stat2 stat = getStat(StatEnum.MAGICAL_RESIST, base);
-		int HWIL = ((Player) owner).getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
+		int HWIL = owner.getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
 		int MResistCalculation = Math.round(2844 * HWIL / (825.0F + HWIL));
-		stat.addToBonus(MResistCalculation);  
+		stat.addToBonus(MResistCalculation);
 		return stat;
 	}
 
@@ -294,9 +305,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (spiritMaster2 == 8 && owner.getLevel() >= 60) {
 			base = 180;
 		}
-		
+
 		Stat2 stat = getStat(StatEnum.MAGIC_SKILL_BOOST_RESIST, base);
-		int HKNO = ((Player) owner).getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
+		int HKNO = owner.getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
 		int MBResistCalculation = Math.round(1392 * HKNO / (129.0F + HKNO));
 		stat.addToBonus(MBResistCalculation);
 		return stat;
@@ -436,7 +447,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getEvasion() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		Stat2 stat = getStat(StatEnum.EVASION, pst.getEvasion());
-		int HDEX = ((Player) owner).getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
+		int HDEX = owner.getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
 		int EvasionCalculation = Math.round(3140 * HDEX / (800.0F + HDEX));
 		stat.addToBonus(EvasionCalculation);
 		return stat;
@@ -452,7 +463,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			base += mainHandWeapon.getItemTemplate().getWeaponStats().getParry();
 		}
 		Stat2 stat = getStat(StatEnum.PARRY, base);
-		int HDEX = ((Player) owner).getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
+		int HDEX = owner.getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
 		int ParryCalculation = Math.round(3112 * HDEX / (550.0F + HDEX));
 		stat.addToBonus(ParryCalculation);
 		return stat;
@@ -463,7 +474,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getBlock() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		Stat2 stat = getStat(StatEnum.BLOCK, pst.getBlock());
-		int HVIT = ((Player) owner).getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
+		int HVIT = owner.getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
 		int BlockCalculation = Math.round(4740 * HVIT / (825.0F + HVIT));
 		stat.addToBonus(BlockCalculation);
 		return stat;
@@ -498,9 +509,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			}
 		}
 		Stat2 stat = getStat(StatEnum.PHYSICAL_ATTACK, base, calculationTypes);
-		int HSTR = ((Player) owner).getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
+		int HSTR = owner.getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
 		int PhyAtkCalculation = Math.round(1256 * HSTR / (825.0F + HSTR));
-		stat.addToBonus(PhyAtkCalculation);		
+		stat.addToBonus(PhyAtkCalculation);
 		return getStat(StatEnum.MAIN_HAND_POWER, stat, calculationTypes);
 	}
 
@@ -531,9 +542,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 				stat.setBaseRate(stat.getBaseRate() * getOffHandDamageRatio());
 				stat.setBonusRate(stat.getBonusRate() * getOffHandDamageRatio());
 			}
-			int HSTR = ((Player) owner).getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
+			int HSTR = owner.getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
 			int PhyAtkCalculation = Math.round(1256 * HSTR / (825.0F + HSTR));
-			stat.addToBonus(PhyAtkCalculation);			
+			stat.addToBonus(PhyAtkCalculation);
 			return getStat(StatEnum.OFF_HAND_POWER, stat, calculationTypes);
 		}
 		return new AdditionStat(StatEnum.OFF_HAND_POWER, 0, owner);
@@ -550,9 +561,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			base = mainHandWeapon.getItemTemplate().getWeaponStats().getPhysicalCritical();
 		}
 		Stat2 stat = getStat(StatEnum.PHYSICAL_CRITICAL, base);
-		int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
+		int HAGI = owner.getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
 		int PhyCriticalCalculation = Math.round(3160 * HAGI / (825.0F + HAGI));
-		stat.addToBonus(PhyCriticalCalculation);  
+		stat.addToBonus(PhyCriticalCalculation);
 		return stat;
 	}
 
@@ -563,7 +574,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (offHandWeapon != null && offHandWeapon.getItemTemplate().isWeapon()) {
 			int base = offHandWeapon.getItemTemplate().getWeaponStats().getPhysicalCritical();
 			Stat2 stat = getStat(StatEnum.PHYSICAL_CRITICAL, base);
-			int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
+			int HAGI = owner.getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
 			int PhyCriticalCalculation = Math.round(3160 * HAGI / (825.0F + HAGI));
 			stat.addToBonus(PhyCriticalCalculation);
 			return stat;
@@ -582,7 +593,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			base += mainHandWeapon.getItemTemplate().getWeaponStats().getPhysicalAccuracy();
 		}
 		Stat2 stat = getStat(StatEnum.PHYSICAL_ACCURACY, base);
-		int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
+		int HAGI = owner.getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
 		int PhyAccuracyCalculation = Math.round(4020 * HAGI / (510.0F + HAGI));
 		stat.addToBonus(PhyAccuracyCalculation);
 		return stat;
@@ -597,9 +608,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 					owner.getLevel());
 			int base = pst.getMainHandAccuracy();
 			base += offHandWeapon.getItemTemplate().getWeaponStats().getPhysicalAccuracy();
-			
+
 			Stat2 stat = getStat(StatEnum.PHYSICAL_ACCURACY, base);
-			int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
+			int HAGI = owner.getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
 			int PhyAccuracyCalculation = Math.round(4020 * HAGI / (510.0F + HAGI));
 			stat.addToBonus(PhyAccuracyCalculation);
 			return stat;
@@ -687,9 +698,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (mainHandWeapon != null) {
 			base += mainHandWeapon.getItemTemplate().getWeaponStats().getBoostMagicalSkill();
 		}
-		
+
 		Stat2 stat = getStat(StatEnum.BOOST_MAGICAL_SKILL, base);
-		int HKNO = ((Player) owner).getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
+		int HKNO = owner.getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
 		int MBoostCalculation = Math.round(5056 * HKNO / (825.0F + HKNO));
 		stat.addToBonus(MBoostCalculation);
 		return stat;
@@ -705,7 +716,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			base += mainHandWeapon.getItemTemplate().getWeaponStats().getMagicalAccuracy();
 		}
 		Stat2 stat = getStat(StatEnum.MAGICAL_ACCURACY, base);
-		int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
+		int HAGI = owner.getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
 		int MAccuracyCalculation = Math.round(2286 * HAGI / (376.0F + HAGI));
 		stat.addToBonus(MAccuracyCalculation);
 		return stat;
@@ -716,9 +727,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	public Stat2 getMCritical() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		int base = pst.getMCritical();
-		
+
 		Stat2 stat = getStat(StatEnum.MAGICAL_CRITICAL, base);
-		int HKNO = ((Player) owner).getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
+		int HKNO = owner.getGameStats().getStat(StatEnum.HKNO, 0).getCurrent();
 		int MCriticalCalculation = Math.round(1884 * HKNO / (825.0F + HKNO));
 		stat.addToBonus(MCriticalCalculation);
 		return stat;
@@ -733,7 +744,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		}
 		base *= getHealth().getCurrent() / 100f;
 		Stat2 stat = getStat(StatEnum.REGEN_HP, base);
-		int HVIT = ((Player) owner).getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
+		int HVIT = owner.getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
 		int RegenHpCalculation = Math.round(316 * HVIT / (825.0F + HVIT));
 		stat.addToBonus(RegenHpCalculation);
 		return stat;
@@ -748,7 +759,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		}
 		base *= getWill().getCurrent() / 100f;
 		Stat2 stat = getStat(StatEnum.REGEN_MP, base);
-		int HWIL = ((Player) owner).getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
+		int HWIL = owner.getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
 		int RegenMpCalculation = Math.round(158 * HWIL / (825.0F + HWIL));
 		stat.addToBonus(RegenMpCalculation);
 		return stat;
@@ -798,36 +809,6 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			}
 		}
 		return damage;
-	}
-
-	/** 返回 skill efficiency / Returns the skill efficiency */
-	public float getSkillEfficiency() {
-		return skillEfficiency;
-	}
-
-	/** 返回最大伤害概率 / Returns the max damage chance*/
-	public int getMaxDamageChance() {
-		return maxDamageChance;
-	}
-
-	/** 返回 min damage ratio / Returns the min damage ratio */
-	public float getMinDamageRatio() {
-		return minDamageRatio;
-	}
-
-	/** 设置 skill efficiency / Sets the skill efficiency */
-	public void setSkillEfficiency(float skillEfficiency) {
-		this.skillEfficiency = skillEfficiency;
-	}
-
-	/** 设置最大伤害概率 / Sets the max damage chance*/
-	public void setMaxDamageChance(int maxDamageChance) {
-		this.maxDamageChance = maxDamageChance;
-	}
-
-	/** 设置 min damage ratio / Sets the min damage ratio */
-	public void setMinDamageRatio(float minDamageRatio) {
-		this.minDamageRatio = minDamageRatio;
 	}
 
 	/** 返回 off hand damage ratio / Returns the off hand damage ratio */

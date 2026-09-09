@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TribeClass;
+import lombok.Getter;
 
 /**
  * 全局掉落部落模板（静态数据/XML）。
@@ -16,11 +17,8 @@ import com.aionemu.gameserver.model.TribeClass;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropTribe")
 public class GlobalDropTribe {
+	/** 获取部落。 / Returns the tribe. */
+	@Getter
 	@XmlAttribute(name = "tribe", required = true)
 	protected TribeClass tribe;
-
-	/** 获取部落。 / Returns the tribe. */
-	public TribeClass getTribe() {
-		return tribe;
-	}
 }

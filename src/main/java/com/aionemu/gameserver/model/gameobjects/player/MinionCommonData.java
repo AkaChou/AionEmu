@@ -6,6 +6,8 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 守护灵公共数据。
@@ -14,20 +16,60 @@ import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
 
 public class MinionCommonData extends VisibleObjectTemplate implements IExpirable {
 
+	/** 返回 minion id / Returns the minion id */
+	@Getter
 	private int minionId;
+	/** 设置 birthday / Sets the birthday */
+	@Setter
 	private Timestamp birthday;
 	private int minionObjId = 0;
-	private int masterObjectId;
-	private String minionGrade;
+	/** 返回 master object id / Returns the master object id */
+	@Getter
+	private final int masterObjectId;
+	/** 返回 minion grade / Returns the minion grade */
+	@Getter
+	private final String minionGrade;
+	/** 设置名称。 / Sets the name. */
+	@Setter
 	private String name;
+	/** 获取守护灵等级。 / Returns the minion level. */
+	@Getter
 	private int minionLevel;
 	private int miniongrowthpoint = 0;
+	/**
+	 * @return 是否已锁定。 / Whether lock
+	 */
+	@Getter
+	@Setter
 	private boolean lock = false;
+	/** 设置 is buffing / Sets the is buffing */
+	@Setter
 	private boolean IsBuffing = false;
+	/**
+	 * @return 是否正在拾取 / Whether looting
+	 */
+	@Getter
 	private boolean isLooting = false;
+	/** 返回 doping bag / Returns the doping bag */
+	@Getter
 	MinionDopingBag dopingBag = null;
+	/**
+	 * @return the despawnTime
+	 */
+	@Getter
+	@Setter
 	private Timestamp despawnTime;
+	/**
+	 * @return the minionSkillPoints
+	 */
+	@Getter
+	@Setter
 	private int minionSkillPoints;
+	/**
+	 * @return the minionFunctionTime
+	 */
+	@Getter
+	@Setter
 	private Timestamp minionFunctionTime;
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {
@@ -59,29 +101,9 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		return minionObjId;
 	}
 
-	/** 返回 master object id / Returns the master object id */
-	public int getMasterObjectId() {
-		return masterObjectId;
-	}
-
-	/** 返回 minion id / Returns the minion id */
-	public int getMinionId() {
-		return minionId;
-	}
-
 	/** 设置 minion id / Sets the minion id */
 	public int setMinionId(int minionId) {
 		return this.minionId = minionId;
-	}
-
-	/** 返回 minion grade / Returns the minion grade */
-	public String getMinionGrade() {
-		return minionGrade;
-	}
-
-	/** 获取守护灵等级。 / Returns the minion level. */
-	public int getMinionLevel() {
-		return minionLevel;
 	}
 
 	/** 设置守护灵等级。 / Sets the minion level. */
@@ -100,16 +122,6 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	/** 返回 birthday timestamp / Returns the birthday timestamp */
 	public Timestamp getBirthdayTimestamp() {
 		return birthday;
-	}
-
-	/** 设置 birthday / Sets the birthday */
-	public void setBirthday(Timestamp birthday) {
-		this.birthday = birthday;
-	}
-
-	/** 设置名称。 / Sets the name. */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/** 获取过期时间。 / Returns the expire time. */
@@ -162,84 +174,13 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		this.miniongrowthpoint = miniongrowthpoint;
 	}
 
-	/**
-	 * @return 是否已锁定。 / Whether lock
-	  */
-	public boolean isLock() {
-		return lock;
-	}
-
-	/** 设置 lock / Sets the lock */
-	public void setLock(boolean lock) {
-		this.lock = lock;
-	}
-
-	/** 返回 doping bag / Returns the doping bag */
-	public MinionDopingBag getDopingBag() {
-		return this.dopingBag;
-	}
-
 	/** 是否增益中 / Is Buffing. */
 	public boolean IsBuffing() {
 		return IsBuffing;
 	}
 
-	/** 设置 is buffing / Sets the is buffing */
-	public void setIsBuffing(boolean isBuffing) {
-		IsBuffing = isBuffing;
-	}
-
 	/** 设置 is looting / Sets the is looting */
 	public void setIsLooting(boolean isLooting) {
 		this.isLooting = isLooting;
-	}
-
-	/**
-	 * @return 是否正在拾取 / Whether looting
-	 */
-	public boolean isLooting() {
-		return this.isLooting;
-	}
-
-	/**
-	 * @return the despawnTime
-	 */
-	public Timestamp getDespawnTime() {
-		return despawnTime;
-	}
-
-	/**
-	 * @param despawnTime the despawnTime to set
-	 */
-	public void setDespawnTime(Timestamp despawnTime) {
-		this.despawnTime = despawnTime;
-	}
-
-	/**
-	 * @return the minionSkillPoints
-	 */
-	public int getMinionSkillPoints() {
-		return minionSkillPoints;
-	}
-
-	/**
-	 * @param minionSkillPoints the minionSkillPoints to set
-	 */
-	public void setMinionSkillPoints(int minionSkillPoints) {
-		this.minionSkillPoints = minionSkillPoints;
-	}
-
-	/**
-	 * @return the minionFunctionTime
-	 */
-	public Timestamp getMinionFunctionTime() {
-		return minionFunctionTime;
-	}
-
-	/**
-	 * @param minionFunctionTime the minionFunctionTime to set
-	 */
-	public void setMinionFunctionTime(Timestamp minionFunctionTime) {
-		this.minionFunctionTime = minionFunctionTime;
 	}
 }

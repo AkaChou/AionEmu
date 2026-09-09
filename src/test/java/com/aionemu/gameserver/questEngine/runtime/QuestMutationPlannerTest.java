@@ -22,9 +22,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeAllItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.worldNpcIs;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QuestMutationPlannerTest {
 	private static final int QUEST_ID = 1300;
@@ -375,7 +373,7 @@ class QuestMutationPlannerTest {
 			new QuestSnapshot(7, 36539, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
 			new QuestEvent.TalkToNpc(804952, 1002), accept).orElseThrow();
-		assertTrue(acceptPlan.afterCommit().get(0) instanceof AfterCommitAction.StartNpcFactionQuest);
+		assertInstanceOf(AfterCommitAction.StartNpcFactionQuest.class, acceptPlan.afterCommit().get(0));
 		assertEquals(4, ((AfterCommitAction.StartNpcFactionQuest) acceptPlan.afterCommit().get(0)).npcFactionId());
 
 		var completion = definition.definition().transitions().stream()
@@ -385,7 +383,7 @@ class QuestMutationPlannerTest {
 		var completionPlan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 36539, QuestStatus.REWARD, 1, Map.of()),
 			new QuestEvent.TalkToNpc(804952, 8), completion).orElseThrow();
-		assertTrue(completionPlan.afterCommit().get(0) instanceof AfterCommitAction.CompleteNpcFactionQuest);
+		assertInstanceOf(AfterCommitAction.CompleteNpcFactionQuest.class, completionPlan.afterCommit().get(0));
 		assertEquals(4, ((AfterCommitAction.CompleteNpcFactionQuest) completionPlan.afterCommit().get(0)).npcFactionId());
 	}
 

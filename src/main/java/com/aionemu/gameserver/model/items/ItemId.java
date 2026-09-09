@@ -127,9 +127,9 @@ public enum ItemId {
 	/** Glorious Insignia / Glorious Insignia */
 	GLORIOUS_INSIGNIA(182213259); // Aion 3.5
 
-	private int itemId;
+	private final int itemId;
 
-	private ItemId(int itemId) {
+	ItemId(int itemId) {
 		this.itemId = itemId;
 	}
 

@@ -10,9 +10,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that synchronizes an assembled (multi-part) NPC to the client.
  */
 public class SM_NPC_ASSEMBLER extends AionServerPacket {
-	private AssembledNpc assembledNpc;
-	private int routeId;
-	private long timeOnMap;
+	private final AssembledNpc assembledNpc;
+	private final int routeId;
+	private final long timeOnMap;
 
 	/**
 	 * 构造组装 NPC 同步包。

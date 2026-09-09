@@ -24,7 +24,6 @@ import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AETHERFORGING_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -208,7 +207,7 @@ public class CraftService {
 		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
-				int xpReward = (int) ((2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60));
+				int xpReward = (2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60);
 				long remaining = ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
 				if (remaining != 0) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
@@ -324,23 +323,4 @@ public class CraftService {
 	 * @param skillId 制作技能 ID / Craft skill id
 	 * @return 加成物品 ID，未匹配返回 0 / Bonus item id, or 0 if unmatched
 	 */
-	private static int getBonusReqItem(int skillId) {
-		switch (skillId) {
-		case 40001: // 料理。 / Cooking.
-			return 169401081;
-		case 40002: // 武器制作。 / Weaponsmithing.
-			return 169401076;
-		case 40003: // 防具制作。 / Armorsmithing.
-			return 169401077;
-		case 40004: // 裁缝。 / Tailoring.
-			return 169401078;
-		case 40007: // 炼金。 / Alchemy.
-			return 169401080;
-		case 40008: // 手工制作。 / Handicrafting.
-			return 169401079;
-		case 40010: // 木工。 / Menuisier.
-			return 169401082;
-		}
-		return 0;
-	}
 }

@@ -29,7 +29,7 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 	 * Aion 客户端版本。
 	 * Aion Client version.
 	 */
-	private int version;
+	private final int version;
 	/**
 	 * 可创建角色数量。
 	 * Number of characters that can be created.
@@ -91,7 +91,7 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 		} else if (version < 213) {
 			log.info(I18n.get("log.6a1b02a86399"));
 		}
-		
+
 		int utcTimeSeconds = (int) (System.currentTimeMillis() / 1000);
 		int offset = DateTimeUtil.getZone().getRules().getOffset(Instant.now()).getTotalSeconds();
 		int negativeOffset = -offset;

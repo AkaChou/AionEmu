@@ -62,8 +62,8 @@ class Quest2841RetailAlignmentTest {
 	void fortyFourthKillKeepsStartUntilRetailReportAction() throws Exception {
 		QuestDefinition definition = definition();
 		List<QuestTransition> counters = definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet kill
-				&& kill.npcIds().equals(TARGET_NPCS))
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+				&& npcIds.equals(TARGET_NPCS))
 			.toList();
 		assertEquals(2, counters.size());
 

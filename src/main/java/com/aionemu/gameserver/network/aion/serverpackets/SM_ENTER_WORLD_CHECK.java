@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 进入世界检查响应包：向客户端回传进入世界的校验结果码。
@@ -9,26 +11,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author -Nemesiss-
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class SM_ENTER_WORLD_CHECK extends AionServerPacket {
 
 	private byte msg = 0x00;
-
-	/**
-	 * 按校验结果码构造检查响应包。
-	 * Creates a world-entry check response with the given result code.
-	 *
-	 * @param msg 校验结果码 / check result code
-	 */
-	public SM_ENTER_WORLD_CHECK(byte msg) {
-		this.msg = msg;
-	}
-
-	/**
-	 * 构造默认（成功）检查响应包。
-	 * Creates a default (success) check response.
-	 */
-	public SM_ENTER_WORLD_CHECK() {
-	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {

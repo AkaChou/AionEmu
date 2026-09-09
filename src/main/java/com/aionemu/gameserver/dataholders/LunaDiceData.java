@@ -27,7 +27,7 @@ public class LunaDiceData {
 	@XmlElement(name = "table")
 	private List<LunaDiceTable> lunaDiceTabTemplate;
 	@XmlTransient
-	private IntObjectHashMap<List<LunaDiceItem>> diceItemList = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<LunaDiceItem>> diceItemList = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按表 ID 建立奖励物品列表索引。

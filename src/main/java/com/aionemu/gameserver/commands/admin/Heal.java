@@ -33,32 +33,27 @@ public class Heal extends AdminCommand
 		if (target == null) {
 			PacketSendUtility.sendMessage(player, "No target selected");
 			return;
-		} if (!(target instanceof Creature)) {
+		} if (!(target instanceof Creature creature)) {
 			PacketSendUtility.sendMessage(player, "Target has to be Creature!");
 			return;
 		}
-		Creature creature = (Creature) target;
 		if (params == null || params.length < 1) {
 			creature.getLifeStats().increaseHp(TYPE.HP, creature.getLifeStats().getMaxHp() + 1);
 			creature.getLifeStats().increaseMp(TYPE.MP, creature.getLifeStats().getMaxMp() + 1);
 			creature.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
 			PacketSendUtility.sendMessage(player, creature.getName() + " has been refreshed !");
-		} else if (params[0].equals("dp") && creature instanceof Player) {
-			Player targetPlayer = (Player) creature;
+		} else if (params[0].equals("dp") && creature instanceof Player targetPlayer) {
 			targetPlayer.getCommonData().setDp(targetPlayer.getGameStats().getMaxDp().getCurrent());
 			PacketSendUtility.sendMessage(player, targetPlayer.getName() + " is now full of DP !");
-		} else if (params[0].equals("fp") && creature instanceof Player) {
-			Player targetPlayer = (Player) creature;
+		} else if (params[0].equals("fp") && creature instanceof Player targetPlayer) {
 			targetPlayer.getLifeStats().setCurrentFp(targetPlayer.getLifeStats().getMaxFp());
 			PacketSendUtility.sendMessage(player, targetPlayer.getName() + " FP has been fully refreshed !");
-		} else if (params[0].equals("repose") && creature instanceof Player) {
-			Player targetPlayer = (Player) creature;
+		} else if (params[0].equals("repose") && creature instanceof Player targetPlayer) {
 			PlayerCommonData pcd = targetPlayer.getCommonData();
 			pcd.setCurrentReposteEnergy(pcd.getMaxReposteEnergy());
 			PacketSendUtility.sendMessage(player, targetPlayer.getName() + " Reposte Energy has been fully refreshed !");
 			PacketSendUtility.sendPacket(targetPlayer, new SM_STATUPDATE_EXP(pcd.getExpShown(), pcd.getExpRecoverable(), pcd.getExpNeed(), pcd.getCurrentReposteEnergy(), pcd.getMaxReposteEnergy()));
-		} else if (params[0].equals("test") && creature instanceof Player) {
-			Player targetPlayer = (Player) creature;
+		} else if (params[0].equals("test") && creature instanceof Player targetPlayer) {
 			PlayerCommonData pcd = targetPlayer.getCommonData();
 			pcd.setCurrentReposteEnergy(pcd.getMaxReposteEnergy());
 			PacketSendUtility.sendPacket(targetPlayer, new SM_STATUPDATE_EXP(pcd.getExpShown(), pcd.getExpRecoverable(), pcd.getExpNeed(), pcd.getCurrentReposteEnergy(), pcd.getMaxReposteEnergy(), 0, 38730744));

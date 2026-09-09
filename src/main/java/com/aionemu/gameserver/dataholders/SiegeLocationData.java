@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.siege.ArtifactLocation;
 import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
+import lombok.Getter;
 
 /**
  * 攻城据点数据容器，按类型分索引要塞、神器与统一据点映射。
@@ -27,11 +28,18 @@ public class SiegeLocationData {
 	private List<SiegeLocationTemplate> siegeLocationTemplates;
 
 	@XmlTransient
-	private Map<Integer, ArtifactLocation> artifactLocations = new LinkedHashMap<Integer, ArtifactLocation>();
+	private final Map<Integer, ArtifactLocation> artifactLocations = new LinkedHashMap<Integer, ArtifactLocation>();
 	@XmlTransient
-	private Map<Integer, FortressLocation> fortressLocations = new LinkedHashMap<Integer, FortressLocation>();
+	private final Map<Integer, FortressLocation> fortressLocations = new LinkedHashMap<Integer, FortressLocation>();
+	/**
+	 * 返回全部攻城据点映射。
+	 * Returns the full siege location map.
+	 *
+	 * @return ID 到据点的映射 / map of id to location
+	 */
+	@Getter
 	@XmlTransient
-	private Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
+	private final Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，按类型构建要塞/神器/统一据点索引。
@@ -88,15 +96,5 @@ public class SiegeLocationData {
 	 */
 	public Map<Integer, FortressLocation> getFortress() {
 		return fortressLocations;
-	}
-
-	/**
-	 * 返回全部攻城据点映射。
-	 * Returns the full siege location map.
-	 *
-	 * @return ID 到据点的映射 / map of id to location
-	 */
-	public Map<Integer, SiegeLocation> getSiegeLocations() {
-		return siegeLocations;
 	}
 }

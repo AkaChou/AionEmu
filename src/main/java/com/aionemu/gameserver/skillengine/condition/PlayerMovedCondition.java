@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.skillengine.model.Skill;
+import lombok.Getter;
 
 /**
  * 玩家移动条件：校验施法者移动状态是否与 allow 配置一致。
@@ -17,18 +18,15 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 @XmlType(name = "PlayerMovedCondition")
 public class PlayerMovedCondition extends Condition {
 
-	@XmlAttribute(required = true)
-	protected boolean allow;
-
 	/**
 	 * 获取是否允许移动施放。
 	 * Gets whether moving is allowed for casting.
 	 *
 	 * @return 允许标记 / allow flag
 	 */
-	public boolean isAllow() {
-		return allow;
-	}
+	@Getter
+	@XmlAttribute(required = true)
+	protected boolean allow;
 
 	/**
 	 * 校验技能环境是否满足本条件。

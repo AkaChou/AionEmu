@@ -17,8 +17,8 @@ import com.aionemu.gameserver.world.WorldPosition;
  * Server packet that synchronizes group member state (vitals, position, class, and abnormals) to the client.
  */
 public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
-	private int groupId;
-	private Player player;
+	private final int groupId;
+	private final Player player;
 	private GroupEvent event;
 
 	/**

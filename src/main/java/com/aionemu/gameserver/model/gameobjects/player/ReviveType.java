@@ -11,9 +11,9 @@ public enum ReviveType {
 	/** 旋涡复活 / Vortex Revive */
 	VORTEX_REVIVE(8), START_POINT_REVIVE(11);
 
-	private int typeId;
+	private final int typeId;
 
-	private ReviveType(int typeId) {
+	ReviveType(int typeId) {
 		this.typeId = typeId;
 	}
 

@@ -5,13 +5,11 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
-import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
@@ -28,7 +26,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -60,7 +57,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		/** 视频种族 / video race */
 		private Race videoRace;
 	/** 开始时间 / start time */
-	private long startTime;
 		/** idab1ere wave / idab1ere wave */
 		private int IDAb1EreWave;
 	/** 副本时间戳 / instance timestamp */
@@ -70,10 +66,8 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		/** bridge drakan high / bridge drakan high */
 		private int bridgeDrakanHigh;
 		/** 副本计时器 / instance timer */
-		private Future<?> instanceTimer;
 	// Boss 波次。 / Boss Wave.
 		/** 灵魂堡垒任务 A1 / bastion task a1 */
-		private Future<?> bastionTaskA1;
 		/** 灵魂堡垒任务 A2 / bastion task a2 */
 		private Future<?> bastionTaskA2;
 		/** 灵魂堡垒任务 A3 / bastion task a3 */
@@ -101,10 +95,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** 灵魂堡垒任务 / bastion task */
 		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -190,7 +184,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -201,17 +195,17 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
 		// 守护者救援。 / Daeva Rescue.
-		sendPacket(player, "UI_Gauge_01", 0 + 1);
+		sendPacket(player, "UI_Gauge_01", 1);
 		// 摧毁发生器。 / Destroy The Generator.
-		sendPacket(player, "UI_Gauge_02", 0 + 1);
+		sendPacket(player, "UI_Gauge_02", 1);
 		// 额外援助。 / Additional Aid.
-		sendPacket(player, "UI_Gauge_03", 0 + 1);
+		sendPacket(player, "UI_Gauge_03", 1);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
 			SpawnBastionRace();
 		}
 	}
-	
+
 	private void startRescueDaevaTimer() {
 		// 守护者救援任务 15 分钟内完成的额外任务会影响灵魂堡垒的难度与奖励。 / The additional missions that you carry out in the 15 minutes of the Daeva rescue mission can change the difficulty and the rewards for the Bastion of Souls.
 		// 若救援任务 15 分钟后结束或典狱长马霍罗什出现，难度与奖励不变。 / If the rescue mission ends after 15 minutes or the Warden Mahorosh appears, the difficulty and the rewards stay the same.
@@ -228,7 +222,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		// 现在完成的额外任务不再影响灵魂堡垒难度或奖励。 / Any additional missions carried out now will have no influence on the Bastion of Souls difficulty or rewards.
 		this.sendMessage(1404235, 15 * 60 * 1000);
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -326,7 +320,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -355,7 +349,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	private void spawnBastionRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("BASTION_OF_SOULS", mapId,
         new Point3D(1169.6204, 1153.8145, 491.13086),
@@ -363,7 +357,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         new Point3D(1159.7225, 1153.7646, 491.1022), 90), instanceId);
         f1.spawn();
     }
-	
+
 	private void bastionToStartRoom(Player player) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -400,7 +394,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		}, 60000);
 		teleport(player, 1183.3602f, 734.0874f, 433.22742f, (byte) 90);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -608,7 +602,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnBastionEasyChest() {
 		spawn(835484, 119.39699f, 642.50430f, 443.95374f, (byte) 15);
         spawn(835484, 115.42487f, 638.64166f, 443.97333f, (byte) 15);
@@ -627,7 +621,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         spawn(835486, 120.47298f, 635.68460f, 443.92804f, (byte) 23);
         spawn(835486, 112.50187f, 643.73267f, 443.92804f, (byte) 5);
 	}
-	
+
 	private void sendPacket(Player player, final String variable, final int value) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 		    /**
@@ -644,7 +638,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -681,12 +675,12 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void startBatiskanBastiel() {
 		final int StartBatiskan_Bastiel = spawnRace == Race.ASMODIANS ? 806592 : 806583;
 		spawn(StartBatiskan_Bastiel, 1213.3298f, 728.104f, 417.55914f, (byte) 89);
 	}
-	
+
 	private void SpawnBastionRace() {
 		// 守护者。 / Daeva.
 		final int DeadDeva = spawnRace == Race.ASMODIANS ? 731788 : 731785;
@@ -892,7 +886,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		// 巴斯蒂尔-巴蒂斯坎 05。 / Bastiel-Batiskan 05.
 		spawn(Bastiel_Batiskan05, 148.12717f, 648.1179f, 443.94836f, (byte) 60);
 	}
-	
+
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1254,7 +1248,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 720000)); //...12Min
     }
-	
+
 	private void rushBastion(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1275,7 +1269,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private void startBastionA2() {
 		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1304,7 +1298,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA3() {
 		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1333,7 +1327,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA4() {
 		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1362,7 +1356,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA5() {
 		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1391,7 +1385,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA6() {
 		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1420,7 +1414,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA7() {
 		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1449,7 +1443,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA8() {
 		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1478,7 +1472,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA9() {
 		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1507,7 +1501,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA10() {
 		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1536,7 +1530,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA11() {
 		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1565,7 +1559,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	private void startBastionA12() {
 		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1594,22 +1588,12 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 	}
-	
+
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
 		// sendMsg("[成功]：你活下来了！！！"); / sendMsg("[SUCCES]: You survived !!! :) ");
 	}
-	
-	private int getTime() {
-		long result = System.currentTimeMillis() - instanceTime;
-		if (result < 60000) {
-			return (int) (60000 - result);
-		} else if (result < 720000) {
-			return (int) (720000 - (result - 60000));
-		}
-		return 0;
-	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : bastionTask) {
 			if (task != null) {
@@ -1617,15 +1601,15 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1643,7 +1627,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1660,7 +1644,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -1675,7 +1659,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -1691,7 +1675,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1717,13 +1701,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
-	private void removeEffects(Player player) {
-		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(17649);
-		effectController.removeEffect(17672);
-	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000302, storage.getItemCountByItemId(185000302));
@@ -1733,7 +1711,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(188100423, storage.getItemCountByItemId(188100423));
 		storage.decreaseByItemId(188100424, storage.getItemCountByItemId(188100424));
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1744,7 +1722,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     public void onPlayerLogOut(Player player) {
         removeItems(player);
     }
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1755,7 +1733,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1767,39 +1745,39 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		movies.clear();
 		doors.clear();
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
-	
+
 	private void teleport(float x, float y, float z, byte h) {
 		for (Player playerInside: instance.getPlayersInside()) {
 			if (playerInside.isOnline()) {
@@ -1807,7 +1785,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	protected void teleport(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.utils.collections;
 
+import lombok.AllArgsConstructor;
+
 /**
  * 可比较的缓存键值对。
  * Comparable cache key-value pair.
@@ -9,19 +11,8 @@ package com.aionemu.gameserver.utils.collections;
  * @author Rolandas
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
+@AllArgsConstructor
 public class CachePair<K extends Comparable, V> implements Comparable<CachePair> {
-
-	/**
-	 * 使用键值构造。
-	 * Construct with key and value.
-	 *
-	 * @param key 键 / Key
-	 * @param value 值 / Value
-	 */
-	public CachePair(K key, V value) {
-		this.key = key;
-		this.value = value;
-	}
 
 	/**
 	 * 缓存键。
@@ -43,8 +34,7 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	 * @return 若 equal 则为 true / True if equal
 	 */
 	public boolean equals(Object obj) {
-		if (obj instanceof CachePair) {
-			CachePair p = (CachePair) obj;
+		if (obj instanceof CachePair p) {
 			return key.equals(p.key) && value.equals(p.value);
 		}
 		return false;

@@ -16,8 +16,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 @Slf4j
 public class SM_PLAYER_SEARCH extends AionServerPacket {
 
-	private List<Player> players;
-	private int region;
+	private final List<Player> players;
+	private final int region;
 
 	/**
 	 * @param players 匹配到的玩家列表 / matched players

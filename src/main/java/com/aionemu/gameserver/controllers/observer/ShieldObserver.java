@@ -16,11 +16,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class ShieldObserver extends ActionObserver {
 	/** 被观察生物 / Observed creature */
-	private Creature creature;
+	private final Creature creature;
 	/** 护盾对象 / Shield object */
-	private Shield shield;
+	private final Shield shield;
 	/** 上一位置 / Previous position */
-	private Point3D oldPosition;
+	private final Point3D oldPosition;
 
 	/**
 	 * 空构造（字段为 null）。

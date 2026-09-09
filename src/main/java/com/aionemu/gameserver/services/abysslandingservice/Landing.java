@@ -7,6 +7,9 @@ import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing.LandingStateType;
 import com.aionemu.gameserver.services.AbyssLandingService;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 欧比斯着陆点生命周期抽象基类：启动/停止/更新与刷怪钩子。
@@ -14,9 +17,20 @@ import com.aionemu.gameserver.services.AbyssLandingService;
  *
  * @param <RL> 着陆点位置类型 / Landing-location type
  */
+@RequiredArgsConstructor
 public abstract class Landing<RL extends LandingLocation> {
+	/**
+	 * 当前等级。
+	 * Current level.
+	 */
+	@Getter
+	@Setter
 	private int level;
 	private boolean started;
+	/**
+	 * @return 着陆点位置 / Landing location
+	 */
+	@Getter
 	private final RL landingLocation;
 
 	/**
@@ -40,13 +54,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	protected abstract void startLanding(int level);
 
 	private final AtomicBoolean closed = new AtomicBoolean();
-
-	/**
-	 * @param landingLocation 着陆点位置 / Landing location
-	 */
-	public Landing(RL landingLocation) {
-		this.landingLocation = landingLocation;
-	}
 
 	/**
 	 * 幂等启动：已启动则直接返回。
@@ -114,32 +121,10 @@ public abstract class Landing<RL extends LandingLocation> {
 	}
 
 	/**
-	 * @return 着陆点位置 / Landing location
-	 */
-	public RL getLandingLocation() {
-		return landingLocation;
-	}
-
-	/**
 	 * @return 着陆点位置 ID / Landing location id
 	 */
 	public int getLandingLocationId() {
 		return landingLocation.getId();
-	}
-
-	/**
-	 * 当前等级。
-	 * Current level.
-	 */
-	public int getLevel() {
-		return this.level;
-	}
-
-	/**
-	 * @param level 着陆等级 / Landing level
-	 */
-	public void setLevel(int level) {
-		this.level = level;
 	}
 
 	/**

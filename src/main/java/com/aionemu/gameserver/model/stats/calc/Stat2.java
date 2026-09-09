@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.stats.calc;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 属性2模型。
@@ -15,6 +17,9 @@ public abstract class Stat2 {
 	float baseRate = 1f;
 	float base;
 	float bonus;
+	/** 设置 fixed bonus rate / Sets the fixed bonus rate */
+	@Getter
+	@Setter
 	float fixedBonusRate;
 	private final Creature owner;
 	protected final StatEnum stat;
@@ -121,16 +126,6 @@ public abstract class Stat2 {
 
 	/** Adds 到加成 / Adds to bonus */
 	public abstract void addToBonus(float bonus);
-
-	/** 设置 fixed bonus rate / Sets the fixed bonus rate */
-	public void setFixedBonusRate(float fixedBonusRate) {
-		this.fixedBonusRate = fixedBonusRate;
-	}
-
-	/** 返回 fixed bonus rate / Returns the fixed bonus rate */
-	public float getFixedBonusRate() {
-		return fixedBonusRate;
-	}
 
 	/** 计算百分比 / Calculate percent */
 	public abstract float calculatePercent(int delta);

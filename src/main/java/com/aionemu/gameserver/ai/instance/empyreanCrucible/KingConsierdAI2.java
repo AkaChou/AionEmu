@@ -28,37 +28,37 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("king_consierd")
 public class KingConsierdAI2 extends AggressiveNpcAI2
 {
-	private List<Integer> percents = new ArrayList<Integer>();
-	private AtomicBoolean isHome = new AtomicBoolean(true);
+	private final List<Integer> percents = new ArrayList<Integer>();
+	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private Future<?> eventTask;
 	private Future<?> skillTask;
-	
+
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
 		addPercents();
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		cancelTasks();
 		percents.clear();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		cancelTasks();
 		super.handleDied();
 	}
-	
+
 	@Override
 	public void handleBackHome() {
 		cancelTasks();
 		addPercents();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -79,7 +79,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			}, 2000);
 		}
 	}
-	
+
 	private void startBloodThirstTask() {
 		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -88,7 +88,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			}
 		}, 180 * 1000);
 	}
-	
+
 	private void startSkillTask() {
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -119,7 +119,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnBabyConsierd(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -135,7 +135,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			}, 3000);
 		}
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -145,7 +145,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelTasks() {
 		if (eventTask != null && !eventTask.isDone()) {
 			eventTask.cancel(true);
@@ -153,7 +153,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			skillTask.cancel(true);
 		}
 	}
-	
+
 	private void checkPercentage(int percentage) {
 		for (Integer percent : percents) {
 			if (percentage <= percent) {
@@ -167,9 +167,9 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void addPercents() {
 		percents.clear();
-		Collections.addAll(percents, new Integer[] {75, 25});
+		Collections.addAll(percents, 75, 25);
 	}
 }

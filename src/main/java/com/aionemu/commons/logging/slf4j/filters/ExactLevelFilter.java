@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.AbstractMatcherFilter;
 import ch.qos.logback.core.spi.FilterReply;
+import lombok.Setter;
 
 /**
  * 精确日志级别过滤器，仅匹配指定 Level
@@ -11,6 +12,13 @@ import ch.qos.logback.core.spi.FilterReply;
  */
 public class ExactLevelFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
+	/**
+	 * 设置需要精确匹配的日志级别
+	 * Set the exact target log level
+	 *
+	 * @param targetLevel 目标日志级别 / Target level
+	 */
+	@Setter
 	private Level targetLevel;
 
 	/**
@@ -37,15 +45,5 @@ public class ExactLevelFilter extends AbstractMatcherFilter<ILoggingEvent> {
 			return FilterReply.NEUTRAL;
 		}
 		return targetLevel.equals(event.getLevel()) ? onMatch : onMismatch;
-	}
-
-	/**
-	 * 设置需要精确匹配的日志级别
-	 * Set the exact target log level
-	 *
-	 * @param targetLevel 目标日志级别 / Target level
-	 */
-	public void setTargetLevel(Level targetLevel) {
-		this.targetLevel = targetLevel;
 	}
 }

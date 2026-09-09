@@ -9,14 +9,14 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that synchronizes Kisk status information to the client.
  */
 public class SM_KISK_UPDATE extends AionServerPacket {
-	private int objId;
-	private int creatorid;
-	private int useMask;
-	private int currentMembers;
-	private int maxMembers;
-	private int remainingRessurects;
-	private int maxRessurects;
-	private int remainingLifetime;
+	private final int objId;
+	private final int creatorid;
+	private final int useMask;
+	private final int currentMembers;
+	private final int maxMembers;
+	private final int remainingRessurects;
+	private final int maxRessurects;
+	private final int remainingLifetime;
 
 	/**
 	 * 根据 Kisk 实例构造状态同步包。

@@ -29,17 +29,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @AIName("anikiki")
 public class AnikikiAI2 extends AggressiveNpcAI2 {
-	private AtomicBoolean isStartedWalkEvent = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isStartedWalkEvent = new AtomicBoolean(false);
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
-		    if (MathUtil.getDistance(getOwner(), player) <= 8) {
+		if (creature instanceof Player player) {
+			if (MathUtil.getDistance(getOwner(), player) <= 8) {
 			    // 玩家靠近 8 码内时启动一次行走事件并生成巡逻怪。 / When a player comes within 8 yards, start the walk event once and spawn patrol mobs.
 			    if (isStartedWalkEvent.compareAndSet(false, true)) {
 				    getSpawnTemplate().setWalkerId("3004600001");
@@ -56,7 +55,7 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();
@@ -75,7 +74,7 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();

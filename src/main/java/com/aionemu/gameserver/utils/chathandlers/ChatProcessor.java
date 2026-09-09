@@ -19,6 +19,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.NoArgsConstructor;
 
 /**
  * 聊天命令处理器：加载、注册，并将玩家输入路由到已注册命令。
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * @author Rolandas
  */
 @Slf4j(topic = "ADMINAUDIT_LOG")
+@NoArgsConstructor
 public class ChatProcessor implements GameEngine {
 
 	/**
@@ -39,7 +41,7 @@ public class ChatProcessor implements GameEngine {
 	 * 回退单例实例。
 	 * Fallback singleton instance.
 	 */
-	private static ChatProcessor instance = new ChatProcessor();
+	private static final ChatProcessor instance = new ChatProcessor();
 	/**
 	 * 别名 → 命令映射。
 	 * Alias-to-command map.
@@ -99,13 +101,6 @@ public class ChatProcessor implements GameEngine {
 	 */
 	@Override
 	public void shutdown() {
-	}
-
-	/**
-	 * 默认构造。
-	 * Default constructor.
-	 */
-	public ChatProcessor() {
 	}
 
 	/**

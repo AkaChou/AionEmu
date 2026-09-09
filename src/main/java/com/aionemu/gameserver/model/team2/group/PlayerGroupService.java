@@ -310,7 +310,7 @@ public class PlayerGroupService {
 		@Override
 		public boolean apply(PlayerGroupMember member) {
 			if (!member.isOnline()
-					&& TimeUtil.isExpired(member.getLastOnlineTime() + GroupConfig.GROUP_REMOVE_TIME * 1000)) {
+					&& TimeUtil.isExpired(member.getLastOnlineTime() + GroupConfig.GROUP_REMOVE_TIME * 1000L)) {
 				currentGroup.onEvent(new PlayerGroupLeavedEvent(currentGroup, member.getObject()));
 			}
 			return true;

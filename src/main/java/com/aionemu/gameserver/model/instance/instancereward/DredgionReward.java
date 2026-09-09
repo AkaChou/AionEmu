@@ -18,14 +18,14 @@ import java.util.List;
  */
 
 public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
-	private int winnerPoints;
-	private int looserPoints;
+	private final int winnerPoints;
+	private final int looserPoints;
 	@SuppressWarnings("unused")
-	private int drawPoins;
-	private MutableInt asmodiansPoints = new MutableInt(0);
-	private MutableInt elyosPoins = new MutableInt(0);
+	private final int drawPoins;
+	private final MutableInt asmodiansPoints = new MutableInt(0);
+	private final MutableInt elyosPoins = new MutableInt(0);
 	private Race race;
-	private List<DredgionRooms> dredgionRooms = new ArrayList<DredgionRooms>();
+	private final List<DredgionRooms> dredgionRooms = new ArrayList<DredgionRooms>();
 	private Point3D asmodiansStartPosition;
 	private Point3D elyosStartPosition;
 
@@ -64,7 +64,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 	}
 
 	public class DredgionRooms {
-		private int roomId;
+		private final int roomId;
 		private int state = 0xFF;
 
 		public DredgionRooms(int roomId) {

@@ -18,7 +18,7 @@ public class BannedMacEntry {
      * MAC 地址。
      * MAC address.
      */
-    private String mac;
+    private final String mac;
 
     /**
      * 封禁备注。

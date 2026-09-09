@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * 配方模板（静态数据/XML）。
@@ -19,12 +20,20 @@ import com.aionemu.gameserver.model.Race;
 @XmlType(name = "RecipeTemplate")
 public class RecipeTemplate {
 	protected List<ComboProduct> comboproduct;
+	/** 返回最大制作数量 / Returns the max production count */
+	@Getter
 	@XmlAttribute(name = "max_production_count")
 	protected Integer maxProductionCount;
+	/** 返回制作延迟时间 / Returns the craft delay time*/
+	@Getter
 	@XmlAttribute(name = "craft_delay_time")
 	protected Integer craftDelayTime;
+	/** 返回制作延迟 ID / Returns the craft delay id */
+	@Getter
 	@XmlAttribute(name = "craft_delay_id")
 	protected Integer craftDelayId;
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 	@XmlAttribute(name = "archdaeva")
@@ -39,12 +48,16 @@ public class RecipeTemplate {
 	protected int dp;
 	@XmlAttribute
 	protected int skillpoint;
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute
 	protected Race race;
 	@XmlAttribute
 	protected int skillid;
 	@XmlAttribute
 	protected int itemid;
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute
 	protected int nameid;
 	@XmlAttribute
@@ -98,11 +111,6 @@ public class RecipeTemplate {
 		return skillpoint;
 	}
 
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
 	/** 返回技能 ID / Returns the skill id */
 	public Integer getSkillid() {
 		return skillid;
@@ -113,34 +121,9 @@ public class RecipeTemplate {
 		return itemid;
 	}
 
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameid() {
-		return nameid;
-	}
-
 	/** 返回 ID / Returns the id */
 	public Integer getId() {
 		return id;
-	}
-
-	/** 返回最大制作数量 / Returns the max production count */
-	public Integer getMaxProductionCount() {
-		return maxProductionCount;
-	}
-
-	/** 返回制作延迟时间 / Returns the craft delay time*/
-	public Integer getCraftDelayTime() {
-		return craftDelayTime;
-	}
-
-	/** 返回制作延迟 ID / Returns the craft delay id */
-	public Integer getCraftDelayId() {
-		return craftDelayId;
 	}
 
 	/**

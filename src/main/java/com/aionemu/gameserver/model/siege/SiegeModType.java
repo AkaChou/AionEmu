@@ -14,5 +14,5 @@ public enum SiegeModType {
 	/** 登陆。 / Landing. */
 	LANDING,
 	/** 突袭。 / Assault. */
-	ASSAULT;
+	ASSAULT
 }

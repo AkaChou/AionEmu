@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
@@ -14,9 +13,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_FLAG_INFO extends AionServerPacket {
 	int count;
-	private Creature _npc;
-	private NpcTemplate npcTemplate;
-	private int npcId;
+	private final Creature _npc;
+	private final int npcId;
 
 	/**
 	 * 按旗帜序号与 NPC 构造信息包。

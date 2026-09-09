@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import lombok.Getter;
 
 /**
  * NPC 势力模板（静态数据/XML）。
@@ -15,15 +16,23 @@ import com.aionemu.gameserver.model.Race;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcFaction")
 public class NpcFactionTemplate {
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
+	/** 获取名称。 / Returns the name. */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
+	/** 返回名称 ID / Returns the name id */
+	@Getter
 	@XmlAttribute(name = "nameId")
 	protected int nameId;
 
+	/** 获取分类。 / Returns the category. */
+	@Getter
 	@XmlAttribute(name = "category")
 	protected FactionCategory category;
 
@@ -36,37 +45,25 @@ public class NpcFactionTemplate {
 	@XmlAttribute(name = "auto_join")
 	protected Integer autoJoin;
 
+	/** 返回 auto quit / Returns the auto quit */
+	@Getter
 	@XmlAttribute(name = "auto_quit")
 	protected int autoQuit = 40;
 
+	/** 获取种族。 / Returns the race. */
+	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race;
 
+	/** 返回 NPC ID / Returns the npc id */
+	@Getter
 	@XmlAttribute(name = "npcid")
 	protected int npcId;
 
+	/** 获取技能点。 / Returns the skill points. */
+	@Getter
 	@XmlAttribute(name = "skill_points")
 	protected int skillPoints;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回名称 ID / Returns the name id */
-	public int getNameId() {
-		return nameId;
-	}
-
-	/** 获取分类。 / Returns the category. */
-	public FactionCategory getCategory() {
-		return category;
-	}
 
 	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
@@ -78,33 +75,13 @@ public class NpcFactionTemplate {
 		return maxlevel;
 	}
 
-	/** 获取种族。 / Returns the race. */
-	public Race getRace() {
-		return race;
-	}
-
 	/** 是否导师 / Whether mentor */
 	public boolean isMentor() {
 		return category == FactionCategory.MENTOR;
 	}
 
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return npcId;
-	}
-
-	/** 获取技能点。 / Returns the skill points. */
-	public int getSkillPoints() {
-		return skillPoints;
-	}
-
 	/** 返回自动加入 / Returns the auto join*/
 	public int getAutoJoin() {
 		return autoJoin;
-	}
-
-	/** 返回 auto quit / Returns the auto quit */
-	public int getAutoQuit() {
-		return autoQuit;
 	}
 }

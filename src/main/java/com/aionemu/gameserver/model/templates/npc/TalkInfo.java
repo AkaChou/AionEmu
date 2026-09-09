@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Talk 信息模板（静态数据/XML）。
@@ -23,8 +24,12 @@ public class TalkInfo {
 	private int talkDelay;
 	@XmlAttribute(name = "is_dialog")
 	private boolean hasDialog;
+	/** 返回 func dialog ids / Returns the func dialog ids */
+	@Getter
 	@XmlAttribute(name = "func_dialogs")
 	private List<Integer> funcDialogIds;
+	/** 返回 sub dialog type / Returns the sub dialog type */
+	@Getter
 	@XmlAttribute(name = "subdialog_type")
 	private String subDialogType;
 
@@ -56,15 +61,5 @@ public class TalkInfo {
 	 */
 	public boolean isDialogNpc() {
 		return hasDialog;
-	}
-
-	/** 返回 func dialog ids / Returns the func dialog ids */
-	public List<Integer> getFuncDialogIds() {
-		return funcDialogIds;
-	}
-
-	/** 返回 sub dialog type / Returns the sub dialog type */
-	public String getSubDialogType() {
-		return subDialogType;
 	}
 }

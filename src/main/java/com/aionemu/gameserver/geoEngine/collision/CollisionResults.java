@@ -3,6 +3,8 @@ package com.aionemu.gameserver.geoEngine.collision;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 碰撞结果集合，按距离排序收集命中，并携带意图掩码、实例 id 与忽略属性。
@@ -15,14 +17,20 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/** 列表是否已按距离排序。 / Whether the list is sorted by distance. */
 	private boolean sorted = true;
 	/** 是否只取第一个命中。 / Whether only the first hit is required. */
+	@Getter
 	private final boolean onlyFirst;
 	/** 碰撞意图位掩码。 / Collision intention bitmask. */
+	@Getter
 	private final byte intentions;
 	/** 映射副本 ID / Map instance id */
+	@Getter
+	@Setter
 	private int instanceId;
 	/** 忽略属性；可为 {@code null} / Ignore properties; may be {@code null} */
+	@Getter
 	private final IgnoreProperties ignoreProperties;
 	/** 是否使斜坡表面无效（不计入有效命中）。 / Whether sloping surfaces should be invalidated. */
+	@Setter
 	private boolean invalidateSlopingSurface;
 
 	/**
@@ -212,46 +220,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	}
 
 	/**
-	 * 是否仅取第一个命中。
-	 * Whether only the first hit is required.
-	 *
-	 * @return 仅首命中标志 / first-only flag
-	 */
-	public boolean isOnlyFirst() {
-		return onlyFirst;
-	}
-
-	/**
-	 * 返回碰撞意图位掩码。
-	 * Returns the collision intention bitmask.
-	 *
-	 * @return 意图掩码 / intention mask
-	 */
-	public byte getIntentions() {
-		return intentions;
-	}
-
-	/**
-	 * 返回地图实例 id。
-	 * Returns the map instance id.
-	 *
-	 * @return 实例 id / instance id
-	 */
-	public int getInstanceId() {
-		return instanceId;
-	}
-
-	/**
-	 * 返回忽略属性。
-	 * Returns the ignore properties.
-	 *
-	 * @return 忽略属性 / ignore properties
-	 */
-	public IgnoreProperties getIgnoreProperties() {
-		return ignoreProperties;
-	}
-
-	/**
 	 * 是否应使斜坡表面无效。
 	 * Whether sloping surfaces should be invalidated.
 	 *
@@ -259,25 +227,5 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 */
 	public boolean shouldInvalidateSlopingSurface() {
 		return invalidateSlopingSurface;
-	}
-
-	/**
-	 * 设置是否使斜坡表面无效。
-	 * Sets whether sloping surfaces should be invalidated.
-	 *
-	 * @param invalidateSlopingSurface 斜坡无效标志 / sloping-surface invalidation flag
-	 */
-	public void setInvalidateSlopingSurface(boolean invalidateSlopingSurface) {
-		this.invalidateSlopingSurface = invalidateSlopingSurface;
-	}
-
-	/**
-	 * 设置地图实例 id。
-	 * Sets the map instance id.
-	 *
-	 * @param instanceId 实例 id / instance id
-	 */
-	public void setInstanceId(int instanceId) {
-		this.instanceId = instanceId;
 	}
 }

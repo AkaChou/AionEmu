@@ -155,7 +155,7 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 			return statEnum;
 		}
 
-		private AttrBonusAction(String value, StatEnum statEnum) {
+		AttrBonusAction(String value, StatEnum statEnum) {
 			this.value = value;
 			this.statEnum = statEnum;
 		}

@@ -27,7 +27,7 @@ public class RvrData {
 	private List<RvrTemplate> rvrTemplates;
 
 	@XmlTransient
-	private Map<Integer, RvrLocation> rvr = new LinkedHashMap<Integer, RvrLocation>();
+	private final Map<Integer, RvrLocation> rvr = new LinkedHashMap<Integer, RvrLocation>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板包装为 RVR 据点并写入索引。

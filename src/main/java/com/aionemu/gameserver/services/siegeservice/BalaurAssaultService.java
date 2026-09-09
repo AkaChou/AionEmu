@@ -377,10 +377,7 @@ public class BalaurAssaultService {
 				count++;
 			}
 		}
-		if (count >= (isBalaurea ? 1 : 2)) {
-			return false;
-		}
-		return true;
+		return count < (isBalaurea ? 1 : 2);
 	}
 	/**
 	 * 判断神器是否可发起龙族突击（当前始终 false）。

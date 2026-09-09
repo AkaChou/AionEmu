@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * 限定物品，用于 limiteditems 相关逻辑。
@@ -11,6 +12,7 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@NoArgsConstructor
 public class LimitedItem {
 
 	@Getter
@@ -25,10 +27,7 @@ public class LimitedItem {
 	@Getter
 	private String salesTime;
 
-	private Map<Integer, Integer> buyCounts = new HashMap<>(); // 玩家对象 ID → 购买数量 / player object id → buy count
-
-	public LimitedItem() {
-	}
+	private final Map<Integer, Integer> buyCounts = new HashMap<>(); // 玩家对象 ID → 购买数量 / player object id → buy count
 
 	public LimitedItem(int itemId, int sellLimit, int buyLimit, String salesTime) {
 		this.itemId = itemId;
@@ -74,5 +73,4 @@ public class LimitedItem {
 		sellLimit = defaultSellLimit;
 		buyCounts.clear();
 	}
-
 }

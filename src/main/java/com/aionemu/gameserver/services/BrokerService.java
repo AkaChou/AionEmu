@@ -66,12 +66,12 @@ import com.aionemu.gameserver.world.World;
 @Slf4j(topic = "EXCHANGE_LOG")
 public class BrokerService {
 
-	private ConcurrentMap<Integer, BrokerItem> elyosBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private final ConcurrentMap<Integer, BrokerItem> elyosBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private final ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private final ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private final ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private Future<?> expiredItemsTask;
-	private ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
+	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	/**
@@ -177,7 +177,7 @@ public class BrokerService {
 			if (brokerItems == null) {
 				return;
 			}
-			searchItems = brokerItems.values().toArray(new BrokerItem[brokerItems.values().size()]);
+			searchItems = brokerItems.values().toArray(new BrokerItem[brokerItems.size()]);
 		} else if ((getFilteredItems(player).length == 0 || !isChidrenMask) && clientMask != 0) {
 			searchItems = getItemsByMask(player, clientMask, false);
 		} else if (isChidrenMask) {
@@ -431,10 +431,10 @@ public class BrokerService {
 			if (!isEmptyCache) {
 				BrokerItem[] newCache;
 				if (isBuyWholeItem) {
-					newCache = (BrokerItem[]) ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
+					newCache = ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
 				} else {
 					int buyingItemIndex = ArrayUtils.indexOf(getFilteredItems(player), buyingItem);
-					newCache = (BrokerItem[]) ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
+					newCache = ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
 					List<BrokerItem> updatedCache = new ArrayList<BrokerItem>(Arrays.asList(newCache));
 					updatedCache.add(buyingItemIndex, buyingItem);
 					newCache = updatedCache.toArray(new BrokerItem[updatedCache.size()]);
@@ -737,7 +737,7 @@ public class BrokerService {
 		long AveItemPrice = 0; // 7-day item's price average
 
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
-		searchItems = brokerItems.values().toArray(new BrokerItem[brokerItems.values().size()]);
+		searchItems = brokerItems.values().toArray(new BrokerItem[brokerItems.size()]);
 
 		if (searchItems == null || searchItems.length <= 0) {
 			return 0;
@@ -798,7 +798,7 @@ public class BrokerService {
 		CurrentLow = GetItemAveLowHigh(player, 1, itemUniqueId); // items's lowest price
 		CurrentHigh = GetItemAveLowHigh(player, 2, itemUniqueId); // items's highest price
 		Ave7day = GetItemAveLowHigh(player, 3, itemUniqueId); // 7-day item's price average
-		IsLowHighSame = (CurrentLow == CurrentHigh ? true : false); // Calculate "IsLowHighSame"
+		IsLowHighSame = (CurrentLow == CurrentHigh); // Calculate "IsLowHighSame"
 
 		PacketSendUtility.sendPacket(player,
 				new SM_BROKER_SERVICE(itemUniqueId, Ave7day, CurrentLow, CurrentHigh, IsLowHighSame));

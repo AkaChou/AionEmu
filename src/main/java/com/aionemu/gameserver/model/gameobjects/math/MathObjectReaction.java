@@ -7,6 +7,6 @@ package com.aionemu.gameserver.model.gameobjects.math;
 
 public enum MathObjectReaction {
 	/** 玩家角色 / Pc. */
-	PC, NPC, ALL;
+	PC, NPC, ALL
 
 }

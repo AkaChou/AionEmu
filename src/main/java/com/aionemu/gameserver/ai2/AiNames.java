@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.ai2;
 
+import lombok.Getter;
+
 /**
  * 常用 AI 注册名称枚举，避免硬编码字符串。
  * Enumeration of common AI registration names to avoid hard-coded strings.
@@ -15,19 +17,16 @@ public enum AiNames {
 	/** 主动攻击型 NPC AI / Aggressive NPC AI */
 	AGGRESSIVE_NPC("aggressive");
 
-	private final String name;
-
-	private AiNames(String name) {
-		this.name = name;
-	}
-
 	/**
 	 * 获取 AI 注册名称字符串。
 	 * Returns the AI registration name string.
 	 *
 	 * @return 名称 / name
 	 */
-	public String getName() {
-		return name;
+	@Getter
+	private final String name;
+
+	AiNames(String name) {
+		this.name = name;
 	}
 }

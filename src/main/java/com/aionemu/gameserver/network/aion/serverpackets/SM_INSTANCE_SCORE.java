@@ -65,10 +65,10 @@ import java.util.List;
 public class SM_INSTANCE_SCORE extends AionServerPacket {
 
 	private int type;
-	private int mapId;
+	private final int mapId;
 	private int instanceTime;
-	private InstanceScoreType instanceScoreType;
-	private InstanceReward instanceReward;
+	private final InstanceScoreType instanceScoreType;
+	private final InstanceReward instanceReward;
 	private List<Player> players;
 	private Integer object;
 	private int PlayerStatus = 0;
@@ -418,12 +418,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(kbr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(kbr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((kbr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((kbr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(kbr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(kbr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((kbr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((kbr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				kamarBattlefieldTable(Race.ELYOS);
@@ -536,12 +536,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(eobr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(eobr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((eobr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((eobr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(eobr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(eobr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((eobr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((eobr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				engulfedOphidanBridgeTable(Race.ELYOS);
@@ -644,12 +644,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(iwwr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(iwwr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((iwwr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((iwwr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(iwwr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(iwwr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((iwwr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((iwwr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				ironWallWarfrontTable(Race.ELYOS);
@@ -752,12 +752,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(idr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(idr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((idr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((idr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(idr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(idr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((idr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((idr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				idgelDomeTable(Race.ELYOS);
@@ -860,12 +860,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(lmr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(lmr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((lmr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((lmr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(lmr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(lmr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((lmr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((lmr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				landMarkTable(Race.ELYOS);
@@ -966,12 +966,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(ecr.getPvpKillsByRace(Race.ELYOS).intValue());
 				writeD(ecr.getPointsByRace(Race.ELYOS).intValue());
 				writeD(0);
-				writeD((ecr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((ecr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				writeC(0);
 				writeD(ecr.getPvpKillsByRace(Race.ASMODIANS).intValue());
 				writeD(ecr.getPointsByRace(Race.ASMODIANS).intValue());
 				writeD(1);
-				writeD((ecr.getInstanceScoreType() == instanceScoreType.PREPARING ? 65535 : 1));
+				writeD((ecr.getInstanceScoreType() == InstanceScoreType.PREPARING ? 65535 : 1));
 				break;
 			case 7:
 				evergaleCanyonTable(Race.ELYOS);
@@ -1262,11 +1262,11 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(0);
 			}
 			break;
-		case 300350000: // Arena Of Chaos.
-		case 300360000: // Arena Of Discipline.
-		case 300420000: // Chaos Training Grounds.
-		case 300430000: // Discipline Training Grounds.
-		case 300550000: // Arena Of Glory.
+		case 300350000: // 混沌竞技场 / Arena Of Chaos.
+		case 300360000: // 孤独竞技场 / Arena Of Discipline.
+		case 300420000: // 混沌修炼场 / Chaos Training Grounds.
+		case 300430000: // 孤独修炼场 / Discipline Training Grounds.
+		case 300550000: // 荣耀竞技场 / Arena Of Glory.
 			PvPArenaReward arenaReward = (PvPArenaReward) instanceReward;
 			PvPArenaPlayerReward rewardedPlayer = arenaReward.getPlayerReward(ownerObject);
 			int rank, points;
@@ -1302,7 +1302,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(rewardedPlayer.getRankingGP());
 				writeD(rewardedPlayer.getScoreAP());
 				writeD(rewardedPlayer.getScoreGP());
-				if (mapId == 300550000) { // Arena Of Glory.
+				if (mapId == 300550000) { // 荣耀竞技场 / Arena Of Glory.
 					writeB(new byte[32]);
 					if (rewardedPlayer.getMithrilMedal() != 0) {
 						writeD(186000147); // Mithril Medal.
@@ -1391,7 +1391,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				break;
 			}
 			break;
-		case 302320000: // Hall Of Tenacity
+		case 302320000: // 黄金神庙训练所 / Hall Of Tenacity
 			HallOfTenacityReward hot = (HallOfTenacityReward) instanceReward;
 			List<Player> members = hot.getPlayersInside();
 			writeD(type);

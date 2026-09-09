@@ -53,7 +53,7 @@ public class RiftSchedule {
 		RiftSchedule rs;
 		try {
 			String xml = Files.readString(Config.configFile("schedule/rift_schedule.xml").toPath(), StandardCharsets.UTF_8);
-			rs = (RiftSchedule) JAXBUtil.deserialize(xml, RiftSchedule.class);
+			rs = JAXBUtil.deserialize(xml, RiftSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize rifts", e);
 		}

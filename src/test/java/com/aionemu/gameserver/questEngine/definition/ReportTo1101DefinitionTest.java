@@ -15,9 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Full vertical proof for the current ReportTo owner of quest 1101. */
 class ReportTo1101DefinitionTest {
@@ -125,7 +123,7 @@ class ReportTo1101DefinitionTest {
 	@Test
 	void noFivePathFixtureCanBeMistakenForReplacementProof() throws Exception {
 		CompiledQuestDefinition compiled = definition();
-		assertFalse(compiled.definition().transitions().size() == 5);
+		assertNotEquals(5, compiled.definition().transitions().size());
 		assertEquals(3, compiled.definition().metadata().rewards().stream()
 			.filter(reward -> reward.kind().equals("ITEM")).count());
 	}

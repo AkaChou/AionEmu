@@ -132,11 +132,11 @@ class Quest1118ProductionFlowTest {
 
 	private static void applyInventoryActions(Map<Integer, Integer> inventory, List<QuestAction> actions) {
 		for (QuestAction action : actions) {
-			if (action instanceof QuestAction.GiveItem give) {
-				inventory.merge(give.itemId(), give.count(), Integer::sum);
-			} else if (action instanceof QuestAction.RemoveItem remove) {
-				inventory.compute(remove.itemId(), (itemId, count) -> {
-					int remaining = count - remove.count();
+			if (action instanceof QuestAction.GiveItem(int itemId1, int count2)) {
+				inventory.merge(itemId1, count2, Integer::sum);
+			} else if (action instanceof QuestAction.RemoveItem(int id, int count1)) {
+				inventory.compute(id, (itemId, count) -> {
+					int remaining = count - count1;
 					return remaining == 0 ? null : remaining;
 				});
 			}

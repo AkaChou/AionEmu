@@ -27,7 +27,7 @@ public class SoirunerkAI2 extends NpcAI2
 
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 834306: //Soirunerk.
+				case 834306: // 索依隆隆 / Soirunerk.
 					spawn(220821, 1390.711f, 1692.9382f, 573.28613f, (byte) 105); //Sanctum Tank B.
 				break;
 			}

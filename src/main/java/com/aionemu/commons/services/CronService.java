@@ -31,6 +31,8 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 定时任务调度服务类
@@ -49,14 +51,15 @@ import org.slf4j.LoggerFactory;
  *    Provides task management functions including add, delete and query
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CronService {
-    
+
     /** 单例实例 Singleton instances */
     private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
-    
+
     /** Quartz 调度器 / Quartz scheduler */
     private Scheduler scheduler;
-    
+
     /** 可运行任务执行器类 Runnable task executor class */
     private Class<? extends RunnableRunner> runnableRunner;
     private String context;
@@ -130,9 +133,6 @@ public final class CronService {
          instances.put(context, cs);
          return cs;
       }
-   }
-
-   private CronService() {
    }
 
     /**
@@ -242,7 +242,7 @@ public final class CronService {
          JobKey jobKey = new JobKey("JobKey:" + jobId);
          JobDetail jobDetail = JobBuilder.newJob(this.runnableRunner).usingJobData(jdm).withIdentity(jobKey).build();
          CronScheduleBuilder csb = CronScheduleBuilder.cronSchedule(cronExpression);
-         CronTrigger trigger = (CronTrigger)TriggerBuilder.newTrigger().withSchedule(csb).build();
+         CronTrigger trigger = TriggerBuilder.newTrigger().withSchedule(csb).build();
          this.scheduler.scheduleJob(jobDetail, trigger);
       } catch (Exception var10) {
          throw new CronServiceException("Failed to start job", var10);
@@ -274,7 +274,7 @@ public final class CronService {
      */
     public void cancel(Runnable r) {
       Map<Runnable, JobDetail> map = this.getRunnables();
-      JobDetail jd = (JobDetail)map.get(r);
+      JobDetail jd = map.get(r);
       this.cancel(jd);
    }
 
@@ -308,13 +308,13 @@ public final class CronService {
      *
      * @throws CronServiceException 获取失败时 when retrieval fails
      */
-    protected Collection<JobDetail> getJobDetails() {
+	private Collection<JobDetail> getJobDetails() {
       if (this.scheduler == null) {
          return Collections.emptySet();
       } else {
          try {
-            Set<JobKey> keys = this.scheduler.getJobKeys((GroupMatcher)null);
-            if (GenericValidator.isBlankOrNull((Collection)keys)) {
+            Set<JobKey> keys = this.scheduler.getJobKeys(null);
+            if (GenericValidator.isBlankOrNull(keys)) {
                return Collections.emptySet();
             } else {
                Set<JobDetail> result = Sets.newHashSetWithExpectedSize(keys.size());
@@ -349,7 +349,7 @@ public final class CronService {
 
          while(i$.hasNext()) {
             JobDetail jd = (JobDetail)i$.next();
-            if (!GenericValidator.isBlankOrNull((Map)jd.getJobDataMap()) && jd.getJobDataMap().containsKey("cronservice.scheduled.runnable.instance")) {
+            if (!GenericValidator.isBlankOrNull(jd.getJobDataMap()) && jd.getJobDataMap().containsKey("cronservice.scheduled.runnable.instance")) {
                Runnable runnable = (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.original");
                result.put(runnable == null ? (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.instance") : runnable, jd);
             }

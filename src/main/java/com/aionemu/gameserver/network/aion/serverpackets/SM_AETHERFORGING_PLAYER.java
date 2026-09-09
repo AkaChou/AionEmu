@@ -11,8 +11,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ranastic
  */
 public class SM_AETHERFORGING_PLAYER extends AionServerPacket {
-	private int playerObjId;
-	private int type;
+	private final int playerObjId;
+	private final int type;
 
 	/**
 	 * 使用玩家对象与状态类型构造同步包。

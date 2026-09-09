@@ -25,9 +25,9 @@ public class Petrified_Jotun_CraftsmanAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+
+	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
+
 	/**
 	 * 生物移动检测：玩家进入 10 米范围时生成替代 NPC 并删除自身（事件只触发一次）。
 	 * Creature-move handler: when a player comes within 10 m, spawns the replacement NPC and deletes self (fires once).
@@ -36,11 +36,10 @@ public class Petrified_Jotun_CraftsmanAI2 extends AggressiveNpcAI2
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
+		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
-					spawn(219777, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
+					spawn(219777, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					AI2Actions.deleteOwner(Petrified_Jotun_CraftsmanAI2.this);
 					AI2Actions.scheduleRespawn(this);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -53,12 +52,12 @@ public class Petrified_Jotun_CraftsmanAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

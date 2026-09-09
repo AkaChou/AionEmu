@@ -167,14 +167,20 @@ public final class QuestProductionJourneyExecutor {
 			definition.definition().progressLayout().unpack(beforePackedVariables));
 		Set<String> actionTouchedFields = new java.util.HashSet<>();
 		for (var action : expected.transition().actions()) {
-			if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.SetStatus setStatus) {
-				expectedStatus = setStatus.status();
-			} else if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.SetVariable set) {
-				expectedVariables.put(set.field(), set.value());
-				actionTouchedFields.add(set.field());
-			} else if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.IncrementVariable increment) {
-				expectedVariables.merge(increment.field(), increment.delta(), Integer::sum);
-				actionTouchedFields.add(increment.field());
+			if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.SetStatus(
+				QuestStatus status
+			)) {
+				expectedStatus = status;
+			} else if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.SetVariable(
+				String field1, int value
+			)) {
+				expectedVariables.put(field1, value);
+				actionTouchedFields.add(field1);
+			} else if (action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.IncrementVariable(
+				String field, int delta
+			)) {
+				expectedVariables.merge(field, delta, Integer::sum);
+				actionTouchedFields.add(field);
 			}
 		}
 		target.variables().forEach((field, value) -> {

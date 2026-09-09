@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
  */
 public class TwoTeamBg extends Battleground {
 	/** 队伍索引 → 回合胜场。 / Team index → round wins. */
-	private Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
 	/** 最大回合数。 / Maximum rounds. */
 	private int maxRounds = 3;
 	/** 已完成回合数。 / Rounds completed. */
@@ -820,7 +820,7 @@ public class TwoTeamBg extends Battleground {
 			public void run() {
 				endTwoTeamMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -844,11 +844,10 @@ public class TwoTeamBg extends Battleground {
 	 */
 	public void onDie(final Player player, Creature lastAttacker) {
 		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player && ((Player) lastAttacker).getObjectId() != player.getObjectId()) {
-			Player killer = (Player) lastAttacker;
+		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			if (killer.getPlayerGroup2() != null) {
 				for (Iterator<Player> iterator = killer.getPlayerGroup2().getMembers().iterator(); iterator.hasNext();) {
-					if (((Player) lastAttacker).getObjectId() != player.getObjectId()) {
+					if (lastAttacker.getObjectId() != player.getObjectId()) {
 					}
 				}
 				int deadCounter = 0;
@@ -934,7 +933,7 @@ public class TwoTeamBg extends Battleground {
 			public void run() {
 				endTwoTeamMatch(true);
 			}
-		}, getMatchLength() * 1000));
+		}, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override

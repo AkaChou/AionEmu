@@ -32,8 +32,9 @@ public class DredgionService2 {
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;
-	private List<Integer> playersWithCooldown = new ArrayList<Integer>();
-	private SM_AUTO_GROUP[] autoGroupUnreg, autoGroupReg;
+	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final SM_AUTO_GROUP[] autoGroupUnreg;
+	private final SM_AUTO_GROUP[] autoGroupReg;
 	private final byte maskLvlGradeC = 1, maskLvlGradeB = 2, maskLvlGradeA = 3;
 	public static final byte minLevel = 46, capLevel = 61;
 

@@ -26,7 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TemperingAction")
 public class TemperingAction extends AbstractItemAction {
-	
+
 	/**
 	 * @return 是否允许执行。 / Whether act
 	  */
@@ -35,13 +35,13 @@ public class TemperingAction extends AbstractItemAction {
 		if (targetItem.getItemTemplate().getMaxAuthorize() == 0) {
 			return false;
 		}
-		
+
 		// 若背包满则无法卸下羽饰；提取时背包至少需有空位。 / if you don't check your inventory and fill it, the plume won't be deleted because it's impossible to drop into full inventory To extract, there must be at least one free cell in the cube.
 		if (player.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330081));
 			return false;
 		}
-		
+
 		if (targetItem.getItemTemplate().isAccessory() && targetItem.getAuthorize() >= 15) {
 			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
@@ -68,7 +68,7 @@ public class TemperingAction extends AbstractItemAction {
 		} else {
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
 		}
-		
+
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
 			@Override
@@ -84,10 +84,10 @@ public class TemperingAction extends AbstractItemAction {
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANCEL(targetItem.getNameId()));
 			}
 		};
-		
+
 		player.getObserveController().attach(observer);
 		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
-		
+
 		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
@@ -98,61 +98,61 @@ public class TemperingAction extends AbstractItemAction {
 						if (player.getEffectController() != null) {
 							hasTemperingProtection = player.getEffectController().hasEffectById(900004);
 						}
-						
+
 						if (targetItem.getItemTemplate().isBracelet()) {
 							targetItem.setAuthorize(0);
 							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
-							
+
 						} else if (targetItem.getItemTemplate().isPlume()) {
 							targetItem.setAuthorize(targetItem.getAuthorize()); // 羽饰淬炼失败不掉级 / plume doesn't decrease
 							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
-							
+
 						}
 						// 新淬炼 5.8 / New Tempering 5.8
 						else if (parentItem.getItemId() == 166032001 || parentItem.getItemId() == 166032002) {
 							targetItem.setAuthorize(targetItem.getAuthorize() - 1);
 							// 你淬炼 %0 失败。 / You failed to temper %0.
                             PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId()));
-							
+
 						} else {
 							if (targetItem.getItemTemplate().isAccessory() && hasTemperingProtection) {
 								int currentLevel = targetItem.getAuthorize();
 								int newLevel = Math.max(0, currentLevel - 1);
 								targetItem.setAuthorize(newLevel);
-								
+
 	                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
-								
+
 							} else {
 								targetItem.setAuthorize(0);
 								// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							}
 						}
-						
+
 					} else {
 						targetItem.setAuthorize(targetItem.getAuthorize() + 1);
-						
+
 						if (targetItem.getItemTemplate().isBracelet()) {
 							checkTempering(player, targetItem);
 						}
-						
+
 						// 你成功淬炼了 %0。达到 +%num1 淬炼等级。 / You have successfully tempered %0. +%num1 temperance level achieved.
                         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_SUCCEEDED(targetItem.getNameId(), targetItem.getAuthorize()));
 					}
-					
+
 					player.getObserveController().removeObserver(observer);
-					
+
 					if (targetItem.isEquipped()) {
 						player.getGameStats().updateStatsVisually();
 					}
-					
+
 					ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 					PacketSendUtility.broadcastPacketAndReceive(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0,
 							isTemperingSuccess ? 1 : 2, 0));
-					
+
 					if (targetItem.isEquipped()) {
 						player.getEquipment().setPersistentState(PersistentState.UPDATE_REQUIRED);
 					} else {
@@ -192,23 +192,11 @@ public class TemperingAction extends AbstractItemAction {
 	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
 		if (item.getItemTemplate().isBracelet()) {
-			if (Rnd.get(1, 100) < EnchantsConfig.ENCHANT_BRACELET) {
-				return true;
-			} else {
-				return false;
-			}
+			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_BRACELET;
 		} else if (item.getItemTemplate().isPlume()) {
-			if (Rnd.get(1, 100) < EnchantsConfig.ENCHANT_PLUME) {
-				return true;
-			} else {
-				return false;
-			}
+			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_PLUME;
 		} else if (item.getItemTemplate().isAccessory() && !item.getItemTemplate().isPlume() || !item.getItemTemplate().isBracelet()) {
-			if (Rnd.get(1, 100) < EnchantsConfig.ENCHANT_ACCESSORY) {
-				return true;
-			} else {
-				return false;
-			}
+			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_ACCESSORY;
 		} else {
 			return false;
 		}

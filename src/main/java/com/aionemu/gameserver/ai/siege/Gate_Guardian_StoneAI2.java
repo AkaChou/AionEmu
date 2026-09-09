@@ -51,15 +51,14 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_DOOR_REPAIR_POPUPDIALOG, player.getObjectId(), 5));
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature) {
-					final Creature kill = (Creature) winner;
+				if (winner instanceof Creature kill) {
 					AI2Actions.deleteOwner(Gate_Guardian_StoneAI2.this);
 					// “种族”的“玩家名”摧毁了大门守护石。 / "Player Name" of the "Race" destroyed the Gate Guardian Stone.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301054, kill.getRace().getRaceDescriptionId(), kill.getName()));
@@ -67,16 +66,16 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDialogFinish(Player player) {
 	}
-	
+
 	public void onActivate(Player player) {
 	}
 }

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * 目标定身/定帧时同步其坐标与朝向的服务端包。
@@ -18,16 +19,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  *
  * @author Sweetkr
  */
+@AllArgsConstructor
 public class SM_TARGET_IMMOBILIZE extends AionServerPacket {
 
-	private Creature creature;
-
-	/**
-	 * @param creature 被定身的生物 / immobilized creature
-	 */
-	public SM_TARGET_IMMOBILIZE(Creature creature) {
-		this.creature = creature;
-	}
+	private final Creature creature;
 
 	// 修改（Aion Reconstruction Project - Yoress）：为非玩家实体增加 geoZ 检测，避免浮空怪。 / modified (Aion Reconstruction Project - Yoress) - Added geoZ check for non player entities to avoid floating mobs.
 	// 眩晕时更新怪物高度检测（减少怪物看起来浮空的情况）。 / and update check to mob altitude when they are stunned (mobs should appear to float in the air less often).

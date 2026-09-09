@@ -11,6 +11,8 @@ import jakarta.xml.bind.annotation.XmlSchemaType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Events 窗口模板（静态数据/XML）。
@@ -22,12 +24,16 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 @XmlAccessorType(value = XmlAccessType.NONE)
 public class EventsWindow {
 
+	/** 返回 ID / Returns the id */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	@XmlAttribute(name = "item", required = true)
 	private int item;
 
+	/** 获取计数。 / Returns the count. */
+	@Getter
 	@XmlAttribute(name = "count", required = true)
 	private long count;
 
@@ -51,21 +57,14 @@ public class EventsWindow {
 	@XmlAttribute(name = "dailyMaxCount", required = true)
 	private int dailyMaxCount;
 
+	/** 返回上次盖章时间 / Returns the last stamp */
+	@Getter
+	@Setter
 	private Timestamp lastStamp;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return item;
-	}
-
-	/** 获取计数。 / Returns the count. */
-	public long getCount() {
-		return count;
 	}
 
 	/** 返回每日最大次数 / Returns the max count of day */
@@ -96,15 +95,5 @@ public class EventsWindow {
 	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return max_level;
-	}
-
-	/** 返回上次盖章时间 / Returns the last stamp */
-	public Timestamp getLastStamp() {
-		return lastStamp;
-	}
-
-	/** 设置上次盖章时间 / Sets the last stamp */
-	public void setLastStamp(Timestamp timestamp) {
-		lastStamp = timestamp;
 	}
 }

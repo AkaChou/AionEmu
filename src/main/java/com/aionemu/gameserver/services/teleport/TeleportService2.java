@@ -459,18 +459,18 @@ public class TeleportService2 {
 
 	private static void changePosition(final Player player, int worldId, int instanceId, float x, float y, float z, byte heading, TeleportAnimation animation) {
 		synchronized (String.valueOf(player.getObjectId()).intern()) {
-			
+
 			if (player.hasStore()) {
 				PrivateStoreService.closePrivateStore(player);
 			}
 			player.getFlyController().endFly(true);
-			
+
 			Pet pet = player.getPet();
 			Summon summon = player.getSummon();
 			Minion minion = player.getMinion();
-			
+
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
-			
+
 			if (pet != null) {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(pet);
 			}
@@ -480,12 +480,12 @@ public class TeleportService2 {
 			if (minion != null) {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(minion);
 			}
-			
+
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
 			player.getController().cancelCurrentSkill();
-			
+
 			int currentWorldId = player.getWorldId();
 			boolean isInstance = DataManager.WORLD_MAPS_DATA.getTemplate(worldId).isInstance();
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, instanceId, x, y, z, heading);
@@ -508,14 +508,14 @@ public class TeleportService2 {
 				PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 				player.getController().startProtectionActiveTask();
 				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
-				
+
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(player);
-				
+
 				player.getEffectController().updatePlayerEffectIcons();
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
 				GameFeatureServices.disputeLandService().onLogin(player);
-				
+
 				playerTransformation(player);
 				instanceTransformation(player);
 				archdaevaTransformation(player);
@@ -888,7 +888,7 @@ public class TeleportService2 {
 		WorldReviveStartPoints startPoint = getReviveWorldStartPoints(worldId, player.getRace(), player.getLevel());
 
 		if (startPoint != null) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, startPoint.getReviveWorld(), 0, startPoint.getX(), startPoint.getY(), startPoint.getZ(), (byte) startPoint.getH());
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, startPoint.getReviveWorld(), 0, startPoint.getX(), startPoint.getY(), startPoint.getZ(), startPoint.getH());
 		} else {
 			moveToBindLocation(player, false);
 		}

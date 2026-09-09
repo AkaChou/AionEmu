@@ -76,12 +76,12 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 public class Skill {
 
 	private SkillMethod skillMethod = SkillMethod.CAST;
-	private List<Creature> effectedList;
+	private final List<Creature> effectedList;
 	private Creature firstTarget;
-	private Creature effector;
-	private int skillLevel;
-	private int skillStackLvl;
-	private StartMovingListener conditionChangeListener;
+	private final Creature effector;
+	private final int skillLevel;
+	private final int skillStackLvl;
+	private final StartMovingListener conditionChangeListener;
 	private SkillTemplate skillTemplate;
 	private boolean firstTargetRangeCheck = true;
 	private ItemTemplate itemTemplate;
@@ -116,7 +116,7 @@ public class Skill {
 	private boolean broadcastToPreselectedTargets;
 
 	public enum SkillMethod {
-		CAST, ITEM, PASSIVE, PROVOKED;
+		CAST, ITEM, PASSIVE, PROVOKED
 	}
 
 	/**
@@ -212,8 +212,7 @@ public class Skill {
 			return false;
 		}
 		// 检查反击技能 / check for counter skill
-		if (effector instanceof Player) {
-			Player player = (Player) effector;
+		if (effector instanceof Player player) {
 			if (this.skillTemplate.getCounterSkill() != null) {
 				long time = player.getLastCounterSkill(skillTemplate.getCounterSkill());
 				if ((time + 5000) < System.currentTimeMillis()) {
@@ -228,10 +227,7 @@ public class Skill {
 			}
 		}
 
-		if (!validateEffectedList()) {
-			return false;
-		}
-		return true;
+		return validateEffectedList();
 	}
 
 	private boolean validateEffectedList() {
@@ -271,6 +267,8 @@ public class Skill {
 
 	/**
 	 * 对外部区域预选的目标执行技能；技能模板仍负责关系、物种、状态与效果判定。
+	 * Executes the skill against the targets preselected by an external area; the skill template still
+	 * governs relation, species, state and effect checks.
 	 */
 	public boolean useSkillOnPreselectedTargets(Collection<? extends Creature> targets, boolean broadcastToTargets) {
 		preselectedTargets = List.copyOf(targets);
@@ -347,7 +345,7 @@ public class Skill {
 		if ((skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) && preselectedTargets == null) {
 			startCast();
 			if (effector instanceof Npc) {
-				((NpcAI2) ((Npc) effector).getAi2()).setSubStateIfNot(AISubState.CAST);
+				((NpcAI2) effector.getAi2()).setSubStateIfNot(AISubState.CAST);
 			}
 		}
 		effector.getObserveController().attach(conditionChangeListener);
@@ -374,7 +372,7 @@ public class Skill {
 				: effector.getSkillCooldown(skillTemplate);
 		if (cooldown != 0) {
 			cooldown = calculateCooldown(cooldown);
-			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100 + this.duration + System.currentTimeMillis());
+			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100L + this.duration + System.currentTimeMillis());
 			effector.setSkillCoolDownBase(skillTemplate.getDelayId(), System.currentTimeMillis());
 		}
 	}
@@ -403,83 +401,83 @@ public class Skill {
 			return Math.max(0, cooldown + skill.getSkillTemplate().getCooldownDelta() * SkillLevel);
 		}
 		switch (skill.getSkillId()) {
-		case 564: // Dauntless Spirit
-		case 565: // Dauntless Spirit
-		case 566: // Dauntless Spirit
-		case 567: // Dauntless Spirit
-		case 568: // Dauntless Spirit
-		case 569: // Dauntless Spirit
-		case 570: // Dauntless Spirit
-		case 571: // Dauntless Spirit
+		case 564: // 气魄 / Dauntless Spirit
+		case 565: // 气魄 / Dauntless Spirit
+		case 566: // 气魄 / Dauntless Spirit
+		case 567: // 气魄 / Dauntless Spirit
+		case 568: // 气魄 / Dauntless Spirit
+		case 569: // 气魄 / Dauntless Spirit
+		case 570: // 气魄 / Dauntless Spirit
+		case 571: // 气魄 / Dauntless Spirit
 		case 727: // Wind Lance
 		case 728: // Wind Lance
 		case 729: // Wind Lance
 		case 730: // Wind Lance
 		case 731: // Wind Lance
 		case 732: // Wind Lance
-		case 755: // Whirling Strike
-		case 756: // Whirling Strike
-		case 757: // Whirling Strike
-		case 1100: // Trap Of Clairvoyance
-		case 1101: // Trap Of Clairvoyance
-		case 1324: // Glacial Shard
-		case 1325: // Glacial Shard
-		case 1326: // Glacial Shard
-		case 1640: // Annihilation
-		case 1641: // Annihilation
-		case 1642: // Annihilation
-		case 1643: // Annihilation
-		case 1644: // Annihilation
-		case 1645: // Annihilation
-		case 1646: // Annihilation
-		case 1647: // Annihilation
-		case 1727: // Word Of Life
-		case 1728: // Word Of Life
-		case 1729: // Word Of Life
-		case 1730: // Word Of Life
-		case 1731: // Word Of Life
-		case 1732: // Word Of Life
-		case 1733: // Word Of Life
-		case 1734: // Word Of Life
-		case 1863: // Disorienting Blow
-		case 1864: // Disorienting Blow
-		case 1865: // Disorienting Blow
-		case 1866: // Disorienting Blow
-		case 1867: // Disorienting Blow
-		case 1868: // Disorienting Blow
-		case 1883: // Burst
-		case 1884: // Burst
-		case 1885: // Burst
-		case 1886: // Burst
-		case 1887: // Burst
-		case 1888: // Burst
-		case 1889: // Burst
-		case 1890: // Burst
+		case 755: // 回旋一击 / Whirling Strike
+		case 756: // 回旋一击 / Whirling Strike
+		case 757: // 回旋一击 / Whirling Strike
+		case 1100: // 透视陷阱 / Trap Of Clairvoyance
+		case 1101: // 透视陷阱 / Trap Of Clairvoyance
+		case 1324: // 冰河重击 / Glacial Shard
+		case 1325: // 冰河重击 / Glacial Shard
+		case 1326: // 冰河重击 / Glacial Shard
+		case 1640: // 灭火 / Annihilation
+		case 1641: // 灭火 / Annihilation
+		case 1642: // 灭火 / Annihilation
+		case 1643: // 灭火 / Annihilation
+		case 1644: // 灭火 / Annihilation
+		case 1645: // 灭火 / Annihilation
+		case 1646: // 灭火 / Annihilation
+		case 1647: // 灭火 / Annihilation
+		case 1727: // 生命之咒语 / Word Of Life
+		case 1728: // 生命之咒语 / Word Of Life
+		case 1729: // 生命之咒语 / Word Of Life
+		case 1730: // 生命之咒语 / Word Of Life
+		case 1731: // 生命之咒语 / Word Of Life
+		case 1732: // 生命之咒语 / Word Of Life
+		case 1733: // 生命之咒语 / Word Of Life
+		case 1734: // 生命之咒语 / Word Of Life
+		case 1863: // 波动攻击 / Disorienting Blow
+		case 1864: // 波动攻击 / Disorienting Blow
+		case 1865: // 波动攻击 / Disorienting Blow
+		case 1866: // 波动攻击 / Disorienting Blow
+		case 1867: // 波动攻击 / Disorienting Blow
+		case 1868: // 波动攻击 / Disorienting Blow
+		case 1883: // 爆裂 / Burst
+		case 1884: // 爆裂 / Burst
+		case 1885: // 爆裂 / Burst
+		case 1886: // 爆裂 / Burst
+		case 1887: // 爆裂 / Burst
+		case 1888: // 爆裂 / Burst
+		case 1889: // 爆裂 / Burst
+		case 1890: // 爆裂 / Burst
 		case 1907: // Word of Instigation
 		case 1908: // Word of Instigation
 		case 1909: // Word of Instigation
-		case 2046: // Stopping Power
-		case 2054: // Autoload
-		case 2268: // Sighting
-		case 2269: // Sighting
-		case 2270: // Sighting
-		case 2271: // Sighting
-		case 2272: // Sighting
-		case 2273: // Sighting
-		case 2391: // Drillbore
-		case 2392: // Drillbore
-		case 2393: // Drillbore
-		case 2394: // Drillbore
-		case 2395: // Drillbore
-		case 2396: // Drillbore
-		case 2397: // Drillbore
-		case 2398: // Drillbore
-		case 2409: // Debilitating Blade
-		case 2410: // Debilitating Blade
-		case 2411: // Debilitating Blade
-		case 2412: // Debilitating Blade
-		case 2413: // Debilitating Blade
-		case 2414: // Debilitating Blade
+		case 2046: // 魔力之恩惠 I / Stopping Power
+		case 2054: // 填装魔力弹 I / Autoload
+		case 2268: // 必中魔眼 / Sighting
+		case 2269: // 必中魔眼 / Sighting
+		case 2270: // 必中魔眼 / Sighting
+		case 2271: // 必中魔眼 / Sighting
+		case 2272: // 必中魔眼 / Sighting
+		case 2273: // 必中魔眼 / Sighting
+		case 2391: // 盔甲破坏 / Drillbore
+		case 2392: // 盔甲破坏 / Drillbore
+		case 2393: // 盔甲破坏 / Drillbore
+		case 2394: // 盔甲破坏 / Drillbore
+		case 2395: // 盔甲破坏 / Drillbore
+		case 2396: // 盔甲破坏 / Drillbore
+		case 2397: // 盔甲破坏 / Drillbore
+		case 2398: // 盔甲破坏 / Drillbore
+		case 2409: // 要害戳刺 / Debilitating Blade
+		case 2410: // 要害戳刺 / Debilitating Blade
+		case 2411: // 要害戳刺 / Debilitating Blade
+		case 2412: // 要害戳刺 / Debilitating Blade
+		case 2413: // 要害戳刺 / Debilitating Blade
+		case 2414: // 要害戳刺 / Debilitating Blade
 		case 2464: // Aether Recharge
 		case 2467: // Aether Recharge
 		case 2470: // Aether Recharge
@@ -488,85 +486,85 @@ public class Skill {
 		case 2479: // Aether Recharge
 		case 2482: // Aether Recharge
 		case 2485: // Aether Recharge
-		case 2711: // Convulsion Beam
-		case 2712: // Convulsion Beam
-		case 2713: // Convulsion Beam
-		case 2714: // Convulsion Beam
-		case 2715: // Convulsion Beam
-		case 2716: // Convulsion Beam
+		case 2711: // 电场束缚 / Convulsion Beam
+		case 2712: // 电场束缚 / Convulsion Beam
+		case 2713: // 电场束缚 / Convulsion Beam
+		case 2714: // 电场束缚 / Convulsion Beam
+		case 2715: // 电场束缚 / Convulsion Beam
+		case 2716: // 电场束缚 / Convulsion Beam
 		case 2919: // Invigorating Strike
 		case 2920: // Invigorating Strike
 		case 2921: // Invigorating Strike
-		case 2945: // Incite Rage
-		case 2946: // Incite Rage
-		case 2947: // Incite Rage
-		case 2948: // Incite Rage
-		case 2949: // Incite Rage
-		case 2950: // Incite Rage
-		case 2951: // Incite Rage
-		case 2952: // Incite Rage
-		case 2961: // Holy Shield
-		case 2962: // Holy Shield
-		case 2963: // Holy Shield
-		case 2964: // Holy Shield
-		case 2965: // Holy Shield
-		case 2966: // Holy Shield
-		case 3147: // Punishing Thrust
-		case 3148: // Punishing Thrust
-		case 3149: // Punishing Thrust
-		case 3150: // Punishing Thrust
-		case 3151: // Punishing Thrust
-		case 3152: // Punishing Thrust
-		case 3153: // Punishing Thrust
-		case 3154: // Punishing Thrust
+		case 2945: // 愤怒诱发 / Incite Rage
+		case 2946: // 愤怒诱发 / Incite Rage
+		case 2947: // 愤怒诱发 / Incite Rage
+		case 2948: // 愤怒诱发 / Incite Rage
+		case 2949: // 愤怒诱发 / Incite Rage
+		case 2950: // 愤怒诱发 / Incite Rage
+		case 2951: // 愤怒诱发 / Incite Rage
+		case 2952: // 愤怒诱发 / Incite Rage
+		case 2961: // 保护之盾 / Holy Shield
+		case 2962: // 保护之盾 / Holy Shield
+		case 2963: // 保护之盾 / Holy Shield
+		case 2964: // 保护之盾 / Holy Shield
+		case 2965: // 保护之盾 / Holy Shield
+		case 2966: // 保护之盾 / Holy Shield
+		case 3147: // 处决一击 / Punishing Thrust
+		case 3148: // 处决一击 / Punishing Thrust
+		case 3149: // 处决一击 / Punishing Thrust
+		case 3150: // 处决一击 / Punishing Thrust
+		case 3151: // 处决一击 / Punishing Thrust
+		case 3152: // 处决一击 / Punishing Thrust
+		case 3153: // 处决一击 / Punishing Thrust
+		case 3154: // 处决一击 / Punishing Thrust
 		case 3242: // Explosive Rebranding
 		case 3243: // Explosive Rebranding
 		case 3244: // Explosive Rebranding
-		case 3246: // Quickening Doom
-		case 3247: // Quickening Doom
-		case 3248: // Quickening Doom
-		case 3312: // Eye Of Wrath
-		case 3330: // Shadowfall
-		case 3731: // Magic's Freedom
-		case 3796: // Armor Spirit
-		case 3980: // Summon Healing Servant
-		case 3981: // Summon Healing Servant
-		case 3982: // Summon Healing Servant
-		case 3983: // Summon Healing Servant
-		case 3984: // Summon Healing Servant
-		case 3985: // Summon Healing Servant
-		case 3986: // Summon Healing Servant
-		case 3987: // Summon Healing Servant
-		case 3988: // Summon Healing Servant
-		case 3989: // Summon Healing Servant
-		case 3990: // Summon Healing Servant
-		case 3991: // Summon Healing Servant
-		case 3998: // Splendor Of Rebirth
-		case 3999: // Splendor Of Rebirth
-		case 4000: // Splendor Of Rebirth
-		case 4001: // Splendor Of Rebirth
-		case 4002: // Splendor Of Rebirth
-		case 4003: // Splendor Of Rebirth
-		case 4134: // Festering Wound
-		case 4164: // Call Lightning
-		case 4165: // Call Lightning
-		case 4166: // Call Lightning
-		case 4384: // Resonant Hymn
-		case 4385: // Resonant Hymn
-		case 4386: // Resonant Hymn
-		case 4387: // Resonant Hymn
-		case 4388: // Resonant Hymn
-		case 4389: // Resonant Hymn
-		case 4390: // Resonant Hymn
+		case 3246: // 昏厥之刃 / Quickening Doom
+		case 3247: // 昏厥之刃 / Quickening Doom
+		case 3248: // 昏厥之刃 / Quickening Doom
+		case 3312: // 愤怒之眼 I / Eye Of Wrath
+		case 3330: // 影子下坠 / Shadowfall
+		case 3731: // 魔力诅咒 I / Magic's Freedom
+		case 3796: // 精灵强化:强化甲胄 I / Armor Spirit
+		case 3980: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3981: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3982: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3983: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3984: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3985: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3986: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3987: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3988: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3989: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3990: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3991: // 召唤:治愈之气息 / Summon Healing Servant
+		case 3998: // 再生之光辉 / Splendor Of Rebirth
+		case 3999: // 再生之光辉 / Splendor Of Rebirth
+		case 4000: // 再生之光辉 / Splendor Of Rebirth
+		case 4001: // 再生之光辉 / Splendor Of Rebirth
+		case 4002: // 再生之光辉 / Splendor Of Rebirth
+		case 4003: // 再生之光辉 / Splendor Of Rebirth
+		case 4134: // 恢复阻断 I / Festering Wound
+		case 4164: // 霹雳 / Call Lightning
+		case 4165: // 霹雳 / Call Lightning
+		case 4166: // 霹雳 / Call Lightning
+		case 4384: // 平稳变奏曲 / Resonant Hymn
+		case 4385: // 平稳变奏曲 / Resonant Hymn
+		case 4386: // 平稳变奏曲 / Resonant Hymn
+		case 4387: // 平稳变奏曲 / Resonant Hymn
+		case 4388: // 平稳变奏曲 / Resonant Hymn
+		case 4389: // 平稳变奏曲 / Resonant Hymn
+		case 4390: // 平稳变奏曲 / Resonant Hymn
 		case 4474: // Blazing Requiem
 		case 4477: // Blazing Requiem
 		case 4480: // Blazing Requiem
-		case 4484: // Chorus Of Blessing
-		case 4485: // Chorus Of Blessing
-		case 4486: // Chorus Of Blessing
-		case 4487: // Treble Cleave
-		case 4488: // Treble Cleave
-		case 4489: // Treble Cleave
+		case 4484: // 免罪旋律 / Chorus Of Blessing
+		case 4485: // 免罪旋律 / Chorus Of Blessing
+		case 4486: // 免罪旋律 / Chorus Of Blessing
+		case 4487: // 不和谐音 / Treble Cleave
+		case 4488: // 不和谐音 / Treble Cleave
+		case 4489: // 不和谐音 / Treble Cleave
 		case 4491: // Mvt.2: Summer
 		case 4492: // Mvt.2: Summer
 		case 4493: // Mvt.2: Summer
@@ -579,12 +577,12 @@ public class Skill {
 		case 4500: // Mvt.3: Autumn
 		case 4501: // Mvt.3: Autumn
 		case 4502: // Mvt.3: Autumn
-		case 4524: // Paean Of Pain
-		case 4525: // Paean Of Pain
-		case 4526: // Paean Of Pain
-		case 4527: // Paean Of Pain
-		case 4528: // Paean Of Pain
-		case 4529: // Paean Of Pain
+		case 4524: // 莫斯奇狂想曲 / Paean Of Pain
+		case 4525: // 莫斯奇狂想曲 / Paean Of Pain
+		case 4526: // 莫斯奇狂想曲 / Paean Of Pain
+		case 4527: // 莫斯奇狂想曲 / Paean Of Pain
+		case 4528: // 莫斯奇狂想曲 / Paean Of Pain
+		case 4529: // 莫斯奇狂想曲 / Paean Of Pain
 		case 4572: // Combustible Cacophony
 		case 4573: // Combustible Cacophony
 		case 4574: // Combustible Cacophony
@@ -593,73 +591,73 @@ public class Skill {
 		case 4577: // Combustible Cacophony
 		case 4578: // Combustible Cacophony
 		case 4579: // Combustible Cacophony
-		case 4591: // Shadowfall
-		case 4592: // Shadowfall
-		case 4593: // Shadowfall
-		case 4594: // Shadowfall
-		case 4595: // Shadowfall
-		case 4596: // Shadowfall
+		case 4591: // 影子下坠 / Shadowfall
+		case 4592: // 影子下坠 / Shadowfall
+		case 4593: // 影子下坠 / Shadowfall
+		case 4594: // 影子下坠 / Shadowfall
+		case 4595: // 影子下坠 / Shadowfall
+		case 4596: // 影子下坠 / Shadowfall
 			return cooldown - 6 * SkillLevel;
 		case 600: // 魔法防御 / Magical Defense
 		case 641: // Unraveling Assault
 		case 642: // Unraveling Assault
 		case 643: // Unraveling Assault
-		case 1351: // Summon Rock
-		case 1352: // Summon Rock
-		case 1353: // Summon Rock
-		case 1354: // Summon Rock
-		case 1355: // Summon Rock
-		case 1356: // Summon Rock
-		case 1801: // Acceleration Cheer
-		case 1802: // Acceleration Cheer
-		case 1803: // Acceleration Cheer
-		case 1804: // Acceleration Cheer
-		case 1805: // Acceleration Cheer
-		case 1806: // Acceleration Cheer
-		case 1807: // Acceleration Cheer
-		case 1808: // Acceleration Cheer
-		case 2750: // Aethercharged Steel
-		case 2751: // Aethercharged Steel
-		case 2752: // Aethercharged Steel
-		case 2753: // Aethercharged Steel
-		case 2754: // Aethercharged Steel
-		case 2755: // Aethercharged Steel
-		case 3590: // Healing Spirit
-		case 3903: // Power Sprint
-		case 4182: // Enfeebling Burst
-		case 4183: // Enfeebling Burst
-		case 4184: // Enfeebling Burst
-		case 4185: // Enfeebling Burst
-		case 4186: // Enfeebling Burst
-		case 4187: // Enfeebling Burst
+		case 1351: // 岩石召唤 / Summon Rock
+		case 1352: // 岩石召唤 / Summon Rock
+		case 1353: // 岩石召唤 / Summon Rock
+		case 1354: // 岩石召唤 / Summon Rock
+		case 1355: // 岩石召唤 / Summon Rock
+		case 1356: // 岩石召唤 / Summon Rock
+		case 1801: // 疾行激励 / Acceleration Cheer
+		case 1802: // 疾行激励 / Acceleration Cheer
+		case 1803: // 疾行激励 / Acceleration Cheer
+		case 1804: // 疾行激励 / Acceleration Cheer
+		case 1805: // 疾行激励 / Acceleration Cheer
+		case 1806: // 疾行激励 / Acceleration Cheer
+		case 1807: // 疾行激励 / Acceleration Cheer
+		case 1808: // 疾行激励 / Acceleration Cheer
+		case 2750: // 功率最大化 / Aethercharged Steel
+		case 2751: // 功率最大化 / Aethercharged Steel
+		case 2752: // 功率最大化 / Aethercharged Steel
+		case 2753: // 功率最大化 / Aethercharged Steel
+		case 2754: // 功率最大化 / Aethercharged Steel
+		case 2755: // 功率最大化 / Aethercharged Steel
+		case 3590: // 精灵强化:治愈 I / Healing Spirit
+		case 3903: // 全力疾行 I / Power Sprint
+		case 4182: // 弱化之印 / Enfeebling Burst
+		case 4183: // 弱化之印 / Enfeebling Burst
+		case 4184: // 弱化之印 / Enfeebling Burst
+		case 4185: // 弱化之印 / Enfeebling Burst
+		case 4186: // 弱化之印 / Enfeebling Burst
+		case 4187: // 弱化之印 / Enfeebling Burst
 			return cooldown - 9 * SkillLevel;
-		case 539: // Exhausting Wave
-		case 540: // Exhausting Wave
-		case 541: // Exhausting Wave
-		case 542: // Exhausting Wave
-		case 543: // Exhausting Wave
-		case 544: // Exhausting Wave
-		case 612: // Tendon Slice
-		case 613: // Tendon Slice
-		case 614: // Tendon Slice
-		case 615: // Tendon Slice
-		case 616: // Tendon Slice
-		case 617: // Tendon Slice
-		case 618: // Ankle Snare
-		case 698: // Earthquake Wave
-		case 699: // Earthquake Wave
-		case 700: // Earthquake Wave
-		case 701: // Earthquake Wave
-		case 702: // Earthquake Wave
-		case 703: // Earthquake Wave
-		case 704: // Earthquake Wave
-		case 705: // Earthquake Wave
-		case 749: // Revival Wave
-		case 750: // Revival Wave
-		case 751: // Revival Wave
-		case 752: // Revival Wave
-		case 753: // Revival Wave
-		case 754: // Revival Wave
+		case 539: // 枯竭波 / Exhausting Wave
+		case 540: // 枯竭波 / Exhausting Wave
+		case 541: // 枯竭波 / Exhausting Wave
+		case 542: // 枯竭波 / Exhausting Wave
+		case 543: // 枯竭波 / Exhausting Wave
+		case 544: // 枯竭波 / Exhausting Wave
+		case 612: // 斩脚 / Tendon Slice
+		case 613: // 斩脚 / Tendon Slice
+		case 614: // 斩脚 / Tendon Slice
+		case 615: // 斩脚 / Tendon Slice
+		case 616: // 斩脚 / Tendon Slice
+		case 617: // 斩脚 / Tendon Slice
+		case 618: // 抓脚 I / Ankle Snare
+		case 698: // 地震波动 / Earthquake Wave
+		case 699: // 地震波动 / Earthquake Wave
+		case 700: // 地震波动 / Earthquake Wave
+		case 701: // 地震波动 / Earthquake Wave
+		case 702: // 地震波动 / Earthquake Wave
+		case 703: // 地震波动 / Earthquake Wave
+		case 704: // 地震波动 / Earthquake Wave
+		case 705: // 地震波动 / Earthquake Wave
+		case 749: // 重生波 / Revival Wave
+		case 750: // 重生波 / Revival Wave
+		case 751: // 重生波 / Revival Wave
+		case 752: // 重生波 / Revival Wave
+		case 753: // 重生波 / Revival Wave
+		case 754: // 重生波 / Revival Wave
 		case 849: // 减速陷阱 / Trap Of Slowing
 		case 850: // 减速陷阱 / Trap Of Slowing
 		case 851: // 减速陷阱 / Trap Of Slowing
@@ -676,7 +674,7 @@ public class Skill {
 		case 862: // 减速陷阱 / Trap Of Slowing
 		case 863: // 减速陷阱 / Trap Of Slowing
 		case 864: // 减速陷阱 / Trap Of Slowing
-		case 888: // Hunter's Might
+		case 888: // 猎人的决心 I / Hunter's Might
 		case 962: // 缚天陷阱 / Skybound Trap
 		case 963: // 缚天陷阱 / Skybound Trap
 		case 964: // 缚天陷阱 / Skybound Trap
@@ -696,104 +694,104 @@ public class Skill {
 		case 1006: // Ripthread Shot
 		case 1007: // Ripthread Shot
 		case 1008: // Ripthread Shot
-		case 1486: // Storm Strike
-		case 1487: // Storm Strike
-		case 1488: // Storm Strike
-		case 1489: // Storm Strike
-		case 1490: // Storm Strike
-		case 1491: // Storm Strike
-		case 1492: // Storm Strike
-		case 1493: // Storm Strike
+		case 1486: // 暴风重击 / Storm Strike
+		case 1487: // 暴风重击 / Storm Strike
+		case 1488: // 暴风重击 / Storm Strike
+		case 1489: // 暴风重击 / Storm Strike
+		case 1490: // 暴风重击 / Storm Strike
+		case 1491: // 暴风重击 / Storm Strike
+		case 1492: // 暴风重击 / Storm Strike
+		case 1493: // 暴风重击 / Storm Strike
 		case 1901: // Resonant Strike
 		case 1902: // Resonant Strike
 		case 1903: // Resonant Strike
-		case 2109: // Paralysis Cannon
-		case 2110: // Paralysis Cannon
-		case 2111: // Paralysis Cannon
-		case 2112: // Paralysis Cannon
-		case 2113: // Paralysis Cannon
-		case 2114: // Paralysis Cannon
-		case 2274: // Missile Guide
-		case 2277: // Missile Guide
-		case 2280: // Missile Guide
-		case 2283: // Missile Guide
-		case 2286: // Missile Guide
-		case 2289: // Missile Guide
-		case 2292: // Missile Guide
-		case 2295: // Missile Guide
+		case 2109: // 束缚炮 / Paralysis Cannon
+		case 2110: // 束缚炮 / Paralysis Cannon
+		case 2111: // 束缚炮 / Paralysis Cannon
+		case 2112: // 束缚炮 / Paralysis Cannon
+		case 2113: // 束缚炮 / Paralysis Cannon
+		case 2114: // 束缚炮 / Paralysis Cannon
+		case 2274: // 灵魂炮 / Missile Guide
+		case 2277: // 灵魂炮 / Missile Guide
+		case 2280: // 灵魂炮 / Missile Guide
+		case 2283: // 灵魂炮 / Missile Guide
+		case 2286: // 灵魂炮 / Missile Guide
+		case 2289: // 灵魂炮 / Missile Guide
+		case 2292: // 灵魂炮 / Missile Guide
+		case 2295: // 灵魂炮 / Missile Guide
 		case 2371: // Sequential Fire
 		case 2374: // Sequential Fire
 		case 2377: // Sequential Fire
 		case 2380: // Pulverizer Cannon
 		case 2381: // Pulverizer Cannon
 		case 2382: // Pulverizer Cannon
-		case 2450: // Life Support Trigger
-		case 2451: // Life Support Trigger
-		case 2452: // Life Support Trigger
-		case 2453: // Life Support Trigger
-		case 2454: // Life Support Trigger
-		case 2455: // Life Support Trigger
-		case 2456: // Life Support Trigger
-		case 2457: // Life Support Trigger
-		case 2939: // Divine Justice
-		case 2940: // Divine Justice
-		case 2941: // Divine Justice
-		case 2942: // Divine Justice
-		case 2943: // Divine Justice
-		case 2944: // Divine Justice
+		case 2450: // 魔力凝聚 / Life Support Trigger
+		case 2451: // 魔力凝聚 / Life Support Trigger
+		case 2452: // 魔力凝聚 / Life Support Trigger
+		case 2453: // 魔力凝聚 / Life Support Trigger
+		case 2454: // 魔力凝聚 / Life Support Trigger
+		case 2455: // 魔力凝聚 / Life Support Trigger
+		case 2456: // 魔力凝聚 / Life Support Trigger
+		case 2457: // 魔力凝聚 / Life Support Trigger
+		case 2939: // 精神破坏 / Divine Justice
+		case 2940: // 精神破坏 / Divine Justice
+		case 2941: // 精神破坏 / Divine Justice
+		case 2942: // 精神破坏 / Divine Justice
+		case 2943: // 精神破坏 / Divine Justice
+		case 2944: // 精神破坏 / Divine Justice
 		case 3239: // Fangdrop Stab
 		case 3240: // Fangdrop Stab
 		case 3241: // Fangdrop Stab
 		case 3245: // Scoundrel's Bond
-		case 3255: // Venomous Strike
-		case 3256: // Venomous Strike
-		case 3257: // Venomous Strike
-		case 3258: // Venomous Strike
-		case 3259: // Venomous Strike
-		case 3260: // Venomous Strike
-		case 3261: // Venomous Strike
-		case 3327: // Break Away
-		case 3531: // Spirit Wall Of Protection
-		case 3562: // Earthen Call
-		case 3563: // Earthen Call
-		case 3564: // Earthen Call
-		case 3565: // Earthen Call
-		case 3566: // Earthen Call
-		case 3567: // Earthen Call
-		case 3568: // Earthen Call
-		case 3569: // Earthen Call
-		case 3575: // Withering Gloom
-		case 3576: // Withering Gloom
-		case 3577: // Withering Gloom
-		case 3578: // Withering Gloom
-		case 3579: // Withering Gloom
-		case 3580: // Withering Gloom
-		case 3581: // Withering Gloom
-		case 3924: // Saving Grace
-		case 3925: // Saving Grace
-		case 3926: // Saving Grace
-		case 3927: // Saving Grace
-		case 3928: // Saving Grace
-		case 3929: // Saving Grace
-		case 3930: // Saving Grace
-		case 3931: // Saving Grace
-		case 3992: // Ripple Of Purification
-		case 3993: // Ripple Of Purification
-		case 3994: // Ripple Of Purification
-		case 3995: // Ripple Of Purification
-		case 3996: // Ripple Of Purification
-		case 3997: // Ripple Of Purification
-		case 4135: // Blinding Light
-		case 4368: // Healing Conduit
-		case 4490: // Staggered Rest
-		case 4631: // Healing Conduit
-		case 4632: // Healing Conduit
-		case 4633: // Healing Conduit
-		case 4634: // Healing Conduit
-		case 4635: // Healing Conduit
-		case 4636: // Healing Conduit
-		case 4637: // Healing Conduit
-		case 4638: // Healing Conduit
+		case 3255: // 雾砂攻击 / Venomous Strike
+		case 3256: // 雾砂攻击 / Venomous Strike
+		case 3257: // 雾砂攻击 / Venomous Strike
+		case 3258: // 雾砂攻击 / Venomous Strike
+		case 3259: // 雾砂攻击 / Venomous Strike
+		case 3260: // 雾砂攻击 / Venomous Strike
+		case 3261: // 雾砂攻击 / Venomous Strike
+		case 3327: // 逃跑姿态 I / Break Away
+		case 3531: // 命令:守护之墙 I / Spirit Wall Of Protection
+		case 3562: // 大地之守护 / Earthen Call
+		case 3563: // 大地之守护 / Earthen Call
+		case 3564: // 大地之守护 / Earthen Call
+		case 3565: // 大地之守护 / Earthen Call
+		case 3566: // 大地之守护 / Earthen Call
+		case 3567: // 大地之守护 / Earthen Call
+		case 3568: // 大地之守护 / Earthen Call
+		case 3569: // 大地之守护 / Earthen Call
+		case 3575: // 黑暗之诅咒 / Withering Gloom
+		case 3576: // 黑暗之诅咒 / Withering Gloom
+		case 3577: // 黑暗之诅咒 / Withering Gloom
+		case 3578: // 黑暗之诅咒 / Withering Gloom
+		case 3579: // 黑暗之诅咒 / Withering Gloom
+		case 3580: // 黑暗之诅咒 / Withering Gloom
+		case 3581: // 黑暗之诅咒 / Withering Gloom
+		case 3924: // 拯救之手 / Saving Grace
+		case 3925: // 拯救之手 / Saving Grace
+		case 3926: // 拯救之手 / Saving Grace
+		case 3927: // 拯救之手 / Saving Grace
+		case 3928: // 拯救之手 / Saving Grace
+		case 3929: // 拯救之手 / Saving Grace
+		case 3930: // 拯救之手 / Saving Grace
+		case 3931: // 拯救之手 / Saving Grace
+		case 3992: // 净化之水 / Ripple Of Purification
+		case 3993: // 净化之水 / Ripple Of Purification
+		case 3994: // 净化之水 / Ripple Of Purification
+		case 3995: // 净化之水 / Ripple Of Purification
+		case 3996: // 净化之水 / Ripple Of Purification
+		case 3997: // 净化之水 / Ripple Of Purification
+		case 4135: // 闪光 I / Blinding Light
+		case 4368: // 吸收之咒语 / Healing Conduit
+		case 4490: // 麻痹回声 I / Staggered Rest
+		case 4631: // 吸收之咒语 / Healing Conduit
+		case 4632: // 吸收之咒语 / Healing Conduit
+		case 4633: // 吸收之咒语 / Healing Conduit
+		case 4634: // 吸收之咒语 / Healing Conduit
+		case 4635: // 吸收之咒语 / Healing Conduit
+		case 4636: // 吸收之咒语 / Healing Conduit
+		case 4637: // 吸收之咒语 / Healing Conduit
+		case 4638: // 吸收之咒语 / Healing Conduit
 			return cooldown - 24 * SkillLevel;
 		case 657: // Battle Banner
 		case 658: // Battle Banner
@@ -801,11 +799,11 @@ public class Skill {
 		case 660: // Battle Banner
 		case 661: // Battle Banner
 		case 662: // Battle Banner
-		case 1009: // Nature's Resolve
-		case 1057: // Bow Of Blessing
-		case 1305: // Wintry Armor
-		case 1306: // Wintry Armor
-		case 1307: // Wintry Armor
+		case 1009: // 抵抗的决心 I / Nature's Resolve
+		case 1057: // 祝福之弓 I / Bow Of Blessing
+		case 1305: // 冰雪甲胄 / Wintry Armor
+		case 1306: // 冰雪甲胄 / Wintry Armor
+		case 1307: // 冰雪甲胄 / Wintry Armor
 		case 1308: // 冰面 / Ice Sheet
 		case 1309: // 冰面 / Ice Sheet
 		case 1310: // 冰面 / Ice Sheet
@@ -822,83 +820,83 @@ public class Skill {
 		case 1321: // 冰面 / Ice Sheet
 		case 1322: // 冰面 / Ice Sheet
 		case 1323: // 冰面 / Ice Sheet
-		case 1339: // Sleeping Storm
-		case 1402: // Elemental Ward
-		case 1460: // Manifest Tornado
-		case 1461: // Manifest Tornado
-		case 1462: // Manifest Tornado
-		case 1463: // Manifest Tornado
-		case 1464: // Manifest Tornado
-		case 1465: // Manifest Tornado
-		case 1466: // Manifest Tornado
-		case 1467: // Manifest Tornado
-		case 1468: // Manifest Tornado
-		case 1469: // Manifest Tornado
-		case 1470: // Manifest Tornado
-		case 1471: // Manifest Tornado
-		case 1472: // Manifest Tornado
-		case 1473: // Manifest Tornado
+		case 1339: // 睡眠暴风 I / Sleeping Storm
+		case 1402: // 元素结界 I / Elemental Ward
+		case 1460: // 召唤台风 / Manifest Tornado
+		case 1461: // 召唤台风 / Manifest Tornado
+		case 1462: // 召唤台风 / Manifest Tornado
+		case 1463: // 召唤台风 / Manifest Tornado
+		case 1464: // 召唤台风 / Manifest Tornado
+		case 1465: // 召唤台风 / Manifest Tornado
+		case 1466: // 召唤台风 / Manifest Tornado
+		case 1467: // 召唤台风 / Manifest Tornado
+		case 1468: // 召唤台风 / Manifest Tornado
+		case 1469: // 召唤台风 / Manifest Tornado
+		case 1470: // 召唤台风 / Manifest Tornado
+		case 1471: // 召唤台风 / Manifest Tornado
+		case 1472: // 召唤台风 / Manifest Tornado
+		case 1473: // 召唤台风 / Manifest Tornado
 		case 1540: // Aetherblaze
 		case 1541: // Aetherblaze
 		case 1542: // Aetherblaze
-		case 1550: // Illusion Storm
-		case 1551: // Illusion Storm
-		case 1552: // Illusion Storm
-		case 1553: // Illusion Storm
-		case 1554: // Illusion Storm
-		case 1555: // Illusion Storm
-		case 1607: // Rise
-		case 1608: // Rise
-		case 1609: // Rise
-		case 1610: // Rise
-		case 1611: // Rise
-		case 1612: // Rise
-		case 1613: // Rise
-		case 1651: // Blessing Of Wind
-		case 1652: // Blessing Of Wind
-		case 1653: // Blessing Of Wind
-		case 1654: // Blessing Of Wind
-		case 1655: // Blessing Of Wind
-		case 1656: // Blessing Of Wind
-		case 1832: // Elemental Screen
-		case 1833: // Elemental Screen
-		case 1834: // Elemental Screen
+		case 1550: // 幻影漩涡 / Illusion Storm
+		case 1551: // 幻影漩涡 / Illusion Storm
+		case 1552: // 幻影漩涡 / Illusion Storm
+		case 1553: // 幻影漩涡 / Illusion Storm
+		case 1554: // 幻影漩涡 / Illusion Storm
+		case 1555: // 幻影漩涡 / Illusion Storm
+		case 1607: // 气概 / Rise
+		case 1608: // 气概 / Rise
+		case 1609: // 气概 / Rise
+		case 1610: // 气概 / Rise
+		case 1611: // 气概 / Rise
+		case 1612: // 气概 / Rise
+		case 1613: // 气概 / Rise
+		case 1651: // 风之祝福 / Blessing Of Wind
+		case 1652: // 风之祝福 / Blessing Of Wind
+		case 1653: // 风之祝福 / Blessing Of Wind
+		case 1654: // 风之祝福 / Blessing Of Wind
+		case 1655: // 风之祝福 / Blessing Of Wind
+		case 1656: // 风之祝福 / Blessing Of Wind
+		case 1832: // 铁壁之咒语 / Elemental Screen
+		case 1833: // 铁壁之咒语 / Elemental Screen
+		case 1834: // 铁壁之咒语 / Elemental Screen
 		case 1904: // Debilitating Incantation
 		case 1905: // Debilitating Incantation
 		case 1906: // Debilitating Incantation
-		case 2033: // Nature's Favor
-		case 2034: // Nature's Favor
-		case 2035: // Nature's Favor
-		case 2036: // Nature's Favor
-		case 2037: // Nature's Favor
-		case 2038: // Nature's Favor
-		case 2039: // Nature's Favor
-		case 2040: // Nature's Favor
+		case 2033: // 魔力之息 / Nature's Favor
+		case 2034: // 魔力之息 / Nature's Favor
+		case 2035: // 魔力之息 / Nature's Favor
+		case 2036: // 魔力之息 / Nature's Favor
+		case 2037: // 魔力之息 / Nature's Favor
+		case 2038: // 魔力之息 / Nature's Favor
+		case 2039: // 魔力之息 / Nature's Favor
+		case 2040: // 魔力之息 / Nature's Favor
 		case 2368: // Pursuit Stance
 		case 2369: // Pursuit Stance
 		case 2370: // Pursuit Stance
-		case 2383: // Aimbot Assist
-		case 2384: // Aimbot Assist
-		case 2385: // Aimbot Assist
-		case 2386: // Aimbot Assist
-		case 2387: // Aimbot Assist
-		case 2388: // Aimbot Assist
-		case 2389: // Aimbot Assist
-		case 2390: // Aimbot Assist
-		case 2458: // Trauma Plate Trigger
-		case 2459: // Trauma Plate Trigger
-		case 2460: // Trauma Plate Trigger
-		case 2461: // Trauma Plate Trigger
-		case 2462: // Trauma Plate Trigger
-		case 2463: // Trauma Plate Trigger
-		case 2825: // Leeching Steel
-		case 2826: // Leeching Steel
-		case 2827: // Leeching Steel
-		case 2828: // Leeching Steel
-		case 2829: // Leeching Steel
-		case 2830: // Leeching Steel
-		case 2831: // Leeching Steel
-		case 2832: // Leeching Steel
+		case 2383: // 灵敏度提升 / Aimbot Assist
+		case 2384: // 灵敏度提升 / Aimbot Assist
+		case 2385: // 灵敏度提升 / Aimbot Assist
+		case 2386: // 灵敏度提升 / Aimbot Assist
+		case 2387: // 灵敏度提升 / Aimbot Assist
+		case 2388: // 灵敏度提升 / Aimbot Assist
+		case 2389: // 灵敏度提升 / Aimbot Assist
+		case 2390: // 灵敏度提升 / Aimbot Assist
+		case 2458: // 魔力屏障 / Trauma Plate Trigger
+		case 2459: // 魔力屏障 / Trauma Plate Trigger
+		case 2460: // 魔力屏障 / Trauma Plate Trigger
+		case 2461: // 魔力屏障 / Trauma Plate Trigger
+		case 2462: // 魔力屏障 / Trauma Plate Trigger
+		case 2463: // 魔力屏障 / Trauma Plate Trigger
+		case 2825: // 吸收反射膜 / Leeching Steel
+		case 2826: // 吸收反射膜 / Leeching Steel
+		case 2827: // 吸收反射膜 / Leeching Steel
+		case 2828: // 吸收反射膜 / Leeching Steel
+		case 2829: // 吸收反射膜 / Leeching Steel
+		case 2830: // 吸收反射膜 / Leeching Steel
+		case 2831: // 吸收反射膜 / Leeching Steel
+		case 2832: // 吸收反射膜 / Leeching Steel
 		case 2849: // Nerve Pulse
 		case 2850: // Nerve Pulse
 		case 2851: // Nerve Pulse
@@ -912,112 +910,112 @@ public class Skill {
 		case 2916: // Eternal Denial
 		case 2917: // Eternal Denial
 		case 2918: // Shield of Vengeance
-		case 2934: // Aether Armor
-		case 2935: // Aether Armor
-		case 2936: // Aether Armor
-		case 2937: // Aether Armor
-		case 2938: // Aether Armor
-		case 2968: // Punishing Wave
-		case 2969: // Punishing Wave
-		case 2970: // Punishing Wave
-		case 2971: // Punishing Wave
-		case 2972: // Punishing Wave
-		case 2973: // Punishing Wave
-		case 2974: // Shield Of Faith
-		case 3035: // Divine Fury
-		case 3155: // Prayer Of Resilience
-		case 3156: // Prayer Of Resilience
-		case 3157: // Prayer Of Resilience
-		case 3158: // Prayer Of Resilience
-		case 3159: // Prayer Of Resilience
-		case 3160: // Prayer Of Resilience
+		case 2934: // 阻断之甲 / Aether Armor
+		case 2935: // 阻断之甲 / Aether Armor
+		case 2936: // 阻断之甲 / Aether Armor
+		case 2937: // 阻断之甲 / Aether Armor
+		case 2938: // 阻断之甲 / Aether Armor
+		case 2968: // 束缚波 / Punishing Wave
+		case 2969: // 束缚波 / Punishing Wave
+		case 2970: // 束缚波 / Punishing Wave
+		case 2971: // 束缚波 / Punishing Wave
+		case 2972: // 束缚波 / Punishing Wave
+		case 2973: // 束缚波 / Punishing Wave
+		case 2974: // 坚固的盾牌 I / Shield Of Faith
+		case 3035: // 激昂 I / Divine Fury
+		case 3155: // 起死回生 / Prayer Of Resilience
+		case 3156: // 起死回生 / Prayer Of Resilience
+		case 3157: // 起死回生 / Prayer Of Resilience
+		case 3158: // 起死回生 / Prayer Of Resilience
+		case 3159: // 起死回生 / Prayer Of Resilience
+		case 3160: // 起死回生 / Prayer Of Resilience
 		case 3236: // Shimmerbomb
 		case 3237: // Shimmerbomb
 		case 3238: // Shimmerbomb
-		case 3319: // Sensory Boost
-		case 3321: // Apply Lethal Venom
-		case 3322: // Apply Lethal Venom
-		case 3323: // Apply Lethal Venom
-		case 3324: // Apply Lethal Venom
-		case 3325: // Apply Lethal Venom
-		case 3326: // Apply Lethal Venom
-		case 3329: // Shadow Walk
-		case 3332: // Dash And Slash
-		case 3333: // Dash And Slash
-		case 3334: // Dash And Slash
-		case 3335: // Dash And Slash
-		case 3336: // Dash And Slash
-		case 3337: // Dash And Slash
-		case 3480: // Oath Of Accuracy
+		case 3319: // 六感最大化 / Sensory Boost
+		case 3321: // 涂毒 / Apply Lethal Venom
+		case 3322: // 涂毒 / Apply Lethal Venom
+		case 3323: // 涂毒 / Apply Lethal Venom
+		case 3324: // 涂毒 / Apply Lethal Venom
+		case 3325: // 涂毒 / Apply Lethal Venom
+		case 3326: // 涂毒 / Apply Lethal Venom
+		case 3329: // 影子步行 I / Shadow Walk
+		case 3332: // 奇袭斩 / Dash And Slash
+		case 3333: // 奇袭斩 / Dash And Slash
+		case 3334: // 奇袭斩 / Dash And Slash
+		case 3335: // 奇袭斩 / Dash And Slash
+		case 3336: // 奇袭斩 / Dash And Slash
+		case 3337: // 奇袭斩 / Dash And Slash
+		case 3480: // 命中之契约 I / Oath Of Accuracy
 		case 3541: // Spirit's Empowerment
 		case 3542: // Spirit's Empowerment
 		case 3543: // Spirit's Empowerment
-		case 3544: // Cloaking Word
-		case 3545: // Infernal Blight
-		case 3546: // Infernal Blight
-		case 3547: // Infernal Blight
-		case 3836: // Spirit Burn-to-Ashes
+		case 3544: // 隐身之光辉 I / Cloaking Word
+		case 3545: // 黄泉之诅咒 / Infernal Blight
+		case 3546: // 黄泉之诅咒 / Infernal Blight
+		case 3547: // 黄泉之诅咒 / Infernal Blight
+		case 3836: // 命令:毁灭 I / Spirit Burn-to-Ashes
 		case 3849: // Blood Funnel
 		case 3850: // Blood Funnel
 		case 3851: // Blood Funnel
 		case 3932: // Restoration Relief
 		case 3933: // Restoration Relief
 		case 3934: // Restoration Relief
-		case 4144: // Chain Of Suffering
-		case 4145: // Chain Of Suffering
-		case 4146: // Chain Of Suffering
-		case 4147: // Chain Of Suffering
-		case 4148: // Chain Of Suffering
-		case 4149: // Chain Of Suffering
-		case 4188: // Noble Grace
-		case 4189: // Noble Grace
-		case 4190: // Noble Grace
-		case 4191: // Noble Grace
-		case 4192: // Noble Grace
-		case 4614: // Sensory Boost
+		case 4144: // 痛苦连锁 / Chain Of Suffering
+		case 4145: // 痛苦连锁 / Chain Of Suffering
+		case 4146: // 痛苦连锁 / Chain Of Suffering
+		case 4147: // 痛苦连锁 / Chain Of Suffering
+		case 4148: // 痛苦连锁 / Chain Of Suffering
+		case 4149: // 痛苦连锁 / Chain Of Suffering
+		case 4188: // 恢复之佑护I / Noble Grace
+		case 4189: // 恢复之佑护I / Noble Grace
+		case 4190: // 恢复之佑护I / Noble Grace
+		case 4191: // 恢复之佑护I / Noble Grace
+		case 4192: // 恢复之佑护I / Noble Grace
+		case 4614: // 六感最大化 / Sensory Boost
 			return cooldown - 36 * SkillLevel;
-		case 683: // Howl
-		case 684: // Howl
-		case 685: // Howl
-		case 686: // Howl
-		case 687: // Howl
-		case 688: // Howl
-		case 689: // Howl
-		case 690: // Howl
+		case 683: // 威胁的咆哮 / Howl
+		case 684: // 威胁的咆哮 / Howl
+		case 685: // 威胁的咆哮 / Howl
+		case 686: // 威胁的咆哮 / Howl
+		case 687: // 威胁的咆哮 / Howl
+		case 688: // 威胁的咆哮 / Howl
+		case 689: // 威胁的咆哮 / Howl
+		case 690: // 威胁的咆哮 / Howl
 		case 936: // Night Haze
 		case 937: // Night Haze
 		case 938: // Night Haze
-		case 1060: // Staggering Trap
-		case 1061: // Staggering Trap
-		case 1062: // Staggering Trap
-		case 1063: // Staggering Trap
-		case 1064: // Staggering Trap
-		case 1065: // Staggering Trap
-		case 1327: // Exchange Vitality
-		case 1329: // Curse Of Weakness
-		case 1330: // Curse Of Weakness
-		case 1331: // Curse Of Weakness
-		case 1332: // Curse Of Weakness
-		case 1333: // Curse Of Weakness
-		case 1334: // Curse Of Weakness
-		case 1335: // Curse Of Weakness
-		case 1336: // Curse Of Weakness
+		case 1060: // 闪电陷阱 / Staggering Trap
+		case 1061: // 闪电陷阱 / Staggering Trap
+		case 1062: // 闪电陷阱 / Staggering Trap
+		case 1063: // 闪电陷阱 / Staggering Trap
+		case 1064: // 闪电陷阱 / Staggering Trap
+		case 1065: // 闪电陷阱 / Staggering Trap
+		case 1327: // 活力交换 I / Exchange Vitality
+		case 1329: // 衰弱之诅咒 / Curse Of Weakness
+		case 1330: // 衰弱之诅咒 / Curse Of Weakness
+		case 1331: // 衰弱之诅咒 / Curse Of Weakness
+		case 1332: // 衰弱之诅咒 / Curse Of Weakness
+		case 1333: // 衰弱之诅咒 / Curse Of Weakness
+		case 1334: // 衰弱之诅咒 / Curse Of Weakness
+		case 1335: // 衰弱之诅咒 / Curse Of Weakness
+		case 1336: // 衰弱之诅咒 / Curse Of Weakness
 		case 1340: // Slumberswept Wind
 		case 1341: // Slumberswept Wind
 		case 1342: // Slumberswept Wind
 		case 1418: // Repulsion Field
 		case 1419: // Repulsion Field
 		case 1420: // Repulsion Field
-		case 2579: // Kinetic Bulwark
-		case 2580: // Kinetic Bulwark
-		case 2581: // Kinetic Bulwark
-		case 2926: // Prayer of Victory
-		case 2927: // Prayer of Victory
-		case 2928: // Prayer of Victory
-		case 2929: // Prayer of Victory
-		case 2930: // Prayer of Victory
-		case 2931: // Prayer of Victory
-		case 3320: // Deadly Abandon
+		case 2579: // 伊德保护膜 / Kinetic Bulwark
+		case 2580: // 伊德保护膜 / Kinetic Bulwark
+		case 2581: // 伊德保护膜 / Kinetic Bulwark
+		case 2926: // 庇护之盔甲 / Prayer of Victory
+		case 2927: // 庇护之盔甲 / Prayer of Victory
+		case 2928: // 庇护之盔甲 / Prayer of Victory
+		case 2929: // 庇护之盔甲 / Prayer of Victory
+		case 2930: // 庇护之盔甲 / Prayer of Victory
+		case 2931: // 庇护之盔甲 / Prayer of Victory
+		case 3320: // 觉悟 I / Deadly Abandon
 		case 3549: // Command: Absorb Wounds
 		case 3906: // Summon Vexing Energy
 		case 3907: // Summon Vexing Energy
@@ -1026,8 +1024,8 @@ public class Skill {
 		case 3910: // Summon Vexing Energy
 		case 3911: // Summon Vexing Energy
 			return cooldown - 60 * SkillLevel;
-		case 2922: // Empyrean Providence
-		case 3904: // Reverse Condition
+		case 2922: // 主神的保护 I / Empyrean Providence
+		case 3904: // 必死的交换 I / Reverse Condition
 			return cooldown - 120 * SkillLevel;
 		// 高阶守护者变身 5.1【天族】 / ArchDaeva Transformation 5.1 [Elyos]
 		case 4752: // Transformation: Avatar Of Fire.
@@ -1106,11 +1104,9 @@ public class Skill {
 	}
 
 	private boolean checkAnimationTime() {
-		if (!(effector instanceof Player) || skillMethod != SkillMethod.CAST) {
+		if (!(effector instanceof Player player) || skillMethod != SkillMethod.CAST) {
 			return true;
 		}
-
-		Player player = (Player) effector;
 
 		// 玩家无武器时不检查动画时间 / if player is without weapon, dont check animation time
 		if (player.getEquipment().getMainHandWeaponType() == null) {
@@ -1123,7 +1119,7 @@ public class Skill {
 		 */
 		// 不检查草药、法力治疗与专注增强 / dont check herb , mana treatment and concentration enhancement
 		switch (this.getSkillId()) { // 4.8
-		case 245: // Bandage Heal
+		case 245: // 绷带治疗 / Bandage Heal
 		case 246: // Herb Treatment I
 		case 247: // Herb Treatment II
 		case 251: // Herb Treatment III
@@ -1504,8 +1500,7 @@ public class Skill {
 			}
 		}
 
-		if (effector instanceof Player && skillMethod == SkillMethod.CAST) {
-			Player playerEffector = (Player) effector;
+		if (effector instanceof Player playerEffector && skillMethod == SkillMethod.CAST) {
 			if (playerEffector.getController().isUnderStance() && !skillTemplate.isStanceUsable()) {
 				playerEffector.getController().stopStance();
 			}
@@ -1564,7 +1559,7 @@ public class Skill {
 		}
 
 		if (effector instanceof Npc) {
-			SkillAttackManager.afterUseSkill((NpcAI2) ((Npc) effector).getAi2());
+			SkillAttackManager.afterUseSkill((NpcAI2) effector.getAi2());
 		}
 	}
 
@@ -1687,7 +1682,7 @@ public class Skill {
 	 */
 	private boolean preCastCheck() {
 		Conditions skillConditions = skillTemplate.getStartconditions();
-		return skillConditions != null ? skillConditions.validate(this) : true;
+		return skillConditions == null || skillConditions.validate(this);
 	}
 
 	/**
@@ -1696,7 +1691,7 @@ public class Skill {
 	 */
 	private boolean preUsageCheck() {
 		Conditions skillConditions = skillTemplate.getUseconditions();
-		return skillConditions != null ? skillConditions.validate(this) : true;
+		return skillConditions == null || skillConditions.validate(this);
 	}
 	/**
 	 * 设置技能消耗加成。
@@ -2013,9 +2008,9 @@ public class Skill {
 		case 17: // Sleep: Scarecrow
 		case 18: // Sleep: Frightcorn
 		case 19: // Fear: Porgus
-		case 20: // Fear: Ginseng
-		case 243: // Return
-		case 245: // Bandage Heal
+		case 20: // 灵魂之呼喊：人参 / Fear: Ginseng
+		case 243: // 回程 / Return
+		case 245: // 绷带治疗 / Bandage Heal
 		case 246: // Herb Treatment I
 		case 247: // Herb Treatment II
 		case 251: // Herb Treatment III
@@ -2040,14 +2035,14 @@ public class Skill {
 		case 319: // Mana Treatment X
 		case 320: // Mana Treatment XI
 		case 321: // Mana Treatment XII
-		case 302: // Escape
-		case 1337: // Sleep
-		case 1338: // Tranquilizing Cloud
-		case 1339: // Sleeping Storm.
-		case 1416: // Curse Of Old Roots
-		case 1417: // Curse Of Roots
-		case 3589: // Fear Shriek
-		case 3775: // Fear
+		case 302: // 紧急返回 / Escape
+		case 1337: // 睡眠 / Sleep
+		case 1338: // 睡眠之云 I / Tranquilizing Cloud
+		case 1339: // 睡眠暴风 I / Sleeping Storm.
+		case 1416: // 诅咒:古树 I / Curse Of Old Roots
+		case 1417: // 诅咒:树 I / Curse Of Roots
+		case 3589: // 恐怖的呼喊 I / Fear Shriek
+		case 3775: // 恐惧 / Fear
 			// 高阶守护者变身 5.1【天族】 / ArchDaeva Transformation 5.1 [Elyos]
 		case 4752: // Transformation: Avatar Of Fire.
 		case 4757: // Transformation: Avatar Of Water.
@@ -2064,17 +2059,17 @@ public class Skill {
 		case 4818: // Transformation: Avatar Of Earth.
 		case 4824: // Transformation: Avatar Of Wind.
 			// 天族【守护者将军】 / Elyos [Guardian General]
-		case 11885: // Transformation: Guardian General I
-		case 11886: // Transformation: Guardian General II
-		case 11887: // Transformation: Guardian General III
-		case 11888: // Transformation: Guardian General IV
-		case 11889: // Transformation: Guardian General V
+		case 11885: // 变身:守护神将 / Transformation: Guardian General I
+		case 11886: // 变身:守护神将 / Transformation: Guardian General II
+		case 11887: // 变身:守护神将 / Transformation: Guardian General III
+		case 11888: // 变身:守护神将 / Transformation: Guardian General IV
+		case 11889: // 变身:守护神将 / Transformation: Guardian General V
 			// 魔族【守护者将军】 / Asmodians [Guardian General]
-		case 11890: // Transformation: Guardian General I
-		case 11891: // Transformation: Guardian General II
-		case 11892: // Transformation: Guardian General III
-		case 11893: // Transformation: Guardian General IV
-		case 11894: // Transformation: Guardian General V
+		case 11890: // 变身:守护神将 / Transformation: Guardian General I
+		case 11891: // 变身:守护神将 / Transformation: Guardian General II
+		case 11892: // 变身:守护神将 / Transformation: Guardian General III
+		case 11893: // 变身:守护神将 / Transformation: Guardian General IV
+		case 11894: // 变身:守护神将 / Transformation: Guardian General V
 			return true;
 		}
 		return false;
@@ -2140,10 +2135,7 @@ public class Skill {
 	 *
 	 */
 	public boolean isPointPointSkill() {
-		if (this.getSkillTemplate().getProperties().getFirstTarget() == FirstTargetAttribute.POINT && this.getSkillTemplate().getProperties().getTargetType() == TargetRangeAttribute.POINT) {
-			return true;
-		}
-		return false;
+		return this.getSkillTemplate().getProperties().getFirstTarget() == FirstTargetAttribute.POINT && this.getSkillTemplate().getProperties().getTargetType() == TargetRangeAttribute.POINT;
 	}
 
 	/**

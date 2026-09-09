@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.iu.IuLocation;
 import com.aionemu.gameserver.model.iu.IuStateType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * IU 演唱会活动抽象基类。
@@ -16,9 +18,17 @@ import com.aionemu.gameserver.model.iu.IuStateType;
  * @author Rinzler (Encom)
  * @param <IUL> IU 地点类型 / IU location type
  */
+@RequiredArgsConstructor
 public abstract class Iu<IUL extends IuLocation> {
 
 	private boolean started;
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * location
+	 */
+	@Getter
 	private final IUL iuLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 
@@ -33,16 +43,6 @@ public abstract class Iu<IUL extends IuLocation> {
 	 * Concrete start logic.
 	 */
 	protected abstract void startConcert();
-
-	/**
-	 * 绑定 IU 地点。
-	 * Binds the IU location.
-	 *
-	 * location
-	 */
-	public Iu(IUL iuLocation) {
-		this.iuLocation = iuLocation;
-	}
 
 	/**
 	 * 启动活动（幂等）。
@@ -99,16 +99,6 @@ public abstract class Iu<IUL extends IuLocation> {
 	 */
 	public boolean isFinished() {
 		return finished.get();
-	}
-
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * location
-	 */
-	public IUL getIuLocation() {
-		return iuLocation;
 	}
 
 	/**

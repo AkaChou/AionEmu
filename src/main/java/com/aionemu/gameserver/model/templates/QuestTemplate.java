@@ -26,6 +26,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestTargetType;
 import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
+import lombok.Getter;
 
 /**
  * 任务模板（静态数据/XML）。
@@ -36,8 +37,16 @@ import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 @XmlType(name = "Quest")
 
 public class QuestTemplate {
+	/**
+	 * 获取 collectItems 属性值。
+	 * Gets the value of the collectItems property
+	 * @return 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
+	 */
+	@Getter
 	@XmlElement(name = "collect_items")
 	protected CollectItems collectItems;
+	/** 获取背包物品。 / Returns the inventory items. */
+	@Getter
 	@XmlElement(name = "inventory_items")
 	protected InventoryItems inventoryItems;
 	@XmlElement(name = "rewards")
@@ -55,8 +64,20 @@ public class QuestTemplate {
 	@XmlList
 	@XmlElement(name = "class_permitted")
 	protected List<PlayerClass> classPermitted;
+	/**
+	 * 获取 genderPermitted 属性值。
+	 * Gets the value of the genderPermitted property
+	 * @return 可能的对象是 {@link Gender } / Possible object is {@link Gender }
+	 */
+	@Getter
 	@XmlElement(name = "gender_permitted")
 	protected Gender genderPermitted;
+	/**
+	 * 获取 questWorkItems 属性值。
+	 * Gets the value of the questWorkItems property
+	 * @return 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
+	 */
+	@Getter
 	@XmlElement(name = "quest_work_items")
 	protected QuestWorkItems questWorkItems;
 	@XmlElement(name = "fighter_selectable_reward")
@@ -81,14 +102,40 @@ public class QuestTemplate {
 	protected List<QuestItems> songweaverSelectableReward;
 	@XmlElement(name = "aethertech_selectable_reward")
 	protected List<QuestItems> aethertechSelectableReward;
+	/**
+	 * 获取 id 属性值。
+	 * Gets the value of the id property
+	 */
+	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
+	/**
+	 * 获取任务名称。
+	 * Gets the quest name.
+	 *
+	 * @return 任务名称 / Quest name
+	 */
+	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
+	/**
+	 * 获取 nameId 属性值。
+	 * Gets the value of the nameId property
+	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute(name = "nameId")
 	protected Integer nameId;
+	/**
+	 * 获取 minlevelPermitted 属性值。
+	 * Gets the value of the minlevelPermitted property
+	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
+	 */
+	@Getter
 	@XmlAttribute(name = "minlevel_permitted")
 	protected Integer minlevelPermitted;
+	/** 返回 maxlevel permitted / Returns the maxlevel permitted */
+	@Getter
 	@XmlAttribute(name = "maxlevel_permitted")
 	protected int maxlevelPermitted;
 	@XmlAttribute(name = "max_repeat_count")
@@ -122,30 +169,28 @@ public class QuestTemplate {
 	protected Boolean timer;
 	@XmlAttribute(name = "category")
 	protected QuestCategory category;
+	/** 返回 repeat cycle / Returns the repeat cycle */
+	@Getter
 	@XmlAttribute(name = "repeat_cycle")
 	protected List<QuestRepeatCycle> repeatCycle;
+	/** 返回 npc faction id / Returns the npc faction id */
+	@Getter
 	@XmlAttribute(name = "npcfaction_id")
 	protected int npcFactionId;
+	/**
+	 * @return 导师类型 / The mentor type
+	 */
+	@Getter
 	@XmlAttribute(name = "mentor_type")
 	protected QuestMentorType mentorType = QuestMentorType.NONE;
+	/** 返回目标类型 / Returns the target type*/
+	@Getter
 	@XmlAttribute(name = "target_type")
 	private QuestTargetType targetType = QuestTargetType.NONE;
+	/** 返回标题 ID / Returns the title id */
+	@Getter
 	@XmlAttribute(name = "titleId")
 	protected int titleId;
-
-	 /**
-	  * 获取 collectItems 属性值。
-	  * Gets the value of the collectItems property
-	  * @return 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
-	  */
-	public CollectItems getCollectItems() {
-		return collectItems;
-	}
-
-	/** 获取背包物品。 / Returns the inventory items. */
-	public InventoryItems getInventoryItems() {
-		return inventoryItems;
-	}
 
 	/**
 	 * 获取 rewards 属性值。 / Gets the value of the rewards property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the rewards property. <p> For example, to add a new item, do as follows: <pre> getRewards().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Rewards }
@@ -207,24 +252,6 @@ public class QuestTemplate {
 			classPermitted = new ArrayList<PlayerClass>();
 		}
 		return this.classPermitted;
-	}
-
-	 /**
-	  * 获取 genderPermitted 属性值。
-	  * Gets the value of the genderPermitted property
-	  * @return 可能的对象是 {@link Gender } / Possible object is {@link Gender }
-	  */
-	public Gender getGenderPermitted() {
-		return genderPermitted;
-	}
-
-	 /**
-	  * 获取 questWorkItems 属性值。
-	  * Gets the value of the questWorkItems property
-	  * @return 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
-	  */
-	public QuestWorkItems getQuestWorkItems() {
-		return questWorkItems;
 	}
 
 	/**
@@ -335,47 +362,6 @@ public class QuestTemplate {
 			aethertechSelectableReward = new ArrayList<QuestItems>();
 		}
 		return this.aethertechSelectableReward;
-	}
-
-	 /**
-	  * 获取 id 属性值。
-	  * Gets the value of the id property
-	  */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * 获取任务名称。
-	 * Gets the quest name.
-	 *
-	 * @return 任务名称 / Quest name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	 /**
-	  * 获取 nameId 属性值。
-	  * Gets the value of the nameId property
-	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
-	  */
-	public Integer getNameId() {
-		return nameId;
-	}
-
-	 /**
-	  * 获取 minlevelPermitted 属性值。
-	  * Gets the value of the minlevelPermitted property
-	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
-	  */
-	public Integer getMinlevelPermitted() {
-		return minlevelPermitted;
-	}
-
-	/** 返回 maxlevel permitted / Returns the maxlevel permitted */
-	public int getMaxlevelPermitted() {
-		return maxlevelPermitted;
 	}
 
 	/** 返回 required rank / Returns the required rank */
@@ -551,33 +537,6 @@ public class QuestTemplate {
 	 */
 	public boolean isMentor() {
 		return mentorType != QuestMentorType.NONE;
-	}
-
-	/**
-	 * @return 导师类型 / The mentor type
-	 */
-	public QuestMentorType getMentorType() {
-		return mentorType;
-	}
-
-	/** 返回目标类型 / Returns the target type*/
-	public QuestTargetType getTargetType() {
-		return targetType;
-	}
-
-	/** 返回 repeat cycle / Returns the repeat cycle */
-	public List<QuestRepeatCycle> getRepeatCycle() {
-		return repeatCycle;
-	}
-
-	/** 返回标题 ID / Returns the title id */
-	public int getTitleId() {
-		return titleId;
-	}
-
-	/** 返回 npc faction id / Returns the npc faction id */
-	public int getNpcFactionId() {
-		return npcFactionId;
 	}
 
 	/**

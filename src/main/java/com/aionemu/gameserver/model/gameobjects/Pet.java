@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PetCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
+import lombok.Getter;
 
 /**
  * 宠物游戏对象。
@@ -16,8 +17,10 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 public class Pet extends VisibleObject {
 
+	/** 返回主人 / Returns the master. */
+	@Getter
 	private final Player master;
-	private MoveController moveController;
+	private final MoveController moveController;
 	private final PetTemplate petTemplate;
 
 	/**
@@ -35,11 +38,6 @@ public class Pet extends VisibleObject {
 		this.master = master;
 		this.petTemplate = petTemplate;
 		this.moveController = new PetMoveController();
-	}
-
-	/** 返回主人 / Returns the master. */
-	public Player getMaster() {
-		return master;
 	}
 
 	/** 返回宠物 ID / Returns the pet id */

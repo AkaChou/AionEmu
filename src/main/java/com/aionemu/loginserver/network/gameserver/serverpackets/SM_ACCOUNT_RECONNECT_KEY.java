@@ -2,6 +2,7 @@ package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
+import lombok.AllArgsConstructor;
 
 /**
  * LS→GS：账号重连密钥响应（对应 CM_ACCOUNT_RECONNECT_KEY）。
@@ -9,6 +10,7 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
  *
  * @author -Nemesiss-
  */
+@AllArgsConstructor
 public class SM_ACCOUNT_RECONNECT_KEY extends GsServerPacket {
 
     /**
@@ -21,18 +23,6 @@ public class SM_ACCOUNT_RECONNECT_KEY extends GsServerPacket {
      * Reconnect key used for authentication.
      */
     private final int reconnectKey;
-
-    /**
-     * 构造账号重连密钥响应包。
-     * Constructs an account reconnect key response packet.
-     *
-     * @param accountId 账号 ID / account id
-     * @param reconnectKey 重连密钥 / reconnect key
-     */
-    public SM_ACCOUNT_RECONNECT_KEY(int accountId, int reconnectKey) {
-        this.accountId = accountId;
-        this.reconnectKey = reconnectKey;
-    }
 
     /**
      * {@inheritDoc}

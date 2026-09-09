@@ -26,8 +26,7 @@ public class ShieldCondition extends Condition {
 	 */
 	@Override
 	public boolean validate(Skill env) {
-		if (env.getEffector() instanceof Player) {
-			Player player = (Player) env.getEffector();
+		if (env.getEffector() instanceof Player player) {
 			return player.getEquipment().isShieldEquipped();
 		}
 		return false;

@@ -69,8 +69,7 @@ public class NpcShoutsService {
 				@Override
 				public void run() {
 					AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
-					if (npcObj != null && npcObj instanceof Npc) {
-						Npc npc2 = (Npc) npcObj;
+					if (npcObj != null && npcObj instanceof Npc npc2) {
 						// 检查 AI 是否覆盖 / check if AI overrides
 						if (!npc2.getAi2().poll(AIQuestion.CAN_SHOUT)) {
 							return;
@@ -144,8 +143,7 @@ public class NpcShoutsService {
 		}
 		Object param = shout.getParam();
 
-		if (target instanceof Player) {
-			Player player = (Player) target;
+		if (target instanceof Player player) {
 			if ("username".equals(param)) {
 				param = player.getName();
 			} else if ("userclass".equals(param)) {

@@ -34,8 +34,8 @@ public class MageAI2 extends AggressiveNpcAI2
 	private int magePhase = 0;
 	private Future<?> phaseTask;
 	private boolean canThink = true;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private final AtomicBoolean isAggred = new AtomicBoolean(false);
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -43,7 +43,7 @@ public class MageAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 95 && magePhase < 1) {
 			magePhase = 1;
@@ -53,7 +53,7 @@ public class MageAI2 extends AggressiveNpcAI2
 			startPhaseTask();
 		}
 	}
-	
+
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -82,7 +82,7 @@ public class MageAI2 extends AggressiveNpcAI2
 			}
 		}, 3000, 15000);
 	}
-	
+
 	private void spawnSpirit(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -111,16 +111,16 @@ public class MageAI2 extends AggressiveNpcAI2
 			}, 1000);
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private void sendMsg(int msg) {
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
-	
+
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -130,13 +130,13 @@ public class MageAI2 extends AggressiveNpcAI2
 		}
 		return players;
 	}
-	
+
 	private void cancelPhaseTask() {
 		if (phaseTask != null && !phaseTask.isDone()) {
 			phaseTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -344,7 +344,7 @@ public class MageAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	private void iceClawBlessing() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
 	}
@@ -355,7 +355,7 @@ public class MageAI2 extends AggressiveNpcAI2
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
     private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); //Survival Instinct.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
@@ -369,13 +369,13 @@ public class MageAI2 extends AggressiveNpcAI2
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelPhaseTask();
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
@@ -384,14 +384,14 @@ public class MageAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		super.handleBackHome();
 	}
-	
+
 	private void deleteHelpers() {
 		despawnNpc(285470); //Water Spirit.
 		despawnNpc(285473); //Fire Spirit.
 		despawnNpc(285469); //Earth Spirit.
 		despawnNpc(285471); //Wind Spirit.
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		deleteHelpers();
@@ -402,7 +402,7 @@ public class MageAI2 extends AggressiveNpcAI2
 		despawnNpc(285471); //Wind Spirit.
 		super.handleDied();
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

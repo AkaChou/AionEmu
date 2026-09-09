@@ -1,26 +1,23 @@
 package com.aionemu.gameserver.model.legiondominion;
 
 import com.aionemu.gameserver.model.templates.legiondominion.LegionDominionTemplate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 军团领地位置，用于 legiondominion 相关逻辑。
  * Legion Dominion Location for legiondominion logic.
  */
 
+@NoArgsConstructor
 public class LegionDominionLocation {
+	/** 获取模板。 / Returns the template. */
+	@Getter
 	protected LegionDominionTemplate template;
 	protected LegionDominionRace legionDominionRace = LegionDominionRace.BALAUR;
 
-	public LegionDominionLocation() {
-	}
-
 	public LegionDominionLocation(LegionDominionTemplate template) {
 		this.template = template;
-	}
-
-	/** 获取模板。 / Returns the template. */
-	public LegionDominionTemplate getTemplate() {
-		return template;
 	}
 
 	/** 返回军团领地 ID / Returns the legion dominion id */

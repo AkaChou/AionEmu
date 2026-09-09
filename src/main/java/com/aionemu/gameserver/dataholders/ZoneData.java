@@ -53,10 +53,10 @@ public class ZoneData {
 	public List<ZoneTemplate> zoneList;
 
 	@XmlTransient
-	private IntObjectHashMap<List<ZoneInfo>> zoneNameMap = new IntObjectHashMap<List<ZoneInfo>>();
+	private final IntObjectHashMap<List<ZoneInfo>> zoneNameMap = new IntObjectHashMap<List<ZoneInfo>>();
 
 	@XmlTransient
-	private HashMap<ZoneTemplate, Integer> weatherZoneIds = new HashMap<ZoneTemplate, Integer>();
+	private final HashMap<ZoneTemplate, Integer> weatherZoneIds = new HashMap<ZoneTemplate, Integer>();
 
 	@XmlTransient
 	private int count;
@@ -170,7 +170,6 @@ public class ZoneData {
 			marshaller.marshal(this, xml);
 		} catch (JAXBException e) {
 			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()));
-			return;
 		}
 	}
 }

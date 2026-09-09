@@ -50,7 +50,7 @@ public class EventService {
 	private Future<?> checkTask = null;
 
 	/** 当前活跃活动列表。 / Currently active events. */
-	private List<EventTemplate> activeEvents;
+	private final List<EventTemplate> activeEvents;
 
 	/** 可开启任务 ID → 活动模板。 / Startable quest id → event templates. */
 	Map<Integer, List<EventTemplate>> eventsForStartQuest = new HashMap<Integer, List<EventTemplate>>();

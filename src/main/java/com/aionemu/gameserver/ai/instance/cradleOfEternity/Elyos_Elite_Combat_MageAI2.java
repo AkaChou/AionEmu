@@ -3,15 +3,12 @@ package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
-import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.List;
 
 /**
  * Cradle Of Eternity 副本 NPC AI：Elyos Elite Combat Mage（@AIName "Elyos_Elite_Combat_Mage"），继承 NpcAI2。
@@ -99,12 +96,4 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	
-	private void despawnNpc(int npcId) {
-		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
-			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
-				npc.getController().onDelete();
-			}
-		}
-	}
 }

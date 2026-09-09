@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /** 不改变玩家状态或执行外部效果地构建计划。 / Builds a plan without mutating player state or performing external effects. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestMutationPlanner {
-	private QuestMutationPlanner() {
-	}
-
 	public static Optional<QuestMutationPlan> plan(CompiledQuestDefinition definition,
 			QuestSnapshot snapshot, QuestTransition transition) {
 		if (definition.id() != snapshot.questId()) {
@@ -86,11 +86,11 @@ public final class QuestMutationPlanner {
 		Map<Integer, Integer> returnedItemRemovals = new LinkedHashMap<>();
 		Map<Integer, Integer> plannedRemovals = new LinkedHashMap<>();
 		for (QuestAction action : actions) {
-			if (action instanceof QuestAction.UnequipItem unequip && snapshot.equipmentFacts() != null) {
-				int count = snapshot.equipmentFacts().equippedItemCount(unequip.itemId());
-				unequippedItems.put(unequip.itemId(), count);
+			if (action instanceof QuestAction.UnequipItem(int itemId, int removeReturnedCount) && snapshot.equipmentFacts() != null) {
+				int count = snapshot.equipmentFacts().equippedItemCount(itemId);
+				unequippedItems.put(itemId, count);
 				try {
-					returnedItemRemovals.merge(unequip.itemId(), unequip.removeReturnedCount(), Math::addExact);
+					returnedItemRemovals.merge(itemId, removeReturnedCount, Math::addExact);
 				} catch (ArithmeticException overflow) {
 					return Optional.empty();
 				}
@@ -182,8 +182,8 @@ public final class QuestMutationPlanner {
 		int packed = layout.pack(variables);
 		var status = projection.status();
 		for (QuestAction action : actions) {
-			if (action instanceof QuestAction.SetStatus setStatus) {
-				status = setStatus.status();
+			if (action instanceof QuestAction.SetStatus(QuestStatus status1)) {
+				status = status1;
 			}
 		}
 		return Optional.of(new QuestMutationPlan(definition.id(), status, packed, actions,
@@ -234,15 +234,15 @@ public final class QuestMutationPlanner {
 		List<QuestReward> metadataRewards = definition.definition().metadata().rewards();
 		List<QuestAction> expanded = new ArrayList<>(declaredActions.size());
 		for (QuestAction action : declaredActions) {
-			if (!(action instanceof QuestAction.GrantSelectedReward selected)) {
+			if (!(action instanceof QuestAction.GrantSelectedReward(int rewardIndex))) {
 				expanded.add(action);
 				continue;
 			}
-			if (selected.rewardIndex() >= metadataRewards.size()) {
-				throw new IllegalStateException("selected reward index " + selected.rewardIndex()
+			if (rewardIndex >= metadataRewards.size()) {
+				throw new IllegalStateException("selected reward index " + rewardIndex
 					+ " is not present in quest metadata " + definition.id());
 			}
-			QuestReward reward = metadataRewards.get(selected.rewardIndex());
+			QuestReward reward = metadataRewards.get(rewardIndex);
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
 			QuestRewardAmountMode mode = switch (kind) {
 				case GOLD, KINAH, AP, GP, EXP -> QuestRewardAmountMode.QUEST_BASE;

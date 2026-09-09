@@ -18,16 +18,16 @@ import lombok.Getter;
 @Getter
 public class Exchange {
 
-	private Player activeplayer;
-	private Player targetPlayer;
+	private final Player activeplayer;
+	private final Player targetPlayer;
 
 	private boolean confirmed;
 	private boolean locked;
 
 	private long kinahCount;
 
-	private Map<Integer, ExchangeItem> items = new HashMap<Integer, ExchangeItem>();
-	private List<Item> itemsToUpdate = new ArrayList<Item>();
+	private final Map<Integer, ExchangeItem> items = new HashMap<Integer, ExchangeItem>();
+	private final List<Item> itemsToUpdate = new ArrayList<Item>();
 
 	public Exchange(Player activeplayer, Player targetPlayer) {
 		super();

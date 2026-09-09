@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * Use 物品动作模板（静态数据/XML）。
@@ -15,35 +16,23 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "UseItemAction")
 public class UseItemAction {
 
+	/** 返回 final reward id / Returns the final reward id */
+	@Getter
 	@XmlAttribute(name = "final_reward_id")
 	protected Integer finalRewardId;
 
+	/** 返回 reward id / Returns the reward id */
+	@Getter
 	@XmlAttribute(name = "reward_id")
 	protected Integer rewardId;
 
+	/** 返回移除数量 / Returns the remove count. */
+	@Getter
 	@XmlAttribute(name = "remove_count")
 	protected Integer removeCount;
 
+	/** 返回检查类型 / Returns the check type. */
+	@Getter
 	@XmlAttribute(name = "check_type")
 	protected Integer checkType;
-
-	/** 返回 final reward id / Returns the final reward id */
-	public Integer getFinalRewardId() {
-		return finalRewardId;
-	}
-
-	/** 返回 reward id / Returns the reward id */
-	public Integer getRewardId() {
-		return rewardId;
-	}
-
-	/** 返回移除数量 / Returns the remove count. */
-	public Integer getRemoveCount() {
-		return removeCount;
-	}
-
-	/** 返回检查类型 / Returns the check type. */
-	public Integer getCheckType() {
-		return checkType;
-	}
 }

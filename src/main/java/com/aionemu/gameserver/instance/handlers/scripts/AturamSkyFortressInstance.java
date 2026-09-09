@@ -26,12 +26,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +50,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		/** energy generators / energy generators */
 		private int energyGenerators;
 		/** balaur spy crystal / balaur spy crystal */
-		private int balaurSpyCrystal;
 		/** drakan chief of staff / drakan chief of staff */
 		private int drakanChiefOfStaff;
 		/** drakan petty officer / drakan petty officer */
@@ -62,10 +59,10 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<Integer>();
 		/** aturamskyfortress 任务 / aturam sky fortress task */
 		private final List<Future<?>> aturamSkyFortressTask = new ArrayList<Future<?>>();
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -87,7 +84,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -109,7 +106,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -217,7 +214,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -255,7 +252,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				sp(282278, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Duduchin.
 			break;
 			case 217373: //Popuchin.
-				sp(702664, 352.29132f, 424.08679f, 655.74670f, (byte) 0, 297, 3000, 0, null); //Activated Balaur Teleporter.
+				sp(702664, 352.29132f, 424.08679f, 655.74670f, (byte) 0, 297, 3000, 0, null); // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
 				sp(730375, 374.85000f, 424.32000f, 653.52000f, (byte) 0, 0, 3000, 0, null); //Popukin's Treasure Box.
 			break;
 			case 217343: //Talon Guardian.
@@ -272,7 +269,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				sendMsgByRace(1400909, Race.PC_ALL, 5000);
 			break;
 			case 217371: //Weapon Hugen.
-				sp(730392, 814.94000f, 303.36319f, 603.42773f, (byte) 0, 97, 3000, 0, null); //Activated Balaur Teleporter.
+				sp(730392, 814.94000f, 303.36319f, 603.42773f, (byte) 0, 97, 3000, 0, null); // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
 				sp(730390, 637.00262f, 497.52673f, 658.33716f, (byte) 0, 86, 3000, 0, null); //Shulack Flitter.
 				sp(730374, 815.39700f, 288.39000f, 602.76400f, (byte) 91, 0, 3000, 0, null); //H-Core.
 			break;
@@ -338,7 +335,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				// 这里有巨大的苏卡纳装置。 / There is a huge Surkana device here.
 				// 既然阿舒纳塔尔拼死保护它，就该摧毁它并干扰龙族计划。 / Since Ashunatal risked her life to protect it, you should destroy it and interfere with the Balaur's plans.
 				sendMsgByRace(1401401, Race.PC_ALL, 2000);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Aturam Sky Fortress>");
             break;
 			case 217369: //Drakan Crewhand.
 			case 217368: //Drakan Combatant.
@@ -347,7 +343,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnRings1() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("ATURAM_SKY_FORTRESS_1", mapId,
         new Point3D(435.79208, 421.96408, 625.9659),
@@ -369,7 +365,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
         new Point3D(176.82208, 649.07650, 901.0089), 20), instanceId);
         f3.spawn();
     }
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -428,7 +424,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	private void rushWalk(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -449,7 +445,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	private void startMarbataWalkerEvent() {
 		// 等候室警报响起。高战力龙族正朝你而来！ / Alarms rang in the Waiting Room. High-powered Drakan are heading your way!
 		sendMsgByRace(1401050, Race.PC_ALL, 0);
@@ -457,7 +453,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		rushWalk((Npc)spawn(217655, 198.34431f, 801.4107f, 900.66125f, (byte) 110)); //Veteran Escort Officer.
 		rushWalk((Npc)spawn(217655, 197.13315f, 798.7863f, 900.6499f, (byte) 110)); //Veteran Escort Officer.
 	}
-	
+
 	private void startOfficerWalkerEvent() {
 		// 机组室门已打开。击杀龙族！ / The door of the Aircrew Room is now open. Kill the Drakan!
 		sendMsgByRace(1401049, Race.PC_ALL, 0);
@@ -468,13 +464,13 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		rushWalk((Npc)spawn(217369, 144.96825f, 712.83344f, 901.0133f, (byte) 110)); //Drakan Crewhand.
 		rushWalk((Npc)spawn(217369, 144.75804f, 718.4293f, 901.05493f, (byte) 80)); //Drakan Crewhand.
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164000163, storage.getItemCountByItemId(164000163)); //Talon Summoning Device.
 		storage.decreaseByItemId(164000202, storage.getItemCountByItemId(164000202)); //Bottomless Bucket.
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(19407); //Powerful Defense.
@@ -483,7 +479,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21807); //Board Swift Runner.
 		effectController.removeEffect(21808); //Board Swift Runner.
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -495,7 +491,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -507,7 +503,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -518,7 +514,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		movies.clear();
 		doors.clear();
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -529,7 +525,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-			case 205494: //Hariken's Supply Chest.
+			case 205494: // 军需品保管箱 / Hariken's Supply Chest.
 			    if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
 				}
@@ -574,19 +570,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void addHarikenItems(Player player) {
 		ItemService.addItem(player, 164000163, 1); //Talon Summoning Device.
 		ItemService.addItem(player, 164000202, 1); //Bottomless Bucket.
 	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : aturamSkyFortressTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
+
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -598,14 +587,14 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * @param h 朝向 / h
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -615,14 +604,14 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -633,7 +622,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -654,7 +643,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -663,7 +652,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
      * @param time 时间 / time
      * @param walkerId 寻路器 ID / walkerId
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -680,21 +669,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -703,7 +678,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -729,20 +704,20 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

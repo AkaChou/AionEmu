@@ -6,15 +6,11 @@ import lombok.RequiredArgsConstructor;
 /**
  * 基于 Netty {@link ByteBuf} 的数据包写入实现。
  * Packet writer implementation backed by a Netty {@link ByteBuf}.
+ *
+ * @param buffer 底层缓冲区。
+ *               Underlying buffer.
  */
-@RequiredArgsConstructor
-public final class ByteBufPacketWriter implements PacketWriter {
-
-    /**
-     * 底层缓冲区。
-     * Underlying buffer.
-     */
-    private final ByteBuf buffer;
+public record ByteBufPacketWriter(ByteBuf buffer) implements PacketWriter {
 
     /**
      * 返回底层 {@link ByteBuf}。
@@ -22,6 +18,7 @@ public final class ByteBufPacketWriter implements PacketWriter {
      *
      * @return 底层缓冲区 / Buffer
      */
+    @Override
     public ByteBuf buffer() {
         return buffer;
     }

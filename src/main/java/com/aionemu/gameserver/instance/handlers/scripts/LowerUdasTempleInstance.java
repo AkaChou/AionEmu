@@ -58,14 +58,14 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 		/** chestudastemple 任务 / chest udas temple task */
 		private Future<?> chestUdasTempleTask;
 		/** udas temple chest / udas temple chest */
-		private List<Npc> udasTempleChest = new ArrayList<Npc>();
+		private final List<Npc> udasTempleChest = new ArrayList<Npc>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -98,7 +98,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
             break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -137,7 +137,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -190,7 +190,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer2() {
         if (!isStartTimer2) {
 			isStartTimer2 = true;
@@ -223,7 +223,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer3() {
 	    if (!isStartTimer3) {
 			isStartTimer3 = true;
@@ -256,7 +256,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer4() {
 	    if (!isStartTimer4) {
 			isStartTimer4 = true;
@@ -289,7 +289,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer5() {
 	    if (!isStartTimer5) {
 			isStartTimer5 = true;
@@ -322,7 +322,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer6() {
 	    if (!isStartTimer6) {
 			isStartTimer6 = true;
@@ -355,7 +355,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer7() {
 	    if (!isStartTimer7) {
 			isStartTimer7 = true;
@@ -388,7 +388,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer8() {
 	    if (!isStartTimer8) {
 			isStartTimer8 = true;
@@ -421,7 +421,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer9() {
 	    if (!isStartTimer9) {
 			isStartTimer9 = true;
@@ -454,7 +454,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer10() {
 	    if (!isStartTimer10) {
 			isStartTimer10 = true;
@@ -487,7 +487,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer11() {
 	    if (!isStartTimer11) {
 			isStartTimer11 = true;
@@ -520,7 +520,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	private void StartTimer12() {
 	    if (!isStartTimer12) {
 			isStartTimer12 = true;
@@ -553,7 +553,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			}, 300000);
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -564,7 +564,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -575,13 +575,13 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000086, storage.getItemCountByItemId(185000086)); //Jotun Vault Key.
 		storage.decreaseByItemId(185000087, storage.getItemCountByItemId(185000087)); //Shadowy Prison Key.
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**

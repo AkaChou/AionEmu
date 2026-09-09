@@ -71,8 +71,8 @@ public class Stigma {
 	}
 
 	public static class StigmaSkill {
-		private int skillId;
-		private int skillLvl;
+		private final int skillId;
+		private final int skillLvl;
 
 		public StigmaSkill(int skillLvl, int skillId) {
 			this.skillId = skillId;

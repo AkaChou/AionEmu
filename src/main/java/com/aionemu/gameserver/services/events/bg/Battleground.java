@@ -220,10 +220,7 @@ public abstract class Battleground {
 	 * @return 若 restricted 则为 true / true if restricted
 	 */
 	public boolean isFlightRestricted() {
-		if (map != null && map.isRestrictFlight()) {
-			return true;
-		}
-		return false;
+		return map != null && map.isRestrictFlight();
 	}
 
 	/**
@@ -1026,7 +1023,7 @@ public abstract class Battleground {
 					backgroundCounter = 0;
 				}
 			}
-		}, 30 * 1000, 1 * 1000));
+		}, 30 * 1000, 1000));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			/**
@@ -1038,7 +1035,7 @@ public abstract class Battleground {
 					getBackgroundTask().cancel(true);
 				}
 			}
-		}, 10 * getMatchLength() * 1000);
+		}, 10L * getMatchLength() * 1000);
 	}
 
 	/**
@@ -1182,8 +1179,7 @@ public abstract class Battleground {
 				100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		if (lastAttacker instanceof Player && lastAttacker.getObjectId() != player.getObjectId()) {
-			Player killer = (Player) lastAttacker;
+		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			killer.setTotalKills(killer.getTotalKills() + 1);
 			if (killer.getPlayerGroup2() != null) {
 				killer.getPlayerGroup2().setKillCount(killer.getPlayerGroup2().getKillCount() + 1);
@@ -1426,9 +1422,8 @@ public abstract class Battleground {
 			for (Player pl : getPlayers()) {
 				scheduleAnnouncement(pl, msg, 0);
 			}
-		} else if (obj instanceof PlayerAlliance) {
+		} else if (obj instanceof PlayerAlliance alliance) {
 			success = true;
-			PlayerAlliance alliance = (PlayerAlliance) obj;
 			PlayerAllianceService.onPlayerLogin(player);
 			pos = getSpawnPositions().get(alliance.getBgIndex());
 			for (PlayerAlliance ally : getAlliances()) {
@@ -1439,9 +1434,8 @@ public abstract class Battleground {
 					scheduleAnnouncement(pl, msg, 0);
 				}
 			}
-		} else if (obj instanceof PlayerGroup) {
+		} else if (obj instanceof PlayerGroup group) {
 			success = true;
-			PlayerGroup group = (PlayerGroup) obj;
 			PlayerGroupService.onPlayerLogin(player);
 			pos = getSpawnPositions().get(group.getBgIndex());
 			for (PlayerGroup grp : getGroups()) {

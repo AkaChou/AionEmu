@@ -5,6 +5,8 @@ import java.io.Serializable;
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * 三维点，用于几何相关逻辑。
@@ -15,6 +17,8 @@ import lombok.Setter;
 @SuppressWarnings("serial")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Point3D implements Cloneable, Serializable {
 
 	/**
@@ -36,13 +40,6 @@ public class Point3D implements Cloneable, Serializable {
 	private float z;
 
 	/**
-	 * 创建坐标为 0, 0, 0 的新点。
-	 * Creates new point with coords 0, 0, 0.
-	 */
-	public Point3D() {
-	}
-
-	/**
 	 * 由二维点和 Z 坐标创建新的三维点。
 	 * Creates new 3D point from 2D point and z coord.
 	 *
@@ -62,20 +59,6 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * 用给定坐标创建新的三维点。
-	 * Creates new 3D point with given coords.
-	 *
-	 * @param x x 坐标 / x coord
-	 * @param y y 坐标 / y coord
-	 * @param z z 坐标 / z coord
-	 */
-	public Point3D(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-
-	/**
 	 * 检查该点是否与另一个点相等。
 	 * Checks if this point is equal to another point.
 	 *
@@ -87,10 +70,9 @@ public class Point3D implements Cloneable, Serializable {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof Point3D)) {
+		if (!(o instanceof Point3D point3D)) {
 			return false;
 		}
-		Point3D point3D = (Point3D) o;
 		return x == point3D.x && y == point3D.y && z == point3D.z;
 	}
 
@@ -123,12 +105,11 @@ public class Point3D implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Point3D");
-		sb.append("{x=").append(x);
-		sb.append(", y=").append(y);
-		sb.append(", z=").append(z);
-		sb.append('}');
-		return sb.toString();
+		String sb = "Point3D" +
+			"{x=" + x +
+			", y=" + y +
+			", z=" + z +
+			'}';
+		return sb;
 	}
 }

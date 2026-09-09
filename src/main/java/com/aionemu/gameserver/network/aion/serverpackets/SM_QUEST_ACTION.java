@@ -3,11 +3,14 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 /**
  * 向客户端同步任务状态、步骤、计时或共享等任务动作。
  * Server packet synchronizing quest status, step, timer, or share actions to the client.
  */
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class SM_QUEST_ACTION extends AionServerPacket {
 	protected int questId;
 	private int status;
@@ -17,10 +20,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	private int sharerId;
 	@SuppressWarnings("unused")
 	private boolean unk;
-
-	SM_QUEST_ACTION() {
-
-	}
 
 	/** 创建将已接任务插入客户端任务列表的动作包。 / Creates the protocol action that inserts an accepted quest into the client quest list. */
 	public static SM_QUEST_ACTION addQuest(int questId, QuestStatus status, int step) {

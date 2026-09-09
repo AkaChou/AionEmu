@@ -95,11 +95,9 @@ public class CM_BUY_ITEM extends AionClientPacket {
 		if (tradeActionId != 18 && target == null && tradeActionId != 19) {
 			return;
 		}
-		if (target instanceof Player && tradeActionId == 0) {
-			Player targetPlayer = (Player) target;
+		if (target instanceof Player targetPlayer && tradeActionId == 0) {
 			PrivateStoreService.sellStoreItem(targetPlayer, player, tradeList);
-		} else if (target instanceof Npc) {
-			Npc npc = (Npc) target;
+		} else if (target instanceof Npc npc) {
 			TradeListTemplate tlist = DataManager.TRADE_LIST_DATA.getTradeListTemplate(npc.getNpcId());
 			TradeListTemplate purchaseTemplate = DataManager.TRADE_LIST_DATA.getPurchaseListTemplate(npc.getNpcId());
 			switch (tradeActionId) {

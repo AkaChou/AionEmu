@@ -4,6 +4,8 @@ import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.TransformType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 变身 Model 游戏对象。
@@ -12,13 +14,22 @@ import com.aionemu.gameserver.skillengine.model.TransformType;
 
 public class TransformModel {
 	private int modelId;
-	private int originalModelId;
-	private TransformType originalType;
+	private final int originalModelId;
+	private final TransformType originalType;
+	/** 设置变身类型。 / Sets the transform type. */
+	@Setter
 	private TransformType transformType;
+	/** 设置面板 ID / Sets the panel id */
+	@Setter
 	private int panelId;
+	/** 是否激活。 / Whether active. */
+	@Getter
+	@Setter
 	private boolean isActive = false;
 	private TribeClass transformTribe;
 	private TribeClass overrideTribe;
+	/** 设置物品 ID / Sets the item id */
+	@Setter
 	private int ItemId;
 	private Effect activeTransformEffect;
 	private int transformLevel;
@@ -53,11 +64,7 @@ public class TransformModel {
 	/** 设置模型 ID / Sets the model id */
 	public void setModelId(int modelId) {
 		this.modelId = modelId;
-		if (modelId == 0 || modelId == originalModelId) {
-			isActive = false;
-		} else {
-			isActive = true;
-		}
+		isActive = modelId != 0 && modelId != originalModelId;
 	}
 
 	/** 返回物品 ID / Returns the item id */
@@ -68,15 +75,6 @@ public class TransformModel {
 		return 0;
 	}
 
-	/** 设置物品 ID / Sets the item id */
-	public void setItemId(int itemId) {
-		if (itemId == 0) {
-			ItemId = 0;
-		} else {
-			this.ItemId = itemId;
-		}
-	}
-
 	/** 获取类型。 / Returns the type. */
 	public TransformType getType() {
 		if (isActive) {
@@ -85,32 +83,12 @@ public class TransformModel {
 		return originalType;
 	}
 
-	/** 设置变身类型。 / Sets the transform type. */
-	public void setTransformType(TransformType transformType) {
-		this.transformType = transformType;
-	}
-
 	/** 返回面板 ID / Returns the panel id */
 	public int getPanelId() {
 		if (isActive) {
 			return panelId;
 		}
 		return 0;
-	}
-
-	/** 设置面板 ID / Sets the panel id */
-	public void setPanelId(int id) {
-		this.panelId = id;
-	}
-
-	/** 是否激活。 / Whether active. */
-	public boolean isActive() {
-		return this.isActive;
-	}
-
-	/** 设置激活状态 / Sets the active state */
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 
 	public synchronized boolean canReplaceActiveTransform(int level) {

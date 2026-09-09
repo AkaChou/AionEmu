@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 充能阶段模板：关联技能 ID 与充能时间。
@@ -18,6 +19,12 @@ public class ChargeTemplate {
 	@XmlAttribute(name = "skill_id")
 	private int skill_id;
 
+	/**
+	 * 获取充能时间。
+	 * Gets charge time.
+	 *
+	 */
+	@Getter
 	@XmlAttribute(name = "time")
 	private int time;
 
@@ -28,14 +35,5 @@ public class ChargeTemplate {
 	 */
 	public int getSkillId() {
 		return skill_id;
-	}
-
-	/**
-	 * 获取充能时间。
-	 * Gets charge time.
-	 *
-	 */
-	public int getTime() {
-		return time;
 	}
 }
