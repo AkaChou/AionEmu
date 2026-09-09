@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.configs.main;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +11,15 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 import com.aionemu.commons.configuration.ConfigurableProcessor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class CustomConfigTest {
+
+	@AfterEach
+	void resetDefaults() {
+		ConfigurableProcessor.process(CustomConfig.class, new Properties());
+	}
 
 	@Test
 	void loadsExpressMailCooldown() {
@@ -26,6 +34,18 @@ class CustomConfigTest {
 	}
 
 	@Test
+	void questDisplayMaxLevelSwitchDefaultsOnAndBinds() {
+		ConfigurableProcessor.process(CustomConfig.class, new Properties());
+		assertTrue(CustomConfig.QUEST_DISPLAY_IGNORE_MAX_LEVEL);
+
+		Properties properties = new Properties();
+		properties.setProperty("gameserver.quest.display.ignore.max.level", "false");
+		ConfigurableProcessor.process(CustomConfig.class, properties);
+
+		assertFalse(CustomConfig.QUEST_DISPLAY_IGNORE_MAX_LEVEL);
+	}
+
+	@Test
 	void customPropertiesDocumentsExpressMailCooldown() throws IOException {
 		Properties properties = new Properties();
 		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/config/main/custom.properties"))) {
@@ -33,5 +53,15 @@ class CustomConfigTest {
 		}
 
 		assertEquals("60", properties.getProperty("gameserver.express.mail.cooldown_seconds"));
+	}
+
+	@Test
+	void customPropertiesDocumentsQuestDisplayMaxLevelSwitch() throws IOException {
+		Properties properties = new Properties();
+		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/config/main/custom.properties"))) {
+			properties.load(in);
+		}
+
+		assertEquals("true", properties.getProperty("gameserver.quest.display.ignore.max.level"));
 	}
 }

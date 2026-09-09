@@ -191,7 +191,7 @@ public class PlayerController extends CreatureController<Player> {
 			if (questId <= 0xFFFF) {
 				diff = QuestService.getLevelRequirement(questId, getOwner().getCommonData().getLevel());
 			}
-			if (diff <= 2 && QuestService.checkStartConditions(new QuestEnv(null, getOwner(), questId, 0), false)) {
+			if (diff <= 2 && QuestService.checkStartConditionsForDisplay(new QuestEnv(null, getOwner(), questId, 0))) {
 				nearbyQuestList.put(questId, diff);
 			}
 		}

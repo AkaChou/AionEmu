@@ -481,10 +481,22 @@ public final class QuestService {
 	 * whether conditions are met
 	 */
 	public static boolean checkStartConditions(QuestEnv env, boolean warn) {
-		return checkStartConditionsImpl(env, warn);
+		return checkStartConditionsImpl(env, warn, false);
 	}
 
-	private static boolean checkStartConditionsImpl(QuestEnv env, boolean warn) {
+	/**
+	 * 检查任务是否满足显示条件。开启配置后，显示任务时忽略最大等级，但实际接取仍受最大等级限制。
+	 * Checks whether a quest may be displayed. When configured, display ignores the maximum level,
+	 * while actual quest start still enforces it.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否显示任务 / whether the quest may be displayed
+	 */
+	public static boolean checkStartConditionsForDisplay(QuestEnv env) {
+		return checkStartConditionsImpl(env, false, CustomConfig.QUEST_DISPLAY_IGNORE_MAX_LEVEL);
+	}
+
+	private static boolean checkStartConditionsImpl(QuestEnv env, boolean warn, boolean ignoreMaxLevel) {
 		Player player = env.getPlayer();
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
         QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
@@ -504,7 +516,7 @@ public final class QuestService {
             }
             return false;
         }
-		if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {
+		if (!isMaxLevelPermitted(template.getMaxlevelPermitted(), player.getLevel(), ignoreMaxLevel)) {
 			if (warn) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_MAX_LEVEL(Integer.toString(template.getMaxlevelPermitted())));
 			}
@@ -589,6 +601,19 @@ public final class QuestService {
 			return player.getNpcFactions().canStartQuest(template);
 		}
 		return true;
+	}
+
+	/**
+	 * 判断任务最大等级是否允许当前玩家等级。
+	 * Checks whether the quest maximum level permits the player's level.
+	 *
+	 * @param maxLevelPermitted 任务最大等级，0 表示不限制 / quest maximum level, 0 means unlimited
+	 * @param playerLevel 玩家等级 / player level
+	 * @param ignoreMaxLevel 是否忽略最大等级 / whether to ignore the maximum level
+	 * @return 是否允许 / whether permitted
+	 */
+	static boolean isMaxLevelPermitted(int maxLevelPermitted, int playerLevel, boolean ignoreMaxLevel) {
+		return ignoreMaxLevel || maxLevelPermitted == 0 || playerLevel <= maxLevelPermitted;
 	}
 
 	/**
