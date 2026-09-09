@@ -39876,7 +39876,7 @@
     <bound_radius side="0.35" upper="2" front="0.25"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="dragonportal_IDAbGateL2_exit" npc_type="NON_ATTACKABLE" level="1" rating="NORMAL" ai="portal" hpgauge_level="3" type="GENERAL" name_id="350777" attack_delay="2000" npc_id="700187" sensory_range="0" tribe="FIELD_OBJECT_LIGHT" name="dimension exit" rank="DISCIPLINED" height="2">
+<npc_template name_desc="dragonportal_IDAbGateL2_exit" npc_type="NON_ATTACKABLE" level="1" rating="NORMAL" ai="ReturnToEntrance" hpgauge_level="3" type="GENERAL" name_id="350777" attack_delay="2000" npc_id="700187" sensory_range="0" tribe="FIELD_OBJECT_LIGHT" name="dimension exit" rank="DISCIPLINED" height="2">
     <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="0" mresist="28" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="0"/>
     <bound_radius side="0.35" upper="2" front="0.25"/>
     <talk_info delay="3" distance="5"/>
