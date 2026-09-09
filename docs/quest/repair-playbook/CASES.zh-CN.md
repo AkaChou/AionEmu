@@ -261,4 +261,4 @@
 - 第一检查点：先从旧 handler 或共享 helper 确认进入 `REWARD` 前后是否写了 `setQuestVar`/`changeQuestStep(..., false)`；再对照 XML reward projection、进入 transition 的 actions 和实际 `SM_QUEST_ACTION` packed vars。不要把客户端奖励窗口 page（例如 1097/5）当成任务日志 step，也不要因为 reward 节点通常写 1 就自动填 1。
 - 验证命令和结果：22 个 XML 通过 `xmllint --noout`；结构化审计确认 22 个 reward 节点均为 `var0=0`、`START -> REWARD` 不再改写变量且各有旧存档恢复路由；`git diff --check` 通过。用户于 2026-09-09 确认 1926 客户端/runtime 验证成功，推荐信交接后能显示下一步并在 203894 完成。本次未运行 Maven focused/catalog/whitelist 门禁（遵循项目未授权构建规则），也未启动或重启服务端。
 - 复用边界：仅适用于 legacy 明确进入 `REWARD` 但没有改 packed var、而当前 typed XML 将该次迁移投影成不同变量的任务。若旧 handler 有 `setQuestVar`、`changeQuestStep(..., false)`，或客户端/legacy 明确要求非零 reward var（例如 1336、1920），不得套用；11031/11032 的旧流程是 `var0=2 -> 3`，而现 XML 还缺少前置阶段，需另建完整阶段链案例。
-- commit：`8080744d7`。
+- commit：`f6aff952a`。
