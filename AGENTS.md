@@ -9,6 +9,7 @@ This file provides project-level guidance for AI coding agents working in this r
 1. Do NOT run build commands unless explicitly requested by the user.
 2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
 3. All summary files should be stored in `.agent/summary/` if that directory is available.
+4. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agent/summary/<topic>/`; do not place them under `scripts/`.
 
 ## Configuration
 
@@ -60,4 +61,5 @@ All detailed rules are in `.agent/rules/`:
 | [java_general.md](.agent/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
 | [formatting.md](.agent/rules/formatting.md) | `**/*.java`, `**/*.xml` | Java and XML formatting, whitespace, wrapping, and generated-file boundaries / Java 与 XML 格式、空白、换行和生成文件边界 |
 | [lombok.md](.agent/rules/lombok.md) | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
+| [ai-artifacts.md](.agent/rules/ai-artifacts.md) | Entire repository | AI-generated intermediate artifacts, topic directories, and script placement / AI 生成中间产物、主题目录和脚本存放规则 |
 | [quest-repair.md](.agent/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |
