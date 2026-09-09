@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2434" version="1">
-  <metadata name="[Group] Revenge is Sweet" display-name-id="1103634" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true" title-id="66">
+  <metadata name="[Group] Revenge is Sweet" display-name-id="1103634" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

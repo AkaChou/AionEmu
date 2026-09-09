@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3922" version="1">
-  <metadata name="The Gladiator Preceptor's Task" display-name-id="1103012" min-level="31" max-level="2147483647" category="IMPORTANT" title-id="38">
+  <metadata name="The Gladiator Preceptor's Task" display-name-id="1103012" min-level="31" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

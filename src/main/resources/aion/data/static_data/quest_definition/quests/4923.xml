@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4923" version="1">
-  <metadata name="The Templar Preceptor's Test" display-name-id="1104213" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true" title-id="88">
+  <metadata name="The Templar Preceptor's Test" display-name-id="1104213" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

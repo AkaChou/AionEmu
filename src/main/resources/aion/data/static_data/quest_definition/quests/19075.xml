@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19075" version="1">
-  <metadata name="The Muse Preceptor's Task" display-name-id="1140753" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true" title-id="38">
+  <metadata name="The Muse Preceptor's Task" display-name-id="1140753" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
