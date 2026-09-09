@@ -262,3 +262,20 @@
 - 验证命令和结果：22 个 XML 通过 `xmllint --noout`；结构化审计确认 22 个 reward 节点均为 `var0=0`、`START -> REWARD` 不再改写变量且各有旧存档恢复路由；`git diff --check` 通过。用户于 2026-09-09 确认 1926 客户端/runtime 验证成功，推荐信交接后能显示下一步并在 203894 完成。本次未运行 Maven focused/catalog/whitelist 门禁（遵循项目未授权构建规则），也未启动或重启服务端。
 - 复用边界：仅适用于 legacy 明确进入 `REWARD` 但没有改 packed var、而当前 typed XML 将该次迁移投影成不同变量的任务。若旧 handler 有 `setQuestVar`、`changeQuestStep(..., false)`，或客户端/legacy 明确要求非零 reward var（例如 1336、1920），不得套用；11031/11032 的旧流程是 `var0=2 -> 3`，而现 XML 还缺少前置阶段，需另建完整阶段链案例。
 - commit：`f6aff952a`。
+
+## 8.19 奖励预览可选工作物品缺失导致 1009 页面失败
+
+- Pattern ID：`REWARD_PREVIEW_OPTIONAL_WORK_ITEM`；关联已有模式 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`、`MULTI_NPC_HANDOFF_REWARD_OWNER`。
+- 代表任务：18600「Scoring Some Bad Stigma / [副本]假烙印之石的流通」。
+- 搜索症状：任务已经进入 `REWARD`，最终 NPC 交任务时出现 `load fail! Quest_Q18600.html (HtmlPageId 1009) (QuestId 18600)`；任务状态调试显示 `Status: REWARD`、`Vars: 3 0 0 0 0`，说明前置阶段已完成但奖励预览没有打开。
+- 玩家可见症状：18600 的 804601、205228 两段 NPC 交接可以推进，最终回到 NPC 204500 后点击交任务失败；客户端将数字 1009 显示为 HTML 页面，而该任务实际应该先显示 `SELECT5(2375)`，再由 `HACTION_SELECT_QUEST_REWARD(1009)` 打开奖励窗口 page 5。
+- 根因：
+  1. Aion 5.8 客户端页面与动作属于两个 ID 空间：`client-html-pages.csv` 中 page 1009 是通用 `QUEST_FAILED_1`，而 `client-hyperlinks.csv` 中 action 1009 是 `SELECT_QUEST_REWARD`；18600 的客户端证据要求 `SELECT5(2375) -> action 1009 -> page 5`。
+  2. 旧 handler 在奖励预览动作中对 182213001（Fake Stigma）执行“有则移除”，随后仍调用 `sendQuestEndDialog` 显示奖励窗口；typed XML 使用严格 `remove-item count="1"` 时，玩家背包没有该物品或旧流程已经清理该物品，`QuestMutationPlanner` 会将该路由判为不可行，交任务事件无法继续。
+  3. 迁移定义只保留了最终 NPC 的直接 `USE_OBJECT` 路径，缺少通用 `QUEST_SELECT(31)` 到 `SELECT5(2375)` 的入口；多 NPC 交接状态、最终 reward owner 和客户端页面链没有同时闭合。
+- 修复层：仅修改任务 XML 并增加任务专用回归测试。18600 保留 `started -> s1 -> reward(var0=3)` 的三 NPC 合同；204500 在 `REWARD` 下同时声明 `USE_OBJECT(-1)` 与 `QUEST_SELECT(31)`，二者均显示 `SELECT5(2375)`；`SELECT_QUEST_REWARD(1009)` 使用 `remove-item count="ALL"`，使物品存在时清理、不存在时仍能提交并显示 `SHOW_SELECT_QUEST_REWARD_WINDOW1(5)`；最终 `<npc-complete>` 继续独占奖励选择与完成 owner。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/18600.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest18600ClientDialogAlignmentTest.java`。
+- 第一检查点：先区分客户端发送的 action 1009 与服务端发送的 page 1009，再查看 reward preview transition 的物品动作是否为严格扣除；对照旧 handler 判断该物品是完成必需品，还是“存在则清理”的历史工作物品。随后同时检查直接 NPC 对话和通用任务选择页是否都能到达客户端真实的 `SELECT5` 页面。
+- 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/18600.xml` 通过；`git diff --check` 通过；任务书自检通过（42 个 Pattern、19 个详细案例）。用户于 2026-09-09 回复“客户端验证完成，提交，加入任务书案例”，未限定分支，按规则确认 18600 完整客户端流程验收完成。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、重启服务端；启动日志、运行日志、协议 trace 和稳定截图为 `not captured`。
+- 复用边界：仅适用于旧 handler 对奖励预览工作物品采用“有则移除、无也继续”、当前 planner 对正数 `RemoveItem` 缺失物品会 fail closed，且客户端同时存在直接 `USE_OBJECT` 与通用 `QUEST_SELECT` 入口的奖励任务。若物品是完成前必须存在的交付材料，应使用显式 `HasItem`/严格扣除；若症状是服务端确实发送了错误奖励 page 而非物品缺失，应复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`；多 NPC owner 仍需另按 `MULTI_NPC_HANDOFF_REWARD_OWNER` 检查。
+- commit：`aea256a29521b4febb327fa99c4b1a7f2773d878`。
