@@ -234,3 +234,17 @@
 - 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `14023.xml` 成功；`Quest14023ClientDialogAlignmentTest` 覆盖自动接取、NPC 对话推进、石板碎片提交扣除与 13 种可选奖励领取链路；生产目录 6200 个任务白名单与目录编译测试 100% 通过；2026-08-28 用户客户端全流程实机验证验收通过，提交后石板碎片正常扣除且背包无残留。
 - 复用边界：适用于收集类使命与支线任务中交付判定通过但未执行扣除导致道具残留在背包的同型问题。若为全 XML 零扣除宏误用，需改用 `npc-item-report`；若为工作道具，需定义为 `<work-items>`。
 - commit：`bd782024d`。
+
+## 8.17 奖励称号被误写为接取前置导致接取页 load fail
+
+- Pattern ID：`REWARD_TITLE_AS_START_PREREQUISITE`。
+- 代表任务：3926「The Sorcerer Preceptor's Task / 魔道星老师的考验」。
+- 搜索症状：接取任务 load fail、`Quest_Q3926.html` 的 `HtmlPageId 1002`、接受按钮无响应、服务端资格结果为 `TITLE_MISSING`。
+- 玩家可见症状：满足 31 级、ELYOS、MAGE/SORCERER 和 NPC 203706 的任务条件后，客户端沿 `QUEST_SELECT -> SELECT_NONE -> ASK_QUEST_ACCEPT` 进入接受动作 `QUEST_ACCEPT_1(1002)`；服务端未进入 `started`，客户端收到错误页面请求并弹出 `load fail! Quest_Q3926.html (HtmlPageId 1002) (QuestId 3926)`。
+- 根因：legacy `quest_data.xml` 的 3926 只有 `<rewards exp="633457" title="38" />` 和职业限制，没有 quest-level `titleId`；迁移 XML 却把奖励称号 38 同时写入 metadata `title-id="38"`。`QuestDefinitionXmlCompiler` 将该属性编译为 `QuestMetadata.titleId`，`PlayerQuestStartEligibilityPort` 在接受动作的 `start-eligible` 求值中把它当作玩家已有称号前置并返回 `TITLE_MISSING`，因此正常角色无法提交 `NONE -> START`，后续也不会产生正确的可见性同步和接受页 1003。
+- 修复层：仅任务 XML 与任务专用回归测试。移除 `3926.xml` metadata 的 `title-id`，保留 `<reward kind="TITLE" id="38" amount="1"/>`；测试同时锁定 metadata `titleId=0`、奖励列表、`QUEST_SELECT/ASK_QUEST_ACCEPT/QUEST_ACCEPT_1` 的 source/target/condition，以及 `VISIBILITY_REFRESH -> QUEST_ACCEPT_1(1003)` 的完整提交后顺序。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/3926.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest3926ClientDialogAlignmentTest.java`。
+- 第一检查点：先把 legacy quest-level `titleId` 与 `<rewards title>` 分开核对，再检查编译后的 `metadata.titleId` 和接受 transition 的 `start-eligible`；Aion 5.8 客户端的 `1002 -> 1003` 只能证明接受动作与页面链，不能把奖励称号推断为接取门槛。相同 ID 若确实出现在 legacy quest-level `titleId`（例如 2511），属于合法的“前置称号 + 奖励称号”双重语义，不适用本模式。
+- 验证命令和结果：`xmllint --noout src/main/resources/aion/data/static_data/quest_definition/quests/3926.xml` 通过；`git diff --check` 通过；用户于 2026-09-09 回复“验证通过”，未限定分支，确认本任务客户端流程验收完成。按项目规则本会话未重跑 Maven focused/catalog/whitelist 门禁，也未启动或重启服务端；启动日志、运行日志、协议 trace 和稳定截图均为 `not captured`。
+- 复用边界：适用于 metadata `title-id` 与奖励 `TITLE` 相同、legacy 没有 quest-level `titleId`、且错误前置会阻断接受或自动接取的任务。若症状来自介绍链末页桥接、收集交付动作/page 错配、奖励预览页错误或自动升级入口，不复用本模式；10521/20521 虽同样缺少 legacy `titleId`，但当前已有自动任务与资格测试把 306 当作门槛，需先确认项目意图；1322 的 legacy `titleId=4` 遗漏属于反向迁移差异，另行处理。
+- commit：`880af62b7`。
