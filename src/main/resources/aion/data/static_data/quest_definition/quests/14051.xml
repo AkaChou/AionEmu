@@ -124,44 +124,20 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="s2" priority="0">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204549" action="CHECK_USER_HAS_QUEST_ITEM"/>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="SELECT2_1"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="1"/>
-        <has-item item-id="182215337" count="3"/>
-        <has-item item-id="182215338" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215337" count="3"/>
-        <remove-item item-id="182215338" count="3"/>
-        <give-item item-id="182215339" count="1"/>
-        <set-variable field="var0" value="2"/>
-      </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204549" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="SELECT2_1_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-
-    <transition source="s1" target="s1" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204549" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="1"/>
-      </conditions>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
@@ -190,6 +166,45 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <transition source="s2" target="s3" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <has-item item-id="182215337" count="3"/>
+        <has-item item-id="182215338" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215337" count="3"/>
+        <remove-item item-id="182215338" count="3"/>
+        <give-item item-id="182215339" count="1"/>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
     <transition source="s2" target="s3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204549" action="SETPRO3"/>
@@ -214,6 +229,14 @@
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730026" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
       </after-commit>
     </transition>
     <transition source="s3" target="reward">
@@ -255,29 +278,5 @@
       <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204500" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204500" action="SELECT2_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204500" action="SELECT4_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
-      </after-commit>
-    </transition>
   </transitions>
 </quest-definition>
