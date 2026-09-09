@@ -213,7 +213,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204044" action="SETPRO4"/>
       </event>
       <actions>
-        <remove-item item-id="182201013" count="1"/>
+        <remove-item item-id="182201013" count="ALL"/>
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="210020000" x="271.69" y="2787.04" z="272.47" heading="50"/>
