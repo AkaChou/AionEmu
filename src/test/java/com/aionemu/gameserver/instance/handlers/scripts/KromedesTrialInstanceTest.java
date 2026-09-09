@@ -13,6 +13,8 @@ class KromedesTrialInstanceTest {
 
 	private static final Path SOURCE = Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KromedesTrialInstance.java");
+	private static final Path SPAWNS = Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/300230000_Kromede's_Trial.xml");
 
 	@Test
 	void onDieDoesNotDereferenceMissingDamageOwnerForClassTreasure() throws IOException {
@@ -58,6 +60,18 @@ class KromedesTrialInstanceTest {
 
 		assertTrue(nullGuard >= 0);
 		assertTrue(classSwitch > nullGuard);
+	}
+
+	@Test
+	void staticFinalBossSpawnsAreHandledByInstanceHandler() throws IOException {
+		String spawns = Files.readString(SPAWNS);
+
+		assertFalse(spawns.contains("<spawn npc_id=\"217005\""),
+				"217005 is selected by KromedesTrialInstance and must not be statically spawned");
+		assertFalse(spawns.contains("<spawn npc_id=\"217006\""),
+				"217006 is selected by KromedesTrialInstance and must not be statically spawned");
+		assertFalse(spawns.contains("<spawn npc_id=\"217119\""),
+				"217119 must not be a repeating static spawn for the final boss");
 	}
 
 	private static String methodBody(String source, String signature) {
