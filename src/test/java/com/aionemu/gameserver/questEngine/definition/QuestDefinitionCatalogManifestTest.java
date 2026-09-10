@@ -119,6 +119,31 @@ class QuestDefinitionCatalogManifestTest {
 	}
 
 	@Test
+	void quest2002KeepsObjectDialogAndRewardPreviewOnSeparateActions() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		QuestDefinition definition = catalog.findExecutable(2002).orElseThrow().definition();
+
+		List<QuestTransition> rewardRoutes = definition.transitions().stream()
+			.filter(transition -> transition.sourceNode().equals("reward"))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 203516)
+			.toList();
+		assertEquals(1, rewardRoutes.stream().filter(transition -> dialogAction(transition) == -1).count());
+		assertEquals(1, rewardRoutes.stream().filter(transition -> dialogAction(transition) == 31).count());
+		assertEquals(1, rewardRoutes.stream().filter(transition -> dialogAction(transition) == 10007).count());
+		assertEquals(1, rewardRoutes.stream().filter(transition -> dialogAction(transition) == 1009).count());
+
+		QuestTransition objectDialog = rewardRoutes.stream()
+			.filter(transition -> dialogAction(transition) == -1)
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(3398)), objectDialog.afterCommit());
+		assertQuestPage(rewardRoutes, 31, 3398);
+		assertPreviewPage(rewardRoutes, 10007);
+		assertPreviewPage(rewardRoutes, 1009);
+	}
+
+	@Test
 	void emptyDuplicateAndMigrationAnnotatedCatalogsFailClosed() {
 		assertEquals("INVALID_PRODUCTION_CATALOG", error("<quest-definition-catalog version=\"2\"/>").code());
 		assertEquals("DUPLICATE_CATALOG_OWNER", error("<quest-definition-catalog version=\"2\">"
@@ -204,6 +229,21 @@ class QuestDefinitionCatalogManifestTest {
 			|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
 			|| action instanceof AfterCommitAction.ShowDialogWindow
 			|| action instanceof AfterCommitAction.CloseDialog;
+	}
+
+	private static int dialogAction(QuestTransition transition) {
+		return ((QuestEvent.TalkToNpc) transition.event()).dialogId();
+	}
+
+	private static void assertPreviewPage(List<QuestTransition> routes, int action) {
+		assertQuestPage(routes, action, 5);
+	}
+
+	private static void assertQuestPage(List<QuestTransition> routes, int action, int page) {
+		QuestTransition route = routes.stream()
+			.filter(transition -> dialogAction(transition) == action)
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page)), route.afterCommit());
 	}
 
 	private static void assertRepeatStartDialogs(QuestCatalog catalog) {

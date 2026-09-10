@@ -374,7 +374,7 @@
       <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
       <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD SETPRO8"/>
+      <preview actions="SELECT_QUEST_REWARD SETPRO8"/>
       <fallback actions="SELECTED_QUEST_REWARD7..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
     <transition source="started" target="started">
@@ -415,6 +415,78 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT4_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s13" target="s13">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s15" target="s15">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203553" action="SELECT7_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT3_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT4_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_3"/>
+      </after-commit>
+    </transition>
+    <transition source="s12" target="s12">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT5_2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s12" target="s12">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT5_2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2_1_1"/>
       </after-commit>
     </transition>
 </transitions>
