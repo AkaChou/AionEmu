@@ -13,6 +13,9 @@
       <reward kind="ITEM" id="188053058" amount="2"/>
       <reward kind="ITEM" id="188050790" amount="4"/>
     </rewards>
+    <drops>
+      <drop npc-id="210075" item-id="182215457" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
     <start-conditions>
       <condition type="finished" quest-id="14111"/>
       <condition type="unfinished" quest-id="1130"/>
@@ -65,6 +68,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203098" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
@@ -131,6 +142,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203183" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
     <transition source="started" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203183" action="SETPRO1"/>
@@ -166,6 +185,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="v2" target="v2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203183" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
     <transition source="v2" target="v3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203183" action="SETPRO2"/>
@@ -193,6 +220,7 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <transition source="v3" target="v3" priority="1">
@@ -201,6 +229,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="v4" target="v4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203183" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <transition source="v4" target="reward">
@@ -221,6 +257,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203098" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
