@@ -185,7 +185,15 @@ public class PlayerController extends CreatureController<Player> {
 	 *
 	 */
 	public void updateNearbyQuests() {
-		var mapInstance = getOwner().getPosition().getMapRegion().getParent();
+		var position = getOwner().getPosition();
+		if (position == null) {
+			return;
+		}
+		MapRegion mapRegion = position.getMapRegion();
+		if (mapRegion == null) {
+			return;
+		}
+		var mapInstance = mapRegion.getParent();
 		mapInstance.refreshQuestIds();
 		HashMap<Integer, Integer> nearbyQuestList = new HashMap<>();
 		for (int questId : mapInstance.getQuestIds()) {
