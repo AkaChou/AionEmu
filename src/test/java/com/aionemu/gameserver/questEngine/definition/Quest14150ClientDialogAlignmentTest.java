@@ -12,23 +12,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 14120 的 Aion 5.8 客户端交付与奖励页面链。
- * Locks quest 14120's Aion 5.8 client turn-in and reward-page flow.
+ * 锁定任务 14150 的 Aion 5.8 客户端交付与奖励页面链。
+ * Locks quest 14150's Aion 5.8 client turn-in and reward-page flow.
  */
-class Quest14120ClientDialogAlignmentTest {
-	private static final int START_NPC = 203932;
-	private static final int HANDOFF_NPC = 730020;
-	private static final int REWARD_NPC = 730019;
-	private static final int QUEST_ITEM = 182215478;
+class Quest14150ClientDialogAlignmentTest {
+	private static final int START_NPC = 204501;
+	private static final int HANDOFF_NPC = 204582;
+	private static final int REWARD_NPC = 204501;
+	private static final int QUEST_ITEM = 182215458;
 
 	@Test
-	void followsTheHandoffAndReopensTheRewardWindowAtTheFinalNpc() throws Exception {
+	void followsTheHandoffAndOpensTheRewardWindowAtTheFinalNpc() throws Exception {
 		QuestDefinition definition = load();
 
 		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
-		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.SELECT1_1, QuestDialogPage.SELECT1_1);
 		assertPage(definition, "started", HANDOFF_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT2);
 		assertPage(definition, "started", HANDOFF_NPC, QuestDialogAction.SELECT2_1, QuestDialogPage.SELECT2_1);
+		assertPage(definition, "started", HANDOFF_NPC, QuestDialogAction.SELECT2_2, QuestDialogPage.SELECT2_2);
 
 		QuestTransition handoff = route(definition, "started", HANDOFF_NPC, QuestDialogAction.SETPRO1);
 		assertEquals("v1", handoff.targetNode());
@@ -49,7 +49,7 @@ class Quest14120ClientDialogAlignmentTest {
 			report.afterCommit());
 
 		QuestTransition rewardPreview = route(definition, "reward", REWARD_NPC, QuestDialogAction.USE_OBJECT);
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 1)), node(definition, "reward").projection());
+		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 2)), node(definition, "reward").projection());
 		assertEquals("reward", rewardPreview.targetNode());
 		assertEquals(List.of(), rewardPreview.conditions());
 		assertEquals(List.of(), rewardPreview.actions());
@@ -82,7 +82,7 @@ class Quest14120ClientDialogAlignmentTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == npcId && talk.dialogId() == action.id())
 			.toList();
-		assertEquals(1, routes.size(), "quest 14120 " + source + " " + npcId + " " + action);
+		assertEquals(1, routes.size(), "quest 14150 " + source + " " + npcId + " " + action);
 		return routes.getFirst();
 	}
 
@@ -93,10 +93,10 @@ class Quest14120ClientDialogAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		try (InputStream input = Quest14120ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/14120.xml")) {
+		try (InputStream input = Quest14150ClientDialogAlignmentTest.class.getResourceAsStream(
+				"/aion/data/static_data/quest_definition/quests/14150.xml")) {
 			if (input == null) {
-				throw new IllegalStateException("missing quest definition 14120.xml");
+				throw new IllegalStateException("missing quest definition 14150.xml");
 			}
 			return QuestDefinitionXmlCompiler.compile(input).definition();
 		}
