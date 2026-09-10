@@ -107,6 +107,41 @@ class QuestAdditionalCapabilityDefinitionTest {
 			QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(invalid.getBytes(StandardCharsets.UTF_8))));
 		assertEquals("SELECTED_REWARD_INDEX_OUT_OF_RANGE", failure.code());
 	}
+
+	@Test
+	void lowersSelectableRewardToConcreteItemBeforePlanning() {
+		String xml = """
+
+						<quest-definition id="20047" version="1">
+						  <metadata name="selectable-reward-runtime" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <rewards><reward kind="SELECTABLE_ITEM" id="100000001" amount="1"/></rewards>
+						  </metadata>
+						  <nodes>
+						    <node label="started" status="START"/>
+						    <node label="complete" status="COMPLETE"/>
+						  </nodes>
+						  <transitions><transition source="started" target="complete">
+						    <event><talk-to-npc npc-id="799513" dialog-id="8"/></event>
+						    <actions>
+						      <grant-selected-reward reward-index="0"/>
+						      <complete-quest reward-index="0"/>
+						    </actions>
+						  </transition></transitions>
+						</quest-definition>
+
+				""";
+
+		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+		var plan = QuestMutationPlanner.plan(compiled,
+			new QuestSnapshot(7, 20047, QuestStatus.START, 0, Map.of()),
+			compiled.definition().transitions().get(0)).orElseThrow();
+
+		assertEquals(List.of(
+			new QuestAction.GrantReward("ITEM", 100000001, 1),
+			new QuestAction.CompleteQuest(0)), plan.requiredActions());
+	}
+
 	@Test
 	void compilesTeamAdvancedClassAndRawDialogCapabilities() {
 		String xml = """

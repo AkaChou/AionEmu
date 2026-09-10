@@ -477,44 +477,23 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="451980"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100201657" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100001994" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100101476" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100901511" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="101301395" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="101501497" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="101701492" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100601552" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="100501434" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="102001355" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="101801327" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="101901232" amount="1"/>
-        <grant-reward kind="SELECTABLE_ITEM" id="102101170" amount="1"/>
-        <grant-reward kind="ITEM" id="187000186" amount="1"/>
-        <grant-reward kind="ITEM" id="166100009" amount="10"/>
-        <grant-reward kind="TITLE" id="306" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="806075" source="reward" target="complete" fixed-reward-indices="0 14 15 16" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="7"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="9"/>
+      <choice action="SELECTED_QUEST_REWARD10" reward-index="10"/>
+      <choice action="SELECTED_QUEST_REWARD11" reward-index="11"/>
+      <choice action="SELECTED_QUEST_REWARD12" reward-index="12"/>
+      <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <fallback actions="SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD"/>
+    </npc-complete>
     <!-- 副本未完成阶段离开、死亡或登出时回到入场前步骤 2。 -->
     <transition source="s3" target="s2">
       <event>

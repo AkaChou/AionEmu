@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuestDefinitionCatalogManifestTest {
+	private static final Set<Integer> SELECTABLE_REWARD_REPAIR_QUESTS = Set.of(2002, 10521, 10530, 20521, 28602);
+
 	@TempDir
 	Path tempDirectory;
 
@@ -66,6 +68,54 @@ class QuestDefinitionCatalogManifestTest {
 			}
 		}
 		assertTrue(checked > 0, "reward dialog audit must inspect production routes");
+	}
+
+	@Test
+	void completionRoutesNeverEmitUnsupportedSelectableRewardActions() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		int checked = 0;
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			Map<String, QuestStatus> statuses = definition.nodes().stream().collect(Collectors.toMap(
+				QuestNode::label, node -> node.projection().status()));
+			for (QuestTransition transition : definition.transitions()) {
+				if (statuses.get(transition.targetNode()) != QuestStatus.COMPLETE) {
+					continue;
+				}
+				checked++;
+				assertFalse(transition.actions().stream().anyMatch(action -> action instanceof QuestAction.GrantReward reward
+					&& reward.rewardKind() == QuestRewardKind.SELECTABLE_ITEM),
+					"completion must lower selectable rewards to ITEM: quest=" + compiled.id()
+						+ " source=" + transition.sourceNode() + " target=" + transition.targetNode());
+			}
+		}
+		assertTrue(checked > 0, "completion reward audit must inspect production routes");
+	}
+
+	@Test
+	void repairedSelectableRewardQuestsDeliverEveryChoiceAsAConcreteItem() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		for (int questId : SELECTABLE_REWARD_REPAIR_QUESTS) {
+			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
+			QuestDefinition definition = compiled.definition();
+			Set<Integer> declared = definition.metadata().rewards().stream()
+				.filter(reward -> reward.kind().equals("SELECTABLE_ITEM"))
+				.map(QuestReward::id)
+				.collect(Collectors.toSet());
+			Map<String, QuestStatus> statuses = definition.nodes().stream().collect(Collectors.toMap(
+				QuestNode::label, node -> node.projection().status()));
+			Set<Integer> concrete = definition.transitions().stream()
+				.filter(transition -> statuses.get(transition.targetNode()) == QuestStatus.COMPLETE)
+				.flatMap(transition -> transition.actions().stream())
+				.filter(QuestAction.GrantReward.class::isInstance)
+				.map(QuestAction.GrantReward.class::cast)
+				.filter(reward -> reward.rewardKind() == QuestRewardKind.ITEM && declared.contains(reward.id()))
+				.map(QuestAction.GrantReward::id)
+				.collect(Collectors.toSet());
+			assertEquals(declared, concrete, "every selectable reward must have a concrete completion route: quest=" + questId);
+		}
 	}
 
 	@Test

@@ -116,7 +116,7 @@ class Quest14025ClientDialogAlignmentTest {
 			new QuestAction.GrantReward("EXP", 0, 3504765L, QuestRewardAmountMode.QUEST_BASE),
 			new QuestAction.GrantReward("ITEM", 169000008, 400L, QuestRewardAmountMode.EXACT),
 			new QuestAction.GrantReward("ITEM", 186000003, 40L, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("SELECTABLE_ITEM", 120001538, 1L, QuestRewardAmountMode.EXACT),
+			new QuestAction.GrantReward("ITEM", 120001538, 1L, QuestRewardAmountMode.EXACT),
 			new QuestAction.CompleteQuest(0)), rewardChoice1.actions());
 
 		QuestTransition rewardChoice2 = talk(definition, "reward", "complete", TELEMACHUS_NPC_ID, QuestDialogAction.SELECTED_QUEST_REWARD2.id());
@@ -124,7 +124,7 @@ class Quest14025ClientDialogAlignmentTest {
 			new QuestAction.GrantReward("EXP", 0, 3504765L, QuestRewardAmountMode.QUEST_BASE),
 			new QuestAction.GrantReward("ITEM", 169000008, 400L, QuestRewardAmountMode.EXACT),
 			new QuestAction.GrantReward("ITEM", 186000003, 40L, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("SELECTABLE_ITEM", 120001539, 1L, QuestRewardAmountMode.EXACT),
+			new QuestAction.GrantReward("ITEM", 120001539, 1L, QuestRewardAmountMode.EXACT),
 			new QuestAction.CompleteQuest(0)), rewardChoice2.actions());
 	}
 

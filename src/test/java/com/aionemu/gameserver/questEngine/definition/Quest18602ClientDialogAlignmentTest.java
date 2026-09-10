@@ -88,6 +88,38 @@ class Quest18602ClientDialogAlignmentTest {
 		assertTrue(rescue.afterCommit().contains(new AfterCommitAction.CloseDialog()));
 	}
 
+	@Test
+	void completesAtRaniniaWithConcreteSelectableRewards() throws Exception {
+		QuestDefinition definition = load().definition();
+		List<AfterCommitAction> rewardWindow = List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
+
+		for (QuestDialogAction action : List.of(QuestDialogAction.USE_OBJECT, QuestDialogAction.SELECT_QUEST_REWARD)) {
+			QuestTransition preview = route(definition, "reward", START_NPC, action);
+			assertEquals("reward", preview.targetNode());
+			assertEquals(rewardWindow, preview.afterCommit());
+		}
+
+		assertRewardCompletion(definition, QuestDialogAction.SELECTED_QUEST_REWARD1, 123001457);
+		assertRewardCompletion(definition, QuestDialogAction.SELECTED_QUEST_REWARD2, 123001458);
+	}
+
+	private static void assertRewardCompletion(QuestDefinition definition, QuestDialogAction action, int itemId) {
+		QuestTransition completion = route(definition, "reward", START_NPC, action);
+		assertEquals("complete", completion.targetNode());
+		assertEquals(List.of(
+			new QuestAction.GrantReward("GOLD", 0, 3460, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("EXP", 0, 3921386, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", 188053405, 2),
+			new QuestAction.GrantReward("ITEM", 186000004, 10),
+			new QuestAction.GrantReward("ITEM", itemId, 1),
+			new QuestAction.CompleteQuest(0)), completion.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(10)), completion.afterCommit());
+	}
+
 	private static QuestTransition route(QuestDefinition definition, QuestDialogAction action) {
 		return route(definition, "unaccepted", START_NPC, action);
 	}

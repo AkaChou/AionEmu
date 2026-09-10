@@ -244,11 +244,12 @@ public final class QuestMutationPlanner {
 			}
 			QuestReward reward = metadataRewards.get(rewardIndex);
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
-			QuestRewardAmountMode mode = switch (kind) {
+			QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
+			QuestRewardAmountMode mode = switch (actionKind) {
 				case GOLD, KINAH, AP, GP, EXP -> QuestRewardAmountMode.QUEST_BASE;
 				default -> QuestRewardAmountMode.EXACT;
 			};
-			expanded.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
+			expanded.add(new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), mode));
 		}
 		return expanded;
 	}
