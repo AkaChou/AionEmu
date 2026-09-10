@@ -95,7 +95,7 @@
         <dialog type="TALK_TO_NPC" npc-id="798417" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <!-- REWARD 完成 -->

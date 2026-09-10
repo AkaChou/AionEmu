@@ -69,7 +69,7 @@
         <dialog type="TALK_TO_NPC" npc-id="833629" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
@@ -77,7 +77,7 @@
         <dialog type="TALK_TO_NPC" npc-id="833584" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
   </transitions>

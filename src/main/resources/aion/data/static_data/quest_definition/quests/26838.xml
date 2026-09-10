@@ -44,7 +44,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806575" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 收集记录书页后进入领奖。Collecting the record page enters reward. -->

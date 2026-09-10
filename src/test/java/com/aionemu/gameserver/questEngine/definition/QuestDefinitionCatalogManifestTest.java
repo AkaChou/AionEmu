@@ -144,6 +144,26 @@ class QuestDefinitionCatalogManifestTest {
 	}
 
 	@Test
+	void quest26930UsesTheSimpleItemCheckForCollectionTurnIn() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		QuestDefinition definition = catalog.findExecutable(26930).orElseThrow().definition();
+		QuestTransition success = definition.transitions().stream()
+			.filter(transition -> transition.sourceNode().equals("started")
+				&& transition.targetNode().equals("reward"))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 804627
+				&& talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())
+			.findFirst().orElseThrow();
+
+		assertTrue(success.conditions().contains(new QuestCondition.HasItem(186000257, 10)));
+		assertTrue(success.actions().contains(new QuestAction.RemoveItem(186000257, QuestAction.RemoveItem.ALL)));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)), success.afterCommit());
+	}
+
+	@Test
 	void emptyDuplicateAndMigrationAnnotatedCatalogsFailClosed() {
 		assertEquals("INVALID_PRODUCTION_CATALOG", error("<quest-definition-catalog version=\"2\"/>").code());
 		assertEquals("DUPLICATE_CATALOG_OWNER", error("<quest-definition-catalog version=\"2\">"

@@ -200,7 +200,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -208,7 +208,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -228,7 +228,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800927" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -248,7 +248,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800928" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 结算奖励: 800927。 Claim rewards. -->

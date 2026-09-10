@@ -170,7 +170,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800934" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -178,7 +178,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800935" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 击杀可可纳斯树 (701568) 6 棵:var0 计数 0→6,priority 1 计数、0 完成进入奖励。 -->
@@ -228,7 +228,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800934" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 终态报告 800935:var0 达 6 报告进入奖励,否则进行中提示。 -->
@@ -249,7 +249,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800935" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 结算奖励:800934。 -->

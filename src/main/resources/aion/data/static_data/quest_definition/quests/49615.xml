@@ -238,7 +238,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800929" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -246,7 +246,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -254,7 +254,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 击杀 Luluba 战士/处刑者/巫师 (231284-231286) 与高阶巫师/火法师/火焰大师 (231287-231289) 合计 10 只:旧节点两组 monster 共享 var0 6bit 打包,实为单计数器 0→10。 -->
@@ -359,5 +359,32 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800929" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

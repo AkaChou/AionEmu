@@ -45,7 +45,7 @@
         <dialog type="TALK_TO_NPC" npc-id="801765" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 收集任务物品后进入领奖。Collecting the quest item enters reward. -->

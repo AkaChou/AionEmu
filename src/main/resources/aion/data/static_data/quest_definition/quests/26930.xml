@@ -69,12 +69,13 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="804627" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <npc-item-report npc-id="804627" source="started" target="reward" item-id="186000257" required="10" remove-count="ALL"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804627" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <!-- 收集满 10 个任务物品进入领奖。Collecting 10 quest items enters reward. -->

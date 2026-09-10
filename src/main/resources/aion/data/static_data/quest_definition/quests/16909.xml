@@ -92,7 +92,7 @@
         <dialog type="TALK_TO_NPC" npc-id="801203" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="801203" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

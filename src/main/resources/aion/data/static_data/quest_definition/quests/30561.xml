@@ -48,7 +48,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805156" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <npc-item-report npc-id="805156" source="started" target="reward" item-id="182212509" required="30"/>
