@@ -53,6 +53,18 @@ class KromedesTrialInstanceTest {
 	}
 
 	@Test
+	void doesNotDuplicateNpcAiWoundedNpcTriggers() throws IOException {
+		String onDie = methodBody(Files.readString(SOURCE), "public void onDie(Npc npc)");
+
+		assertFalse(onDie.contains("spawn(217001"),
+				"the NPC AI owns the IDCromede_Invisible_NPC13 trigger");
+		assertFalse(onDie.contains("spawn(217003"),
+				"the NPC AI owns the IDCromede_Invisible_NPC14 trigger");
+		assertFalse(onDie.contains("spawn(217004"),
+				"the NPC AI owns the IDCromede_Invisible_NPC12 trigger");
+	}
+
+	@Test
 	void classTreasureSpawnIgnoresMissingDamageOwner() throws IOException {
 		String spawnClassTreasure = methodBody(Files.readString(SOURCE),
 				"private void spawnClassTreasure(Player player, float x, float y, float z, byte heading)");

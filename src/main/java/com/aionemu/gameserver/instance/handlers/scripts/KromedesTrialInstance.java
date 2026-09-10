@@ -512,7 +512,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 				spawnClassTreasure(player, 740.83966f, 535.38837f, 199.12067f, (byte) 89);
             break;
 			case 216982: //Hamam The Torturer.
-				spawn(217004, 651.186f, 767.856f, 215.584f, (byte) 59); //Wounded Hamam.
 				spawnClassTreasure(player, 757.48157f, 617.7071f, 197.17694f, (byte) 108);
             break;
 			case 216968: //Divine Hisen.
@@ -526,11 +525,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 				spawnClassTreasure(player, 581.11005f, 775.1529f, 215.53482f, (byte) 112);
             break;
 			case 217000: //Lady Angerr.
-				spawn(217001, 650.679f, 774.197f, 215.584f, (byte) 60); //Distraught Lady Angerr.
 				spawnClassTreasure(player, 512.89886f, 570.039f, 216.89487f, (byte) 31);
-            break;
-			case 217002: //Justicetaker Wyr.
-				spawn(217003, 651.341f, 780.757f, 215.584f, (byte) 59); //Injured Justicetaker Wyr.
             break;
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
