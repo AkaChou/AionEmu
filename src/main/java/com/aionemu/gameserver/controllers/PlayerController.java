@@ -185,8 +185,10 @@ public class PlayerController extends CreatureController<Player> {
 	 *
 	 */
 	public void updateNearbyQuests() {
+		var mapInstance = getOwner().getPosition().getMapRegion().getParent();
+		mapInstance.refreshQuestIds();
 		HashMap<Integer, Integer> nearbyQuestList = new HashMap<>();
-		for (int questId : getOwner().getPosition().getMapRegion().getParent().getQuestIds()) {
+		for (int questId : mapInstance.getQuestIds()) {
 			int diff = 0;
 			if (questId <= 0xFFFF) {
 				diff = QuestService.getLevelRequirement(questId, getOwner().getCommonData().getLevel());
