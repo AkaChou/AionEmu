@@ -257,6 +257,8 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 实时奖励确认是另一类协议问题。无目标奖励包会保留客户端原始 action，并由 typed owner 构造成 `QuestEvent.QuestDialog`；普通奖励槽使用 8..22，实时奖励槽使用 110..124。任务已在 `REWARD`、页面也正常显示，但 XML 只注册普通动作时，点击“领取”不会命中任何完成迁移。修复时必须根据客户端可见奖励槽注册对应的实时动作，并锁定职业条件、奖励索引、事务动作及 `after-commit` 关闭顺序；不能把所有 110..124 全局改写成 8..22。
 
+可选奖励还有一个独立的运行时边界：metadata 中的 `SELECTABLE_ITEM` 只是客户端选择项，不是可直接提交到耐久奖励端的奖励类型。奖励完成 transition 中出现 `<grant-reward kind="SELECTABLE_ITEM">` 会在 `PlayerQuestRewardPort` 预检阶段被拒绝，常见表现是任务已经是 `REWARD`，点击选择后仍不完成。优先使用 `<npc-complete>` 声明固定奖励索引、每个 `choice` 的奖励索引和必要的 `fallback`；其展开结果必须是具体 `ITEM`，并保留 `USE_OBJECT/SELECT_QUEST_REWARD -> page 5` 的预览合同。使用 `<grant-selected-reward>` 时也必须检查 `QuestMutationPlanner` 已将 metadata 的 `SELECTABLE_ITEM` 降为 `ITEM`。排查时先运行生产 XML 扫描，任何直接 `<grant-reward kind="SELECTABLE_ITEM">` 都应视为候选缺陷，再用目录级测试确认每个选择项都有具体完成路由，不能把所有选择项一次性发放。
+
 ### 6.2 击杀后、重登后任务状态回退或目标 NPC 消失
 
 以 14112「了解污染的原因」为基准检查：

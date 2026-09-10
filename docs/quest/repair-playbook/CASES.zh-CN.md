@@ -300,3 +300,23 @@
 - 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/1006.xml` 通过；`git diff --check` 通过；IDE 增量编译生成的 `target/classes` 已包含 `hasMatchingRoutes`，字节码检查通过；只读数据库检查确认该角色为 `SORCERER / ELYOS / 210010000 / q1006 REWARD / var0=5`；用户于 2026-09-10 回复“验证成功”，结合当前任务上下文确认 q1006 客户端流程验收完成。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、停止或重启服务端。
 - 复用边界：适用于同一 NPC 同时承载多个 typed owner、事件索引使用宽 NPC key、授权门控在 dispatcher 前运行，且错误 owner 会把有效任务对话回退为通用结束对话的场景。若实际 action/dialog 已匹配但页面编号错误，复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`；若是 `QUEST_SELECT` 与对象 action 的 ID 空间混淆，复用 `OBJECT_ACTION_AND_QUEST_SELECT_ID_SPACE`；未授权普通任务仍需保留任务列表选择保护，不能全局取消 gate。
 - commit：`59bba1a`。
+
+## 8.21 可选奖励直接使用不可持久化类型导致 REWARD 领取不完成
+
+- Pattern ID：`REWARD_SELECTABLE_ITEM_DURABLE_LOWERING`；关联已有模式 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`、`REWARD_SELECTION_SAME_INTERACTION_RESPONSE`。
+- 代表任务：18602「Nightmare In Shining Armor / [副本]恶梦的真相」；同型静态缺陷批次为 28602、10521、20521、10530、2002。
+- 搜索症状：任务已经进入 `REWARD`，客户端能打开奖励对话或选择窗口，但点击可选奖励后任务不进入 `COMPLETE`，奖励不落袋，或重新对话仍显示同一奖励页面；运行日志可见 durable reward preflight 拒绝 `SELECTABLE_ITEM`。
+- 玩家可见症状：18602 调试信息为 `Quest ID: 18602`、`Status: REWARD`、`Vars: 3 0 0 0 0`、`Complete count: 0`；这证明副本击杀已经完成并正确进入奖励状态，问题集中在拉尼尼亚 205229 的最终奖励领取，而不是进度位回退。用户于 2026-09-10 确认修改后客户端验证完成。
+- 根因：
+  1. metadata 的 `SELECTABLE_ITEM` 是客户端奖励选择项，不是事务奖励端可直接持久化的 durable kind；`PlayerQuestRewardPort` 的预检明确拒绝该类型，因此旧完成 transition 即使编译成功，领取时仍会失败并保留 `REWARD`；
+  2. 18602/28602 的直接完成路由把两个可选奖励分别写成 `<grant-reward kind="SELECTABLE_ITEM">`，10530、2002、10521、20521 还把多个选择项一次性写入同一完成动作，既会触发运行时拒绝，也不符合“玩家只领取一个选项”的奖励语义；
+  3. 另外 20 个任务使用 `grant-selected-reward`。原 `QuestMutationPlanner` 虽然会把该声明式动作展开成 `GrantReward`，却保留了 metadata 的 `SELECTABLE_ITEM` wire kind，同样可能在事务端失败。
+- 修复层：任务 XML、共享 planner 和目录级回归测试。
+  1. 18602/28602 使用 `npc-complete` 固定奖励索引 `0..3`，将 choice `1/2` 映射到可选奖励索引 `4/5`；10530 固定 `0/1`、choice `2..7`；2002 固定 `0`、choice `1..6` 并保留 `SETPRO8` 奖励预览入口；10521/20521 固定 `0/14/15/16`、choice `1..13`，其余动作走固定奖励 fallback；
+  2. `QuestMutationPlanner` 将 metadata `SELECTABLE_ITEM` 降级为具体 `ITEM`，保持其他奖励类型和金额模式不变；
+  3. 目录审计禁止完成路由直接产生 `SELECTABLE_ITEM`，并确认五个同型任务的每个声明式选择项都出现在具体 `ITEM` 完成路由中；q18602 专用测试锁定预览、两个选择、固定奖励、完成状态同步和最终选择页。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{18602,28602,10521,20521,10530,2002}.xml`、`src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java`；`Quest18602ClientDialogAlignmentTest.java`、`Quest14025ClientDialogAlignmentTest.java`、`QuestAdditionalCapabilityDefinitionTest.java`、`QuestDefinitionCatalogManifestTest.java`。
+- 第一检查点：先执行 `rg '<grant-reward kind="SELECTABLE_ITEM"'` 扫描生产任务 XML；再把 metadata 奖励索引按“固定/可选”分组，逐一核对 `npc-complete` 的 choice、fallback 和预览 action。对 `grant-selected-reward` 必须检查 planner 之后的 `requiredActions`，不能只看 XML 编译时的声明式 action。客户端 action 1009 与服务端 page 5 仍需按 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT` 分开验证。
+- 验证命令和结果：6 个 XML 均通过 `xmllint --noout --schema .../quest_definition.xsd`；生产任务目录已无直接 `grant-reward kind="SELECTABLE_ITEM"`；`git diff --check` 和暂存差异检查通过。用户完成 18602 客户端验证；10521、20521、10530、2002、28602 的本次批量修复完成 XML/目录合同验证，尚未逐任务做人工客户端验收。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、停止或重启服务端。
+- 复用边界：适用于 metadata 含 `SELECTABLE_ITEM`、完成动作需要由玩家选择一个物品、且 durable reward port 不支持选择类型的任务。若可选奖励是实时奖励 action 110..124，先复用 `TARGETLESS_REALTIME_REWARD_ACTION_SPACE`；若任务没有选择项而只是固定奖励页无响应，复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT` 或 `REWARD_SELECTION_SAME_INTERACTION_RESPONSE`，不要套用本模式。
+- commit：`68d5786`。
