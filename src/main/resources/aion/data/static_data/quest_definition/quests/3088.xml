@@ -41,22 +41,22 @@
     <npc-complete npc-id="798202" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798201" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="798201" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="798201" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798204" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="798204" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="798204" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798132" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="798132" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="798132" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798166" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="798166" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="798166" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>

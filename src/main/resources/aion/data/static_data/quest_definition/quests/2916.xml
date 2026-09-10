@@ -43,27 +43,27 @@
     <npc-complete npc-id="204141" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="204152" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="204152" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="204152" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="204150" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="204150" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="204150" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798033" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="798033" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="798033" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="203673" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="203673" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="203673" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700211" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="700211" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="700211" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>

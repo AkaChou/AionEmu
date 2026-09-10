@@ -38,14 +38,14 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="278067" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="278067" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="278067" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="278137" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <dialog type="NPC_REPORT" npc-id="278137" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="278137" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
