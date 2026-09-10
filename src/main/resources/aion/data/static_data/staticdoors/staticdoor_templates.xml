@@ -341,7 +341,7 @@
 	</world>
 	<!-- KROMEDE'S TRIAL 2.0 -->
 	<world world="300230000">
-		<staticdoor keyid="185000098" doorid="2" x="387.2498" y="205.220963" z="145.985352" mesh="id_cromede_san_door_01a.cga">
+		<staticdoor keyid="185000098" doorid="2" state="0x2" x="387.2498" y="205.220963" z="145.985352" mesh="id_cromede_san_door_01a.cga">
 			<box x1="380.589233" y1="198.90744" z1="145.97316" x2="393.898376" y2="211.882034" z2="162.5763"/>
 		</staticdoor>
 		<staticdoor doorid="81" x="634.572266" y="583.6797" z="211.213242" mesh="bookcase_door.cga">
@@ -350,10 +350,10 @@
 		<staticdoor doorid="259" x="596.228333" y="669.8781" z="211.344925" mesh="bookcase_door.cga">
 			<box x1="594.5228" y1="669.454041" z1="204.409531" x2="597.9339" y2="670.302246" z2="213.672592"/>
 		</staticdoor>
-		<staticdoor keyid="185000100" doorid="325" x="674.9739" y="584.4858" z="199.574448" mesh="idcromede_low_door.cga">
+		<staticdoor keyid="185000100" doorid="325" state="0x2" x="674.9739" y="584.4858" z="199.574448" mesh="idcromede_low_door.cga">
 			<box x1="674.6845" y1="582.037231" z1="199.517258" x2="675.283" y2="586.839" z2="206.66098"/>
 		</staticdoor>
-		<staticdoor keyid="185000099" doorid="326" x="687.7169" y="590.996948" z="200.075348" mesh="idcromede_low_door.cga">
+		<staticdoor keyid="185000099" doorid="326" state="0x2" x="687.7169" y="590.996948" z="200.075348" mesh="idcromede_low_door.cga">
 			<box x1="685.3637" y1="590.7076" z1="200.018158" x2="690.165466" y2="591.3061" z2="207.16188"/>
 		</staticdoor>
 		<staticdoor doorid="360" x="671.2874" y="606.637268" z="201.79837" mesh="idcromede_low_door.cga">

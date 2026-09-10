@@ -54,7 +54,7 @@ public class StaticDoorService {
 	 * door id
 	 */
 	public void openStaticDoor(final Player player, int doorId) {
-		if (player.getAccessLevel() >= 3) {
+		if (canBypassDoorKey(player)) {
 			PacketSendUtility.sendMessage(player, "Door Id: " + doorId);
 		}
 		StaticDoor door = player.getPosition().getWorldMapInstance().getDoors().get(doorId);
@@ -63,13 +63,19 @@ public class StaticDoorService {
 			return;
 		}
 		int keyId = door.getObjectTemplate().getKeyId();
-		if (player.getAccessLevel() >= 3) {
+		if (canBypassDoorKey(player)) {
 			PacketSendUtility.sendMessage(player, "Key Id: " + keyId);
 		}
-		if (checkStaticDoorKey(player, doorId, keyId)) {
-			door.setOpen(true);
+		boolean opened = false;
+		synchronized (door) {
+			if (!door.isOpen() && checkStaticDoorKey(player, doorId, keyId)) {
+				door.setOpen(true);
+				opened = true;
+			}
 		}
-		InstanceService.onOpenDoor(player, doorId);
+		if (opened) {
+			InstanceService.onOpenDoor(player, doorId);
+		}
 	}
 
 	/**
@@ -82,7 +88,7 @@ public class StaticDoorService {
 	 * @return 允许开启返回 true / true if the door may be opened
 	 */
 	public boolean checkStaticDoorKey(Player player, int doorId, int keyId) {
-		if (player.getAccessLevel() >= AdminConfig.DOORS_OPEN) {
+		if (canBypassDoorKey(player)) {
 			return true;
 		}
 		if (keyId == 0) {
@@ -96,5 +102,16 @@ public class StaticDoorService {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 判断管理员是否按配置拥有免钥匙开门权限。
+	 * Checks whether the administrator is configured to bypass door keys.
+	 *
+	 * @param player 玩家 / player
+	 * @return 允许免钥匙开门返回 true / true if key bypass is allowed
+	 */
+	private boolean canBypassDoorKey(Player player) {
+		return player.getAccessLevel() >= AdminConfig.DOORS_OPEN;
 	}
 }
