@@ -61,6 +61,9 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730334" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <player-race-is race="ASMODIANS"/>
+      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
