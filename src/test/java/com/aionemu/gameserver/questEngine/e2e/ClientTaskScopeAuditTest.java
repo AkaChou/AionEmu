@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -68,22 +67,14 @@ class ClientTaskScopeAuditTest {
 	}
 
 	@Test
-	void missingQuestPageBehindDeadActionRouteIsNotFlagged() throws Exception {
+	void standardNpcStartDoesNotEmitAnUnsupportedSelect11Route() throws Exception {
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		CompiledQuestDefinition definition = definition(1101);
-		// 1101 的接取入口宏生成动作 1012 -> 页面 1012 路由，但其 1011 页按钮实际发 1007 接取流，
-		// 动作 1012 不可达，缺失页面没有运行时影响。
-		assertFalse(oracle.actionVisibleOn(1101, 1012), "action 1012 is a dead route for quest 1101");
-		QuestTransition route = definition.definition().transitions().stream()
-			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT1_1.id()
-				&& candidate.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog(
-				int dialogId
-			)
-					&& dialogId == QuestDialogPage.SELECT1_1.id()))
-			.findFirst().orElseThrow();
-		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, route, oracle);
-		assertNotEquals(QuestE2eStatus.PAGE_NOT_IN_TASK_HTML, row.status(), row.reason());
+		// 1011 的客户端按钮实际发 1007；没有 XML 显式声明时，不应生成 1012 桥接。
+		assertFalse(oracle.actionVisibleOn(1101, 1012), "action 1012 is not visible on quest 1101");
+		assertFalse(definition.definition().transitions().stream()
+			.anyMatch(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT1_1.id()));
 	}
 
 	private static QuestTransition questSelectRoute(CompiledQuestDefinition definition) {

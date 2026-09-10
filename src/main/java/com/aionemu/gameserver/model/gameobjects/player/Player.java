@@ -203,6 +203,7 @@ public class Player extends Creature {
 	@Setter
 	private QuestStateList questStateList;
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
+	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
 	@Getter
 	@Setter
 	private RecipeList recipeList;
@@ -940,6 +941,36 @@ public class Player extends Creature {
 	/** Consumes a server-issued quest-share offer exactly once. */
 	public boolean consumePendingQuestShare(int questId) {
 		return questId > 0 && pendingQuestShares.remove(questId);
+	}
+
+	/** 记录从 NPC 任务列表点击进入的任务对话授权。 / Records task-dialog authorization from an NPC quest-list click. */
+	public void rememberNpcQuestDialogSelection(int interactionObjectId, int questId) {
+		if (interactionObjectId <= 0 || questId <= 0) {
+			npcQuestDialogSelection = null;
+			return;
+		}
+		npcQuestDialogSelection = new NpcQuestDialogSelection(interactionObjectId, questId);
+	}
+
+	/** 判断任务对话是否由同一 NPC 的任务列表点击授权。 / Checks whether a quest dialog was authorized by the same NPC's quest-list click. */
+	public boolean hasNpcQuestDialogSelection(int interactionObjectId, int questId) {
+		NpcQuestDialogSelection selection = npcQuestDialogSelection;
+		return selection != null && selection.interactionObjectId() == interactionObjectId
+			&& selection.questId() == questId;
+	}
+
+	/** 返回同一 NPC 的任务列表授权任务 ID；没有授权时返回 0。 / Returns the quest id authorized by the same NPC's quest row, or 0 when absent. */
+	public int getNpcQuestDialogSelectionQuestId(int interactionObjectId) {
+		NpcQuestDialogSelection selection = npcQuestDialogSelection;
+		return selection != null && selection.interactionObjectId() == interactionObjectId ? selection.questId() : 0;
+	}
+
+	/** 清除 NPC 任务对话授权。 / Clears NPC quest-dialog authorization. */
+	public void clearNpcQuestDialogSelection() {
+		npcQuestDialogSelection = null;
+	}
+
+	private record NpcQuestDialogSelection(int interactionObjectId, int questId) {
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,9 +37,17 @@ class QuestDialogXmlSyntaxTest {
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(1003)), startAccept.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), definition.transitions().stream()
+			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(203758,
+				QuestDialogAction.ASK_QUEST_ACCEPT.id())))
+			.findFirst().orElseThrow().afterCommit());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), definition.transitions().stream()
 			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(203097, 31)))
 			.findFirst().orElseThrow().afterCommit());
+		assertFalse(definition.transitions().stream()
+			.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(203758,
+				QuestDialogAction.SELECT1_1.id()))));
 	}
 
 	@Test

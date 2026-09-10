@@ -23,6 +23,7 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 			// 提交已成功但玩家已登出：无可发送对象，best-effort 关闭。 / Commit succeeded but player logged out: nothing to send to, best-effort close.
 			return false;
 		}
+		player.clearNpcQuestDialogSelection();
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 		return true;
 	}

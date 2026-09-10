@@ -40,6 +40,7 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
+		player.clearNpcQuestDialogSelection();
 		final VisibleObject obj = player.getKnownList().getObject(targetObjectId);
 		final AionConnection client = getConnection();
 		if (obj == null) {

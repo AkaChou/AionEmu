@@ -13,7 +13,10 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.QuestService;
 /**
@@ -54,13 +57,48 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	}
 
 	/**
-	 * 判断 NPC 是否从客户端通用任务选择页发起了无任务上下文的简单对话。
-	 * Determines whether an NPC selection came from the client's generic quest-selection page without quest context.
+	 * 判断客户端是否从通用任务选择页发起了非任务行动作。
+	 * Determines whether the client sent a non-quest-row action from the generic quest-selection page.
 	 *
 	 * <p>关闭 {@code show_acquirable_normal_quest} 后，5.8 客户端可能携带或不携带候选任务 ID；
-	 * 从 10 页选择任务（31）之外的动作都属于简单对话。</p>
+	 * 第 10 页中只有选择任务（31）可以进入任务上下文。</p>
 	 * <p>When {@code show_acquirable_normal_quest} is disabled, the 5.8 client may or may not attach a candidate
-	 * quest id; actions other than quest selection (31) from page 10 are simple dialogs.</p>
+	 * quest id; only quest selection (31) from page 10 may enter a quest context.</p>
+	 *
+	 * @param dialogId 对话动作 ID / dialog action id
+	 * @param lastPage 客户端发包前所在页面 / page shown by the client before sending the packet
+	 * @return 是否为通用页中的非任务行动作 / whether this is a non-quest-row action from the generic page
+	 */
+	static boolean isGenericQuestSelectionPage(int dialogId, int lastPage) {
+		return lastPage == QuestDialogPage.SELECT_QUEST.id()
+			&& dialogId != QuestDialogAction.QUEST_SELECT.id();
+	}
+
+	/**
+	 * 判断是否是从 NPC 任务列表点击任务行进入任务上下文的唯一入口。
+	 * Determines whether this is the only quest-context entry from an NPC quest-list row click.
+	 */
+	static boolean isNpcQuestRowSelection(int targetObjectId, int dialogId, int lastPage, int questId) {
+		return targetObjectId > 0 && questId > 0
+			&& lastPage == QuestDialogPage.SELECT_QUEST.id()
+			&& dialogId == QuestDialogAction.QUEST_SELECT.id();
+	}
+
+	/**
+	 * 判断普通任务是否不在玩家当前进行中/待领奖阶段。
+	 * Determines whether a normal quest is outside the player's active or reward-pending progress.
+	 */
+	static boolean isNormalQuestOutsideActiveProgress(QuestMetadata metadata, QuestState questState) {
+		if (metadata == null || !"QUEST".equals(metadata.category())) {
+			return false;
+		}
+		return questState == null || (questState.getStatus() != QuestStatus.START
+			&& questState.getStatus() != QuestStatus.REWARD);
+	}
+
+	/**
+	 * 判断 NPC 是否从客户端通用任务选择页发起了无任务上下文的简单对话。
+	 * Determines whether an NPC selection came from the client's generic quest-selection page without quest context.
 	 *
 	 * @param targetObjectId NPC 对象 ID / NPC object id
 	 * @param dialogId 对话动作 ID / dialog action id
@@ -70,14 +108,14 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * @return 是否应按简单 NPC 对话处理 / whether to process as a simple NPC dialog
 	 */
 	static boolean isSimpleNpcDialogSelection(int targetObjectId, int dialogId, int lastPage, int questId) {
-		return targetObjectId > 0 && lastPage == QuestDialogPage.SELECT_QUEST.id()
-			&& dialogId != QuestDialogAction.QUEST_SELECT.id();
+		return targetObjectId > 0 && isGenericQuestSelectionPage(dialogId, lastPage);
 	}
 
 	@Override
 	protected void runImpl() {
 		final Player player = getConnection().getActivePlayer();
-		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		QuestEngine questEngine = GameEngineServices.questEngine();
+		var metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		QuestEnv env = new QuestEnv(null, player, questId, 0);
 
         /* 	if (player.isInPlayerMode(PlayerMode.RIDE)) { - dismount player with pet when interact with npc.
@@ -90,7 +128,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		if (targetObjectId == 0 || targetObjectId == player.getObjectId()) {
 			if (metadata != null && !metadata.cannotShare() && (dialogId == 1002 || dialogId == 20000)) {
 				if (player.consumePendingQuestShare(questId)) {
-					QuestEngine questEngine = GameEngineServices.questEngine();
 					if (questEngine.questCatalog().findExecutable(questId).isPresent()) {
 						questEngine.onSharedQuestDialog(new QuestEnv(null, player, questId, dialogId));
 					} else {
@@ -99,18 +136,43 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 					return;
 				}
 			}
-			if (GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questId, dialogId))) {
+			// Page 10 only accepts the quest-row action (31). A different action must not
+			// enter QuestEngine through the targetless/class-change branch, even when the
+			// client attaches a candidate quest id while normal-quest markers are hidden.
+			// 第 10 页只允许任务行动作（31）；即使客户端在关闭普通任务标记时附带候选任务 ID，
+			// 其他动作也不能通过无目标/玩家对象分支进入任务引擎。
+			if (isGenericQuestSelectionPage(dialogId, lastPage)) {
+				player.clearNpcQuestDialogSelection();
+				return;
+			}
+			if (questId > 0 && isNormalQuestOutsideActiveProgress(metadata,
+				player.getQuestStateList().getQuestState(questId))) {
+				player.clearNpcQuestDialogSelection();
+				return;
+			}
+			if (questEngine.onDialog(new QuestEnv(null, player, questId, dialogId))) {
 				return;
 			}
 			ClassChangeService.changeClassToSelection(player, questId, dialogId);
 			return;
 		}
 		VisibleObject obj = player.getKnownList().getObject(targetObjectId);
-		if (obj != null && obj instanceof Creature creature) {
-			if (isSimpleNpcDialogSelection(targetObjectId, dialogId, lastPage, questId) && obj instanceof Npc) {
+		if (obj instanceof Creature creature) {
+			if (isGenericQuestSelectionPage(dialogId, lastPage)) {
+				player.clearNpcQuestDialogSelection();
+			}
+			if (obj instanceof Npc && isNpcQuestRowSelection(targetObjectId, dialogId, lastPage, questId)) {
+				player.rememberNpcQuestDialogSelection(targetObjectId, questId);
+			}
+			int routedQuestId = questId > 0 ? questId
+				: obj instanceof Npc npc ? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
+			if (obj instanceof Npc npc && questEngine.requiresNpcQuestRowSelection(player, npc, routedQuestId, dialogId)) {
+				player.clearNpcQuestDialogSelection();
+				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+			} else if (isSimpleNpcDialogSelection(targetObjectId, dialogId, lastPage, questId) && obj instanceof Npc) {
 				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
 			} else {
-				creature.getController().onDialogSelect(dialogId, player, questId, extendedRewardIndex);
+				creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
 			}
 		}
 	}

@@ -43,6 +43,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManif
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
@@ -221,6 +222,9 @@ public class QuestEngine implements GameEngine {
 			Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
 			int requestedOwner = env.getQuestId();
 			int npcId = npc == null ? 0 : npc.getNpcId();
+			if (npc != null && requiresNpcQuestRowSelection(player, npc, requestedOwner, env.getDialogId())) {
+				return false;
+			}
 			QuestProductionDispatcher typed = productionDispatcher;
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
@@ -282,6 +286,58 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		return false;
+	}
+
+	/**
+	 * 判断 NPC 任务动作是否已经由同一 NPC 的任务列表行授权。
+	 * Determines whether an NPC quest action was authorized by a quest row from the same NPC.
+	 *
+	 * <p>客户端关闭普通任务标记时，可能仍把候选任务 ID 省略在对话包中；因此不能只在
+	 * {@code CM_DIALOG_SELECT} 依据 questId 做判断。无 questId 的 NPC 路由也必须拒绝未接受
+	 * 普通任务，只有任务列表行建立的玩家会话授权才能进入任务上下文。</p>
+	 * <p>When normal-quest markers are disabled, the client may omit the candidate quest id from
+	 * a dialog packet. The quest engine therefore also gates NPC routes without a quest id; only
+	 * the player-session authorization created by a quest-row click may enter quest context.</p>
+	 *
+	 * @param player 玩家 / player
+	 * @param npc 对话 NPC / dialog NPC
+	 * @param questId 客户端任务 ID，0 表示未知 / client quest id, or 0 when unknown
+	 * @param dialogId 对话动作 ID / dialog action id
+	 * @return 是否必须回到任务列表选择 / whether quest-row selection is required
+	 */
+	public boolean requiresNpcQuestRowSelection(Player player, Npc npc, int questId, int dialogId) {
+		if (player == null || npc == null || npc.getAi2() == null
+			|| "quest_use_item".equals(npc.getAi2().getName())) {
+			return false;
+		}
+		QuestEvent event = new QuestEvent.TalkToNpc(npc.getNpcId(), dialogId, npc.getObjectId());
+		if (questId > 0) {
+			return isUnauthorizedNormalQuestRoute(player, npc, event, questId);
+		}
+		if (!npc.getObjectTemplate().isDialogNpc()) {
+			return false;
+		}
+		for (int candidateId : getQuestNpc(npc.getNpcId()).getOnTalkEvent()) {
+			if (isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isUnauthorizedNormalQuestRoute(Player player, Npc npc, QuestEvent event, int questId) {
+		QuestProductionDispatcher typed = productionDispatcher;
+		if (!typed.owns(questId) || player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)
+			|| !typed.hasRoutes(event, questId)) {
+			return false;
+		}
+		QuestMetadata metadata = typed.catalogRegistry().findMetadata(questId).orElse(null);
+		if (metadata == null || !"QUEST".equals(metadata.category())) {
+			return false;
+		}
+		QuestState questState = player.getQuestStateList().getQuestState(questId);
+		return questState == null || (questState.getStatus() != QuestStatus.START
+			&& questState.getStatus() != QuestStatus.REWARD);
 	}
 
 	/** Dispatches an accepted server-issued quest share without inventing an NPC interaction object. */

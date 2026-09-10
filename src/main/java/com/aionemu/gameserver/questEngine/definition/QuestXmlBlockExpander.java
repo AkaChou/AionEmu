@@ -417,10 +417,9 @@ final class QuestXmlBlockExpander {
 		List<QuestTransition> result = new ArrayList<>();
 		result.add(talk(npcId, QuestDialogAction.QUEST_SELECT.id(), List.of(), List.of(), source, source, null,
 			List.of(new AfterCommitAction.ShowQuestDialog(startDialogId))));
-		if (startDialogId == QuestDialogPage.SELECT1.id()) {
-			result.add(talk(npcId, QuestDialogAction.SELECT1_1.id(), List.of(), List.of(), source, source, null,
-				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1.id()))));
-		} else if (startDialogId == QuestDialogPage.SELECT_NONE.id()) {
+		// SELECT1's next action is quest-specific; only an explicit XML route may introduce SELECT1_1.
+		// SELECT1 的下一动作取决于具体任务；只有 XML 显式路由才能引入 SELECT1_1。
+		if (startDialogId == QuestDialogPage.SELECT_NONE.id()) {
 			result.add(talk(npcId, QuestDialogAction.SELECT_NONE_1.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE_1.id()))));
 		}

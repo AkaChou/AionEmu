@@ -33,6 +33,7 @@ public class CM_SHOW_DIALOG extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
+		player.clearNpcQuestDialogSelection();
 		if (player.isTrading()) {
 			return;
 		}

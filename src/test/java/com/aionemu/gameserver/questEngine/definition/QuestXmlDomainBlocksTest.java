@@ -33,7 +33,6 @@ class QuestXmlDomainBlocksTest {
 			""";
 		String expanded = """
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
@@ -441,9 +440,9 @@ class QuestXmlDomainBlocksTest {
 
 			""";
 		List<QuestTransition> transitions = compile(xml).definition().transitions();
-		assertEquals(10, transitions.stream().takeWhile(t -> talkNpcId(t) == 203110).count());
-		assertEquals(203120, talkNpcId(transitions.get(10)));
-		assertEquals(203123, talkNpcId(transitions.get(11)));
+		assertEquals(9, transitions.stream().takeWhile(t -> talkNpcId(t) == 203110).count());
+		assertEquals(203120, talkNpcId(transitions.get(9)));
+		assertEquals(203123, talkNpcId(transitions.get(10)));
 	}
 
 	@Test
