@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,21 @@ class PlayerContainerTest {
 
 		assertEquals(List.of(1, 2, 3), visited);
 		assertTrue(players.getAllPlayers().isEmpty());
+	}
+
+	@Test
+	void doOnAllPlayersContinuesAfterVisitorFailure() {
+		PlayerContainer players = playerContainerWithThreePlayers();
+		List<Integer> visited = new ArrayList<Integer>();
+
+		players.doOnAllPlayers(player -> {
+			visited.add(player.getObjectId());
+			if (player.getObjectId() == 1) {
+				throw new ConcurrentModificationException();
+			}
+		});
+
+		assertEquals(List.of(1, 2, 3), visited);
 	}
 
 	@Test

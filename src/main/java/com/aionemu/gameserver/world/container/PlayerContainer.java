@@ -96,21 +96,31 @@ public class PlayerContainer implements Iterable<Player> {
 	}
 
 	/**
-	 * 对所有在线玩家执行访问者逻辑；异常会被捕获并记录日志。
-	 * Visits all online players; exceptions are caught and logged.
+	 * 对所有在线玩家执行访问者逻辑；单个玩家异常不会中断其余玩家，且保留异常堆栈。
+	 * Visits all online players; one player's failure does not stop the remaining players, and the cause is preserved.
 	 *
 	 * @param visitor 玩家访问者 / player visitor
 	 */
 	@SuppressWarnings("unused")
 	public void doOnAllPlayers(Visitor<Player> visitor) {
+		final List<Player> players;
 		try {
-			for (Player player : playersSnapshot()) {
-				if (player != null) {
-					visitor.visit(player);
-				}
-			}
+			players = playersSnapshot();
 		} catch (Exception ex) {
-			log.error(I18n.get("log.cc03391ccf0f", ex));
+			log.error(I18n.get("log.player_container.snapshot_failed"), ex);
+			return;
+		}
+
+		String visitorType = visitor == null ? "null" : visitor.getClass().getName();
+		for (Player player : players) {
+			if (player == null) {
+				continue;
+			}
+			try {
+				visitor.visit(player);
+			} catch (Exception ex) {
+				log.error(I18n.get("log.player_container.visitor_failed", player.getObjectId(), visitorType), ex);
+			}
 		}
 	}
 
