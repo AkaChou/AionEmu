@@ -47,6 +47,7 @@ public class ChatChannels {
         addTradeChannel("trade_LF1A");
         addTradeChannel("trade_LF3");
         addTradeChannel("trade_LF4");
+		addTradeChannel("trade_LF4_M");
 		addTradeChannel("trade_LF4_M1");
 		addTradeChannel("trade_LF5");
 		addTradeChannel("trade_LF5_Ship");
@@ -57,6 +58,7 @@ public class ChatChannels {
         addTradeChannel("trade_DF3");
         addTradeChannel("trade_DF2A");
         addTradeChannel("trade_DF4");
+		addTradeChannel("trade_DF4_M");
 		addTradeChannel("trade_DF5");
 		addTradeChannel("trade_DF5_Ship");
 		addTradeChannel("trade_LDF5_Under_L");
@@ -170,6 +172,7 @@ public class ChatChannels {
         addTradeChannel("trade_LF_Prison");
         addTradeChannel("trade_DF_Prison");
         addTradeChannel("trade_Underpass");
+        addTradeChannel("trade_Underpass_M");
         addTradeChannel("trade_LDF4a");
         addTradeChannel("trade_LDF4b");
         addTradeChannel("trade_Tiamat_Down");
@@ -212,6 +215,7 @@ public class ChatChannels {
         addRegionChannel(210030000, "public_LF1A");
         addRegionChannel(210040000, "public_LF3");
         addRegionChannel(210050000, "public_LF4");
+		addRegionChannel(210130000, "public_LF4_M");
 		addRegionChannel(210050000, "public_LF4_M1");
 		addRegionChannel(210070000, "public_LF5");
 		addRegionChannel(210080000, "public_LF5_Ship");
@@ -223,6 +227,7 @@ public class ChatChannels {
         addRegionChannel(220040000, "public_DF3");
         addRegionChannel(220050000, "public_DF2A");
         addRegionChannel(220070000, "public_DF4");
+		addRegionChannel(220140000, "public_DF4_M");
 		addRegionChannel(220080000, "public_DF5");
 		addRegionChannel(220090000, "public_DF5_Ship");
 		addRegionChannel(210090000, "public_LDF5_Under_D");
@@ -350,6 +355,7 @@ public class ChatChannels {
         addRegionChannel(510010000, "public_LF_Prison");
         addRegionChannel(520010000, "public_DF_Prison");
         addRegionChannel(600010000, "public_Underpass");
+        addRegionChannel(600110000, "public_Underpass_M");
         addRegionChannel(600020000, "public_LDF4a");
         addRegionChannel(600030000, "public_LDF4b");
         addRegionChannel(600040000, "public_Tiamat_Down");
