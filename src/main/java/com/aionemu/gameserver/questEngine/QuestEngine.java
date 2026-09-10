@@ -317,18 +317,23 @@ public class QuestEngine implements GameEngine {
 		if (!npc.getObjectTemplate().isDialogNpc()) {
 			return false;
 		}
+		boolean unauthorizedNormalRoute = false;
 		for (int candidateId : getQuestNpc(npc.getNpcId()).getOnTalkEvent()) {
-			if (isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
-				return true;
+			if (!productionDispatcher.hasMatchingRoutes(event, candidateId)) {
+				continue;
 			}
+			if (!isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
+				return false;
+			}
+			unauthorizedNormalRoute = true;
 		}
-		return false;
+		return unauthorizedNormalRoute;
 	}
 
 	private boolean isUnauthorizedNormalQuestRoute(Player player, Npc npc, QuestEvent event, int questId) {
 		QuestProductionDispatcher typed = productionDispatcher;
 		if (!typed.owns(questId) || player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)
-			|| !typed.hasRoutes(event, questId)) {
+			|| !typed.hasMatchingRoutes(event, questId)) {
 			return false;
 		}
 		QuestMetadata metadata = typed.catalogRegistry().findMetadata(questId).orElse(null);
