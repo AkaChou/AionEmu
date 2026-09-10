@@ -115,7 +115,7 @@
         <can-act template-id="702757" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-    <npc-item-report npc-id="804955" source="started" target="reward" item-id="182215747" required="1"/>
+    <npc-item-report npc-id="804955" source="started" target="reward" item-id="182215747" required="1" failure-page="CLOSE"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804955" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

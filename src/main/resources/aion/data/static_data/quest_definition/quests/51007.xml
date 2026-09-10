@@ -110,7 +110,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="831033" source="started" target="reward" item-id="182215157" required="3"/>
+    <npc-item-report npc-id="831033" source="started" target="reward" item-id="182215157" required="3" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831033" action="SET_SUCCEED"/>
@@ -199,7 +199,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="831039" source="started" target="reward" item-id="182215157" required="3"/>
+    <npc-item-report npc-id="831039" source="started" target="reward" item-id="182215157" required="3" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831039" action="SET_SUCCEED"/>

@@ -35,7 +35,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806782" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 击杀 248013（IDAbRe_Core_03_Witch_Boss_Ae）进入领奖。 Killing 248013 enters reward. -->

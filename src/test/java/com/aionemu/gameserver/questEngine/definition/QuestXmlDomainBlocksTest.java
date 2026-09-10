@@ -572,6 +572,34 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcItemReportUsesTheTaskOwnedFailureResponse() {
+		String closeBlock = """
+			<npc-item-report npc-id="800937" source="started" target="reward"
+				item-id="182215285" required="1" failure-page="CLOSE"/>
+			""";
+		CompiledQuestDefinition close = compile(itemReportDefinition(closeBlock));
+		assertEquals(List.of(new AfterCommitAction.CloseDialog()),
+			itemReportFailureTransition(close).afterCommit());
+
+		String pageBlock = closeBlock.replace("failure-page=\"CLOSE\"",
+			"failure-page=\"CHECK_USER_ITEM_FAIL\"");
+		CompiledQuestDefinition page = compile(itemReportDefinition(pageBlock));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.CHECK_USER_ITEM_FAIL.id())),
+			itemReportFailureTransition(page).afterCommit());
+	}
+
+	private static QuestTransition itemReportFailureTransition(CompiledQuestDefinition compiled) {
+		return compiled.definition().transitions().stream()
+			.filter(transition -> transition.sourceNode().equals("started")
+				&& transition.targetNode().equals("started"))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 800937 && talk.dialogId() == 39)
+			.findFirst()
+			.orElseThrow();
+	}
+
+	@Test
 	void npcItemReportRejectsBadStatusesAndRemovalCount() {
 		String valid = itemReportDefinition(
 			"<npc-item-report npc-id=\"800937\" source=\"started\" target=\"reward\" item-id=\"182215285\" required=\"2\"/>");

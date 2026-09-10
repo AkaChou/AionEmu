@@ -103,7 +103,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799335" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

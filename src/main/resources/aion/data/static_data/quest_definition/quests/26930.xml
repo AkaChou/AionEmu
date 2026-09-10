@@ -69,7 +69,7 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="804627" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <npc-item-report npc-id="804627" source="started" target="reward" item-id="186000257" required="10" remove-count="ALL"/>
+    <npc-item-report npc-id="804627" source="started" target="reward" item-id="186000257" required="10" remove-count="ALL" failure-page="CLOSE"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804627" action="QUEST_SELECT"/>

@@ -33,7 +33,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806573" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 击杀守护者 Boss 进入领奖。Killing the Def_Boss enters reward. -->

@@ -32,7 +32,7 @@
         <dialog type="TALK_TO_NPC" npc-id="798135" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">

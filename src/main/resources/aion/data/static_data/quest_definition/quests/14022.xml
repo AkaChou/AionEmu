@@ -238,7 +238,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203996" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

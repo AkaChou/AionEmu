@@ -535,13 +535,27 @@ final class QuestXmlBlockExpander {
 		List<AfterCommitAction> successAfterCommit = List.of(
 			syncQuestState(targetNode),
 			new AfterCommitAction.ShowQuestDialog(5));
+		AfterCommitAction failureAfterCommit = itemReportFailureAfterCommit(block);
 		return List.of(
 			talk(npcId, 39, hasItem, removeItem, source, target, 0, successAfterCommit),
 			talk(npcId, 39, List.of(), List.of(), source, source, 1,
-				List.of(new AfterCommitAction.ShowQuestDialog(2716))),
+				List.of(failureAfterCommit)),
 			talk(npcId, 20002, hasItem, removeItem, source, target, 0, successAfterCommit),
 			talk(npcId, 20002, List.of(), List.of(), source, source, 1,
 				List.of(new AfterCommitAction.CloseDialog())));
+	}
+
+	private static AfterCommitAction itemReportFailureAfterCommit(Element block) {
+		String configured = block.hasAttribute("failure-page")
+			? block.getAttribute("failure-page").trim() : "";
+		if (configured.isEmpty()) {
+			return new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id());
+		}
+		if ("CLOSE".equalsIgnoreCase(configured)) {
+			return new AfterCommitAction.CloseDialog();
+		}
+		return new AfterCommitAction.ShowQuestDialog(
+			QuestDefinitionXmlCompiler.dialogPageSymbol(block, "failure-page").id());
 	}
 
 	private static int removeCount(Context context, Element block, int required) {

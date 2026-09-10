@@ -143,10 +143,11 @@ Standard item-backed NPC report:
 <npc-item-report npc-id="800937"
                  source="started" target="reward"
                  item-id="182215285" required="1"
-                 remove-count="ALL"/>
+                 remove-count="ALL"
+                 failure-page="CLOSE"/>
 ```
 
-This emits the fixed four-route dialog 39/20002 success and failure protocol. Success has priority 0, checks `required`, removes the same count or `ALL`, enters REWARD, then synchronizes with `PACKET_ONLY` and shows page 5. Failure has priority 1 and respectively shows 2716 or closes the dialog. Omitting `remove-count` means `required`; an explicit number must match it so checking and removal cannot diverge. Source and target must project START and REWARD. Extra conditions, actions, pages, or removal behavior require explicit transitions; growth-quest special pages are excluded from the batch matcher.
+This emits the fixed four-route dialog 39/20002 success and failure protocol. Success has priority 0, checks `required`, removes the same count or `ALL`, enters REWARD, then synchronizes with `PACKET_ONLY` and shows page 5. Failure has priority 1. Omitting `failure-page` preserves the legacy page 2716 response; a task-owned page symbol may be supplied instead, or `CLOSE` can safely close the insufficient-item dialog. Omitting `remove-count` means `required`; an explicit number must match it so checking and removal cannot diverge. Source and target must project START and REWARD. Extra conditions, actions, pages, or removal behavior require explicit transitions; growth-quest special pages are excluded from the batch matcher.
 
 Multi-dimensional counter grid:
 

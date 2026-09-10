@@ -119,7 +119,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="802433" source="started" target="reward" item-id="186000256" required="20"/>
+    <npc-item-report npc-id="802433" source="started" target="reward" item-id="186000256" required="20" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="802433" action="SET_SUCCEED"/>

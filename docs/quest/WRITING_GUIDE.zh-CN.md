@@ -143,10 +143,11 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 <npc-item-report npc-id="800937"
                  source="started" target="reward"
                  item-id="182215285" required="1"
-                 remove-count="ALL"/>
+                 remove-count="ALL"
+                 failure-page="CLOSE"/>
 ```
 
-固定展开为 dialog 39 和 20002 的成功/失败四条边。成功 priority 为 0，检查 `required` 数量、扣除相同数量或 `ALL`、进入 REWARD，随后依次同步 `PACKET_ONLY` 并显示页面 5；失败 priority 为 1，分别显示 2716 和关闭对话。`remove-count` 省略时等于 `required`，显式数字也必须相同，避免检查与扣除数量分离。source/target 必须分别投影 START/REWARD；额外条件、动作、页面或不同扣除协议继续使用显式 transition。成长任务的特殊页面不会被批量 matcher 捕获。
+固定展开为 dialog 39 和 20002 的成功/失败四条边。成功 priority 为 0，检查 `required` 数量、扣除相同数量或 `ALL`、进入 REWARD，随后依次同步 `PACKET_ONLY` 并显示页面 5；失败 priority 为 1。`failure-page` 省略时保持兼容页面 `2716`，也可填写任务 HTML 中真实存在的页面，或用 `CLOSE` 安全关闭物品不足的对话。`remove-count` 省略时等于 `required`，显式数字也必须相同，避免检查与扣除数量分离。source/target 必须分别投影 START/REWARD；额外条件、动作、页面或不同扣除协议继续使用显式 transition。成长任务的特殊页面不会被批量 matcher 捕获。
 
 多维计数网格：
 

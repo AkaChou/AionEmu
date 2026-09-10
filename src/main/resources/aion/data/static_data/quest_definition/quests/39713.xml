@@ -39,7 +39,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800936" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -119,7 +119,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800936" source="started" target="reward" item-id="182215285" required="1"/>
+    <npc-item-report npc-id="800936" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800936" action="SET_SUCCEED"/>
@@ -137,7 +137,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800937" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -217,7 +217,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800937" source="started" target="reward" item-id="182215285" required="1"/>
+    <npc-item-report npc-id="800937" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800937" action="SET_SUCCEED"/>
@@ -235,7 +235,7 @@
         <dialog type="TALK_TO_NPC" npc-id="800938" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -315,7 +315,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800938" source="started" target="reward" item-id="182215285" required="1"/>
+    <npc-item-report npc-id="800938" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800938" action="SET_SUCCEED"/>

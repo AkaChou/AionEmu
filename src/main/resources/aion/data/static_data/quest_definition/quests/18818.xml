@@ -107,7 +107,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="830208" source="started" target="reward" item-id="182006856" required="10"/>
+    <npc-item-report npc-id="830208" source="started" target="reward" item-id="182006856" required="10" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="830208" action="SET_SUCCEED"/>

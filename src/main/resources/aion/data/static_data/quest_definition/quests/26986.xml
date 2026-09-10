@@ -34,7 +34,7 @@
         <dialog type="TALK_TO_NPC" npc-id="804863" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 击杀任一研究队员进入领奖。Killing any research team member enters reward. -->

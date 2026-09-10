@@ -376,7 +376,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203700" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1_1_1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="203700" source="reward" target="complete" fixed-reward-indices="0 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

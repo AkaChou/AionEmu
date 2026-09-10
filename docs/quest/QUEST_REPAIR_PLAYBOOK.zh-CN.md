@@ -330,6 +330,20 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 客户端修复和服务端任务修复要分开提交，避免用 XML page 改动掩盖数据包编码或客户端设置问题。
 
+### 6.8 收集物不足时 `npc-item-report` 发送任务不存在的失败页
+
+当 `<npc-item-report>` 的成功提交正常，但 dialog `39/20002` 的物品不足分支显示 `HtmlPageId 2716` 的 load fail，先核对当前任务 HTML 是否真的包含 `2716`。该积木历史上把失败页硬编码为 `SELECT6(2716)`，而部分任务的客户端失败协议只提供 `CHECK_USER_ITEM_FAIL(10001)`，或根本没有失败页。
+
+修复层属于共享 XML 积木，不是逐任务复制显式 transition：
+
+```xml
+<npc-item-report npc-id="800937" source="started" target="reward"
+                 item-id="182215285" required="1"
+                 failure-page="CLOSE"/>
+```
+
+`failure-page` 省略时保持 `2716` 兼容行为；任务自己的 HTML 有明确失败页时可填写对应页面符号；没有客户端失败页时使用 `CLOSE`，只关闭失败分支，不伪造成功页或奖励窗口。批量修复必须同时检查任务 HTML 页面索引、编译后的 priority `0/1` 路由和 XSD，不能用全局替换掩盖页面语义。
+
 ## 7. 验证门禁
 
 以下 Maven、Javac、测试和脚本命令仅在用户明确授权后执行；未获授权时只记录待执行验收项，并保持“实现完成，待验收”，不得请用户进入客户端复测。不会触发构建的 `git diff --check`、状态和 diff 检查可直接执行。

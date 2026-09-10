@@ -57,7 +57,7 @@
         <dialog type="TALK_TO_NPC" npc-id="804879" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="s1" target="reward">

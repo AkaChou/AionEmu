@@ -41,7 +41,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806093" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
@@ -65,7 +65,7 @@
         <dialog type="TALK_TO_NPC" npc-id="241547" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
@@ -89,7 +89,7 @@
         <dialog type="TALK_TO_NPC" npc-id="241548" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
@@ -113,7 +113,7 @@
         <dialog type="TALK_TO_NPC" npc-id="241550" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
@@ -137,7 +137,7 @@
         <dialog type="TALK_TO_NPC" npc-id="241551" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">

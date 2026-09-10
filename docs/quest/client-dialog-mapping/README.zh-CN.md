@@ -53,6 +53,8 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 
 `quest-order-audit.csv` 只使用 `source_variant=active` 且精确映射的任务 HTML 页面。审计从外部入口开始遍历，而不是把 HTML 文件中的页面声明顺序当作任务执行顺序。外部入口包括 `QUEST_SELECT`、`USE_OBJECT`、不依赖 NPC 的 `QUEST_ACTION`，以及没有出现在当前任务页面按钮中、但会直接打开 active 页面的一类 NPC 动作（例如 `EXCHANGE_COIN`）。
 
+`npc-item-report` 的物品不足回落不能假定所有任务都有 `SELECT6(2716)`。积木的 `failure-page` 省略时保留该兼容页；页面符号必须来自当前任务 active HTML，缺少失败页时使用 `failure-page="CLOSE"`。这是失败响应的 owner 合同，不是把失败页替换成奖励成功页的批处理规则。
+
 每条可达 IR 响应显示任务页面后，审计器先确认页面存在，再只沿该页面实际可见的动作，匹配响应后状态和同一 NPC 下的编译路由。未由客户端可达路径触发的服务端兼容备用路由不会被枚举为客户端流程。状态含义如下：
 
 - `PAGE_ACTION_MATCHED`：当前页面的可见动作在编译 IR 中有匹配路由；这不单独证明该动作的响应页面或状态副作用。

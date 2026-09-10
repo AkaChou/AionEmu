@@ -115,7 +115,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="831299" source="started" target="reward" item-id="182006982" required="1"/>
+    <npc-item-report npc-id="831299" source="started" target="reward" item-id="182006982" required="1" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831299" action="SET_SUCCEED"/>

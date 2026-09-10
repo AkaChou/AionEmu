@@ -128,7 +128,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -153,7 +153,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204817" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">

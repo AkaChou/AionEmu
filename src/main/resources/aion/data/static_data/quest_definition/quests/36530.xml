@@ -118,7 +118,7 @@
       </after-commit>
     </transition>
     <!-- 交付:Cynthor (804948) 报告,持有 182215741 (黑玫瑰) 进入奖励。 -->
-    <npc-item-report npc-id="804948" source="started" target="reward" item-id="182215741" required="1" remove-count="ALL"/>
+    <npc-item-report npc-id="804948" source="started" target="reward" item-id="182215741" required="1" remove-count="ALL" failure-page="CLOSE"/>
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804948" action="SET_SUCCEED"/>

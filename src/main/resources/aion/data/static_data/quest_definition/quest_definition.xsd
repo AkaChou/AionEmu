@@ -260,6 +260,7 @@
     <xs:attribute name="item-id" type="xs:int" use="required"/>
     <xs:attribute name="required" type="xs:int" use="required"/>
     <xs:attribute name="remove-count" type="remove-count"/>
+    <xs:attribute name="failure-page" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="counter-grid-dimension-type">

@@ -117,7 +117,7 @@
       </event>
     </transition>
     <!-- 收集苔藓宝箱的赃物 (182215746) 1 个:集齐则交任务进入奖励。 -->
-    <npc-item-report npc-id="804955" source="started" target="reward" item-id="182215746" required="1"/>
+    <npc-item-report npc-id="804955" source="started" target="reward" item-id="182215746" required="1" failure-page="CLOSE"/>
     <!-- 奖励:804955 领取固定奖励 (exp/物品)。 -->
     <transition source="reward" target="reward">
       <event>
