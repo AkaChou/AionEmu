@@ -1024,5 +1024,21 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started2-complete" target="started2-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

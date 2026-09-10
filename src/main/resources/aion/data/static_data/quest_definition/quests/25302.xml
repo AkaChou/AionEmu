@@ -88,5 +88,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

@@ -109,5 +109,14 @@
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+  <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204372" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -349,5 +349,13 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804729" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

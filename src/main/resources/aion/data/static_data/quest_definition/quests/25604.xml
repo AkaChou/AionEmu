@@ -179,5 +179,21 @@
       <preview actions="SELECT_QUEST_REWARD"/>
       <fallback actions="SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806173" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806173" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

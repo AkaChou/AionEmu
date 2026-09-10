@@ -102,5 +102,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798984" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -83,5 +83,24 @@
     <npc-complete npc-id="278589" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278589" action="SELECT1_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278589" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

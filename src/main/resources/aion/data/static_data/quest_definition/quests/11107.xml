@@ -138,5 +138,29 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="296490" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="296491" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798963" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

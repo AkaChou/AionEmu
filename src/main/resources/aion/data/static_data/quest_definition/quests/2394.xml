@@ -210,5 +210,19 @@
       <choice action="SELECTED_QUEST_REWARD13" reward-index="15"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+  <transition source="started" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701147" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="orlan" template-id="790021" heading="8"/>
+        <start-walking slot="orlan"/>
+        <start-follow slot="orlan"/>
+        <broadcast-npc-emotion slot="orlan" emotion="START_EMOTE2"/>
+        <watch-follow-zone slot="orlan" zone="HALABANA_HOT_SPRINGS_220020000"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

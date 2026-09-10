@@ -444,5 +444,77 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204625" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204622" action="SELECT3_4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_4_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204626" action="SELECT3_3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204625" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204625" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204625" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204625" action="SELECT2_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204622" action="SELECT3_4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204626" action="SELECT3_3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_3_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

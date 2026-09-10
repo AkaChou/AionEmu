@@ -195,5 +195,85 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203784" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203786" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203790" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203792" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203793" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798316" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

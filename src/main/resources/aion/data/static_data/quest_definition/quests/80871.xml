@@ -113,5 +113,13 @@
         <close-dialog/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="834167" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

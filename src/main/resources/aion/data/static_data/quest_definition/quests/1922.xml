@@ -334,5 +334,21 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_COMPLETE"/>
       </after-commit>
     </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203764" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203764" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

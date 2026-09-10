@@ -531,5 +531,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="a0b0" target="a0b0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

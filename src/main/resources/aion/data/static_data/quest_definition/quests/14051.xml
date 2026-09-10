@@ -278,5 +278,13 @@
       <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204549" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

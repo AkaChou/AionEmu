@@ -304,5 +304,37 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804700" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731536" action="SELECT3_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731536" action="SELECT3_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731536" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

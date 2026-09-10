@@ -394,5 +394,69 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203725" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798440" action="SELECT4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203852" action="SELECT5_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806555" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1"/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

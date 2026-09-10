@@ -37,7 +37,7 @@
   </nodes>
   <transitions>
     <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
-    <dialog type="NPC_START" npc-id="801047" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="801047" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <!-- 击杀：230744/230745/230749 任一一只 var0+1 / kills: +1 var0 per any of 230744/230745/230749 -->
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="230744 230745 230749"/>
@@ -85,5 +85,14 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-  </transitions>
+  <transition source="k1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801047" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

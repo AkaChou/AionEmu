@@ -584,5 +584,69 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204182" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798443" action="SELECT4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204173" action="SELECT5_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806556" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT9_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT9"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT9_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT9_1_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1_1"/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

@@ -230,5 +230,29 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798133" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798136" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="v2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798139" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

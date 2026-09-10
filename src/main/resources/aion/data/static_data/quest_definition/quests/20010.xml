@@ -378,5 +378,29 @@
         <can-act template-id="731782" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-  </transitions>
+      <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806593" action="SELECT3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806593" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806593" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -150,5 +150,67 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

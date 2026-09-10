@@ -92,5 +92,13 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806697" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

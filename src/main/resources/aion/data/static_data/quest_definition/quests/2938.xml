@@ -103,5 +103,13 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="204267" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG"/>
-  </transitions>
+      <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203557" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

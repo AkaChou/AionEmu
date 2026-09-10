@@ -261,5 +261,13 @@
       <choice action="SELECTED_QUEST_REWARD5" reward-index="7"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="a0b0" target="a0b0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204007" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

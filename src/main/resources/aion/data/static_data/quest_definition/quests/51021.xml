@@ -88,13 +88,13 @@
         <can-act template-id="701470" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-    <dialog type="NPC_START" npc-id="202549" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="202549" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15">
       <event>
         <kill-npc npc-id="217161"/>
       </event>
     </kill-chain>
-    <dialog type="NPC_REPORT" npc-id="202549" source="k15" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="202549" source="k15" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="202549" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

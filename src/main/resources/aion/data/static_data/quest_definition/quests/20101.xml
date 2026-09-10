@@ -488,5 +488,45 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731531" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804556" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804556" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802361" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802361" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

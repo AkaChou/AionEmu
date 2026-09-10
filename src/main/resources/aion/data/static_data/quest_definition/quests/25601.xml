@@ -279,5 +279,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806196" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

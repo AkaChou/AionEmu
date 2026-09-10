@@ -218,5 +218,29 @@
       <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204110" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204387" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204387" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

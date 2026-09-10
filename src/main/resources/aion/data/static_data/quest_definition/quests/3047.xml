@@ -159,5 +159,13 @@
       <choice action="SELECTED_QUEST_REWARD13" reward-index="14"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798208" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

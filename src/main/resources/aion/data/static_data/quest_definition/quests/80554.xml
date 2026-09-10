@@ -38,7 +38,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="832006" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="832006" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="832006" action="QUEST_SELECT"/>

@@ -114,7 +114,7 @@
       <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798926" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="798926" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798926" action="QUEST_SELECT"/>

@@ -477,5 +477,13 @@
         <can-act template-id="703315" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-  </transitions>
+      <transition source="s13" target="s13">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT14"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT14"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

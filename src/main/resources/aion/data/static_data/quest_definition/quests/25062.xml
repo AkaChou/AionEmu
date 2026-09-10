@@ -77,5 +77,13 @@
       <preview action="USE_OBJECT"/>
       <fallback actions="SELECTED_QUEST_REWARD3..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804917" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

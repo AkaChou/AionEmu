@@ -217,5 +217,13 @@
         <can-act template-id="703139" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-  </transitions>
+      <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806165" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

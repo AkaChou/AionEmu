@@ -48,7 +48,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="799076" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="799076" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799076" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

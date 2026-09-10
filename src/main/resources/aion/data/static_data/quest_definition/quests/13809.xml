@@ -174,5 +174,17 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+  <transition source="started" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802427" action="SETPRO1"/>
+      </event>
+      <actions>
+        <!-- 无物品变更 -->
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -35,7 +35,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="800500" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="800500" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <kill-chain nodes="started k1 k2">
       <event>
         <kill-npc npc-id="209470"/>

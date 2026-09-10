@@ -181,5 +181,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203620" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

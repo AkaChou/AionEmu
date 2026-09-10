@@ -413,5 +413,53 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s11" target="s11">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT12_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT12_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT8_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT8_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703312" action="SELECT10_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s11" target="s11">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT12_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT12_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT10_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -364,5 +364,61 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203519" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v3" target="v3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203552" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v4" target="v4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203554" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v8" target="v8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203554" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v3" target="v3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203552" action="SELECT4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v4" target="v4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203554" action="SELECT5_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v8" target="v8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203554" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

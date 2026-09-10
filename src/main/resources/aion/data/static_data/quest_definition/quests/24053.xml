@@ -283,5 +283,37 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204795" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="step2" target="step2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204796" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="step4" target="step4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204795" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

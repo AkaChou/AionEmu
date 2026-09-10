@@ -167,5 +167,23 @@
       </after-commit>
     </transition>
 
-  </transitions>
+      <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204602" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204602" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210040000" x="2006.7308" y="1392.1913" z="118.125" heading="4"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -33,7 +33,7 @@
   </nodes>
   <transitions>
     <!-- 接取：start_npc_ids 为空，沿用同批 FACTION 先例以 end NPC 作接取 NPC。 -->
-    <dialog type="NPC_START" npc-id="799800" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="799800" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <!-- 第一步：与 Iaetia (798996) 对话推进 var0 0→1。 -->
     <transition source="started" target="started">
       <event>

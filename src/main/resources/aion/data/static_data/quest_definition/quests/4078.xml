@@ -161,5 +161,13 @@
       <preview actions="SELECT_QUEST_REWARD"/>
       <fallback actions="SELECTED_QUEST_REWARD6..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205157" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

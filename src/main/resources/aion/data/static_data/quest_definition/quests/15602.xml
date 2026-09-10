@@ -388,5 +388,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806194" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

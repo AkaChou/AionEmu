@@ -98,5 +98,29 @@
       <after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/></after-commit>
     </transition>
     <npc-complete npc-id="203093" source="reward-alternate" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG"/>
-  </transitions>
+      <transition source="ring-found" target="ring-found">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203093" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="ring-found" target="ring-found">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203095" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203095" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

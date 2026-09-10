@@ -1538,5 +1538,53 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
       </after-commit>
     </transition>
-  </transitions>
+      <transition source="equipped97" target="equipped97">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204264" action="SELECT8_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started10" target="started10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT10_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790003" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started3" target="started3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started4" target="started4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203546" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

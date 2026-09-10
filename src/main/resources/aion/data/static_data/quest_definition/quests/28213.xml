@@ -107,5 +107,17 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-  </transitions>
+  <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798604" action="SETPRO1"/>
+      </event>
+      <actions>
+        <!-- 无物品变更 -->
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>
