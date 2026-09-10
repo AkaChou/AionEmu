@@ -354,7 +354,7 @@ mvn -q -Dtest=EarlyElyosQuestRegressionTest,Quest1163ClientDialogAlignmentTest,Q
 
 ```bash
 git diff --check
-mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
+mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestClientContractGateTest test
 git status --short
 git diff --stat
 ```
@@ -365,6 +365,7 @@ git diff --stat
 - `PRODUCTION_WHITELIST_VIOLATIONS=0`；
 - 没有 XML 编译异常、路径重复或 ambiguous transition；
 - 展开后的 IR 不存在同一 source/NPC/action 下 `NPC_REPORT` 与 `npc-complete` preview 重叠；
+- `QuestClientContractGateTest` 不存在基线之外的任务页缺失或可见按钮无路由；基线刷新后，使用 `-Dquest.client.contract.failOnStaleBaseline=true` 确保修复后的旧指纹已经删除；
 - `play-movie` self-loop 后存在由客户端和旧 handler 证明的后续页面、关闭响应或状态推进；
 - 多 NPC 任务的接取、交付、报告和领奖 owner 没有被通用 block 重复展开；
 - 没有将无关 dirty 文件带入 diff。
@@ -383,12 +384,13 @@ mvn clean verify
 
 1. 任务专用 focused test 直接调用 `QuestDefinitionXmlCompiler`，并锁定修改路径的完整 IR 合同。
 2. `QuestDefinitionCatalogManifestTest` 和 `ProductionCatalogWhitelistVerificationTest` 通过，确认 production catalog 全量可编译且 owner 合法。
-3. XSD、枚举生成检查和 `git diff --check` 只能作为补充，不能替代上述编译门禁；它们发现不了 block 展开后的 `AMBIGUOUS_TRANSITION`。
+3. `QuestClientContractGateTest` 通过，确认本次 XML 修改没有新增任务页缺失或可见按钮无路由；若修复消除了已有问题，同时删除 `src/test/resources/quest/quest-client-contract-baseline.tsv` 中对应指纹。
+4. XSD、枚举生成检查和 `git diff --check` 只能作为补充，不能替代上述编译门禁；它们发现不了 block 展开后的 `AMBIGUOUS_TRANSITION`。
 
 可按当前任务替换测试名后执行：
 
 ```bash
-mvn -q -Dtest=Quest<id>RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
+mvn -q -Dtest=Quest<id>RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestClientContractGateTest test
 ```
 
 若用户没有授权运行构建，交接必须明确列出该命令并保持 `PENDING`，不能把客户端点击当作编译器。用户通过 IDEA 启动服务端时，agent 不代替用户启动、停止或重启进程，但客户端复测前必须确认启动日志满足以下健康条件：
