@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,6 +33,22 @@ class Quest14025ClientDialogAlignmentTest {
 		assertNode(definition, "s5", QuestStatus.START, Map.of("var0", 5));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 6));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of());
+
+		// 1. 区域任务结束/升级只自动接取并刷新可见性，不发送不存在的接取 HTML
+		// 1. Zone completion/level-up only auto-start and refresh visibility; they do not send an acquisition HTML page
+		QuestTransition zoneMissionEnd = transition(definition, "unaccepted", "started",
+			new QuestEvent.ZoneMissionEnd());
+		assertEquals(List.of(new QuestCondition.StartEligible()), zoneMissionEnd.conditions());
+		assertEquals(List.of(), zoneMissionEnd.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+			zoneMissionEnd.afterCommit());
+
+		QuestTransition levelUp = transition(definition, "unaccepted", "started", new QuestEvent.LevelUp());
+		assertEquals(List.of(new QuestCondition.StartEligible(), new QuestCondition.QuestsFinished(Set.of(14020))),
+			levelUp.conditions());
+		assertEquals(List.of(), levelUp.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+			levelUp.afterCommit());
 
 		// 1. started 阶段：NPC 203989 (埃吉斯) 对话翻页与推进至 s1 (var0=1)
 		// 1. started stage: NPC 203989 (Aegis) dialog page turns and advances to s1 (var0=1)
