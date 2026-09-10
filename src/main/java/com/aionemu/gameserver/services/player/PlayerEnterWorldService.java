@@ -388,7 +388,7 @@ public final class PlayerEnterWorldService {
 				if (qs.getStatus() == QuestStatus.NONE && qs.getCompleteCount() == 0) {
 					continue;
 				}
-				if (qs.getStatus() != QuestStatus.COMPLETE && qs.getStatus() != QuestStatus.NONE) {
+				if (qs.getStatus().isClientQuestListVisible()) {
 					questList.add(qs);
 				}
 				if (qs.getCompleteCount() > 0) {
@@ -405,6 +405,9 @@ public final class PlayerEnterWorldService {
 
 			// SM_QUEST_LIST
 			client.sendPacket(new SM_QUEST_LIST(questList));
+			// 重新评估旧版 LOCKED 占位任务；成功后通过 SM_QUEST_ACTION 正式加入客户端列表。
+			// Re-evaluate legacy LOCKED placeholders; successful starts are added to the client list by SM_QUEST_ACTION.
+			GameEngineServices.questEngine().recheckLockedQuestStates(player);
 
 			// SM_SKILL_ANIMATION
 			client.sendPacket(new SM_SKILL_ANIMATION(player));

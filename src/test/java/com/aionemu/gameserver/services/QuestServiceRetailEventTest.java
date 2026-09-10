@@ -10,6 +10,7 @@ import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 class QuestServiceRetailEventTest {
 
@@ -27,6 +28,18 @@ class QuestServiceRetailEventTest {
 		assertEquals(1, ai.calls);
 		assertSame(player, ai.player);
 		assertEquals(9645, ai.questId);
+	}
+
+	@Test
+	void normalizesLockedEventPlaceholderBeforeClientRegistration() {
+		assertEquals(QuestStatus.START,
+			QuestService.normalizeEventQuestStatus(QuestStatus.LOCKED));
+		assertEquals(QuestStatus.START,
+			QuestService.normalizeEventQuestStatus(QuestStatus.START));
+		assertEquals(QuestStatus.REWARD,
+			QuestService.normalizeEventQuestStatus(QuestStatus.REWARD));
+		assertEquals(QuestStatus.COMPLETE,
+			QuestService.normalizeEventQuestStatus(QuestStatus.COMPLETE));
 	}
 
 	private static final class RecordingAI extends AITemplate {

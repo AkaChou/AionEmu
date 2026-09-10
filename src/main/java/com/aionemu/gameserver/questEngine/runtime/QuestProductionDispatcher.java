@@ -136,6 +136,18 @@ public final class QuestProductionDispatcher {
 		return !index.routesFor(event, questId).isEmpty();
 	}
 
+	/**
+	 * 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event.
+	 */
+	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
+		Objects.requireNonNull(event, "event");
+		if (questId <= 0) {
+			return false;
+		}
+		return index.routesFor(event, questId).stream()
+			.anyMatch(route -> QuestEvent.matches(route.transition().event(), event));
+	}
+
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
 		return catalog.executables().stream().map(CompiledQuestDefinition::id).sorted().toList();

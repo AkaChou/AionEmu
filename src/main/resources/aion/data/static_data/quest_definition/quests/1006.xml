@@ -703,6 +703,16 @@
       </after-commit>
     </transition>
     <!-- Reward report and the legacy 8..23 completion dialog range. -->
+    <!-- 部分 Aion 5.8 客户端会通过通用任务选择动作进入领奖 NPC。
+         Some Aion 5.8 clients enter the reward NPC through the generic quest-selection action. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="790001" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

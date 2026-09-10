@@ -77,6 +77,20 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	@Test
+	void locked14051PlaceholderCanBeReevaluatedAfterItsPrerequisiteIsComplete() throws Exception {
+		Player player = player(38);
+		player.getQuestStateList().addQuest(14050,
+			new QuestState(14050, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		player.getQuestStateList().addQuest(14051,
+			new QuestState(14051, QuestStatus.LOCKED, 0, 0, null, 0, null));
+
+		QuestStartEligibility result = port(player, Map.of(14051, metadata(14051)))
+			.snapshot(PLAYER_ID, 14051, new QuestEvent.LevelUp());
+
+		assertTrue(result.eligible(), () -> "14051 rejected: " + result.reason());
+	}
+
+	@Test
 	void quest10521RejectsLevelTenAndRequiresQuest10520AtLevelSixtyFive() throws Exception {
 		QuestMetadata quest10521 = metadata(10521);
 		Map<Integer, QuestMetadata> metadata = Map.of(10521, quest10521);

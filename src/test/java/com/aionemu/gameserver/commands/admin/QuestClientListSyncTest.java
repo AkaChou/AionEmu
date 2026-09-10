@@ -31,4 +31,10 @@ class QuestClientListSyncTest {
 		assertFalse(Quest.addsQuestToClientList(null, QuestStatus.NONE));
 		assertFalse(Quest.addsQuestToClientList(QuestStatus.START, QuestStatus.COMPLETE));
 	}
+
+	@Test
+	void treatsLockedLegacyPlaceholdersAsInvisibleBeforeStartingThem() {
+		assertFalse(Quest.addsQuestToClientList(QuestStatus.LOCKED, QuestStatus.LOCKED));
+		assertTrue(Quest.addsQuestToClientList(QuestStatus.LOCKED, QuestStatus.START));
+	}
 }

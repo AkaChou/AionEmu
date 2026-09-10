@@ -681,6 +681,39 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
+	 * 重新评估玩家持久化的 LOCKED 任务，只执行对应 owner 的自动升级路由。
+	 * Re-evaluates the player's persisted LOCKED quests through each owner's automatic level-up routes.
+	 *
+	 * <p>LOCKED 是旧版任务列表中的持久化占位状态；规划器仍要求任务定义显式声明
+	 * {@code start-eligible} 及全部元数据前置条件，避免把普通 NPC 对话路由变成自动接取。
+	 * LOCKED is a persisted placeholder from the legacy quest list; the planner still requires
+	 * an explicit {@code start-eligible} condition and all metadata prerequisites, so ordinary
+	 * NPC dialog routes never become automatic starts.</p>
+	 *
+	 * @param player 玩家 / player
+	 */
+	public void recheckLockedQuestStates(Player player) {
+		if (player == null || player.getQuestStateList() == null) {
+			return;
+		}
+		List<Integer> lockedQuestIds = new ArrayList<>();
+		for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+			if (state.getStatus() == QuestStatus.LOCKED) {
+				lockedQuestIds.add(state.getQuestId());
+			}
+		}
+		for (int questId : lockedQuestIds) {
+			try {
+				productionDispatcher.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), questId,
+					QuestDispatchContract.EXCLUSIVE);
+			} catch (RuntimeException ignored) {
+				// 锁定任务恢复为尽力而为，与常规升级分发边界一致。
+				// Locked-state recovery is best-effort, matching the normal level-up dispatch boundary.
+			}
+		}
+	}
+
+	/**
 	 * 分发使用物品事件；首个非 UNKNOWN 结果即返回。
 	 * Dispatch an item-use event; return the first non-UNKNOWN result.
 	 *

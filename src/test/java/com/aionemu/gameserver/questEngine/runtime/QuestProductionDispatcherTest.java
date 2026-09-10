@@ -36,6 +36,8 @@ class QuestProductionDispatcherTest {
 		assertTrue(dispatcher.hasRoutes(event));
 		assertTrue(dispatcher.hasRoutes(event, 1101));
 		assertFalse(dispatcher.hasRoutes(event, 1102));
+		assertFalse(dispatcher.hasMatchingRoutes(new QuestEvent.TalkToNpc(203057, 31), 1101));
+		assertTrue(dispatcher.hasMatchingRoutes(event, 1101));
 	}
 
 	@Test

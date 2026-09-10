@@ -8,6 +8,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -66,6 +67,67 @@ class QuestMutationPlannerTest {
 			new QuestEvent.QuestDialog(1002), transition).isPresent());
 		assertFalse(QuestMutationPlanner.planSharedQuestAccept(definition, snapshot,
 			new QuestEvent.QuestDialog(20000), transition).isPresent());
+	}
+
+	@Test
+	void lockedStateMatchesOnlyAnExplicitAutomaticStartRoute() {
+		int questId = QUEST_ID + 30;
+		CompiledQuestDefinition definition = QuestDsl.quest(questId)
+			.progress(bitField("var0", 0, 2, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(QuestDsl.levelUp()).from("unaccepted").when(QuestDsl.startEligible()).goTo("started")
+			.on(QuestDsl.talkToNpc(700001)).from("unaccepted").goTo("started")
+			.compile();
+		QuestSnapshot locked = new QuestSnapshot(7, questId, QuestStatus.LOCKED, 0, Map.of())
+			.withStartEligibility(QuestStartEligibility.allowed());
+		var levelUp = definition.definition().transitions().stream()
+			.filter(transition -> transition.event().equals(new QuestEvent.LevelUp()))
+			.findFirst().orElseThrow();
+		var dialog = definition.definition().transitions().stream()
+			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(700001)))
+			.findFirst().orElseThrow();
+
+		QuestMutationPlan plan = QuestMutationPlanner.plan(definition, locked,
+			new QuestEvent.LevelUp(), levelUp).orElseThrow();
+
+		assertEquals(QuestStatus.START, plan.nextStatus());
+		assertEquals(0, plan.nextPackedVariables());
+		assertEquals(List.of(new QuestCondition.StartEligible()), levelUp.conditions());
+		assertEquals(List.of(), levelUp.actions());
+		assertEquals(List.of(), levelUp.afterCommit());
+		assertFalse(QuestMutationPlanner.plan(definition, locked,
+			new QuestEvent.TalkToNpc(700001), dialog).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, locked.withStartEligibility(
+			QuestStartEligibility.rejected("REPEAT_LIMIT")), new QuestEvent.LevelUp(), levelUp).isPresent());
+	}
+
+	@Test
+	void locked14051StateIsRecoveredByBothAutomaticStartEventsAfterPrerequisitesPass() throws Exception {
+		CompiledQuestDefinition definition;
+		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
+			"/aion/data/static_data/quest_definition/quests/14051.xml"))) {
+			definition = QuestDefinitionXmlCompiler.compile(input);
+		}
+		QuestSnapshot locked = new QuestSnapshot(7, 14051, QuestStatus.LOCKED, 0, Map.of())
+			.withStartEligibility(QuestStartEligibility.allowed())
+			.withCompletedQuestIds(Set.of(14050))
+			.withActiveQuestIds(Set.of());
+
+		for (QuestEvent event : List.of(new QuestEvent.LevelUp(), new QuestEvent.ZoneMissionEnd())) {
+			var transition = definition.definition().transitions().stream()
+				.filter(candidate -> "unaccepted".equals(candidate.sourceNode())
+					&& "started".equals(candidate.targetNode()) && candidate.event().equals(event))
+				.findFirst().orElseThrow();
+			var plan = QuestMutationPlanner.plan(definition, locked, event, transition).orElseThrow();
+
+			assertEquals(QuestStatus.START, plan.nextStatus());
+			assertEquals(0, plan.nextPackedVariables());
+			assertEquals(List.of(new QuestCondition.StartEligible()), transition.conditions());
+			assertEquals(List.of(), transition.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+				transition.afterCommit());
+		}
 	}
 
 	@Test

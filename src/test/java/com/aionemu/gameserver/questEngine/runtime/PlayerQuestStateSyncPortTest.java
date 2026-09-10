@@ -20,4 +20,10 @@ class PlayerQuestStateSyncPortTest {
 		assertFalse(PlayerQuestStateSyncPort.addsQuestToClientList(QuestStatus.START, QuestStatus.REWARD));
 		assertFalse(PlayerQuestStateSyncPort.addsQuestToClientList(QuestStatus.REWARD, QuestStatus.COMPLETE));
 	}
+
+	@Test
+	void lockedPlaceholderIsInvisibleUntilAutomaticStartAddsTheQuest() {
+		assertFalse(PlayerQuestStateSyncPort.addsQuestToClientList(QuestStatus.LOCKED, QuestStatus.LOCKED));
+		assertTrue(PlayerQuestStateSyncPort.addsQuestToClientList(QuestStatus.LOCKED, QuestStatus.START));
+	}
 }

@@ -377,19 +377,20 @@ public final class QuestMutationPlanner {
 
 	/**
 	 * 可重复任务在两次运行之间持久化为 COMPLETE，而其下一个开始转换从 NONE/未接取节点声明。
-	 * 只有显式开始合格（start-eligible）的转换才能跨越该生命周期边界；
-	 * 完成后的普通未接取对话路由不得触发。
+	 * 旧版持久化的 LOCKED 状态也映射到同一个未接取边界，但只有显式开始合格（start-eligible）的转换才能跨越该边界；
+	 * 完成后的普通未接取对话路由，以及 LOCKED 占位状态的普通对话路由，均不得触发。
 	 * A repeatable quest is persisted as COMPLETE between runs, while its next
-	 * start transition is declared from the NONE/unaccepted node. Only an
-	 * explicitly start-eligible transition may cross that lifecycle boundary;
-	 * ordinary unaccepted dialog routes must not fire after completion.
+	 * start transition is declared from the NONE/unaccepted node. A legacy
+	 * persisted LOCKED state maps to the same unaccepted boundary, but only an
+	 * explicitly start-eligible transition may cross it; ordinary unaccepted
+	 * dialog routes must not fire after completion or from a locked placeholder.
 	 */
 	private static boolean matchesSourceStatus(QuestSnapshot snapshot, QuestNode source,
 		QuestTransition transition) {
 		if (snapshot.status() == source.projection().status()) {
 			return true;
 		}
-		return snapshot.status() == QuestStatus.COMPLETE
+		return (snapshot.status() == QuestStatus.COMPLETE || snapshot.status() == QuestStatus.LOCKED)
 			&& source.projection().status() == QuestStatus.NONE
 			&& transition.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance);
 	}

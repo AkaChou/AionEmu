@@ -787,7 +787,8 @@ public final class QuestService {
 		}
 		int id = env.getQuestId();
 		Player player = env.getPlayer();
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, questStatus, 0));
+		QuestStatus effectiveStatus = normalizeEventQuestStatus(questStatus);
+		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, effectiveStatus, 0));
 		if ((player.getLevel() < template.getMinlevelPermitted()) && (template.getMinlevelPermitted() != 999)) {
 			return false;
 		}
@@ -809,17 +810,28 @@ public final class QuestService {
 		}
 		QuestState qs = player.getQuestStateList().getQuestState(id);
 		if (qs == null) {
-			qs = new QuestState(template.getId(), questStatus, 0, 0, null, 0, null);
+			qs = new QuestState(template.getId(), effectiveStatus, 0, 0, null, 0, null);
 			player.getQuestStateList().addQuest(id, qs);
 		} else {
 			if (template.getMaxRepeatCount() >= qs.getCompleteCount()) {
-				qs.setStatus(questStatus);
+				qs.setStatus(effectiveStatus);
 				qs.setQuestVar(0);
 			}
 		}
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		return true;
+	}
+
+	/**
+	 * 将旧版活动任务占位状态转换为客户端可用的初始状态。
+	 * Normalizes the legacy event-quest placeholder to a client-visible start state.
+	 *
+	 * @param status 持久化活动任务状态 / persisted event-quest status
+	 * @return 客户端与运行时使用的状态 / status used by the client and runtime
+	 */
+	static QuestStatus normalizeEventQuestStatus(QuestStatus status) {
+		return status == QuestStatus.LOCKED ? QuestStatus.START : status;
 	}
 
 	private static boolean checkQuestListSize(QuestStateList qsl) {

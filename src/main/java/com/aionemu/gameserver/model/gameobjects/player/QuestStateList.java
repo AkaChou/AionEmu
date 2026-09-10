@@ -104,7 +104,7 @@ public class QuestStateList {
 			QuestMetadata questMetadata = metadata.apply(qs.getQuestId());
 			QuestStatus s = qs.getStatus();
 
-			if (s != QuestStatus.COMPLETE && s != QuestStatus.LOCKED && s != QuestStatus.NONE
+			if (s.isClientQuestListVisible()
 					&& questMetadata != null && "QUEST".equals(questMetadata.category())) {
 				l.add(qs);
 			}

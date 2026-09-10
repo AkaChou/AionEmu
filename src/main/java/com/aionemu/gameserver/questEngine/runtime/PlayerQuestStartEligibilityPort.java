@@ -73,7 +73,8 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 			return QuestStartEligibility.rejected("QUEST_METADATA_MISSING");
 		}
 		QuestState existing = player.getQuestStateList().getQuestState(questId);
-		if (existing != null && existing.getStatus() != QuestStatus.NONE && !existing.canRepeat(metadata)) {
+		if (existing != null && existing.getStatus() != QuestStatus.NONE
+				&& existing.getStatus() != QuestStatus.LOCKED && !existing.canRepeat(metadata)) {
 			return QuestStartEligibility.rejected("QUEST_ALREADY_ACTIVE");
 		}
 
@@ -157,8 +158,7 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 
 	private int normalQuestCount(Player player) {
 		return (int) player.getQuestStateList().getAllQuestState().stream()
-			.filter(state -> state.getStatus() != QuestStatus.COMPLETE && state.getStatus() != QuestStatus.LOCKED
-				&& state.getStatus() != QuestStatus.NONE)
+			.filter(state -> state.getStatus().isClientQuestListVisible())
 			.filter(state -> {
 				QuestMetadata metadata = metadataByQuest.apply(state.getQuestId());
 				return metadata == null || "QUEST".equals(metadata.category());

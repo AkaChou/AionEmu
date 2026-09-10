@@ -109,7 +109,7 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 	}
 
 	private static boolean isVisibleInClientQuestList(QuestStatus status) {
-		return status != QuestStatus.NONE && status != QuestStatus.COMPLETE;
+		return status != null && status.isClientQuestListVisible();
 	}
 
 	private static void sendCompletionAvailability(Player player, QuestMetadata metadata) {

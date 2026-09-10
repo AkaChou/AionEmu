@@ -210,7 +210,7 @@ public class Quest extends AdminCommand {
 	}
 
 	private static boolean isVisibleInClientQuestList(QuestStatus status) {
-		return status != null && status != QuestStatus.NONE && status != QuestStatus.COMPLETE;
+		return status != null && status.isClientQuestListVisible();
 	}
 
     private void handleDelete(Player admin, Player target, String... params) {
