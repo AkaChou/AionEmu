@@ -381,8 +381,6 @@
     <spawn npc_id="700924">
       <spot x="587.671082" y="774.231995" z="217.757614" entity_id="5" h="60" resolve_z="true"/>
     </spawn>
-    <spawn npc_id="700939">
-    </spawn>
     <spawn npc_id="217135">
       <spot x="689.836182" y="661.176453" z="202.760223" h="26" resolve_z="true"/>
     </spawn>

@@ -19,6 +19,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 克罗米德斯试炼副本事件处理器。
@@ -45,12 +48,31 @@ import java.util.Set;
 @InstanceID(300230000)
 public class KromedesTrialInstance extends GeneralInstanceHandler
 {
+	private static final int QUEST_NIGHTMARE_IN_SHINING_ARMOR = 18602;
+	private static final int QUEST_INTO_THE_UNKNOWN = 28602;
+	private static final int QUEST_ROBSTIN_NPC_ID = 700939;
+	private static final int INSTANCE_ROBSTIN_NPC_ID = 700965;
+	private static final int RELIC_KEY_ID = 185000109;
+	private static final int RELIC_KEY_SOURCE_NPC_ID = 216968;
+	private static final float QUEST_ROBSTIN_X = 656.92f;
+	private static final float QUEST_ROBSTIN_Y = 585.74f;
+	private static final float QUEST_ROBSTIN_Z = 199.04f;
+	private static final float INSTANCE_ROBSTIN_X = 657.200745f;
+	private static final float INSTANCE_ROBSTIN_Y = 585.777771f;
+	private static final float INSTANCE_ROBSTIN_Z = 200.362244f;
 		/** 技能种族 / skill race */
 		private Race skillRace;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private final List<Integer> movies = new ArrayList<Integer>();
+	/** 遗物钥匙来源是否已在本实例被击杀 / whether the relic-key source has been killed in this instance */
+	private boolean relicKeySourceConsumed;
+	/**
+	 * 离开副本前在任务步骤 1 持有遗物钥匙的玩家，供同一实例重入时恢复。
+	 * Players who held the relic key at quest step 1 before leaving, restored when re-entering the same instance.
+	 */
+	private final Set<Integer> relicKeyRecoveryPlayers = ConcurrentHashMap.newKeySet();
 
 	/**
 	 * 玩家进入副本时处理。
@@ -60,10 +82,87 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(Player player) {
+		synchronizeRobstinNpc(player);
+		restoreRelicKey(player);
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
 		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000);
 		sendMovie(player, 453);
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
+	}
+
+	/**
+	 * 根据任务步骤在副本对象与任务对象之间切换罗勃斯汀。
+	 * Selects the instance NPC or quest NPC for Robstin based on the active quest step.
+	 *
+	 * @param player 触发切换的玩家 / player that triggered the switch
+	 */
+	public void synchronizeRobstinNpc(Player player) {
+		if (instance == null) {
+			return;
+		}
+		boolean questRobstin = hasRobstinQuestStep(player)
+			|| instance.getPlayersInside().stream().anyMatch(this::hasRobstinQuestStep);
+		if (questRobstin) {
+			deleteNpcs(INSTANCE_ROBSTIN_NPC_ID);
+			keepSingleNpc(QUEST_ROBSTIN_NPC_ID);
+			if (instance.getNpcs(QUEST_ROBSTIN_NPC_ID).isEmpty()) {
+				spawn(QUEST_ROBSTIN_NPC_ID, QUEST_ROBSTIN_X, QUEST_ROBSTIN_Y, QUEST_ROBSTIN_Z, (byte) 0);
+			}
+		} else {
+			deleteNpcs(QUEST_ROBSTIN_NPC_ID);
+			keepSingleNpc(INSTANCE_ROBSTIN_NPC_ID);
+			if (instance.getNpcs(INSTANCE_ROBSTIN_NPC_ID).isEmpty()) {
+				spawn(INSTANCE_ROBSTIN_NPC_ID, INSTANCE_ROBSTIN_X, INSTANCE_ROBSTIN_Y,
+					INSTANCE_ROBSTIN_Z, (byte) 113);
+			}
+		}
+	}
+
+	private boolean hasRobstinQuestStep(Player player) {
+		if (player == null) {
+			return false;
+		}
+		return isRobstinQuestStep(
+			player.getQuestStateList().getQuestState(QUEST_NIGHTMARE_IN_SHINING_ARMOR))
+			|| isRobstinQuestStep(player.getQuestStateList().getQuestState(QUEST_INTO_THE_UNKNOWN));
+	}
+
+	static boolean isRobstinQuestStep(QuestState questState) {
+		return questState != null && questState.getStatus() == QuestStatus.START
+			&& questState.getQuestVarById(0) == 2
+			&& (questState.getQuestId() == QUEST_NIGHTMARE_IN_SHINING_ARMOR
+				|| questState.getQuestId() == QUEST_INTO_THE_UNKNOWN);
+	}
+
+	private void deleteNpcs(int npcId) {
+		for (Npc npc : instance.getNpcs(npcId)) {
+			npc.getController().onDelete();
+		}
+	}
+
+	private void keepSingleNpc(int npcId) {
+		List<Npc> npcs = instance.getNpcs(npcId);
+		for (int i = 1; i < npcs.size(); i++) {
+			npcs.get(i).getController().onDelete();
+		}
+	}
+
+	@Override
+	public void onPlayMovieEnd(Player player, int movieId) {
+		if (movieId == 454) {
+			synchronizeRobstinNpc(player);
+		}
+	}
+
+	/**
+	 * 玩家登录并恢复到该副本时处理临时任务钥匙。
+	 * Handles temporary quest-key recovery when a player logs back into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onPlayerLogin(Player player) {
+		restoreRelicKey(player);
 	}
 
 	/**
@@ -378,6 +477,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onLeaveInstance(Player player) {
+		rememberRelicKey(player);
 		removeItems(player);
 		removeEffects(player);
 	}
@@ -390,6 +490,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
+		rememberRelicKey(player);
 		removeItems(player);
 		removeEffects(player);
 	}
@@ -414,6 +515,9 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 				spawn(217004, 651.186f, 767.856f, 215.584f, (byte) 59); //Wounded Hamam.
 				spawnClassTreasure(player, 757.48157f, 617.7071f, 197.17694f, (byte) 108);
             break;
+			case 216968: //Divine Hisen.
+				relicKeySourceConsumed = true;
+			break;
 			case 216999: //Jesse.
 				announceKaligaTreasury();
 				if (player != null) {
@@ -499,6 +603,88 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		effectController.removeEffect(19270);
 		effectController.removeEffect(19288); //Rage Of Kromede.
 	}
+
+	/**
+	 * 记录玩家离开同一副本后可恢复的遗物钥匙。
+	 * Records a relic key that can be restored after the player leaves and re-enters this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	private void rememberRelicKey(Player player) {
+		QuestState questState = player.getQuestStateList().getQuestState(QUEST_NIGHTMARE_IN_SHINING_ARMOR);
+		if (shouldPreserveRelicKeyOnLeave(questState,
+			player.getInventory().getItemCountByItemId(RELIC_KEY_ID))) {
+			relicKeyRecoveryPlayers.add(player.getObjectId());
+		}
+	}
+
+	/**
+	 * 重新进入或登录同一副本时恢复离开前的遗物钥匙。
+	 * Restores the relic key held before leaving when the player re-enters or logs back into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	private void restoreRelicKey(Player player) {
+		QuestState questState = player.getQuestStateList().getQuestState(QUEST_NIGHTMARE_IN_SHINING_ARMOR);
+		boolean recoveryMarked = relicKeyRecoveryPlayers.remove(player.getObjectId());
+		boolean keyPresent = player.getInventory().getItemCountByItemId(RELIC_KEY_ID) > 0;
+		if (!shouldRecoverRelicKey(questState, keyPresent, isRelicKeySourceUnavailable(), recoveryMarked)) {
+			return;
+		}
+		ItemService.addItem(player, RELIC_KEY_ID, 1);
+	}
+
+	/**
+	 * 判断任务步骤和钥匙持有状态是否符合实例重入恢复条件。
+	 * Checks whether the quest step and key possession qualify for instance re-entry recovery.
+	 *
+	 * @param questState 任务状态，可为空 / quest state, nullable
+	 * @param itemCount 离开前持有的钥匙数量 / key count held before leaving
+	 * @return 是否应记录恢复标记 / whether recovery should be recorded
+	 */
+	static boolean shouldPreserveRelicKeyOnLeave(QuestState questState, long itemCount) {
+		return isRelicKeyQuestStep(questState) && itemCount > 0;
+	}
+
+	/**
+	 * 判断已推进的副本在钥匙来源已消失或离开标记存在时是否需要恢复钥匙。
+	 * Determines whether a progressed instance should restore the key after the source is gone or a leave marker exists.
+	 *
+	 * @param questState 任务状态，可为空 / quest state, nullable
+	 * @param keyPresent 是否已持有钥匙 / whether the key is already present
+	 * @param sourceNpcUnavailable 钥匙来源是否已消失 / whether the key source is unavailable
+	 * @param recoveryMarked 是否在离开前记录过钥匙 / whether the key was marked before leaving
+	 * @return 是否应恢复钥匙 / whether the key should be restored
+	 */
+	static boolean shouldRecoverRelicKey(QuestState questState, boolean keyPresent, boolean sourceNpcUnavailable,
+		boolean recoveryMarked) {
+		return isRelicKeyQuestStep(questState) && !keyPresent && (sourceNpcUnavailable || recoveryMarked);
+	}
+
+	/**
+	 * 判断遗物钥匙的来源 NPC 是否已被持久化副本消耗。
+	 * Checks whether the relic-key source NPC has already been consumed by the persisted instance.
+	 *
+	 * @return 来源是否不可用 / whether the source is unavailable
+	 */
+	private boolean isRelicKeySourceUnavailable() {
+		if (relicKeySourceConsumed) {
+			return true;
+		}
+		if (instance == null) {
+			return false;
+		}
+		Npc keySource = instance.getNpc(RELIC_KEY_SOURCE_NPC_ID);
+		return keySource == null || keySource.getLifeStats() == null || keySource.getLifeStats().isAlreadyDead();
+	}
+
+	private static boolean isRelicKeyQuestStep(QuestState questState) {
+		return questState != null
+			&& questState.getQuestId() == QUEST_NIGHTMARE_IN_SHINING_ARMOR
+			&& questState.getStatus() == QuestStatus.START
+			&& questState.getQuestVarById(0) == 1;
+	}
+
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
@@ -510,7 +696,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000101, storage.getItemCountByItemId(185000101)); //Secret Safe Key.
 		storage.decreaseByItemId(185000102, storage.getItemCountByItemId(185000102)); //Kaliga's Key.
-        storage.decreaseByItemId(185000109, storage.getItemCountByItemId(185000109)); //Relic Key.
+		storage.decreaseByItemId(RELIC_KEY_ID, storage.getItemCountByItemId(RELIC_KEY_ID)); //Relic Key.
 		storage.decreaseByItemId(164000140, storage.getItemCountByItemId(164000140)); //Explosive Bead.
 		storage.decreaseByItemId(164000141, storage.getItemCountByItemId(164000141)); //Silver Blade Rotan.
         storage.decreaseByItemId(164000142, storage.getItemCountByItemId(164000142)); //Sapping Pollen.
@@ -596,6 +782,8 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
     public void onInstanceDestroy() {
         doors.clear();
 		movies.clear();
+		relicKeySourceConsumed = false;
+		relicKeyRecoveryPlayers.clear();
     }
 
 	private void sendMovie(Player player, int movie) {

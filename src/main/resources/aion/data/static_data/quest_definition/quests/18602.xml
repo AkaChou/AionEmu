@@ -12,10 +12,14 @@
       <reward kind="SELECTABLE_ITEM" id="123001457" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="123001458" amount="1"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="18601"/>
-      <condition type="finished" quest-id="1527"/>
-    </start-conditions>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="18601"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="1527"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -131,19 +135,60 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 电影 454 结束：var0 1→2。 -->
+    <!-- 730308：var0=1 查看水晶球并使用马加之药水。 / At var0=1, inspect the crystal and use Maga's potion. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730308" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730308" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
     <transition source="s1" target="s2">
       <event>
-        <movie-end movie-id="454"/>
+        <dialog type="TALK_TO_NPC" npc-id="730308" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="185000109" count="1"/>
+      </conditions>
       <actions>
+        <remove-item item-id="185000109" count="1"/>
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
+        <teleport-player-current-or-default world-id="300230000" x="687.56116" y="681.68225" z="200.28648" heading="30"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 700939：var0=2 使用查看；STEP_TO_3 复仇宣言并推进。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730308" action="SETPRO2"/>
+      </event>
+      <conditions>
+        <has-item item-id="185000109" count="1" expected="false"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730308" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 700939：var0=2 使用查看；STEP_TO_3 复仇宣言并推进。 / At var0=2, inspect 700939 and advance on SETPRO3. -->
     <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="700939" action="USE_OBJECT"/>
