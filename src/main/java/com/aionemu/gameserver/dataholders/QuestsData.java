@@ -80,12 +80,12 @@ public class QuestsData {
 	}
 
 	/**
-	 * 返回指定 NPC 势力下、玩家当前可看到的任务列表。
-	 * Returns faction quests currently visible to the player.
+	 * 返回指定 NPC 势力下、玩家当前可接取的任务列表。
+	 * Returns faction quests the player can currently start.
 	 *
 	 * @param npcFactionId NPC 势力 ID / NPC faction id
 	 * @param player 玩家 / player
-	 * @return 可见任务列表 / visible quest list
+	 * @return 可接任务列表 / startable quest list
 	 */
 	public List<QuestTemplate> getQuestsByNpcFaction(int npcFactionId, Player player) {
 		List<QuestTemplate> factionQuests = sortedByFactionId.get(npcFactionId);
@@ -99,7 +99,7 @@ public class QuestsData {
 				continue;
 			}
 			questEnv.setQuestId(questTemplate.getId());
-			if (QuestService.checkStartConditionsForDisplay(questEnv)) {
+			if (QuestService.checkStartConditions(questEnv, false)) {
 				quests.add(questTemplate);
 			}
 		}

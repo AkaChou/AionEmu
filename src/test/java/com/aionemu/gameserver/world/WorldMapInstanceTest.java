@@ -10,10 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import java.io.IOException;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class WorldMapInstanceTest {
 
@@ -105,38 +102,6 @@ class WorldMapInstanceTest {
 		assertThrows(UnsupportedOperationException.class, () -> snapshot.add(1002));
 		questIds.add(1003);
 		assertEquals(List.of(1001), snapshot);
-	}
-
-	@Test
-	void refreshQuestIdsIncludesQuestFromAlreadySpawnedNpc() throws ReflectiveOperationException {
-		QuestEngine engine = new QuestEngine();
-		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-		beanFactory.registerSingleton(QuestEngine.class.getName(), engine);
-		QuestEngine.setInstanceProvider(beanFactory.getBeanProvider(QuestEngine.class));
-		try {
-			engine.registerQuestNpc(203932).addOnQuestStart(14120);
-
-			NpcTemplate template = new NpcTemplate();
-			Field templateId = NpcTemplate.class.getDeclaredField("npcId");
-			templateId.setAccessible(true);
-			templateId.setInt(template, 203932);
-			Npc npc = objenesis.newInstance(Npc.class);
-			Field objectTemplate = VisibleObject.class.getDeclaredField("objectTemplate");
-			objectTemplate.setAccessible(true);
-			objectTemplate.set(npc, template);
-
-			WorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-			Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
-			objects.put(1, npc);
-			setField(instance, "worldMapObjects", objects);
-			setField(instance, "questIds", new ArrayList<Integer>());
-
-			instance.refreshQuestIds();
-
-			assertEquals(List.of(14120), instance.getQuestIds());
-		} finally {
-			QuestEngine.setInstanceProvider(null);
-		}
 	}
 
 	@Test

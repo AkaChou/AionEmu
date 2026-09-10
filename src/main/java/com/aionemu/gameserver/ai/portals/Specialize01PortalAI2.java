@@ -85,7 +85,7 @@ public class Specialize01PortalAI2 extends PortalAI2
 					playerHasQuest = true;
 					break;
 				} else if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
-					if (QuestService.checkStartConditionsForDisplay(new QuestEnv(getOwner(), player, questId, 0))) {
+					if (QuestService.checkStartConditions(new QuestEnv(getOwner(), player, questId, 0), false)) {
 						playerCanStartQuest = true;
 						continue;
 					}

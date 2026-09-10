@@ -161,12 +161,6 @@ public class CustomConfig {
 	@Property(key = "gameserver.basic.questsize.limit", defaultValue = "40")
 	public static int BASIC_QUEST_SIZE_LIMIT;
 	/**
-	 * 是否在玩家超过任务最大等级后仍显示任务；仅影响显示，不放宽接取限制。
-	 * Whether quests remain visible after the player exceeds the quest max level; display only, does not relax start restrictions.
-	 */
-	@Property(key = "gameserver.quest.display.ignore.max.level", defaultValue = "true")
-	public static boolean QUEST_DISPLAY_IGNORE_MAX_LEVEL;
-	/**
 	 * 是否启用副本系统。
 	 * Whether instances are enabled.
 	 */

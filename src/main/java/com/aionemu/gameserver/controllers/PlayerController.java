@@ -194,14 +194,13 @@ public class PlayerController extends CreatureController<Player> {
 			return;
 		}
 		var mapInstance = mapRegion.getParent();
-		mapInstance.refreshQuestIds();
 		HashMap<Integer, Integer> nearbyQuestList = new HashMap<>();
-		for (int questId : mapInstance.getQuestIds()) {
+		for (int questId : getOwner().getPosition().getMapRegion().getParent().getQuestIds()) {
 			int diff = 0;
 			if (questId <= 0xFFFF) {
 				diff = QuestService.getLevelRequirement(questId, getOwner().getCommonData().getLevel());
 			}
-			if (diff <= 2 && QuestService.checkStartConditionsForDisplay(new QuestEnv(null, getOwner(), questId, 0))) {
+			if (diff <= 2 && QuestService.checkStartConditions(new QuestEnv(null, getOwner(), questId, 0), false)) {
 				nearbyQuestList.put(questId, diff);
 			}
 		}

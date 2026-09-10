@@ -298,22 +298,6 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * 从当前已生成的 NPC 补齐本实例的任务索引。
-	 * Rebuild the instance quest index from the NPCs currently spawned in it.
-	 *
-	 * <p>任务引擎可能在 NPC 已生成后完成注册，或地图实例可能在任务索引变更后继续复用。
-	 * 重新登录只会重新发送现有索引，不会自动扫描 NPC，因此在生成附近任务包前需要补齐一次。
-	 * The quest engine may finish registration after NPCs have spawned, or a map instance may be reused
-	 * after the quest index changes. Relogging only resends the existing index, so scan the current NPCs
-	 * before building the nearby-quest packet.</p>
-	 */
-	public void refreshQuestIds() {
-		for (VisibleObject object : worldMapObjectsSnapshot()) {
-			addQuestIds(object);
-		}
-	}
-
-	/**
 	 * 回滚刚加入的任务 ID。
 	 * Roll back newly added quest ids.
 	 *
