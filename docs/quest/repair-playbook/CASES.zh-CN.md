@@ -279,3 +279,24 @@
 - 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/18600.xml` 通过；`git diff --check` 通过；任务书自检通过（42 个 Pattern、19 个详细案例）。用户于 2026-09-09 回复“客户端验证完成，提交，加入任务书案例”，未限定分支，按规则确认 18600 完整客户端流程验收完成。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、重启服务端；启动日志、运行日志、协议 trace 和稳定截图为 `not captured`。
 - 复用边界：仅适用于旧 handler 对奖励预览工作物品采用“有则移除、无也继续”、当前 planner 对正数 `RemoveItem` 缺失物品会 fail closed，且客户端同时存在直接 `USE_OBJECT` 与通用 `QUEST_SELECT` 入口的奖励任务。若物品是完成前必须存在的交付材料，应使用显式 `HasItem`/严格扣除；若症状是服务端确实发送了错误奖励 page 而非物品缺失，应复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`；多 NPC owner 仍需另按 `MULTI_NPC_HANDOFF_REWARD_OWNER` 检查。
 - commit：`aea256a29521b4febb327fa99c4b1a7f2773d878`。
+
+## 8.20 NPC 宽对话索引误拦截已激活任务导致 NPC 只显示结束对话
+
+- Pattern ID：`NPC_DIALOG_ROUTE_GATE_COLLISION`。
+- 代表任务：1006「Ascension / 重生为守护者」；ELYOS 转职分支。
+- 搜索症状：选择魔道星后退出副本仍要求选择将来之路、与 NPC 790001 对话只有“结束对话”、任务调试为 `Status: REWARD`、`Vars: 5 0 0 0 0`、任务没有进入下一步。
+- 玩家可见症状：ELYOS 角色在 Aion 5.8 客户端中完成 q1006 的魔道星选择并离开转职副本后，任务书仍停留在“和菲尔诺斯对话，选择将来之路”；与菲尔诺斯（Pernos，NPC template 790001）交互时只显示结束对话。数据库状态已是 `REWARD / var0=5`，但奖励选择窗口未打开。
+- 根因：
+  1. q1006 的 `s5 / START / var0=5` 经 `SETPRO9` 进入 `reward / REWARD / var0=5`，并已完成 `SetPlayerClass(SORCERER) -> teleport 210010000 -> LEVEL_AND_VISIBILITY_REFRESH`；数据库状态证明转职分支本身没有回退；
+  2. 提交 `a22bfb3a2` 引入的 `QuestEngine.requiresNpcQuestRowSelection` 在 typed dispatch 前遍历同一 NPC 的所有 `onTalkEvent` owner，并使用 `QuestProductionDispatcher.hasRoutes` 的宽 `TalkToNpc(npcId)` 索引判断候选；该索引只保证 NPC 相同，不保证 action/dialog 相同；
+  3. 普通任务 1123 的 reward 路由也挂在 790001 的 `USE_OBJECT(-1)` 上，且该角色没有 q1123 状态。宽索引把 q1123 当成当前候选后，任务列表授权门控先返回 false，`TalkEventHandler` 随后发送通用对话页 10，q1006 自身的 reward route 根本没有机会执行；这正是“只有结束对话”且上午修复前正常的边界。
+- 修复层：q1006 XML、共享 quest runtime 和回归测试。
+  1. q1006 的 `reward` 显式注册 `TALK_TO_NPC 790001 / QUEST_SELECT(31) -> SHOW_SELECT_QUEST_REWARD_WINDOW1(5)`；现有 `<npc-complete>` 继续独占 `USE_OBJECT(-1)`、`SELECT_QUEST_REWARD(1009)` 预览和 8..23 完成动作；
+  2. `QuestProductionDispatcher` 新增按 `QuestEvent.matches` 过滤实际 action/dialog 的 `hasMatchingRoutes`；NPC 门控只有在所有实际匹配项都是未授权普通任务时才拦截，同一动作存在 MISSION 或已接取 owner 时继续 typed dispatch；
+  3. `Quest1006ClientDialogAlignmentTest` 锁定 q1006 的职业映射、奖励 preview 三入口和 16 条完成路由；`QuestProductionDispatcherTest#ownerRouteLookupDoesNotConfuseAnotherTypedOwner` 锁定宽 NPC key 与实际 dialog 匹配的差异。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java`、`src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestProductionDispatcher.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/1006.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1006ClientDialogAlignmentTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestProductionDispatcherTest.java`。
+- 第一检查点：先用实际客户端 action/dialog 构造 `QuestEvent.TalkToNpc`，分别核对宽 `hasRoutes` 与 `QuestEvent.matches`；再列出同一 NPC 的全部 typed owner、metadata category、当前 `QuestState` 和 transition source/target。不能因为同 NPC 存在一个未接受普通任务，就在 typed dispatcher 之前遮蔽已处于 `START/REWARD` 的 MISSION 路由。
+- 代表测试：`Quest1006ClientDialogAlignmentTest#returnsTheRewardWindowWhenTheClientUsesQuestSelectionIngress`；`QuestProductionDispatcherTest#ownerRouteLookupDoesNotConfuseAnotherTypedOwner`。
+- 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/1006.xml` 通过；`git diff --check` 通过；IDE 增量编译生成的 `target/classes` 已包含 `hasMatchingRoutes`，字节码检查通过；只读数据库检查确认该角色为 `SORCERER / ELYOS / 210010000 / q1006 REWARD / var0=5`；用户于 2026-09-10 回复“验证成功”，结合当前任务上下文确认 q1006 客户端流程验收完成。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、停止或重启服务端。
+- 复用边界：适用于同一 NPC 同时承载多个 typed owner、事件索引使用宽 NPC key、授权门控在 dispatcher 前运行，且错误 owner 会把有效任务对话回退为通用结束对话的场景。若实际 action/dialog 已匹配但页面编号错误，复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`；若是 `QUEST_SELECT` 与对象 action 的 ID 空间混淆，复用 `OBJECT_ACTION_AND_QUEST_SELECT_ID_SPACE`；未授权普通任务仍需保留任务列表选择保护，不能全局取消 gate。
+- commit：`59bba1a`。
