@@ -278,5 +278,65 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204138" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207917" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207917" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798392" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207917" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207917" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799409" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207917" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207917" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799410" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207917" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207917" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>
