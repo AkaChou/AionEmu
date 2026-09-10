@@ -60,6 +60,14 @@ class DatabaseSchemaInitializerTest {
     }
 
     @Test
+    void loginServerSchemaIncludesSvStatsLastUpdate() throws IOException {
+        String schema = resourceText("db/mysql/al_server_ls.sql");
+
+        assertTrue(schema.contains("CREATE TABLE `svstats`"));
+        assertTrue(schema.contains("`last_update` datetime DEFAULT NULL"));
+    }
+
+    @Test
     void repairsRolledBackLunaColumnsBeforeDroppingObsoleteInstanceTables() {
         List<String> statements = DatabaseSchemaInitializer.rollbackRepairStatements(Set.of("player_id", "free_chest"));
 

@@ -295,6 +295,7 @@ CREATE TABLE `svstats` (
   `status` int(11) NOT NULL DEFAULT '0',
   `current` int(11) NOT NULL DEFAULT '0',
   `max` int(11) NOT NULL DEFAULT '0',
+  `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -67,6 +67,7 @@ final class DatabaseSchemaInitializer {
                 repairRolledBackInstanceSchema(connection, target.database());
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
+                migrateSvStatsLastUpdate(connection, target.database());
                 migrateAccountVip(connection, target.database());
                 log.debug("Database {} already contains tables; skipping schema initialization.", target.database());
                 return;
@@ -139,6 +140,33 @@ final class DatabaseSchemaInitializer {
             }
         }
         return columns;
+    }
+
+    /**
+     * 补齐登录服在线统计的最后更新时间字段，兼容已有数据库。
+     * Add the login-server online-statistics last-update column for existing databases.
+     *
+     * <p>该迁移仅在字段缺失且表已存在时执行，并且可重复运行。
+     * This migration runs only when the table exists and the column is missing, so it is idempotent.</p>
+     *
+     * @param connection 数据库连接 / Database connection
+     * @param database 数据库名 / Database name
+     * @throws SQLException schema 修复失败时 / When schema repair fails
+     */
+    private static void migrateSvStatsLastUpdate(Connection connection, String database) throws SQLException {
+        if (!"al_server_ls".equals(database)) {
+            return;
+        }
+
+        Set<String> columns = tableColumns(connection, database, "svstats");
+        if (columns.isEmpty() || columns.contains("last_update")) {
+            return;
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE `al_server_ls`.`svstats` "
+                + "ADD COLUMN `last_update` DATETIME NULL AFTER `max`");
+        }
     }
 
     private static void migrateGodstoneProcCount(Connection connection, String database) throws SQLException {
