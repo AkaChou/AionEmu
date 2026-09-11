@@ -1,6 +1,6 @@
 # Quest client contract baseline v1
 # Refreshed from the current production catalog and Aion 5.8 client mapping on 2026-09-11.
-# PAGE_NOT_IN_TASK_HTML=1206 BUTTON_WITHOUT_ROUTE=615
+# PAGE_NOT_IN_TASK_HTML=1089 BUTTON_WITHOUT_ROUTE=597
 # failure_type	quest_id	source_state	npc_id	trigger_action	shown_page	visible_action	actual_path
 BUTTON_WITHOUT_ROUTE	11003	started	798942	31	2375	39	started + NPC 798942 + 31 -> started + page 2375
 BUTTON_WITHOUT_ROUTE	11012	started	799071	31	1352	10001	started + NPC 799071 + 31 -> started + page 1352
@@ -183,8 +183,6 @@ BUTTON_WITHOUT_ROUTE	18992	unaccepted	806215	31	1011	10000	unaccepted + NPC 8062
 BUTTON_WITHOUT_ROUTE	18994	unaccepted	806241	31	1011	10000	unaccepted + NPC 806241 + 31 -> unaccepted + page 1011
 BUTTON_WITHOUT_ROUTE	19002	started	203782	31	1352	39	started + NPC 203782 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	19002	started	203783	31	1352	39	started + NPC 203783 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19008	started	203788	31	1352	39	started + NPC 203788 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19008	started	203789	31	1352	39	started + NPC 203789 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	1901	started	203131	1438	1438	10000	started + NPC 203131 + 1438 -> started + page 1438
 BUTTON_WITHOUT_ROUTE	1901	started	203131	1525	1525	10001	started + NPC 203131 + 1525 -> started + page 1525
 BUTTON_WITHOUT_ROUTE	1901	started	203830	1438	1438	10000	started + NPC 203830 + 1438 -> started + page 1438
@@ -219,13 +217,6 @@ BUTTON_WITHOUT_ROUTE	1983	started	203793	31	2375	39	started + NPC 203793 + 31 ->
 BUTTON_WITHOUT_ROUTE	1988	started	203725	1353	1353	10000	started + NPC 203725 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	1988	started	203771	1353	1353	10000	started + NPC 203771 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	1988	started	203989	1353	1353	10000	started + NPC 203989 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	1989	started	203704	1354	1354	10000	started + NPC 203704 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	203705	1354	1354	10000	started + NPC 203705 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	203706	1354	1354	10000	started + NPC 203706 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	203707	1354	1354	10000	started + NPC 203707 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	203771	1354	1354	10000	started + NPC 203771 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	801214	1354	1354	10000	started + NPC 801214 + 1354 -> started + page 1354
-BUTTON_WITHOUT_ROUTE	1989	started	801215	1354	1354	10000	started + NPC 801215 + 1354 -> started + page 1354
 BUTTON_WITHOUT_ROUTE	2002	s10	790002	2205	2205	10003	s10 + NPC 790002 + 2205 -> s10 + page 2205
 BUTTON_WITHOUT_ROUTE	20031	s10	799226	31	3399	10007	s10 + NPC 799226 + 31 -> s10 + page 3399
 BUTTON_WITHOUT_ROUTE	20032	started	799239	1353	1353	10001	started + NPC 799239 + 1353 -> started + page 1353
@@ -380,15 +371,6 @@ BUTTON_WITHOUT_ROUTE	26977	unaccepted	801764	31	1011	39	unaccepted + NPC 801764 
 BUTTON_WITHOUT_ROUTE	26985	s1	804866	1012	1012	10000	s1 + NPC 804866 + 1012 -> s1 + page 1012
 BUTTON_WITHOUT_ROUTE	2717	complete	806560	31	1011	10000	complete + NPC 806560 + 31 -> complete + page 1011
 BUTTON_WITHOUT_ROUTE	2717	unaccepted	806560	31	1011	10000	unaccepted + NPC 806560 + 31 -> unaccepted + page 1011
-BUTTON_WITHOUT_ROUTE	2722	started	278032	1353	1353	10001	started + NPC 278032 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278037	1353	1353	10001	started + NPC 278037 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278040	1353	1353	10001	started + NPC 278040 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278043	1353	1353	10001	started + NPC 278043 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278047	1353	1353	10001	started + NPC 278047 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278056	1353	1353	10001	started + NPC 278056 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278066	1353	1353	10001	started + NPC 278066 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278068	1353	1353	10001	started + NPC 278068 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2722	started	278126	1353	1353	10001	started + NPC 278126 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2724	started	278002	1353	1353	10000	started + NPC 278002 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2724	started	278014	1353	1353	10000	started + NPC 278014 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2724	started	278089	1353	1353	10000	started + NPC 278089 + 1353 -> started + page 1353
@@ -617,59 +599,19 @@ BUTTON_WITHOUT_ROUTE	80953	started	835553	31	1011	20002	started + NPC 835553 + 3
 BUTTON_WITHOUT_ROUTE	80957	started	222002	31	1011	20002	started + NPC 222002 + 31 -> started + page 1011
 BUTTON_WITHOUT_ROUTE	80959	started	222003	31	1011	20002	started + NPC 222003 + 31 -> started + page 1011
 BUTTON_WITHOUT_ROUTE	80962	started	835608	31	1011	20002	started + NPC 835608 + 31 -> started + page 1011
-PAGE_NOT_IN_TASK_HTML	11001	started	798945	31	10002		started + NPC 798945 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	11003	started	798933	31	1352		started + NPC 798933 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	11008	started	798927	31	10002		started + NPC 798927 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11008	started	798997	31	10002		started + NPC 798997 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11009	started	798945	31	10002		started + NPC 798945 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11010	started	798931	31	10002		started + NPC 798931 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11026	started	203384	31	10002		started + NPC 203384 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11026	started	798950	31	10002		started + NPC 798950 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	11036	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	11053	started	799015	31	1352		started + NPC 799015 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	11077	started	798926	31	10002		started + NPC 798926 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11103	started	798983	31	10002		started + NPC 798983 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	11123	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	11143	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	11212	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	11216	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	11233	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	11294	started	798926	31	10002		started + NPC 798926 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11294	started	799092	31	10002		started + NPC 799092 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11460	started	798954	31	10002		started + NPC 798954 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	11460	started	798985	31	10002		started + NPC 798985 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	11468	started	799503	31	2375		started + NPC 799503 + 31 -> started + page 2375
-PAGE_NOT_IN_TASK_HTML	1192	started	203098	31	10002		started + NPC 203098 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	1197	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	1198	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	1218	started	203121	31	10002		started + NPC 203121 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1218	started	203172	31	10002		started + NPC 203172 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1220	started	203172	31	10002		started + NPC 203172 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1220	started	205240	31	10002		started + NPC 205240 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1319	started	203908	31	10002		started + NPC 203908 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1324	started	203904	31	10002		started + NPC 203904 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1324	started	203940	31	10002		started + NPC 203940 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	1355	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	1363	started	203943	31	10002		started + NPC 203943 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	13800	started	802431	31	10002		started + NPC 802431 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	13800	started	804699	31	10002		started + NPC 804699 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	14014	reward	203098	31	10002		reward + NPC 203098 + 31 -> reward + page 10002
-PAGE_NOT_IN_TASK_HTML	14121	started	203903	31	10002		started + NPC 203903 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	14122	started	203917	31	10002		started + NPC 203917 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	14122	started	203934	31	10002		started + NPC 203934 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1452	started	203704	31	10002		started + NPC 203704 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1452	started	203934	31	10002		started + NPC 203934 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1469	started	790004	31	10002		started + NPC 790004 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1483	started	798126	31	10002		started + NPC 798126 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1483	started	798127	31	10002		started + NPC 798127 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1484	started	798126	31	10002		started + NPC 798126 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1484	started	798127	31	10002		started + NPC 798127 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	1514	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	1527	started	204555	31	10002		started + NPC 204555 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1527	started	205229	31	10002		started + NPC 205229 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1528	started	204553	31	10002		started + NPC 204553 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1528	started	204583	31	10002		started + NPC 204583 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1540	started	204588	31	10002		started + NPC 204588 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	15476	started	805809	31	2375		started + NPC 805809 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	15476	started	805810	31	2375		started + NPC 805810 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	15476	started	805811	31	2375		started + NPC 805811 + 31 -> started + page 2375
@@ -680,9 +622,7 @@ PAGE_NOT_IN_TASK_HTML	15480	started	805805	31	2375		started + NPC 805805 + 31 ->
 PAGE_NOT_IN_TASK_HTML	15480	started	805806	31	2375		started + NPC 805806 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	15480	started	805807	31	2375		started + NPC 805807 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	15480	started	805808	31	2375		started + NPC 805808 + 31 -> started + page 2375
-PAGE_NOT_IN_TASK_HTML	1553	started	203786	31	10002		started + NPC 203786 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	1559	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	1574	started	730025	31	10002		started + NPC 730025 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	1607	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	1640	reward	730033	-1	5		reward + NPC 730033 + -1 -> reward + page 5
 PAGE_NOT_IN_TASK_HTML	1644	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
@@ -698,15 +638,8 @@ PAGE_NOT_IN_TASK_HTML	16986	started	804862	31	1352		started + NPC 804862 + 31 ->
 PAGE_NOT_IN_TASK_HTML	16988	started	801953	31	1352		started + NPC 801953 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	17160	started	804699	31	1352		started + NPC 804699 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	17161	started	804699	31	1352		started + NPC 804699 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	1721	started	278501	31	10002		started + NPC 278501 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1721	started	278518	31	10002		started + NPC 278518 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1724	started	278519	31	10002		started + NPC 278519 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1724	started	278594	31	10002		started + NPC 278594 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1725	started	278520	31	10002		started + NPC 278520 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1725	started	278590	31	10002		started + NPC 278590 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	17526	started	806781	31	1352		started + NPC 806781 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18035	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	18213	started	205985	31	10002		started + NPC 205985 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	18303	started	730390	31	1011		started + NPC 730390 + 31 -> started + page 1011
 PAGE_NOT_IN_TASK_HTML	18314	started	799530	31	1352		started + NPC 799530 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18316	started	799530	31	1352		started + NPC 799530 + 31 -> started + page 1352
@@ -714,9 +647,6 @@ PAGE_NOT_IN_TASK_HTML	18743	started	206378	31	1352		started + NPC 206378 + 31 ->
 PAGE_NOT_IN_TASK_HTML	18743	started	206379	31	1352		started + NPC 206379 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18743	started	206380	31	1352		started + NPC 206380 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18743	started	804707	31	1352		started + NPC 804707 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	18806	started	830194	31	10002		started + NPC 830194 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	18807	started	830194	31	10002		started + NPC 830194 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	18809	started	830168	31	10002		started + NPC 830168 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	18932	started	806258	31	1352		started + NPC 806258 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18932	started	806259	31	1352		started + NPC 806259 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18951	started	209678	31	1352		started + NPC 209678 + 31 -> started + page 1352
@@ -734,9 +664,6 @@ PAGE_NOT_IN_TASK_HTML	18991	started	806214	31	1352		started + NPC 806214 + 31 ->
 PAGE_NOT_IN_TASK_HTML	18993	started	806215	31	1352		started + NPC 806215 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18995	started	806241	31	1352		started + NPC 806241 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	18997	started	806252	31	1352		started + NPC 806252 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	1909	started	203739	31	10002		started + NPC 203739 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1918	started	203835	31	10002		started + NPC 203835 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	1937	started	204573	31	10002		started + NPC 204573 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	19631	started	798155	31	1352		started + NPC 798155 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	19631	started	800411	31	1352		started + NPC 800411 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	19632	started	800411	31	1352		started + NPC 800411 + 31 -> started + page 1352
@@ -769,17 +696,9 @@ PAGE_NOT_IN_TASK_HTML	21080	started	799231	31	1352		started + NPC 799231 + 31 ->
 PAGE_NOT_IN_TASK_HTML	21080	started	799427	31	1352		started + NPC 799427 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	21137	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	21221	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	2135	started	203532	31	10002		started + NPC 203532 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	21468	started	799503	31	2375		started + NPC 799503 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	2230	started	203621	31	1352		started + NPC 203621 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	2237	started	700145	31	1352		started + NPC 700145 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	2247	started	203645	31	10002		started + NPC 203645 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2266	started	203558	31	10002		started + NPC 203558 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2266	started	203654	31	10002		started + NPC 203654 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2271	started	203557	31	10002		started + NPC 203557 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2271	started	203655	31	10002		started + NPC 203655 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2278	started	203590	31	10002		started + NPC 203590 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2279	started	203557	31	10002		started + NPC 203557 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2303	started	204378	31	1352		started + NPC 204378 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	2303	started	798082	31	1352		started + NPC 798082 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	2316	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
@@ -794,39 +713,21 @@ PAGE_NOT_IN_TASK_HTML	24014	s5	203668	39	2120		s5 + NPC 203668 + 39 -> s5 + page
 PAGE_NOT_IN_TASK_HTML	2409	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	2411	unaccepted	204364	31	1011		unaccepted + NPC 204364 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	2411	unaccepted	204366	31	1011		unaccepted + NPC 204366 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	24121	started	204301	31	10002		started + NPC 204301 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	24152	started	204768	31	10002		started + NPC 204768 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	24203	started	205150	31	2375		started + NPC 205150 + 31 -> started + page 2375
-PAGE_NOT_IN_TASK_HTML	24242	started	204372	31	10002		started + NPC 204372 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2428	started	204433	31	10002		started + NPC 204433 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2435	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	2443	unaccepted	790016	31	1011		unaccepted + NPC 790016 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	2448	unaccepted	798079	31	1011		unaccepted + NPC 798079 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	2448	unaccepted	798080	31	1011		unaccepted + NPC 798080 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	2458	started	204379	31	10002		started + NPC 204379 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2480	started	730038	31	10002		started + NPC 730038 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2498	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	2505	started	204720	31	10002		started + NPC 204720 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2512	started	204703	31	10002		started + NPC 204703 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2512	started	204753	31	10002		started + NPC 204753 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2515	started	790015	31	10002		started + NPC 790015 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2523	started	204734	31	10002		started + NPC 204734 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2523	started	204802	31	10002		started + NPC 204802 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2527	started	700328	31	1352		started + NPC 700328 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	2538	started	204827	31	10002		started + NPC 204827 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	25533	started	806112	31	1352		started + NPC 806112 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	25602	s3	806171	31	2034		s3 + NPC 806171 + 31 -> s3 + page 2034
 PAGE_NOT_IN_TASK_HTML	2569	s1	204768	31	1693		s1 + NPC 204768 + 31 -> s1 + page 1693
 PAGE_NOT_IN_TASK_HTML	2578	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	2646	started	204817	31	10002		started + NPC 204817 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2663	started	204777	31	10002		started + NPC 204777 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2670	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	26904	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	26909	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	2692	started	212164	31	10002		started + NPC 212164 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2767	started	279004	31	10002		started + NPC 279004 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	28035	unaccepted		20000	1003		unaccepted + QUEST_ACTION + 20000 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	28213	started	205986	31	10002		started + NPC 205986 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	28250	started	798804	31	1352		started + NPC 798804 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28251	started	798804	31	1352		started + NPC 798804 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28303	started	700980	31	1352		started + NPC 700980 + 31 -> started + page 1352
@@ -841,8 +742,6 @@ PAGE_NOT_IN_TASK_HTML	28743	started	206395	31	1352		started + NPC 206395 + 31 ->
 PAGE_NOT_IN_TASK_HTML	28743	started	206396	31	1352		started + NPC 206396 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28743	started	206397	31	1352		started + NPC 206397 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28743	started	804732	31	1352		started + NPC 804732 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	28806	started	830211	31	10002		started + NPC 830211 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	28807	started	830211	31	10002		started + NPC 830211 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	28833	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	28835	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	28932	started	806260	31	1352		started + NPC 806260 + 31 -> started + page 1352
@@ -861,17 +760,8 @@ PAGE_NOT_IN_TASK_HTML	28991	started	806216	31	1352		started + NPC 806216 + 31 ->
 PAGE_NOT_IN_TASK_HTML	28993	started	806217	31	1352		started + NPC 806217 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28995	started	806242	31	1352		started + NPC 806242 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	28997	started	806253	31	1352		started + NPC 806253 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	2912	started	204193	31	10002		started + NPC 204193 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2912	started	204236	31	10002		started + NPC 204236 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2913	started	204173	31	10002		started + NPC 204173 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2913	started	204193	31	10002		started + NPC 204193 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2914	started	204147	31	10002		started + NPC 204147 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2917	started	203574	31	10002		started + NPC 203574 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2917	started	204241	31	10002		started + NPC 204241 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2922	unaccepted	204108	31	1011		unaccepted + NPC 204108 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	2922	unaccepted	798058	31	1011		unaccepted + NPC 798058 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	2928	started	204261	31	10002		started + NPC 204261 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	2954	started	204191	31	10002		started + NPC 204191 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	2966	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	2967	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	2968	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
@@ -886,17 +776,12 @@ PAGE_NOT_IN_TASK_HTML	2978	started	204100	31	1352		started + NPC 204100 + 31 -> 
 PAGE_NOT_IN_TASK_HTML	2980	started	204102	31	1352		started + NPC 204102 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	2982	started	204110	31	1352		started + NPC 204110 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	30007	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
-PAGE_NOT_IN_TASK_HTML	30055	started	798929	31	10002		started + NPC 798929 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	30107	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	3018	started	730105	31	1352		started + NPC 730105 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3018	started	798150	31	1352		started + NPC 798150 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3019	started	730106	31	1352		started + NPC 730106 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3019	started	798150	31	1352		started + NPC 798150 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	30202	started	798926	31	10002		started + NPC 798926 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	30208	started	798941	31	1352		started + NPC 798941 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	30302	started	799225	31	10002		started + NPC 799225 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3037	started	798166	31	10002		started + NPC 798166 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3041	started	798167	31	10002		started + NPC 798167 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	3044	started	730145	31	1352		started + NPC 730145 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3044	started	798206	31	1352		started + NPC 798206 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3048	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
@@ -913,13 +798,6 @@ PAGE_NOT_IN_TASK_HTML	3074	started	798193	31	1352		started + NPC 798193 + 31 -> 
 PAGE_NOT_IN_TASK_HTML	3074	unaccepted	798193	1352	1352		unaccepted + NPC 798193 + 1352 -> unaccepted + page 1352
 PAGE_NOT_IN_TASK_HTML	3074	unaccepted	798193	1693	1693		unaccepted + NPC 798193 + 1693 -> unaccepted + page 1693
 PAGE_NOT_IN_TASK_HTML	30760	started	804871	31	1352		started + NPC 804871 + 31 -> started + page 1352
-PAGE_NOT_IN_TASK_HTML	3085	started	798132	31	10002		started + NPC 798132 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3085	started	798144	31	10002		started + NPC 798144 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3086	started	798132	31	10002		started + NPC 798132 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3086	started	798201	31	10002		started + NPC 798201 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3087	started	798144	31	10002		started + NPC 798144 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3087	started	798201	31	10002		started + NPC 798201 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3093	started	798185	31	10002		started + NPC 798185 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	3095	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	3096	started	700423	31	1352		started + NPC 700423 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	3096	started	700424	31	1352		started + NPC 700424 + 31 -> started + page 1352
@@ -1028,7 +906,6 @@ PAGE_NOT_IN_TASK_HTML	35064	unaccepted	804946	31	1011		unaccepted + NPC 804946 +
 PAGE_NOT_IN_TASK_HTML	35065	complete	804947	31	1011		complete + NPC 804947 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	35065	started	804947	31	1352		started + NPC 804947 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	35065	unaccepted	804947	31	1011		unaccepted + NPC 804947 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	3547	started	730024	31	10002		started + NPC 730024 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	35505	complete	799825	31	1011		complete + NPC 799825 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	35505	complete	799826	31	1011		complete + NPC 799826 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	35505	started	799825	31	2375		started + NPC 799825 + 31 -> started + page 2375
@@ -1224,7 +1101,6 @@ PAGE_NOT_IN_TASK_HTML	36547	unaccepted	804948	31	1011		unaccepted + NPC 804948 +
 PAGE_NOT_IN_TASK_HTML	36548	complete	804948	31	1011		complete + NPC 804948 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	36548	started	804948	31	2375		started + NPC 804948 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	36548	unaccepted	804948	31	1011		unaccepted + NPC 804948 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	3711	started	203844	31	10002		started + NPC 203844 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	3718	s1	279045	31	1011		s1 + NPC 279045 + 31 -> s1 + page 1011
 PAGE_NOT_IN_TASK_HTML	3718	started	279045	31	1011		started + NPC 279045 + 31 -> started + page 1011
 PAGE_NOT_IN_TASK_HTML	39601	complete	800922	31	1011		complete + NPC 800922 + 31 -> complete + page 1011
@@ -1271,8 +1147,6 @@ PAGE_NOT_IN_TASK_HTML	39615	complete	800927	31	1011		complete + NPC 800927 + 31 
 PAGE_NOT_IN_TASK_HTML	39615	complete	800928	31	1011		complete + NPC 800928 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	39615	unaccepted	800927	31	1011		unaccepted + NPC 800927 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	39615	unaccepted	800928	31	1011		unaccepted + NPC 800928 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	3970	started	203893	31	10002		started + NPC 203893 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3970	started	798386	31	10002		started + NPC 798386 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	39701	complete	800931	31	1011		complete + NPC 800931 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	39701	complete	800932	31	1011		complete + NPC 800932 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	39701	unaccepted	800931	31	1011		unaccepted + NPC 800931 + 31 -> unaccepted + page 1011
@@ -1321,11 +1195,6 @@ PAGE_NOT_IN_TASK_HTML	39715	complete	800938	31	1011		complete + NPC 800938 + 31 
 PAGE_NOT_IN_TASK_HTML	39715	unaccepted	800936	31	1011		unaccepted + NPC 800936 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	39715	unaccepted	800937	31	1011		unaccepted + NPC 800937 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	39715	unaccepted	800938	31	1011		unaccepted + NPC 800938 + 31 -> unaccepted + page 1011
-PAGE_NOT_IN_TASK_HTML	3973	started	203893	31	10002		started + NPC 203893 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	3973	started	798949	31	10002		started + NPC 798949 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	4015	started	205130	31	10002		started + NPC 205130 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	4020	started	205120	31	10002		started + NPC 205120 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	4052	started	730152	31	10002		started + NPC 730152 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	4053	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	4060	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	4074	complete	205181	1352	1352		complete + NPC 205181 + 1352 -> complete + page 1352
@@ -1333,7 +1202,6 @@ PAGE_NOT_IN_TASK_HTML	4074	complete	205181	1693	1693		complete + NPC 205181 + 16
 PAGE_NOT_IN_TASK_HTML	4074	started	205181	31	1352		started + NPC 205181 + 31 -> started + page 1352
 PAGE_NOT_IN_TASK_HTML	4074	unaccepted	205181	1352	1352		unaccepted + NPC 205181 + 1352 -> unaccepted + page 1352
 PAGE_NOT_IN_TASK_HTML	4074	unaccepted	205181	1693	1693		unaccepted + NPC 205181 + 1693 -> unaccepted + page 1693
-PAGE_NOT_IN_TASK_HTML	4082	reward	205190	-1	10002		reward + NPC 205190 + -1 -> reward + page 10002
 PAGE_NOT_IN_TASK_HTML	4087	unaccepted		1002	1003		unaccepted + QUEST_ACTION + 1002 -> started + page 1003
 PAGE_NOT_IN_TASK_HTML	45007	complete	799848	31	1011		complete + NPC 799848 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	45007	unaccepted	799848	31	1011		unaccepted + NPC 799848 + 31 -> unaccepted + page 1011
@@ -1641,9 +1509,6 @@ PAGE_NOT_IN_TASK_HTML	46548	complete	804955	31	1011		complete + NPC 804955 + 31 
 PAGE_NOT_IN_TASK_HTML	46548	started	804955	31	2375		started + NPC 804955 + 31 -> started + page 2375
 PAGE_NOT_IN_TASK_HTML	46548	unaccepted	804955	31	1011		unaccepted + NPC 804955 + 31 -> unaccepted + page 1011
 PAGE_NOT_IN_TASK_HTML	4718	started	278001	31	1011		started + NPC 278001 + 31 -> started + page 1011
-PAGE_NOT_IN_TASK_HTML	4905	started	204211	31	10002		started + NPC 204211 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	4906	started	204211	31	10002		started + NPC 204211 + 31 -> started + page 10002
-PAGE_NOT_IN_TASK_HTML	4920	started	804609	31	10002		started + NPC 804609 + 31 -> started + page 10002
 PAGE_NOT_IN_TASK_HTML	49601	complete	800925	31	1011		complete + NPC 800925 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	49601	complete	800926	31	1011		complete + NPC 800926 + 31 -> complete + page 1011
 PAGE_NOT_IN_TASK_HTML	49601	unaccepted	800925	31	1011		unaccepted + NPC 800925 + 31 -> unaccepted + page 1011

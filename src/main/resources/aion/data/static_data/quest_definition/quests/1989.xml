@@ -41,108 +41,151 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="stage-complete" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="choice" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="combat-report" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="class-report" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward-combat" status="REWARD">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="reward-class" status="REWARD">
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203704" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203704" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203704" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203705" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203705" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203705" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203706" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203706" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203706" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203707" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203707" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203707" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="801214" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="801214" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="801214" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="801215" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="801215" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="801215" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203771" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203771" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203771" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="ASK_QUEST_ACCEPT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203705" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203706" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203707" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="801214" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="801215" action="SELECT2_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
@@ -156,53 +199,681 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="stage-complete">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203705" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="SETPRO1"/>
       </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203706" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203707" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="801214" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="801215" action="SELECT2_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203705" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="SELECT4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="SELECT5_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="stage-complete" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="stage-complete" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage-complete" target="stage-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage-complete" target="choice">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+
+    <transition source="choice" target="choice">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT7_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
+      </after-commit>
+    </transition>
+    <transition source="choice" target="choice">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT7_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7_2"/>
+      </after-commit>
+    </transition>
+    <transition source="choice" target="combat-report">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SETPRO4"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="choice" target="class-report">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SETPRO5"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="combat-report" target="combat-report" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <currency-below kind="DP" amount="4000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_2"/>
+      </after-commit>
+    </transition>
+    <transition source="combat-report" target="combat-report" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="DP" amount="4000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
+    <transition source="combat-report" target="reward-combat">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <reset-currency kind="DP"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="105"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="combat-report" target="combat-report">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="class-report" target="class-report" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <currency-below kind="DP" amount="4000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_2"/>
+      </after-commit>
+    </transition>
+    <transition source="class-report" target="class-report" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="DP" amount="4000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
+      </after-commit>
+    </transition>
+    <transition source="class-report" target="reward-class">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <reset-currency kind="DP"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="105"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="class-report" target="class-report">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <npc-complete npc-id="203771" source="reward-combat" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <npc-complete npc-id="203771" source="reward-class" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

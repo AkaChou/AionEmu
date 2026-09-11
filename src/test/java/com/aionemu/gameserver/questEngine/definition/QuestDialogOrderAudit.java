@@ -23,6 +23,17 @@ import java.util.Set;
 public final class QuestDialogOrderAudit {
 	private static final Set<Integer> FIXED_EQUIPMENT_EXCHANGES = Set.of(
 		1993, 1994, 2993, 2994, 80292, 80293, 80296, 80297);
+	/**
+	 * Aion 5.8 客户端全局协议页：它们由 HtmlPages.xml 解析，不属于单个任务 HTML，
+	 * 因此即使其他任务活动页面中也引用同一 ID，仍可用于当前任务的成功、失败或默认响应。
+	 * Aion 5.8 global protocol pages: they are resolved by HtmlPages.xml rather than a single
+	 * quest HTML, so the same valid ID remains usable even when other task pages reference it.
+	 */
+	private static final Set<Integer> GLOBAL_PROTOCOL_PAGES = Set.of(
+		QuestDialogPage.QUEST_FAILED_1.id(),
+		QuestDialogPage.CHECK_USER_ITEM_OK.id(),
+		QuestDialogPage.CHECK_USER_ITEM_FAIL.id(),
+		QuestDialogPage.DEFAULT_SUCCESS.id());
 	private static final List<String> OUTPUT_FIELDS = List.of(
 		"quest_id", "source_file", "server_source_state", "npc_id", "trigger_action",
 		"actual_path", "shown_page", "client_visible_action", "client_expected",
@@ -175,7 +186,7 @@ public final class QuestDialogOrderAudit {
 	}
 
 	private static boolean isKnownGenericPage(int pageId, Set<Integer> taskHtmlPageIds) {
-		if (pageId == QuestDialogPage.QUEST_FAILED_1.id()) {
+		if (GLOBAL_PROTOCOL_PAGES.contains(pageId)) {
 			return true;
 		}
 		try {
