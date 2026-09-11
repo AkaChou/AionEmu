@@ -320,3 +320,43 @@
 - 验证命令和结果：6 个 XML 均通过 `xmllint --noout --schema .../quest_definition.xsd`；生产任务目录已无直接 `grant-reward kind="SELECTABLE_ITEM"`；`git diff --check` 和暂存差异检查通过。用户完成 18602 客户端验证；10521、20521、10530、2002、28602 的本次批量修复完成 XML/目录合同验证，尚未逐任务做人工客户端验收。按项目规则本会话未运行 Maven focused/catalog/whitelist 门禁，也未启动、停止或重启服务端。
 - 复用边界：适用于 metadata 含 `SELECTABLE_ITEM`、完成动作需要由玩家选择一个物品、且 durable reward port 不支持选择类型的任务。若可选奖励是实时奖励 action 110..124，先复用 `TARGETLESS_REALTIME_REWARD_ACTION_SPACE`；若任务没有选择项而只是固定奖励页无响应，复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT` 或 `REWARD_SELECTION_SAME_INTERACTION_RESPONSE`，不要套用本模式。
 - commit：`68d5786`。
+
+
+## 8.22 选择确认页使上交时序后移导致 SELECT_REWARD 无路由
+
+- Pattern ID：`CONFIRM_PAGE_HANDOVER_TIMING`。
+- 代表任务：1122「Delivering Pernos's Robe」。同批同型的 select2_2/select2_3 分支不重复建案例。
+- 搜索症状：审计 `BUTTON_WITHOUT_ROUTE` 指向 `SELECT_REWARD(1009)`，select2_2/select2_3 报 `CLIENT_PAGE_UNREACHED`。
+- 玩家可见症状：玩家在 select2 选完物品组合后对话无任何反应，无法上交慧眼之衣组合进入领奖，只能关闭对话。
+- 根因：Aion 5.8 客户端在 select2 的三个 `SETPRO` 选择按钮之后插入了确认页 select2_1/2/3（按钮“是我选的。”=`SELECT_QUEST_REWARD(1009)`）；旧 handler 在 `SETPRO_n` 点击时立即检查物品、删除三件套并进 `REWARD`，既不显示确认页也没有 1009 路由。5.8 客户端页面为第一证据，旧 handler 的检查与删除副作用仍然权威。
+- 修复层：任务 XML。`SETPRO1/2/3` 改为纯翻页到 `SELECT2_1/2_3`（无状态副作用）；`SELECT_QUEST_REWARD` 按持有 182200218/219/220 用唯一优先级 0/1/2 分支进 `reward1/2/3`（保留移除三件套、`LEVEL_AND_VISIBILITY_REFRESH` 与奖励窗 5/6/7），优先级 10 兜底显示 select2_4(1608)；删除被取代的 `SELECT2_1` 动作自环路由。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1122.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/JavaHandlerFamilyDefinitionTest.java`。
+- 验证命令和结果：`mvn -q -Dtest='QuestClientContractGateTest,QuestDefinitionCompilerTest,QuestDefinitionCatalogManifestTest,JavaHandlerFamilyDefinitionTest,LegacyTemplateMirrorRouteRegressionTest,Quest30313RetailAlignmentTest,ProductionCatalogWhitelistVerificationTest' -Dquest.client.contract.failOnStaleBaseline=true test` 通过（78 个测试，生产 catalog 6200 编译成功、失败 0、白名单违规 0）；审计 1122 未解决 3 -> 0；全目录审计 `EVIDENCE_REQUIRED=0`。
+- 复用边界：仅适用于“选择按钮 -> 确认页 -> 确认上交”的三段时序且旧 handler 的物品检查/删除副作用可整体后移的任务。确认页不存在、物品检查必须留在选择时执行、或确认页按钮不是 `SELECT_QUEST_REWARD` 的任务必须重新取证。
+- commit：`7268098e8`。
+
+## 8.23 客户端按钮符号更新导致旧完成动作无入口
+
+- Pattern ID：`STALE_LEGACY_BUTTON_SYMBOL`。
+- 代表任务：20031「Go To Gelkmaros / [使命]前往格尔克马洛斯」；同批同型 20036 不重复建案例。
+- 搜索症状：审计 `BUTTON_WITHOUT_ROUTE`：`s10 + NPC 799226 + QUEST_SELECT -> select8_1(3399)` 的按钮 `10007` 无路由；旧 handler 期待 `STEP_TO_11(10010)`。
+- 玩家可见症状：玩家在 select8_1 页点击“点头。”后对话无任何反应，任务卡在最后一步无法上交库尔玛武器碎片进入领奖。
+- 根因：5.8 客户端把 select8_1 的确认按钮写成 `HACTION_SETPRO8(10007)`（旧客户端为 `STEP_TO_11(10010)`）；旧 handler 分支仍监听 10010，导致 10007 无候选、10010 无客户端入口。两个动作空间同号不同义（`STEP_TO_8` 与 `SETPRO8` 同为 10007），必须以客户端 HTML 的按钮常量为准。
+- 修复层：任务 XML。`s10 -> reward` 完成路由动作 `SETPRO11` 改为 `SETPRO8`，保留上交 182215591、`var0=11`、`REWARD` 与各自既有 sync 模式（20031 `LEVEL_AND_VISIBILITY_REFRESH`，20036 `PACKET_ONLY`）。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/20031.xml`、`20036.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/GelkmarosSelect8SymbolContractTest.java`。
+- 验证命令和结果：`mvn -q -Dtest='GelkmarosSelect8SymbolContractTest' test` 通过；审计 20031/20036 的 `BUTTON_WITHOUT_ROUTE` 行清零且无新增失败。
+- 复用边界：仅适用于客户端更新了页面按钮符号且旧 handler 副作用保持权威的任务；若新符号伴随状态副作用变化（新增物品、推进不同 var），必须按新证据重取合同，不能只换动作 id。
+- commit：`d966208a3`。
+
+## 8.24 旧 handler 注释禁用的交互保持无路由并作为集中管理例外
+
+- Pattern ID：`DISABLED_INTERACTION_STAYS_UNROUTED`。
+- 代表任务：30313「[Group] Opening The Prison」。同型的 730275/799225 双 NPC 分开处理原则适用于一切“旧 handler 注释禁用”批次。
+- 搜索症状：审计 `BUTTON_WITHOUT_ROUTE`：`unaccepted + 730275/799225 + QUEST_SELECT -> select1(1011)` 的按钮 39 无路由；select1、check_user_item_ok、check_user_item_fail 三页 `CLIENT_PAGE_UNREACHED`。
+- 玩家可见症状：与水晶/囚笼交互的对话无法推进任务步骤（该交互在旧 handler 中本就被禁用）；接取与领奖仅在权威 NPC 上可用。
+- 根因：旧 handler 只在 799322 `addOnQuestStart`（SELECT_NONE 链），799225 仅在 `REWARD` 态领奖（`USE_OBJECT` 移除 182209717 后显示 10002），而 730275 的整个交互块被注释禁用。此前克隆批次给三个 NPC 都配了接取块和奖励路由，凭空产生接取页与按钮。
+- 修复层：任务 XML。删除 730275/799225 的 `NPC_START` 与 730275 全部路由（接取、对话、领奖、完成），799322 只保留接取，799225 保留领奖链；select1/check_user_item_ok/check_user_item_fail 三页保持不可达，在 `unresolved-inventory.csv` 作为集中管理例外记录（`INTENTIONAL_CLIENT_ONLY`/`EVIDENCE_BLOCKED`，缺口注明"旧 handler 注释禁用、无原版证据不启用"）。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/30313.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest30313RetailAlignmentTest.java`。
+- 验证命令和结果：`mvn -q -Dtest='Quest30313RetailAlignmentTest' test` 通过（2 个测试断言 730275 零路由、799225 不接取、领奖窗口路由归属）；审计 30313 的 2 行 `BUTTON_WITHOUT_ROUTE` 清零，3 行 `CLIENT_PAGE_UNREACHED` 为已记录例外。
+- 复用边界：仅适用于旧 handler 中被明确注释禁用且仓库内无零售证据的交互。一旦获得抓包或解包的逐 var 对话证据，应按新证据重建路由并把台账行移出例外，而不是维持禁用状态；对“handler 存在但没写该交互”的任务不适用本模式，须回到证据收集。
+- commit：`7268098e8`。
