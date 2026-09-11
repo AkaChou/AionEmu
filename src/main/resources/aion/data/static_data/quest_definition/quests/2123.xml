@@ -9,11 +9,20 @@
       <item id="182203122" count="1"/>
       <item id="182203121" count="1"/>
     </items>
-    <rewards>
-      <reward kind="EXP" id="0" amount="3905"/>
-      <reward kind="ITEM" id="125001757" amount="1"/>
-      <reward kind="ITEM" id="123000864" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3905"/>
+        <reward kind="ITEM" id="125001757" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="4280"/>
+        <reward kind="ITEM" id="123000864" amount="1"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="500"/>
+        <reward kind="EXP" id="0" amount="3430"/>
+      </group>
+    </reward-groups>
     <drops>
       <drop npc-id="210386" item-id="182203123" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="210387" item-id="182203123" chance="100" each-member="true" collecting-step="0"/>
@@ -32,8 +41,14 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="reward0" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward1" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -45,17 +60,10 @@
         <can-act template-id="700128" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-    <dialog type="NPC_START" npc-id="203550" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203550" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203550" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <dialog type="NPC_START" npc-id="203550" source="unaccepted" target="started"
+        selection-sources="unaccepted started" start-page="SELECT1"/>
 
-    <dialog type="NPC_REPORT" npc-id="700128" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700128" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT1_1"/>
       </event>
@@ -72,29 +80,119 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="ASK_QUEST_ACCEPT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="reward0" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="700128" action="SELECT1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <has-item item-id="182203121" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182203121" count="ALL"/>
+        <remove-item item-id="182203122" count="ALL"/>
+        <remove-item item-id="182203123" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO2"/>
+      </event>
+      <conditions>
+        <has-item item-id="182203122" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182203121" count="ALL"/>
+        <remove-item item-id="182203122" count="ALL"/>
+        <remove-item item-id="182203123" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO3"/>
+      </event>
+      <conditions>
+        <has-item item-id="182203123" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182203121" count="ALL"/>
+        <remove-item item-id="182203122" count="ALL"/>
+        <remove-item item-id="182203123" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" actions="SETPRO1 SETPRO2 SETPRO3"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="700128" action="SELECT1_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
+
+    <transition source="reward0" target="reward0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="203550" source="reward0" target="complete"
+        fixed-reward-indices="0 1"
+        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
+        complete-reward-index="0" finish="SELECTION_DIALOG"/>
+
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="203550" source="reward1" target="complete"
+        fixed-reward-indices="0 1"
+        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
+        complete-reward-index="1" finish="SELECTION_DIALOG"/>
+
+    <transition source="reward2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="203550" source="reward2" target="complete"
+        fixed-reward-indices="0 1"
+        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
+        complete-reward-index="2" finish="SELECTION_DIALOG"/>
 </transitions>
 </quest-definition>
