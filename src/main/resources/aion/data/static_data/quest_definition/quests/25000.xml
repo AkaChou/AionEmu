@@ -96,7 +96,7 @@
     <npc-complete npc-id="804718" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-      <transition source="s1" target="reward">
+    <transition source="s1" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804990" action="SET_SUCCEED"/>
       </event>
@@ -105,5 +105,17 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+<transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804753" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

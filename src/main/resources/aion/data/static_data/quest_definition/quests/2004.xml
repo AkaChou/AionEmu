@@ -257,5 +257,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2_1_1"/>
       </after-commit>
     </transition>
+    <transition source="v2" target="v2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203539" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

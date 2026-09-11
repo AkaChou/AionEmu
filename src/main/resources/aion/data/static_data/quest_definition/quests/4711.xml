@@ -111,19 +111,15 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="278001" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="278001" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="278001" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="279042" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <npc-complete npc-id="279042" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="730196" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <npc-complete npc-id="730196" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="started" target="started">
+
+
+
+
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278001" action="SELECT2_1"/>
       </event>
@@ -186,5 +182,5 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+  </transitions>
 </quest-definition>

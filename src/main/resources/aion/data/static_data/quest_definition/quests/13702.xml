@@ -85,5 +85,14 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="k4" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802350" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

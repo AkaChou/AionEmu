@@ -119,7 +119,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
-      <transition source="s1" target="s1">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805404" action="SELECT3_1"/>
       </event>
@@ -144,5 +144,17 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+<transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805357" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

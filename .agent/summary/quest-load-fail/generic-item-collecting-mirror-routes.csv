@@ -1,0 +1,10 @@
+quest_id,file,source,target,npc_id,action,items,success_page,failure_page
+2237,src/main/resources/aion/data/static_data/quest_definition/quests/2237.xml,started,reward,700145,CHECK_USER_HAS_QUEST_ITEM_SIMPLE,182203226:3,SHOW_SELECT_QUEST_REWARD_WINDOW1,CLOSE
+2527,src/main/resources/aion/data/static_data/quest_definition/quests/2527.xml,started,reward,700328,CHECK_USER_HAS_QUEST_ITEM,182204420:5,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+3096,src/main/resources/aion/data/static_data/quest_definition/quests/3096.xml,started,reward,700423,CHECK_USER_HAS_QUEST_ITEM,182208067:1 182208068:1 182208069:1 182208070:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+3096,src/main/resources/aion/data/static_data/quest_definition/quests/3096.xml,started,reward,700424,CHECK_USER_HAS_QUEST_ITEM,182208067:1 182208068:1 182208069:1 182208070:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+3096,src/main/resources/aion/data/static_data/quest_definition/quests/3096.xml,started,reward,700425,CHECK_USER_HAS_QUEST_ITEM,182208067:1 182208068:1 182208069:1 182208070:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+3096,src/main/resources/aion/data/static_data/quest_definition/quests/3096.xml,started,reward,700426,CHECK_USER_HAS_QUEST_ITEM,182208067:1 182208068:1 182208069:1 182208070:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+11003,src/main/resources/aion/data/static_data/quest_definition/quests/11003.xml,started,reward,798933,CHECK_USER_HAS_QUEST_ITEM,182206701:6 182206702:4,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+80356,src/main/resources/aion/data/static_data/quest_definition/quests/80356.xml,started,reward,831815,CHECK_USER_HAS_QUEST_ITEM_SIMPLE,188100124:5,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+80365,src/main/resources/aion/data/static_data/quest_definition/quests/80365.xml,started,reward,831827,CHECK_USER_HAS_QUEST_ITEM_SIMPLE,188100124:5,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6

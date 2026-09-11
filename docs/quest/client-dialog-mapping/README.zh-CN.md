@@ -32,7 +32,8 @@
 | `same-symbol-map.csv` | 去掉 `HACTION_`、`HTML_PAGE_` 前缀后的同符号词干对照 |
 | `parse-errors.csv` | 无法解析的中文任务 HTML；只有表头表示全部解析成功 |
 | `parse-recoveries.csv` | 原始标记不规范或为空的文件、恢复解析诊断及提取记录数 |
-| `legacy-quest-dialog-contracts.csv` | 从 `origin/history` 正式 retail 模板 XML 提取的 NPC、页面和报告状态合同，包含 Git 对象及内容哈希 |
+| `legacy-quest-dialog-contracts.csv` | 从全部 `origin/history` compact quest script XML 提取的每任务一份有效 NPC、页面和报告状态合同；专用区域模板覆盖聚合的 `zz_retail_simple_quests.xml` |
+| `legacy-quest-dialog-template-index.csv` | 上述 XML 的完整模板索引，保留同一任务可能存在的聚合与专用模板行，用于冲突和来源审计 |
 | `client-lifecycle-alignment.csv` | 客户端接取/报告页面图与当前 XML、旧正式模板合同的逐路由交叉审计 |
 | `quest-order-audit.csv` | active 客户端页面动作图与编译后任务 IR 的逐路径顺序审计 |
 
@@ -104,6 +105,10 @@ python3 .agent/summary/quest/align_client_quest_dialog_lifecycle.py
 python3 .agent/summary/quest/extract_legacy_quest_dialog_contracts.py --check
 python3 .agent/summary/quest/align_client_quest_dialog_lifecycle.py --check
 ```
+
+合同生成器会从 `origin/history:src/main/resources/aion/definitions/compact/quests/scripts/` 动态发现全部 XML。
+同一任务同时出现在聚合文件和专用区域文件时，有效合同表优先采用专用区域模板；只有多个专用模板互相冲突时才将有效合同降级为 `PARTIAL`。
+完整模板索引不做覆盖，因此可以用 `source_resource`、Git object 和 SHA-256 追溯每一条原始证据。
 
 `align_client_quest_dialog_lifecycle.py --write` 只应用上述强证据门槛下的 `READY` 路由；默认运行只更新报告。
 

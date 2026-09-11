@@ -45,7 +45,7 @@
     <npc-complete npc-id="204580" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-      <transition source="started" target="started">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204580" action="SELECT_NONE_1"/>
       </event>
@@ -62,5 +62,56 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204580" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <has-item item-id="182201818" count="5"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182201818" count="ALL"/>
+        <remove-item item-id="182201819" count="ALL"/>
+        <remove-item item-id="182201820" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204580" action="SETPRO2"/>
+      </event>
+      <conditions>
+        <has-item item-id="182201819" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182201818" count="ALL"/>
+        <remove-item item-id="182201819" count="ALL"/>
+        <remove-item item-id="182201820" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204580" action="SETPRO3"/>
+      </event>
+      <conditions>
+        <has-item item-id="182201820" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182201818" count="ALL"/>
+        <remove-item item-id="182201819" count="ALL"/>
+        <remove-item item-id="182201820" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

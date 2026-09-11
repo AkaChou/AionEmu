@@ -134,5 +134,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
+  <npc-item-report npc-id="800368" source="started" target="reward" item-id="182213260" required="3" failure-page="CLOSE"/>
   </transitions>
 </quest-definition>

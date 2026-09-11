@@ -43,6 +43,9 @@ class LegacyContract:
     report_target_status: str
     source_git_object: str
     source_sha256: str
+    start_page_id: int = 0
+    report_page_id: int = 0
+    reward_page_id: int = 0
 
 
 @dataclass(frozen=True)
@@ -197,6 +200,56 @@ def read_client_pages(page_path: Path, action_path: Path) -> dict[int, tuple[Cli
     return result
 
 
+def read_client_pages_by_id(page_path: Path, action_path: Path) -> dict[tuple[int, int], ClientPage]:
+    candidates: dict[tuple[int, int], ClientPage] = {}
+    conflicting: set[tuple[int, int]] = set()
+    with page_path.open(encoding="utf-8-sig", newline="") as stream:
+        for row in csv.DictReader(stream):
+            if row["source_variant"] != "active" or row["page_mapping"] != "exact":
+                continue
+            key = (int(row["quest_id"]), int(row["page_id"]))
+            candidate = ClientPage(
+                page_id=key[1],
+                page_name=row["page_constant"].removeprefix("HTML_PAGE_"),
+                actions=frozenset(),
+                source_file=row["source_file"],
+                source_sha256=row["source_sha256"],
+            )
+            previous = candidates.get(key)
+            if previous is not None and previous != candidate:
+                conflicting.add(key)
+            else:
+                candidates.setdefault(key, candidate)
+
+    actions: dict[tuple[int, int], set[int]] = {}
+    with action_path.open(encoding="utf-8-sig", newline="") as stream:
+        for row in csv.DictReader(stream):
+            if (row["source_variant"] != "active" or row["page_mapping"] != "exact"
+                    or row["action_mapping"] != "exact"):
+                continue
+            key = (int(row["quest_id"]), int(row["page_id"]))
+            candidate = candidates.get(key)
+            if candidate is None:
+                continue
+            if (row.get("source_file", candidate.source_file) != candidate.source_file
+                    or row.get("source_sha256", candidate.source_sha256) != candidate.source_sha256):
+                conflicting.add(key)
+                continue
+            actions.setdefault(key, set()).add(int(row["action_id"]))
+
+    return {
+        key: ClientPage(
+            page_id=page.page_id,
+            page_name=page.page_name,
+            actions=frozenset(actions.get(key, set())),
+            source_file=page.source_file,
+            source_sha256=page.source_sha256,
+        )
+        for key, page in candidates.items()
+        if key not in conflicting
+    }
+
+
 def read_legacy_contracts(path: Path) -> dict[int, LegacyContract]:
     grouped: dict[int, list[LegacyContract]] = {}
     with path.open(encoding="utf-8-sig", newline="") as stream:
@@ -212,6 +265,9 @@ def read_legacy_contracts(path: Path) -> dict[int, LegacyContract]:
                 report_target_status=row["report_target_status"],
                 source_git_object=row["source_git_object"],
                 source_sha256=row["source_sha256"],
+                start_page_id=int(row["start_page_id"] or 0),
+                report_page_id=int(row["report_page_id"] or 0),
+                reward_page_id=int(row["reward_page_id"] or 0),
             )
             grouped.setdefault(int(row["quest_id"]), []).append(contract)
     return {quest_id: contracts[0] for quest_id, contracts in grouped.items() if len(contracts) == 1}
@@ -225,6 +281,7 @@ def route_alignment(
     statuses: dict[str, str],
     page: ClientPage,
     contract: LegacyContract | None,
+    explicit_page: ClientPage | None = None,
 ) -> Alignment:
     route_type = element.get("type", "")
     npc_id = int(element.get("npc-id", "0"))
@@ -232,7 +289,10 @@ def route_alignment(
     target = element.get("target", "")
     page_attribute = "start-page" if route_type == "NPC_START" else "page"
     actual = element.get(page_attribute, "")
-    expected = page.page_name
+    candidate_pages = [page]
+    if explicit_page is not None and explicit_page.page_id != page.page_id:
+        candidate_pages.append(explicit_page)
+    evidence_page = explicit_page or page
     legacy_npcs = (contract.start_npcs if route_type == "NPC_START" else contract.end_npcs) if contract else frozenset()
     if contract is None:
         audit_status = "EVIDENCE_REQUIRED"
@@ -249,14 +309,26 @@ def route_alignment(
         audit_status = "EVIDENCE_REQUIRED"
         fix_status = "EVIDENCE_REQUIRED"
         reason = "current report action or status timing differs from the legacy template contract"
-    elif actual == expected:
-        audit_status = "CLIENT_LIFECYCLE_ALIGNED"
-        fix_status = "NOT_NEEDED"
-        reason = ""
     else:
-        audit_status = "CLIENT_LIFECYCLE_PAGE_MISMATCH"
-        fix_status = "READY"
-        reason = "active client has one lifecycle page exposing the required protocol action"
+        matched_page = next((candidate for candidate in candidate_pages if candidate.page_name == actual), None)
+        if matched_page is not None:
+            evidence_page = matched_page
+            audit_status = "CLIENT_LIFECYCLE_ALIGNED"
+            fix_status = "NOT_NEEDED"
+            reason = ""
+        elif explicit_page is None:
+            evidence_page = page
+            audit_status = "CLIENT_LIFECYCLE_PAGE_MISMATCH"
+            fix_status = "READY"
+            reason = "active client has one lifecycle page exposing the required protocol action"
+        else:
+            evidence_page = explicit_page
+            audit_status = "EVIDENCE_REQUIRED"
+            fix_status = "EVIDENCE_REQUIRED"
+            reason = (f"actual page {actual} differs from explicit legacy page {explicit_page.page_name} "
+                      f"and inferred client root {page.page_name}")
+    expected = evidence_page.page_name
+    expected_page_id = evidence_page.page_id
     return Alignment(
         quest_id=quest_id,
         quest_xml=relative,
@@ -269,10 +341,10 @@ def route_alignment(
         target_status=statuses.get(target, ""),
         actual_page=actual,
         expected_page=expected,
-        expected_page_id=page.page_id,
-        client_actions=" ".join(str(action) for action in sorted(page.actions)),
-        client_source_file=page.source_file,
-        client_source_sha256=page.source_sha256,
+        expected_page_id=expected_page_id,
+        client_actions=" ".join(str(action) for action in sorted(evidence_page.actions)),
+        client_source_file=evidence_page.source_file,
+        client_source_sha256=evidence_page.source_sha256,
         legacy_template_type=contract.template_type if contract else "",
         legacy_source_git_object=contract.source_git_object if contract else "",
         legacy_source_sha256=contract.source_sha256 if contract else "",
@@ -286,7 +358,9 @@ def scan(
     root: Path,
     client_pages: dict[int, tuple[ClientPage | None, ClientPage | None]],
     contracts: dict[int, LegacyContract],
+    client_pages_by_id: dict[tuple[int, int], ClientPage] | None = None,
 ) -> list[Alignment]:
+    client_pages_by_id = client_pages_by_id or {}
     quest_dir = root / "src/main/resources/aion/data/static_data/quest_definition/quests"
     rows: list[Alignment] = []
     for path in sorted(quest_dir.glob("*.xml"), key=lambda candidate: int(candidate.stem)):
@@ -303,8 +377,15 @@ def scan(
             page = candidates[0] if route_type == "NPC_START" else candidates[1] if route_type == "NPC_REPORT" else None
             if page is None:
                 continue
+            explicit_page_id = 0
+            if contract is not None and route_type == "NPC_START":
+                explicit_page_id = contract.start_page_id
+            elif contract is not None and route_type == "NPC_REPORT":
+                explicit_page_id = contract.report_page_id
+            explicit_page = client_pages_by_id.get((quest_id, explicit_page_id))
             rows.append(route_alignment(
-                quest_id, path.relative_to(root).as_posix(), digest(content), element, statuses, page, contract
+                quest_id, path.relative_to(root).as_posix(), digest(content), element, statuses,
+                page, contract, explicit_page
             ))
     return sorted(rows, key=lambda row: (row.quest_id, row.route_type, row.npc_id, row.source_node, row.target_node))
 
@@ -367,12 +448,15 @@ def render(rows: list[Alignment]) -> bytes:
 def main() -> int:
     args = parse_args()
     root = args.root.resolve()
-    pages = read_client_pages(rooted(root, args.pages), rooted(root, args.actions))
+    page_path = rooted(root, args.pages)
+    action_path = rooted(root, args.actions)
+    pages = read_client_pages(page_path, action_path)
+    pages_by_id = read_client_pages_by_id(page_path, action_path)
     contracts = read_legacy_contracts(rooted(root, args.contracts))
-    rows = scan(root, pages, contracts)
+    rows = scan(root, pages, contracts, pages_by_id)
     if args.write:
         changed = replace_ready(root, rows)
-        rows = scan(root, pages, contracts)
+        rows = scan(root, pages, contracts, pages_by_id)
         print(f"changed_routes={changed}")
     generated = render(rows)
     output = rooted(root, args.output)

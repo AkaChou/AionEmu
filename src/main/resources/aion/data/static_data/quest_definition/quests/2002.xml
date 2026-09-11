@@ -206,6 +206,15 @@
     </transition>
     <transition source="s10" target="s11">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO4"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s11">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO3"/>
       </event>
       <after-commit>

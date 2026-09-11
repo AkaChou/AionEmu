@@ -32,10 +32,13 @@
       <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
+    </node>
+    <node label="checked" status="START">
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -43,14 +46,80 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="204355" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="204355" source="started" target="reward" page="SELECT2"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204355" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="checked" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204355" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204196" count="5"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182204196" count="5"/>
+        <give-item item-id="182204234" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204355" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="checked" target="checked">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204100" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="checked" target="checked">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204100" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="checked" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204100" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204234" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182204234" count="1"/>
+        <give-item item-id="182204197" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="204355" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204100" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204100" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="checked" target="checked">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204355" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

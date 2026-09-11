@@ -94,6 +94,18 @@ class RemainingCapabilityDefinitionTest {
 			new QuestEvent.ItemPlay(182201728, 0)));
 		assertTrue(QuestEvent.matches(new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id()),
 			new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id())));
+		assertTrue(QuestEvent.matches(
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())));
+		assertTrue(QuestEvent.matches(
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()),
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())));
+		assertFalse(QuestEvent.matches(
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+			new QuestEvent.TalkToNpc(800938, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())));
+		assertFalse(QuestEvent.matches(
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+			new QuestEvent.TalkToNpc(800937, QuestDialogAction.SELECT_QUEST_REWARD.id())));
 		assertEquals(new QuestEvent.UseItem(182200501),
 			QuestEvent.routeKey(new QuestEvent.UseItem(182200501, 900008)));
 		assertEquals(new QuestEvent.ItemPlay(182201728, 0),

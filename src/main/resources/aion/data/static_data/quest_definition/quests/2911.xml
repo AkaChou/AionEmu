@@ -4,9 +4,15 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <rewards>
-      <reward kind="EXP" id="0" amount="2820"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2820"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="1000"/>
+        <reward kind="EXP" id="0" amount="2250"/>
+      </group>
+    </reward-groups>
     <start-condition-groups>
       <group><condition type="finished" quest-id="2009" reward-mode="0"/></group>
       <group><condition type="finished" quest-id="2009" reward-mode="1"/></group>
@@ -26,38 +32,26 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="reward0" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward1" status="REWARD">
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204079" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="204079" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204079" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <dialog type="NPC_START" npc-id="204079" source="unaccepted" target="started"
+        selection-sources="unaccepted started" start-page="SELECT1"/>
 
-    <dialog type="NPC_REPORT" npc-id="204193" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204193" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204079" action="ASK_QUEST_ACCEPT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204079" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204193" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -68,5 +62,49 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="reward0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204193" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204193" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+
+    <transition source="reward0" target="reward0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204193" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204193" source="reward0" target="complete"
+        fixed-reward-indices="0"
+        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
+        complete-reward-index="0" finish="SELECTION_DIALOG"/>
+
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204193" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204193" source="reward1" target="complete"
+        fixed-reward-indices="0 1"
+        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
+        complete-reward-index="1" finish="SELECTION_DIALOG"/>
+  </transitions>
 </quest-definition>

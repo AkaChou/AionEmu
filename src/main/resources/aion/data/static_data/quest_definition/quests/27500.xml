@@ -187,7 +187,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-      <transition source="started" target="started">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806265" action="SELECT2_1"/>
       </event>
@@ -195,5 +195,29 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-</transitions>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806264" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+<transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806265" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

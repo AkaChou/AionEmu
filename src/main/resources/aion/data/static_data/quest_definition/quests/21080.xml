@@ -71,7 +71,7 @@
         <give-item item-id="182207939" count="1"/>
       </actions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -79,7 +79,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799231" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -103,7 +103,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799231" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799231" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -128,7 +128,7 @@
         <give-item item-id="182207939" count="1"/>
       </actions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -136,7 +136,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799427" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -160,7 +160,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799427" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799427" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

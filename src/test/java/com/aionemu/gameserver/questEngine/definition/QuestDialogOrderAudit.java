@@ -139,7 +139,7 @@ public final class QuestDialogOrderAudit {
 					for (ClientAction action : page.actions().values()) {
 						List<QuestTransition> candidates = dialogRoutes.stream().filter(candidate ->
 							sameDialogOwner(trigger.event(), candidate.event())
-								&& dialogAction(candidate.event()) == action.actionId()
+								&& dialogActionMatches(candidate.event(), action.actionId())
 								&& startsFromNode(candidate, trigger.targetNode(), definition)).toList();
 						result.addAll(rows(definition, client.sourceFile(), trigger, dialogId,
 							action, candidates));
@@ -387,6 +387,13 @@ public final class QuestDialogOrderAudit {
 			return leftTalk.npcId() == rightTalk.npcId();
 		}
 		return left instanceof QuestEvent.QuestDialog && right instanceof QuestEvent.QuestDialog;
+	}
+
+	private static boolean dialogActionMatches(QuestEvent definition, int actionId) {
+		if (definition instanceof QuestEvent.TalkToNpc talk) {
+			return QuestEvent.matches(talk, new QuestEvent.TalkToNpc(talk.npcId(), actionId));
+		}
+		return dialogAction(definition) == actionId;
 	}
 
 	private static int dialogAction(QuestEvent event) {

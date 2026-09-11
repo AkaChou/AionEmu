@@ -12,8 +12,10 @@ from pathlib import Path
 
 
 DEFAULT_REVISION = "origin/history"
-DEFAULT_RESOURCE = "src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml"
+SCRIPT_RESOURCE_PREFIX = "src/main/resources/aion/definitions/compact/quests/scripts"
+AGGREGATE_RETAIL_RESOURCE = f"{SCRIPT_RESOURCE_PREFIX}/zz_retail_simple_quests.xml"
 DEFAULT_OUTPUT = "docs/quest/client-dialog-mapping/legacy-quest-dialog-contracts.csv"
+DEFAULT_TEMPLATE_INDEX_OUTPUT = "docs/quest/client-dialog-mapping/legacy-quest-dialog-template-index.csv"
 
 
 @dataclass(frozen=True)
@@ -53,8 +55,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Extract legacy retail quest dialog contracts.")
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--revision", default=DEFAULT_REVISION)
-    parser.add_argument("--resource", default=DEFAULT_RESOURCE)
+    parser.add_argument("--resource", action="append",
+                        help="Limit extraction to one origin/history resource; repeat for multiple resources. "
+                             "By default all compact quest script XML files are discovered.")
     parser.add_argument("--output", type=Path, default=Path(DEFAULT_OUTPUT))
+    parser.add_argument("--template-index-output", type=Path, default=Path(DEFAULT_TEMPLATE_INDEX_OUTPUT))
     parser.add_argument("--check", action="store_true", help="Fail if the generated output differs.")
     return parser.parse_args()
 
@@ -68,6 +73,20 @@ def git_bytes(root: Path, revision: str, resource: str) -> tuple[bytes, str]:
         ["git", "rev-parse", spec], cwd=root, check=True, text=True, stdout=subprocess.PIPE
     ).stdout.strip()
     return content, git_object
+
+
+def discover_resources(root: Path, revision: str) -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", revision],
+        cwd=root,
+        check=True,
+        text=True,
+        stdout=subprocess.PIPE,
+    )
+    return sorted(
+        path for path in result.stdout.splitlines()
+        if path.startswith(f"{SCRIPT_RESOURCE_PREFIX}/") and path.endswith(".xml")
+    )
 
 
 def ids(element: ET.Element, attribute: str) -> str:
@@ -103,12 +122,11 @@ def extract_contracts(
             continue
         template = element.tag
         start_type = element.get("start_type", "TALK")
-        start_npcs = ids(element, "start_ids") if template == "data_driven_quest" else ids(element, "start_npc_ids")
-        end_npcs = ids(element, "end_npc_ids")
+        start_npcs = (ids(element, "start_ids") if template == "data_driven_quest"
+                      else ids(element, "start_npc_ids") or ids(element, "start_npc_id"))
+        end_npcs = ids(element, "end_npc_ids") or ids(element, "end_npc_id")
         if template == "monster_hunt" and not end_npcs:
             end_npcs = start_npcs
-        elif template == "item_order" and not end_npcs:
-            end_npcs = ids(element, "end_npc_id")
 
         values: dict[str, str] = {
             "contract_scope": "PARTIAL",
@@ -320,6 +338,68 @@ def extract_contracts(
     return sorted(contracts, key=lambda contract: (contract.quest_id, contract.template_type))
 
 
+def extract_resources(
+    root: Path,
+    revision: str,
+    resources: list[str],
+) -> list[Contract]:
+    contracts: list[Contract] = []
+    for resource in resources:
+        content, git_object = git_bytes(root, revision, resource)
+        contracts.extend(extract_contracts(content, revision, resource, git_object))
+    return sorted(contracts, key=lambda contract: (
+        contract.quest_id, contract.template_type, contract.source_resource))
+
+
+CONTRACT_COMPARISON_FIELDS = tuple(
+    field for field in Contract.__dataclass_fields__
+    if not field.startswith("source_")
+)
+
+
+def contract_signature(contract: Contract) -> tuple[object, ...]:
+    return tuple(getattr(contract, field) for field in CONTRACT_COMPARISON_FIELDS)
+
+
+def is_aggregate_retail_contract(contract: Contract) -> bool:
+    return contract.source_resource == AGGREGATE_RETAIL_RESOURCE
+
+
+def select_effective_contracts(contracts: list[Contract]) -> list[Contract]:
+    grouped: dict[int, list[Contract]] = {}
+    for contract in contracts:
+        grouped.setdefault(contract.quest_id, []).append(contract)
+
+    effective: list[Contract] = []
+    for quest_id, rows in grouped.items():
+        specialized = [row for row in rows if not is_aggregate_retail_contract(row)]
+        specialized_full = [row for row in specialized if row.contract_scope == "FULL"]
+        aggregate_full = [row for row in rows
+                          if is_aggregate_retail_contract(row) and row.contract_scope == "FULL"]
+        if specialized_full:
+            candidates = specialized_full
+        elif aggregate_full:
+            candidates = aggregate_full
+        elif specialized:
+            candidates = specialized
+        else:
+            candidates = rows
+
+        signatures = {contract_signature(candidate) for candidate in candidates}
+        representative = min(candidates, key=lambda row: (row.source_resource, row.template_type))
+        if len(signatures) != 1:
+            representative = Contract(
+                **{
+                    **asdict(representative),
+                    "contract_scope": "PARTIAL",
+                    "unresolved_reason": "conflicting specialized legacy template contracts",
+                }
+            )
+        effective.append(representative)
+    return sorted(effective, key=lambda contract: (
+        contract.quest_id, contract.template_type, contract.source_resource))
+
+
 def render(contracts: list[Contract]) -> bytes:
     stream = io.StringIO(newline="")
     fields = list(Contract.__dataclass_fields__)
@@ -333,14 +413,28 @@ def main() -> int:
     args = parse_args()
     root = args.root.resolve()
     output = args.output if args.output.is_absolute() else root / args.output
-    content, git_object = git_bytes(root, args.revision, args.resource)
-    generated = render(extract_contracts(content, args.revision, args.resource, git_object))
+    template_index_output = (args.template_index_output if args.template_index_output.is_absolute()
+                             else root / args.template_index_output)
+    resources = args.resource or discover_resources(root, args.revision)
+    if not resources:
+        raise SystemExit(f"no legacy quest script resources found at {SCRIPT_RESOURCE_PREFIX}")
+    contracts = extract_resources(root, args.revision, resources)
+    effective = select_effective_contracts(contracts)
+    generated = render(effective)
+    generated_index = render(contracts)
     if args.check:
         if not output.is_file() or output.read_bytes() != generated:
             raise SystemExit(f"legacy quest dialog contracts are stale: {output}")
+        if (not template_index_output.is_file()
+                or template_index_output.read_bytes() != generated_index):
+            raise SystemExit(f"legacy quest dialog template index is stale: {template_index_output}")
         return 0
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(generated)
+    template_index_output.parent.mkdir(parents=True, exist_ok=True)
+    template_index_output.write_bytes(generated_index)
+    print(f"resources={len(resources)} templates={len(contracts)} effective={len(effective)} "
+          f"output={output} template_index={template_index_output}")
     return 0
 
 

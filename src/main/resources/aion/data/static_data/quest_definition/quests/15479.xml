@@ -207,7 +207,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805802" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -354,7 +354,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805804" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -496,7 +496,7 @@
     <npc-complete npc-id="805804" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-      <transition source="started" target="reward">
+    <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805800" action="SELECT_QUEST_REWARD"/>
       </event>
@@ -523,5 +523,43 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805802" action="SELECT_NONE_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805804" action="SELECT_NONE_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805802" action="SELECT_NONE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805804" action="SELECT_NONE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

@@ -132,6 +132,55 @@ class ExtractLegacyQuestDialogContractsTest(unittest.TestCase):
                          (contract.progress_vars, contract.progress_npc_ids,
                           contract.progress_page_ids, contract.progress_action_ids))
 
+    def test_selects_specialized_contract_over_aggregate_retail_resource(self) -> None:
+        aggregate = contracts.extract_contracts(
+            b'<quest_scripts><monster_hunt id="7" start_npc_ids="0" end_npc_ids="20"/></quest_scripts>',
+            "history", contracts.AGGREGATE_RETAIL_RESOURCE, "aggregate-object"
+        )
+        specialized = contracts.extract_contracts(
+            b'<quest_scripts><monster_hunt id="7" start_npc_ids="10" end_npc_ids="20"/></quest_scripts>',
+            "history", f"{contracts.SCRIPT_RESOURCE_PREFIX}/village_mission.xml", "special-object"
+        )
+
+        [effective] = contracts.select_effective_contracts(aggregate + specialized)
+
+        self.assertEqual("10", effective.start_npc_ids)
+        self.assertEqual(f"{contracts.SCRIPT_RESOURCE_PREFIX}/village_mission.xml",
+                         effective.source_resource)
+
+    def test_marks_conflicting_specialized_contracts_partial(self) -> None:
+        first = contracts.extract_contracts(
+            b'<quest_scripts><monster_hunt id="7" start_npc_ids="10"/></quest_scripts>',
+            "history", f"{contracts.SCRIPT_RESOURCE_PREFIX}/a.xml", "first-object"
+        )
+        second = contracts.extract_contracts(
+            b'<quest_scripts><monster_hunt id="7" start_npc_ids="11"/></quest_scripts>',
+            "history", f"{contracts.SCRIPT_RESOURCE_PREFIX}/b.xml", "second-object"
+        )
+
+        [effective] = contracts.select_effective_contracts(first + second)
+
+        self.assertEqual("PARTIAL", effective.contract_scope)
+        self.assertIn("conflicting specialized", effective.unresolved_reason)
+
+    def test_generalizes_singular_start_and_end_npc_attributes(self) -> None:
+        source = b"""<quest_scripts>
+  <crafting_rewards id="1941" start_npc_id="203788" end_npc_id="203700"/>
+</quest_scripts>"""
+
+        [contract] = contracts.extract_contracts(source, "history", "crafting.xml", "object-id")
+
+        self.assertEqual(("203788", "203700"),
+                         (contract.start_npc_ids, contract.end_npc_ids))
+
+    def test_discovers_compact_script_resources_from_origin_history(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+
+        resources = contracts.discover_resources(root, contracts.DEFAULT_REVISION)
+
+        self.assertGreaterEqual(len(resources), 49)
+        self.assertIn(contracts.AGGREGATE_RETAIL_RESOURCE, resources)
+
 
 if __name__ == "__main__":
     unittest.main()

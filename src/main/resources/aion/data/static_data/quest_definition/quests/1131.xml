@@ -140,5 +140,13 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="shugo" target="shugo">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799093" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

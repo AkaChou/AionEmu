@@ -157,7 +157,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806171" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s3">
@@ -194,11 +194,11 @@
     </transition>
     <transition source="s3" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806171" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="806171" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
 

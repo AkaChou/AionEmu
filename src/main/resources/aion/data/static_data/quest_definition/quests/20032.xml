@@ -184,7 +184,7 @@
       </after-commit>
     </transition>
     <!-- 组队/联盟状态时拒绝进入实例。 In a group, entry to the instance is refused. -->
-    <transition source="s2" target="s2">
+    <transition source="s2" target="s2" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799325" action="SETPRO3"/>
       </event>
@@ -197,7 +197,7 @@
       </after-commit>
     </transition>
     <!-- 单人时进入塔洛克空穴并推进。 Solo players enter Taloc Hollow and advance. -->
-    <transition source="s2" target="s3">
+    <transition source="s2" target="s3" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799325" action="SETPRO3"/>
       </event>
@@ -534,5 +534,29 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799239" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799258" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

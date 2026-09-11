@@ -1,0 +1,16 @@
+quest_id,file,kind,source,target,npc_id,items,success_page,failure_page
+2237,src/main/resources/aion/data/static_data/quest_definition/quests/2237.xml,DIRECT_SIMPLE,started,reward,832822,182203226:3,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+16921,src/main/resources/aion/data/static_data/quest_definition/quests/16921.xml,DIRECT_SIMPLE,k1,reward,802431,186000256:20,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+16930,src/main/resources/aion/data/static_data/quest_definition/quests/16930.xml,DIRECT_SIMPLE,started,reward,804626,186000257:10,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+16992,src/main/resources/aion/data/static_data/quest_definition/quests/16992.xml,CLONE_ITEM_CHECK,k1,reward,802048,,,
+25230,src/main/resources/aion/data/static_data/quest_definition/quests/25230.xml,DIRECT_SIMPLE,started,reward,805226,185000114:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+25231,src/main/resources/aion/data/static_data/quest_definition/quests/25231.xml,DIRECT_SIMPLE,started,reward,805226,185000115:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+25232,src/main/resources/aion/data/static_data/quest_definition/quests/25232.xml,DIRECT_SIMPLE,started,reward,805226,185000116:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,
+30706,src/main/resources/aion/data/static_data/quest_definition/quests/30706.xml,CLONE_ITEM_REPORT,started,reward,800368,,,
+30756,src/main/resources/aion/data/static_data/quest_definition/quests/30756.xml,CLONE_ITEM_REPORT,started,reward,800368,,,
+80356,src/main/resources/aion/data/static_data/quest_definition/quests/80356.xml,DIRECT_SIMPLE,started,reward,831819,188100124:5,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+80357,src/main/resources/aion/data/static_data/quest_definition/quests/80357.xml,CLONE_ITEM_REPORT,started,reward,831816,,,
+80358,src/main/resources/aion/data/static_data/quest_definition/quests/80358.xml,CLONE_ITEM_REPORT,started,reward,831817,,,
+80365,src/main/resources/aion/data/static_data/quest_definition/quests/80365.xml,DIRECT_SIMPLE,started,reward,831819,188100124:5,SHOW_SELECT_QUEST_REWARD_WINDOW1,SELECT6
+80366,src/main/resources/aion/data/static_data/quest_definition/quests/80366.xml,CLONE_ITEM_REPORT,started,reward,831828,,,
+80367,src/main/resources/aion/data/static_data/quest_definition/quests/80367.xml,CLONE_ITEM_REPORT,started,reward,831829,,,

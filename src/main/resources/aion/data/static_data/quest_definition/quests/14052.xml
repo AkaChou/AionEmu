@@ -444,7 +444,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
-      <transition source="s1" target="s1">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204625" action="SELECT2_1"/>
       </event>
@@ -516,5 +516,56 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_3_1_1"/>
       </after-commit>
     </transition>
-</transitions>
+<transition source="s2" target="s3" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204629" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <has-item item-id="182215340" count="1"/>
+        <has-item item-id="182215341" count="1"/>
+        <has-item item-id="182215342" count="1"/>
+        <has-item item-id="182215343" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215340" count="1"/>
+        <remove-item item-id="182215341" count="1"/>
+        <remove-item item-id="182215342" count="1"/>
+        <remove-item item-id="182215343" count="1"/>
+        <give-item item-id="182215344" count="1"/>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+<transition source="s2" target="s2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204629" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204629" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204629" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

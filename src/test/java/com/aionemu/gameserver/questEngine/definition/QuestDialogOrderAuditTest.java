@@ -136,6 +136,38 @@ class QuestDialogOrderAuditTest {
 	}
 
 	@Test
+	void itemCheckAliasMatchesTheSimpleClientAction() {
+		QuestCatalog catalog = catalog(90007, List.of(
+			new QuestNode("unaccepted", new NodeProjection(QuestStatus.NONE, Map.of())),
+			new QuestNode("started", new NodeProjection(QuestStatus.START, Map.of())),
+			new QuestNode("reward", new NodeProjection(QuestStatus.REWARD, Map.of()))), List.of(
+			new QuestTransition(new QuestEvent.TalkToNpc(100007, 31), List.of(), List.of(), "started",
+				List.of(new AfterCommitAction.ShowQuestDialog(500)), null, "unaccepted"),
+			new QuestTransition(
+				new QuestEvent.TalkToNpc(100007, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+				List.of(), List.of(), "reward", List.of(), null, "started")));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> clientQuests = Map.of(90007,
+			new QuestDialogOrderAudit.ClientQuest("QUEST_Q90007.html", Map.of(500,
+				new QuestDialogOrderAudit.ClientPage(500, "item-check", 1, Map.of(
+					QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id(),
+					new QuestDialogOrderAudit.ClientAction(
+						QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id(),
+						"QUEST_Q90007.html#item-check")), Map.of(), "QUEST_Q90007.html#item-check"))));
+
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(catalog, clientQuests);
+
+		assertEquals(List.of("PAGE_ACTION_MATCHED"), rows.stream()
+			.filter(row -> row.clientVisibleAction().equals(Integer.toString(
+				QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())))
+			.map(QuestDialogOrderAudit.AuditRow::auditStatus).toList());
+		assertTrue(rows.stream()
+			.filter(row -> row.clientVisibleAction().equals(Integer.toString(
+				QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())))
+			.allMatch(row -> row.candidate() != null
+				&& row.candidate().targetNode().equals("reward")));
+	}
+
+	@Test
 	void clientPageReaderRejectsMultipleActiveSources() throws Exception {
 		assertAmbiguousClientPages("""
 			90021,q21-a.html,active,hash21a,1,first,501,exact,0

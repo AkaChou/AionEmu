@@ -276,5 +276,13 @@
       </after-commit>
     </transition>
 
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

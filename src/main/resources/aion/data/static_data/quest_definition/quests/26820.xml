@@ -32,7 +32,7 @@
   </nodes>
   <transitions>
     <!-- 806075 启动入口(旧 handler 仅 addOnQuestStart)。Start entry via 806075. -->
-    <dialog type="NPC_START" npc-id="806075" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
     <!-- 未接取时与 Corto 对话显示提示。Unaccepted dialog with Corto shows the prompt. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
@@ -92,6 +92,14 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806233" action="SETPRO1"/>
+      </event>
+      <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>

@@ -5,6 +5,7 @@ import csv
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -316,6 +317,27 @@ class AlignClientQuestDialogLifecycleTest(unittest.TestCase):
             result = alignment.read_client_pages(pages, actions)
 
         self.assertNotIn(1, result)
+
+    def test_explicit_legacy_page_overrides_inferred_client_lifecycle_root(self) -> None:
+        contract = alignment.LegacyContract(
+            "monster_hunt", frozenset({801281}), frozenset({801281}), "START", 1009, "REWARD",
+            "legacy-object", "legacy-hash", start_page_id=1011, report_page_id=1352,
+            reward_page_id=5,
+        )
+        inferred = alignment.ClientPage(2375, "select5", frozenset({1009}), "q16960.html", "client-hash")
+        explicit = alignment.ClientPage(1352, "SELECT2", frozenset({1353}), "q16960.html", "client-hash")
+        element = ET.fromstring(
+            '<dialog type="NPC_REPORT" npc-id="801281" source="k1" target="reward" page="SELECT2"/>'
+        )
+
+        row = alignment.route_alignment(
+            16960, "quests/16960.xml", "quest-hash", element,
+            {"k1": "START", "reward": "REWARD"}, inferred, contract, explicit,
+        )
+
+        self.assertEqual("CLIENT_LIFECYCLE_ALIGNED", row.audit_status)
+        self.assertEqual(1352, row.expected_page_id)
+        self.assertEqual("SELECT2", row.expected_page)
 
 
 if __name__ == "__main__":

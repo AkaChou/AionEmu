@@ -54,10 +54,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="804711" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="804715" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+
+
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804715" action="QUEST_SELECT"/>

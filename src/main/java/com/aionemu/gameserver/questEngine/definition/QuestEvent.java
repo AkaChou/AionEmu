@@ -758,7 +758,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		Objects.requireNonNull(actual, "actual");
 		if (definition instanceof TalkToNpc expected && actual instanceof TalkToNpc observed) {
 			return expected.npcId() == observed.npcId()
-				&& (expected.dialogId() == null || expected.dialogId().equals(observed.dialogId()));
+				&& matchesDialogId(expected.dialogId(), observed.dialogId());
 		}
 		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
 			return expected.itemId() == observed.itemId();
@@ -811,6 +811,32 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return true;
 		}
 		return definition.equals(actual);
+	}
+
+	/**
+	 * 兼容不同客户端版本用于同一交付检查的 HACTION_CHECK_USER_HAS_QUEST_ITEM(39)
+	 * 与 HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE(20002)。该匹配仅补齐缺失动作，
+	 * 不改变编译期冲突检测或显式定义。
+	 *
+	 * Treats HACTION_CHECK_USER_HAS_QUEST_ITEM(39) and
+	 * HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE(20002), used by different client
+	 * revisions for the same turn-in check, as runtime aliases. This matching only
+	 * fills a missing action; it does not alter compile-time conflict detection or
+	 * explicit definitions.
+	 */
+	private static boolean matchesDialogId(Integer expected, Integer observed) {
+		if (expected == null) {
+			return true;
+		}
+		if (expected.equals(observed)) {
+			return true;
+		}
+		return observed != null && isItemCheckDialogId(expected) && isItemCheckDialogId(observed);
+	}
+
+	private static boolean isItemCheckDialogId(int dialogId) {
+		return dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
+			|| dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id();
 	}
 
 	/**
