@@ -437,6 +437,31 @@ python3 .agent/summary/quest/check_quest_repair_playbook.py
 
 脚本聚合主 Playbook、Pattern 索引和代表案例文档，验证 Pattern ID 唯一、五列指纹完整、所有索引和详细案例的代表提交至少被一个 Pattern 覆盖、Git commit 可解析、代表测试类和方法存在，以及详细案例包含 Pattern ID、症状、根因、修复层、修改文件、验证结果、复用边界和 commit。该检查只验证 Playbook 的结构与引用闭环，不替代任务 focused test、production catalog/whitelist 或客户端/runtime 验收。
 
+### 7.6 客户端对话契约批次治理模式（2026-09 治理轮）
+
+对全目录 `QuestDialogOrderAudit` 未解决行的批次治理遵循以下流程，可作为后续同类治理的固定流程引用：
+
+1. **先分类后修改**：把审计未解决行与客户端页面图、任务 XML 对话声明、`legacy-quest-dialog-contracts.csv` 契约做逐行关联，产出 `unresolved-inventory.csv`（含 decision/blocker/evidence_gaps）。分类只允许 `INTENTIONAL_CLIENT_ONLY`、`EVIDENCE_BLOCKED`、`FIX_XML`、`FIX_GENERATOR`、`GLOBAL_PROTOCOL`；无法在仓库内取证（唯一契约缺失、start item 未证实、per-var 页面映射缺失）的行一律升级为 `EVIDENCE_BLOCKED`/`INTENTIONAL_CLIENT_ONLY` 并逐行写明缺失证据，不留"待修复"占位。
+2. **按契约族批量修复**：每批一个页面族或契约族（报告协议路由、select_none 接取链、NPC_START 生成链、accept/refuse close 回退、NPC_REPORT 页指回），先 dry-run 生成 manifest 审阅，再写入；写入用模板化文本插入、`ET.fromstring` 校验、SHA-256 并发检查，脚本必须幂等（重跑不重复插入）。
+3. **每批后审计并回读**：全量审计既当编译器（AMBIGUOUS_TRANSITION 立即暴露批次冲突）也当验收器；冲突典型来源是 `expandNpcReport` 不做显式路由过滤（与 `expandNpcStart` 不同），新增显式 `QUEST_SELECT` 路由前必须检查同 (source, npc) 是否已有 `NPC_REPORT` 生成。
+4. **审计后必须刷新基线与台账**：`refresh_contract_baseline_with_aliases.py`（目标 0 指纹）、`extract_legacy_handler_action_contracts.py`（READY 队列 0）、重建 `unresolved-inventory.csv`。
+5. **回归与静态检查**：三个映射回归脚本、`git diff --check`、修改 XML 的 `xmllint --noout`，Java 测试用 IDEA headless `inspect`（scope 限定测试目录，输出目录无 problem 文件即通过）。
+
+本批次验证命令组合（无需 Maven）：
+
+```bash
+CP="src/main/resources:src/test/resources:target/test-classes:target/classes:$(cat .agent/summary/quest-load-fail/maven-test-classpath.txt)"
+java -cp "$CP" com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
+  docs/quest/client-dialog-mapping/quest-dialog-pages.csv \
+  docs/quest/client-dialog-mapping/quest-dialog-action-details.csv \
+  .agent/summary/quest-load-fail/quest-order-audit-current.csv
+python3 .agent/summary/quest-load-fail/refresh_contract_baseline_with_aliases.py
+python3 .agent/summary/quest-load-fail/extract_legacy_handler_action_contracts.py
+python3 .agent/summary/quest-load-fail/test_extract_legacy_handler_action_contracts.py
+python3 .agent/summary/quest/test_extract_legacy_quest_dialog_contracts.py
+python3 .agent/summary/quest/test_align_client_quest_dialog_lifecycle.py
+```
+
 ## 8. 模式指纹与代表案例
 
 增长型证据已从主 Playbook 拆分，方法论、验证门禁和交付规则继续保留在本文档：
