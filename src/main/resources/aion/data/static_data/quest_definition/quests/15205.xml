@@ -3,24 +3,23 @@
   <metadata name="Cygnea Fountain of Luck" display-name-id="1801259" min-level="55" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
       <item id="186000469" count="100"/>
     </items>
+    <inventory-items>
+      <item id="186000469" count="1"/>
+    </inventory-items>
     <bonuses>
       <bonus level="2" type="MEDAL"/>
     </bonuses>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
@@ -31,88 +30,179 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="701429" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="reward" priority="0">
+    <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="701429" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="USE_OBJECT"/>
       </event>
       <conditions>
-        <has-item item-id="186000469" count="100"/>
+        <has-item item-id="186000469" count="1"/>
       </conditions>
-      <actions>
-        <remove-item item-id="186000469" count="100"/>
-      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="10">
+    <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="701429" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="701429" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <dialog type="NPC_START" npc-id="804788" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804788" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <has-item item-id="186000469" count="100"/>
+        <has-item item-id="186000469" count="1"/>
       </conditions>
-      <actions>
-        <remove-item item-id="186000469" count="100"/>
-      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="10">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804788" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804788" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-      <transition source="started" target="reward">
+    <transition source="unaccepted" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="701429" action="SETPRO1"/>
       </event>
+      <conditions>
+        <start-eligible/>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701429" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000469" count="100"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="complete" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804788" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000469" count="100"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000469" count="100"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>
