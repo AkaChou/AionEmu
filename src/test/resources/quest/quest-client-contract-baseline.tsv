@@ -1,6 +1,6 @@
 # Quest client contract baseline v1
 # Refreshed from the current production catalog and Aion 5.8 client mapping on 2026-09-11.
-# PAGE_NOT_IN_TASK_HTML=1089 BUTTON_WITHOUT_ROUTE=416
+# PAGE_NOT_IN_TASK_HTML=1089 BUTTON_WITHOUT_ROUTE=408
 # failure_type	quest_id	source_state	npc_id	trigger_action	shown_page	visible_action	actual_path
 BUTTON_WITHOUT_ROUTE	11003	started	798942	31	2375	39	started + NPC 798942 + 31 -> started + page 2375
 BUTTON_WITHOUT_ROUTE	11012	started	799071	31	1352	10001	started + NPC 799071 + 31 -> started + page 1352
@@ -279,10 +279,6 @@ BUTTON_WITHOUT_ROUTE	2919	started	700212	1353	1353	10001	started + NPC 700212 + 
 BUTTON_WITHOUT_ROUTE	2920	started	204141	1353	1353	10010	started + NPC 204141 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2920	started	204141	1354	1354	10010	started + NPC 204141 + 1354 -> started + page 1354
 BUTTON_WITHOUT_ROUTE	2920	started	204141	1355	1355	10011	started + NPC 204141 + 1355 -> started + page 1355
-BUTTON_WITHOUT_ROUTE	2925	started	204127	1353	1353	10001	started + NPC 204127 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2925	started	204193	1353	1353	10001	started + NPC 204193 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2925	started	204235	1353	1353	10001	started + NPC 204235 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	2925	started	204261	1353	1353	10001	started + NPC 204261 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2962	started	204253	1353	1353	10001	started + NPC 204253 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2962	started	278067	1353	1353	10001	started + NPC 278067 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2962	started	278137	1353	1353	10001	started + NPC 278137 + 1353 -> started + page 1353
@@ -310,10 +306,6 @@ BUTTON_WITHOUT_ROUTE	3044	unaccepted	798206	31	1011	1009	unaccepted + NPC 798206
 BUTTON_WITHOUT_ROUTE	3055	unaccepted	730146	31	1011	39	unaccepted + NPC 730146 + 31 -> unaccepted + page 1011
 BUTTON_WITHOUT_ROUTE	30706	started	800368	31	2375	20002	started + NPC 800368 + 31 -> started + page 2375
 BUTTON_WITHOUT_ROUTE	30756	started	800368	31	2375	20002	started + NPC 800368 + 31 -> started + page 2375
-BUTTON_WITHOUT_ROUTE	3082	started	204030	1353	1353	10001	started + NPC 204030 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	3082	started	700416	1353	1353	10001	started + NPC 700416 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	3082	started	798116	1353	1353	10001	started + NPC 798116 + 1353 -> started + page 1353
-BUTTON_WITHOUT_ROUTE	3082	started	798155	1353	1353	10001	started + NPC 798155 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	3088	started	798132	1353	1353	10001	started + NPC 798132 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	3088	started	798166	1353	1353	10001	started + NPC 798166 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	3088	started	798201	1353	1353	10001	started + NPC 798201 + 1353 -> started + page 1353
