@@ -26,41 +26,77 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
+    <node label="started0" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="started1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="started2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="798450" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
-      <accept-actions>
-        <give-item item-id="152203543" count="1"/>
-        <give-item item-id="152203544" count="1"/>
-      </accept-actions>
-    </dialog>
-    <dialog type="NPC_REPORT" npc-id="798450" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798450" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="798451" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798451" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798450" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_1"/>
       </event>
@@ -68,7 +104,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started0" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_2"/>
       </event>
@@ -76,7 +112,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started0" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_3"/>
       </event>
@@ -84,5 +120,467 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_3"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started0" target="started1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO10"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="KINAH" amount="167500"/>
+      </conditions>
+      <actions>
+        <decrease-currency kind="KINAH" amount="167500"/>
+        <give-item item-id="152203543" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO10"/>
+      </event>
+      <conditions>
+        <currency-below kind="KINAH" amount="167500"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_4_4"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO20"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="KINAH" amount="223000"/>
+      </conditions>
+      <actions>
+        <decrease-currency kind="KINAH" amount="223000"/>
+        <give-item item-id="152203544" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO20"/>
+      </event>
+      <conditions>
+        <currency-below kind="KINAH" amount="223000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_4_4"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SELECT1_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_3"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO10"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="KINAH" amount="167500"/>
+      </conditions>
+      <actions>
+        <decrease-currency kind="KINAH" amount="167500"/>
+        <give-item item-id="152203543" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO10"/>
+      </event>
+      <conditions>
+        <currency-below kind="KINAH" amount="167500"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_4_4"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO20"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="KINAH" amount="223000"/>
+      </conditions>
+      <actions>
+        <decrease-currency kind="KINAH" amount="223000"/>
+        <give-item item-id="152203544" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="SETPRO20"/>
+      </event>
+      <conditions>
+        <currency-below kind="KINAH" amount="223000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_4_4"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798451" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182206927" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003544" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203544" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started2" priority="5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1" expected="false"/>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1" expected="false"/>
+        <has-item item-id="152203544" count="1" expected="false"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182206927" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1" priority="2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003544" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1" priority="3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1" priority="4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203544" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started2" priority="5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1" expected="false"/>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1" expected="false"/>
+        <has-item item-id="152203544" count="1" expected="false"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182206927" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003544" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203544" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206927" count="1" expected="false"/>
+        <recipe-known recipe-id="155003543" expected="false"/>
+        <recipe-known recipe-id="155003544" expected="false"/>
+        <has-item item-id="152203543" count="1" expected="false"/>
+        <has-item item-id="152203544" count="1" expected="false"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <npc-complete npc-id="798450" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

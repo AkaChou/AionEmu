@@ -1,6 +1,6 @@
 # Quest client contract baseline v1
 # Refreshed from the current production catalog and Aion 5.8 client mapping on 2026-09-11.
-# PAGE_NOT_IN_TASK_HTML=1089 BUTTON_WITHOUT_ROUTE=597
+# PAGE_NOT_IN_TASK_HTML=1089 BUTTON_WITHOUT_ROUTE=577
 # failure_type	quest_id	source_state	npc_id	trigger_action	shown_page	visible_action	actual_path
 BUTTON_WITHOUT_ROUTE	11003	started	798942	31	2375	39	started + NPC 798942 + 31 -> started + page 2375
 BUTTON_WITHOUT_ROUTE	11012	started	799071	31	1352	10001	started + NPC 799071 + 31 -> started + page 1352
@@ -195,16 +195,6 @@ BUTTON_WITHOUT_ROUTE	1901	started	798025	1438	1438	10000	started + NPC 798025 + 
 BUTTON_WITHOUT_ROUTE	1901	started	798025	1525	1525	10001	started + NPC 798025 + 1525 -> started + page 1525
 BUTTON_WITHOUT_ROUTE	1901	started	798026	1438	1438	10000	started + NPC 798026 + 1438 -> started + page 1438
 BUTTON_WITHOUT_ROUTE	1901	started	798026	1525	1525	10001	started + NPC 798026 + 1525 -> started + page 1525
-BUTTON_WITHOUT_ROUTE	19014	started	203790	31	1352	39	started + NPC 203790 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19014	started	203791	31	1352	39	started + NPC 203791 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19020	started	203793	31	1352	39	started + NPC 203793 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19020	started	203794	31	1352	39	started + NPC 203794 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19026	started	203792	31	1352	39	started + NPC 203792 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19026	started	798013	31	1352	39	started + NPC 798013 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19032	started	203786	31	1352	39	started + NPC 203786 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19032	started	203787	31	1352	39	started + NPC 203787 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19057	started	798450	31	1352	39	started + NPC 798450 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	19057	started	798451	31	1352	39	started + NPC 798451 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	19064	started	203701	31	1352	10000	started + NPC 203701 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	1917	started	203075	1354	1354	10000	started + NPC 203075 + 1354 -> started + page 1354
 BUTTON_WITHOUT_ROUTE	1917	started	203835	1354	1354	10000	started + NPC 203835 + 1354 -> started + page 1354
@@ -406,16 +396,6 @@ BUTTON_WITHOUT_ROUTE	28994	unaccepted	806242	31	1011	10000	unaccepted + NPC 8062
 BUTTON_WITHOUT_ROUTE	29000	started	204097	31	1352	39	started + NPC 204097 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	29008	started	204104	31	1352	39	started + NPC 204104 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	29008	started	204105	31	1352	39	started + NPC 204105 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29014	started	204106	31	1352	39	started + NPC 204106 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29014	started	204107	31	1352	39	started + NPC 204107 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29020	started	204110	31	1352	39	started + NPC 204110 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29020	started	204111	31	1352	39	started + NPC 204111 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29026	started	204108	31	1352	39	started + NPC 204108 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29026	started	798060	31	1352	39	started + NPC 798060 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29032	started	204102	31	1352	39	started + NPC 204102 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29032	started	204103	31	1352	39	started + NPC 204103 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29057	started	798452	31	1352	39	started + NPC 798452 + 31 -> started + page 1352
-BUTTON_WITHOUT_ROUTE	29057	started	798453	31	1352	39	started + NPC 798453 + 31 -> started + page 1352
 BUTTON_WITHOUT_ROUTE	2911	started	204079	1353	1353	10000	started + NPC 204079 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2911	started	204079	1353	1353	10001	started + NPC 204079 + 1353 -> started + page 1353
 BUTTON_WITHOUT_ROUTE	2911	started	204193	1353	1353	10000	started + NPC 204193 + 1353 -> started + page 1353
