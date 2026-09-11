@@ -1,10 +1,1 @@
 quest_id,source_state,source_status,npc_id,action_id,action_name,handler_path,branch_count,response_page,response_kind,effects,evidence_status,unresolved_reason,source_git_object,source_sha256
-1122,started,START,790001,1009,SELECT_REWARD,src/main/java/com/aionemu/gameserver/quest/handlers/poeta/_1122DeliveringPernossRobe.java,0,0,,,NO_MATCHING_BRANCH,handler has no matching action occurrence near the audited state,dfcc04c1aef88dbaaf8e5aa102678ddaef33e467,38d245889544437925fc55044e8603dbf3d2c5dcc2158c1d1200435749083718
-20031,s10,START,799226,10007,STEP_TO_8,src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_20031Go_To_Gelkmaros.java,1,0,NO_RESPONSE,setQuestVar setQuestVarById setStatus changeQuestStep updateQuestStatus removeQuestItem giveQuestItem,AMBIGUOUS,handler branch does not expose a concrete response,bcbbd04550e238fc9ae6e1e358baa889d3c97149,17903813c1ce5cb10c2195144b0a6fe47e4ad1bdd2bbb559ab5b582dcf9e5ce2
-20036,s10,,799226,10007,STEP_TO_8,,0,0,,,NO_HANDLER,quest has no legacy Java handler,,
-25602,s1,,806171,39,CHECK_COLLECTED_ITEMS,,0,0,,,NO_HANDLER,quest has no legacy Java handler,,
-28644,unaccepted,,730776,39,CHECK_COLLECTED_ITEMS,,0,0,,,NO_HANDLER,quest has no legacy Java handler,,
-28645,unaccepted,,730777,39,CHECK_COLLECTED_ITEMS,,0,0,,,NO_HANDLER,quest has no legacy Java handler,,
-28648,unaccepted,,730887,39,CHECK_COLLECTED_ITEMS,,0,0,,,NO_HANDLER,quest has no legacy Java handler,,
-30313,unaccepted,NONE,730275,39,CHECK_COLLECTED_ITEMS,src/main/java/com/aionemu/gameserver/quest/handlers/beshmundir/_30313GroupOpeningthePrison.java,1,0,NO_RESPONSE,,AMBIGUOUS,handler branch does not expose a concrete response,dcd1bef25f266aec365bc6e53ec517f892124c42,525f7534d15c3cc181548128b35cfcf58624b80e73cb834c6f216aea0b4fc5e5
-30313,unaccepted,NONE,799225,39,CHECK_COLLECTED_ITEMS,src/main/java/com/aionemu/gameserver/quest/handlers/beshmundir/_30313GroupOpeningthePrison.java,1,0,NO_RESPONSE,,AMBIGUOUS,handler branch does not expose a concrete response,dcd1bef25f266aec365bc6e53ec517f892124c42,525f7534d15c3cc181548128b35cfcf58624b80e73cb834c6f216aea0b4fc5e5
