@@ -38,14 +38,6 @@
     <!-- 接取/报告 NPC:绿帽团魔族任务管理员 (800934/800935)。start_npc_ids=0,旧引擎经军团面板接取;DSL 按 39601 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="800934" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -102,14 +94,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">

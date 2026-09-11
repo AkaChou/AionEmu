@@ -114,7 +114,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 分支：HACTION_SETPRO1 选择情侣线（dialog 10000）→ v1（var0=1） -->
@@ -149,7 +149,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 情侣线 v1：回报 → r1 / couple line: report to reward -->
@@ -186,7 +186,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 单身线 v2：回报 → r2 / single line: report to reward -->

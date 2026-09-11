@@ -29,14 +29,6 @@
     <!-- 接取/报告 NPC：804931。start_npc_ids=0，旧引擎经军团面板接取；DSL 按 36500/39610 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804931" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="804931" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -101,7 +93,7 @@
         <dialog type="TALK_TO_NPC" npc-id="804931" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 击杀 Starmaw Dionae (219678/219679) 共 10 只：var0 计数 0→10，priority 1 计数、0 完成进入奖励。 -->
@@ -193,5 +185,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-  </transitions>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804931" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition></transitions>
 </quest-definition>

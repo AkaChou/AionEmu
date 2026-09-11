@@ -87,12 +87,48 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	@Test
 	void quest25602UsesTheClientSuccessReportAndRewardResponse() throws Exception {
 		QuestDefinition definition = compile(25602);
-		assertPage(definition, "s3", 806171, 10002);
-		QuestTransition reward = talkRoutes(definition, "s3", 806171, 1009).getFirst();
-		assertEquals("reward", reward.targetNode());
+		// 旧 handler 中 CHECK_COLLECTED_ITEMS 的权威 source node 是 s1（var=1）：
+		// 成功页推进 s2，失败页停留在 s1。
+		// Per the legacy handler, CHECK_COLLECTED_ITEMS' authoritative source node is s1 (var=1):
+		// the success page advances to s2 and the failure page stays on s1.
+		List<QuestTransition> checks = talkRoutes(definition, "s1", 806171, 39);
+		assertEquals(2, checks.size(), "quest 25602 item check branches");
+		QuestTransition success = checks.stream()
+			.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		QuestTransition failure = checks.stream()
+			.filter(transition -> Integer.valueOf(10).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		assertEquals("s2", success.targetNode(), "quest 25602 success target");
+		assertEquals(List.of(new QuestCondition.HasItem(182216002, 4)), success.conditions(),
+			"quest 25602 success conditions");
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), reward.afterCommit());
+			new QuestAction.RemoveItem(182216002, QuestAction.RemoveItem.ALL),
+			new QuestAction.SetVariable("var0", 2)),
+			success.actions(), "quest 25602 success removals and step advance");
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestDialog(10000)), success.afterCommit(),
+			"quest 25602 success response");
+		assertEquals("s1", failure.targetNode(), "quest 25602 failure target");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10001)), failure.afterCommit(),
+			"quest 25602 failure response");
+		// 剧情链：s2 对话给 select3，SETPRO3 播放动画 872 并推进到 s3。
+		// Story chain: talk at s2 shows select3, SETPRO3 plays movie 872 and advances to s3.
+		assertPage(definition, "s2", 806171, 1693);
+		QuestTransition movie = talkRoutes(definition, "s2", 806171, 10002).getFirst();
+		assertEquals("s3", movie.targetNode(), "quest 25602 movie target");
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.PlayMovie(872),
+			new AfterCommitAction.CloseDialog()), movie.afterCommit(),
+			"quest 25602 movie response");
+		// 领奖链：reward 对话给 select_success，确认后打开奖励窗口。
+		// Reward chain: talk at reward shows select_success, then confirmation opens the reward window.
+		assertPage(definition, "reward", 806171, 10002);
+		QuestTransition reward = talkRoutes(definition, "reward", 806171, 1009).getFirst();
+		assertEquals("reward", reward.targetNode());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), reward.afterCommit());
 	}
 
 	@Test
@@ -116,7 +152,24 @@ class LegacyTemplateMirrorRouteRegressionTest {
 
 		QuestDefinition windstream = compile(21080);
 		for (int npcId : List.of(799231, 799427)) {
-			assertPage(windstream, "started", npcId, 10002);
+			// 客户端 select4 页（拿出沃夫冈的信）必须可达：无信时对话显示 select4 而非重复报告页。
+			// The client select4 page (produce Wolfgang's letter) must be reachable: without the
+			// item the talk shows select4 instead of repeating the report page.
+			List<QuestTransition> selects = talkRoutes(windstream, "started", npcId, 31);
+			assertEquals(2, selects.size(), "quest 21080 select branches for " + npcId);
+			QuestTransition report = selects.stream()
+				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+				.findFirst().orElseThrow();
+			QuestTransition letter = selects.stream()
+				.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
+				.findFirst().orElseThrow();
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10002)), report.afterCommit(),
+				"quest 21080 report page for " + npcId);
+			assertTrue(report.conditions().stream()
+					.anyMatch(condition -> condition instanceof QuestCondition.HasItem),
+				"quest 21080 report branch requires the letter for " + npcId);
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2034)), letter.afterCommit(),
+				"quest 21080 letter page for " + npcId);
 			List<QuestTransition> reward = talkRoutes(windstream, "started", npcId, 1009);
 			QuestTransition success = reward.stream()
 				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
@@ -166,10 +219,6 @@ class LegacyTemplateMirrorRouteRegressionTest {
 					new AfterCommitAction.ShowQuestDialog(7))),
 			new DialogRoute(1640, "unaccepted", 730033, 10000, "started",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-					new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1640, "started", 730033, 10001, "complete",
-				List.of(new AfterCommitAction.RefreshPlayerStats(),
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
 					new AfterCommitAction.CloseDialog())),
 			new DialogRoute(1722, "s2", 278544, 10002, "s2",
 				List.of(new AfterCommitAction.CloseDialog())),
@@ -240,7 +289,37 @@ class LegacyTemplateMirrorRouteRegressionTest {
 				"quest " + expected.questId() + " action " + expected.actionId() + " response");
 		}
 
+		// 1640 的 SETPRO2 是双分支：有信件走结算，无信件回 select2_1（客户端 select2_1 页必须可达）。
+		// Quest 1640's SETPRO2 is a two-branch pair: with the letter it settles; without it the
+		// client select2_1 page (required reachable) is shown again.
 		QuestDefinition teleporter = compile(1640);
+		List<QuestTransition> setpro2 = talkRoutes(teleporter, "started", 730033, 10001);
+		assertEquals(2, setpro2.size(), "quest 1640 SETPRO2 branch count");
+		QuestTransition settle = setpro2.stream()
+			.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		QuestTransition retry = setpro2.stream()
+			.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		assertEquals("complete", settle.targetNode(), "quest 1640 settle target");
+		assertEquals(List.of(new QuestCondition.HasItem(182201790, 1)), settle.conditions(),
+			"quest 1640 settle conditions");
+		assertEquals(List.of(
+			new QuestAction.RemoveItem(182201790, 1),
+			new QuestAction.GrantReward("GOLD", 0, 2020L, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("EXP", 0, 492677L, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.CompleteQuest(0)), settle.actions(),
+			"quest 1640 settle actions");
+		assertEquals(List.of(
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.CloseDialog()), settle.afterCommit(),
+			"quest 1640 settle response");
+		assertEquals("started", retry.targetNode(), "quest 1640 retry target");
+		assertTrue(retry.conditions().isEmpty(), "quest 1640 retry conditions");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1353)), retry.afterCommit(),
+			"quest 1640 retry response");
+
 		QuestTransition completedDialog = talkRoutes(teleporter, "complete", 730033, 10000).getFirst();
 		assertEquals("complete", completedDialog.targetNode());
 		assertTrue(completedDialog.afterCommit().contains(new AfterCommitAction.CloseDialog()));

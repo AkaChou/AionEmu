@@ -39,14 +39,6 @@
     <!-- 接取/报告 NPC：800927、800928 与 800929。start_npc_ids=0，旧引擎经派系面板接取；DSL 按 FACTION 先例（39610/39601）用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="800927" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -107,14 +99,6 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="800928" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -171,14 +155,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800929" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">

@@ -34,7 +34,7 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="205181" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="205181" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="205181" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="205181" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
@@ -43,7 +43,7 @@
         <dialog type="TALK_TO_NPC" npc-id="205181" action="SELECT2"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <close-dialog/>
       </after-commit>
     </transition>
 
@@ -52,7 +52,7 @@
         <dialog type="TALK_TO_NPC" npc-id="205181" action="SELECT3"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="complete" target="complete">

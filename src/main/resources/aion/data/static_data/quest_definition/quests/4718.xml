@@ -145,17 +145,6 @@
       </after-commit>
     </transition>
     <!-- 开始阶段 NPC 对话。 Early-stage NPC dialog. -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278001" action="QUEST_SELECT"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="0"/>
-      </conditions>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
     <!-- 收集完成后的提示。 Completion prompt after both counters are met. -->
     <transition source="s1" target="s1">
       <event>

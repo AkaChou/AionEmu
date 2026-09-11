@@ -43,14 +43,6 @@
     <!-- 接取/报告:Fortuneer's 派系军需官 799837。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799837" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="799837" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -110,14 +102,6 @@
       </after-commit>
     </transition>
     <!-- 接取/报告:Fortuneer's 派系军需官 799838。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799838" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799838" action="ASK_QUEST_ACCEPT"/>

@@ -353,9 +353,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
       </after-commit>
     </transition>
+    <!-- Aion 5.8 客户端 select8_1 页按钮为 SETPRO8(10007)，旧 handler 的 STEP_TO_11(10010) 已过期；
+         副作用保持不变：上交 182215591 并进入 REWARD。
+         The Aion 5.8 client's select8_1 button is SETPRO8(10007); the legacy STEP_TO_11(10010) is stale,
+         with unchanged effects: hand in 182215591 and enter REWARD. -->
     <transition source="s10" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799226" action="SETPRO11"/>
+        <dialog type="TALK_TO_NPC" npc-id="799226" action="SETPRO8"/>
       </event>
       <conditions>
         <variable-is field="var0" value="10"/>

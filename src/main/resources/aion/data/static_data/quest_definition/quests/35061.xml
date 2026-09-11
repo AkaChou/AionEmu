@@ -29,14 +29,6 @@
     <!-- 接取：alabaster 每日 NPC (804943, end_npc) 提供任务。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804943" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="804943" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

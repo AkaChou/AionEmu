@@ -211,7 +211,15 @@
         <variable-is field="var0" value="5"/>
       </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203605" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

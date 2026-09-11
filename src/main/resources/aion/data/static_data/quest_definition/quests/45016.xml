@@ -30,14 +30,6 @@
     <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由深渊守备军军官 Vintel (799849) 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799849" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="799849" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

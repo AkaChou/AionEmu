@@ -38,14 +38,6 @@
     <!-- 接取 NPC 800922: 任务介绍。 Quest intro. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800922" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="800922" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
@@ -105,14 +97,6 @@
       </after-commit>
     </transition>
     <!-- 接取 NPC 800923: 任务介绍。 Quest intro. -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800923" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800923" action="ASK_QUEST_ACCEPT"/>

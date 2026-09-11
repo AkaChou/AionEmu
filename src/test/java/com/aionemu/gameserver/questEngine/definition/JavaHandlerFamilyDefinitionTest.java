@@ -139,26 +139,58 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void robeDeliverySelectsAmongThreeItemGatedRewardBranches() throws Exception {
+	void robeDeliveryConfirmsTheChoiceThenSelectsAmongThreeItemGatedRewardBranches() throws Exception {
 		CompiledQuestDefinition compiled = definition("1122.xml");
 		Set<Integer> prerequisites = compiled.definition().metadata().prerequisites();
 		assertTrue(prerequisites.contains(1116));
 
 		List<QuestTransition> transitions = compiled.definition().transitions();
-		// Each step dialog is gated by the matching collect item and removes it.
-		assertNotNull(gatedReward(transitions, 10000, 182200218, "reward1"));
-		assertNotNull(gatedReward(transitions, 10001, 182200219, "reward2"));
-		assertNotNull(gatedReward(transitions, 10002, 182200220, "reward3"));
-		// Every step dialog also has a fallback that reports the missing item.
-		for (int dialog : new int[] {10000, 10001, 10002}) {
-			QuestTransition fallback = transitions.stream()
+		// Aion 5.8 在 select2 之后插入确认页：SETPRO 只翻页到 select2_1/2/3，无状态副作用。
+		// The Aion 5.8 client inserts confirmation pages after select2: SETPRO only turns the page
+		// to select2_1/2/3 without state side effects.
+		int[] setproDialogs = {10000, 10001, 10002};
+		int[] confirmPages = {1353, 1438, 1523};
+		for (int index = 0; index < setproDialogs.length; index++) {
+			final int setproDialog = setproDialogs[index];
+			final int confirmPage = confirmPages[index];
+			QuestTransition turn = transitions.stream()
 				.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("started")
 					&& t.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == 790001 && talk.dialogId() == dialog
-					&& t.conditions().isEmpty())
+					&& talk.npcId() == 790001 && talk.dialogId() == setproDialog)
 				.findFirst().orElseThrow();
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1608)), fallback.afterCommit());
+			assertTrue(turn.conditions().isEmpty(), "SETPRO page turn must be unconditional");
+			assertTrue(turn.actions().isEmpty(), "SETPRO page turn must not touch items");
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(confirmPage)),
+				turn.afterCommit(), "SETPRO must open its confirmation page");
 		}
+		// 确认点击 SELECT_QUEST_REWARD 才上交：命中物品的分支按唯一优先级进入对应 reward 节点。
+		// The confirmation click SELECT_QUEST_REWARD performs the hand-over into item-gated
+		// reward branches with unique priorities.
+		int[] gateItems = {182200218, 182200219, 182200220};
+		String[] rewardNodes = {"reward1", "reward2", "reward3"};
+		int[] rewardWindows = {5, 6, 7};
+		for (int index = 0; index < gateItems.length; index++) {
+			QuestTransition branch = gatedReward(transitions, 1009, gateItems[index], rewardNodes[index], index);
+			assertEquals(List.of(
+				new QuestAction.RemoveItem(182200218, QuestAction.RemoveItem.ALL),
+				new QuestAction.RemoveItem(182200219, QuestAction.RemoveItem.ALL),
+				new QuestAction.RemoveItem(182200220, QuestAction.RemoveItem.ALL)), branch.actions(),
+				"hand-over must clear all three collect items");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(rewardWindows[index])), branch.afterCommit(),
+				"hand-over must refresh state and open reward window " + rewardWindows[index]);
+		}
+		// 没有任何选择物品时回退到 select2_4 结束对话。
+		// Without any choice item the fallback shows select2_4.
+		QuestTransition fallback = transitions.stream()
+			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("started")
+				&& t.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 790001 && talk.dialogId() == 1009
+				&& t.conditions().isEmpty())
+			.findFirst().orElseThrow();
+		assertEquals(10, fallback.priority().intValue(), "fallback must yield to the gated branches");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1608)), fallback.afterCommit());
 		// Each reward node resolves its own completion reward group.
 		assertTrue(completions(transitions, "reward1").contains(new QuestAction.GrantReward("ITEM", 123000878, 1)));
 		assertTrue(completions(transitions, "reward2").contains(new QuestAction.GrantReward("ITEM", 162000048, 1)));
@@ -291,12 +323,13 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	private static QuestTransition gatedReward(List<QuestTransition> transitions, int dialog, int itemId,
-			String target) {
+			String target, int priority) {
 		return transitions.stream().filter(t -> t.sourceNode().equals("started") && t.targetNode().equals(target))
 			.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 790001 && talk.dialogId() == dialog)
-			.filter(t -> t.conditions().contains(new QuestCondition.HasItem(itemId, 1)))
-			.findFirst().orElse(null);
+			.filter(t -> t.conditions().contains(new QuestCondition.HasItem(itemId, 1))
+				&& Integer.valueOf(priority).equals(t.priority()))
+			.findFirst().orElseThrow();
 	}
 
 	private static List<QuestAction> completions(List<QuestTransition> transitions, String source) {

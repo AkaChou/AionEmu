@@ -43,14 +43,6 @@
     <!-- 接取:FACTION 派系任务旧节点无 start NPC(start_npc_ids 缺省),由血之十字军军官 (804962) 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804962" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="804962" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

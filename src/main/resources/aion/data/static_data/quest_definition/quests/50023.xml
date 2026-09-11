@@ -52,7 +52,7 @@
         <dialog type="TALK_TO_NPC" npc-id="831071" action="SELECT2"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <close-dialog/>
       </after-commit>
     </transition>
 
@@ -130,7 +130,7 @@
         <dialog type="TALK_TO_NPC" npc-id="831071" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 档位 1：拿出 1 个线索 (dialog 8 / SELECTED_QUEST_REWARD1)，has-item 1 → r1 -->

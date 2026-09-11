@@ -58,13 +58,22 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 204768:var0=1,31 显示 1693,STEP_TO_2(10001) 推进 var0=2。 -->
+    <!-- 204768:var0=1,31 显示 select5,SELECT_QUEST_REWARD(1009) 上交进入 REWARD 并打开领奖窗。 -->
     <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204768" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">

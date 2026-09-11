@@ -57,7 +57,58 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="217006" source="started" target="reward" item-id="185000102" required="1"/>
+    <!-- 旧 handler 只注册 730776 陈列柜：接取后点 39 打开陈列柜，有钥匙 185000102 即上交进入 REWARD
+         并打开领奖窗，否则显示 2716；USE_OBJECT 在 START 态回看 select5，FINISH_DIALOG 关闭对话。
+         The legacy handler only registers rack 730776: after accepting, action 39 opens the case; with key
+         185000102 it is handed in for REWARD and the reward window, otherwise page 2716 shows; USE_OBJECT
+         re-opens select5 at START and FINISH_DIALOG closes. -->
+    <transition source="started" priority="0" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730776" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="185000102" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="185000102" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730776" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730776" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730776" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730776" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="730776" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

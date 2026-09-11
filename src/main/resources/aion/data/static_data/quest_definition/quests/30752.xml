@@ -95,5 +95,13 @@
         <can-act template-id="730702" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-  </transitions>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800461" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition></transitions>
 </quest-definition>

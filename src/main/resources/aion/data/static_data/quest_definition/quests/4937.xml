@@ -309,5 +309,13 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition></transitions>
 </quest-definition>

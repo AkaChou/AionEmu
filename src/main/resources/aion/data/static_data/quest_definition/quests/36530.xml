@@ -42,14 +42,6 @@
     <!-- 接取/报告 NPC:Cynthor (804948)。start_npc_ids=0,旧引擎经军团面板接取;DSL 按 36520 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804948" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="804948" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

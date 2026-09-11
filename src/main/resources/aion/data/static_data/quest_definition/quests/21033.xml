@@ -85,7 +85,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799256" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799256" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -109,5 +109,13 @@
       </after-commit>
     </transition>
 
-  </transitions>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799256" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition></transitions>
 </quest-definition>

@@ -36,7 +36,8 @@
     <npc-complete npc-id="204403" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="790016" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 旧 handler：790016 只在 REWARD 态领奖，不是接取 NPC，不注册 addOnQuestStart。
+         Legacy handler: 790016 only pays the reward at REWARD and never starts the quest. -->
     <dialog type="NPC_REPORT" npc-id="790016" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="790016" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>

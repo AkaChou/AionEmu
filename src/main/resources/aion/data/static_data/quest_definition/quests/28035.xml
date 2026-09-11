@@ -61,7 +61,7 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <!-- 801047:var0=0,31 显示 1352,1353 显示 1353,1008 打开选择,STEP_TO_1(10000) 推进 var0=1。 -->

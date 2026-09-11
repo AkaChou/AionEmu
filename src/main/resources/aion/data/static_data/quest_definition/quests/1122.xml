@@ -74,9 +74,38 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward1" priority="0">
+    <!-- Aion 5.8 客户端在 select2 的选择按钮后增加确认页 select2_1/2/3，SETPRO 仅翻页；
+         上交物品与状态推进移到 SELECT_QUEST_REWARD 确认点击，保留旧 handler 的检查与删除副作用。
+         The Aion 5.8 client inserts confirmation pages select2_1/2/3 after the select2 choice buttons;
+         SETPRO only turns the page, and the hand-over moves to the SELECT_QUEST_REWARD click while
+         keeping the legacy handler's item checks and removals. -->
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_3"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <has-item item-id="182200218" count="1"/>
@@ -91,17 +120,9 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="10">
+    <transition source="started" target="reward2" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_4"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward2" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <has-item item-id="182200219" count="1"/>
@@ -116,17 +137,9 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="10">
+    <transition source="started" target="reward3" priority="2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_4"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward3" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <has-item item-id="182200220" count="1"/>
@@ -143,7 +156,7 @@
     </transition>
     <transition source="started" target="started" priority="10">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_4"/>
@@ -199,14 +212,6 @@
       </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-      <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790001" action="FINISH_DIALOG"/>
       </event>

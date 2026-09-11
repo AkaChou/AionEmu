@@ -30,14 +30,6 @@
     <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由 Fortuneers NPC 799837 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799837" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
         <dialog type="TALK_TO_NPC" npc-id="799837" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

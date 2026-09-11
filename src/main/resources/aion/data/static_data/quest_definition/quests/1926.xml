@@ -111,5 +111,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+
+    <!-- 零售单 NPC 接取：select_none 链根接取，生成 1007/1002/1003 标准接取链。 -->
+    <dialog type="NPC_START" npc-id="203894" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/></transitions>
 </quest-definition>
