@@ -101,6 +101,7 @@
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
@@ -171,5 +172,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-  </transitions>
+
+    <!-- 客户端 check_user_item_ok 确认页按钮：结束对话；领奖经 REWARD 态入口打开。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804925" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition></transitions>
 </quest-definition>
