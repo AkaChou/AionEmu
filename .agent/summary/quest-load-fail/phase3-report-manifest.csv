@@ -1,0 +1,190 @@
+quest_id,npc,source,decision
+1000,,,blocked: npc-complete npcs != 1
+1182,203099,,skip: route exists
+1183,730012,,skip: route exists
+1192,203098,,skip: route exists
+1218,203172,,skip: route exists
+1220,205240,,skip: route exists
+1319,,,blocked: started nodes != 1
+1322,,,blocked: npc-complete npcs != 1
+1324,203940,,skip: route exists
+1363,203943,,skip: route exists
+1391,204500,,skip: route exists
+1394,,,blocked: started nodes != 1
+1452,203704,,skip: route exists
+1469,790004,,skip: route exists
+1483,,,blocked: started nodes != 1
+1484,,,blocked: started nodes != 1
+1527,205229,,skip: route exists
+1528,204583,,skip: route exists
+1540,,,blocked: started nodes != 1
+1574,,,blocked: started nodes != 1
+1634,,,blocked: started nodes != 1
+1691,,,blocked: started nodes != 1
+1721,,,blocked: started nodes != 1
+1724,,,blocked: started nodes != 1
+1725,278590,,skip: route exists
+1909,,,blocked: started nodes != 1
+1918,203835,,skip: route exists
+1922,,,blocked: started nodes != 1
+1932,,,blocked: started nodes != 1
+1937,,,blocked: started nodes != 1
+2000,,,blocked: npc-complete npcs != 1
+2135,203532,,skip: route exists
+2208,,,blocked: started nodes != 1
+2232,,,blocked: npc-complete npcs != 1
+2247,203645,,skip: route exists
+2266,203654,,skip: route exists
+2271,203557,,skip: route exists
+2278,,,blocked: started nodes != 1
+2279,,,blocked: started nodes != 1
+2307,,,blocked: npc-complete npcs != 1
+2428,,,blocked: started nodes != 1
+2458,204379,,skip: route exists
+2480,,,blocked: started nodes != 1
+2505,204720,,skip: route exists
+2512,204753,,skip: route exists
+2515,,,blocked: started nodes != 1
+2523,,,blocked: started nodes != 1
+2538,,,blocked: started nodes != 1
+2646,,,blocked: started nodes != 1
+2663,204777,,skip: route exists
+2692,,,blocked: started nodes != 1
+2767,,,blocked: started nodes != 1
+2912,,,blocked: started nodes != 1
+2913,,,blocked: started nodes != 1
+2914,204147,,skip: route exists
+2917,,,blocked: started nodes != 1
+2918,203574,,skip: route exists
+2928,204261,,skip: route exists
+2947,,,blocked: started nodes != 1
+2954,204191,,skip: route exists
+3037,798166,,skip: route exists
+3041,798167,,skip: route exists
+3049,798211,,skip: route exists
+3085,798132,,skip: route exists
+3086,798201,,skip: route exists
+3087,798144,,skip: route exists
+3088,,,blocked: npc-complete npcs != 1
+3093,,,blocked: started nodes != 1
+3319,798050,,skip: route exists
+3547,204647,,skip: route exists
+3920,804603,,skip: route exists
+3933,203701,,skip: route exists
+3934,203701,,skip: route exists
+3935,203701,,skip: route exists
+3938,203701,,skip: route exists
+3940,203701,,skip: route exists
+3965,798390,,skip: route exists
+3966,798391,,skip: route exists
+3967,798391,,skip: route exists
+3968,798390,,skip: route exists
+3969,798390,,skip: route exists
+3970,,,blocked: started nodes != 1
+3973,,,blocked: started nodes != 1
+4015,205130,,skip: route exists
+4020,205120,,skip: route exists
+4052,,,blocked: started nodes != 1
+4501,204728,,skip: route exists
+4542,,,blocked: npc-complete npcs != 1
+4905,,,blocked: started nodes != 1
+4906,,,blocked: started nodes != 1
+4920,804609,,skip: route exists
+4966,798385,,skip: route exists
+4967,,,blocked: started nodes != 1
+4968,,,blocked: started nodes != 1
+4969,,,blocked: started nodes != 1
+10033,,,blocked: started nodes != 1
+10113,,,blocked: started nodes != 1
+10525,,,blocked: started nodes != 1
+11001,,,blocked: started nodes != 1
+11008,798997,,skip: route exists
+11009,,,blocked: started nodes != 1
+11010,,,blocked: started nodes != 1
+11026,203384,,skip: route exists
+11046,798954,,skip: route exists
+11068,799025,,skip: route exists
+11072,798937,,skip: route exists
+11077,,,blocked: started nodes != 1
+11103,,,blocked: started nodes != 1
+11139,799075,,skip: route exists
+11294,798926,,skip: route exists
+11455,799070,,skip: route exists
+11458,798953,,skip: route exists
+11460,798985,,skip: route exists
+13800,802431,,skip: route exists
+13809,,,blocked: started nodes != 1
+13812,,,blocked: started nodes != 1
+14014,,,blocked: started nodes != 1
+14025,,,blocked: started nodes != 1
+14031,,,blocked: started nodes != 1
+14051,,,blocked: started nodes != 1
+14053,,,blocked: npc-complete npcs != 1
+14121,204032,,skip: route exists
+14122,,,blocked: started nodes != 1
+14123,,,blocked: started nodes != 1
+14152,,,blocked: started nodes != 1
+14200,,,blocked: started nodes != 1
+14201,,,blocked: started nodes != 1
+14220,802540,,skip: route exists
+16960,,,blocked: started nodes != 1
+17510,,,blocked: started nodes != 1
+18213,,,blocked: started nodes != 1
+18806,830194,,skip: route exists
+18807,830194,,skip: route exists
+18809,,,blocked: started nodes != 1
+18833,,,blocked: started nodes != 1
+18835,,,blocked: started nodes != 1
+18837,,,blocked: started nodes != 1
+19004,,,blocked: started nodes != 1
+19064,203701,,skip: route exists
+20113,,,blocked: started nodes != 1
+21070,799406,,skip: route exists
+21081,799202,,skip: route exists
+21125,799295,,skip: route exists
+21138,799415,,skip: route exists
+21217,799226,,skip: route exists
+21244,799317,,skip: route exists
+21296,799225,,skip: route exists
+21458,799249,,skip: route exists
+21460,799276,,skip: route exists
+23800,802433,,skip: route exists
+23809,802429,,skip: route exists
+23812,,,blocked: started nodes != 1
+24031,,,blocked: started nodes != 1
+24121,,,blocked: started nodes != 1
+24150,204702,,skip: route exists
+24152,,,blocked: started nodes != 1
+24220,802542,,skip: route exists
+24242,,,blocked: started nodes != 1
+26905,204372,,skip: route exists
+26906,204369,,skip: route exists
+26908,204817,,skip: route exists
+26960,,,blocked: started nodes != 1
+27510,,,blocked: started nodes != 1
+28213,798804,,skip: route exists
+28806,830211,,skip: route exists
+28807,830211,,skip: route exists
+28837,,,blocked: started nodes != 1
+29064,204053,,skip: route exists
+30055,798929,,skip: route exists
+30107,799029,,skip: route exists
+30202,,,blocked: started nodes != 1
+30302,,,blocked: started nodes != 1
+30600,800325,,skip: route exists
+30610,800327,,skip: route exists
+45007,799848,,skip: route exists
+45008,799848,,skip: route exists
+50021,,,blocked: started nodes != 1
+51021,,,blocked: started nodes != 1
+80034,799765,,skip: route exists
+80035,799765,,skip: route exists
+80036,799765,,skip: route exists
+80037,799780,,skip: route exists
+80038,799780,,skip: route exists
+80039,799780,,skip: route exists
+80310,831384,,skip: route exists
+80311,831387,,skip: route exists
+80615,,,blocked: started nodes != 1
+80616,,,blocked: started nodes != 1
+80752,833584,,skip: route exists

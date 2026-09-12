@@ -1,0 +1,13 @@
+quest_id,npc,src,decision,target,symbol,explicit
+1972,203788,started,repoint,,SELECT5,False
+1974,203790,started,repoint,,SELECT5,False
+1976,203792,started,repoint,,SELECT5,False
+1978,203784,started,repoint,,SELECT5,False
+1980,203786,started,repoint,,SELECT5,False
+1982,203793,started,repoint,,SELECT5,False
+2972,204104,started,repoint,,SELECT5,False
+2974,204106,started,repoint,,SELECT5,False
+2976,204108,started,repoint,,SELECT5,False
+2978,204100,started,repoint,,SELECT5,False
+2980,204102,started,repoint,,SELECT5,False
+2982,204110,started,repoint,,SELECT5,False
