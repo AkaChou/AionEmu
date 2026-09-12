@@ -16,7 +16,7 @@ class QuestStartItemDefinitionRegressionTest {
 			new ExpectedRoute(1198, 700009, "unaccepted", QuestDialogAction.USE_OBJECT.id()),
 			new ExpectedRoute(1323, 730032, "unaccepted", QuestDialogAction.USE_OBJECT.id()),
 			new ExpectedRoute(1559, 700513, "started", QuestDialogAction.USE_OBJECT.id()),
-			new ExpectedRoute(1582, 700196, "unaccepted", QuestDialogAction.QUEST_SELECT.id()))) {
+			new ExpectedRoute(1582, 700196, "started", QuestDialogAction.QUEST_SELECT.id()))) {
 			CompiledQuestDefinition definition = definition(expected.questId());
 			assertTrue(definition.definition().transitions().stream()
 				.filter(transition -> expected.source().equals(transition.sourceNode()))

@@ -41,7 +41,7 @@ class QuestStepDialogTerminationTest {
 		return switch (questId) {
 			case 1006 -> talk.npcId() == 790001 && (dialogId == 10000 || dialogId >= 10004 && dialogId <= 10014);
 			case 1929 -> talk.npcId() == 205110 && dialogId == 10003;
-			case 2008 -> talk.npcId() == 203550 && dialogId >= 10004 && dialogId <= 10014;
+			case 2008 -> talk.npcId() == 203550 && dialogId >= 10004 && dialogId <= 10016;
 			case 20032 -> talk.npcId() == 799325 && dialogId == 10002;
 			case 24030 -> talk.npcId() == 205020 && dialogId == 10005;
 			default -> false;

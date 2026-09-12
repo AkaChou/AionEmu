@@ -43,7 +43,7 @@ class Quest1607MappingTheRevolutionariesRegressionTest {
 	@Test
 	void completesTheReportStateForEveryInvestigationOrder() throws Exception {
 		CompiledQuestDefinition definition = definition();
-		List<String> zones = List.of(ZONE_A, ZONE_B, ZONE_C, ZONE_D);
+		List<String> zones = new ArrayList<>(List.of(ZONE_A, ZONE_B, ZONE_C, ZONE_D));
 		List<List<String>> permutations = new ArrayList<>();
 		generatePermutations(zones, 0, permutations);
 

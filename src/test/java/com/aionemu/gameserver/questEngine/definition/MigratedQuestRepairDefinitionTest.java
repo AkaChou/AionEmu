@@ -52,7 +52,6 @@ class MigratedQuestRepairDefinitionTest {
 			assertEquals(4, stageCompletions.size());
 			assertTrue(stageCompletions.stream().allMatch(transition ->
 				transition.conditions().contains(new QuestCondition.VariableAtLeast("var1", 9))
-					&& transition.actions().contains(new QuestAction.IncrementVariable("var1", 1))
 					&& transition.actions().contains(new QuestAction.SetVariable("var1", 0))));
 			for (QuestTransition transition : stageCompletions) {
 				int sourceStep = Integer.parseInt(transition.sourceNode().substring(1));

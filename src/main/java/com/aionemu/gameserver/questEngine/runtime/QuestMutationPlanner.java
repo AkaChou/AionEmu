@@ -391,7 +391,13 @@ public final class QuestMutationPlanner {
 		if (snapshot.status() == source.projection().status()) {
 			return true;
 		}
-		return (snapshot.status() == QuestStatus.COMPLETE || snapshot.status() == QuestStatus.LOCKED)
+		if (snapshot.status() == QuestStatus.LOCKED) {
+			return source.projection().status() == QuestStatus.NONE
+				&& !(transition.event() instanceof QuestEvent.TalkToNpc)
+				&& !(transition.event() instanceof QuestEvent.QuestDialog)
+				&& transition.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance);
+		}
+		return snapshot.status() == QuestStatus.COMPLETE
 			&& source.projection().status() == QuestStatus.NONE
 			&& transition.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance);
 	}

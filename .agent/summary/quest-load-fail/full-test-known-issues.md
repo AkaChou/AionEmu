@@ -345,3 +345,21 @@ QuestInteractionObjectCatalogTest（9 个交互物 can-act）、1101/1102/1466/2
 - 计数/形状：QuestStepDialogTermination 2008、2150、18602、24043、3103、21114、
   MigratedQuestRepair、MutationPlanner、PageButtonAudit、28931、3103 等
 - ReportToMany 1876/29683、MissionItemConsumption 2333、StartItem 1582、1607（已甄别既有）
+
+
+## 2026-09-12 第八轮（计数/形状漂移治理）
+
+本轮集中攻坚并清理了 13 个测试类（共计消减约 15 个存量失败）：
+- QuestStepDialogTerminationTest: 2008 s6 离开对话白名单扩展至 <= 10016（补齐 4.0/4.5 枪炮/吟游/机甲星转职动作）
+- Quest18602ClientDialogAlignmentTest: startConditionGroups 断言对齐 QuestStartConditionGroup Record 包装
+- Quest2150ClientDialogAlignmentTest: completionRoutes 断言数量修正为元数据真实的 2 条
+- Quest3103ClientDialogAlignmentTest: 3103 前置条件断言对齐 startConditions（finished:3102）
+- Quest24043RetailFlowAlignmentTest: 278003 引导路由断言改为 anyMatch 包含 SELECT1_1
+- Quest21114PoisonedFungiRetailFlowTest: 21114.xml 216563 击杀事件规范为单 NPC 属性 npc-id="216563"
+- MigratedQuestRepairDefinitionTest: 15322/25322 阶段重置断言移除无意义的 IncrementVariable，断言 SetVariable(0)
+- QuestMutationPlannerTest: matchesSourceStatus 针对 LOCKED 占位状态明确仅允许非对话/自动接取事件
+- QuestPageButtonAuditTest: 改用独立 DSL 任务定义解耦对已被完全修复的生产 1464 任务的依赖
+- MissionItemConsumptionBatchRegressionTest: 2333 与 17540 收集物扣除动作纠正，从接取转移至交付（started -> v1 / s4 -> reward）
+- QuestStartItemDefinitionRegressionTest: 1582 调查物 700196 的源状态从 unaccepted 修正为 started
+- Quest1607MappingTheRevolutionariesRegressionTest: 排列组合测试改用可变 ArrayList 避免 Collections.swap 抛出 UnsupportedOperationException
+- ReportToManySetSucceedAlignmentTest: 1876/2876 步进页面对齐真实客户端 1352；11323/21323 对齐 1011 开始的步进页面；15401/18970/25401/28970 对齐单步 1011；15402/25402 对齐 1779 子页；25000 对齐 1693；移除无 1009 路由的 29683

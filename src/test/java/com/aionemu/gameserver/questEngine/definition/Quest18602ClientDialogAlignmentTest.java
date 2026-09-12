@@ -18,8 +18,8 @@ class Quest18602ClientDialogAlignmentTest {
 		QuestDefinition definition = load().definition();
 
 		assertEquals(List.of(
-			List.of(new QuestStartCondition("finished", 18601, 0)),
-			List.of(new QuestStartCondition("finished", 1527, 0))),
+			new QuestStartConditionGroup(List.of(new QuestStartCondition("finished", 18601, 0))),
+			new QuestStartConditionGroup(List.of(new QuestStartCondition("finished", 1527, 0)))),
 			definition.metadata().startConditionGroups());
 
 		QuestTransition accept = route(definition, QuestDialogAction.QUEST_ACCEPT_1);

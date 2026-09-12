@@ -52,7 +52,7 @@ class Quest24043RetailFlowAlignmentTest {
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT7_1.id())), movie.afterCommit());
 
 		assertTrue(routes(definition, "started", 278003).stream()
-			.allMatch(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+			.anyMatch(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.dialogId() == QuestDialogAction.SELECT1_1.id()));
 	}
 

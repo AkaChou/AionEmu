@@ -76,9 +76,6 @@
       <conditions>
         <start-eligible/>
       </conditions>
-      <actions>
-        <remove-item item-id="182204131" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
@@ -91,6 +88,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <remove-item item-id="182204131" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -161,6 +161,9 @@
       <conditions>
         <has-item item-id="182204131" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182204131" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>

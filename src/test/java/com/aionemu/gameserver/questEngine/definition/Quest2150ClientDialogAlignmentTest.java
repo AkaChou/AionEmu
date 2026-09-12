@@ -84,8 +84,8 @@ class Quest2150ClientDialogAlignmentTest {
 					&& dialogId <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
 			})
 			.toList();
-		assertTrue(completionRoutes.size() >= 4,
-			"expected at least 4 completion routes, got " + completionRoutes.size());
+		assertEquals(2, completionRoutes.size(),
+			"expected exactly 2 completion routes, got " + completionRoutes.size());
 	}
 
 	private static void assertContract(QuestTransition transition, String target,

@@ -25,7 +25,23 @@ class QuestPageButtonAuditTest {
 
 	@Test
 	void quest1464FlagsUnroutedButtonWithoutRoute() throws Exception {
-		CompiledQuestDefinition definition = definition(1464);
+		String xml = """
+			<?xml version="1.0" encoding="UTF-8"?>
+			<quest-definition id="1464" version="1">
+			  <metadata name="Unrouted" display-name-id="1" min-level="1" max-level="10" category="QUEST">
+			    <races><race id="ELYOS"/></races>
+			  </metadata>
+			  <nodes><node label="unaccepted" status="NONE"/></nodes>
+			  <transitions>
+			    <transition source="unaccepted" target="unaccepted">
+			      <event><talk-to-npc npc-id="203755" dialog-id="31"/></event>
+			      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+			    </transition>
+			  </transitions>
+			</quest-definition>
+			""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		List<QuestE2eAuditRow> rows = QuestE2eBatchAudit.auditPageButtons(definition, oracle);
 		assertTrue(rows.stream().anyMatch(row -> row.status() == QuestE2eStatus.BUTTON_WITHOUT_ROUTE),

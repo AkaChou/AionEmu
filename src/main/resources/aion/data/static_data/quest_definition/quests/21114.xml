@@ -160,7 +160,7 @@
 
     <transition source="s4" target="reward">
       <event>
-        <kill-npc npc-ids="216563"/>
+        <kill-npc npc-id="216563"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

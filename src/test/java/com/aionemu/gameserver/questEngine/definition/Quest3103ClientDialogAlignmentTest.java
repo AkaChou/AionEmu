@@ -26,7 +26,9 @@ class Quest3103ClientDialogAlignmentTest {
 	void keepsTheRetailStartReportAndRewardOwnersExclusive() {
 		QuestDefinition definition = load().definition();
 
-		assertEquals(Set.of(3102), definition.metadata().prerequisites());
+		assertEquals(Set.of(), definition.metadata().prerequisites());
+		assertEquals(List.of(new QuestStartCondition("finished", 3102, 0)),
+			definition.metadata().startConditions());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
