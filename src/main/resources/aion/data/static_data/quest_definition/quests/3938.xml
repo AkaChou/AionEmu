@@ -40,7 +40,6 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="203701" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="203701" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
@@ -282,6 +281,46 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 客户端 select_success 按钮 1009 触发 check_item 检查：集齐进 REWARD+奖励窗，不足显示 check_user_item_fail，FINISH_DIALOG 关闭。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206098" count="10"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182206098" count="10"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
       </after-commit>
     </transition></transitions>
 </quest-definition>

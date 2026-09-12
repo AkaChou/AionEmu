@@ -147,5 +147,14 @@
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
+    </transition>
+    <!-- 客户端 check_user_item_fail 页：物品不足时显示确认，FINISH_DIALOG 关闭。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition></transitions>
 </quest-definition>
