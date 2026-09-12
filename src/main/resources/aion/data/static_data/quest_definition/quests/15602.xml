@@ -396,5 +396,11 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+
+    <!-- quest_use_item 交互物 703136：s4 态对话路由需 ACTION_ITEM_USE 资格声明。 -->
+    <transition source="s4" target="s4">
+      <event>
+        <can-act template-id="703136" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition></transitions>
 </quest-definition>

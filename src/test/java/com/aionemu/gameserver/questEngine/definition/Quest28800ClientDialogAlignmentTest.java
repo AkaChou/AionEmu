@@ -48,10 +48,14 @@ class Quest28800ClientDialogAlignmentTest {
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());
 		assertNull(accept.priority());
 
+		// 客户端 HTML 只有 select5(2375)（契约 report_page=2375）：接取 NPC 与报告 NPC 的
+		// 进度对话都显示 select5，不存在 select2 页。
+		// The client HTML only has select5 (contract report_page=2375): both the start NPC and
+		// the report NPC show select5; no select2 page exists in this task's HTML.
 		QuestTransition startedKeep = route(definition, "started", START_NPC,
 			QuestDialogAction.QUEST_SELECT);
 		assertContract(startedKeep, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())));
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())));
 		assertTrue(routes(definition, "reward", START_NPC).stream().noneMatch(t ->
 			((QuestEvent.TalkToNpc) t.event()).dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id()));
 

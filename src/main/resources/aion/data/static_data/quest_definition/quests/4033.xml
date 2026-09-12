@@ -118,5 +118,11 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-  </transitions>
+  
+    <!-- quest_use_item 交互物 700379：started 态对话路由需 ACTION_ITEM_USE 资格声明。 -->
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700379" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition></transitions>
 </quest-definition>

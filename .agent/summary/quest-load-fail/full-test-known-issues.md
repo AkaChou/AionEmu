@@ -207,3 +207,92 @@ CollectTurnIn/ItemCollecting/2877 系列已在第二轮回滚或修正）。
 2. 计数漂移类（MonsterHunt1102 36v35 等）需对照零售 Quest_Simple* 模板逐个重审；
 3. 非 quest 基建类（AionBoot/TemplateShard/RetailAi/GameCoreServices/Fissure/Kromedes）
    是运行时数据目录（./data）与 JDK 25 环境问题，与任务数据无关。
+
+## reward-owner 独占扫描疑点（84 个任务，未改动，待逐个契约核对）
+
+28800 已实证并修复（turn-in 路由挂到 start NPC 破坏 REPORT_NPC 独占）。以下任务的 1009 turn-in 路由挂在契约 start NPC 上，需逐个判定：单点收集任务（start=end 时合法，已排除）可能确属错位，也可能是零售允许 start NPC 直接上交的变体。
+
+- quest 18972: npc 804865 source started
+- quest 1347: npc 203965 source a0b0
+- quest 16988: npc 801953 source started
+- quest 28251: npc 806730 source started
+- quest 25562: npc 731685 source started
+- quest 28250: npc 806135 source started
+- quest 18973: npc 804865 source started
+- quest 25560: npc 731685 source started
+- quest 16800: npc 806075 source started
+- quest 25561: npc 731685 source started
+- quest 18743: npc 206378 source started
+- quest 18743: npc 206379 source started
+- quest 18743: npc 206380 source started
+- quest 18974: npc 804865 source started
+- quest 15101: npc 804711 source started
+- quest 26905: npc 204301 source started
+- quest 25564: npc 731685 source started
+- quest 80279: npc 831117 source started
+- quest 21460: npc 799258 source started
+- quest 26906: npc 204301 source started
+- quest 24123: npc 204345 source started
+- quest 25639: npc 731685 source started
+- quest 3965: npc 798311 source started
+- quest 15560: npc 731684 source started
+- quest 29064: npc 204053 source started
+- quest 28743: npc 206395 source k1
+- quest 28743: npc 206396 source k1
+- quest 28743: npc 206397 source k1
+- quest 28743: npc 206395 source started
+- quest 28743: npc 206396 source started
+- quest 28743: npc 206397 source started
+- quest 21217: npc 799316 source started
+- quest 15561: npc 731684 source started
+- quest 26977: npc 801765 source started
+- quest 28972: npc 804924 source k2
+- quest 28972: npc 804924 source started
+- quest 28973: npc 804924 source k2
+- quest 28973: npc 804924 source started
+- quest 15562: npc 731684 source started
+- quest 19638: npc 798926 source k10
+- quest 19638: npc 798926 source started
+- quest 28208: npc 205320 source k7
+- quest 28208: npc 205320 source started
+- quest 15639: npc 731684 source started
+- quest 14123: npc 203933 source report
+- quest 28974: npc 804924 source k2
+- quest 28974: npc 804924 source started
+- quest 15564: npc 731684 source started
+- quest 15637: npc 731684 source started
+- quest 28951: npc 209743 source k25
+- quest 28951: npc 209743 source started
+- quest 28831: npc 830651 source started
+- quest 15634: npc 731684 source started
+- quest 28952: npc 209743 source k4
+- quest 28952: npc 209743 source started
+- quest 26837: npc 806573 source started
+- quest 18932: npc 806259 source started
+- quest 19631: npc 798155 source k10
+- quest 19631: npc 798155 source started
+- quest 49600: npc 800924 source started
+- quest 2569: npc 204754 source started
+- quest 2569: npc 204754 source s1
+- quest 2569: npc 204754 source s2
+- quest 15632: npc 731684 source started
+- quest 23800: npc 804719 source started
+- quest 26986: npc 804863 source started
+- quest 19633: npc 800411 source k10
+- quest 19633: npc 800411 source started
+- quest 25634: npc 731685 source started
+- quest 21081: npc 799225 source started
+- quest 28932: npc 806261 source k1
+- quest 28932: npc 806261 source started
+- quest 16837: npc 806564 source started
+- quest 21296: npc 799444 source started
+- quest 18952: npc 209678 source started
+- quest 25637: npc 731685 source started
+- quest 26908: npc 204702 source started
+- quest 19642: npc 798991 source k10
+- quest 19642: npc 798991 source started
+- quest 18951: npc 209678 source started
+- quest 25632: npc 731685 source started
+- quest 21455: npc 799404 source started
+- quest 16986: npc 804862 source started
+- quest 49700: npc 800933 source started

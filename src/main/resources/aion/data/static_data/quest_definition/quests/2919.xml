@@ -284,5 +284,17 @@
         fixed-reward-indices="0 1"
         actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
         complete-reward-index="0" finish="SELECTION_DIALOG"/>
-  </transitions>
+  
+    <!-- quest_use_item 交互物 700212：talk2 态对话路由需 ACTION_ITEM_USE 资格声明。 -->
+    <transition source="talk2" target="talk2">
+      <event>
+        <can-act template-id="700212" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <!-- quest_use_item 交互物 700212：collected 态对话路由需 ACTION_ITEM_USE 资格声明。 -->
+    <transition source="collected" target="collected">
+      <event>
+        <can-act template-id="700212" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition></transitions>
 </quest-definition>

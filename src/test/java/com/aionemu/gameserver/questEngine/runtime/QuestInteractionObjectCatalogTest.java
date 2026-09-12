@@ -161,9 +161,13 @@ class QuestInteractionObjectCatalogTest {
 		QuestMetadata metadata = new QuestMetadata("interaction", 0, 1, 99, Set.of(), "QUEST",
 			RepeatPolicy.once(), Set.of(), List.of(), List.of(),
 			List.of(new QuestDrop(700106, 182200205, 100, true, 0)));
+		// 附一条与交互物无关的迁移，避免 NO_TRANSITIONS 编译门禁先于 validator 触发。
+		// An unrelated transition keeps the NO_TRANSITIONS compile gate from firing before
+		// the validator under test.
 		CompiledQuestDefinition definition = QuestDsl.quest(990103).metadata(metadata)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.KillNpc(999999)).from("started").goTo("started")
 			.compile();
 
 		IllegalStateException failure = assertThrows(IllegalStateException.class,
