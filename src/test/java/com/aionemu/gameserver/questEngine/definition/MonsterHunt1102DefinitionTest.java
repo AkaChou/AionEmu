@@ -27,12 +27,16 @@ class MonsterHunt1102DefinitionTest {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		assertEquals(36, transitions.size());
+		// 客户端 1102 HTML 无 select1_1(1012) 页：select1 的按钮直接是 ASK_QUEST_ACCEPT(1007)，
+		// 接取链不含 1012 翻页。
+		// The client 1102 HTML has no select1_1 (1012) page: select1's button goes straight to
+		// ASK_QUEST_ACCEPT; the accept chain has no 1012 turn.
+		assertEquals(35, transitions.size());
 		assertEquals(6, transitions.stream().filter(t -> t.event() instanceof QuestEvent.KillNpc).count());
 		assertEquals(Set.of(210133, 210134), transitions.stream()
 			.filter(t -> t.event() instanceof QuestEvent.KillNpc)
 			.map(t -> ((QuestEvent.KillNpc) t.event()).npcId()).collect(Collectors.toSet()));
-		assertEquals(Set.of(31, 1012, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
+		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
 			dialogIds(transitions, "unaccepted"));
 		assertEquals(Set.of(31, 1009), dialogIds(transitions, "target-count-reached"));
 		assertEquals(Set.of(-1, 1009), transitions.stream()

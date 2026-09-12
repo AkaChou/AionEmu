@@ -34,10 +34,13 @@ class ReportTo1101DefinitionTest {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		assertEquals(30, transitions.size());
+		// 客户端 1101 HTML 无 select1_1(1012) 页：select1 按钮直接是 ASK_QUEST_ACCEPT(1007)。
+		// The client 1101 HTML has no select1_1 (1012) page: select1's button goes straight to
+		// ASK_QUEST_ACCEPT.
+		assertEquals(29, transitions.size());
 		assertTrue(transitions.stream().allMatch(t -> t.event() instanceof QuestEvent.TalkToNpc talk
 			&& talk.dialogId() != null));
-		assertEquals(Set.of(31, 1012, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
+		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
 			dialogIds(transitions, "unaccepted", 203049));
 		assertEquals(Set.of(1008), dialogIds(transitions, "started", 203049));
 		assertEquals(Set.of(31, 1009), dialogIds(transitions, "started", 203057));
