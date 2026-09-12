@@ -311,3 +311,19 @@ CollectTurnIn/ItemCollecting/2877 系列已在第二轮回滚或修正）。
 终态快照：48 failing classes / 59 failures+errors（此前 49/61）。
 新确认既有漂移：3103（prerequisites 断言 vs start-conditions 映射，客户端 quest.xml 无前置证据）。
 84 个 reward-owner 独占疑点已记录（见上节），逐个契约核对留独立任务。
+
+
+## 2026-09-12 第六轮增补
+
+已修复：MonsterHunt1102（1012 页客户端不存在，35 条迁移）、ReportTo1101（同模式，29 条）、
+QuestInteractionObjectCatalogTest（9 个交互物 NPC 的 can-act 资格 + inline NO_TRANSITIONS）、
+Quest28800（恢复起点多 NPC 收上交形状，放宽过严独占断言并注明理由）、1466/28800 断言。
+
+新确认既有漂移（无本会话 diff，起点形状即不满足断言）：
+- QuestStepDialogTermination 2008：s6 的 10015/10016 奖励选择路由无响应（起点即如此）；
+- Quest2150：completion 路由 2 条（断言 ≥4，起点即如此）；
+- 3103：prerequisites 断言 vs start-conditions 映射差异，客户端 quest.xml 无前置证据。
+
+剩余分布：NPE null-source 遍历家族（14015/14010/Dialog31/1926And2938/CompletedQuest——
+测试 helper 未防 null source 的 enter-world 路由）、NO_MATCH e2e 家族（dispatcher 层）、
+计数/形状类（2150/2008/18602/24043/21114 等）、非 quest 基建（./data 运行目录）。
