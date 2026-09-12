@@ -24,6 +24,9 @@ QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/qu
 OUTPUT = ROOT / ".agent/summary/quest-load-fail/unresolved-inventory.csv"
 
 PAGE_NAME_RE = re.compile(r"^(?P<source>[^#]+)#(?P<page>\S+?) page-order")
+RETAIL_TEMPLATES = {r["quest_id"]: r for r in csv.DictReader(
+    (ROOT / ".agent/summary/quest-load-fail/retail-simple-templates.csv")
+    .open(encoding="utf-8-sig", newline=""))}
 EVIDENCE_NPC = {r["quest_id"]: r for r in csv.DictReader(
     (ROOT / ".agent/summary/quest-load-fail/data-driven-npc-evidence.csv")
     .open(encoding="utf-8-sig", newline=""))}
@@ -202,6 +205,15 @@ def main() -> int:
         decision_counts[decision] += 1
         # 逐行证据缺口：缺哪份证据、缺哪个字段，补齐后即可按家族批处理。
         # Per-row evidence gaps: exactly which contract/handler input is missing.
+        evidence = EVIDENCE_NPC.get(str(quest_id))
+        retail = RETAIL_TEMPLATES.get(str(quest_id))
+        if retail:
+            talk_npcs = retail.get("talk_npcs", "")
+            gaps.append(
+                f"retail template {retail['template']}: acquire {retail['acquire_npc_name']}, "
+                f"reward {retail['reward_npc_name']}"
+                + (f", per-var talk npcs [{talk_npcs}]" if talk_npcs else "")
+                + (f", item_check={retail['item_check']}" if retail.get("item_check") else ""))
         evidence = EVIDENCE_NPC.get(str(quest_id))
         if evidence and evidence.get("acquire_npc_id"):
             gaps.append(f"client data-driven evidence: acquire npc {evidence['acquire_npc_id']}"
