@@ -360,3 +360,30 @@
 - 验证命令和结果：`mvn -q -Dtest='Quest30313RetailAlignmentTest' test` 通过（2 个测试断言 730275 零路由、799225 不接取、领奖窗口路由归属）；审计 30313 的 2 行 `BUTTON_WITHOUT_ROUTE` 清零，3 行 `CLIENT_PAGE_UNREACHED` 为已记录例外。
 - 复用边界：仅适用于旧 handler 中被明确注释禁用且仓库内无零售证据的交互。一旦获得抓包或解包的逐 var 对话证据，应按新证据重建路由并把台账行移出例外，而不是维持禁用状态；对“handler 存在但没写该交互”的任务不适用本模式，须回到证据收集。
 - commit：`7268098e8`。
+
+
+## 8.25 上交检查后的客户端确认页未接线
+
+- Pattern ID：`CHECK_CONFIRMATION_PAGE_CONTRACT`。
+- 代表任务：1636「Fungal Sight」；同批同型的 15010（显式检查对）与 2372/16942/18745（npc-item-report）不重复建案例。
+- 搜索症状：审计 `CLIENT_PAGE_UNREACHED` 指向 check_user_item_ok/check_user_item_fail；玩家上交后没有确认页直接跳奖励窗，或不足时显示客户端不存在的 SELECT6。
+- 玩家可见症状：玩家上交收集物后看不到"任务完成"确认页直接跳奖励窗，或物品不足时点击无反馈/显示客户端不存在的页面；审计两处 check_user_item 页不可达。
+- 根因：Aion 5.8 客户端在上交检查后插入了确认页（ok 页与 fail 页各带可见按钮）；typed 修复只保留了"进 REWARD+奖励窗"的终端形状，既不显示确认页，也不给确认按钮接线。
+- 修复层：任务 XML。39/1009 成功分支在状态 sync 之后显示 CHECK_USER_ITEM_OK；确认按钮 FINISH_DIALOG 关闭（领奖经 REWARD 态 preview）、SELECT_QUEST_REWARD 由 preview 独占（不重复接线）；失败分支显示 CHECK_USER_ITEM_FAIL（npc-item-report 用 failure-page 属性）。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{1636,15010,2372,16942,18745,24203,50019...}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/AcceptAndConfirmationEntryContractTest.java`。
+- 验证命令和结果：`mvn -q -Dtest='AcceptAndConfirmationEntryContractTest,CollectTurnInClientActionAlignmentBatchTest,...' test` 通过；审计 CLIENT_PAGE_UNREACHED 相应行清零；包顺序符合 `STATE_SYNC_BEFORE_DEPENDENT_PAGE`。
+- 复用边界：仅适用于客户端 HTML 中 ok/fail 页带可见按钮的任务。ok 页按钮指向故事翻页链（SELECT3/SETPRO2 等）的任务需先补链根，不适用本模式；纯 NPC_REPORT 流且客户端无对应确认入口的任务保持例外。
+- commit：`207e88649`、`a3a84d8d8`。
+
+## 8.26 自动接取任务被批量补入对话接取入口
+
+- Pattern ID：`AUTO_START_KEEPS_NONE_DIALOG_FREE`。
+- 代表任务：1877「Urgent Orders」；同批回滚覆盖 118 个任务的简报对（select_none 批推断过度）。
+- 搜索症状：给自动接取任务补 select_none 对话路由后，全量测试出现迁移计数断言失败（expected 1 was 3）、auto-start 断言失败（remains auto-started）。
+- 玩家可见症状：自动接取任务的对话在未接取状态下出现多余的接取简报页，重复完成任务后再对话时接取入口行为混乱（别名展开导致多条路由竞争）。
+- 根因：区域/事件/道具自动接取任务的接取由权威自动入口完成，NONE 态对话路由违反已验收合同；客户端 HTML 存在 select_none 页与 data-driven NPC 名字只能证明"谁接取"，不能证明"需要对话接取路由"；带 start-eligible 的新路由还会被 repeatable 别名机制展开成多条迁移。
+- 修复层：任务 XML 回滚。简报对整体移除，select_none 页回到集中管理例外台账（引用零售/客户端 NPC 证据）。
+- 修改文件：118 个 `quests/*.xml`、`AcceptAndConfirmationEntryContractTest#zoneAutoStartQuestsKeepUnacceptedFreeOfDialogRoutes`（合同正向锁定）。
+- 验证命令和结果：`Quest2877To2887UrgentOrdersFlowTest` 22/22、`ItemCollectingDialogProtocolAlignmentTest` 6/6 恢复绿；审计行回到例外台账。
+- 复用边界：补对话接取入口前必须先确认任务没有权威自动接取入口（enter-zone/enter-world/use-item/level-up），且客户端 HTML 有完整接取链；两者都满足才允许 NPC_START/显式路由。冲突裁决时，已验收测试合同优先于仅有间接证据的批处理推断。
+- commit：`0095c6abf`。
