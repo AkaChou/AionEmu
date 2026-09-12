@@ -120,7 +120,7 @@ select_none 批的 118 个"简报对"（QUEST_SELECT→SELECT_NONE + FINISH clos
 - 结论：剩余 34 类全部为仓库存量技术债（全量测试从未在起点运行），不属于本次治理范围；
   逐类修复需各自按客户端证据重新审定合同，建议独立任务推进。
 
-## 2026-09-12 第三轮（环境修复后）终态清单
+## 2026-09-12 第三轮（环境修复后）——已过时，见第四轮
 
 环境修复（NetworkConfig 代码级默认值 + 2 个 de-final + 1466 断言）后：185 → 61 个失败/错误。
 
@@ -296,3 +296,18 @@ CollectTurnIn/ItemCollecting/2877 系列已在第二轮回滚或修正）。
 - quest 21455: npc 799404 source started
 - quest 16986: npc 804862 source started
 - quest 49700: npc 800933 source started
+
+
+## 2026-09-12 第五轮（逐类修复后终态快照）
+
+已修复并提交（4ed35dbff）：
+- QuestInteractionObjectCatalogTest 7/7（9 个 quest_use_item 交互物 NPC 补 can-act
+  ACTION_ITEM_USE 资格声明，含 28644/28645/28648 陈列柜、2919 双节点、3082/4033/15602/25670；
+  inline DSL 测试补无关迁移绕过 NO_TRANSITIONS 早触发）；
+- Quest28800ClientDialogAlignmentTest（删除挂错 start/第三 NPC 的 2 条 1009 turn-in，
+  断言更新为客户端 select5）；
+- Quest1466ClientDialogAlignmentTest（断言更新为客户端 select_success=10002）。
+
+终态快照：48 failing classes / 59 failures+errors（此前 49/61）。
+新确认既有漂移：3103（prerequisites 断言 vs start-conditions 映射，客户端 quest.xml 无前置证据）。
+84 个 reward-owner 独占疑点已记录（见上节），逐个契约核对留独立任务。
