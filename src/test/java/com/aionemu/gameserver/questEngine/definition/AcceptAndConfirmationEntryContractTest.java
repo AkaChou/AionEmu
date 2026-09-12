@@ -27,27 +27,25 @@ class AcceptAndConfirmationEntryContractTest {
 		"src/main/resources/aion/data/static_data/quest_definition/quests");
 
 	@Test
-	void briefingOnlySelectNoneStaysOnUnacceptedAndCloses() throws Exception {
+	void zoneAutoStartQuestsKeepUnacceptedFreeOfDialogRoutes() throws Exception {
+		// 已验收合同：区域自动接取任务在 NONE 态不得有任何对话路由——接取由区域路由完成，
+		// select_none 简报页作为集中管理例外记录。
+		// Accepted contract: zone auto-start quests keep NONE free of dialog routes - the zone
+		// route owns acceptance and the select_none briefing page stays a managed exception.
 		QuestDefinition definition = compile(1877);
-		// 简报对：QUEST_SELECT 带 start-eligible 显示 select_none，不接取。
-		// The briefing pair: QUEST_SELECT carries start-eligible and shows select_none without
-		// accepting.
-		QuestTransition briefing = talkRoute(definition, "unaccepted", 278503, 31);
-		assertEquals(List.of(new QuestCondition.StartEligible()), briefing.conditions(),
-			"quest 1877 briefing must stay start-eligible gated");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4762)), briefing.afterCommit(),
-			"quest 1877 briefing must show select_none");
 		assertTrue(definition.transitions().stream().noneMatch(transition ->
-				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 278503
-					&& "started".equals(transition.targetNode())),
-			"quest 1877 dialog must never accept; the zone route owns NONE -> START");
-		// 履行委托按钮关闭对话。
-		// The accept-commission button closes the dialog.
-		QuestTransition finish = talkRoute(definition, "unaccepted", 278503, 1008);
-		assertEquals(List.of(new QuestCondition.StartEligible()), finish.conditions(),
-			"quest 1877 finish must stay start-eligible gated");
-		assertEquals(List.of(new AfterCommitAction.CloseDialog()), finish.afterCommit(),
-			"quest 1877 finish must close");
+				transition.sourceNode() != null && transition.sourceNode().equals("unaccepted")
+					&& transition.event() instanceof QuestEvent.TalkToNpc),
+			"quest 1877 unaccepted must stay free of dialog routes");
+		QuestTransition start = definition.transitions().stream()
+			.filter(transition -> transition.sourceNode() != null
+				&& transition.sourceNode().equals("unaccepted")
+				&& transition.event().equals(new QuestEvent.EnterZone("TEMINON_LANDING_400010000")))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestCondition.StartEligible()), start.conditions(),
+			"quest 1877 zone route must stay start-eligible gated");
+		assertEquals("started", start.targetNode(),
+			"quest 1877 zone route owns NONE -> START");
 	}
 
 	@Test
