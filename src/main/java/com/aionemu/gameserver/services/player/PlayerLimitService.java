@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class PlayerLimitService {
 
-	private static final ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<Integer, Long>();
+	private static ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<Integer, Long>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	/**

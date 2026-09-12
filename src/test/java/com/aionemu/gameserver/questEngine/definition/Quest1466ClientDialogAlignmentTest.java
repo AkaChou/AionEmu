@@ -68,7 +68,9 @@ class Quest1466ClientDialogAlignmentTest {
 			itemPlay.afterCommit());
 		assertFalse(itemPlay.afterCommit().stream().anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance));
 
-		assertPage(definition, "started", REPORT_NPC_ID, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);
+		// 客户端报告页为 select_success(10002)（按钮 SELECT_QUEST_REWARD），无 select5 页。
+        // The client report page is select_success(10002); the task HTML has no select5 page.
+        assertPage(definition, "started", REPORT_NPC_ID, QuestDialogAction.QUEST_SELECT, QuestDialogPage.DEFAULT_SUCCESS);
 		QuestTransition report = route(definition, "started", REPORT_NPC_ID,
 			QuestDialogAction.SELECT_QUEST_REWARD);
 		assertEquals("reward", report.targetNode());

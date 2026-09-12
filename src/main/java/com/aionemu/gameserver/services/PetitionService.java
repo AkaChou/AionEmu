@@ -32,7 +32,7 @@ public class PetitionService {
 
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
-	private static final SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
+	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
 
 	/**
 	 * 获取请愿服务单例（优先 Spring ObjectProvider）。

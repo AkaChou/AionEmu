@@ -95,28 +95,28 @@ public class NetworkConfig {
 	 * Minimum threads used to execute Aion client packets.
 	 */
 	@Property(key = "gameserver.network.packet.processor.threads.min", defaultValue = "4")
-	public static int PACKET_PROCESSOR_MIN_THREADS;
+	public static int PACKET_PROCESSOR_MIN_THREADS = 4;
 
 	/**
 	 * 执行客户端数据包的最大线程数。
 	 * Maximum threads used to execute Aion client packets.
 	 */
 	@Property(key = "gameserver.network.packet.processor.threads.max", defaultValue = "4")
-	public static int PACKET_PROCESSOR_MAX_THREADS;
+	public static int PACKET_PROCESSOR_MAX_THREADS = 4;
 
 	/**
 	 * 判定可回收多余线程的阈值（min == max 时无效）。
 	 * Threshold for killing extra threads (no effect when min threads == max threads).
 	 */
 	@Property(key = "gameserver.network.packet.processor.threshold.kill", defaultValue = "3")
-	public static int PACKET_PROCESSOR_THREAD_KILL_THRESHOLD;
+	public static int PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 3;
 
 	/**
 	 * 判定应扩容额外线程的阈值（min == max 时无效）。
 	 * Threshold for spawning extra threads (no effect when min threads == max threads).
 	 */
 	@Property(key = "gameserver.network.packet.processor.threshold.spawn", defaultValue = "50")
-	public static int PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD;
+	public static int PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 50;
 
 	/**
 	 * 是否记录未知数据包。
