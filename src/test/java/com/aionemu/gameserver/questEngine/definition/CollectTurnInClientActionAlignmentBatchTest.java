@@ -160,7 +160,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	@Test
 	void quest18745KeepsTheRewardOwnerExclusive() throws Exception {
 		QuestDefinition definition = definition(18745).definition();
-		checkTurnInBranches(definition, 804707, 182215943, 1, "CHECK_USER_ITEM_FAIL");
+		checkTurnInBranches(definition, 804707, 182215943, 1, "CHECK_USER_ITEM_FAIL", true);
 		for (int npcId : new int[] {206378, 206379, 206380, 702958}) {
 			assertFalse(definition.transitions().stream().anyMatch(candidate ->
 				candidate.event() instanceof QuestEvent.TalkToNpc talk
@@ -190,8 +190,19 @@ class CollectTurnInClientActionAlignmentBatchTest {
 		checkTurnInBranches(definition, npcId, List.of(new QuestCondition.HasItem(itemId, count)), failPage);
 	}
 
+	private static void checkTurnInBranches(QuestDefinition definition, int npcId, int itemId, int count,
+			String failPage, boolean confirmPage) {
+		checkTurnInBranches(definition, npcId, List.of(new QuestCondition.HasItem(itemId, count)), failPage,
+			confirmPage);
+	}
+
 	private static void checkTurnInBranches(QuestDefinition definition, int npcId, List<QuestCondition> conditions,
 			String failPage) {
+		checkTurnInBranches(definition, npcId, conditions, failPage, false);
+	}
+
+	private static void checkTurnInBranches(QuestDefinition definition, int npcId, List<QuestCondition> conditions,
+			String failPage, boolean confirmPage) {
 		QuestTransition success = transition(definition, "started", "reward",
 			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
 		assertEquals(Integer.valueOf(0), success.priority());
@@ -201,10 +212,21 @@ class CollectTurnInClientActionAlignmentBatchTest {
 			.map(hasItem -> (QuestAction) new QuestAction.RemoveItem(hasItem.itemId(), hasItem.count()))
 			.toList();
 		assertEquals(removals, success.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			success.afterCommit());
+		// 客户端 check_user_item_ok 确认页由成功分支显示；奖励窗口由 REWARD 态 preview 的
+		// SELECT_QUEST_REWARD 打开（ok 页按钮 1009）。
+		// The client check_user_item_ok confirmation page is shown by the success branch; the
+		// reward window opens through the REWARD-state preview's SELECT_QUEST_REWARD (ok 1009).
+		if (confirmPage) {
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(10000)),
+				success.afterCommit());
+		} else {
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+				success.afterCommit());
+		}
 		QuestTransition failure = transition(definition, "started", "started",
 			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
 		assertEquals(Integer.valueOf(1), failure.priority());
