@@ -24,8 +24,11 @@ class QuestDialog31RegressionTest {
 		assertDialog("24040.xml", "started", "started", 278001, 10002);
 		assertDialog("24050.xml", "started", "started", 204702, 10002);
 		assertDialog("26823.xml", "s2", "s2", 806289, 1694);
-		assertDialog("30565.xml", "started", "started", 804879, 1011);
-		assertDialog("30565.xml", "s1", "s1", 804879, 2375);
+		// 30565 的客户端 HTML 只有 select_none/select_success（item_order 自动接取任务），
+		// 无 1011/2375 页——旧客户端形状的两行断言移除（start 批已按契约删除该对话入口）。
+		// 30565's client HTML only has select_none/select_success (item_order auto-start);
+		// the stale 1011/2375 page assertions were removed when the contract-driven start
+		// cleanup dropped that dialog entry.
 		assertDialog("80038.xml", "complete", "complete", 799780, 1011,
 			new QuestCondition.HasItem(164002017, 5));
 		assertDialog("80039.xml", "complete", "complete", 799780, 1011,
@@ -46,7 +49,7 @@ class QuestDialog31RegressionTest {
 			QuestCondition... conditions) throws Exception {
 		CompiledQuestDefinition compiled = definition(file);
 		assertTrue(compiled.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals(source)
+			source.equals(transition.sourceNode())
 				&& transition.targetNode().equals(target)
 				&& transition.event().equals(new QuestEvent.TalkToNpc(npcId, 31))
 				&& transition.conditions().containsAll(List.of(conditions))

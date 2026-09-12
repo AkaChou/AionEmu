@@ -134,7 +134,7 @@ class CompletedQuestPrerequisiteRegressionTest {
 
 	private static QuestTransition automaticStart(CompiledQuestDefinition definition, QuestEvent event) {
 		return definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("unaccepted")
+			.filter(transition -> "unaccepted".equals(transition.sourceNode())
 				&& transition.event().equals(event))
 			.findFirst().orElseThrow();
 	}

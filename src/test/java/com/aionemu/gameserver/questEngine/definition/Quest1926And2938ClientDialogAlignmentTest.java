@@ -105,11 +105,24 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			assertNull(completion.priority());
 		}
 
-		assertEquals(23, definition.transitions().size());
+		// 1926/2938 是 level-up 自动接取任务（AUTO_START_KEEPS_NONE_DIALOG_FREE）：
+        // 接取由 LevelUp 路由完成，NONE 态无对话接取链；总数 25 = 6 显式 + LevelUp +
+        // EnterWorld 恢复 + npc-complete 的 preview(-1/31/1009) 与 16 个 SELECTED 完成动作。
+        // 1926/2938 are level-up auto-start quests: acceptance belongs to the LevelUp route,
+        // NONE stays free of dialog chains; 25 = 6 explicit + LevelUp + EnterWorld recovery +
+        // the npc-complete preview (-1/31/1009) and 16 SELECTED completion actions.
+        assertEquals(25, definition.transitions().size());
 		assertTrue(routes(definition, "unaccepted", firstNpcId).isEmpty());
 		assertTrue(routes(definition, "unaccepted", secondNpcId).isEmpty());
 		assertTrue(routes(definition, "started", secondNpcId).isEmpty());
-		assertTrue(routes(definition, "reward", firstNpcId).isEmpty());
+		// first NPC 在 reward 态不得接取或上交（REPORT NPC 独占），但允许 FINISH 关闭响应。
+		// The first NPC must neither accept nor hand in at REWARD (report NPC exclusivity);
+		// a FINISH close response is allowed.
+		assertTrue(routes(definition, "reward", firstNpcId).stream().noneMatch(t -> {
+			int dialogId = ((QuestEvent.TalkToNpc) t.event()).dialogId();
+			return dialogId == QuestDialogAction.QUEST_SELECT.id()
+				|| dialogId == QuestDialogAction.SELECT_QUEST_REWARD.id();
+		}));
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
@@ -124,7 +137,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 
 	private static QuestTransition transition(QuestDefinition definition, String source, QuestEvent event) {
 		List<QuestTransition> routes = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source) && candidate.event().equals(event))
+			.filter(candidate -> source.equals(candidate.sourceNode()) && candidate.event().equals(event))
 			.toList();
 		assertEquals(1, routes.size(), "quest " + definition.id() + " " + source + " " + event);
 		return routes.getFirst();

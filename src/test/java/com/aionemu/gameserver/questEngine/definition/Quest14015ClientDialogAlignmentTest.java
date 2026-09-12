@@ -94,7 +94,7 @@ class Quest14015ClientDialogAlignmentTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
+			.filter(candidate -> source.equals(candidate.sourceNode())
 				&& candidate.targetNode().equals(target) && candidate.event().equals(event))
 			.findFirst().orElseThrow();
 	}

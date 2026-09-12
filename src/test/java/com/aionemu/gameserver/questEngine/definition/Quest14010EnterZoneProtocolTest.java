@@ -20,7 +20,7 @@ class Quest14010EnterZoneProtocolTest {
 	void enteringVerteronStartsTheMissionWithoutOpeningQuestHtml() throws Exception {
 		CompiledQuestDefinition definition = definition();
 		QuestTransition enterZone = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("unaccepted"))
+			.filter(transition -> "unaccepted".equals(transition.sourceNode()))
 			.filter(transition -> transition.targetNode().equals("started"))
 			.filter(transition -> transition.event().equals(
 				new QuestEvent.EnterZone("VERTERON_CITADEL_210030000")))
