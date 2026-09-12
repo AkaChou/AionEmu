@@ -185,3 +185,25 @@ select_none 批的 118 个"简报对"（QUEST_SELECT→SELECT_NONE + FINISH clos
 - com.aionemu.gameserver.instance.handlers.scripts.KromedesTrialInstanceTest (1) touched=[] :: Lady Angerr death should still spawn Distraught Lady Angerr ==> expected: <true> but was: <fals
 - com.aionemu.gameserver.questEngine.definition.Quest1466ClientDialogAlignmentTest (1) touched=[] :: Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route
 - com.aionemu.gameserver.questEngine.e2e.QuestE2eInfrastructureTest (1) touched=[] :: No value present
+
+
+## 2026-09-12 第四轮甄别（用户指示"继续"后）
+
+对剩余 quest 类失败逐类深查（每类取失败断言 → git diff/git show 起点 XML 对照）：
+
+新确认的既有漂移（起点 XML 与当前完全相同，断言在起点即不成立）：
+- QuestLegacyMonsterHuntProductionFlowTest 17541/27541：no-match 断言 vs 无条件 1009 路由，
+  起点与当前逐字节相同（此前会话从未跑过该测试类）；
+- ProductionJourney e2e NO_MATCH 家族（1106/1114/1843/49715/1103/1170/1913/14047）：
+  8 个任务全部无本会话 diff，NO_MATCH 源于 dispatcher 层存量状态；
+- 3057/2841/1582/2333/29683/1876/1607(z4)/20047-inline：前轮已确认。
+
+结论：61 个存量失败中**没有任何一个由本会话 18 个提交引入**（本会话引入的
+CollectTurnIn/ItemCollecting/2877 系列已在第二轮回滚或修正）。
+它们是仓库长期"修复只跑聚焦测试、从不全量回归"积累的技术债。
+
+处置建议（独立任务）：
+1. NO_MATCH e2e 家族与 dispatcher 交互，需先修 dispatcher 的多候选 UNKNOWN 判定；
+2. 计数漂移类（MonsterHunt1102 36v35 等）需对照零售 Quest_Simple* 模板逐个重审；
+3. 非 quest 基建类（AionBoot/TemplateShard/RetailAi/GameCoreServices/Fissure/Kromedes）
+   是运行时数据目录（./data）与 JDK 25 环境问题，与任务数据无关。
