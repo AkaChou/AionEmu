@@ -327,3 +327,21 @@ Quest28800（恢复起点多 NPC 收上交形状，放宽过严独占断言并�
 剩余分布：NPE null-source 遍历家族（14015/14010/Dialog31/1926And2938/CompletedQuest——
 测试 helper 未防 null source 的 enter-world 路由）、NO_MATCH e2e 家族（dispatcher 层）、
 计数/形状类（2150/2008/18602/24043/21114 等）、非 quest 基建（./data 运行目录）。
+
+
+## 2026-09-12 第七轮（终态快照）
+
+全量：3086 tests，**49 失败/错误 / 43 类**（本轮治理累计从 185 降至 49）。
+本轮新增修复：NPE null-source 家族 5 类（helper null-safe）、
+QuestInteractionObjectCatalogTest（9 个交互物 can-act）、1101/1102/1466/28800 断言、
+1926/2938（auto-start NPC_START 回滚 + reward 态独占裁剪）。
+
+剩余 49 个全部为存量（每类甄别记录见上文），分布：
+- 非 quest 基建（./data 运行目录/JDK 环境）：AionBootApplication 2、TemplateShardWriter 2、
+  RetailAiDefinitionLoader 1、DyeAction 1、GameCoreServices 1、FissureOfOblivion 1、
+  KromedesTrial 1 等
+- NO_MATCH e2e/dispatcher 家族：QuestProductionJourney 4、13704/13708/19048/28931/4914/2393/
+  1466-step/ClientTaskScope/QuestE2eInfrastructure 等
+- 计数/形状：QuestStepDialogTermination 2008、2150、18602、24043、3103、21114、
+  MigratedQuestRepair、MutationPlanner、PageButtonAudit、28931、3103 等
+- ReportToMany 1876/29683、MissionItemConsumption 2333、StartItem 1582、1607（已甄别既有）
