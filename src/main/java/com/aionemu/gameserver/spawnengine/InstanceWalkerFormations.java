@@ -17,6 +17,12 @@ import java.util.Map;
 public class InstanceWalkerFormations {
 
 	/**
+	 * 同一编队刷怪点允许的最大 X/Y 偏差；采用现有队形成员间距。
+	 * Maximum X/Y drift allowed within one formation; uses the existing formation member spacing.
+	 */
+	private static final float POSITION_GROUP_DISTANCE = WalkerGroupShift.DISTANCE;
+
+	/**
 	 * 路径 ID → 待编队的集群 NPC 候选列表。
 	 * Route id to clustered NPC candidates awaiting formation.
 	 */
@@ -71,10 +77,10 @@ public class InstanceWalkerFormations {
 	 */
 	protected void organizeAndSpawn() {
 		for (List<ClusteredNpc> candidates : groupedSpawnObjects.values()) {
-			Map<Integer, List<ClusteredNpc>> byPosition = groupByPositionHash(candidates);
+			List<List<ClusteredNpc>> byPosition = groupByPosition(candidates);
 			int maxSize = 0;
 			List<ClusteredNpc> npcs = null;
-			for (List<ClusteredNpc> group : byPosition.values()) {
+			for (List<ClusteredNpc> group : byPosition) {
 				if (group.size() > maxSize) {
 					npcs = group;
 					maxSize = npcs.size();
@@ -92,7 +98,7 @@ public class InstanceWalkerFormations {
 				wg.form();
 				wg.spawn();
 				walkFormations.put(candidates.get(0).getWalkTemplate().getRouteId(), wg);
-				// 生成其余坐标不同的单位 / spawn the rest which didn't have the same coordinates
+				// 生成未进入最大近邻组的其余单位 / spawn the remaining units outside the largest proximity group
 				for (ClusteredNpc snpc : candidates) {
 					if (npcs.contains(snpc)) {
 						continue;
@@ -104,24 +110,43 @@ public class InstanceWalkerFormations {
 	}
 
 	/**
-	 * 按坐标哈希将候选 NPC 分组。
-	 * Groups candidate NPCs by position hash.
+	 * 按 X/Y 近邻关系将候选 NPC 分组，避免零售坐标微调拆散同一编队。
+	 * Groups candidate NPCs by X/Y proximity so retail coordinate drift cannot split one formation.
 	 *
 	 * @param candidates 候选列表 / candidate list
-	 * @return 位置哈希 → 成员列表 / position hash to members
+	 * @return 近邻坐标组 / proximity-based position groups
 	 */
-	private Map<Integer, List<ClusteredNpc>> groupByPositionHash(List<ClusteredNpc> candidates) {
-		Map<Integer, List<ClusteredNpc>> grouped = new HashMap<Integer, List<ClusteredNpc>>();
+	static List<List<ClusteredNpc>> groupByPosition(List<ClusteredNpc> candidates) {
+		List<List<ClusteredNpc>> grouped = new ArrayList<List<ClusteredNpc>>();
 		for (ClusteredNpc candidate : candidates) {
-			Integer positionHash = candidate.getPositionHash();
-			List<ClusteredNpc> group = grouped.get(positionHash);
+			List<ClusteredNpc> group = findPositionGroup(grouped, candidate);
 			if (group == null) {
 				group = new ArrayList<ClusteredNpc>();
-				grouped.put(positionHash, group);
+				grouped.add(group);
 			}
 			group.add(candidate);
 		}
 		return grouped;
+	}
+
+	/**
+	 * 查找候选 NPC 所属的近邻组；每个组只与首个坐标比较，避免远距离点位串联合并。
+	 * Finds the proximity group for a candidate; compares only with the group anchor to prevent chain merging.
+	 *
+	 * @param grouped 已建立的近邻组 / established proximity groups
+	 * @param candidate 待分组候选 / candidate to group
+	 * @return 匹配的组，未找到时为 null / matching group or null
+	 */
+	private static List<ClusteredNpc> findPositionGroup(List<List<ClusteredNpc>> grouped, ClusteredNpc candidate) {
+		for (List<ClusteredNpc> group : grouped) {
+			ClusteredNpc anchor = group.get(0);
+			float deltaX = candidate.getX() - anchor.getX();
+			float deltaY = candidate.getY() - anchor.getY();
+			if (deltaX * deltaX + deltaY * deltaY <= POSITION_GROUP_DISTANCE * POSITION_GROUP_DISTANCE) {
+				return group;
+			}
+		}
+		return null;
 	}
 
 	/**

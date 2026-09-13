@@ -96,36 +96,6 @@ public class ClusteredNpc {
 	}
 
 	/**
-	 * 判断与另一集群 NPC 是否坐标相同。
-	 * Whether this clustered NPC shares the same X/Y as another.
-	 *
-	 * @param other 另一集群 NPC / other clustered npc
-	 * @return 坐标相同则为 true / true if same position
-	 */
-	public boolean hasSamePosition(ClusteredNpc other) {
-		if (this == other)
-			return true;
-		if (other == null) {
-			return false;
-		}
-		return this.x == other.x && this.y == other.y;
-	}
-
-	/**
-	 * 基于 X/Y 的位置哈希，用于编队分组。
-	 * Position hash from X/Y used when grouping for formation.
-	 *
-	 * @return 位置哈希 / the position hash
-	 */
-	public int getPositionHash() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Float.floatToIntBits(x);
-		result = prime * result + Float.floatToIntBits(y);
-		return result;
-	}
-
-	/**
 	 * 相对路径第一步的 X 偏移。
 	 * X delta relative to the first route step.
 	 *
