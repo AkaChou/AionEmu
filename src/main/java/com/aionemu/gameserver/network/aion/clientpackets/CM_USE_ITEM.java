@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.network.NetworkConfig;
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * 客户端使用物品请求包；按 type 分支处理取消、目标物、副本重置、多回城与染色等。
  * Client packet for using an item; branches by type for cancel, target item, instance reset, multi-return, dye, etc.
  */
+@Slf4j
 public class CM_USE_ITEM extends AionClientPacket {
 	public int uniqueItemId;
 	public int type, targetItemId, syncId, returnId, customDyeColor;
@@ -87,6 +91,12 @@ public class CM_USE_ITEM extends AionClientPacket {
 			player.getController().stopProtectionActiveTask();
 		}
 		Item item = player.getInventory().getItemByObjId(uniqueItemId);
+		if (NetworkConfig.DISPLAY_QUEST_TRACE && item != null) {
+			log.info(I18n.get("log.quest_trace.use_item",
+				player.getName(),
+				item.getItemId(),
+				uniqueItemId));
+		}
 		Item targetItem = player.getInventory().getItemByObjId(targetItemId);
 		HouseObject<?> targetHouseObject = null;
 		if (item == null) {

@@ -3,6 +3,9 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.network.NetworkConfig;
+import lombok.extern.slf4j.Slf4j;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
 
@@ -11,6 +14,7 @@ import lombok.AccessLevel;
  * Server packet synchronizing quest status, step, timer, or share actions to the client.
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Slf4j
 public class SM_QUEST_ACTION extends AionServerPacket {
 	protected int questId;
 	private int status;
@@ -122,6 +126,12 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
+		if (NetworkConfig.DISPLAY_QUEST_TRACE && (action == 1 || action == 2)) {
+			log.info(I18n.get("log.quest_trace.quest_action",
+				questId,
+				status,
+				step));
+		}
 		writeC(action);
 		writeD(questId);
 		switch (action) {

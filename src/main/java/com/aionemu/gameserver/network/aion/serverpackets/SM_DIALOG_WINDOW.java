@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.network.NetworkConfig;
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import com.aionemu.gameserver.model.DialogPage;
@@ -17,6 +20,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  * 对话窗口包：打开 NPC/对象对话框，并按页类型写入邮箱状态或城镇挑战任务城镇 ID。
  * Opens an NPC/object dialog window; for mail or town-challenge pages writes mailbox state or town id.
  */
+@Slf4j
 public class SM_DIALOG_WINDOW extends AionServerPacket {
 	private final int targetObjectId;
 	private final int dialogID;
@@ -44,6 +48,13 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
+		if (NetworkConfig.DISPLAY_QUEST_TRACE) {
+			log.info(I18n.get("log.quest_trace.dialog_window",
+				player != null ? player.getName() : "unknown",
+				targetObjectId,
+				questId,
+				dialogID));
+		}
 		writeD(targetObjectId);
 		writeH(dialogID);
 		writeD(questId);
