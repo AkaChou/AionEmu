@@ -425,6 +425,7 @@
 - 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：台账 EVIDENCE_BLOCKED 从 1,069 行骤降至 432 行（-637 行），INTENTIONAL_CLIENT_ONLY 规范提升至 1,532 行；全库 6,200 个任务无新缺陷。
 - 复用边界：适用于所有生产数据已形成业务闭环但在客户端 HTML 中残留废页的任务分类治理。
+- commit：`772809b10`。
 
 ## 8.30 道具起手任务 use-item 路由补齐与第 4 页接取确认分类治理
 
@@ -440,6 +441,7 @@
 - 修改文件：`1197.xml`、`1198.xml`、`80008.xml`、`80009.xml`、12 个清理 XML、`build_unresolved_inventory.py`、`unresolved-inventory.csv`。
 - 验证命令和结果：`EarlyElyosQuestRegressionTest`（17 单测全绿）；`ProductionCatalogWhitelistVerificationTest`（6,200 个生产任务编译 0 错误、0 白名单违规）；台账 EVIDENCE_BLOCKED 从 432 行降至 364 行（净降 68 行，页面 4 阻断彻底归零）。
 - 复用边界：适用于一切由背包物品触发接取的任务与宏展开被显式错误覆盖的常规任务。
+- commit：`106a69bda`。
 
 ## 8.31 接取与拒绝页真实路由覆盖审定与多 NPC 起手分类提纯
 
@@ -455,6 +457,7 @@
 - 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：`accept/start flow lacks unique contract start NPC` 阻断彻底归零（104 -> 0 行）；台账 EVIDENCE_BLOCKED 从 364 行进一步降至 260 行（净降 104 行，仅剩 110 个任务）。
 - 复用边界：适用于一切使用宏展开、显式 close-dialog 或道具起手实现接取/拒绝判定的任务台账治理。
+- commit：`bb0435fda`。
 
 ## 8.32 纯过场动画任务对白残页与系统全局提示页分类治理
 
@@ -469,3 +472,26 @@
 - 修复层：台账分类器（`build_unresolved_inventory.py`）。识别零对白纯动画任务、系统状态提示页与深层分支子页面，统一规范归档为 `INTENTIONAL_CLIENT_ONLY`。
 - 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：`page family needs per-quest handler/template evidence` 分类彻底清零（132 -> 0 行）；台账 EVIDENCE_BLOCKED 从 260 行降至 139 行（净降 121 行，仅剩 64 个复杂长剧情任务）。
+- 复用边界：适用于零 NPC 对话的纯动画/自动完成任务、由全局引擎按资格或完成状态接管的系统提示页，以及未被父页面实际引用的客户端深层模板残页；不能把仍有真实 NPC 触发入口的页面归入此模式。
+- commit：`bc1378767`。
+
+## 8.33 无任务上下文 NPC 对话按钮被误绑定到未接取任务 owner
+
+- Pattern ID：`CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN`。
+- 代表任务：1370「Betrayal Of Isson」（NPC 203949）；同型行为覆盖 730019（1320/1321/1322/1478）、203965/203966（1347 报告链）等 NPC。
+- 搜索症状：关闭“未满65级普通任务标记”后 NPC 对话报 load fail、点击任务页按钮无反应、第 10 页非 31 动作携带候选 questId、任务全做完后同一动作正常。
+- 玩家可见症状：Aion 5.8 客户端关闭普通任务标记后，NPC 203949 的对话页 1011 点击动作 1012 时，服务端把 questId=0 的动作绑定到未接取的普通任务 1370/1371，下发带 questId 的任务页 1012，客户端随后 load fail；该 NPC 任务全部完成后同一动作只得到 page 1012、questId=0 的普通页面，客户端正常。NPC 730019、203965/203966 也出现同型卡页或无响应。
+- 根因：
+  1. `CM_DIALOG_SELECT` 把客户端 questId=0 直接解释为“可尝试 NPC 上所有任务 owner”，并在第 10 页非 31 动作上仍采信客户端附带的候选 questId；
+  2. 关闭普通任务标记后，客户端没有对应任务行，但 NPC 对话页仍可能保留任务按钮；服务端一旦绑定未接取 owner，就会下发带 questId 的任务页，客户端无法加载；
+  3. 任务全部完成后没有 owner 能接管，`DialogService` 的 questId=0 普通页面回显才是正确语义。
+- 修复层：共享客户端包入口 `CM_DIALOG_SELECT` 和回归测试；`QuestEngine` 只同步注释，不改变交互物 AI 的 questId==0 派发。
+  1. `CM_DIALOG_SELECT` 在 NPC 没有任务上下文（客户端 questId=0 且没有同 NPC 任务行记忆）时改走 `onSimpleDialogSelect`，完全不进入 QuestEngine；
+  2. `resolveRoutedQuestId` 强制第 10 页非 31 动作的路由任务 ID 为 0，不借用客户端候选 questId；
+  3. `USE_OBJECT(-1)/START_DIALOG(31)` 的 `AI2Actions.selectDialog` 交互物路径保持原样。
+- 修改文件：`src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_DIALOG_SELECT.java`、`src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java`、`src/test/java/com/aionemu/gameserver/network/aion/clientpackets/CMDialogSelectContextTest.java`。
+- 第一检查点：先看原始 `CM_DIALOG_SELECT` 的 `targetObjectId/dialogId/lastPage/questId`，再计算同 NPC remembered selection 和 `resolveRoutedQuestId`；确认目标不是 `quest_use_item` 等 ActionItem 交互物后，没有任务上下文就禁止 QuestEngine owner 派发。不要用“页面上存在任务按钮”推断客户端有任务上下文。
+- 代表测试：`CMDialogSelectContextTest#treatsNpcSelectionsWithoutQuestContextAsPlainDialogs`；`CMDialogSelectContextTest#genericPageNonQuestActionsCannotBorrowQuestContext`；`DialogServiceQuestDialogTest#simpleNpcDialogUsesGenericPageWithoutQuestOwnerOrQuestDispatch`。
+- 验证命令和结果：`mvn -o -Dtest='QuestEngineNpcDialogDispatchTest,Quest1347ClientDialogAlignmentTest,Quest1346ClientDialogAlignmentTest,DialogServiceQuestDialogTest,CMDialogSelectContextTest,QuestProductionJourneyTest' -DfailIfNoSpecifiedTests=false test` 通过（31/31）；`mvn -o -Dtest='com.aionemu.gameserver.questEngine.**,com.aionemu.gameserver.network.aion.clientpackets.**' -DfailIfNoSpecifiedTests=false test` 运行 1,317 条，仅既有 `QuestClientContractGateTest` 23 条指纹失败，规范化后与基线逐行一致；`git diff --check` 通过；用户于 2026-09-13 回复“验证通过，请详细记录”，结合本轮 NPC/标记上下文视为客户端验收完成。服务端由用户用 IDEA 管理，本会话未启动、停止或重启。
+- 复用边界：适用于 NPC 对话选择在 `questId==0`、没有 remembered selection 时被错误绑定到任何未接取普通任务 owner，尤其是关闭 `show_acquirable_normal_quest` 后仍回发任务按钮的场景；不适用于 `AI2Actions.selectDialog` 的 `USE_OBJECT(-1)/START_DIALOG(31)` 交互物路径，也不适用于客户端确实携带 questId>0 或 remembered selection 的正常任务路由。第 10 页非 31 动作必须强制无任务上下文。
+- commit：`e518518ce`。
