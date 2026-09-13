@@ -35,7 +35,10 @@ public class SkillLearnService {
 			removeSkill(player, 30001);
 			PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 			// 为何在数据包之后添加？ / Why adding after the packet ?
-			player.getSkillList().addSkill(player, 30002, skillLevel);
+			// 仅当玩家尚未习得精气提取或当前等级低于采集等级时才更新，避免覆盖降级。 / Only set essencetapping if not present or lower than gathering level to prevent downgrade.
+			if (!player.getSkillList().isSkillPresent(30002) || player.getSkillList().getSkillLevel(30002) < skillLevel) {
+				player.getSkillList().addSkill(player, 30002, skillLevel);
+			}
 		}
 
 		addSkills(player, level, playerClass, playerRace);
