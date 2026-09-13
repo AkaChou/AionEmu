@@ -119,6 +119,73 @@ public class InstanceService {
 	}
 
 	/**
+	 * 重置指定玩家拥有的全部单人副本，并返回实际销毁数量。
+	 * Resets all solo instances owned by the given player and returns the number destroyed.
+	 *
+	 * <p>只处理个人实例，以及由该玩家单独注册的非个人单人实例。
+	 * 带队伍、联盟或军团注册的实例不会被重置。
+	 * Only personal instances and non-personal solo instances registered by the player are reset.
+	 * Instances registered to a group, alliance or league are not reset.</p>
+	 *
+	 * @param player 拥有者 / owner
+	 * @return 已销毁的副本数量 / number of destroyed instances
+	 */
+	public synchronized static int resetPlayerSoloInstances(Player player) {
+		if (player == null) {
+			throw new IllegalArgumentException("player must not be null");
+		}
+		int playerObjectId = player.getObjectId();
+		if (playerObjectId == 0) {
+			return 0;
+		}
+
+		List<WorldMapInstance> instancesToReset = new ArrayList<>();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		for (WorldMapTemplate worldTemplate : DataManager.WORLD_MAPS_DATA) {
+			if (!worldTemplate.isInstance()) {
+				continue;
+			}
+			for (WorldMapInstance instance : world.getWorldMap(worldTemplate.getMapId()).getInstances()) {
+				if (isPlayerSoloInstance(instance, playerObjectId)) {
+					instancesToReset.add(instance);
+				}
+			}
+		}
+
+		int destroyedCount = 0;
+		for (WorldMapInstance instance : instancesToReset) {
+			if (isInstanceExist(instance.getMapId(), instance.getInstanceId())) {
+				destroyInstance(instance);
+				destroyedCount++;
+			}
+		}
+		return destroyedCount;
+	}
+
+	/**
+	 * 判断实例是否为指定玩家拥有的单人副本。
+	 * Whether the instance is a solo instance owned by the given player.
+	 *
+	 * @param instance 待检查副本 / instance to inspect
+	 * @param playerObjectId 玩家对象 ID / player object id
+	 * @return 属于该玩家的单人副本则为 true / true when owned solo instance
+	 */
+	static boolean isPlayerSoloInstance(WorldMapInstance instance, int playerObjectId) {
+		if (instance.getRegisteredGroup() != null || instance.getRegistredAlliance() != null
+				|| instance.getRegistredLeague() != null) {
+			return false;
+		}
+		if (!isSoloInstance(instance)) {
+			return false;
+		}
+		if (instance.isPersonal()) {
+			return instance.getOwnerId() == playerObjectId;
+		}
+		Integer soloPlayerObjectId = instance.getSoloPlayerObj();
+		return soloPlayerObjectId != null && soloPlayerObjectId == playerObjectId;
+	}
+
+	/**
 	 * 销毁副本：踢出玩家、删除对象并通知处理器。
 	 * Destroys an instance: ejects players, deletes objects, notifies the handler.
 	 *
