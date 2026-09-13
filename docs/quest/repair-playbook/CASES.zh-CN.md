@@ -496,3 +496,17 @@
 - 验证命令和结果：`mvn -o -Dtest='QuestEngineNpcDialogDispatchTest,Quest1347ClientDialogAlignmentTest,Quest1346ClientDialogAlignmentTest,DialogServiceQuestDialogTest,CMDialogSelectContextTest,QuestProductionJourneyTest' -DfailIfNoSpecifiedTests=false test` 通过（31/31）；`mvn -o -Dtest='com.aionemu.gameserver.questEngine.**,com.aionemu.gameserver.network.aion.clientpackets.**' -DfailIfNoSpecifiedTests=false test` 运行 1,317 条，仅既有 `QuestClientContractGateTest` 23 条指纹失败，规范化后与基线逐行一致；`git diff --check` 通过；用户于 2026-09-13 回复“验证通过，请详细记录”，结合本轮 NPC/标记上下文视为客户端验收完成。服务端由用户用 IDEA 管理，本会话未启动、停止或重启。
 - 复用边界：适用于 NPC 对话选择在 `questId==0`、没有 remembered selection 时被错误绑定到任何未接取普通任务 owner，尤其是关闭 `show_acquirable_normal_quest` 后仍回发任务按钮的场景；不适用于 `AI2Actions.selectDialog` 的 `USE_OBJECT(-1)/START_DIALOG(31)` 交互物路径，也不适用于客户端确实携带 questId>0 或 remembered selection 的正常任务路由。第 10 页非 31 动作必须强制无任务上下文。
 - commit：`e518518ce`。
+
+## 8.34 任务接取后要击杀的目标 NPC 缺失，区域重入和重登均未恢复
+
+- Pattern ID：`PRE_KILL_QUEST_NPC_ZONE_SPAWN_AND_REENTRY`。
+- 代表任务：14123「The Shadow of Vengeance」，ELTEN 结界塔后空地的行商锡普拉塔。
+- 玩家可见症状：任务第二步要求消灭结界塔后面空地上的行商锡普拉塔，但进入目标区域后找不到 NPC；离开再进入或重登后仍不出现，任务无法继续。
+- 根因：2026-07-27 的任务迁移把旧 Java handler 转成 SimpleHunt 自动生成定义时，只保留了 206360 的击杀计数和后续对话/奖励语义，丢失了旧 `onEnterZoneEvent` 在 `ELTNEN_OBSERVATORY_210020000`、`START/var0=0` 时动态生成 template 206360 的副作用；两条接取路线也只进入 `started`，没有任务 owner 负责生成目标。
+- 修复层：仅修改任务 14123 的 typed XML。两条 `unaccepted -> started` 接取路线在事务提交后生成 `current-or-default` 实例中的 template 206360；`started -> started` 的 `ENTER_ZONE` 和 world 210020000 `ENTER_WORLD` 仅在 `var0=0` 时恢复生成；原击杀 transition 保持 `started/var0=0 -> report/var0=1`。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/14123.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14123ZoneSpawnTest.java`。
+- 第一检查点：先展开任务的两条接取 transition、`START` 状态的区域/世界入口和击杀 transition，确认目标 NPC 的 spawn owner 是否存在且只在击杀前状态生效；再检查地图静态 spawn 与旧 AI，避免同一模板生成第二只目标。
+- 代表测试：`Quest14123ZoneSpawnTest#spawnsPeddlerOnBothAcceptanceRoutes`；`Quest14123ZoneSpawnTest#restoresPeddlerWhenReenteringTheQuestZone`；`Quest14123ZoneSpawnTest#restoresPeddlerAfterLoginAtTheQuestWorld`；`Quest14123ZoneSpawnTest#keepsThePeddlerKillCountAdvancingToReport`。
+- 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/14123.xml` 通过；`git diff --check` 通过；IDE 静态错误检查通过；用户于 2026-09-13 回复“验证完成，提交”，视为完整任务客户端流程验收完成。本会话未运行 Maven，未捕获修复后的 packet trace、启动日志、runtime object/world/instance 或截图附件；服务端由用户管理，本会话未启动、停止或重启。
+- 复用边界：适用于任务接取后、击杀前必须由任务 owner 动态出现，并需要在目标区域重入或登录后恢复的攻击目标。不适用于静态地图 NPC、击杀后才生成可交互 NPC 的 14112 型流程，或需要固定实例而非 `current-or-default` 的任务；复用前必须重新核对唯一 spawn owner、状态变量、区域条件和击杀 transition。
+- commit：`d263468021b82eca00ee84c30832f7d6baf84b52`。
