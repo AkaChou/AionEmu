@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -15,15 +14,11 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
-import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -79,10 +74,11 @@ public class CrazyDaevaService {
 	}
 
 	/**
-	 * 随机挑选一名在线玩家成为疯狂大埃。
-	 * Randomly selects one online player as the Crazy Daeva.
+	 * 随机挑选一名在线玩家，发送活动通知但不执行原地传送或 PvP 奖励。
+	 * Randomly selects one online player, sends the event notice, but does not teleport in place or grant a PvP reward.
 	 */
 	public void startChoose() {
+		crazyCount = 0;
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(final Player player) {
@@ -92,12 +88,9 @@ public class CrazyDaevaService {
 				if (player.getRndCrazy() >= EventsConfig.CRAZY_LOWEST_RND && player.getLevel() >= 55) {
 					crazyCount++;
 					if (crazyCount == 1) {
-						TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(),
-								player.getY(), player.getZ(), player.getHeading(), TeleportAnimation.BEAM_ANIMATION);
 						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName());
 						log.info(I18n.get("log.b2c3238d6b52", player.getName()));
 						player.setInCrazy(true);
-						GameCoreGameplayServices.pvpService().doReward(player);
 					}
 				}
 				log.info(I18n.get("log.17935c8ff33a", player.getName(), rnd));
@@ -192,9 +185,6 @@ public class CrazyDaevaService {
 					@Override
 					public void visit(final Player player) {
 						if (player.isInCrazy()) {
-							TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(),
-									player.getX(), player.getY(), player.getZ(), player.getHeading(),
-									TeleportAnimation.BEAM_ANIMATION);
 							if (player.getCrazyLevel() == 1) {
 								AbyssPointsService.addAp(player, 5000);
 								log.info(I18n.get("log.a3154d047f49", player.getName(), player.getCrazyKillCount()));
