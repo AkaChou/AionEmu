@@ -186,7 +186,13 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				: obj instanceof Npc npc ? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
 			if (obj instanceof Npc npc && questEngine.requiresNpcQuestRowSelection(player, npc, routedQuestId, dialogId)) {
 				player.clearNpcQuestDialogSelection();
-				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+				// 该动作属于未授权普通任务：动作 ID 不是页面 ID，回显会让客户端
+				// 请求不存在的 html 页并报 load fail；回到任务列表页等待任务行选择。
+				// The action belongs to an unauthorized normal quest: echoing the action id as a page
+				// would make the client request a missing html page ("load fail"). Send the NPC
+				// quest-list page so only a quest-row click can enter quest context again.
+				creature.getController().onSimpleDialogSelect(QuestDialogPage.SELECT_QUEST.id(), player,
+					extendedRewardIndex);
 			} else if (isSimpleNpcDialogSelection(targetObjectId, dialogId, lastPage, questId) && obj instanceof Npc) {
 				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
 			} else {

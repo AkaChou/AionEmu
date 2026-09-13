@@ -303,6 +303,11 @@ public class QuestEngine implements GameEngine {
 	 * <p>When normal-quest markers are disabled, the client may omit the candidate quest id from
 	 * a dialog packet. The quest engine therefore also gates NPC routes without a quest id; only
 	 * the player-session authorization created by a quest-row click may enter quest context.</p>
+	 * <p>无 questId 时逐个检查该 NPC 的候选任务：只要存在未授权的普通任务路由就必须回到任务列表
+	 * 重新选择，且只有进行中/待领奖或已由任务列表行授权的候选才允许直接派发。</p>
+	 * <p>Without a quest id every talk candidate on the NPC is inspected; any unauthorized normal
+	 * quest route requires a fresh quest-row selection, and only an active or row-authorized
+	 * candidate may be dispatched directly.</p>
 	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC
@@ -327,10 +332,17 @@ public class QuestEngine implements GameEngine {
 			if (!productionDispatcher.hasMatchingRoutes(event, candidateId)) {
 				continue;
 			}
-			if (!isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
+			if (isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
+				unauthorizedNormalRoute = true;
+				continue;
+			}
+			// 只有进行中/待领奖或已由任务列表行授权的匹配候选才能放行；未接取的其他类别任务
+			// 与当前动作撞车时，不能抵消同一动作上的未授权普通任务。
+			// Only an active or row-authorized match may release the gate; an unaccepted
+			// non-normal quest sharing the action must not cancel an unauthorized normal route.
+			if (isAuthorizedNpcDialogOwner(player, npc, event, candidateId)) {
 				return false;
 			}
-			unauthorizedNormalRoute = true;
 		}
 		return unauthorizedNormalRoute;
 	}
@@ -348,6 +360,29 @@ public class QuestEngine implements GameEngine {
 		QuestState questState = player.getQuestStateList().getQuestState(questId);
 		return questState == null || (questState.getStatus() != QuestStatus.START
 			&& questState.getStatus() != QuestStatus.REWARD);
+	}
+
+	/**
+	 * 判断匹配的 typed owner 是否已由任务列表行选择或进行中状态明确授权。
+	 * Determines whether a matching typed owner is explicitly authorized by a quest-row selection or live progress.
+	 *
+	 * @param player 玩家 / player
+	 * @param npc 对话 NPC / dialog NPC
+	 * @param event 客户端动作事件 / client action event
+	 * @param questId 候选任务 ID / candidate quest id
+	 * @return 是否已授权 / whether the owner is authorized
+	 */
+	private boolean isAuthorizedNpcDialogOwner(Player player, Npc npc, QuestEvent event, int questId) {
+		QuestProductionDispatcher typed = productionDispatcher;
+		if (!typed.owns(questId) || !typed.hasMatchingRoutes(event, questId)) {
+			return false;
+		}
+		if (player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)) {
+			return true;
+		}
+		QuestState questState = player.getQuestStateList().getQuestState(questId);
+		return questState != null && (questState.getStatus() == QuestStatus.START
+			|| questState.getStatus() == QuestStatus.REWARD);
 	}
 
 	/** Dispatches an accepted server-issued quest share without inventing an NPC interaction object. */

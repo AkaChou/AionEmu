@@ -18,6 +18,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -121,6 +122,21 @@ class DialogServiceQuestDialogTest {
 		DialogService.onSimpleDialogSelect(1012, player, npc(new NamedAi("normal")), 0);
 
 		assertOnlyDialog(player, NPC_OBJECT_ID, 1012);
+		assertFalse(questEngine.dialogCalled);
+	}
+
+	/**
+	 * 门控拒绝未授权普通任务动作后回到任务列表页：动作 ID 不能当作页面回显。
+	 * After the quest-row gate refuses an unauthorized normal quest action the client must return to the
+	 * quest-list page; the refused action id must never be echoed as a page id.
+	 */
+	@Test
+	void refusedQuestActionReturnsToTheQuestListPageWithoutEchoingTheActionId() throws Exception {
+		Player player = playerWithQuest(QuestStatus.NONE);
+
+		DialogService.onSimpleDialogSelect(QuestDialogPage.SELECT_QUEST.id(), player, npc(new NamedAi("normal")), 0);
+
+		assertOnlyDialog(player, NPC_OBJECT_ID, QuestDialogPage.SELECT_QUEST.id());
 		assertFalse(questEngine.dialogCalled);
 	}
 
