@@ -248,13 +248,21 @@ public class QuestEngine implements GameEngine {
 
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				var result = typed.dispatch(event, player.getObjectId(), 0, QuestDispatchContract.EXCLUSIVE);
-				if (result.handled()) {
-					result.handledOwners().stream().findFirst().ifPresent(env::setQuestId);
-					return true;
-				}
-				if (result.claimed()) {
-					return false;
+				// 参考 legacy 引擎：按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出；
+				// 客户端关闭普通任务标记时不可见的未接取普通任务不参与派发，只有任务列表行授权才能进入。
+				// Legacy-engine parity: try the NPC's quests in order and let the first owner that
+				// actually handles the action win. Unaccepted normal quests stay out of this dispatch and
+				// require a quest-list row selection.
+				for (int candidateId : eligibleNpcDialogOwners(player, npc, event)) {
+					var result = typed.dispatch(event, player.getObjectId(), candidateId,
+						QuestDispatchContract.EXCLUSIVE);
+					if (result.handled()) {
+						env.setQuestId(candidateId);
+						return true;
+					}
+					if (result.claimed()) {
+						return false;
+					}
 				}
 				// Most quest interaction objects use a pure ACTION_ITEM_USE eligibility route and no
 				// separate TALK transition. Re-run that side-effect-free route at use completion so
@@ -329,22 +337,52 @@ public class QuestEngine implements GameEngine {
 		}
 		boolean unauthorizedNormalRoute = false;
 		for (int candidateId : getQuestNpc(npc.getNpcId()).getOnTalkEvent()) {
-			if (!productionDispatcher.hasMatchingRoutes(event, candidateId)) {
+			if (!productionDispatcher.owns(candidateId)
+				|| !productionDispatcher.hasMatchingRoutes(event, candidateId)) {
 				continue;
+			}
+			// 客户端关闭普通任务标记后仍可见/可进入的 owner（非普通任务类别、进行中、已授权）
+			// 直接放行；只有匹配候选全是未接取普通任务时才要求任务列表行选择。
+			// A matching owner the client can still see or enter (other category, live, or already
+			// authorized) releases the gate; a row selection is only required when every matching
+			// candidate is an unaccepted normal quest.
+			if (isClientVisibleNpcDialogOwner(player, npc, candidateId)) {
+				return false;
 			}
 			if (isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
 				unauthorizedNormalRoute = true;
-				continue;
-			}
-			// 只有进行中/待领奖或已由任务列表行授权的匹配候选才能放行；未接取的其他类别任务
-			// 与当前动作撞车时，不能抵消同一动作上的未授权普通任务。
-			// Only an active or row-authorized match may release the gate; an unaccepted
-			// non-normal quest sharing the action must not cancel an unauthorized normal route.
-			if (isAuthorizedNpcDialogOwner(player, npc, event, candidateId)) {
-				return false;
 			}
 		}
 		return unauthorizedNormalRoute;
+	}
+
+	/**
+	 * 返回 questId==0 对话可以派发的 owner，按任务 ID 升序排列。
+	 * Returns owners eligible for a questId==0 dialog dispatch, ordered by quest id.
+	 *
+	 * <p>与 legacy 引擎一致：逐个尝试候选，第一个真正处理该动作的 owner 胜出；未接取的普通任务
+	 * 不在其中，只有任务列表行授权才能进入。</p>
+	 * <p>Legacy-engine parity: candidates are tried in order and the first owner that actually
+	 * handles the action wins. Unaccepted normal quests are excluded and require a quest-list row.</p>
+	 *
+	 * @param player 玩家 / player
+	 * @param npc 对话 NPC / dialog NPC
+	 * @param event 客户端动作事件 / client action event
+	 * @return 可派发的 owner ID 列表 / dispatchable owner ids
+	 */
+	List<Integer> eligibleNpcDialogOwners(Player player, Npc npc, QuestEvent event) {
+		QuestProductionDispatcher typed = productionDispatcher;
+		List<Integer> eligible = new ArrayList<Integer>();
+		// 候选来自正式 catalog 并通过事件键过滤，因此不依赖 questNpcs 索引是否已装载。
+		// Candidates come from the production catalog and are filtered by the event key, so this does
+		// not depend on the questNpcs index being installed.
+		for (int candidateId : typed.owners()) {
+			if (typed.hasMatchingRoutes(event, candidateId)
+				&& isClientVisibleNpcDialogOwner(player, npc, candidateId)) {
+				eligible.add(candidateId);
+			}
+		}
+		return eligible;
 	}
 
 	private boolean isUnauthorizedNormalQuestRoute(Player player, Npc npc, QuestEvent event, int questId) {
@@ -363,21 +401,29 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 判断匹配的 typed owner 是否已由任务列表行选择或进行中状态明确授权。
-	 * Determines whether a matching typed owner is explicitly authorized by a quest-row selection or live progress.
+	 * 判断 typed owner 在客户端关闭普通任务标记时是否仍然可见/可进入。
+	 * Determines whether a typed owner stays visible/enterable while the normal-quest marker is disabled.
+	 *
+	 * <p>非普通任务类别（IMPORTANT/MISSION 等）客户端始终可见；进行中或已由任务列表行授权的任务也能
+	 * 直接派发。只有未接取的普通任务需要任务列表行选择。</p>
+	 * <p>Other categories (IMPORTANT/MISSION and so on) stay visible in the client, and a live or
+	 * row-authorized quest may be dispatched too; only unaccepted normal quests require a row.</p>
 	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC
-	 * @param event 客户端动作事件 / client action event
 	 * @param questId 候选任务 ID / candidate quest id
-	 * @return 是否已授权 / whether the owner is authorized
+	 * @return 是否可见/可进入 / whether the owner stays visible or enterable
 	 */
-	private boolean isAuthorizedNpcDialogOwner(Player player, Npc npc, QuestEvent event, int questId) {
+	private boolean isClientVisibleNpcDialogOwner(Player player, Npc npc, int questId) {
 		QuestProductionDispatcher typed = productionDispatcher;
-		if (!typed.owns(questId) || !typed.hasMatchingRoutes(event, questId)) {
+		if (!typed.owns(questId)) {
 			return false;
 		}
 		if (player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)) {
+			return true;
+		}
+		QuestMetadata metadata = typed.catalogRegistry().findMetadata(questId).orElse(null);
+		if (metadata != null && !"QUEST".equals(metadata.category())) {
 			return true;
 		}
 		QuestState questState = player.getQuestStateList().getQuestState(questId);
