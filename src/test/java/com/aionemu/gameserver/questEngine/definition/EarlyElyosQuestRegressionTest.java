@@ -349,4 +349,29 @@ class EarlyElyosQuestRegressionTest {
 			throw new AssertionError("failed to load " + resource, e);
 		}
 	}
+	@Test
+	void insomniaMedicineAcceptanceOpensAskAcceptWindowNotRefusePage() {
+		CompiledQuestDefinition definition = load(1111);
+		QuestTransition askAccept = route(definition, "unaccepted", "unaccepted",
+			new QuestEvent.TalkToNpc(203075, 1007));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), askAccept.afterCommit());
+
+		QuestTransition accept = route(definition, "unaccepted", "started",
+			new QuestEvent.TalkToNpc(203075, 1002));
+		assertTrue(accept.conditions().contains(new QuestCondition.StartEligible()));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(1003)), accept.afterCommit());
+	}
+
+	@Test
+	void singleItemCollection1117DeliveryTransitionsToRewardWindowDirectly() {
+		CompiledQuestDefinition definition = load(1117);
+		QuestTransition itemCheck = route(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(203074, 39));
+		assertTrue(itemCheck.conditions().contains(new QuestCondition.HasItem(182200208, 3)));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)), itemCheck.afterCommit());
+	}
 }

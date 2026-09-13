@@ -68,14 +68,6 @@
       <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="ASK_QUEST_ACCEPT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730373" action="SELECT2_1"/>
