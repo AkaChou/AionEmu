@@ -99,21 +99,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			&& questState.getStatus() != QuestStatus.REWARD);
 	}
 
-	/**
-	 * 判断 NPC 是否从客户端通用任务选择页发起了无任务上下文的简单对话。
-	 * Determines whether an NPC selection came from the client's generic quest-selection page without quest context.
-	 *
-	 * @param targetObjectId NPC 对象 ID / NPC object id
-	 * @param dialogId 对话动作 ID / dialog action id
-	 * @param lastPage 客户端发包前所在页面 / page shown by the client before sending the packet
-	 * @param questId 客户端可能携带的候选任务 ID，不参与页面上下文判定 /
-	 *                candidate quest id the client may carry; not part of the page-context decision
-	 * @return 是否应按简单 NPC 对话处理 / whether to process as a simple NPC dialog
-	 */
-	static boolean isSimpleNpcDialogSelection(int targetObjectId, int dialogId, int lastPage, int questId) {
-		return targetObjectId > 0 && isGenericQuestSelectionPage(dialogId, lastPage);
-	}
-
 	@Override
 	protected void runImpl() {
 		final Player player = getConnection().getActivePlayer();
@@ -184,20 +169,11 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			}
 			int routedQuestId = questId > 0 ? questId
 				: obj instanceof Npc npc ? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
-			if (obj instanceof Npc npc && questEngine.requiresNpcQuestRowSelection(player, npc, routedQuestId, dialogId)) {
-				player.clearNpcQuestDialogSelection();
-				// 该动作属于未授权普通任务：动作 ID 不是页面 ID，回显会让客户端
-				// 请求不存在的 html 页并报 load fail；回到任务列表页等待任务行选择。
-				// The action belongs to an unauthorized normal quest: echoing the action id as a page
-				// would make the client request a missing html page ("load fail"). Send the NPC
-				// quest-list page so only a quest-row click can enter quest context again.
-				creature.getController().onSimpleDialogSelect(QuestDialogPage.SELECT_QUEST.id(), player,
-					extendedRewardIndex);
-			} else if (isSimpleNpcDialogSelection(targetObjectId, dialogId, lastPage, questId) && obj instanceof Npc) {
-				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
-			} else {
-				creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
-			}
+			// 与 legacy 引擎一致：NPC 动作先进入任务引擎，再由 NPC AI / DialogService 兜底，
+			// 不再因为客户端停留在通用页而绕过任务路由。
+			// Legacy-engine parity: every NPC action goes through the quest engine first and then the
+			// NPC AI / DialogService, instead of bypassing quest routing for generic-page actions.
+			creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
 		}
 	}
 }

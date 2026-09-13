@@ -227,9 +227,6 @@ public class QuestEngine implements GameEngine {
 			Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
 			int requestedOwner = env.getQuestId();
 			int npcId = npc == null ? 0 : npc.getNpcId();
-			if (npc != null && requiresNpcQuestRowSelection(player, npc, requestedOwner, env.getDialogId())) {
-				return false;
-			}
 			QuestProductionDispatcher typed = productionDispatcher;
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
@@ -248,12 +245,14 @@ public class QuestEngine implements GameEngine {
 
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				// 参考 legacy 引擎：按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出；
-				// 客户端关闭普通任务标记时不可见的未接取普通任务不参与派发，只有任务列表行授权才能进入。
+				// 参考 legacy 引擎：按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
+				// 客户端可见/进行中/已授权的 owner 优先，随后回退到其余匹配 owner，
+				// 因此任何 NPC 的对话链都不会因为“必须先在任务列表里选一次”而点了没反应。
 				// Legacy-engine parity: try the NPC's quests in order and let the first owner that
-				// actually handles the action win. Unaccepted normal quests stay out of this dispatch and
-				// require a quest-list row selection.
-				for (int candidateId : eligibleNpcDialogOwners(player, npc, event)) {
+				// actually handles the action win. Client-visible, live, and authorized owners are
+				// preferred, then every remaining match, so no NPC dialog chain ever dead-ends behind a
+				// quest-row requirement.
+				for (int candidateId : npcDialogDispatchOwners(player, npc, event)) {
 					var result = typed.dispatch(event, player.getObjectId(), candidateId,
 						QuestDispatchContract.EXCLUSIVE);
 					if (result.handled()) {
@@ -302,112 +301,49 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 判断 NPC 任务动作是否已经由同一 NPC 的任务列表行授权。
-	 * Determines whether an NPC quest action was authorized by a quest row from the same NPC.
+	 * 返回 questId==0 对话的派发顺序：先客户端可见/进行中/已授权的 owner，再其余匹配 owner。
+	 * Returns the questId==0 dialog dispatch order: client-visible, live, or authorized owners first,
+	 * then every remaining match.
 	 *
-	 * <p>客户端关闭普通任务标记时，可能仍把候选任务 ID 省略在对话包中；因此不能只在
-	 * {@code CM_DIALOG_SELECT} 依据 questId 做判断。无 questId 的 NPC 路由也必须拒绝未接受
-	 * 普通任务，只有任务列表行建立的玩家会话授权才能进入任务上下文。</p>
-	 * <p>When normal-quest markers are disabled, the client may omit the candidate quest id from
-	 * a dialog packet. The quest engine therefore also gates NPC routes without a quest id; only
-	 * the player-session authorization created by a quest-row click may enter quest context.</p>
-	 * <p>无 questId 时逐个检查该 NPC 的候选任务：只要存在未授权的普通任务路由就必须回到任务列表
-	 * 重新选择，且只有进行中/待领奖或已由任务列表行授权的候选才允许直接派发。</p>
-	 * <p>Without a quest id every talk candidate on the NPC is inspected; any unauthorized normal
-	 * quest route requires a fresh quest-row selection, and only an active or row-authorized
-	 * candidate may be dispatched directly.</p>
-	 *
-	 * @param player 玩家 / player
-	 * @param npc 对话 NPC / dialog NPC
-	 * @param questId 客户端任务 ID，0 表示未知 / client quest id, or 0 when unknown
-	 * @param dialogId 对话动作 ID / dialog action id
-	 * @return 是否必须回到任务列表选择 / whether quest-row selection is required
-	 */
-	public boolean requiresNpcQuestRowSelection(Player player, Npc npc, int questId, int dialogId) {
-		if (player == null || npc == null || npc.getAi2() == null
-			|| "quest_use_item".equals(npc.getAi2().getName())) {
-			return false;
-		}
-		QuestEvent event = new QuestEvent.TalkToNpc(npc.getNpcId(), dialogId, npc.getObjectId());
-		if (questId > 0) {
-			return isUnauthorizedNormalQuestRoute(player, npc, event, questId);
-		}
-		if (!npc.getObjectTemplate().isDialogNpc()) {
-			return false;
-		}
-		boolean unauthorizedNormalRoute = false;
-		for (int candidateId : getQuestNpc(npc.getNpcId()).getOnTalkEvent()) {
-			if (!productionDispatcher.owns(candidateId)
-				|| !productionDispatcher.hasMatchingRoutes(event, candidateId)) {
-				continue;
-			}
-			// 客户端关闭普通任务标记后仍可见/可进入的 owner（非普通任务类别、进行中、已授权）
-			// 直接放行；只有匹配候选全是未接取普通任务时才要求任务列表行选择。
-			// A matching owner the client can still see or enter (other category, live, or already
-			// authorized) releases the gate; a row selection is only required when every matching
-			// candidate is an unaccepted normal quest.
-			if (isClientVisibleNpcDialogOwner(player, npc, candidateId)) {
-				return false;
-			}
-			if (isUnauthorizedNormalQuestRoute(player, npc, event, candidateId)) {
-				unauthorizedNormalRoute = true;
-			}
-		}
-		return unauthorizedNormalRoute;
-	}
-
-	/**
-	 * 返回 questId==0 对话可以派发的 owner，按任务 ID 升序排列。
-	 * Returns owners eligible for a questId==0 dialog dispatch, ordered by quest id.
-	 *
-	 * <p>与 legacy 引擎一致：逐个尝试候选，第一个真正处理该动作的 owner 胜出；未接取的普通任务
-	 * 不在其中，只有任务列表行授权才能进入。</p>
-	 * <p>Legacy-engine parity: candidates are tried in order and the first owner that actually
-	 * handles the action wins. Unaccepted normal quests are excluded and require a quest-list row.</p>
+	 * <p>与 legacy 引擎一致，逐个尝试候选，第一个真正处理该动作的 owner 胜出；未接取的普通任务
+	 * 只是排在可见 owner 之后，仍会被尝试，因此不会出现“点了没反应”。</p>
+	 * <p>Legacy-engine parity: candidates are tried in order and the first owner that actually handles
+	 * the action wins. Unaccepted normal quests are only ordered after the visible owners; they are
+	 * still tried, so a dialog click can never dead-end.</p>
 	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC
 	 * @param event 客户端动作事件 / client action event
-	 * @return 可派发的 owner ID 列表 / dispatchable owner ids
+	 * @return 派发顺序 / dispatch order
 	 */
-	List<Integer> eligibleNpcDialogOwners(Player player, Npc npc, QuestEvent event) {
+	List<Integer> npcDialogDispatchOwners(Player player, Npc npc, QuestEvent event) {
 		QuestProductionDispatcher typed = productionDispatcher;
-		List<Integer> eligible = new ArrayList<Integer>();
+		List<Integer> preferred = new ArrayList<Integer>();
+		List<Integer> remaining = new ArrayList<Integer>();
 		// 候选来自正式 catalog 并通过事件键过滤，因此不依赖 questNpcs 索引是否已装载。
 		// Candidates come from the production catalog and are filtered by the event key, so this does
 		// not depend on the questNpcs index being installed.
 		for (int candidateId : typed.owners()) {
-			if (typed.hasMatchingRoutes(event, candidateId)
-				&& isClientVisibleNpcDialogOwner(player, npc, candidateId)) {
-				eligible.add(candidateId);
+			if (!typed.hasMatchingRoutes(event, candidateId)) {
+				continue;
 			}
+			(isClientVisibleNpcDialogOwner(player, npc, candidateId) ? preferred : remaining)
+				.add(candidateId);
 		}
-		return eligible;
-	}
-
-	private boolean isUnauthorizedNormalQuestRoute(Player player, Npc npc, QuestEvent event, int questId) {
-		QuestProductionDispatcher typed = productionDispatcher;
-		if (!typed.owns(questId) || player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)
-			|| !typed.hasMatchingRoutes(event, questId)) {
-			return false;
-		}
-		QuestMetadata metadata = typed.catalogRegistry().findMetadata(questId).orElse(null);
-		if (metadata == null || !"QUEST".equals(metadata.category())) {
-			return false;
-		}
-		QuestState questState = player.getQuestStateList().getQuestState(questId);
-		return questState == null || (questState.getStatus() != QuestStatus.START
-			&& questState.getStatus() != QuestStatus.REWARD);
+		preferred.addAll(remaining);
+		return preferred;
 	}
 
 	/**
-	 * 判断 typed owner 在客户端关闭普通任务标记时是否仍然可见/可进入。
-	 * Determines whether a typed owner stays visible/enterable while the normal-quest marker is disabled.
+	 * 判断 typed owner 在客户端关闭普通任务标记时是否可见/可进入，用于决定派发优先级。
+	 * Determines whether a typed owner is visible/enterable while the normal-quest marker is disabled;
+	 * this decides the dispatch preference only.
 	 *
-	 * <p>非普通任务类别（IMPORTANT/MISSION 等）客户端始终可见；进行中或已由任务列表行授权的任务也能
-	 * 直接派发。只有未接取的普通任务需要任务列表行选择。</p>
+	 * <p>非普通任务类别（IMPORTANT/MISSION 等）客户端始终可见；进行中或已由任务列表行选择的任务
+	 * 同样优先。未接取的普通任务排在它们之后，但依然会被尝试。</p>
 	 * <p>Other categories (IMPORTANT/MISSION and so on) stay visible in the client, and a live or
-	 * row-authorized quest may be dispatched too; only unaccepted normal quests require a row.</p>
+	 * row-selected quest is preferred as well. Unaccepted normal quests are only ordered after them and
+	 * are still tried.</p>
 	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC

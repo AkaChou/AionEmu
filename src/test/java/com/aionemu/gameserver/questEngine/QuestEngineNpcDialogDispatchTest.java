@@ -33,23 +33,21 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证 NPC 任务行门控与 legacy 引擎一致的 questId==0 对话派发。
- * Verifies the NPC quest-row gate and the legacy-parity questId==0 dialog dispatch.
+ * 验证 NPC 对话在 questId==0 时按 legacy 引擎的通用顺序派发。
+ * Verifies the generic legacy-ordered NPC dialog dispatch for questId==0.
  *
- * <p>legacy 引擎（参考实现）在 questId==0 时按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的
- * owner 胜出。只有关闭普通任务标记后客户端不可见的未接取普通任务必须由任务列表行授权，
- * 非普通任务类别（IMPORTANT/MISSION 等）与进行中任务照常参与派发。</p>
- * <p>The legacy engine (reference implementation) tries the NPC's quests in order for questId==0 and
- * lets the first owner that actually handles the action win. Only unaccepted normal quests, which the
- * client cannot see once the normal-quest marker is disabled, require a quest-list row; other
- * categories (IMPORTANT/MISSION and so on) and live quests keep taking part.</p>
+ * <p>legacy 引擎（参考实现 /Users/mc/IdeaProjects/AionEmu 的 QuestEngine.onDialog）在 questId==0 时
+ * 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出；任何候选都不会被“必须先在任务列表
+ * 里选一次”挡掉。本仓库保留同一通用规则，并让客户端可见/进行中/已由任务列表行选择的任务优先。</p>
+ * <p>The legacy engine (reference implementation: QuestEngine.onDialog in /Users/mc/IdeaProjects/AionEmu)
+ * tries the NPC's quests in order for questId==0 and lets the first owner that actually handles the
+ * action win; no candidate is blocked behind a quest-row requirement. This repository keeps that
+ * generic rule and prefers client-visible, live, or quest-row-selected quests first.</p>
  */
-class QuestEngineNpcQuestRowGateTest {
+class QuestEngineNpcDialogDispatchTest {
 	private static final int NPC_TEMPLATE_ID = 203_949;
 	private static final int REFERENCE_NPC_TEMPLATE_ID = 730_019;
 	private static final int REFERENCE_ITEM_NPC_TEMPLATE_ID = 730_039;
@@ -65,7 +63,7 @@ class QuestEngineNpcQuestRowGateTest {
 		// 1371 的 ACTION_ITEM_USE 模板需要非 quest_use_item 的 AI 才能通过启动校验。
 		// Quest 1371's ACTION_ITEM_USE template needs a non quest_use_item AI to pass startup validation.
 		DataManager.NPC_DATA.getNpcData().put(REFERENCE_ITEM_NPC_TEMPLATE_ID,
-			npcTemplate(REFERENCE_ITEM_NPC_TEMPLATE_ID, "general"));
+			npcTemplate(REFERENCE_ITEM_NPC_TEMPLATE_ID, "ai"));
 	}
 
 	@AfterEach
@@ -74,13 +72,13 @@ class QuestEngineNpcQuestRowGateTest {
 	}
 
 	/**
-	 * 203949：1370/1371（未接取普通任务）与 1373（未接取 IMPORTANT）共用 1012/1007 时，
-	 * 客户端可见的 1373 放行门控，而未接取的普通任务不参与 questId==0 派发。
-	 * 203949: when unaccepted normal quests 1370/1371 share 1012/1007 with unaccepted IMPORTANT 1373,
-	 * the gate must stay open for the client-visible owner while hidden normal quests stay out.
+	 * 203949：1370/1371（未接取普通任务）与 1373（未接取 IMPORTANT）共用 1012 时，
+	 * 可见的 1373 优先，未接取普通任务仍排在后面继续被尝试。
+	 * 203949: when unaccepted normal quests 1370/1371 share 1012 with unaccepted IMPORTANT 1373 the
+	 * visible 1373 is preferred, and the unaccepted normal quests still stay in the dispatch order.
 	 */
 	@Test
-	void releasesTheGateForClientVisibleQuestsAndKeepsHiddenNormalQuestsOutOfDispatch() throws Exception {
+	void prefersClientVisibleOwnersAndStillDispatchesUnacceptedNormalQuests() throws Exception {
 		QuestEngine engine = engineWithCatalog(productionXml(1370, 1371, 1373));
 		Player player = player();
 		Npc npc = dialogNpc();
@@ -90,38 +88,33 @@ class QuestEngineNpcQuestRowGateTest {
 		assertEquals("IMPORTANT", engine.questCatalog().findMetadata(1373).orElseThrow().category());
 		assertNull(player.getQuestStateList().getQuestState(1373));
 
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.SELECT1_1.id()));
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.ASK_QUEST_ACCEPT.id()));
-		assertTrue(engine.requiresNpcQuestRowSelection(player, npc, 1370, QuestDialogAction.SELECT1_1.id()));
-		assertEquals(List.of(1373), engine.eligibleNpcDialogOwners(player, npc,
+		assertEquals(List.of(1373, 1370, 1371), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
 	}
 
 	/**
-	 * 任务行授权（31 + questId）后，被授权的普通任务与可见类别一起按任务 ID 顺序参与派发。
-	 * After the quest-row authorization (31 + questId) the authorized normal quest joins the dispatch
-	 * next to the client-visible owner, ordered by quest id.
+	 * 任务列表行选择过的任务排在最前，其余可见 owner 与未接取普通任务依次跟上。
+	 * A quest-row-selected quest is dispatched first; the other visible owners and the unaccepted
+	 * normal quests follow.
 	 */
 	@Test
-	void dispatchesTheRowAuthorizedNormalQuestAlongsideTheVisibleOwner() throws Exception {
+	void dispatchesTheRowSelectedQuestFirst() throws Exception {
 		QuestEngine engine = engineWithCatalog(productionXml(1370, 1373));
 		Player player = player();
 		Npc npc = dialogNpc();
 
 		player.rememberNpcQuestDialogSelection(NPC_OBJECT_ID, 1370);
 
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.SELECT1_1.id()));
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 1370,
-			QuestDialogAction.ASK_QUEST_ACCEPT.id()));
-		assertEquals(List.of(1370, 1373), engine.eligibleNpcDialogOwners(player, npc,
+		assertEquals(List.of(1370, 1373), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
 	}
 
 	/**
 	 * 参考实现中的同类 NPC：730019 上未接取普通任务 1321/1322 与 IMPORTANT 1320/1478 共用 1012，
-	 * 客户端可见的 1320/1478 继续派发，普通任务不参与。
+	 * 可见的 1320/1478 优先，普通任务仍在派发序列里，因此点击一定会被服务到。
 	 * Reference-shaped NPC: on 730019 the unaccepted normal quests 1321/1322 share 1012 with IMPORTANT
-	 * 1320/1478, so the client-visible owners keep being dispatched and the normal quests stay out.
+	 * 1320/1478; the visible owners are preferred and the normal quests remain dispatchable, so the click
+	 * is always served.
 	 */
 	@Test
 	void servesTheVisibleQuestChainOnTheReferenceEltnenQuestNpc() throws Exception {
@@ -129,19 +122,35 @@ class QuestEngineNpcQuestRowGateTest {
 		Player player = player();
 		Npc npc = dialogNpc(REFERENCE_NPC_TEMPLATE_ID);
 
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.SELECT1_1.id()));
-		assertEquals(List.of(1320, 1478), engine.eligibleNpcDialogOwners(player, npc,
+		assertEquals(List.of(1320, 1478, 1321, 1322), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(REFERENCE_NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(),
 				NPC_OBJECT_ID)));
 	}
 
 	/**
-	 * 1006 合同：同一动作上存在已激活的 MISSION owner 时，未授权普通任务不得把它回退成任务列表。
-	 * Quest 1006 contract: a live MISSION owner on the same action must keep the gate open for the
-	 * colliding unauthorized normal quest.
+	 * 通用性关键用例：候选只有未接取普通任务时，它们依然进入派发序列（单任务场景就是 legacy 行为）。
+	 * Key genericity case: when every matching candidate is an unaccepted normal quest they still enter
+	 * the dispatch order, which matches the legacy engine for the single-quest case.
 	 */
 	@Test
-	void keepsTheGateOpenForAnActiveOtherCategoryOwner() throws Exception {
+	void dispatchesLoneUnacceptedNormalQuestsInsteadOfDeadEnding() throws Exception {
+		QuestEngine engine = engineWithCatalog(new ImmutableQuestCatalog(List.of(
+			talkOwner(1370, NPC_TEMPLATE_ID, "QUEST", QuestStatus.NONE,
+				QuestDialogAction.SELECT1_1.id()))));
+		Player player = player();
+		Npc npc = dialogNpc();
+
+		assertEquals(List.of(1370), engine.npcDialogDispatchOwners(player, npc,
+			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
+	}
+
+	/**
+	 * 1006 合同：同一动作上存在已激活的 MISSION owner 时它优先，未接取普通任务仍排在后面。
+	 * Quest 1006 contract: a live MISSION owner is preferred on the colliding action while the
+	 * unaccepted normal quest stays in the tail of the dispatch order.
+	 */
+	@Test
+	void prefersTheActiveMissionOwnerOnTheCollidingAction() throws Exception {
 		QuestEngine engine = engineWithCatalog(new ImmutableQuestCatalog(List.of(
 			talkOwner(1006, 790_001, "MISSION", QuestStatus.REWARD, QuestDialogAction.QUEST_SELECT.id()),
 			talkOwner(1123, 790_001, "QUEST", QuestStatus.REWARD, QuestDialogAction.QUEST_SELECT.id()))));
@@ -149,40 +158,21 @@ class QuestEngineNpcQuestRowGateTest {
 		Npc npc = dialogNpc(790_001);
 
 		assertNull(player.getQuestStateList().getQuestState(1123));
-		assertFalse(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(List.of(1006), engine.eligibleNpcDialogOwners(player, npc,
+		assertEquals(List.of(1006, 1123), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(790_001, QuestDialogAction.QUEST_SELECT.id(), NPC_OBJECT_ID)));
 	}
 
 	/**
-	 * 纯边界：匹配候选只有未接取普通任务时，门控要求任务列表行选择，且没有可派发的 owner。
-	 * Boundary: when every matching candidate is an unaccepted normal quest the gate requires a quest
-	 * row and no owner is dispatchable.
+	 * 兼容边界：候选只有未接取的其他类别任务时，它同样先于普通任务被派发。
+	 * Compatibility boundary: a lone unaccepted other-category candidate is dispatched ahead of any
+	 * normal quest as well.
 	 */
 	@Test
-	void requiresRowSelectionWhenEveryMatchingCandidateIsAnUnacceptedNormalQuest() throws Exception {
-		QuestEngine engine = engineWithCatalog(new ImmutableQuestCatalog(List.of(
-			talkOwner(1370, NPC_TEMPLATE_ID, "QUEST", QuestStatus.NONE,
-				QuestDialogAction.SELECT1_1.id()))));
-		Player player = player();
-		Npc npc = dialogNpc();
-
-		assertTrue(engine.requiresNpcQuestRowSelection(player, npc, 0, QuestDialogAction.SELECT1_1.id()));
-		assertEquals(List.of(), engine.eligibleNpcDialogOwners(player, npc,
-			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
-	}
-
-	/**
-	 * 兼容边界：候选只有未接取的其他类别任务时保持原行为，不额外要求任务行选择。
-	 * Compatibility boundary: a lone unaccepted other-category candidate keeps the previous behavior and
-	 * does not force a quest-row selection.
-	 */
-	@Test
-	void doesNotForceRowSelectionForALoneUnacceptedOtherCategoryCandidate() throws Exception {
+	void prefersALoneUnacceptedOtherCategoryCandidate() throws Exception {
 		QuestEngine engine = engineWithCatalog(productionXml(1373));
 
-		assertFalse(engine.requiresNpcQuestRowSelection(player(), dialogNpc(), 0,
-			QuestDialogAction.SELECT1_1.id()));
+		assertEquals(List.of(1373), engine.npcDialogDispatchOwners(player(), dialogNpc(),
+			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
 	}
 
 	private static QuestEngine engineWithCatalog(QuestCatalog catalog) {
@@ -195,7 +185,7 @@ class QuestEngineNpcQuestRowGateTest {
 		List<CompiledQuestDefinition> definitions = new ArrayList<>();
 		for (int questId : questIds) {
 			String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-			try (InputStream input = QuestEngineNpcQuestRowGateTest.class.getResourceAsStream(resource)) {
+			try (InputStream input = QuestEngineNpcDialogDispatchTest.class.getResourceAsStream(resource)) {
 				if (input == null) {
 					throw new IllegalStateException("missing quest definition " + resource);
 				}

@@ -16,14 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class CMDialogSelectContextTest {
 	@Test
-	void identifiesSimpleNpcDialogFromTheGenericPage() {
-		assertTrue(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(900_007, QuestDialogAction.SELECT1_1.id(),
-			QuestDialogPage.SELECT_QUEST.id(), 1111));
-		assertTrue(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(900_007, QuestDialogAction.SELECT1_1.id(),
-			QuestDialogPage.SELECT_QUEST.id(), 0));
-	}
-
-	@Test
 	void identifiesNonQuestActionsFromTheGenericPageEvenWithoutAnNpcTarget() {
 		assertTrue(CM_DIALOG_SELECT.isGenericQuestSelectionPage(QuestDialogAction.SELECT1_1.id(),
 			QuestDialogPage.SELECT_QUEST.id()));
@@ -64,14 +56,6 @@ class CMDialogSelectContextTest {
 			QuestDialogPage.SELECT_QUEST.id()));
 		assertFalse(CM_DIALOG_SELECT.isGenericQuestSelectionPage(QuestDialogAction.ASK_QUEST_ACCEPT.id(),
 			QuestDialogPage.SELECT1.id()));
-		assertFalse(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(900_007, QuestDialogAction.QUEST_SELECT.id(),
-			QuestDialogPage.SELECT_QUEST.id(), 1111));
-		assertFalse(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(900_007, QuestDialogAction.QUEST_SELECT.id(),
-			QuestDialogPage.SELECT_QUEST.id(), 0));
-		assertFalse(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(900_007, QuestDialogAction.SELECT1_1.id(),
-			QuestDialogPage.SELECT1.id(), 1111));
-		assertFalse(CM_DIALOG_SELECT.isSimpleNpcDialogSelection(0, QuestDialogAction.SELECT1_1.id(),
-			QuestDialogPage.SELECT_QUEST.id(), 1111));
 	}
 
 	private static QuestState state(QuestStatus status) {
