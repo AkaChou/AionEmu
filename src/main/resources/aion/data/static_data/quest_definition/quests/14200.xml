@@ -1,92 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="14200" version="1">
   <metadata name="Eternal Flames" display-name-id="1129968" min-level="45" max-level="2147483647" category="QUEST">
     <races>
-      <race id="ELYOS"/>
+      <race id="ELYOS" />
     </races>
     <rewards>
-      <reward kind="GOLD" id="0" amount="65400"/>
-      <reward kind="EXP" id="0" amount="1181639"/>
-      <reward kind="ITEM" id="162000050" amount="20"/>
-      <reward kind="ITEM" id="188053060" amount="2"/>
+      <reward kind="GOLD" id="0" amount="65400" />
+      <reward kind="EXP" id="0" amount="1181639" />
+      <reward kind="ITEM" id="162000050" amount="20" />
+      <reward kind="ITEM" id="188053060" amount="2" />
     </rewards>
     <kills>
       <kill sequence="1">
-        <npc id="700390"/>
+        <npc id="700390" />
       </kill>
       <kill sequence="2">
-        <npc id="700390"/>
+        <npc id="700390" />
       </kill>
       <kill sequence="3">
-        <npc id="700390"/>
+        <npc id="700390" />
       </kill>
     </kills>
     <start-conditions>
-      <condition type="unfinished" quest-id="1091"/>
-      <condition type="noacquired" quest-id="1091"/>
-      <condition type="unfinished" quest-id="1092"/>
-      <condition type="noacquired" quest-id="1092"/>
+      <condition type="unfinished" quest-id="1091" />
+      <condition type="noacquired" quest-id="1091" />
+      <condition type="unfinished" quest-id="1092" />
+      <condition type="noacquired" quest-id="1092" />
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="k1" status="START">
-      <var name="var0" value="1"/>
+      <var name="var0" value="1" />
     </node>
     <node label="k2" status="START">
-      <var name="var0" value="2"/>
+      <var name="var0" value="2" />
     </node>
     <node label="k3" status="START">
-      <var name="var0" value="3"/>
+      <var name="var0" value="3" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="3" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
     <kill-chain nodes="started k1 k2 k3">
       <event>
-        <kill-npc npc-id="700390"/>
+        <kill-npc npc-id="700390" />
       </event>
     </kill-chain>
-    <dialog type="NPC_START" npc-id="798155" source="unaccepted" target="started" selection-sources="unaccepted k3" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="798155" source="k3" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="798155" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1" />
+    <dialog type="NPC_REPORT" npc-id="798155" source="k3" target="reward" page="SELECT2" />
     <npc-complete npc-id="798155" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="798206" source="unaccepted" target="started" selection-sources="unaccepted k3" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="798206" source="k3" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798206" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
     <transition source="k3" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798155" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798155" action="SETPRO1" />
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
       </after-commit>
     </transition>
-    <transition source="k3" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798206" action="SETPRO1"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-  </transitions>
+    </transitions>
 </quest-definition>

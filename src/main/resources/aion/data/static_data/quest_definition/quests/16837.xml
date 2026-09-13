@@ -1,51 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="16837" version="1">
   <metadata name="[Instanced Dungeon/Group] Artifact Protector Ganesh" display-name-id="1803206" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
-      <race id="ELYOS"/>
+      <race id="ELYOS" />
     </races>
     <rewards>
-      <reward kind="GOLD" id="0" amount="405720"/>
-      <reward kind="EXP" id="0" amount="35455047"/>
+      <reward kind="GOLD" id="0" amount="405720" />
+      <reward kind="EXP" id="0" amount="35455047" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="k1" status="START">
-      <var name="var0" value="1"/>
+      <var name="var0" value="1" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="806564" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="806564" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-ids="246418"/>
+        <kill-npc npc-ids="246418" />
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="PACKET_ONLY" />
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="806564" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="806564" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="806568" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="806568" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="806568" source="k1" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="806568" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete></transitions>
 </quest-definition>

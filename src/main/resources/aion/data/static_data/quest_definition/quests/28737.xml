@@ -1,50 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="28737" version="1">
   <metadata name="Suspicious Minds" display-name-id="1800943" min-level="60" max-level="2147483647" category="IMPORTANT">
     <races>
-      <race id="ASMODIANS"/>
+      <race id="ASMODIANS" />
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="9492173"/>
+      <reward kind="EXP" id="0" amount="9492173" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="804732" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="804732" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="804732" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="206395" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="206395" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_START" npc-id="804732" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
+    <dialog type="NPC_REPORT" npc-id="206395" source="started" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="206395" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
-    <dialog type="NPC_START" npc-id="206396" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="206396" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="206396" source="started" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="206396" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
-    <dialog type="NPC_START" npc-id="206397" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="206397" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="206397" source="started" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="206397" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
   </transitions>
 </quest-definition>

@@ -168,18 +168,18 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204799" source="unaccepted" target="a0b0" selection-sources="unaccepted" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="832820" source="unaccepted" target="a0b0" selection-sources="unaccepted" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="4" npc-ids="213563"/>
       <dimension field="var1" required="6" npc-ids="213564" source-order="VALUE_THEN_NODE"/>
     </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="204799" source="a4b6" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204799" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="832820" source="a4b6" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="832820" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
       <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204799" action="SELECT1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="832820" action="SELECT1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>

@@ -593,7 +593,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="800327" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="800326" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
     <transition source="a0b0c0" target="a0b1c0">
       <event>
         <kill-npc npc-id="219240"/>
@@ -9077,8 +9077,8 @@
         <kill-npc npc-id="219245"/>
       </event>
     </kill-chain>
-    <dialog type="NPC_REPORT" npc-id="800327" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="800327" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="800326" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="800326" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

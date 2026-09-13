@@ -1,65 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="24112" version="1">
   <metadata name="No Laissez-faire for Lepharists" display-name-id="1129973" min-level="14" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
-      <race id="ASMODIANS"/>
+      <race id="ASMODIANS" />
     </races>
     <rewards>
-      <reward kind="GOLD" id="0" amount="15480"/>
-      <reward kind="EXP" id="0" amount="25255"/>
-      <reward kind="ITEM" id="188053406" amount="1"/>
+      <reward kind="GOLD" id="0" amount="15480" />
+      <reward kind="EXP" id="0" amount="25255" />
+      <reward kind="ITEM" id="188053406" amount="1" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203631" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="203631" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1" />
     <transition source="started" target="started">
       <event>
-        <kill-npc npc-id="210510"/>
+        <kill-npc npc-id="210510" />
       </event>
       <conditions>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="0" />
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="1" />
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="PACKET_ONLY" />
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="203631" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203631" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="832821" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="832821" source="started" target="reward" page="SELECT5"/>
+    <dialog type="NPC_REPORT" npc-id="832821" source="started" target="reward" page="SELECT5" />
     <npc-complete npc-id="832821" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203631" action="SETPRO1"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-  </transitions>
+    </transitions>
 </quest-definition>

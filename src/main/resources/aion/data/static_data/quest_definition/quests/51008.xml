@@ -1,42 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="51008" version="1">
   <metadata name="[Event/Daily] Non-Helping Hands" display-name-id="1150012" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
-      <race id="ASMODIANS"/>
+      <race id="ASMODIANS" />
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" />
     <rewards>
-      <reward kind="ITEM" id="160010203" amount="1"/>
-      <reward kind="ITEM" id="186000177" amount="4"/>
+      <reward kind="ITEM" id="160010203" amount="1" />
+      <reward kind="ITEM" id="186000177" amount="4" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="831039" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="831039" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="831039" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="831037" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="831037" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_START" npc-id="831039" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
+    <dialog type="NPC_REPORT" npc-id="831037" source="started" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="831037" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
   </transitions>
 </quest-definition>

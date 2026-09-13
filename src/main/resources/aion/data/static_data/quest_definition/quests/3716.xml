@@ -53,13 +53,13 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203844" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="279045" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="700485 700486"/>
       <dimension field="var1" required="1" npc-ids="700488 700489"/>
     </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="203844" source="a1b1" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="203844" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="279045" source="a1b1" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="279045" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>

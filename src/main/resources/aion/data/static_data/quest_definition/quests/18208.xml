@@ -1,44 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="18208" version="1">
   <metadata name="Illusion or Infiltration?" display-name-id="1129614" min-level="50" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
+      <race id="ELYOS" />
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="7448473"/>
-      <reward kind="ITEM" id="186000130" amount="100"/>
+      <reward kind="EXP" id="0" amount="7448473" />
+      <reward kind="ITEM" id="186000130" amount="100" />
     </rewards>
     <start-conditions>
-      <condition type="finished" quest-id="18207"/>
+      <condition type="finished" quest-id="18207" />
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="205316" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="205316" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="205316" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="205309" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="205309" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_START" npc-id="205316" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
+    <dialog type="NPC_REPORT" npc-id="205309" source="started" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="205309" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
   </transitions>
 </quest-definition>

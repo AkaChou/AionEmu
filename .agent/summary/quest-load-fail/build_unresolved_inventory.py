@@ -211,11 +211,12 @@ def main() -> int:
                 xroot = ET.parse(path).getroot()
                 rep_nodes = xroot.findall(".//transitions/dialog[@type='NPC_REPORT']") + \
                             xroot.findall(".//transitions/npc-item-report") + \
-                            xroot.findall(".//transitions/npc-complete")
+                            xroot.findall(".//transitions/npc-complete") + \
+                            xroot.findall(".//transitions//complete-quest")
                 if rep_nodes:
                     xml_has_report = True
                     r0 = rep_nodes[0]
-                    report_desc = f"{r0.tag} (npc={r0.get('npc-id', 'n/a')})"
+                    report_desc = f"{r0.tag} (npc={r0.get('npc-id', 'n/a')})" if r0.tag != "complete-quest" else "complete-quest"
                 has_any_talk = bool(xroot.findall(".//transitions/dialog[@type='NPC_START']")) or \
                                bool(xroot.findall(".//transitions/dialog[@type='NPC_REPORT']")) or \
                                bool(xroot.findall(".//transitions/npc-start")) or \

@@ -1,52 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="16986" version="1">
   <metadata name="No Sanctuary for the Commanders" display-name-id="1800823" min-level="63" max-level="2147483647" category="IMPORTANT">
     <races>
-      <race id="ELYOS"/>
+      <race id="ELYOS" />
     </races>
-    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false" />
     <rewards>
-      <reward kind="EXP" id="0" amount="9388701"/>
-      <reward kind="ITEM" id="186000237" amount="5"/>
+      <reward kind="EXP" id="0" amount="9388701" />
+      <reward kind="ITEM" id="186000237" amount="5" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="k1" status="START">
-      <var name="var0" value="1"/>
+      <var name="var0" value="1" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="804862" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="804862" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-ids="235624 235625 235626"/>
+        <kill-npc npc-ids="235624 235625 235626" />
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="PACKET_ONLY" />
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="804862" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="804862" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="804864" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="804864" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="804864" source="k1" target="reward" page="DEFAULT_SUCCESS" />
     <npc-complete npc-id="804864" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete></transitions>
 </quest-definition>
