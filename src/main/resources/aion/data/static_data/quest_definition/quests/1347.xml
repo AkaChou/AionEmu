@@ -217,14 +217,6 @@
       </event>
     </kill-chain>
     <dialog type="NPC_START" npc-id="203965" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
-    <transition source="a0b0" target="a0b0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203965" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
     <dialog type="NPC_REPORT" npc-id="203965" source="a7b3" target="reward" page="SELECT2"/>
     <npc-complete npc-id="203965" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
@@ -238,15 +230,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203965" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
 </transitions>

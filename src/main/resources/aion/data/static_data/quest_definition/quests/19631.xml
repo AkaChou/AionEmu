@@ -70,7 +70,7 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="798155" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
+    <transition source="k10" target="k10">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798155" action="QUEST_SELECT"/>
       </event>
@@ -96,7 +96,7 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="800411" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
+    <transition source="k10" target="k10">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800411" action="QUEST_SELECT"/>
       </event>
@@ -123,24 +123,5 @@
     </npc-complete>
     <counter-grid>
       <dimension field="var0" required="10" npc-ids="214198 214199 214216 214217"/>
-    </counter-grid>
-
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798155" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800411" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition></transitions>
+    </counter-grid></transitions>
 </quest-definition>
