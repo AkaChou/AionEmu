@@ -1190,12 +1190,8 @@ public class DialogService {
                 break;
             }
             default: {
-                if (questId > 0) {
-                    if (dialogId == 23 && player.getInventory().isFull()) {
-                        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
-                    } else {
-                        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
-                    }
+                if (dialogId == 23 && player.getInventory().isFull()) {
+                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
                 } else {
                     PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId));
                 }

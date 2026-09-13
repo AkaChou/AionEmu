@@ -63,6 +63,7 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 		if (player == null) {
 			return false;
 		}
+		player.clearNpcQuestDialogSelection();
 		int objectId = snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId();
 		if (objectId == 0 && !snapshot.targetlessDialog()) {
 			throw new IllegalStateException("showSelectionDialog requires an authoritative interaction objectId "
