@@ -46,7 +46,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/>
+        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
@@ -55,7 +55,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
+        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>

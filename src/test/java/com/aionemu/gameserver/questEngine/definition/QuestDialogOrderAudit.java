@@ -77,7 +77,10 @@ public final class QuestDialogOrderAudit {
 			ClientQuest client = entry.getValue();
 			List<QuestTransition> dialogRoutes = definition.transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null
-					|| transition.event() instanceof QuestEvent.QuestDialog).toList();
+					|| transition.event() instanceof QuestEvent.QuestDialog
+					|| (transition.event() instanceof QuestEvent.UseItem || transition.event() instanceof QuestEvent.ItemPlay)
+						&& transition.afterCommit().stream().anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance))
+				.toList();
 			Set<Integer> shownPages = new LinkedHashSet<>();
 			Set<Integer> clientVisibleActions = client.pages().values().stream()
 				.flatMap(page -> page.actions().keySet().stream())
@@ -173,6 +176,10 @@ public final class QuestDialogOrderAudit {
 			Set<Integer> clientVisibleActions) {
 		if (transition.event() instanceof QuestEvent.QuestDialog) {
 			return true;
+		}
+		if (transition.event() instanceof QuestEvent.UseItem || transition.event() instanceof QuestEvent.ItemPlay) {
+			return transition.afterCommit().stream()
+				.anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance);
 		}
 		QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
 		if (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
@@ -386,6 +393,9 @@ public final class QuestDialogOrderAudit {
 		if (left instanceof QuestEvent.TalkToNpc leftTalk && right instanceof QuestEvent.TalkToNpc rightTalk) {
 			return leftTalk.npcId() == rightTalk.npcId();
 		}
+		if (left instanceof QuestEvent.UseItem || left instanceof QuestEvent.ItemPlay) {
+			return right instanceof QuestEvent.QuestDialog || right instanceof QuestEvent.TalkToNpc;
+		}
 		return left instanceof QuestEvent.QuestDialog && right instanceof QuestEvent.QuestDialog;
 	}
 
@@ -400,12 +410,19 @@ public final class QuestDialogOrderAudit {
 		return switch (event) {
 			case QuestEvent.TalkToNpc talk -> talk.dialogId();
 			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
+			case QuestEvent.UseItem use -> 0;
+			case QuestEvent.ItemPlay play -> 0;
 			default -> throw new IllegalArgumentException("not a dialog event: " + event);
 		};
 	}
 
 	private static String dialogOwner(QuestEvent event) {
-		return event instanceof QuestEvent.TalkToNpc talk ? "NPC " + talk.npcId() : "QUEST_ACTION";
+		return switch (event) {
+			case QuestEvent.TalkToNpc talk -> "NPC " + talk.npcId();
+			case QuestEvent.UseItem use -> "ITEM " + use.itemId();
+			case QuestEvent.ItemPlay play -> "ITEM " + play.itemId();
+			default -> "QUEST_ACTION";
+		};
 	}
 
 	private static String ownerNpc(QuestEvent event) {

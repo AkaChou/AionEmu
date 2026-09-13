@@ -77,6 +77,22 @@ class QuestDialogOrderAuditTest {
 			.toList());
 	}
 
+@Test
+	void useItemTransitionsAreTraversedInAudit() throws Exception {
+		Path pages = Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv");
+		Path details = Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv");
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(
+			catalog, QuestDialogOrderAudit.readClientPages(pages, details));
+
+		List<QuestDialogOrderAudit.AuditRow> page4Unreached = rows.stream()
+			.filter(r -> (r.questId() == 1107 || r.questId() == 1114) && r.shownPage().equals("4")
+				&& r.auditStatus().equals("CLIENT_PAGE_UNREACHED"))
+			.toList();
+		assertEquals(List.of(), page4Unreached,
+			"page 4 of item-start quests 1107/1114 must be reached via use-item route");
+	}
+
 	@Test
 	void reportsCompiledPagesMissingFromTheActiveClientMap() {
 		QuestCatalog catalog = catalog(90001, List.of(

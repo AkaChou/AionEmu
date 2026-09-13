@@ -41,7 +41,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="reward" target="reward">
       <event>
         <dialog type="QUEST_ACTION" action="FINISH_DIALOG"/>
       </event>
