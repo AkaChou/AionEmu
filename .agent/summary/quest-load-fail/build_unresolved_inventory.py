@@ -203,25 +203,39 @@ def main() -> int:
         elif audit_status == "CLIENT_PAGE_UNREACHED":
             # 终态分类：仅保留合法例外（集中管理、逐行引用证据/缺口）。
             # Final taxonomy: only managed exceptions remain, each citing its evidence/gap.
-            if page_name in ("select_success", "select5", "select2", "select3",
-                    "select4", "select6", "select7", "select8", "select9", "select10",
-                    "select1", "select2_1", "select3_1", "select4_1", "select5_1",
-                    "select6_1", "select7_1", "select8_1", "select9_1", "select10_1",
-                    "select1_1", "select1_2", "select2_2", "select3_2", "select10_2",
-                    "select10_3", "select10_4_4", "select1_1_1", "select1_1_1_1",
-                    "select2_1_1", "select3_1_1", "select5_1", "select5_2", "select11"):
-                path = QUEST_DIR / f"{quest_id}.xml"
-                xml_has_report = False
-                report_desc = ""
-                if path.exists():
-                    xroot = ET.parse(path).getroot()
-                    rep_nodes = xroot.findall(".//transitions/dialog[@type='NPC_REPORT']") + \
-                                xroot.findall(".//transitions/npc-item-report") + \
-                                xroot.findall(".//transitions/npc-complete")
-                    if rep_nodes:
-                        xml_has_report = True
-                        r0 = rep_nodes[0]
-                        report_desc = f"{r0.tag} (npc={r0.get('npc-id', 'n/a')})"
+            path = QUEST_DIR / f"{quest_id}.xml"
+            xml_has_report = False
+            has_any_talk = False
+            report_desc = ""
+            if path.exists():
+                xroot = ET.parse(path).getroot()
+                rep_nodes = xroot.findall(".//transitions/dialog[@type='NPC_REPORT']") + \
+                            xroot.findall(".//transitions/npc-item-report") + \
+                            xroot.findall(".//transitions/npc-complete")
+                if rep_nodes:
+                    xml_has_report = True
+                    r0 = rep_nodes[0]
+                    report_desc = f"{r0.tag} (npc={r0.get('npc-id', 'n/a')})"
+                has_any_talk = bool(xroot.findall(".//transitions/dialog[@type='NPC_START']")) or \
+                               bool(xroot.findall(".//transitions/dialog[@type='NPC_REPORT']")) or \
+                               bool(xroot.findall(".//transitions/npc-start")) or \
+                               bool(xroot.findall(".//transitions/npc-report")) or \
+                               bool(xroot.findall(".//transitions/npc-complete"))
+                if not has_any_talk:
+                    for t in xroot.findall(".//transitions/transition"):
+                        if t.findall("./event/dialog"):
+                            has_any_talk = True
+                            break
+
+            if not has_any_talk:
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = "cutscene/zone-only quest has zero dialog interactions; client HTML dialog pages are unused template assets"
+                gaps.append("cutscene/zone quest: zero NPC dialog routes in production definition")
+            elif page_name in ("no_right", "quest_complete", "quest_failed_1"):
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = f"system status page ({page_name}) is a global engine notification, not part of quest progression chain"
+                gaps.append(f"system page {page_name}: non-progression template asset")
+            elif page_name.startswith("select") or page_name == "select_success":
                 if contract and contract.get("report_page_id") and \
                         contract["report_page_id"] not in ("", "0"):
                     decision = "INTENTIONAL_CLIENT_ONLY"

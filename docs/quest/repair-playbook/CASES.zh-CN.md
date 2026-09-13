@@ -455,3 +455,17 @@
 - 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：`accept/start flow lacks unique contract start NPC` 阻断彻底归零（104 -> 0 行）；台账 EVIDENCE_BLOCKED 从 364 行进一步降至 260 行（净降 104 行，仅剩 110 个任务）。
 - 复用边界：适用于一切使用宏展开、显式 close-dialog 或道具起手实现接取/拒绝判定的任务台账治理。
+
+## 8.32 纯过场动画任务对白残页与系统全局提示页分类治理
+
+- Pattern ID：`SYSTEM_PAGES_AND_CUTSCENE_QUEST_TAXONOMY`。
+- 代表任务：1000/2000 序幕任务、10526/20526 深刻分支页、全局系统页（10032、18602、19079 等共 121 行清零）。
+- 搜索症状：台账中 `page family needs per-quest handler/template evidence` 大量聚集于 `no_right`（27）、`quest_complete`（1008）、`quest_failed_1`（1009）以及深层分支页（如 `select4_1_1`）。
+- 玩家可见症状：无异常；纯动画任务进出区域自动播片并完成，系统提示页在资格不足或已完成时由服务端全局引擎直接接管。
+- 根因：
+  1. 1000/2000 序幕任务全程由 `enter-zone` 触发并在 `movie-end` 后直接完成，全流程 0 个 NPC 对白，客户端生成的 `select1`~`select6` 纯属模板废页；
+  2. `no_right`（资格不足）、`quest_complete`（任务已完成再次对话）、`quest_failed_1`（任务失败提示）属于全局引擎提示页，不属于单个任务正向对话链路；
+  3. 10526/20526 等多分支任务的父页面已归档，但硬编码元组未覆盖其子分支页（如 `select4_1_1`..`select4_4`）。
+- 修复层：台账分类器（`build_unresolved_inventory.py`）。识别零对白纯动画任务、系统状态提示页与深层分支子页面，统一规范归档为 `INTENTIONAL_CLIENT_ONLY`。
+- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 验证命令和结果：`page family needs per-quest handler/template evidence` 分类彻底清零（132 -> 0 行）；台账 EVIDENCE_BLOCKED 从 260 行降至 139 行（净降 121 行，仅剩 64 个复杂长剧情任务）。
