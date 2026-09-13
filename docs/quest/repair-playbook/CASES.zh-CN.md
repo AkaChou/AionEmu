@@ -338,13 +338,13 @@
 ## 8.23 客户端按钮符号更新导致旧完成动作无入口
 
 - Pattern ID：`STALE_LEGACY_BUTTON_SYMBOL`。
-- 代表任务：20031「Go To Gelkmaros / [使命]前往格尔克马洛斯」；同批同型 20036 不重复建案例。
+- 代表任务：20031「Go To Gelkmaros / [使命]前往格尔克马洛斯」。原修复批次还包含 20036；后续 Aion 5.8 客户端审计确认 20036 是 `client_level=999` 的禁用占位，已从生产目录删除，本案例现只保留 20031 的正式合同。
 - 搜索症状：审计 `BUTTON_WITHOUT_ROUTE`：`s10 + NPC 799226 + QUEST_SELECT -> select8_1(3399)` 的按钮 `10007` 无路由；旧 handler 期待 `STEP_TO_11(10010)`。
 - 玩家可见症状：玩家在 select8_1 页点击“点头。”后对话无任何反应，任务卡在最后一步无法上交库尔玛武器碎片进入领奖。
 - 根因：5.8 客户端把 select8_1 的确认按钮写成 `HACTION_SETPRO8(10007)`（旧客户端为 `STEP_TO_11(10010)`）；旧 handler 分支仍监听 10010，导致 10007 无候选、10010 无客户端入口。两个动作空间同号不同义（`STEP_TO_8` 与 `SETPRO8` 同为 10007），必须以客户端 HTML 的按钮常量为准。
-- 修复层：任务 XML。`s10 -> reward` 完成路由动作 `SETPRO11` 改为 `SETPRO8`，保留上交 182215591、`var0=11`、`REWARD` 与各自既有 sync 模式（20031 `LEVEL_AND_VISIBILITY_REFRESH`，20036 `PACKET_ONLY`）。
-- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/20031.xml`、`20036.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/GelkmarosSelect8SymbolContractTest.java`。
-- 验证命令和结果：`mvn -q -Dtest='GelkmarosSelect8SymbolContractTest' test` 通过；审计 20031/20036 的 `BUTTON_WITHOUT_ROUTE` 行清零且无新增失败。
+- 修复层：任务 XML。`s10 -> reward` 完成路由动作 `SETPRO11` 改为 `SETPRO8`，保留上交 182215591、`var0=11`、`REWARD` 与 20031 的 `LEVEL_AND_VISIBILITY_REFRESH` sync 模式。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/20031.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/GelkmarosSelect8SymbolContractTest.java`。
+- 验证命令和结果：原始修复时 `mvn -q -Dtest='GelkmarosSelect8SymbolContractTest' test` 通过；后续客户端审计确认 20036 为禁用占位，`DisabledClientQuestPlaceholderCatalogTest` 锁定 20036 不再进入 catalog/目录，`GelkmarosSelect8SymbolContractTest` 现只校验 20031。最终 Maven 门禁和客户端复测待执行。
 - 复用边界：仅适用于客户端更新了页面按钮符号且旧 handler 副作用保持权威的任务；若新符号伴随状态副作用变化（新增物品、推进不同 var），必须按新证据重取合同，不能只换动作 id。
 - commit：`d966208a3`。
 

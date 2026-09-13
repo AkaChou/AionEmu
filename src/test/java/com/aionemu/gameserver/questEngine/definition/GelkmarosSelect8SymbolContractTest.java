@@ -23,12 +23,9 @@ class GelkmarosSelect8SymbolContractTest {
 
 	@Test
 	void select8_1ConfirmCompletesTheMissionThroughTheClientSymbol() throws Exception {
-		// 各任务保留治理前的既有 sync 模式：20031 刷新可见性，20036 仅发包。
-		// Each quest keeps its pre-existing sync mode: 20031 refreshes visibility, 20036 packet-only.
-		var expectedSync = java.util.Map.of(
-			20031, QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH,
-			20036, QuestStateSyncMode.PACKET_ONLY);
-		for (int questId : List.of(20031, 20036)) {
+		// 20036 是 5.8 客户端禁用占位，正式规则由 20031 唯一承接。
+		// 20036 is disabled in the Aion 5.8 client; 20031 is the sole production owner.
+		for (int questId : List.of(20031)) {
 			QuestDefinition definition;
 			try (InputStream input = Files.newInputStream(QUEST_DIRECTORY.resolve(questId + ".xml"))) {
 				definition = QuestDefinitionXmlCompiler.compile(input).definition();
@@ -50,7 +47,7 @@ class GelkmarosSelect8SymbolContractTest {
 					com.aionemu.gameserver.questEngine.model.QuestStatus.REWARD)),
 				"quest " + questId + " must advance to var0=11 REWARD");
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(expectedSync.get(questId)),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()), route.afterCommit(),
 				"quest " + questId + " confirm response");
 			// 旧符号 STEP_TO_11(10010) 不再出现在任何路由中（客户端 select8_1 只有 10007 按钮）。

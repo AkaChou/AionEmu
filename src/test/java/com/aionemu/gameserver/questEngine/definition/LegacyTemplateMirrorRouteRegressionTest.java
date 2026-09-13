@@ -406,18 +406,6 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			QuestDefinition definition = compile(route[0]);
 			assertPage(definition, "s1", route[1], 1352);
 		}
-
-		for (int[] start : List.of(
-			new int[] {18395, 798926, 182216153},
-			new int[] {28395, 799225, 182216155})) {
-			QuestDefinition definition = compile(start[0]);
-			QuestTransition route = talkRoutes(definition, "unaccepted", start[1], 10000).getFirst();
-			assertEquals("started", route.targetNode());
-			assertEquals(List.of(new QuestAction.GiveItem(start[2], 1)), route.actions());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()), route.afterCommit());
-		}
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
