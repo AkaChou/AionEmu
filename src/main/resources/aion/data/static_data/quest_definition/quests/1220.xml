@@ -4,6 +4,10 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182200568" count="1"/>
+      <item id="182200569" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="6620"/>
       <reward kind="EXP" id="0" amount="91950"/>
@@ -23,30 +27,25 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="started1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203172" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 契约外报告页换无按钮反馈。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203172" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="203172" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="798004" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤(zz_retail_simple_quests.xml):type="TALK" ids="798004" give_item_id="182200569" give_item_count="1" remove_item_id="182200568" remove_item_count="1";对话链按客户端按钮图重建。 -->
+    <!-- 起步 NPC 乌内(203172)：接取时把革命团宝箱 182200568 交给玩家。
+         Client select1 的按钮是 ASK_QUEST_ACCEPT(1007)，由 NPC_START 展开的接取链闭环。 -->
+    <dialog type="NPC_START" npc-id="203172" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182200568" count="1"/>
+      </accept-actions>
+    </dialog>
+    <!-- 中转 NPC 努蒙(798004)：select2→select2_1→SETPRO1，交出宝箱 182200568 换取要送往埃尔滕要塞的 182200569。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798004" action="QUEST_SELECT"/>
@@ -63,7 +62,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="started1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798004" action="SETPRO1"/>
       </event>
@@ -79,20 +78,8 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="798004" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="205240" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 契约外报告页换无按钮反馈。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205240" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-
+    <!-- 交付 NPC 玛平恩恩(205240)：select5 交出宝箱 182200569 并进入奖励结算。 -->
+    <dialog type="NPC_REPORT" npc-id="205240" source="started1" target="reward" page="SELECT5"/>
     <npc-complete npc-id="205240" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

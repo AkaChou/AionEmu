@@ -52,6 +52,23 @@ class QuestProductionJourneyTest {
 		assertProductionJourneyCompletes(2223);
 	}
 
+	/**
+	 * 1220 宝箱交接链：乌内接取发箱(182200568)→努蒙换箱(182200569)→玛平恩恩结算，
+	 * 覆盖此前“接取不发箱导致 SETPRO1 物品不足回退动作 ID 触发 load fail”的缺陷。
+	 * Quest 1220 box hand-off chain: Une starts and grants 182200568, Numonerk exchanges it for 182200569,
+	 * Mappinerk settles the reward, covering the missing-treasure-box defect that echoed an action id
+	 * as a page and produced a client "load fail".
+	 */
+	@Test
+	void plansAndExecutesSecretDeliveryBoxChainFromProductionXml() throws Exception {
+		CompiledQuestDefinition definition = definition(1220);
+		QuestProductionJourneyPlanner.Result planned = new QuestProductionJourneyPlanner().plan(definition, oracle);
+		assertTrue(planned.planned(), () -> String.valueOf(planned.failure()));
+		QuestProductionJourneyExecutor.Result executed = new QuestProductionJourneyExecutor()
+			.execute(definition, oracle, planned.plan());
+		assertTrue(executed.completed(), () -> String.valueOf(executed.failure()));
+	}
+
 	@Test
 	void executesTargetlessItemStartAndNormalizedTransactions() throws Exception {
 		for (int questId : List.of(1106, 1114, 1843)) assertProductionJourneyCompletes(questId);

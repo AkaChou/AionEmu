@@ -90,6 +90,30 @@ class DialogServiceQuestDialogTest {
 		assertOnlyDialog(player, 0, 0);
 	}
 
+	/**
+	 * 任务动作未被任务引擎处理时，服务层不得把按钮动作 ID 当页面 ID 回显，
+	 * 否则客户端会去找同名 html 页并报 load fail。
+	 * An unhandled quest action must never be echoed as a page id, otherwise the client looks up a
+	 * non-existent html page and reports "load fail".
+	 */
+	@Test
+	void unhandledQuestAcceptActionClosesTheWindowInsteadOfEchoingTheActionId() throws Exception {
+		Player player = playerWithQuest(QuestStatus.NONE);
+
+		DialogService.onDialogSelect(1002, player, npc(new NamedAi("normal")), QUEST_ID, 0);
+
+		assertOnlyDialog(player, 0, 0);
+	}
+
+	@Test
+	void unhandledQuestStepActionClosesTheWindowInsteadOfEchoingTheActionId() throws Exception {
+		Player player = playerWithQuest(QuestStatus.START);
+
+		DialogService.onDialogSelect(10000, player, npc(new NamedAi("normal")), QUEST_ID, 0);
+
+		assertOnlyDialog(player, 0, 0);
+	}
+
 	@Test
 	void simpleNpcDialogUsesGenericPageWithoutQuestOwnerOrQuestDispatch() throws Exception {
 		Player player = playerWithQuest(QuestStatus.NONE);
