@@ -100,3 +100,5 @@
 | `aea256a29` | 18600 奖励预览在任务物品缺失时显示 `HtmlPageId 1009` load fail | 奖励预览的可选工作物品使用 `RemoveItem.ALL` 保持“有则清理、无则继续”，并补齐 `QUEST_SELECT/USE_OBJECT -> SELECT5 -> page 5` 的客户端奖励链 |
 | `59bba1a` | 1006 菲尔诺斯奖励对话被同 NPC 未授权普通任务的宽索引拦截 | 任务列表授权保护必须区分宽路由键与实际 action/dialog 匹配；同一 NPC 存在 MISSION/已激活路由时不能在 typed dispatch 前误返回通用“结束对话” |
 | `f2470b4dc` | 1111 接取动作 1007 误配 QUEST_REFUSE_4 导致 laod fail | 清除覆盖宏的显式 transition，恢复 NPC_START 默认展开的标准第 4 页 |
+| `46bb3cc96` | 1464 双 NPC 跨图间谍任务收集交付链与完成 NPC 归属修复 | 莫尔海姆 Medea 处验货并扣除 15 个泰奥尼亚转入 REWARD，埃尔特内 Jinus 处领奖，补齐 SELECT1/ok/fail 完整对话链 |
+| `待提交` | 1005 实机抓包确立多步任务黄金定律与客户端废页归档 | 第 N 步对话下发 SELECT(N+1)，步进动作 SETPRO(N+1)，推步后以 0 关窗；台账将已闭环任务的客户端未实装废页提纯归档 |

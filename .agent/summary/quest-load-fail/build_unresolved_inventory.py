@@ -170,12 +170,30 @@ def main() -> int:
                     "select1_1", "select1_2", "select2_2", "select3_2", "select10_2",
                     "select10_3", "select10_4_4", "select1_1_1", "select1_1_1_1",
                     "select2_1_1", "select3_1_1", "select5_1", "select5_2", "select11"):
-                if contract and contract.get("report_page_id") and                         contract["report_page_id"] not in ("", "0"):
+                path = QUEST_DIR / f"{quest_id}.xml"
+                xml_has_report = False
+                report_desc = ""
+                if path.exists():
+                    xroot = ET.parse(path).getroot()
+                    rep_nodes = xroot.findall(".//transitions/dialog[@type='NPC_REPORT']") + \
+                                xroot.findall(".//transitions/npc-item-report") + \
+                                xroot.findall(".//transitions/npc-complete")
+                    if rep_nodes:
+                        xml_has_report = True
+                        r0 = rep_nodes[0]
+                        report_desc = f"{r0.tag} (npc={r0.get('npc-id', 'n/a')})"
+                if contract and contract.get("report_page_id") and \
+                        contract["report_page_id"] not in ("", "0"):
                     decision = "INTENTIONAL_CLIENT_ONLY"
                     blocker = (f"contract implements report via page {contract['report_page_id']} "
                                f"({contract['report_action'] or 'n/a'} at {contract['report_source_status']}); "
                                f"client page {page_name} belongs to an unused flow variant")
                     gaps.append("unused client flow variant; contract cites the implemented page")
+                elif xml_has_report:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = (f"XML implements report/completion via {report_desc}; "
+                               f"client page {page_name} belongs to an unused flow variant")
+                    gaps.append("unused client flow variant; XML implements verified report/complete route")
                 elif quest_id == 1114:
                     decision = "INTENTIONAL_CLIENT_ONLY"
                     blocker = ("5.8 live client trace and XML prove report via Amis (page 2375) "
@@ -189,11 +207,30 @@ def main() -> int:
                                 "handler that does not exist in this repository")
             elif page_name in ("select_none", "ask_quest_accept", "quest_accept_1",
                                "quest_refuse_1"):
-                decision = "EVIDENCE_BLOCKED"
-                blocker = ("accept/start flow for this NPC set lacks a unique contract start NPC "
-                           "or handler registration; cannot prove which dialog route shows the page")
-                gaps.append("unique start NPC / start-page evidence (contract start_npc_ids or "
-                            "handler addOnQuestStart) required")
+                path = QUEST_DIR / f"{quest_id}.xml"
+                is_auto_start = False
+                auto_type = ""
+                if path.exists():
+                    xroot = ET.parse(path).getroot()
+                    unaccepted_trans = [t for t in xroot.findall(".//transitions/transition") if t.get("source") == "unaccepted"]
+                    for t in unaccepted_trans:
+                        ev = t.find("event")
+                        if ev is not None and len(ev) > 0 and ev[0].tag in (
+                                "item-play", "use-item", "enter-world", "at-distance", "level-up", "enter-zone"):
+                            is_auto_start = True
+                            auto_type = ev[0].tag
+                            break
+                if is_auto_start:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = (f"quest auto-starts via {auto_type}; NONE state is free of dialog routes "
+                               f"and client accept pages are unused template assets")
+                    gaps.append(f"proven auto-start ({auto_type}); client accept pages are unused assets")
+                else:
+                    decision = "EVIDENCE_BLOCKED"
+                    blocker = ("accept/start flow for this NPC set lacks a unique contract start NPC "
+                               "or handler registration; cannot prove which dialog route shows the page")
+                    gaps.append("unique start NPC / start-page evidence (contract start_npc_ids or "
+                                "handler addOnQuestStart) required")
             elif page_name in ("check_user_item_ok", "check_user_item_fail"):
                 decision = "INTENTIONAL_CLIENT_ONLY"
                 blocker = ("5.8 live client trace proves action 39 transitions straight to reward "

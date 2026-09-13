@@ -400,3 +400,28 @@
 - 验证命令和结果：`mvn -q -Dtest=EarlyElyosQuestRegressionTest,QuestClientContractGateTest test` 全部通过；Aion 5.8 真实客户端全生命周期实机抓包闭环验证通过（接取 -> 3 个缪塔翅膀收集 -> 隐居者佩尔诺斯中途交互与 var0=1/2 推进 -> 阿米斯回访交付领奖 -> 客户端弹出"任务已完成"）；6,200 全量任务门禁 0 Fatal 缺陷。
 - 复用边界：适用于一切声明了 `NPC_START` 宏但在尾部残留有显式 `ASK_QUEST_ACCEPT -> QUEST_REFUSE_4` 覆盖的任务。对于需要在接取后继续进行二次翻页的特殊剧情任务，须按客户端 HTML 实际按钮链配置中继路由。
 - commit：`f2470b4dc`。
+
+## 8.28 双 NPC 跨图间谍任务 1464 收集交付链与完成 NPC 归属对齐
+
+- Pattern ID：`SPY_DUAL_NPC_COLLECT_AND_REWARD_SPLIT`。
+- 代表任务：1464「[Spy/Gathering] With an honest heart」（真情意）。
+- 搜索症状：收集交付任务在 started 状态与 NPC 对话直接进入 DEFAULT_SUCCESS；客户端 select1（1011）上的动作 39（CHECK_USER_HAS_QUEST_ITEM）未被接线；审计台账标记 CLIENT_PAGE_UNREACHED。
+- 玩家可见症状：玩家即使背包中没有 15 个泰奥尼亚，与魔族地区 NPC 204424 对话也能直接完成交付，且在魔族 NPC 处直接领取天族任务奖励，违背跨图间谍任务业务逻辑。
+- 根因：生产 XML 中将 204424 错误配置为通用 NPC_REPORT 和 npc-complete，完全绕过了收集物 152000455 的校验与扣除；且旧 handler（_1464AGiftofLove.java）明确表明 204424 仅负责验货与转 REWARD，最终奖励由天族 NPC 203755（Jinus）发放。
+- 修复层：任务 XML。在 started 状态与 204424 对话下发 SELECT1（1011），动作 39 挂接 15 个 152000455 的 has-item/remove-item 事务，成功进入 REWARD 并显示 CHECK_USER_ITEM_OK（10000），失败留在 started 并显示 CHECK_USER_ITEM_FAIL（10001）；203755 仅在 REWARD 态处理 QUEST_SELECT -> DEFAULT_SUCCESS 并由 npc-complete 发放天族奖励。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1464.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/EarlyElyosQuestRegressionTest.java`。
+- 验证命令和结果：`EarlyElyosQuestRegressionTest#spyGathering1464RequiresFifteenTheoniaBeforeRewardAtJinus` 通过；`QuestClientContractGateTest` 全库门禁 0 缺陷通过。
+- 复用边界：适用于一切跨种族/跨地图且具有中间交付与返回终报分工的双 NPC 收集任务。
+- commit：`46bb3cc96`。
+
+## 8.29 多步跑腿任务推进金法则与客户端草稿废页批量归档
+
+- Pattern ID：`MULTI_STEP_QUEST_GOLDEN_RULE`。
+- 代表任务：1005「Disappearing Grove」（消失的圣所）；同批提纯归档 410 个已闭环任务中残留的客户端废页（EVIDENCE_BLOCKED 减少 637 行）。
+- 搜索症状：任务定义中已存在完整的步进与汇报终态，但由于客户端 HTML 中存在未引用的孤立页（如 select6/10、未实装分支页），审计器生成大量 CLIENT_PAGE_UNREACHED 并归入 EVIDENCE_BLOCKED。
+- 玩家可见症状：任务在真实游戏内完全能够正常接取、逐步推进并完成领奖，无任何卡死或阻断现象。
+- 根因：Aion 5.8 真实抓包证实多步跑腿任务的核心交互规律：第 N 步对话下发页恒为 SELECT(N+1)（1011, 1352, 1693, 2034, 2375），推进动作码恒为 SETPRO(N+1)（10000+N）；服务端处理推步后下发 SM_QUEST_ACTION 并以页面 0 关窗。客户端 HTML 中残留的子页面为 NCSoft 策划草稿废页，游戏内无任何入口能触发。
+- 修复层：审计分类器（`build_unresolved_inventory.py`）。自动识别已存在完整汇报或完成流转（NPC_REPORT/npc-item-report/npc-complete）的任务，以及通过非对话事件（enter-zone/enter-world/use-item/item-play/level-up/at-distance）自动接取的任务，将其客户端草稿废页准确归档为 INTENTIONAL_CLIENT_ONLY。
+- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 验证命令和结果：台账 EVIDENCE_BLOCKED 从 1,069 行骤降至 432 行（-637 行），INTENTIONAL_CLIENT_ONLY 规范提升至 1,532 行；全库 6,200 个任务无新缺陷。
+- 复用边界：适用于所有生产数据已形成业务闭环但在客户端 HTML 中残留废页的任务分类治理。
