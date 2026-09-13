@@ -196,16 +196,16 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 216967: //Petrahulk Gatekeeper.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000098, 1)); //Temple Vault Door Key.
+				registerDropItemIfAbsent(dropItems, npcId, 185000098); //Temple Vault Door Key.
 			break;
 			case 216968: //Divine Hisen.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000109, 1)); //Relic Key.
+				registerDropItemIfAbsent(dropItems, npcId, 185000109); //Relic Key.
 			break;
 			case 216980: //Warden Baal.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000099, 1)); //Dungeon Grate Key.
+				registerDropItemIfAbsent(dropItems, npcId, 185000099); //Dungeon Grate Key.
 			break;
 			case 216981: //Manor Guard Captain.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000100, 1)); //Dungeon Door Key.
+				registerDropItemIfAbsent(dropItems, npcId, 185000100); //Dungeon Door Key.
 			break;
 			case 216999: //Jesse.
 			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000101, 1)); //Secret Safe Key.
@@ -213,7 +213,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188052826, 1)); //Judge's Fabled Weapon Chest.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000102, 1)); //Kaliga's Key.
+				registerDropItemIfAbsent(dropItems, npcId, 185000102); //Kaliga's Key.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 				switch (Rnd.get(1, 5)) {
 					case 1:
@@ -447,6 +447,14 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
+		}
+	}
+
+	private void registerDropItemIfAbsent(Set<DropItem> dropItems, int npcId, int itemId) {
+		boolean alreadyRegistered = dropItems.stream()
+			.anyMatch(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
+		if (!alreadyRegistered) {
+			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, itemId, 1));
 		}
 	}
 

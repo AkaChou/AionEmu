@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +18,8 @@ class KromedesTrialInstanceTest {
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KromedesTrialInstance.java");
 	private static final Path SPAWNS = Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300230000_Kromede's_Trial.xml");
+	private static final Path NPC_DROPS = Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_006.xml");
 
 	@Test
 	void onDieDoesNotDereferenceMissingDamageOwnerForClassTreasure() throws IOException {
@@ -85,6 +88,42 @@ class KromedesTrialInstanceTest {
 				"700939 is selected only for the active quest step");
 		assertTrue(spawns.contains("<spawn npc_id=\"700965\" respawn_time=\"60\">"),
 				"700965 is the static pure-instance Robstin");
+	}
+
+	@Test
+	void handlerRegistersKeysOnlyWhenDropDataDidNotProvideThem() throws IOException {
+		String source = Files.readString(SOURCE);
+		String onDropRegistered = methodBody(source,
+				"public void onDropRegistered(Npc npc)");
+
+		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000098);"));
+		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000109);"));
+		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000099);"));
+		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000100);"));
+		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000102);"));
+		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000098, 1)"));
+		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000099, 1)"));
+		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000100, 1)"));
+		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000102, 1)"));
+		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000109, 1)"));
+
+		String helper = methodBody(source,
+				"private void registerDropItemIfAbsent(Set<DropItem> dropItems, int npcId, int itemId)");
+		int existingDropCheck = helper.indexOf("getDropTemplate().getItemId() == itemId");
+		int addDrop = helper.indexOf(".add(", existingDropCheck);
+
+		assertTrue(existingDropCheck >= 0);
+		assertTrue(addDrop > existingDropCheck);
+	}
+
+	@Test
+	void baseDropDataProvidesExactlyOneKeyForEachGateNpc() throws IOException {
+		String npcDrops = Files.readString(NPC_DROPS);
+
+		assertSingleKeyDrop(npcDrops, 216967, 185000098);
+		assertSingleKeyDrop(npcDrops, 216968, 185000109);
+		assertSingleKeyDrop(npcDrops, 216980, 185000099);
+		assertSingleKeyDrop(npcDrops, 216981, 185000100);
 	}
 
 	@Test
@@ -166,5 +205,27 @@ class KromedesTrialInstanceTest {
 			}
 		}
 		throw new AssertionError(signature + " method body was not closed");
+	}
+
+	private static void assertSingleKeyDrop(String npcDrops, int npcId, int itemId) {
+		String npcDrop = npcDropBody(npcDrops, npcId);
+		String item = "item_id=\"" + itemId + "\"";
+		int firstOccurrence = npcDrop.indexOf(item);
+		int lastOccurrence = npcDrop.lastIndexOf(item);
+
+		assertTrue(firstOccurrence >= 0);
+		assertEquals(firstOccurrence, lastOccurrence);
+		assertTrue(npcDrop.substring(firstOccurrence, npcDrop.indexOf("/>", firstOccurrence))
+				.contains("chance=\"100.00\" min_amount=\"1\" max_amount=\"1\""));
+	}
+
+	private static String npcDropBody(String source, int npcId) {
+		String openingTag = "<npc_drop npc_id=\"" + npcId + "\">";
+		int bodyStart = source.indexOf(openingTag);
+		assertTrue(bodyStart >= 0, openingTag + " must exist");
+		bodyStart += openingTag.length();
+		int bodyEnd = source.indexOf("</npc_drop>", bodyStart);
+		assertTrue(bodyEnd >= 0, "</npc_drop> must exist after " + openingTag);
+		return source.substring(bodyStart, bodyEnd);
 	}
 }
