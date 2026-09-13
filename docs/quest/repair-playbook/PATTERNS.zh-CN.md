@@ -13,6 +13,7 @@
 
 | Pattern ID | 症状关键词 | IR / owner 指纹 | 第一检查点 | 代表证明 |
 |---|---|---|---|---|
+| `START_ACTION_OVERRIDE_SHADOWS_WINDOW` | 接取 NPC 点击询问帮忙后弹 laod fail、page 1007 不存在 | 动作 1007 (ASK_QUEST_ACCEPT) 误填为页面 1007 (QUEST_REFUSE_4)，覆盖了宏的 page 4 | XML 尾部显式 ASK_QUEST_ACCEPT 路由、宏默认展开目标页 | `f2470b4dc`、`EarlyElyosQuestRegressionTest#insomniaMedicineAcceptanceOpensAskAcceptWindowNotRefusePage` |
 | `LEVEL_UP_AUTO_START_NO_DIALOG` | 升级后自动接取弹 load fail、page 4 不存在、NPC 首次对话页错误 | `LEVEL_UP` 只提交 `NONE -> START` 并刷新可见性，不发送接取 HTML；NPC `QUEST_SELECT` 单独显示客户端存在的首个页面 | 自动接取 transition 与 NPC transition 是否被错误合并；旧 handler 是否只更新状态 | `d3b28d2af`、`Quest38001LevelUpDialogTest#matchesLegacyLevelUpAndNpcDialogContract` |
 | `LEVEL_UP_MULTI_NPC_PHASED_DIALOG` | 升级接取 load fail、第一 NPC 可点但第二 NPC 卡住、最终在错误 NPC 领奖 | 自动接取不发页面；多个 NPC 按显式中间状态和各自客户端 action 链推进；最终 reward owner 独占完成路由 | 每个 NPC 的 source/target/vars、关闭点、下一阶段入口和最终 owner | `76b0894`、`Quest1920And2945ClientDialogAlignmentTest#quest1920MatchesLegacyAndClientDialogContract` |
 | `TARGETLESS_REALTIME_REWARD_ACTION_SPACE` | 实时奖励界面能选但领取无响应、任务不完成 | targetless reward action 使用独立动作空间并映射到对应奖励槽；普通和实时动作共享完成语义但不做全局 remap | 原始 `CM_DIALOG_SELECT` action、客户端可见槽位、生产 targetless 索引和奖励索引 | `4a23cf0a0`、`Quest13830To13834TargetlessRewardTest#compilesNormalAndRealtimeTargetlessRewardsWithClassRewardsAndCloseOrder` |
@@ -98,3 +99,4 @@
 | `f6aff952a` | 1926/2938 及 20 个同型任务的 `REWARD` packed step 投影错位 | 旧 handler 未改变量时，reward 节点必须保留旧变量；同时用 `ENTER_WORLD` 修复已经持久化的错误 `REWARD var0=1` |
 | `aea256a29` | 18600 奖励预览在任务物品缺失时显示 `HtmlPageId 1009` load fail | 奖励预览的可选工作物品使用 `RemoveItem.ALL` 保持“有则清理、无则继续”，并补齐 `QUEST_SELECT/USE_OBJECT -> SELECT5 -> page 5` 的客户端奖励链 |
 | `59bba1a` | 1006 菲尔诺斯奖励对话被同 NPC 未授权普通任务的宽索引拦截 | 任务列表授权保护必须区分宽路由键与实际 action/dialog 匹配；同一 NPC 存在 MISSION/已激活路由时不能在 typed dispatch 前误返回通用“结束对话” |
+| `f2470b4dc` | 1111 接取动作 1007 误配 QUEST_REFUSE_4 导致 laod fail | 清除覆盖宏的显式 transition，恢复 NPC_START 默认展开的标准第 4 页 |

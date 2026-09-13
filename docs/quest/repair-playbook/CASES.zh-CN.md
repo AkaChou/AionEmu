@@ -387,3 +387,16 @@
 - 验证命令和结果：`Quest2877To2887UrgentOrdersFlowTest` 22/22、`ItemCollectingDialogProtocolAlignmentTest` 6/6 恢复绿；审计行回到例外台账。
 - 复用边界：补对话接取入口前必须先确认任务没有权威自动接取入口（enter-zone/enter-world/use-item/level-up），且客户端 HTML 有完整接取链；两者都满足才允许 NPC_START/显式路由。冲突裁决时，已验收测试合同优先于仅有间接证据的批处理推断。
 - commit：`0095c6abf`。
+
+## 8.27 接取动作 ID 与拒绝页 ID 碰撞导致接取弹窗报 load fail
+
+- Pattern ID：`START_ACTION_OVERRIDE_SHADOWS_WINDOW`。
+- 代表任务：1111「Insomnia Medicine」；同批清洗 57 个受影响任务（如 11012、11051-11055、1322、1582、21051 等）。
+- 搜索症状：点击接取 NPC 对话中“询问有什么事可以帮忙”（动作 1007）后客户端弹出 `laod fail` 错误提示；审计报告中出现 `page-not-in-task-html-candidates.csv` 记录 `1007,ASK_QUEST_ACCEPT,QUEST_REFUSE_4`。
+- 玩家可见症状：与接取 NPC 对话点选任务后，无法弹出接取/拒绝窗口，屏幕中央弹出红色 `laod fail` 提示框，任务无法接取。
+- 根因：动作 ID 1007（`ASK_QUEST_ACCEPT`）与页面 ID 1007（`QUEST_REFUSE_4`）数值重叠。历史批量修补脚本误将动作 ID 当作页面 ID，向任务 XML 尾部写入了 `<dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>`，强行覆盖了 `NPC_START` 宏默认展开的合法接取弹窗（`SHOW_ASK_QUEST_ACCEPT_WINDOW`，页面 4）。由于客户端 HTML 资产中根本不存在 1007 页，客户端解析失败报错。
+- 修复层：任务 XML。清除覆盖宏的错误显式 transition，恢复由 `NPC_START` 展开的标准第 4 页（带有 1002 接受与 1003 拒绝按钮）；测试层补充回归断言。
+- 修改文件：57 个 `quests/*.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/EarlyElyosQuestRegressionTest.java`。
+- 验证命令和结果：`mvn -q -Dtest=EarlyElyosQuestRegressionTest,QuestClientContractGateTest test` 全部通过；Aion 5.8 真实客户端全生命周期实机抓包闭环验证通过（接取 -> 3 个缪塔翅膀收集 -> 隐居者佩尔诺斯中途交互与 var0=1/2 推进 -> 阿米斯回访交付领奖 -> 客户端弹出"任务已完成"）；6,200 全量任务门禁 0 Fatal 缺陷。
+- 复用边界：适用于一切声明了 `NPC_START` 宏但在尾部残留有显式 `ASK_QUEST_ACCEPT -> QUEST_REFUSE_4` 覆盖的任务。对于需要在接取后继续进行二次翻页的特殊剧情任务，须按客户端 HTML 实际按钮链配置中继路由。
+- commit：`f2470b4dc`。
