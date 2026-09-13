@@ -392,4 +392,24 @@ class EarlyElyosQuestRegressionTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)), itemCheck.afterCommit());
 	}
+
+	@Test
+	void spyGathering1464RequiresFifteenTheoniaBeforeRewardAtJinus() {
+		CompiledQuestDefinition definition = load(1464);
+		QuestTransition startSelect = route(definition, "started", "started",
+			new QuestEvent.TalkToNpc(204424, 31));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), startSelect.afterCommit());
+
+		QuestTransition itemDelivery = route(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(204424, 39));
+		assertTrue(itemDelivery.conditions().contains(new QuestCondition.HasItem(152000455, 15)));
+		assertTrue(itemDelivery.actions().contains(new QuestAction.RemoveItem(152000455, 15)));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(10000)), itemDelivery.afterCommit());
+
+		QuestTransition rewardReport = route(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(203755, 31));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10002)), rewardReport.afterCommit());
+	}
 }
