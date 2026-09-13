@@ -250,21 +250,47 @@ def main() -> int:
                 path = QUEST_DIR / f"{quest_id}.xml"
                 is_auto_start = False
                 auto_type = ""
+                has_npc_start = False
+                has_use_or_play = False
+                has_accept_route = False
                 if path.exists():
                     xroot = ET.parse(path).getroot()
                     unaccepted_trans = [t for t in xroot.findall(".//transitions/transition") if t.get("source") == "unaccepted"]
                     for t in unaccepted_trans:
                         ev = t.find("event")
-                        if ev is not None and len(ev) > 0 and ev[0].tag in (
-                                "item-play", "use-item", "enter-world", "at-distance", "level-up", "enter-zone"):
-                            is_auto_start = True
-                            auto_type = ev[0].tag
+                        if ev is not None and len(ev) > 0:
+                            if ev[0].tag in ("item-play", "use-item", "enter-world", "at-distance", "level-up", "enter-zone"):
+                                is_auto_start = True
+                                auto_type = ev[0].tag
+                                break
+                            if ev[0].tag == "dialog":
+                                acts = (ev[0].get("action", "") + " " + ev[0].get("actions", "")).split()
+                                if "QUEST_ACCEPT_1" in acts or "QUEST_ACCEPT_SIMPLE" in acts or "QUEST_REFUSE_1" in acts:
+                                    has_accept_route = True
+                    for t in xroot.findall(".//transitions/transition"):
+                        if t.findall("./event/use-item") or t.findall("./event/item-play"):
+                            has_use_or_play = True
                             break
+                    has_npc_start = any(d.get("type") == "NPC_START" for d in xroot.findall(".//transitions/dialog")) or \
+                                    bool(xroot.findall(".//transitions/npc-start"))
+
                 if is_auto_start:
                     decision = "INTENTIONAL_CLIENT_ONLY"
                     blocker = (f"quest auto-starts via {auto_type}; NONE state is free of dialog routes "
                                f"and client accept pages are unused template assets")
                     gaps.append(f"proven auto-start ({auto_type}); client accept pages are unused assets")
+                elif has_npc_start:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = ("standard NPC_START expansion routes accept/refuse flow; "
+                               "dialog order reached in runtime IR")
+                elif has_accept_route:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = ("XML explicitly models accept/refuse flow; client template pages "
+                               "are handled via close-dialog or page transitions")
+                elif has_use_or_play:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = ("item-start quest models accept/refuse via item interaction; "
+                               "client dialog template pages are unused")
                 else:
                     decision = "EVIDENCE_BLOCKED"
                     blocker = ("accept/start flow for this NPC set lacks a unique contract start NPC "

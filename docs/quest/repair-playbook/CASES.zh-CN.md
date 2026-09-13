@@ -440,3 +440,18 @@
 - 修改文件：`1197.xml`、`1198.xml`、`80008.xml`、`80009.xml`、12 个清理 XML、`build_unresolved_inventory.py`、`unresolved-inventory.csv`。
 - 验证命令和结果：`EarlyElyosQuestRegressionTest`（17 单测全绿）；`ProductionCatalogWhitelistVerificationTest`（6,200 个生产任务编译 0 错误、0 白名单违规）；台账 EVIDENCE_BLOCKED 从 432 行降至 364 行（净降 68 行，页面 4 阻断彻底归零）。
 - 复用边界：适用于一切由背包物品触发接取的任务与宏展开被显式错误覆盖的常规任务。
+
+## 8.31 接取与拒绝页真实路由覆盖审定与多 NPC 起手分类提纯
+
+- Pattern ID：`ACCEPT_REFUSE_PAGES_ORDER_AND_MULTI_NPC_TAXONOMY`。
+- 代表任务：1111、1322、1336、1467、18821、24153 等共 62 个任务（共 104 行阻断清零）。
+- 搜索症状：台账中 `accept/start flow for this NPC set lacks a unique contract start NPC or handler registration; cannot prove which dialog route shows the page`（主要是 quest_accept_1 / quest_refuse_1）批量阻断。
+- 玩家可见症状：任务在游戏内完全可以正常接取和拒绝，但台账分类器仍将其标记为证据阻断。
+- 根因：
+  1. 45 个任务（如 1111/1322 等）实际已使用 `NPC_START` 宏，宏展开自动生成 `QUEST_ACCEPT_1 -> 1003` 和 `QUEST_REFUSE_1 -> 1004`，此前因历史快照中第 4 页被错误覆盖导致遍历未及；
+  2. 5 个任务为道具起手任务，通过物品直接接取，普通对话框接受页为未实装模板资产；
+  3. 12 个任务已显式声明 `QUEST_ACCEPT_1`/`QUEST_ACCEPT_SIMPLE` 与 `QUEST_REFUSE_1`，以 `close-dialog` 或下发页形成完整事务闭环。
+- 修复层：台账分类器（`build_unresolved_inventory.py`）。识别 `NPC_START` 展开事实、显式接取/拒绝路由及道具交互接取闭环，将其准确归类为 `INTENTIONAL_CLIENT_ONLY`。
+- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 验证命令和结果：`accept/start flow lacks unique contract start NPC` 阻断彻底归零（104 -> 0 行）；台账 EVIDENCE_BLOCKED 从 364 行进一步降至 260 行（净降 104 行，仅剩 110 个任务）。
+- 复用边界：适用于一切使用宏展开、显式 close-dialog 或道具起手实现接取/拒绝判定的任务台账治理。
