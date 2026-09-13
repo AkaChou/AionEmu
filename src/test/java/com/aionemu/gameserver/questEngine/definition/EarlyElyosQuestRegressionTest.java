@@ -303,16 +303,34 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	@Test
-	void nymphGownAlreadyHasTheDirectObjectHandoffAndRewardRoute() {
+	void nymphGownItemStartAndFullLifecycleAlignsWithLiveClientTrace() {
 		CompiledQuestDefinition definition = load(1114);
+
+		QuestTransition useItem = route(definition, "unaccepted", "unaccepted",
+			new QuestEvent.UseItem(182200214));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), useItem.afterCommit());
+
+		QuestTransition accept = route(definition, "unaccepted", "v0",
+			new QuestEvent.QuestDialog(QuestDialogAction.QUEST_ACCEPT_1.id()));
+		assertTrue(accept.actions().contains(new QuestAction.GiveItem(182200226, 1)));
+		assertTrue(accept.actions().contains(new QuestAction.RemoveItem(182200214, 1)));
+
+		QuestTransition gown = route(definition, "v1", "v2",
+			new QuestEvent.TalkToNpc(700008, -1));
+		assertTrue(gown.actions().contains(new QuestAction.GiveItem(182200217, 1)));
+
 		QuestTransition handoff = route(definition, "v2", "v3",
 			new QuestEvent.TalkToNpc(203075, 2375));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.ShowQuestDialog(2375)), handoff.afterCommit());
-		QuestTransition gown = route(definition, "v1", "v2",
-			new QuestEvent.TalkToNpc(700008, -1));
-		assertTrue(gown.actions().contains(new QuestAction.GiveItem(182200217, 1)));
+
+		QuestTransition rewardPreview = route(definition, "v3", "reward4",
+			new QuestEvent.TalkToNpc(203075, 1009));
+		assertTrue(rewardPreview.actions().contains(new QuestAction.RemoveItem(182200217, 1)));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(6)), rewardPreview.afterCommit());
 	}
 
 	private static QuestTransition route(CompiledQuestDefinition definition, String source, String target,

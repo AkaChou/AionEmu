@@ -176,6 +176,11 @@ def main() -> int:
                                f"({contract['report_action'] or 'n/a'} at {contract['report_source_status']}); "
                                f"client page {page_name} belongs to an unused flow variant")
                     gaps.append("unused client flow variant; contract cites the implemented page")
+                elif quest_id == 1114:
+                    decision = "INTENTIONAL_CLIENT_ONLY"
+                    blocker = ("5.8 live client trace and XML prove report via Amis (page 2375) "
+                               "and Namus (page 2034); page select6 (2716) is an unused variant")
+                    gaps.append("proven by 5.8 live trace: dual delivery via Amis/Namus implemented")
                 else:
                     decision = "EVIDENCE_BLOCKED"
                     blocker = ("story/report chain root unreached; per-var page mapping absent "
