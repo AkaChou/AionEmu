@@ -86,6 +86,27 @@ class CMObjectSearchTest {
 	}
 
 	@Test
+	void resolvesTheClientEremitiaCollisionDuringQuest10031StageOne() {
+		assertEquals(798600, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524,
+			questState(10031, QuestStatus.START, 1)));
+	}
+
+	@Test
+	void keepsTheDredgionEremitiaIdOutsideQuest10031StageOne() {
+		assertEquals(221524, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524,
+			questState(10031, QuestStatus.START, 0)));
+		assertEquals(221524, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524,
+			questState(10031, QuestStatus.START, 2)));
+		assertEquals(221524, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524,
+			questState(2696, QuestStatus.START, 1)));
+		assertEquals(221524, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524,
+			questState(10031, QuestStatus.COMPLETE, 1)));
+		assertEquals(221524, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(221524, null));
+		assertEquals(798600, CM_OBJECT_SEARCH.resolveEremitiaSearchNpcId(798600,
+			questState(10031, QuestStatus.START, 1)));
+	}
+
+	@Test
 	void resolvesTheClientAsteraNpcCollisionDuringTheMoveStage() {
 		int searchNpcId = CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
 				questState(10520, QuestStatus.START, 4));

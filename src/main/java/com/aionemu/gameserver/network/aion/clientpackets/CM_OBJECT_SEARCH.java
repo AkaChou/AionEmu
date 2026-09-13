@@ -32,6 +32,10 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	private static final int MOVE_TO_ASTERA_STAGE = 4;
 	private static final int ELYOS_SANCTUARY_SENSOR = 206485;
 	private static final int ASMODIAN_SANCTUARY_SENSOR = 206486;
+	private static final int QUEST_RISK_FOR_THE_OBELISK = 10031;
+	private static final int CLIENT_DREDGION_EREMITIA = 221524;
+	private static final int QUEST_EREMITIA = 798600;
+	private static final int EREMITIA_SEARCH_STAGE = 1;
 
 	private int npcId;
 	/**
@@ -60,6 +64,7 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		int searchNpcId = resolveAsteraSearchNpcId(player, npcId);
 		if (gm) {
 			searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
+			searchNpcId = resolveEremitiaSearchNpcId(player, searchNpcId);
 		}
 		SearchTarget target = resolveQuestSensorTarget(searchNpcId);
 		if (target == null) {
@@ -157,6 +162,46 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		int stage = state.getQuestVarById(0);
 		return stage == FIRST_ACESTES_STAGE || stage == REPORT_ACESTES_STAGE
 				? QUEST_ACESTES : requestedNpcId;
+	}
+
+	/**
+	 * 将 10031 第一阶段的客户端同名 NPC 请求解析为任务目标。
+	 * Resolves the client NPC-name collision during quest 10031's first stage to the quest target.
+	 *
+	 * <p>副本守卫 221524 与任务 NPC 798600 都使用“艾尔米提亚”名称，客户端寻路请求只携带
+	 * NPC ID。只有任务状态明确处于 var0=1 时才改写，避免影响其他任务和阶段。</p>
+	 * <p>Instance guard 221524 and quest NPC 798600 share the Eremitia name, while the client search
+	 * request carries only an NPC ID. The alias is applied only at quest var0=1, preserving all other
+	 * quests and stages.</p>
+	 *
+	 * @param player 搜索玩家 / searching player
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	private static int resolveEremitiaSearchNpcId(Player player, int requestedNpcId) {
+		if (player == null || requestedNpcId != CLIENT_DREDGION_EREMITIA) {
+			return requestedNpcId;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(QUEST_RISK_FOR_THE_OBELISK);
+		return resolveEremitiaSearchNpcId(requestedNpcId, state);
+	}
+
+	/**
+	 * 按给定任务状态解析艾尔米提亚搜索目标；空状态和不匹配状态保持原 ID。
+	 * Resolves the Eremitia search target from the supplied quest state; null or non-matching states
+	 * preserve the original ID.
+	 *
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @param state 10031 的当前任务状态，可为空 / current quest 10031 state, nullable
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	static int resolveEremitiaSearchNpcId(int requestedNpcId, QuestState state) {
+		if (requestedNpcId != CLIENT_DREDGION_EREMITIA || state == null
+				|| state.getQuestId() != QUEST_RISK_FOR_THE_OBELISK || state.getStatus() != QuestStatus.START
+				|| state.getQuestVarById(0) != EREMITIA_SEARCH_STAGE) {
+			return requestedNpcId;
+		}
+		return QUEST_EREMITIA;
 	}
 
 	/**
