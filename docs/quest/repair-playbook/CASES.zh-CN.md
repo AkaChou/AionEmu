@@ -425,3 +425,18 @@
 - 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：台账 EVIDENCE_BLOCKED 从 1,069 行骤降至 432 行（-637 行），INTENTIONAL_CLIENT_ONLY 规范提升至 1,532 行；全库 6,200 个任务无新缺陷。
 - 复用边界：适用于所有生产数据已形成业务闭环但在客户端 HTML 中残留废页的任务分类治理。
+
+## 8.30 道具起手任务 use-item 路由补齐与第 4 页接取确认分类治理
+
+- Pattern ID：`ITEM_START_USE_ITEM_REPAIR_AND_PAGE4_TAXONOMY`。
+- 代表任务：1197、1198、80008、80009 道具起手；2289、2367、2411、2443、2448、2922、3088、3936、3937、3938、4940、4941 等 12 个历史遗留 QUEST_REFUSE_4 清除。
+- 搜索症状：台账中 `no in-repo evidence proves the dialog/item edge that opens the ask-accept window for this quest`（页面 4 未到达）大量聚集。
+- 玩家可见症状：右键使用背包中的奥德精炼法（182200558）、盗贼团书信（182200559）等道具时无响应或无法弹出接取窗口；部分任务对话点击接受时误显拒绝页或报 load fail。
+- 根因：
+  1. 真实道具起手任务（1197/1198/80008/80009）已在 items 模板中声明 `<queststart questid="...">`，但生产 XML 缺失 `<use-item>` 触发器以显示 `SHOW_ASK_QUEST_ACCEPT_WINDOW`（页面 4）；
+  2. 历史遗留的批量脚本误将动作码 1007（ASK_QUEST_ACCEPT）映射为页面 1007（QUEST_REFUSE_4），覆盖了 `NPC_START` 展开的标准第 4 页；
+  3. 自动起手（enter-zone/level-up）与阵营委托免挂接取对话，其 HTML 中的页面 4 实为未实装模板资产。
+- 修复层：生产 XML 与台账分类器。生产 XML 为道具起手任务补齐 `<use-item>` 路由，清除 12 处历史遗留 `QUEST_REFUSE_4` 覆盖；分类器完善第 4 页在自动起手、阵营任务及宏展开下的归类。
+- 修改文件：`1197.xml`、`1198.xml`、`80008.xml`、`80009.xml`、12 个清理 XML、`build_unresolved_inventory.py`、`unresolved-inventory.csv`。
+- 验证命令和结果：`EarlyElyosQuestRegressionTest`（17 单测全绿）；`ProductionCatalogWhitelistVerificationTest`（6,200 个生产任务编译 0 错误、0 白名单违规）；台账 EVIDENCE_BLOCKED 从 432 行降至 364 行（净降 68 行，页面 4 阻断彻底归零）。
+- 复用边界：适用于一切由背包物品触发接取的任务与宏展开被显式错误覆盖的常规任务。

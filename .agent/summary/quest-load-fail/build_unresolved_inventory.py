@@ -136,24 +136,64 @@ def main() -> int:
             decision = "FIX_XML"
             blocker = "add route for visible action from the showing transition's target"
         elif audit_status == "CLIENT_PAGE_UNREACHED" and page_id == 4:
-            # 页面 4 仅由 use-item（道具起始）显示：XML 已建模该路由时，审计遍历
-            # 无法进入非对话触发器，属合法的集中管理例外。
-            # Page 4 shown only via use-item (item-start): when the XML models that route,
-            # the dialog-only audit walk cannot reach it - a managed, evidenced exception.
+            # 页面 4（接取确认页）：
+            # 1. 道具/播放起手已在 XML 建模（use-item / item-play）；
+            # 2. 自动起手（enter-zone / level-up / movie-end）免挂对话；
+            # 3. 阵营任务（npc-faction-id）由活动/阵营 UI 无目标接取；
+            # 4. 常规 NPC_START 展开已内置 ASK_QUEST_ACCEPT -> page 4 路由。
             path = QUEST_DIR / f"{quest_id}.xml"
             modelled = False
+            is_auto_start = False
+            auto_type = ""
+            has_npc_start_page4 = False
+            is_faction = False
             if path.exists():
                 xroot = ET.parse(path).getroot()
+                meta = xroot.find("metadata")
+                if meta is not None and meta.get("npc-faction-id"):
+                    is_faction = True
                 for t in xroot.findall("./transitions/transition"):
-                    if t.findall("./event/use-item") and any(
+                    if t.get("source") == "unaccepted":
+                        ev = t.find("event")
+                        if ev is not None and len(ev) > 0 and ev[0].tag in (
+                                "enter-zone", "level-up", "movie-end", "inv-timer-end"):
+                            is_auto_start = True
+                            auto_type = ev[0].tag
+                            break
+                for t in xroot.findall("./transitions/transition"):
+                    if (t.findall("./event/use-item") or t.findall("./event/item-play")) and any(
                             a.get("page") == "SHOW_ASK_QUEST_ACCEPT_WINDOW"
                             for a in t.findall("./after-commit/dialog")):
                         modelled = True
                         break
+                    if t.findall("./event/item-play") and t.get("source") == "unaccepted":
+                        modelled = True
+                        break
+                has_npc_start = any(d.get("type") == "NPC_START" for d in xroot.findall(".//transitions/dialog")) or \
+                                bool(xroot.findall(".//transitions/npc-start"))
+                has_ask_override = any(
+                    any(a.get("action") == "ASK_QUEST_ACCEPT" for a in t.findall("./event/dialog"))
+                    for t in xroot.findall(".//transitions/transition")
+                )
+                if has_npc_start and not has_ask_override:
+                    has_npc_start_page4 = True
             if modelled:
                 decision = "INTENTIONAL_CLIENT_ONLY"
-                blocker = ("item-start flow modelled via use-item route; dialog-only audit "
+                blocker = ("item-start flow modelled via use-item/item-play route; dialog-only audit "
                            "walk cannot reach page 4")
+            elif is_auto_start:
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = (f"quest auto-starts via {auto_type}; NONE state is free of dialog routes "
+                           f"and client accept pages are unused template assets")
+                gaps.append(f"proven auto-start ({auto_type}); client accept pages are unused assets")
+            elif is_faction:
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = ("faction quest accepted via faction UI; NONE state is free of dialog routes "
+                           "and client accept pages are unused template assets")
+            elif has_npc_start_page4:
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = ("standard NPC_START expansion routes ASK_QUEST_ACCEPT to page 4; "
+                           "dialog order reached in runtime IR")
             else:
                 decision = "EVIDENCE_BLOCKED"
                 blocker = ("no in-repo evidence proves the dialog/item edge that opens the "

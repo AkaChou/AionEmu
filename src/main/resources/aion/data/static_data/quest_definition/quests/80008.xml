@@ -39,6 +39,34 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <use-item item-id="182214006"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 798415 接取（handler targetId==0 分支的活动 UI 接取以 NPC 对话表达） -->
     <transition source="unaccepted" target="started">
       <event>
