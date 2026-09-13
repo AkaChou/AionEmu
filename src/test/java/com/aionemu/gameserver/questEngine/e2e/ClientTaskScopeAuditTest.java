@@ -10,6 +10,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,13 +47,24 @@ class ClientTaskScopeAuditTest {
 	@Test
 	void missingQuestPageBehindReachableActionIsFlagged() throws Exception {
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
-		CompiledQuestDefinition definition = definition(1198);
-		// 1198 在 NPC 点击（USE_OBJECT，始终可达）后显示 SELECT2(1352)，而该任务 html 无此段落。
-		QuestTransition route = definition.definition().transitions().stream()
-			.filter(candidate -> candidate.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.ShowQuestDialog(int dialogId)
-					&& dialogId == QuestDialogPage.SELECT2.id()))
-			.findFirst().orElseThrow();
+		String xml = """
+			<?xml version="1.0" encoding="UTF-8"?>
+			<quest-definition id="1198" version="1">
+			  <metadata name="MissingPage" display-name-id="1" min-level="1" max-level="10" category="QUEST">
+			    <races><race id="ELYOS"/></races>
+			  </metadata>
+			  <nodes><node label="unaccepted" status="NONE"/></nodes>
+			  <transitions>
+			    <transition source="unaccepted" target="unaccepted">
+			      <event><talk-to-npc npc-id="203098" dialog-id="31"/></event>
+			      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+			    </transition>
+			  </transitions>
+			</quest-definition>
+			""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		QuestTransition route = definition.definition().transitions().getFirst();
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, route, oracle);
 		assertEquals(QuestE2eStatus.PAGE_NOT_IN_TASK_HTML, row.status(), row.reason());
 	}

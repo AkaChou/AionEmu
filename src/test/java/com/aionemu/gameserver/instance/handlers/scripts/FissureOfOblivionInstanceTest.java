@@ -116,7 +116,7 @@ class FissureOfOblivionInstanceTest {
 		assertTrue(nodes(PORTAL_TEMPLATES, "//portal_dialog[@npc_id='834194']/portal_path").getLength() > 0);
 		assertEquals(1, nodes(QUEST_DEFINITION,
 				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='QUEST_SELECT']").getLength());
-		assertEquals(1, nodes(QUEST_DEFINITION,
+		assertEquals(2, nodes(QUEST_DEFINITION,
 				"//transition[@source='s4']/after-commit/dialog[@page='SELECT5_1_1']").getLength());
 		assertEquals(1, nodes(QUEST_DEFINITION,
 				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='SELECT5_1']").getLength());

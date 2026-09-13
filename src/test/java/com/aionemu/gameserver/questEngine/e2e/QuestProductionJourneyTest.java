@@ -3,9 +3,11 @@ package com.aionemu.gameserver.questEngine.e2e;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
+import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyExecutor;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyPlanner;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,13 +71,19 @@ class QuestProductionJourneyTest {
 	}
 
 	@Test
-	void executesClientLocalFinishAndDeterministicObjectDropsFromProductionXml() throws Exception {
+	void executesFinishDialogAndDeterministicObjectDropsFromProductionXml() throws Exception {
 		CompiledQuestDefinition definition = definition(1103);
 		QuestProductionJourneyPlanner.Result planned = new QuestProductionJourneyPlanner().plan(definition, oracle);
 
 		assertTrue(planned.planned(), () -> String.valueOf(planned.failure()));
 		assertFalse(planned.plan().initialInventory().containsKey(182200201));
 		assertEquals(1, planned.plan().steps().stream()
+			.filter(step -> step.kind() == QuestProductionJourneyPlanner.StepKind.PAGE_ACTION)
+			.filter(step -> step.transition().event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 203057
+				&& talk.dialogId() == QuestDialogAction.FINISH_DIALOG.id())
+			.count());
+		assertEquals(0, planned.plan().steps().stream()
 			.filter(step -> step.kind() == QuestProductionJourneyPlanner.StepKind.CLIENT_LOCAL_FINISH_DIALOG).count());
 		assertEquals(3, planned.plan().steps().stream()
 			.filter(step -> step.kind() == QuestProductionJourneyPlanner.StepKind.USE_OBJECT_DROP).count());
@@ -88,15 +96,21 @@ class QuestProductionJourneyTest {
 			.execute(definition, oracle, planned.plan());
 
 		assertTrue(executed.completed(), () -> String.valueOf(executed.failure()));
-		int localFinishIndex = java.util.stream.IntStream.range(0, planned.plan().steps().size())
+		int finishDialogIndex = java.util.stream.IntStream.range(0, planned.plan().steps().size())
 			.filter(index -> planned.plan().steps().get(index).kind()
-				== QuestProductionJourneyPlanner.StepKind.CLIENT_LOCAL_FINISH_DIALOG)
+				== QuestProductionJourneyPlanner.StepKind.PAGE_ACTION)
+			.filter(index -> planned.plan().steps().get(index).transition().event()
+				instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 203057
+				&& talk.dialogId() == QuestDialogAction.FINISH_DIALOG.id())
 			.findFirst().orElseThrow();
-		var localFinish = executed.steps().get(localFinishIndex);
-		assertFalse(localFinish.outcome().handled());
-		assertFalse(localFinish.outcome().stateChanged());
-		assertTrue(localFinish.outcome().packets().isEmpty());
-		assertEquals(0, localFinish.page());
+		var finishDialog = executed.steps().get(finishDialogIndex);
+		assertTrue(finishDialog.outcome().handled());
+		assertFalse(finishDialog.outcome().failed());
+		assertEquals(0, finishDialog.page());
+		assertTrue(finishDialog.outcome().packets().stream()
+			.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW
+				&& packet.dialogId() == 0));
 		assertEquals(List.of(1, 2, 3), java.util.stream.IntStream.range(0, planned.plan().steps().size())
 			.filter(index -> planned.plan().steps().get(index).kind()
 				== QuestProductionJourneyPlanner.StepKind.USE_OBJECT_DROP)

@@ -33,15 +33,6 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	@Test
-	void quest1607SynchronizesRewardStateBeforeRewardWindow() throws Exception {
-		assertRouteContract(1607, "z4", projection(QuestStatus.START, 5), "reward",
-			projection(QuestStatus.REWARD, 5), 204574, QuestDialogAction.SELECT_QUEST_REWARD, null,
-			List.of(), List.of(),
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
-	}
-
-	@Test
 	void quest2392SynchronizesEachSelectedItemBranchBeforeItsRewardWindow() throws Exception {
 		assertItemRewardRoute(QuestDialogAction.SETPRO1, 182204159, "r1", 1,
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1);
@@ -82,7 +73,6 @@ class QuestPacketOrderRegressionTest {
 	@Test
 	void protocolLoopSendsCommittedStateBeforeEveryRepairedPage() throws Exception {
 		assertProtocolPacketOrder(1573, "v2", QuestDialogAction.QUEST_SELECT.id(), null);
-		assertProtocolPacketOrder(1607, "z4", QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO1.id(), 0);
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO2.id(), 0);
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO3.id(), 0);

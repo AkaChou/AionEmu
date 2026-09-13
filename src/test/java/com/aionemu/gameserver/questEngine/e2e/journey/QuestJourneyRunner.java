@@ -2,6 +2,8 @@ package com.aionemu.gameserver.questEngine.e2e.journey;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
@@ -119,13 +121,21 @@ public final class QuestJourneyRunner implements AutoCloseable {
 	}
 
 	/**
-	 * 通过真实 {@code CM_DIALOG_SELECT} 与指定 NPC 开始一次交互，并种入 KnownList 权威对象。
+	 * 通过真实 {@code CM_DIALOG_SELECT} 与指定 NPC 开始一次交互，并种入 KnownList 权威对象；
+	 * NPC 任务行动作会先将虚拟客户端置于通用任务选择页，使请求携带真实 Aion 5.8 任务行
+	 * 点击所需的页面上下文。
 	 * Starts an interaction with the named NPC through a real {@code CM_DIALOG_SELECT} and exposes the authoritative
-	 * object through KnownList.
+	 * object through KnownList; the NPC quest-row action first places the virtual client on the generic quest-selection
+	 * page so the request carries the page context required by a real Aion 5.8 row click.
 	 */
 	public Step interact(int npcId, int actionId) {
 		int objectId = nextObjectId++;
 		runtime.world().seedInteractionNpc(npcId, objectId);
+		if (actionId == QuestDialogAction.QUEST_SELECT.id()) {
+			// A real row click sends QUEST_SELECT(31) from SELECT_QUEST(10), not from a closed page (0).
+			// 真实任务行点击从 SELECT_QUEST(10) 发送 QUEST_SELECT(31)，而不是从已关闭页面（0）发送。
+			runtime.state().showPage(QuestDialogPage.SELECT_QUEST.id());
+		}
 		return perform("npc:" + npcId + ":" + actionId,
 			() -> client.clickNpc(npcId, objectId, runtime.state().questId(), actionId));
 	}

@@ -196,7 +196,7 @@ public final class DataManager {
         DataManager manager = provider == null ? SingletonHolder.instance
                 : provider.getIfAvailable(() -> SingletonHolder.instance);
         // 快路径：已加载时免锁直接返回 / Fast path: skip locking when already loaded.
-        if (!LOADED.get()) {
+        if (manager == SingletonHolder.instance && !LOADED.get()) {
             manager.load();
         }
         return manager;

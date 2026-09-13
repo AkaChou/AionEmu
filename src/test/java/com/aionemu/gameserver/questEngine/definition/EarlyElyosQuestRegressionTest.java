@@ -284,7 +284,7 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	@Test
-	void fossilCollectionPublishesProgressButFinalNpcStillChecksBothItems() {
+	void fossilCollectionPublishesProgressAndFinalNpcConsumesOnlyTheCollectedItem() {
 		CompiledQuestDefinition definition = load(1137);
 		QuestTransition collection = definition.definition().transitions().stream()
 			.filter(route -> route.sourceNode().equals("started")
@@ -297,9 +297,9 @@ class EarlyElyosQuestRegressionTest {
 		QuestTransition report = route(definition, "started", "reward",
 			new QuestEvent.TalkToNpc(203111, 39));
 		assertTrue(report.conditions().contains(new QuestCondition.HasItem(182200513, 1)));
-		assertTrue(report.conditions().contains(new QuestCondition.HasItem(182200512, 1)));
+		assertFalse(report.conditions().contains(new QuestCondition.HasItem(182200512, 1)));
 		assertTrue(report.actions().contains(new QuestAction.RemoveItem(182200513, 1)));
-		assertTrue(report.actions().contains(new QuestAction.RemoveItem(182200512, 1)));
+		assertFalse(report.actions().contains(new QuestAction.RemoveItem(182200512, 1)));
 	}
 
 	@Test

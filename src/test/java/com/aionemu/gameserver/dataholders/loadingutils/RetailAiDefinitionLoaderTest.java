@@ -317,7 +317,7 @@ class RetailAiDefinitionLoaderTest {
 			aiDirectory.toFile(), aiDirectory.resolve("npc-ai.xml").toFile(),
 			aiDirectory.resolve("ai-strings.xml").toFile(), aiDirectory.resolve("ai-areas.xml").toFile());
 		var templatePattern = java.util.regex.Pattern.compile(
-			"<npc_template\\b[^>]*\\bnpc_id=\"(\\d+)\"[^>]*\\bai=\"(?:bomb|summoner)\"");
+			"<npc_template\\b(?=[^>]*\\bai=\"(?:bomb|summoner)\")(?=[^>]*\\bnpc_id=\"(\\d+)\")[^>]*>");
 		int supported = 0;
 		try (var paths = Files.list(Path.of("src/main/resources/aion/data/static_data/npcs"))) {
 			for (Path path : paths.filter(file -> file.getFileName().toString()

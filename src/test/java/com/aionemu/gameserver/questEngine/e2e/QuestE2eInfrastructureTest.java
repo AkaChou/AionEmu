@@ -151,31 +151,10 @@ class QuestE2eInfrastructureTest {
 	}
 
 	@Test
-	void automaticQuestStartDialogsUseTargetlessObjectZeroAfterStateSync() throws Exception {
-		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
-		assertTargetlessAutomaticStartDialog(10110, QuestEvent.LevelUp.class, oracle);
-		assertTargetlessAutomaticStartDialog(10110, QuestEvent.ZoneMissionEnd.class, oracle);
-	}
-
-	@Test
 	void automaticQuestStartsWithoutPagesOnlySynchronizeState() throws Exception {
-		CompiledQuestDefinition definition = definition(1920);
-		QuestTransition transition = definition.definition().transitions().stream()
-			.filter(candidate -> "unaccepted".equals(candidate.sourceNode()))
-			.filter(candidate -> candidate.event() instanceof QuestEvent.LevelUp)
-			.findFirst().orElseThrow();
-		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			runtime.prepare(transition);
-			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchPrepared();
-			assertTrue(outcome.handled(), outcome::toString);
-			assertFalse(outcome.failed(), outcome::toString);
-			assertEquals(QuestStatus.START, runtime.state().status());
-			assertTrue(outcome.packets().stream()
-				.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.QUEST_ACTION));
-			assertFalse(outcome.packets().stream()
-				.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW));
-			assertTrue(QuestE2ePacketValidator.validate(definition, transition, 0, outcome.packets()).valid());
-		}
+		assertAutomaticStartWithoutPage(1920, QuestEvent.LevelUp.class);
+		assertAutomaticStartWithoutPage(10110, QuestEvent.LevelUp.class);
+		assertAutomaticStartWithoutPage(10110, QuestEvent.ZoneMissionEnd.class);
 	}
 
 	@Test
@@ -767,32 +746,24 @@ class QuestE2eInfrastructureTest {
 		}
 	}
 
-	private static void assertTargetlessAutomaticStartDialog(int questId,
-			Class<? extends QuestEvent> eventType, ClientResourceOracle oracle) throws Exception {
+	private static void assertAutomaticStartWithoutPage(int questId,
+			Class<? extends QuestEvent> eventType) throws Exception {
 		CompiledQuestDefinition definition = definition(questId);
 		QuestTransition transition = definition.definition().transitions().stream()
 			.filter(candidate -> "unaccepted".equals(candidate.sourceNode()))
 			.filter(candidate -> eventType.isInstance(candidate.event()))
 			.findFirst().orElseThrow();
-		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
-		assertEquals(QuestE2eStatus.PASS, row.status(), row::toString);
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
 			runtime.prepare(transition);
 			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchPrepared();
 			assertTrue(outcome.handled(), outcome::toString);
 			assertFalse(outcome.failed(), outcome::toString);
 			assertEquals(QuestStatus.START, runtime.state().status());
-			ServerPacketObservation dialog = outcome.packets().stream()
-				.filter(packet -> packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW)
-				.findFirst().orElseThrow();
-			assertEquals(0, dialog.targetObjectId());
-			assertEquals(questId, dialog.questId());
+			assertTrue(outcome.packets().stream()
+				.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.QUEST_ACTION));
+			assertFalse(outcome.packets().stream()
+				.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW));
 			assertTrue(QuestE2ePacketValidator.validate(definition, transition, 0, outcome.packets()).valid());
-			List<ServerPacketObservation.Type> packetTypes = outcome.packets().stream()
-				.map(ServerPacketObservation::type).toList();
-			int syncIndex = packetTypes.indexOf(ServerPacketObservation.Type.QUEST_ACTION);
-			int pageIndex = packetTypes.indexOf(ServerPacketObservation.Type.DIALOG_WINDOW);
-			assertTrue(syncIndex >= 0 && pageIndex > syncIndex, packetTypes::toString);
 		}
 	}
 

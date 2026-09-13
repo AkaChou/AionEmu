@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -39,8 +41,9 @@ class QuestNoHandlerShard3DefinitionTest {
 			new QuestReward("SELECTABLE_ITEM", 110551182, 1L),
 			new QuestReward("SELECTABLE_ITEM", 110601652, 1L)), meta.rewards());
 
-		// The four retail mobs (DF2A_KalnifSpotD_47/48_An, DF2A_ElementalWater4D_47/48_An)
-		// share one total kill counter of 10, matching the deleted Java handler.
+		// The four retail mobs share one total var0 counter of 10, matching the retail template.
+		assertTrue(compiled.definition().nodes().stream().anyMatch(node ->
+			node.label().equals("started") && node.projection().status() == QuestStatus.START));
 		Set<Integer> npcIds = compiled.definition().transitions().stream()
 			.map(QuestTransition::event).filter(e -> e instanceof QuestEvent.KillNpcSet)
 			.map(e -> ((QuestEvent.KillNpcSet) e).npcIds())
@@ -52,16 +55,18 @@ class QuestNoHandlerShard3DefinitionTest {
 		assertEquals(2, killRoutes.size());
 		QuestTransition counting = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 1)
 			.findFirst().orElseThrow();
-		assertEquals(new QuestCondition.VariableBelow("var1", 10), counting.conditions().get(0));
-		assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), counting.actions());
+		assertEquals("started", counting.targetNode());
+		assertEquals(new QuestCondition.VariableBelow("var0", 9), counting.conditions().get(0));
+		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), counting.actions());
 		QuestTransition finishing = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 0)
 			.findFirst().orElseThrow();
-		assertEquals(new QuestCondition.VariableAtLeast("var1", 10), finishing.conditions().get(0));
-		assertEquals("reward", finishing.targetNode());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), finishing.actions());
+		assertEquals(new QuestCondition.VariableAtLeast("var0", 9), finishing.conditions().get(0));
+		assertEquals(new QuestCondition.VariableBelow("var0", 10), finishing.conditions().get(1));
+		assertEquals("ready", finishing.targetNode());
+		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finishing.actions());
 
-		Map<String, Integer> rewardVars = varsOf(compiled, "reward");
-		assertEquals(1, rewardVars.get("var0"));
+		assertEquals(10, varsOf(compiled, "ready").get("var0"));
+		assertEquals(10, varsOf(compiled, "reward").get("var0"));
 		// Five selectable rewards -> five completion routes on npc 205164.
 		List<List<QuestAction>> completions = completionActions(compiled);
 		assertEquals(5, completions.size());

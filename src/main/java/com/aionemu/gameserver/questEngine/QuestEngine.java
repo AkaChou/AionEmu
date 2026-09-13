@@ -168,6 +168,11 @@ public class QuestEngine implements GameEngine {
 	public QuestEngine() {
 	}
 
+	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
+	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
+		return productionDispatcher.hasMatchingRoutes(event, questId);
+	}
+
 	QuestRuntimeComposition runtimeComposition() {
 		return runtimeComposition;
 	}

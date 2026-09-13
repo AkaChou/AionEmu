@@ -346,6 +346,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 				int objectId = request.objectId() > 0 ? request.objectId() : talk.interactionObjectId();
 				if (objectId > 0) {
 					state.interactWith(talk.npcId(), objectId);
+					world.player().rememberNpcQuestDialogSelection(objectId, definition.id());
 				}
 			}
 			case QuestEvent.UseItem use -> {
@@ -406,7 +407,11 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 */
 	private void seedEventAuthority(QuestEvent event) {
 		switch (event) {
-			case QuestEvent.TalkToNpc talk -> world.seedInteractionNpc(talk.npcId(), 900_000 + talk.npcId());
+			case QuestEvent.TalkToNpc talk -> {
+				int objectId = 900_000 + talk.npcId();
+				world.seedInteractionNpc(talk.npcId(), objectId);
+				world.player().rememberNpcQuestDialogSelection(objectId, definition.id());
+			}
 			case QuestEvent.UseItem use ->
 				facts.itemObjectId = use.itemObjectId() == 0 ? 800_000 + use.itemId() : use.itemObjectId();
 			case QuestEvent.ItemPlay itemPlay -> facts.itemObjectId = 800_000 + itemPlay.itemId();

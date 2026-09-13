@@ -7,6 +7,8 @@ import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_SHOW_DIALOG;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_USE_ITEM;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eWorldFixture;
@@ -149,6 +151,9 @@ public final class QuestProtocolLoop implements AutoCloseable {
 	}
 
 	private boolean dialog(ClientActionRequest request) {
+		if (request.actionId() == QuestDialogAction.QUEST_SELECT.id() && runtime.state().currentPage() == 0) {
+			runtime.state().showPage(QuestDialogPage.SELECT_QUEST.id());
+		}
 		ByteBuffer buffer = ByteBuffer.allocate(18).order(ByteOrder.LITTLE_ENDIAN)
 			.putInt(request.objectId())
 			.putShort((short) request.actionId())

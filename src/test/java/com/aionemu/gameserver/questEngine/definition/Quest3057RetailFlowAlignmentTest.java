@@ -33,11 +33,13 @@ class Quest3057RetailFlowAlignmentTest {
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition start = route(definition, "unaccepted", START_AND_REWARD_NPC, QuestDialogAction.QUEST_SELECT);
-		assertEquals("started", start.targetNode());
+		assertEquals("unaccepted", start.targetNode());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE.id())),
 			start.afterCommit());
 		assertTrue(routes(definition, "unaccepted", LURED_NPC).isEmpty());
-		assertTrue(routes(definition, "started", START_AND_REWARD_NPC).isEmpty());
+		assertEquals(List.of(QuestDialogAction.FINISH_DIALOG.id()),
+			routes(definition, "started", START_AND_REWARD_NPC).stream()
+			.map(Quest3057RetailFlowAlignmentTest::dialogId).toList());
 		assertTrue(routes(definition, "started", LURED_NPC).isEmpty());
 		assertTrue(routes(definition, "reward", LURED_NPC).isEmpty());
 
@@ -52,7 +54,7 @@ class Quest3057RetailFlowAlignmentTest {
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), reached.afterCommit());
 		assertFalse(definition.transitions().stream().anyMatch(candidate -> candidate.event() instanceof QuestEvent.EnterZone));
 
-		QuestTransition report = route(definition, "reward", START_AND_REWARD_NPC, QuestDialogAction.USE_OBJECT);
+		QuestTransition report = route(definition, "reward", START_AND_REWARD_NPC, QuestDialogAction.QUEST_SELECT);
 		assertEquals("reward", report.targetNode());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			report.afterCommit());
@@ -65,7 +67,7 @@ class Quest3057RetailFlowAlignmentTest {
 			.filter(candidate -> dialogId(candidate) >= QuestDialogAction.SELECTED_QUEST_REWARD1.id())
 			.filter(candidate -> dialogId(candidate) <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id())
 			.toList();
-		assertEquals(13, completions.size());
+		assertEquals(16, completions.size());
 		assertTrue(completions.stream().allMatch(candidate -> candidate.targetNode().equals("complete")
 			&& candidate.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance)
 			&& candidate.afterCommit().equals(List.of(

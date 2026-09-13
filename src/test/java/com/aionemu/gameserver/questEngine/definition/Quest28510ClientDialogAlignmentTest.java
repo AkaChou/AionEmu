@@ -80,7 +80,7 @@ class Quest28510ClientDialogAlignmentTest {
 			transition.conditions().size() == 1
 				&& transition.conditions().getFirst() instanceof QuestCondition.QuestVariableIs));
 
-		assertPage(definition, "reward", REWARD_NPC, QuestDialogAction.USE_OBJECT, QuestDialogPage.DEFAULT_SUCCESS);
+		assertPage(definition, "reward", REWARD_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.DEFAULT_SUCCESS);
 		assertPage(definition, "reward", REWARD_NPC, QuestDialogAction.SELECT_QUEST_REWARD,
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1);
 		assertTrue(route(definition, "reward", REWARD_NPC, QuestDialogAction.SELECTED_QUEST_REWARD1)

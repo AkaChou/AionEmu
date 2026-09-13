@@ -46,9 +46,9 @@ class TemplateShardWriterTest {
 			"npc_id", shardDir, "npc_template", 3);
 
 		assertEquals(3, shards.size());
-		assertEquals("npc_template_250001_250003.xml", shards.get(0).getName());
-		assertEquals("npc_template_250004_250006.xml", shards.get(1).getName());
-		assertEquals("npc_template_250007_250007.xml", shards.get(2).getName());
+		assertEquals("npc_template_250001_250002.xml", shards.get(0).getName());
+		assertEquals("npc_template_250003_250004.xml", shards.get(1).getName());
+		assertEquals("npc_template_250005_250007.xml", shards.get(2).getName());
 		long smallestShard = shards.stream().mapToLong(File::length).min().orElseThrow();
 		long largestShard = shards.stream().mapToLong(File::length).max().orElseThrow();
 		assertTrue(largestShard < smallestShard * 2,
@@ -56,9 +56,10 @@ class TemplateShardWriterTest {
 		String firstShard = Files.readString(shards.get(0).toPath(), StandardCharsets.UTF_8);
 		assertTrue(firstShard.startsWith("<?xml"));
 		assertTrue(firstShard.contains("<npc_templates>"));
+		String secondShard = Files.readString(shards.get(1).toPath(), StandardCharsets.UTF_8);
 		// XMLEventWriter 会把自闭合子元素展开为 <stats maxHp="10"></stats>，断言按展开形式匹配
 		// XMLEventWriter expands self-closing children to <stats maxHp="10"></stats>; assert the expanded form
-		assertTrue(firstShard.contains("<stats maxHp=\"10\">"), "nested child elements must survive the split");
+		assertTrue(secondShard.contains("<stats maxHp=\"10\">"), "nested child elements must survive the split");
 		int total = 0;
 		for (File shard : shards) {
 			total += countElements(shard, "npc_template");
@@ -157,7 +158,7 @@ class TemplateShardWriterTest {
 		List<File> shards = TemplateShardWriter.writeShards(List.of(first, second), "npc_templates", "npc_template",
 			"npc_id", shardDir, "npc_template", 2);
 
-		assertEquals(List.of("npc_template_1_4.xml", "npc_template_5_5.xml"),
+		assertEquals(List.of("npc_template_1_2.xml", "npc_template_3_5.xml"),
 			shards.stream().map(File::getName).toList());
 	}
 

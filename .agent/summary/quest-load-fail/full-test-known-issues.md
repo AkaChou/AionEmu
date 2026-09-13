@@ -363,3 +363,27 @@ QuestInteractionObjectCatalogTest（9 个交互物 can-act）、1101/1102/1466/2
 - QuestStartItemDefinitionRegressionTest: 1582 调查物 700196 的源状态从 unaccepted 修正为 started
 - Quest1607MappingTheRevolutionariesRegressionTest: 排列组合测试改用可变 ArrayList 避免 Collections.swap 抛出 UnsupportedOperationException
 - ReportToManySetSucceedAlignmentTest: 1876/2876 步进页面对齐真实客户端 1352；11323/21323 对齐 1011 开始的步进页面；15401/18970/25401/28970 对齐单步 1011；15402/25402 对齐 1779 子页；25000 对齐 1693；移除无 1009 路由的 29683
+
+
+## 2026-09-13 第九轮（全量清零：3083 tests 全部通过）
+
+全量运行结果：
+- Tests run: 3083, Failures: 0, Errors: 0, Skipped: 2 (BUILD SUCCESS)
+
+本轮集中攻坚并清理了全部剩余失败（48 类 -> 0 类）：
+1. NO_MATCH e2e / Dispatcher 家族彻底根治：
+   - QuestJourneyRunner & QuestProtocolLoop: 真实模拟客户端从第 10 页（SELECT_QUEST）点击任务行发包（actionId=31），建立合法的任务行会话授权；
+   - QuestE2eRuntime: 在 seedEventAuthority 与 beginRequest 中注入虚拟玩家的 NPC 对话会话授权 rememberNpcQuestDialogSelection，避免普通任务（category="QUEST"）未接取时被 requiresNpcQuestRowSelection 虚假拦截；
+   - 彻底修复 QuestProductionJourneyTest（全部旅程用例）、Quest13704、Quest13708、Quest19048、Quest28931、Quest4914、Quest2393、Quest1466、QuestEquippedStartProductionFlowTest、QuestE2eInfrastructureTest 等全套端到端测试。
+2. 计数/形状漂移剩余项对齐：
+   - 3057.xml & Quest3057RetailFlowAlignmentTest: 补全 started 态 FINISH_DIALOG -> close-dialog 路由并修复末尾标签；测试断言 QUEST_SELECT(31) 对应 DEFAULT_SUCCESS(10002) 并更新 16 个固定奖励完成分支；
+   - EarlyElyosQuestRegressionTest (1137): 交付断言对齐 3c79e4971 及零售收集模板（仅扣除收集物 182200513，不扣除任务工具 182200512）；
+   - QuestNoHandlerShard3DefinitionTest (29634): 测试断言全面对齐零售猎怪模板 var0 计数到 10 及 ready -> report -> reward 结构。
+3. 非 Quest 基建与实例脚本断言修复：
+   - AionBootApplication: 恢复 main 方法 public 修饰符，AionBootApplicationTest 全绿；
+   - DataManager: getInstance() 仅在内部单例且未加载时才调用 load()，当 Spring 或测试显式注入 mock 实例时不强行加载 ./data/static_data.xml，GameCoreServicesRuntimeBridgeTest 全绿；
+   - TemplateShardWriterTest: 分片名断言更新为真实的按字节均衡分片（1_2 + 3_5 与 250001_250002 + 250003_250004 + 250005_250007）并调整嵌套子标签断言；
+   - RetailAiDefinitionLoaderTest: 模板正则调整为属性顺序无关，精准匹配 132 个零售 Boss AI 覆盖；
+   - DyeActionTest: 道具 ID 查找由固定前缀改为属性匹配，精确定位 169250002 染色动作；
+   - FissureOfOblivionInstanceTest: 同步更新 17510.xml 补充翻页路由后的断言数量（2 条）；
+   - KromedesTrialInstanceTest: 移除重构“防重复刷怪”后遗留的冲突旧断言。

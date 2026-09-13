@@ -126,6 +126,9 @@ class QuestAdditionalCapabilityDefinitionTest {
 						      <grant-selected-reward reward-index="0"/>
 						      <complete-quest reward-index="0"/>
 						    </actions>
+						    <after-commit>
+						      <sync-quest-state mode="COMPLETION"/>
+						    </after-commit>
 						  </transition></transitions>
 						</quest-definition>
 

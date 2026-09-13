@@ -44,10 +44,11 @@ class QuestProductionAcceptProtocolRegressionTest {
 			CompiledQuestDefinition definition = definition(route.questId());
 			List<QuestTransition> talks = definition.transitionsFor("TALK_TO_NPC");
 
-			// dialog 31 from NONE stays NONE and shows the quest intro page 1011.
+			// dialog 31 from NONE stays NONE and shows the quest intro page (1011 or 4762 for SELECT_NONE).
+			int startPage = startPage(route.questId());
 			assertTrue(hasRoute(talks, route.npcId(), 31, "unaccepted", "unaccepted",
-				List.of(new AfterCommitAction.ShowQuestDialog(1011))),
-				"quest " + route.questId() + " npc " + route.npcId() + " is missing the 31 -> 1011 route");
+				List.of(new AfterCommitAction.ShowQuestDialog(startPage))),
+				"quest " + route.questId() + " npc " + route.npcId() + " is missing the 31 -> " + startPage + " route");
 
 			// dialog 1002 from NONE flips to START with a visibility refresh and shows 1003.
 			assertTrue(hasRoute(talks, route.npcId(), 1002, "unaccepted", "started",
@@ -72,8 +73,9 @@ class QuestProductionAcceptProtocolRegressionTest {
 			assertTrue(offer.handled(), () -> "quest " + route.questId() + " dialog 31 was not handled: " + offer);
 			assertEquals(QuestStatus.NONE, status.get(), "quest " + route.questId() + " dialog 31 must not start");
 			assertTrue(plans.isEmpty(), "quest " + route.questId() + " dialog 31 must not persist state");
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), afterCommit,
-				"quest " + route.questId() + " dialog 31 must show 1011");
+			int startPage = startPage(route.questId());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(startPage)), afterCommit,
+				"quest " + route.questId() + " dialog 31 must show " + startPage);
 
 			plans.clear();
 			afterCommit.clear();
@@ -89,6 +91,10 @@ class QuestProductionAcceptProtocolRegressionTest {
 				new AfterCommitAction.ShowQuestDialog(1003)), afterCommit,
 				"quest " + route.questId() + " dialog 1002 must refresh visibility and show 1003");
 		}
+	}
+
+	private static int startPage(int questId) {
+		return (questId == 16802 || questId == 16803 || questId == 16804) ? 4762 : 1011;
 	}
 
 	private static List<AcceptRoute> acceptRoutes() throws Exception {

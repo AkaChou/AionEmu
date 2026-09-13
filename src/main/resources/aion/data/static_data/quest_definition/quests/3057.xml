@@ -31,7 +31,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="798213" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="798213" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
         <attack-npc npc-id="214576"/>
@@ -40,21 +40,20 @@
         <watch-lured-npc-coordinate x="1691.41" y="219.09" z="72.62" radius="30" completion="KILL"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798213" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <transition source="started" target="reward">
       <event>
         <npc-reach-target/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798213" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="798213" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -68,5 +67,6 @@
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
-    </transition></transitions>
+    </transition>
+  </transitions>
 </quest-definition>

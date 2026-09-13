@@ -45,7 +45,7 @@ class Quest2841RetailAlignmentTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
 			route(definition, "hunting-complete", "hunting-complete", 278003, 31).afterCommit());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)),
 			route(definition, "hunting-complete", "reward", 278003, 1009).afterCommit());
 		assertEquals(16, definition.transitions().stream()

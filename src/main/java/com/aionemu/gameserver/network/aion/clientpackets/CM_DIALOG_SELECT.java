@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -146,7 +147,8 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				return;
 			}
 			if (questId > 0 && isNormalQuestOutsideActiveProgress(metadata,
-				player.getQuestStateList().getQuestState(questId))) {
+				player.getQuestStateList().getQuestState(questId))
+				&& !questEngine.hasMatchingRoutes(new QuestEvent.QuestDialog(dialogId), questId)) {
 				player.clearNpcQuestDialogSelection();
 				return;
 			}

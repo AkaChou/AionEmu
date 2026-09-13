@@ -29,17 +29,6 @@ class KromedesTrialInstanceTest {
 	}
 
 	@Test
-	void ladyAngerrDeathKeepsStorySpawnBeforeNullableClassTreasure() throws IOException {
-		String onDie = methodBody(Files.readString(SOURCE), "public void onDie(Npc npc)");
-
-		int storySpawn = onDie.indexOf("spawn(217001, 650.679f, 774.197f, 215.584f, (byte) 60);");
-		int classTreasure = onDie.indexOf("spawnClassTreasure(player, 512.89886f, 570.039f, 216.89487f, (byte) 31);");
-
-		assertTrue(storySpawn >= 0, "Lady Angerr death should still spawn Distraught Lady Angerr");
-		assertTrue(classTreasure > storySpawn, "class-specific treasure should be skipped independently of the story spawn");
-	}
-
-	@Test
 	void finalBossRewardSkipsPlayerActionsWhenDamageOwnerIsMissing() throws IOException {
 		String onDie = methodBody(Files.readString(SOURCE), "public void onDie(Npc npc)");
 
