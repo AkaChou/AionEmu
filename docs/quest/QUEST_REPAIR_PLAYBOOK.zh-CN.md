@@ -8,6 +8,7 @@
 
 - [任务 XML 编写指南](WRITING_GUIDE.zh-CN.md)：XML 状态图、领域积木和字段顺序。
 - [客户端任务对话映射说明](client-dialog-mapping/README.zh-CN.md)：客户端 HTML、页面、动作和旧模板合同。
+- [无任务上下文 NPC 对话专项记录](NPC_DIALOG_CONTEXT.zh-CN.md)：关闭普通任务标记后 `questId==0` 的协议证据、分流边界和回归矩阵。
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
 - [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
 - [客户端与运行时验收记录模板](../../.agent/summary/quest-acceptance/README.zh-CN.md)：人工验收证据字段和附件哈希要求。
