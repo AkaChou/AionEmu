@@ -213,7 +213,11 @@ public class QuestEngine implements GameEngine {
 
 	/**
 	 * 分发 NPC 对话事件；questId 为 0 时按 NPC 上注册的谈话任务依次尝试。
+	 * 客户端 NPC 对话选择没有任务上下文时，由 CM_DIALOG_SELECT 先按普通对话分流；
+	 * 这里的 questId==0 派发保留给任务交互物 AI 等仍需要 owner 路由的入口。
 	 * Dispatch an NPC dialog event; when questId is 0, try talk-quests registered on the NPC.
+	 * CM_DIALOG_SELECT routes client NPC selections without quest context to a plain dialog first;
+	 * this questId==0 dispatch remains for interaction-object AI and other callers that still need owner routing.
 	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否有处理器接管 / Whether a handler took over
@@ -245,13 +249,13 @@ public class QuestEngine implements GameEngine {
 
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				// 参考 legacy 引擎：按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
-				// 客户端可见/进行中/已授权的 owner 优先，随后回退到其余匹配 owner，
-				// 因此任何 NPC 的对话链都不会因为“必须先在任务列表里选一次”而点了没反应。
-				// Legacy-engine parity: try the NPC's quests in order and let the first owner that
-				// actually handles the action win. Client-visible, live, and authorized owners are
-				// preferred, then every remaining match, so no NPC dialog chain ever dead-ends behind a
-				// quest-row requirement.
+				// 参考 legacy 引擎：当调用方确实提供了 questId==0 的任务对话入口（交互物 AI 等）时，
+				// 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
+				// 客户端 NPC 对话选择没有任务上下文时已在 CM_DIALOG_SELECT 按普通对话处理，不会走到这里。
+				// Legacy-engine parity: when the caller really provides a questId==0 quest-dialog entry
+				// (interaction-object AI and similar), try the NPC's quests in order and let the first
+				// owner that actually handles the action win. Client NPC selections without quest context
+				// are already handled as plain dialogs by CM_DIALOG_SELECT and never reach this path.
 				for (int candidateId : npcDialogDispatchOwners(player, npc, event)) {
 					var result = typed.dispatch(event, player.getObjectId(), candidateId,
 						QuestDispatchContract.EXCLUSIVE);

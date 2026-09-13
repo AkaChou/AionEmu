@@ -64,9 +64,9 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * Determines whether the client sent a non-quest-row action from the generic quest-selection page.
 	 *
 	 * <p>关闭 {@code show_acquirable_normal_quest} 后，5.8 客户端可能携带或不携带候选任务 ID；
-	 * 第 10 页中只有选择任务（31）可以进入任务上下文。</p>
+	 * 第 10 页中的非任务行动作不能建立任务上下文，只有携带 questId&gt;0 的任务行选择（31）可以。</p>
 	 * <p>When {@code show_acquirable_normal_quest} is disabled, the 5.8 client may or may not attach a candidate
-	 * quest id; only quest selection (31) from page 10 may enter a quest context.</p>
+	 * quest id; only a quest-row selection (31) carrying questId&gt;0 can establish quest context on page 10.</p>
 	 *
 	 * @param dialogId 对话动作 ID / dialog action id
 	 * @param lastPage 客户端发包前所在页面 / page shown by the client before sending the packet
@@ -85,6 +85,40 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		return targetObjectId > 0 && questId > 0
 			&& lastPage == QuestDialogPage.SELECT_QUEST.id()
 			&& dialogId == QuestDialogAction.QUEST_SELECT.id();
+	}
+
+	/**
+	 * 判断 NPC 选择是否携带任务上下文；没有上下文的 NPC 选项按普通对话处理。
+	 * Determines whether an NPC selection carries quest context; NPC options without it are plain dialogs.
+	 *
+	 * @param npcTarget 目标是否为 NPC / whether the target is an NPC
+	 * @param routedQuestId 客户端携带或已记住的任务 ID / quest id from the client or remembered selection
+	 * @return 是否进入任务引擎 / whether to enter the quest engine
+	 */
+	static boolean hasQuestDialogContext(boolean npcTarget, int routedQuestId) {
+		return !npcTarget || routedQuestId != 0;
+	}
+
+	/**
+	 * 解析 NPC 对话应携带的任务上下文。
+	 * Resolves the quest context carried by an NPC dialog selection.
+	 *
+	 * <p>通用任务选择页上的非任务行动作永远不能建立任务上下文；其他页面优先使用客户端携带的任务
+	 * ID，客户端未携带时再使用同一 NPC 的任务行记忆。</p>
+	 * <p>A non-quest-row action from the generic quest-selection page can never establish quest context;
+	 * other pages prefer the client-provided quest id and fall back to the remembered quest-row selection.</p>
+	 *
+	 * @param clientQuestId 客户端携带的任务 ID / client-provided quest id
+	 * @param rememberedQuestId 同一 NPC 的任务行记忆 / remembered quest-row selection for the same NPC
+	 * @param genericQuestPage 是否为通用任务选择页上的非任务行动作 /
+	 *                         whether this is a non-quest-row action from the generic quest-selection page
+	 * @return 路由任务 ID，0 表示无任务上下文 / routed quest id; 0 means no quest context
+	 */
+	static int resolveRoutedQuestId(int clientQuestId, int rememberedQuestId, boolean genericQuestPage) {
+		if (genericQuestPage) {
+			return 0;
+		}
+		return clientQuestId > 0 ? clientQuestId : rememberedQuestId;
 	}
 
 	/**
@@ -161,19 +195,32 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		}
 		VisibleObject obj = player.getKnownList().getObject(targetObjectId);
 		if (obj instanceof Creature creature) {
-			if (isGenericQuestSelectionPage(dialogId, lastPage)) {
+			boolean npcTarget = obj instanceof Npc;
+			boolean genericQuestPage = npcTarget && isGenericQuestSelectionPage(dialogId, lastPage);
+			if (genericQuestPage) {
 				player.clearNpcQuestDialogSelection();
 			}
 			if (obj instanceof Npc && isNpcQuestRowSelection(targetObjectId, dialogId, lastPage, questId)) {
 				player.rememberNpcQuestDialogSelection(targetObjectId, questId);
 			}
-			int routedQuestId = questId > 0 ? questId
-				: obj instanceof Npc npc ? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
-			// 与 legacy 引擎一致：NPC 动作先进入任务引擎，再由 NPC AI / DialogService 兜底，
-			// 不再因为客户端停留在通用页而绕过任务路由。
-			// Legacy-engine parity: every NPC action goes through the quest engine first and then the
-			// NPC AI / DialogService, instead of bypassing quest routing for generic-page actions.
-			creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
+			int rememberedQuestId = obj instanceof Npc npc
+				? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
+			int routedQuestId = resolveRoutedQuestId(questId, rememberedQuestId, genericQuestPage);
+			// 没有任务上下文的 NPC 选项只是普通对话：关闭“未满65级普通任务标记”后，5.8 客户端
+			// 仍可能把 NPC 对话页上的任务按钮发回来；若绑定未接取任务 owner，服务端会下发带 questId
+			// 的任务页并触发 load fail。与“该 NPC 任务已全部完成”一致，跳过任务引擎，直接交给
+			// NPC AI / DialogService 做普通页面导航；有任务上下文时保持原有任务路由。
+			// An NPC option without quest context is a plain dialog: after the normal-quest marker is
+			// disabled, the 5.8 client can still send quest-page buttons with questId==0. Binding an
+			// unaccepted owner would send a quest-id-tagged page and make the client fail to load it.
+			// Match the "all quests on this NPC are done" behavior by skipping the quest engine and
+			// letting the NPC AI / DialogService navigate the page. A real quest context keeps the
+			// original quest routing.
+			if (hasQuestDialogContext(npcTarget, routedQuestId)) {
+				creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
+			} else {
+				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+			}
 		}
 	}
 }
