@@ -22,4 +22,13 @@ class StatCapUtilTest {
 		assertEquals(Integer.MIN_VALUE, StatCapUtil.getLowerCap(StatEnum.PVP_ATTACK_RATIO_PHYSICAL));
 		assertEquals(Integer.MAX_VALUE, StatCapUtil.getUpperCap(StatEnum.PVP_ATTACK_RATIO_PHYSICAL));
 	}
+
+	@Test
+	void keepsBoostSpellAttackDamageAboveShortRange() {
+		Stat2 stat = new AdditionStat(StatEnum.BOOST_SPELL_ATTACK, 10_000_000, null);
+
+		StatCapUtil.calculateBaseValue(stat, (byte) 1);
+
+		assertEquals(10_000_000, stat.getCurrent());
+	}
 }

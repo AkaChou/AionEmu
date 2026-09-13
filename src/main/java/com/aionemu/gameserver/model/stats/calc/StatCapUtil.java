@@ -144,6 +144,7 @@ public class StatCapUtil {
 		case BOOST_MAGICAL_SKILL:
 			value = 32767;
 			break;
+		case BOOST_SPELL_ATTACK:
 		case MAXHP:
 		case MAXMP:
 		case REGEN_HP:
