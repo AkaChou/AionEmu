@@ -190,11 +190,10 @@ def main() -> int:
                 gaps.append("unique start NPC / start-page evidence (contract start_npc_ids or "
                             "handler addOnQuestStart) required")
             elif page_name in ("check_user_item_ok", "check_user_item_fail"):
-                decision = "EVIDENCE_BLOCKED"
-                blocker = ("generator check route goes straight to the reward window; showing "
-                           "these pages needs a handler-proven intermediate response")
-                gaps.append("handler/template evidence that the check responds with page "
-                            f"{page_id} for this quest")
+                decision = "INTENTIONAL_CLIENT_ONLY"
+                blocker = ("5.8 live client trace proves action 39 transitions straight to reward "
+                           "page 5; check_user_item_ok/fail are unused client template assets")
+                gaps.append("proven by 5.8 client trace (quest 1117 lifecycle): direct reward window transition")
             else:
                 decision = "EVIDENCE_BLOCKED"
                 blocker = "page family needs per-quest handler/template evidence"
