@@ -55,7 +55,7 @@
     </transition>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6">
       <event>
-        <kill-npc npc-ids="213780"/>
+        <kill-npc npc-ids="213780 236929"/>
       </event>
     </kill-chain>
     <dialog type="NPC_REPORT" npc-id="833545" source="k6" target="reward" page="DEFAULT_SUCCESS"/>

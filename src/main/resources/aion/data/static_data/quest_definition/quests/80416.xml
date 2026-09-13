@@ -37,7 +37,7 @@
   <transitions>
     <dialog type="NPC_START" npc-id="831840" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <counter-grid>
-      <dimension field="var0" required="1" npc-ids="213778"/>
+      <dimension field="var0" required="1" npc-ids="213778 237265"/>
     </counter-grid>
     <dialog type="NPC_REPORT" npc-id="831840" source="k1" target="reward" page="SELECT2"/>
     <npc-complete npc-id="831840" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">

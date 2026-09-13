@@ -3628,10 +3628,10 @@
     <dialog type="NPC_START" npc-id="831027" source="unaccepted" target="a0b0c0d0e0" selection-sources="unaccepted a0b0c0d0e0" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="3" npc-ids="213776"/>
-      <dimension field="var1" required="3" npc-ids="213778"/>
-      <dimension field="var2" required="3" npc-ids="213802"/>
+      <dimension field="var1" required="3" npc-ids="213778 237265"/>
+      <dimension field="var2" required="3" npc-ids="213802 237267"/>
       <dimension field="var3" required="3" npc-ids="213779"/>
-      <dimension field="var4" required="1" npc-ids="213780"/>
+      <dimension field="var4" required="1" npc-ids="213780 236929"/>
     </counter-grid>
     <dialog type="NPC_REPORT" npc-id="831027" source="a3b3c3d3e1" target="reward" page="SELECT2"/>
     <npc-complete npc-id="831027" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

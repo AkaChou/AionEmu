@@ -14,6 +14,7 @@
     </rewards>
     <drops>
       <drop npc-id="213775" item-id="182204478" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="236924" item-id="182204478" chance="100" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

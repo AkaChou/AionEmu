@@ -944,9 +944,6 @@
       <spot x="155.542038" y="631.913574" z="505.000732" h="43" resolve_z="true"/>
       <spot x="134.963181" y="629.082031" z="505.000732" h="40" random_walk="2" resolve_z="true"/>
     </spawn>
-    <spawn npc_id="237263">
-      <spot x="750.495544" y="464.870758" z="318.06277" h="75"/>
-    </spawn>
     <spawn npc_id="236915">
       <spot x="499.708679" y="542.873108" z="449.000732" h="60" walker_id="R01_Mobpath_G_IDDF3_R01_ElementalWater2D_48" walker_index="0" resolve_z="true"/>
       <spot x="553.612854" y="560.318298" z="450.110870" h="75" resolve_z="true"/>
@@ -1279,12 +1276,6 @@
       <spot x="509.057281" y="673.818970" z="449.110870" h="105" random_walk="2" resolve_z="true"/>
       <spot x="549.463684" y="642.530151" z="453.110870" h="53" random_walk="2" resolve_z="true"/>
       <spot x="478.415497" y="555.616272" z="445.736176" h="30" random_walk="2" resolve_z="true"/>
-    </spawn>
-    <spawn npc_id="236925" respawn_time="60">
-      <spot x="254.184067" y="699.625977" z="605.000732" h="115" resolve_z="true"/>
-    </spawn>
-    <spawn npc_id="236928" respawn_time="60">
-      <spot x="185.648148" y="721.275635" z="532.000732" h="100" resolve_z="true"/>
     </spawn>
   </spawn_map>
 </spawns>

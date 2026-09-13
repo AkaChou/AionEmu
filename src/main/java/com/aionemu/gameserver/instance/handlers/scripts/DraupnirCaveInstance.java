@@ -93,6 +93,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 213780: //Commander Bakarma.
+			case 236929: //Commander Bakarma.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
