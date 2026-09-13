@@ -539,6 +539,23 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcReportSuppressesRoutesOverriddenByExplicitTransitions() {
+		String transitions = """
+			<npc-report npc-id="203941" source="started" target="reward" page="1352"/>
+			<transition source="started" target="reward">
+			  <event><talk-to-npc npc-id="203941" dialog-id="1009"/></event>
+			  <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+			</transition>
+			""";
+		CompiledQuestDefinition compiled = compile(reportDefinition(transitions));
+		List<QuestTransition> routes = compiled.definition().transitions().stream()
+			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward"))
+			.toList();
+		assertEquals(1, routes.size(), "explicit 1009 route must suppress the npc-report generated 1009 route");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), routes.getFirst().afterCommit());
+	}
+
+	@Test
 	void npcReportRejectsInvalidPagesAndStatuses() {
 		String valid = reportDefinition(
 			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"1352\"/>");

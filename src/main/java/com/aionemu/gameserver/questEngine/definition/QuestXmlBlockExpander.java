@@ -506,11 +506,16 @@ final class QuestXmlBlockExpander {
 		}
 		rewardAfterCommit.add(new AfterCommitAction.ShowQuestDialog(
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-		return List.of(
+		List<QuestTransition> result = List.of(
 			talk(npcId, QuestDialogAction.QUEST_SELECT.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(page))),
 			talk(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id(), List.of(), List.of(), source, target, null,
 				List.copyOf(rewardAfterCommit)));
+		return result.stream().filter(transition -> {
+			QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
+			return !context.explicitDialogRoutes().contains(
+				new DialogRouteKey(transition.sourceNode(), talk.npcId(), talk.dialogId()));
+		}).toList();
 	}
 
 	private static List<QuestTransition> expandNpcItemReport(Context context, Element block) {
