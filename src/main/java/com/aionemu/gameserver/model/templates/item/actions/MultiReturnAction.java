@@ -11,9 +11,12 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.templates.teleport.MultiReturn;
 import com.aionemu.gameserver.model.templates.teleport.MultiReturnLocationList;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.MultiReturnService;
+import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 
@@ -40,6 +43,19 @@ public class MultiReturnAction extends AbstractItemAction {
 		return true;
 	}
 
+	public boolean canAct(Player player, int selectedMapIndex) {
+		MultiReturnLocationList returnData = getReturnData(selectedMapIndex);
+		if (returnData == null) {
+			return false;
+		}
+		if (TeleportService2.isAbyssEntryWorld(returnData.getWorldId())
+				&& !TeleportService2.meetsAbyssEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
+			return false;
+		}
+		return true;
+	}
+
 	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
@@ -47,6 +63,11 @@ public class MultiReturnAction extends AbstractItemAction {
 
 	/** 执行 / act. */
 	public void act(final Player player, final Item MultiReturn, final int SelectedMapIndex) {
+		MultiReturnLocationList returnData = getReturnData(SelectedMapIndex);
+		if (!canAct(player, SelectedMapIndex)) {
+			return;
+		}
+		final int worldId = returnData.getWorldId();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 				MultiReturn.getObjectId(), MultiReturn.getItemTemplate().getTemplateId(), 3000, 0, 0));
 		player.getController().cancelTask(TaskId.ITEM_USE);
@@ -71,24 +92,23 @@ public class MultiReturnAction extends AbstractItemAction {
 			public void run() {
 				player.getObserveController().removeObserver(observer);
 				if (player.getInventory().decreaseByObjectId(MultiReturn.getObjectId(), 1)) {
-					int MultiReturnId = getId();
-					com.aionemu.gameserver.model.templates.teleport.MultiReturn rItem = DataManager.MULTI_RETURN_ITEM_DATA
-							.getMultiReturnById(MultiReturnId);
-					if (rItem != null && rItem.getMultiReturnList() != null) {
-						MultiReturnLocationList ReturnData = rItem.getReturnDataById(SelectedMapIndex);
-						if (ReturnData != null) {
-							int ReturnCount = rItem.getMultiReturnList().size();
-							if (SelectedMapIndex <= (ReturnCount - 1)) {
-								int worldId = ReturnData.getWorldId();
-								int LocId = MultiReturnService.getTeleportWorldId(worldId, player.getRace());
-								MultiReturnService.Teleport(player, LocId, worldId);
-							}
-						}
+					int locId = MultiReturnService.getTeleportWorldId(worldId, player.getRace());
+					if (locId != 0) {
+						MultiReturnService.Teleport(player, locId, worldId);
 					}
 				}
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 						MultiReturn.getObjectId(), MultiReturn.getItemTemplate().getTemplateId(), 0, 1, 0));
 			}
 		}, 3000);
+	}
+
+	private MultiReturnLocationList getReturnData(int selectedMapIndex) {
+		MultiReturn multiReturn = DataManager.MULTI_RETURN_ITEM_DATA.getMultiReturnById(getId());
+		if (multiReturn == null || multiReturn.getMultiReturnList() == null
+				|| selectedMapIndex < 0 || selectedMapIndex >= multiReturn.getMultiReturnList().size()) {
+			return null;
+		}
+		return multiReturn.getReturnDataById(selectedMapIndex);
 	}
 }

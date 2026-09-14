@@ -84,6 +84,11 @@ public class TeleportService2 {
 
 	private static final int TELEPORT_DEFAULT_DELAY = 2200;
 	private static final int BEAM_DEFAULT_DELAY = 3000;
+	private static final int ABYSS_ENTRY_WORLD_ID = 400010000;
+	// 入场资格取决于系列任务终点：天族 1920->1921->1922->1044，魔族 2945->2946->2947->2042。
+	// Entry qualification is the terminal quest of each chain: 1920->1921->1922->1044 and 2945->2946->2947->2042.
+	private static final int ELYOS_ABYSS_ENTRY_QUEST_ID = 1044;
+	private static final int ASMODIAN_ABYSS_ENTRY_QUEST_ID = 2042;
 
 	/**
 	 * 按传送员模板将玩家传送到指定地点（含飞行传送与费用校验）。
@@ -179,6 +184,43 @@ public class TeleportService2 {
 		return requiredQuestStep > 0
 				&& (questState.getStatus() == QuestStatus.START || questState.getStatus() == QuestStatus.REWARD)
 				&& questState.getQuestVarById(0) >= requiredQuestStep;
+	}
+
+	/**
+	 * 判断目标世界是否为欧比斯入口世界。
+	 * Returns whether the target world is the Abyss entry world.
+	 *
+	 * @param worldId 世界 ID / World id
+	 * @return 是否为欧比斯 / whether it is the Abyss
+	 */
+	public static boolean isAbyssEntryWorld(int worldId) {
+		return worldId == ABYSS_ENTRY_WORLD_ID;
+	}
+
+	/**
+	 * 检查玩家是否已完成本阵营的欧比斯入场任务。
+	 * Checks whether the player completed the racial Abyss entry quest.
+	 *
+	 * @param player 玩家 / Player
+	 * @return 是否允许进入欧比斯 / whether Abyss entry is allowed
+	 */
+	public static boolean meetsAbyssEntryRequirement(Player player) {
+		int questId = getAbyssEntryQuestId(player.getRace());
+		return questId != 0 && meetsQuestRequirement(player.getQuestStateList().getQuestState(questId), 0);
+	}
+
+	static boolean meetsAbyssEntryRequirement(Race race, QuestState questState) {
+		int questId = getAbyssEntryQuestId(race);
+		return questId != 0 && questState != null && questState.getQuestId() == questId
+				&& meetsQuestRequirement(questState, 0);
+	}
+
+	static int getAbyssEntryQuestId(Race race) {
+		return switch (race) {
+		case ELYOS -> ELYOS_ABYSS_ENTRY_QUEST_ID;
+		case ASMODIANS -> ASMODIAN_ABYSS_ENTRY_QUEST_ID;
+		default -> 0;
+		};
 	}
 
 	private static boolean checkKinahForTransportation(TeleportLocation location, Player player) {
@@ -869,6 +911,11 @@ public class TeleportService2 {
 
 		if (loc == null) {
 			log.warn(I18n.get("log.e07f399d3e8d", portalPath.getLocId()));
+			return;
+		}
+
+		if (isAbyssEntryWorld(worldId) && !meetsAbyssEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
 			return;
 		}
 

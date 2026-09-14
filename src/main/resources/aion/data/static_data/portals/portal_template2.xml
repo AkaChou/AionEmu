@@ -614,37 +614,49 @@
 	<!-- Verteron To Teminon Landing -->
 	<portal_use npc_id="730059">
 		<portal_path loc_id="4000102" race="ELYOS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="1044" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- Eltnen To Teminon Landing -->
 	<portal_use npc_id="730060">
 		<portal_path loc_id="4000103" race="ELYOS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="1044" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- Heiron To Teminon Landing -->
 	<portal_use npc_id="730061">
 		<portal_path loc_id="4000104" race="ELYOS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="1044" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- Altgard To Primum Landing -->
 	<portal_use npc_id="730062">
 		<portal_path loc_id="4000105" race="ASMODIANS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="2042" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- Morheim To Primum Landing -->
 	<portal_use npc_id="730063">
 		<portal_path loc_id="4000106" race="ASMODIANS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="2042" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- Beluslan To Primum Landing -->
 	<portal_use npc_id="730064">
 		<portal_path loc_id="4000107" race="ASMODIANS">
-			<portal_req min_level="45"/>
+			<portal_req min_level="45">
+				<quest_req quest_id="2042" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_use>
 	<!-- ABYSS TELEPORTER END -->

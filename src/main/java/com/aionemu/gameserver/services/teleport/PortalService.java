@@ -72,6 +72,12 @@ public class PortalService {
 		int mapId = loc.getWorldId();
 		int playerSize = portalPath.getPlayerCount();
 		boolean isInstance = portalPath.isInstance();
+		if (TeleportService2.isAbyssEntryWorld(mapId)
+				&& !isAbyssEntryAllowed(mapId, player.getWorldId(), player.isInInstance(),
+						TeleportService2.meetsAbyssEntryRequirement(player))) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
+			return;
+		}
 		InstanceCooltime clt = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
 		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
 			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
@@ -303,6 +309,11 @@ public class PortalService {
 			}
 			break;
 		}
+	}
+
+	static boolean isAbyssEntryAllowed(int targetWorldId, int currentWorldId, boolean inInstance,
+			boolean meetsRequirement) {
+		return targetWorldId == currentWorldId || inInstance || meetsRequirement;
 	}
 
 	private static boolean checkKinah(Player player, int kinah) {

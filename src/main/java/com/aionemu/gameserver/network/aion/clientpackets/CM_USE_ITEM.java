@@ -27,6 +27,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
+import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -133,6 +134,11 @@ public class CM_USE_ITEM extends AionClientPacket {
 					.STR_CANNOT_USE_ITEM_TOO_LOW_LEVEL_MUST_BE_THIS_LEVEL(item.getNameId(), requiredLevel));
 			return;
 		}
+		if (TeleportService2.isAbyssEntryWorld(item.getItemTemplate().getReturnWorldId())
+				&& !TeleportService2.meetsAbyssEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
+			return;
+		}
 		HandlerResult result = GameEngineServices.questEngine().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
 		if (result == HandlerResult.FAILED) {
 			return;
@@ -159,6 +165,13 @@ public class CM_USE_ITEM extends AionClientPacket {
 		// 将物品 CD 存于服务端 Player 变量。 / Store Item CD in server Player variable.
 		// 防止药水刷屏，以及重登使用 Kisk/奥德果冻/长 CD。 / Prevents potion spamming, and relogging to use kisks/aether jelly/long CD
 		// 物品。 / items.
+		if (type == 6) {
+			for (AbstractItemAction itemAction : actions) {
+				if (itemAction instanceof MultiReturnAction action && !action.canAct(player, returnId)) {
+					return;
+				}
+			}
+		}
 		if (player.isItemUseDisabled(item.getItemTemplate().getUseLimits())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANT_USE_UNTIL_DELAY_TIME);
 			return;
