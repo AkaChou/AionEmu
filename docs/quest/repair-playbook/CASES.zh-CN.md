@@ -510,3 +510,25 @@
 - 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/14123.xml` 通过；`git diff --check` 通过；IDE 静态错误检查通过；用户于 2026-09-13 回复“验证完成，提交”，视为完整任务客户端流程验收完成。本会话未运行 Maven，未捕获修复后的 packet trace、启动日志、runtime object/world/instance 或截图附件；服务端由用户管理，本会话未启动、停止或重启。
 - 复用边界：适用于任务接取后、击杀前必须由任务 owner 动态出现，并需要在目标区域重入或登录后恢复的攻击目标。不适用于静态地图 NPC、击杀后才生成可交互 NPC 的 14112 型流程，或需要固定实例而非 `current-or-default` 的任务；复用前必须重新核对唯一 spawn owner、状态变量、区域条件和击杀 transition。
 - commit：`d263468021b82eca00ee84c30832f7d6baf84b52`。
+
+## 8.35 工作物品声明整批丢失导致完成后任务道具残留
+
+- Pattern ID：`WORK_ITEM_DECLARATION_LOST_ON_MIGRATION`；关联已有模式 `COLLECT_ITEM_TURNIN_REMOVAL_MISSING`。
+- 代表任务：1192「Verteron Reinforcements / 贝尔特伦要塞的支援请求」（ELYOS，NPC 203098 接取、203701/203833 交接、203098 领奖）。
+- 搜索症状：任务完成后任务道具还在背包、支援请求书残留、交任务不扣任务道具、工作物品不回收、背包任务物品不消失。
+- 玩家可见症状：1192 走到 NPC 203701 / 203833 汇报并回到 203098 领取奖励、任务状态变为 `COMPLETE` 后，任务道具 182200556「Reinforcement Request / 支援请求书」仍留在背包中未被回收。
+- 根因：
+  1. `quest_data.xml:824` 的 `<quest_work_items>` 声明 1192 的工作物品为 182200556，retail 模板 `zz_retail_simple_quests.xml:8532` 也要求接取时发放、203701 处交出；但迁移后的 `quests/1192.xml` 的 `<metadata>` **没有 `<work-items>` 声明**；
+  2. 旧引擎 `QuestService.setFinishingState`（commit `911440146`）在完成时**无条件**清理全部 `questWorkItems`，而 typed 引擎只在 metadata 声明了 `<work-items>` 时执行同样的清理（`QuestMutationPlanner.appendCompletionWorkItemCleanup`，`QuestMutationPlanner.java:291-302`；放弃路径见 `QuestService.java:1450`）。声明为空列表即等于完成时什么都不清理；
+  3. 交接移除也已丢失：`f07723711` 为 203701 添加 `started -> reward` 的 `SETPRO1` 时标注「无物品变更」，但 retail 契约要求该步骤交出 182200556。
+- 关键盲区：若审计只检查「XML 中是否存在该物品的 `remove-item`」，1192 会被误判为已覆盖 —— `1192.xml` 确实有一处 `remove-item item-id="182200556"`，但它挂在 `SELECT_QUEST_REWARD` 的转换上，玩家实际走的 `SETPRO1` 路径并未交出物品。必须按**每条真正进入 REWARD 的路由**判定，而不是按「定义里某处存在移除」判定。
+- 修复层：任务 XML、目录级回归测试与全量迁移审计。
+  1. `1192.xml` 补齐 `<work-items><item id="182200556" count="1"/></work-items>`；
+  2. 203701 的 `SETPRO1` 转换补回 `<remove-item item-id="182200556" count="ALL"/>`，用 `ALL` 表达「有则交出、旧存档缺失也不阻断路由」（对齐 `REWARD_PREVIEW_OPTIONAL_WORK_ITEM` 的 `RemoveItem.ALL` 合同）；
+  3. 全量审计 `quest_data.xml` 中 1337 个声明了 `quest_work_items` 且为 `EXECUTABLE` 的任务，补齐 175 个丢失的 `<work-items>` 声明，并对 19026/19032/29026/29032 去除重复条目。审计前的分布为：1156 个正确、57 个有显式 remove-item、8 个部分兜底、111 个**无声明且无兜底**、5 个声明不一致。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{1192 及 179 个同型任务}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestWorkItemMigrationCoverageTest.java`；审计脚本与完整清单见 `.agents/summary/quest-1192/2026-09-14-work-item-migration-audit.zh-CN.md`。
+- 第一检查点：先读 `quest_data.xml` 的 `<quest_work_items>` 取得权威物品集，再检查编译后的 `metadata.questWorkItems()` 是否为空。为空时不要接受「XML 别处有 remove-item」作为通过依据，必须逐条枚举「源非 REWARD、目标 REWARD」的 transition，确认每条都自己交出物品；`use-item` 起手路径尤其容易漏检 —— `QuestStartAction`（`queststart` 道具动作）只调用 `onDialog(ASK_ACCEPTION)`，`ReadAction` 也只播动画，**道具模板不承担消耗**，交出必须由任务侧表达。
+- 代表测试：`QuestWorkItemMigrationCoverageTest#verteronReinforcementsDeclaresItsWorkItemAndTurnsItInAtLavirintos`；`QuestWorkItemMigrationCoverageTest#everyExecutableWorkItemQuestIsCleanedUpOnCompletion`；`QuestWorkItemMigrationCoverageTest#everyItemEnteringRewardIsHandedInOrDeclaredAsAWorkItem`。
+- 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd` 对全部 180 个改动文件通过；`git diff --check` 通过；`PRODUCTION_COMPILE_OK=6193`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`；`QuestWorkItemMigrationCoverageTest` 3 项全通过；`Quest1192ClientDialogAlignmentTest`、`QuestMutationPlannerTest`、`QuestDefinitionCatalogManifestTest` 等相关套件全通过。已知既有失败（改动前基线一致，与本修复无关）：`QuestClientContractGateTest` 的 23 条 `BUTTON_WITHOUT_ROUTE`、`QuestDraupnirNpcVariantContractTest` 的 quest 80805 kill route。本会话未运行客户端验证，未启动或重启服务端；用户尚未回复本任务的客户端确认，**实现完成、验收待定**。
+- 复用边界：适用于 legacy `quest_data.xml` 声明了 `quest_work_items`、而迁移后的 typed XML 丢失或写错 `<work-items>` 声明的任务；也适用于「某条进入 REWARD 的路由未交出工作物品」的 1192 型缺陷。`quest_data.xml` 的 `<quest_work_items>` 是可回收性的权威来源，但遇到三方证据冲突时不得自动收敛：4942 的旧 handler 移除 `186000085`、`quest_data.xml` 声明 `182207122`、当前 XML 声明 6 个 `152206*` 分支图纸（`category="RECIPE"`），三者互不相同，已作为证据冲突案例登记在测试的 `EVIDENCE_CONFLICT_QUESTS` 中待人工裁定。若物品是普通收集物 `<items>` 而非工作物品，复用 `COLLECT_ITEM_TURNIN_REMOVAL_MISSING`；若症状是奖励预览页 load fail 而非残留，复用 `REWARD_PREVIEW_OPTIONAL_WORK_ITEM`。
+- commit：`de7c36d9d`（实现完成；客户端验收待定）。
