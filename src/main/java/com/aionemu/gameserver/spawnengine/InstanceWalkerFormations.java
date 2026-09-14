@@ -77,7 +77,7 @@ public class InstanceWalkerFormations {
 	 */
 	protected void organizeAndSpawn() {
 		for (List<ClusteredNpc> candidates : groupedSpawnObjects.values()) {
-			List<List<ClusteredNpc>> byPosition = groupByPosition(candidates);
+			List<List<ClusteredNpc>> byPosition = groupCandidates(candidates);
 			int maxSize = 0;
 			List<ClusteredNpc> npcs = null;
 			for (List<ClusteredNpc> group : byPosition) {
@@ -110,13 +110,25 @@ public class InstanceWalkerFormations {
 	}
 
 	/**
-	 * 按 X/Y 近邻关系将候选 NPC 分组，避免零售坐标微调拆散同一编队。
-	 * Groups candidate NPCs by X/Y proximity so retail coordinate drift cannot split one formation.
+	 * 按路径池人数和 X/Y 近邻关系将候选 NPC 分组。
+	 * Groups candidate NPCs by route pool size and X/Y proximity.
+	 * <p>
+	 * 候选数等于池人数时视为一个完整编队；否则回退到近邻分组以处理复用路径。
+	 * A pool-sized candidate set is one complete formation; otherwise proximity grouping handles reused routes.
 	 *
 	 * @param candidates 候选列表 / candidate list
-	 * @return 近邻坐标组 / proximity-based position groups
+	 * @return 候选坐标组 / candidate position groups
 	 */
-	static List<List<ClusteredNpc>> groupByPosition(List<ClusteredNpc> candidates) {
+	static List<List<ClusteredNpc>> groupCandidates(List<ClusteredNpc> candidates) {
+		if (candidates.isEmpty()) {
+			return new ArrayList<List<ClusteredNpc>>();
+		}
+		if (candidates.size() == candidates.get(0).getWalkTemplate().getPool()) {
+			List<List<ClusteredNpc>> completeFormation = new ArrayList<List<ClusteredNpc>>();
+			completeFormation.add(new ArrayList<ClusteredNpc>(candidates));
+			return completeFormation;
+		}
+
 		List<List<ClusteredNpc>> grouped = new ArrayList<List<ClusteredNpc>>();
 		for (ClusteredNpc candidate : candidates) {
 			List<ClusteredNpc> group = findPositionGroup(grouped, candidate);

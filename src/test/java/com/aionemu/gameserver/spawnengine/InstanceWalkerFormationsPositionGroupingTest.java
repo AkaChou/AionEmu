@@ -27,6 +27,8 @@ class InstanceWalkerFormationsPositionGroupingTest {
 
 	private static final Path DREADGION_SPAWNS = Path.of(
 		"src/main/resources/aion/data/static_data/spawns/Instances/302200000_Dredgion_Defense_Sanctum.xml");
+	private static final Path GELKMAROS_SPAWNS = Path.of(
+		"src/main/resources/aion/data/static_data/spawns/Npcs/220070000_Gelkmaros.xml");
 	private static final List<String> DREADGION_ROUTES = List.of(
 		"idlc1_dreadgion_npcpathmain2",
 		"idlc1_dreadgion_npcpathbase_mob_18",
@@ -45,37 +47,29 @@ class InstanceWalkerFormationsPositionGroupingTest {
 
 	@Test
 	void groupsDreadgionSurfaceAdjustedSpawnsIntoCompleteFormations() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-		var document = factory.newDocumentBuilder().parse(DREADGION_SPAWNS.toFile());
-		var xpath = XPathFactory.newInstance().newXPath();
-
 		for (String routeId : DREADGION_ROUTES) {
-			NodeList spots = (NodeList) xpath.evaluate(
-				"/spawns/spawn_map/spawn/spot[@walker_id='" + routeId + "']",
-				document, XPathConstants.NODESET);
-			assertEquals(3, spots.getLength(), routeId);
-
-			List<ClusteredNpc> candidates = new ArrayList<>(spots.getLength());
-			for (int i = 0; i < spots.getLength(); i++) {
-				Element spot = (Element) spots.item(i);
-				candidates.add(candidate(Float.parseFloat(spot.getAttribute("x")),
-					Float.parseFloat(spot.getAttribute("y"))));
-			}
-
-			List<List<ClusteredNpc>> groups = InstanceWalkerFormations.groupByPosition(candidates);
+			List<List<ClusteredNpc>> groups = groupsFromSpawnFile(DREADGION_SPAWNS, routeId);
 			assertEquals(1, groups.size(), routeId);
 			assertEquals(3, groups.getFirst().size(), routeId);
 		}
 	}
 
 	@Test
+	void groupsPoolSizedGelkmarosRouteAcrossRetailAnchorSpread() throws Exception {
+		List<List<ClusteredNpc>> groups = groupsFromSpawnFile(GELKMAROS_SPAWNS,
+			"6E070A628CDFB97DE9C54EA88B9A1C7D5FC5FBE4");
+
+		assertEquals(1, groups.size());
+		assertEquals(3, groups.getFirst().size());
+	}
+
+	@Test
 	void groupsNearbyPairWithinFormationSpacing() {
 		List<ClusteredNpc> candidates = List.of(
-			candidate(0, 0),
-			candidate(1.8f, 0));
+			candidate(0, 0, 3),
+			candidate(1.8f, 0, 3));
 
-		List<List<ClusteredNpc>> groups = InstanceWalkerFormations.groupByPosition(candidates);
+		List<List<ClusteredNpc>> groups = InstanceWalkerFormations.groupCandidates(candidates);
 
 		assertEquals(1, groups.size());
 		assertEquals(2, groups.getFirst().size());
@@ -84,24 +78,45 @@ class InstanceWalkerFormationsPositionGroupingTest {
 	@Test
 	void keepsGroupsSeparatedBeyondFormationSpacing() {
 		List<ClusteredNpc> candidates = List.of(
-			candidate(0, 0),
-			candidate(0, 0),
-			candidate(0, 0),
-			candidate(5, 0),
-			candidate(5, 0),
-			candidate(5, 0));
+			candidate(0, 0, 3),
+			candidate(0, 0, 3),
+			candidate(0, 0, 3),
+			candidate(5, 0, 3),
+			candidate(5, 0, 3),
+			candidate(5, 0, 3));
 
-		List<List<ClusteredNpc>> groups = InstanceWalkerFormations.groupByPosition(candidates);
+		List<List<ClusteredNpc>> groups = InstanceWalkerFormations.groupCandidates(candidates);
 
 		assertEquals(2, groups.size());
 		assertEquals(3, groups.get(0).size());
 		assertEquals(3, groups.get(1).size());
 	}
 
-	private ClusteredNpc candidate(float x, float y) {
+	private List<List<ClusteredNpc>> groupsFromSpawnFile(Path path, String routeId) throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+		var document = factory.newDocumentBuilder().parse(path.toFile());
+		var xpath = XPathFactory.newInstance().newXPath();
+		NodeList spots = (NodeList) xpath.evaluate(
+			"/spawns/spawn_map/spawn/spot[@walker_id='" + routeId + "']",
+			document, XPathConstants.NODESET);
+		assertEquals(3, spots.getLength(), routeId);
+
+		List<ClusteredNpc> candidates = new ArrayList<>(spots.getLength());
+		for (int i = 0; i < spots.getLength(); i++) {
+			Element spot = (Element) spots.item(i);
+			candidates.add(candidate(Float.parseFloat(spot.getAttribute("x")),
+				Float.parseFloat(spot.getAttribute("y")), 3));
+		}
+		return InstanceWalkerFormations.groupCandidates(candidates);
+	}
+
+	private ClusteredNpc candidate(float x, float y, int poolSize) {
 		TestNpc npc = objenesis.newInstance(TestNpc.class);
 		npc.setSpawn(SpawnEngine.createSpawnTemplate(0, 0, x, y, 0, (byte) 0));
-		return new ClusteredNpc(npc, 0, new WalkerTemplate("test-route"));
+		WalkerTemplate template = new WalkerTemplate("test-route");
+		template.setPool(poolSize);
+		return new ClusteredNpc(npc, 0, template);
 	}
 
 	private static final class TestNpc extends Npc {
