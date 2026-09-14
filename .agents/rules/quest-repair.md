@@ -9,6 +9,7 @@ globs: "src/main/resources/aion/data/static_data/quest_definition/**/*.xml, src/
 
 Before working on a quest issue, read:
 
+- `../memory-bank/patterns/quest-engine.md`
 - `../../docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md`
 - `../../docs/quest/repair-playbook/PATTERNS.zh-CN.md`
 - `../../docs/quest/repair-playbook/CASES.zh-CN.md`
@@ -60,3 +61,5 @@ When `CASES.zh-CN.md` links a matched case to `docs/quest/repair-playbook/cases/
    git add -f docs/quest/repair-playbook/PATTERNS.zh-CN.md
    git add -f docs/quest/repair-playbook/CASES.zh-CN.md
    ```
+
+19. After completing or verifying a quest repair with a new reusable finding or engine-level insight, update `.agents/memory-bank/patterns/quest-engine.md` following the Automatic Wrap-up Protocol; a one-off case belongs in `.agents/summary/<topic>/` and does not require a new Pattern.

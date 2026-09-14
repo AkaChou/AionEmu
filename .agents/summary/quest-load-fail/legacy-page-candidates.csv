@@ -1,6 +1,0 @@
-quest_id,file,kind,source_node,target_node,npc_id,action_id,action_name,old_page,new_page,evidence_page,evidence_source
-25602,src/main/resources/aion/data/static_data/quest_definition/quests/25602.xml,TRANSITION,s3,s3,806171,31,QUEST_SELECT,SELECT4,DEFAULT_SUCCESS,10002,20000_29999/quest_q25602.html
-50031,src/main/resources/aion/data/static_data/quest_definition/quests/50031.xml,START_DIALOG,unaccepted,unaccepted,831783,31,QUEST_SELECT,SELECT1,SELECT_NONE,4762,50000_59999/quest_q50031.html
-50038,src/main/resources/aion/data/static_data/quest_definition/quests/50038.xml,START_DIALOG,unaccepted,unaccepted,832815,31,QUEST_SELECT,SELECT1,SELECT_NONE,4762,50000_59999/quest_q50038.html
-50040,src/main/resources/aion/data/static_data/quest_definition/quests/50040.xml,START_DIALOG,unaccepted,unaccepted,832815,31,QUEST_SELECT,SELECT1,SELECT_NONE,4762,50000_59999/quest_q50040.html
-50041,src/main/resources/aion/data/static_data/quest_definition/quests/50041.xml,START_DIALOG,unaccepted,unaccepted,832815,31,QUEST_SELECT,SELECT1,SELECT_NONE,4762,50000_59999/quest_q50041.html

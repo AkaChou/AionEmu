@@ -1,8 +1,0 @@
-quest_id,file,source_node,npc_id,action_id,action_name,response,page_id,page_name,start_eligible,evidence_source
-1921,src/main/resources/aion/data/static_data/quest_definition/quests/1921.xml,s3,203833,2042,SELECT4_1_1_2,SHOW_QUEST_PAGE,2042,SELECT4_1_1_2,False,QUEST_Q1921.html#select4_1_1_1: 回答说是第一个。
-1921,src/main/resources/aion/data/static_data/quest_definition/quests/1921.xml,s3,203833,2047,SELECT4_1_1_3,SHOW_QUEST_PAGE,2047,SELECT4_1_1_3,False,QUEST_Q1921.html#select4_1_1_1: 回答说是第二个。
-1921,src/main/resources/aion/data/static_data/quest_definition/quests/1921.xml,s3,203833,2052,SELECT4_1_1_4,SHOW_QUEST_PAGE,2052,SELECT4_1_1_4,False,QUEST_Q1921.html#select4_1_1_1: 回答说是第三个。
-2946,src/main/resources/aion/data/static_data/quest_definition/quests/2946.xml,s3,204208,2042,SELECT4_1_1_2,SHOW_QUEST_PAGE,2042,SELECT4_1_1_2,False,QUEST_Q2946.html#select4_1_1_1: 回答说是第一个。
-2946,src/main/resources/aion/data/static_data/quest_definition/quests/2946.xml,s3,204208,2047,SELECT4_1_1_3,SHOW_QUEST_PAGE,2047,SELECT4_1_1_3,False,QUEST_Q2946.html#select4_1_1_1: 回答说是第二个。
-2946,src/main/resources/aion/data/static_data/quest_definition/quests/2946.xml,s3,204208,2052,SELECT4_1_1_4,SHOW_QUEST_PAGE,2052,SELECT4_1_1_4,False,QUEST_Q2946.html#select4_1_1_1: 回答说是第三个。
-10530,src/main/resources/aion/data/static_data/quest_definition/quests/10530.xml,reward,203752,3743,SELECT9_1_1_1_1,SHOW_QUEST_PAGE,3743,SELECT9_1_1_1_1,False,10000_19999/quest_q10530.html#select9_1_1_1: 继续听下去。

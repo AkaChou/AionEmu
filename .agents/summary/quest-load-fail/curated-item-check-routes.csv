@@ -1,6 +1,0 @@
-quest_id,file,source,target,npc_id,items,success_page,failure_page
-3936,src/main/resources/aion/data/static_data/quest_definition/quests/3936.xml,started,reward,203710,182206091:10 182206092:10 182206093:10 182206094:10,SHOW_SELECT_QUEST_REWARD_WINDOW1,CHECK_USER_ITEM_FAIL
-3937,src/main/resources/aion/data/static_data/quest_definition/quests/3937.xml,started,reward,203708,182206095:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,CHECK_USER_ITEM_FAIL
-4940,src/main/resources/aion/data/static_data/quest_definition/quests/4940.xml,started,reward,204050,182207117:10 182207118:10 182207119:10 182207120:10,SHOW_SELECT_QUEST_REWARD_WINDOW1,CHECK_USER_ITEM_FAIL
-4941,src/main/resources/aion/data/static_data/quest_definition/quests/4941.xml,started,reward,204060,182207121:1,SHOW_SELECT_QUEST_REWARD_WINDOW1,CHECK_USER_ITEM_FAIL
-21027,src/main/resources/aion/data/static_data/quest_definition/quests/21027.xml,started,reward,799254,182207824:1,CHECK_USER_ITEM_OK,CHECK_USER_ITEM_FAIL

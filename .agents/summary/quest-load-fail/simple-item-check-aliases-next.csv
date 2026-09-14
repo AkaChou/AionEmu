@@ -1,2 +1,0 @@
-quest_id,file,kind,source,target,npc_id,items,success_page,failure_page
-16992,src/main/resources/aion/data/static_data/quest_definition/quests/16992.xml,CLONE_ITEM_CHECK,k1,reward,802048,,,

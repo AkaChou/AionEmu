@@ -11,6 +11,8 @@ globs: "**/*.java"
 2. After validation is authorized, start with the smallest focused test and expand only as required by risk and the user's request.
 3. Do not mix `../../target` artifacts, running processes, configuration, or logs between separate checkouts.
 4. Do not edit `../../target` or generated class/JAR files manually, and do not treat stale build artifacts as evidence for the current source tree.
+5. When investigating runtime discrepancies, stale behavior, or environment anomalies, consult [.agents/memory-bank/patterns/build-and-env.md](../memory-bank/patterns/build-and-env.md) (specifically the IDEA target/classes mtime check).
+6. On high-frequency facade and hot paths, avoid naked dynamic bean lookups or `applicationContext.getIfAvailable(...)`; consult [.agents/memory-bank/patterns/architecture-runtime.md](../memory-bank/patterns/architecture-runtime.md).
 
 ## Coding Conventions
 

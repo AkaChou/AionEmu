@@ -9,8 +9,16 @@ This file provides project-level guidance for AI coding agents working in this r
 1. Do NOT run build commands unless explicitly requested by the user.
 2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
 3. `.agents/summary/` is the canonical directory for all summary files.
-4. `.agent/summary/` is a legacy path. Do not create a real directory or new files there; use `.agents/summary/` instead. If a legacy tool still requests the old path, its writes must resolve through the repository compatibility link to `.agents/summary/`.
+4. `.agent/summary/` is a legacy path. Do not create a real directory or new files there; use `.agents/summary/` instead. If a legacy tool still requests the old path, its writes must resolve through the repository compatibility link when that link is present; do not recreate or remove the link as part of an unrelated task.
 5. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
+
+## Memory Bank
+
+Persistent architecture patterns and debugging insights are maintained in [.agents/memory-bank/](.agents/memory-bank/):
+- **Read before action**: When diagnosing bugs or touching core systems, read [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) first to avoid known pitfalls.
+- **Active focus**: Check [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) for current focus areas across sessions.
+- **Automatic Wrap-up Protocol (自动沉淀协议)**:
+  After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. When this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
 
 ## Configuration
 
@@ -65,3 +73,4 @@ All detailed rules are in `.agents/rules/`:
 | [lombok.md](.agents/rules/lombok.md)             | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
 | [ai-artifacts.md](.agents/rules/ai-artifacts.md) | Entire repository | AI-generated intermediate artifacts, topic directories, and script placement / AI 生成中间产物、主题目录和脚本存放规则 |
 | [quest-repair.md](.agents/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |
+| [memory-bank/](.agents/memory-bank/README.md) | Entire repository | Persistent architecture patterns, gotchas, and troubleshooting router / 持久化架构模式、避坑指南与排查路由器 |

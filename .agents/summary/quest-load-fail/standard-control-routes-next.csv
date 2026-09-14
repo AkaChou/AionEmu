@@ -1,2 +1,0 @@
-quest_id,file,source,target,npc_id,action,kind,work_items,actual_path
-29683,src/main/resources/aion/data/static_data/quest_definition/quests/29683.xml,started,reward,806700,SET_SUCCEED,SET_REWARD,,started + NPC 806700 + 31 -> started + page 1011

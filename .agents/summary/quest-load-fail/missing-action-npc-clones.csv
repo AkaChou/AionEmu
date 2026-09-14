@@ -1,2 +1,0 @@
-quest_id,file,source_node,npc_id,action_id,action_name
-28036,src/main/resources/aion/data/static_data/quest_definition/quests/28036.xml,started,801047,1009,SELECT_QUEST_REWARD
