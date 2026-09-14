@@ -54,6 +54,15 @@ class BalaureaTeleporterQuestRequirementTest {
 	}
 
 	@Test
+	void masterInggisonUsesTheSpawnedTalocsHollowEntranceNpc() throws Exception {
+		Portal2Data data = (Portal2Data) JAXBContext.newInstance(Portal2Data.class)
+				.createUnmarshaller().unmarshal(PORTAL_TEMPLATES.toFile());
+
+		assertTalocsHollowPortal(data, 799022);
+		assertTalocsHollowPortal(data, 835605);
+	}
+
+	@Test
 	void spaceTeleportersRequireTheRacialEntryMission() throws Exception {
 		TeleporterData data = (TeleporterData) JAXBContext.newInstance(TeleporterData.class)
 				.createUnmarshaller().unmarshal(TELEPORTER_XML.toFile());
@@ -108,5 +117,15 @@ class BalaureaTeleporterQuestRequirementTest {
 		assertNotNull(location, "missing telelocation " + locId + " for NPC " + npcId);
 		assertEquals(questId, location.getRequiredQuest());
 		assertEquals(3, location.getRequiredQuestStep());
+	}
+
+	private static void assertTalocsHollowPortal(Portal2Data data, int npcId) {
+		PortalPath portalPath = data.getPortalDialog(npcId, 10000, Race.ELYOS);
+		assertNotNull(portalPath, "missing Taloc's Hollow portal for NPC " + npcId);
+		assertEquals(3001900, portalPath.getLocId());
+		assertTrue(portalPath.isInstance());
+		assertEquals(Race.ELYOS, portalPath.getRace());
+		assertNotNull(portalPath.getPortalReq());
+		assertEquals(51, portalPath.getPortalReq().getMinLevel());
 	}
 }

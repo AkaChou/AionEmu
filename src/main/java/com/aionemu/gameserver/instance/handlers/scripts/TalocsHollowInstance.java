@@ -14,6 +14,8 @@ import com.aionemu.commons.utils.Rnd;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
+import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -182,6 +184,15 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
+			case 215457: //Ancient Octanus.
+				// 真端 Elim_Octaside_Door 在死亡事件中切换 1F Rush 条件；实例层兜底覆盖旧刷怪或 AI 未接管的情况。
+				// Retail Elim_Octaside_Door switches the 1F rush condition on death; the instance fallback also covers legacy spawns or an AI that did not take over.
+				sendMsgByRace(1400659, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "IDElim_1F_StartRush", 2, 0);
+				// entity 51 is a static GEO placeable collision node, not a normal StaticDoor state pair.
+				// entity 51 是静态 GEO 可放置碰撞节点，不是普通 StaticDoor 的门状态对。
+				GameWorldServices.geoService().despawnPlaceableObject(instance.getMapId(), instance.getInstanceId(), 51);
+			break;
 			case 215480, 246240: //Queen Mosqua / special-server Queen Mosqua.
                 deleteNpc(700738); //Huge Insect Egg.
 				sendMovie(player, 435);
@@ -196,6 +207,15 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 				ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
             break;
+			case 700739: //Cracked Huge Insect Egg.
+				// 真端 pattern `Elim_WindEventB` 用条件变量在卵的位置升起气流，并开启地面移动碰撞；
+				// 实例层补一条幂等兜底，保证 pattern 未接管时气流视觉与移动碰撞仍然开启。
+				// The retail pattern `Elim_WindEventB` raises the updraft at the egg through a condition
+				// variable and switches on its ground moving collision; this idempotent instance-level
+				// adapter keeps the wind visual and the collision alive when the pattern does not take over.
+				RetailConditionSpawnEngine.setVariable(instance, "IDElim_2F_Wind", 1, 0);
+				RetailDynamicAreaEngine.setEnabled(instance, "MOVING_COLLISION_WINDBOX", 100, true);
+			break;
 			case 700942: //Bug Fluid.
 			    despawnNpc(npc);
 			break;
