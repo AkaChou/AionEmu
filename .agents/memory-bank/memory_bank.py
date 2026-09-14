@@ -33,6 +33,9 @@ ENTRY_FIELDS = (
     "first_check",
 )
 
+# Optional fields whose path and commit references are validated the same way as `evidence`.
+REFERENCE_FIELDS = ("evidence", "see_also")
+
 
 @dataclass(frozen=True)
 class PatternEntry:

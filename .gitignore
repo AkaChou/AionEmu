@@ -26,6 +26,10 @@ log/
 /log
 /aion
 
+# Python bytecode caches from memory-bank maintenance scripts
+__pycache__/
+*.py[cod]
+
 # OS files
 .DS_Store
 Thumbs.db

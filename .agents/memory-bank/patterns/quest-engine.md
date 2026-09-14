@@ -18,7 +18,7 @@ last_verified: 2026-09-14
 symptom: 前置缺失、level-up 过早接取、NPC 注册或路由不一致
 root_cause: XML migration loses prerequisite or NPC registration semantics from legacy Handler
 fix_or_guardrail: Compare commit 911440146 first and restore missing prerequisites or NPC mappings
-evidence: commit 911440146; quest_data.xml; docs/quest repair rules
+evidence: commit 911440146; src/main/resources/aion/data/static_data/quest_data/quest_data.xml; docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
 validation: static; production-catalog; case-specific runtime/client validation required
 boundaries: If origin/history is unavailable record substitute evidence; static proof is not client acceptance
 superseded_by: none
@@ -47,10 +47,11 @@ last_verified: 2026-09-14
 symptom: var0 不增长、自环计数卡 0、variable-at-least 不触发
 root_cause: Target projection overwrote fields already changed by transition actions
 fix_or_guardrail: Track actionTouchedFields and let actions win over target projection
-evidence: .agents/summary/quest-e2e/triage.md:83; QuestMutationPlanner; quest 18972
+evidence: .agents/summary/quest-e2e/triage.md:83; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java:81; quest 18972
 validation: static; focused-test; runtime/client validation not implied
 boundaries: Applies to action and target field collisions; unrelated state projection rules still need separate proof
 superseded_by: none
+see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (COUNTER_SOURCE_PROJECTION_NO_LOCK)
 first_check: QuestMutationPlanner.build, action variable writes, target projection
 -->
    - **现象**：同节点自环计数任务（如 18972.xml 的 `started→started` 计数、击杀怪、收集道具）在玩家交互后，计数卡在 0，`variable-at-least` 完成转换永不触发。
@@ -66,7 +67,7 @@ last_verified: 2026-09-14
 symptom: CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称
 root_cause: Completion path omitted the legacy questWorkItems cleanup that existed on abandon
 fix_or_guardrail: Append completion cleanup unless the XML explicitly removes all required work items
-evidence: QuestMutationPlanner; QuestMutationPlannerTest; archive/2026-09-12-full-test-known-issues.md:103
+evidence: commit 8baeb9232; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java:291; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlannerTest.java:207; .agents/summary/quest-acceptance/14023-2026-08-28-client-accepted.md:32
 validation: static; focused-test; runtime/client validation not implied
 boundaries: Do not add duplicate removal actions when explicit count=ALL already expresses the contract
 superseded_by: none
@@ -87,10 +88,11 @@ last_verified: 2026-09-14
 symptom: dialog 31 无路由、中间 NPC 丢失、NPC ID 错配、choice/fallback 冲突
 root_cause: XML migration omitted intermediate NPC report nodes or copied NPC identities incorrectly
 fix_or_guardrail: Restore START variable nodes, NPC_REPORT transitions and explicit choice/fallback handling
-evidence: quests/1900.xml; client dialog mapping; NPC_REPORT repair cases in this card
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/1900.xml; docs/quest/client-dialog-mapping/quest-dialog-action-details.csv; NPC_REPORT repair cases in this card
 validation: static; production-gate; client-contract evidence required per quest
 boundaries: METADATA_ONLY tasks cannot receive executable nodes until their catalog mode is changed
 superseded_by: none
+see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (MULTI_NPC_HANDOFF_REWARD_OWNER, ORDERED_MULTI_NPC_REPORT_FLOW)
 first_check: quest XML nodes, NPC_REPORT edges, catalog mode and client dialog mapping
 -->
    - **现象**：从 Java Handler 迁移到 XML 时，多 NPC + 多 var 档流程在 XML 中只剩起始 NPC，中间交付 NPC 丢失或 ID 错配（如 804871↔804870 孪生 ID 抄错）。玩家点击 NPC 发送 dialog 31 无匹配转换。
@@ -115,6 +117,7 @@ evidence: docs/quest/client-dialog-mapping/quest-dialog-action-details.csv; docs
 validation: static; client-contract; real-client validation required for acceptance
 boundaries: The intermediate NPC and terminal NPC must be distinguished by client action mapping
 superseded_by: none
+see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (ORDERED_MULTI_NPC_REPORT_FLOW)
 first_check: client dialog action details, quest-order-audit and var node sequence
 -->
    - **现象**：`6d8019d8f` 误删中间 var 节点，导致 `var0` 永远卡在 0、客户端任务追踪 UI 不推进。
@@ -148,6 +151,7 @@ evidence: commit 59bba1a; .agents/summary/quest-acceptance/1006-2026-09-10-clien
 validation: focused-test; client-acceptance record; runtime boundary remains explicit
 boundaries: Applies to shared NPC event routing; ordinary task authorization gates must remain intact
 superseded_by: none
+see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (NPC_DIALOG_ROUTE_GATE_COLLISION)
 first_check: QuestEvent.matches and QuestProductionDispatcher priority
 -->
 
@@ -172,6 +176,7 @@ evidence: commit fb26a0d49; .agents/summary/quest-2392/2026-09-14-optional-work-
 validation: static; focused-test; production-gate; client validation required
 boundaries: count=ALL is safe only for cleanup semantics and must not replace a required exact-count consumption
 superseded_by: none
+see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (PATTERNS index)
 first_check: removalFeasible, branch transitions and reward-stage remove-item actions
 -->
 

@@ -13,12 +13,12 @@
 <!-- pattern-metadata
 status: CONFIRMED
 scope: Dynamic script loading, AI classes, command handlers and data-text mappings
-first_seen: unknown
+first_seen: 2026-09-09
 last_verified: 2026-09-14
 symptom: 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载
 root_cause: Runtime discovers classes through package scanning, reflection and data attributes rather than static Java calls
 fix_or_guardrail: Preserve dynamic package trees and search aion data text before rename or deletion
-evidence: CompiledScriptLoader; @AIName; src/main/resources/aion/ dynamic loading paths
+evidence: src/main/java/com/aionemu/commons/scripting/CompiledScriptLoader.java; src/main/resources/aion/data/static_data/npcs/
 validation: static; runtime loader logs when the affected package or data is exercised
 boundaries: Package allowlists do not prove every class is used; validate the specific loader and data version
 superseded_by: none
@@ -51,7 +51,7 @@ last_verified: 2026-09-14
 symptom: JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效
 root_cause: JAXB needs to write instance fields while newer JDKs restrict reflective mutation of final fields
 fix_or_guardrail: Remove final only from XML-injected instance fields and retain static final or safe XmlTransient caches
-evidence: JAXB entity classes; JDK 25 reflection warnings; static XML loader behavior
+evidence: src/main/java/com/aionemu/gameserver/model/templates/item/ItemTemplate.java; src/main/java/com/aionemu/gameserver/skillengine/model/SkillLearnTemplate.java
 validation: static; focused binding test or runtime loader evidence required per entity
 boundaries: Do not remove static final constants or final fields proven to be excluded from JAXB binding
 superseded_by: none

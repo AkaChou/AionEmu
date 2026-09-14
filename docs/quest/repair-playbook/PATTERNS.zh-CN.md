@@ -1,9 +1,13 @@
 # 任务修复 Pattern 指纹与提交索引
 
 [返回任务排查与修复 Playbook](../QUEST_REPAIR_PLAYBOOK.zh-CN.md) ·
-[查看已验收代表案例](CASES.zh-CN.md)
+[查看已验收代表案例](CASES.zh-CN.md) ·
+[跨域不变量与长期模式：.agents/memory-bank](../../../.agents/memory-bank/README.md)
 
 下面的提交不是互相独立的技巧，而是一条从客户端证据到状态、协议、AI 和性能的排查链。新 agent 遇到相似症状时，先找对应案例，再读取完整 diff 和测试。
+
+> **两套体系的分工**：本文件是 **Quest 细粒度指纹库**，按「症状 → IR/owner 指纹 → 第一检查点 → 代表提交与测试」组织，覆盖单个任务的修复合同；`.agents/memory-bank/patterns/quest-engine.md` 是 **跨域长期不变量**，只记录可复用的根因与护栏。
+> 两者存在对应关系（例如本文件的 `NPC_DIALOG_ROUTE_GATE_COLLISION` 对应 memory-bank 的 `QE-006`，`MULTI_NPC_HANDOFF_REWARD_OWNER` / `ORDERED_MULTI_NPC_REPORT_FLOW` 与 `QE-004` / `QE-005` 描述同一类问题）。**排查时先查本文件的细粒度指纹定位具体合同，再读 memory-bank 卡片确认跨域护栏和失效边界**。
 
 本节只按可复用的“问题模式”记录一个代表任务，目的是为后续修复提供证据和实现参考，不维护任务清单、验收名单或覆盖数量。后续任务与已有案例的症状、根因、修复层和修复合同相同时，不追加任务 ID、不修改案例正文，也不新增重复案例；问题或修复模式实质不同时才建立新案例。
 

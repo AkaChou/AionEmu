@@ -13,7 +13,7 @@
 <!-- pattern-metadata
 status: CONFIRMED
 scope: Spring startup, static-data loading pools and high-frequency service facades
-first_seen: unknown
+first_seen: 2026-08-23
 last_verified: 2026-09-14
 symptom: 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean
 root_cause: XML parsing and container singleton locks dominate startup while uncached lookups add hot-path contention
@@ -46,12 +46,12 @@ first_check: startup JFR, static-data pool, resource parse count and facade look
 <!-- pattern-metadata
 status: CONFIRMED
 scope: DAO provider wiring and startup service registration
-first_seen: unknown
+first_seen: 2026-09-09
 last_verified: 2026-09-14
 symptom: ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件
 root_cause: Runtime SPI discovery hid provider dependencies and service registration files were easy to miss
 fix_or_guardrail: Use explicit DAOClassProvider injection and compile-time provider wiring
-evidence: DAOManager.init; LoginStartupRuntimeBridge; GameUtilityServicesRuntimeBridge; ServiceLoader history
+evidence: src/main/java/com/aionemu/commons/database/dao/DAOManager.java:45; src/main/java/com/aionemu/loginserver/lifecycle/LoginStartupRuntimeBridge.java; src/main/java/com/aionemu/gameserver/lifecycle/GameUtilityServicesRuntimeBridge.java; commit eac35a48c
 validation: static; focused startup or provider wiring test required per change
 boundaries: Legacy bridges must remain lifecycle-safe until all static call sites are migrated
 superseded_by: none
@@ -76,7 +76,7 @@ last_verified: 2026-09-14
 symptom: 封包无响应、opcode 已实现但 handler 未触发、收发链路失败
 root_cause: Packet classes without explicit opcode registration are not reachable by the dispatcher
 fix_or_guardrail: Register packet class literals in ServerPacketsOpcodes or AionPacketHandler
-evidence: ServerPacketsOpcodes; AionPacketHandler; packet registration paths
+evidence: src/main/java/com/aionemu/gameserver/network/aion/ServerPacketsOpcodes.java; src/main/java/com/aionemu/gameserver/network/aion/AionPacketHandler.java
 validation: static; focused packet test or runtime packet trace required per handler
 boundaries: Registration proof does not validate packet payload compatibility or client opcode version
 superseded_by: none

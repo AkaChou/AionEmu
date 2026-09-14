@@ -9,16 +9,41 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-from memory_bank import ENTRY_FIELDS, PATTERN_HEADING, PatternEntry, iter_pattern_entries
+from memory_bank import (
+    ENTRY_FIELDS,
+    PATTERN_HEADING,
+    REFERENCE_FIELDS,
+    PatternEntry,
+    iter_pattern_entries,
+)
 from sync_memory_bank import render_symptom_index
 
 
 PATTERN_ID = re.compile(r"\b[A-Z][A-Z0-9]+-\d{3}\b")
 HEADING_ID = PATTERN_HEADING
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\((?P<target>[^)\s]+)(?:\s+[^)]*)?\)")
+
+# Source extensions that make a bare filename (no directory separator) a checkable reference.
+# "DAOManager.init" and "Maven/JDK baseline notes" are descriptive text, not references, and
+# are excluded because their trailing token never carries one of these extensions.
+EVIDENCE_SOURCE_EXTENSIONS = frozenset({"java", "xml", "csv", "md", "json", "properties", "xsd", "yml", "yaml"})
+_SOURCE_EXT_ALTERNATION = "|".join(sorted(EVIDENCE_SOURCE_EXTENSIONS))
+# Evidence references: a repository path optionally pinned to a line number. Either a path with
+# at least one separator ("quests/1900.xml") or a bare source filename ("quest_data.xml").
+EVIDENCE_REFERENCE = re.compile(
+    r"(?P<path>"
+    r"[A-Za-z0-9_@.-]+/[A-Za-z0-9_@./-]*\.[A-Za-z0-9]+"
+    rf"|[A-Za-z0-9_@.-]+\.(?:{_SOURCE_EXT_ALTERNATION})\b"
+    r")(?::(?P<line>\d+))?"
+)
+# git commit references inside an evidence field: "commit 97fcba667".
+EVIDENCE_COMMIT = re.compile(r"\bcommit[ =](?P<sha>[0-9a-f]{7,40})\b")
+# Runtime artifacts that are gitignored and legitimately absent from a fresh checkout.
+EVIDENCE_ENV_ALLOWLIST = ("target/", "aion/", "log/")
 
 REQUIRED_CARD_FIELDS = ("Pattern IDs:", "card_status:", "scope:", "last_reviewed:")
 REQUIRED_ACTIVE_FIELDS = ("last_updated:", "status:", "scope:", "owner:", "expires:")
@@ -84,9 +109,10 @@ def validate_entry_metadata(
 
 def validate_pattern_cards(
     pattern_dir: Path, errors: list[str]
-) -> tuple[dict[str, list[str]], dict[str, dict[str, str]]]:
+) -> tuple[dict[str, list[str]], dict[str, dict[str, str]], dict[str, Path]]:
     occurrences: dict[str, list[str]] = defaultdict(list)
     entries: dict[str, dict[str, str]] = {}
+    cards: dict[str, Path] = {}
     paths = sorted(pattern_dir.glob("*.md"))
     parsed_entries = list(iter_pattern_entries(pattern_dir))
     entries_by_card: dict[Path, list[PatternEntry]] = defaultdict(list)
@@ -105,7 +131,8 @@ def validate_pattern_cards(
         for entry in card_entries:
             occurrences[entry.pattern_id].append(f"{entry.card}:{entry.line}")
             entries[entry.pattern_id] = validate_entry_metadata(entry, errors)
-    return occurrences, entries
+            cards[entry.pattern_id] = entry.card
+    return occurrences, entries, cards
 
 
 def validate_archive(archive_dir: Path, errors: list[str]) -> int:
@@ -148,6 +175,102 @@ def validate_summary_compatibility(root: Path, errors: list[str]) -> None:
         errors.append(f"legacy summary symlink does not target {canonical}: {legacy}")
 
 
+def resolve_commit(root: Path, reference: str) -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{reference}^{{commit}}"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
+class EvidenceResolver:
+    """Resolve evidence path references against the repository, with a suffix-match fallback.
+
+    Cards cite source files by a stable suffix ("quests/1900.xml") rather than the full package
+    path, so an exact-miss falls back to a suffix search over the tracked source roots. The index
+    is built once and reused for every reference.
+    """
+
+    SEARCH_ROOTS = ("src", "docs", ".agents", "scripts")
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        self._index: dict[str, list[Path]] | None = None
+
+    def _files(self) -> dict[str, list[Path]]:
+        if self._index is None:
+            index: dict[str, list[Path]] = {}
+            for name in self.SEARCH_ROOTS:
+                base = self.root / name
+                if not base.is_dir():
+                    continue
+                for path in base.rglob("*"):
+                    if path.is_file():
+                        index.setdefault(str(path.relative_to(self.root)), []).append(path)
+            self._index = index
+        return self._index
+
+    def resolve(self, card: Path, reference: str) -> Path | None:
+        if reference.startswith(EVIDENCE_ENV_ALLOWLIST):
+            return None
+        # Card-relative references such as "archive/foo.md" resolve against the card's directory.
+        for base in (self.root, card.parent):
+            candidate = base / reference
+            if candidate.exists():
+                return candidate
+        suffix = "/" + reference
+        matches = [p for rel, paths in self._files().items() if rel.endswith(suffix) for p in paths]
+        if len(matches) == 1:
+            return matches[0]
+        return None
+
+
+def validate_evidence_references(
+    entries: dict[str, dict[str, str]],
+    cards: dict[str, Path],
+    resolver: EvidenceResolver,
+    root: Path,
+    errors: list[str],
+) -> int:
+    checked = 0
+    for pattern_id, metadata in sorted(entries.items()):
+        card = cards.get(pattern_id, root)
+        for field_name in REFERENCE_FIELDS:
+            evidence = metadata.get(field_name, "")
+            if not evidence:
+                continue
+            for match in EVIDENCE_REFERENCE.finditer(evidence):
+                reference = match.group("path")
+                if reference.startswith(EVIDENCE_ENV_ALLOWLIST):
+                    continue
+                checked += 1
+                resolved = resolver.resolve(card, reference)
+                if resolved is None:
+                    errors.append(
+                        f"Pattern {pattern_id} {field_name} references missing path {reference}"
+                    )
+                    continue
+                line_ref = match.group("line")
+                if line_ref and resolved.is_file():
+                    total = len(resolved.read_text(encoding="utf-8", errors="replace").splitlines())
+                    if int(line_ref) > total:
+                        errors.append(
+                            f"Pattern {pattern_id} {field_name} line {reference}:{line_ref} "
+                            f"exceeds {total} lines"
+                        )
+            for match in EVIDENCE_COMMIT.finditer(evidence):
+                checked += 1
+                if resolve_commit(root, match.group("sha")) is None:
+                    errors.append(
+                        f"Pattern {pattern_id} {field_name} references unknown commit "
+                        f"{match.group('sha')}"
+                    )
+    return checked
+
+
 def validate(root: Path) -> tuple[tuple[str, ...], int, int, int, int, int]:
     bank = root / ".agents/memory-bank"
     errors: list[str] = []
@@ -168,7 +291,7 @@ def validate(root: Path) -> tuple[tuple[str, ...], int, int, int, int, int]:
 
     router_ids = set(PATTERN_ID.findall(router))
     symptom_ids = set(PATTERN_ID.findall(symptom_index))
-    occurrences, entries = validate_pattern_cards(bank / "patterns", errors)
+    occurrences, entries, cards = validate_pattern_cards(bank / "patterns", errors)
     pattern_ids = set(occurrences)
 
     for pattern_id, locations in sorted(occurrences.items()):
@@ -198,14 +321,25 @@ def validate(root: Path) -> tuple[tuple[str, ...], int, int, int, int, int]:
         bank / "archive/README.md",
     )
     links_checked = validate_links(governance_paths, errors)
+    evidence_checked = validate_evidence_references(
+        entries, cards, EvidenceResolver(root), root, errors
+    )
     archive_count = validate_archive(bank / "archive", errors)
-    return tuple(errors), len(router_ids), len(pattern_ids), len(symptom_ids), links_checked, archive_count
+    return (
+        tuple(errors),
+        len(router_ids),
+        len(pattern_ids),
+        len(symptom_ids),
+        links_checked,
+        evidence_checked,
+        archive_count,
+    )
 
 
 def main() -> None:
     args = parse_args()
     result = validate(args.root.resolve())
-    errors, router_count, pattern_count, symptom_count, links_checked, archive_count = result
+    errors, router_count, pattern_count, symptom_count, links_checked, evidence_checked, archive_count = result
     if errors:
         print("MEMORY_BANK_CHECK_FAILED")
         for error in errors:
@@ -217,6 +351,7 @@ def main() -> None:
         f"PATTERNS={pattern_count} "
         f"SYMPTOM_INDEX={symptom_count} "
         f"LINKS={links_checked} "
+        f"EVIDENCE_REFS={evidence_checked} "
         f"ARCHIVE_ENTRIES={archive_count}"
     )
 

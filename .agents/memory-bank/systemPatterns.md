@@ -27,6 +27,7 @@
 | **静态数据与 JAXB** | `SDJ-001`, `SDJ-002` | JAXB 实体实例字段严禁声明为 `final`；动态反射包树与技能/NPC XML 存在隐式映射关系 | [patterns/static-data-jaxb.md](patterns/static-data-jaxb.md) |
 | **核心架构与运行时** | `AR-001`, `AR-002`, `AR-003` | 移除 SPI 机制改为显式注入 Provider；高频服务门面热路径严禁裸调 `getIfAvailable` 查容器 | [patterns/architecture-runtime.md](patterns/architecture-runtime.md) |
 | **构建、环境与工具** | `ENV-001`, `ENV-002`, `ENV-003`, `ENV-004` | IDEA/打包运行产物边界；Lombok 同名同参重载陷阱；standalone javac 不可信；批量文本编辑需保护代码结构 | [patterns/build-and-env.md](patterns/build-and-env.md) |
+| **AI 选型与 NPC 移动** | `AIM-001`, `AIM-002`, `AIM-003` | Retail Pattern 会覆盖脚本跟随 AI；跟随停步半径产消两侧必须同源；非凸几何下用足迹队列 + 拉回兜底 | [patterns/ai-movement.md](patterns/ai-movement.md) |
 
 ---
 

@@ -15,6 +15,8 @@
 
 单次任务不要直接升级为永久规则；永久规则也不要反向承载完整的原始审计输出。Quest 的客户端/运行时验收仍以 `docs/quest/` 和 `summary` 中的结构化证据为准，memory-bank 只保存可复用结论。
 
+**与 Quest Playbook 的分工**：`docs/quest/repair-playbook/PATTERNS.zh-CN.md` 是 Quest **细粒度指纹库**（按症状、IR/owner 指纹、代表提交与测试组织，覆盖单个任务的修复合同）；本目录 `patterns/quest-engine.md` 是**跨域长期不变量**（只记录可复用的根因、护栏和失效边界）。二者存在对应关系（如 Playbook 的 `NPC_DIALOG_ROUTE_GATE_COLLISION` 对应 `QE-006`），排查 Quest 问题时应先读 Playbook 定位具体合同，再读 memory-bank 卡片确认跨域护栏。
+
 路径契约：`.agents/summary/` 是唯一真实目录；旧工具使用的 `.agent/summary` 必须是指向它的相对符号链接，不能另建第二份 summary。
 
 ## 2. 目录结构与读取顺序 (Layout and Read Order)
@@ -32,6 +34,7 @@
 ├── patterns/                      ← 带 Pattern ID 的长期模式卡片
 │   ├── quest-engine.md
 │   ├── instance-runtime.md
+│   ├── ai-movement.md
 │   ├── static-data-jaxb.md
 │   ├── architecture-runtime.md
 │   └── build-and-env.md
@@ -114,3 +117,14 @@ python3 .agents/memory-bank/check_memory_bank.py
 ```
 
 提交前可使用 `python3 .agents/memory-bank/sync_memory_bank.py --check` 检查派生索引是否过期。校验器只负责结构性问题：Pattern ID 是否唯一且可路由、每个条目元数据是否齐全、症状索引是否覆盖全部模式、内部 Markdown 链接是否存在、active/archive 元数据是否齐全。它不替 Agent 判断根因，也不把静态检查结果当成运行时或客户端验收。
+
+### 7.1 证据引用校验 (Evidence Reference Check)
+
+`check_memory_bank.py` 会额外解析每个 Pattern `evidence:` 字段中**看起来像引用**的 token 并逐条验证：
+
+- **路径**：含目录分隔符（`quests/1900.xml`）或带源码扩展名（`quest_data.xml`）的 token，按「仓库根 → 卡片所在目录 → 源码后缀匹配」顺序解析；后缀匹配命中多份或零份时报错。
+- **行号**：`path:line` 形式的行号若超出该文件总行数则报错。
+- **提交**：`commit <sha>` 形式的引用必须能被 `git rev-parse` 解析。
+- **豁免**：`target/`、`aion/`、`log/` 等被 gitignore 的运行时产物不做存在性检查（全新 checkout 中本来就不存在）。
+
+纯描述性文字（如 `Maven/JDK baseline notes`、`DAOManager.init`）不含上述特征，不会被误判为引用。这条校验能拦住「证据指向已删除文件」「行号越界」「引用不存在的提交」三类腐化；它**不检查引用内容是否切题**——行号落在文件内但语义错配仍需人工判断。

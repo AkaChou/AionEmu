@@ -15,7 +15,7 @@
 - **主分支 / 工作分支**：`quest`
 - **当前核心关注域**：
   - Quest 任务流转、状态机与 NPC 交互（Taloc's Hollow 副本实例脚本、Condition Spawns、Retail AI 判定）。
-  - 跟随 NPC 寻路轨迹（Breadcrumb trail）与护送 AI 选型优化。
+  - **已沉淀**：跟随 NPC 寻路轨迹（Breadcrumb trail）与护送 AI 选型优化已修复并提炼为 `AIM-001`–`AIM-003`（见 [patterns/ai-movement.md](patterns/ai-movement.md)），证据留在 `docs/movement/escort-follow-movement-repair.md`。不再作为未完成焦点。
 
 ---
 
