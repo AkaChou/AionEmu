@@ -8788,7 +8788,6 @@
         </spawn>
 		<!-- Seabrine Jotun -->
         <spawn npc_id="219928" respawn_time="3600">
-            <spot x="1949.3339" y="1439.2106" z="360.04346" h="61"/>
           <spot x="1949.117432" y="1438.918945" z="363.306366" h="15" resolve_z="true"/>
         </spawn>
 		<!-- Tidalsail Spirit -->

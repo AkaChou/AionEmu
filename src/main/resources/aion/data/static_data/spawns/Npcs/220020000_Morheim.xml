@@ -2084,7 +2084,6 @@
       <spot x="1048.913330" y="2624.040527" z="235.001678" entity_id="1210" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="212672" respawn_time="600">
-      <spot x="1336.708862" y="324.459351" z="527.125" h="56"/>
       <spot x="1335.928589" y="324.759094" z="528.000000" h="56" resolve_z="true"/>
       <spot x="1341.177856" y="375.215820" z="530.000000" h="80" resolve_z="true"/>
       <spot x="1361.220337" y="324.270447" z="528.000000" h="60" random_walk="2" resolve_z="true"/>
@@ -3898,7 +3897,6 @@
     </spawn>
     <spawn npc_id="212970" respawn_time="600">
       <spot x="2655.322266" y="2499.562500" z="146.000000" h="33" resolve_z="true"/>
-      <spot x="2655.404541" y="2499.500488" z="144.18858" h="33"/>
       <spot x="2760.326416" y="2620.455566" z="167.000000" random_walk="2" h="0" resolve_z="true"/>
       <spot x="2629.498779" y="2520.264404" z="144.000000" h="30" resolve_z="true"/>
       <spot x="2769.579346" y="2601.957031" z="167.000000" random_walk="2" h="0" resolve_z="true"/>
@@ -6799,13 +6797,11 @@
     </spawn>
     <spawn npc_id="212860" pool="1" respawn_time="11760">
       <spot x="2646.686523" y="2498.138428" z="146.000000" h="33" resolve_z="true"/>
-      <spot x="2646.628418" y="2498.094727" z="144.18858" h="33"/>
     </spawn>
     <spawn npc_id="212652" respawn_time="240">
       <spot x="1218.109863" y="942.508240" z="351.68646" h="86" alternate_id="212419" select_prob="9334"/>
     </spawn>
     <spawn npc_id="700216" respawn_time="60">
-      <spot x="2646.686523" y="2498.138428" z="144.18858" entity_id="330"/>
       <spot x="2646.628418" y="2498.094727" z="147.000000" entity_id="330" h="0" resolve_z="true"/>
       <spot x="2655.404541" y="2499.500488" z="147.000000" entity_id="286" h="0" resolve_z="true"/>
       <spot x="2663.902344" y="2500.970947" z="147.000000" entity_id="316" h="0" resolve_z="true"/>

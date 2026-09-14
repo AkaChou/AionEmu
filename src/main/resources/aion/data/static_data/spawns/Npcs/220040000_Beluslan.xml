@@ -5598,7 +5598,6 @@
     </spawn>
     <spawn npc_id="213744" pool="1" respawn_time="16380">
       <spot x="638.139893" y="2900.841309" z="298.000000" h="0" resolve_z="true"/>
-      <spot x="637.055542" y="2902.004639" z="296.10007"/>
     </spawn>
     <spawn npc_id="214093" respawn_time="240">
       <spot x="868.236816" y="1435.440674" z="215.000000" random_walk="5" h="0" resolve_z="true"/>

@@ -69,7 +69,6 @@
     </spawn>
     <spawn npc_id="236898">
       <spot x="269.530640" y="523.877563" z="510.000732" h="13" resolve_z="true"/>
-      <spot x="268.591919" y="523.973389" z="504.92404" h="13"/>
       <spot x="266.678558" y="496.798492" z="506.000732" h="45" resolve_z="true"/>
       <spot x="232.855606" y="519.384460" z="510.000732" h="56" resolve_z="true"/>
       <spot x="244.997391" y="534.895691" z="510.000732" h="15" resolve_z="true"/>
@@ -235,7 +234,6 @@
     </spawn>
     <spawn npc_id="236917">
       <spot x="503.294067" y="499.596863" z="450.110870" h="30" resolve_z="true"/>
-      <spot x="503.347595" y="499.394562" z="447.13733" h="30"/>
       <spot x="531.766418" y="568.824219" z="451.000732" h="45" walker_id="R01_Mobpath_G_IDDF3_R01_Elementalearth2D_428" walker_index="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="236872">
@@ -345,7 +343,6 @@
     </spawn>
     <spawn npc_id="236875">
       <spot x="219.847824" y="664.449402" z="527.000732" h="90" resolve_z="true"/>
-      <spot x="219.482697" y="664.685852" z="523.4187" h="90"/>
       <spot x="227.537018" y="685.354492" z="529.000732" h="50" resolve_z="true"/>
       <spot x="414.902374" y="591.392334" z="460.523438" h="75" resolve_z="true"/>
       <spot x="175.596649" y="696.006226" z="529.000732" h="106" resolve_z="true"/>
@@ -579,7 +576,6 @@
       <spot x="585.861694" y="486.200409" z="449.000732" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="236765">
-      <spot x="445.252167" y="704.531311" z="583.92377" h="90"/>
       <spot x="444.937378" y="704.942993" z="588.000732" h="90" resolve_z="true"/>
       <spot x="652.874451" y="578.386841" z="563.000732" h="53" resolve_z="true"/>
       <spot x="482.268707" y="548.424377" z="515.000732" h="30" resolve_z="true"/>
@@ -604,7 +600,6 @@
     </spawn>
     <spawn npc_id="236897">
       <spot x="261.367676" y="536.866455" z="511.000732" h="51" walker_id="05_Mobpath_N_IDDF3_05_AddDrakyD_46_Ae1" resolve_z="true"/>
-      <spot x="260.905884" y="536.327698" z="506.0148" h="51" walker_id="05_Mobpath_N_IDDF3_05_AddDrakyD_46_Ae1"/>
       <spot x="248.088623" y="511.459686" z="511.000732" h="50" walker_id="05_Mobpath_N_IDDF3_05_AddDrakyD_46_Ae_5" resolve_z="true"/>
       <spot x="253.289612" y="527.747498" z="511.000732" h="50" walker_id="05_Mobpath_N_IDDF3_05_AddDrakyD_46_Ae_4" resolve_z="true"/>
       <spot x="251.834122" y="523.412964" z="511.000732" h="50" walker_id="05_Mobpath_N_IDDF3_05_AddDrakyD_46_Ae_6" resolve_z="true"/>
@@ -806,7 +801,6 @@
       <spot x="476.822845" y="587.655334" z="513.6864" h="25"/>
     </spawn>
     <spawn npc_id="236887">
-      <spot x="302.286499" y="695.237549" z="598.28107" h="46"/>
       <spot x="302.169342" y="695.003235" z="601.000732" h="46" resolve_z="true"/>
       <spot x="292.972137" y="696.848816" z="601.000732" h="10" resolve_z="true"/>
     </spawn>

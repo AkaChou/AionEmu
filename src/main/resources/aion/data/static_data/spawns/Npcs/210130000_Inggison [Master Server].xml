@@ -4845,7 +4845,6 @@
     </spawn>
     <spawn npc_id="215866" respawn_time="90">
       <spot x="725.218262" y="1719.074829" z="325.000000" h="0" resolve_z="true"/>
-      <spot x="724.820251" y="1718.404175" z="322.69946"/>
       <spot x="858.236938" y="1563.302246" z="355.917542" random_walk="6" h="0" resolve_z="true"/>
       <spot x="684.538757" y="1515.480835" z="363.000000" random_walk="2" h="0" resolve_z="true"/>
       <spot x="741.553650" y="1467.337646" z="363.000000" h="25" random_walk="2" resolve_z="true"/>
@@ -7082,7 +7081,6 @@
       <spot x="1543.714600" y="1299.120239" z="400.000000" h="61" resolve_z="true"/>
     </spawn>
     <spawn npc_id="206134" pool="1" respawn_time="60">
-      <spot x="231.029144" y="1250.353394" z="313.65802"/>
       <spot x="230.750000" y="1251.010010" z="316.000000" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700914" respawn_time="60">

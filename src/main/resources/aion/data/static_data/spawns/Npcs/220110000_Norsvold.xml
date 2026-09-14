@@ -30,7 +30,6 @@
 			<spot x="1787.681519" y="2318.547119" z="206.497543" entity_id="1506" h="53" resolve_z="true"/>
 			<spot x="1816.726196" y="2326.113770" z="209.405029" entity_id="1507" h="53" resolve_z="true"/>
 			<spot x="1783.174316" y="2235.812256" z="201.783295" entity_id="1508" h="53" resolve_z="true"/>
-		  <spot x="1630.102417" y="2147.306641" z="177.08167" h="53"/>
 		</spawn>
 		<!-- Guardian's Trap -->
 		<spawn npc_id="703075" respawn_time="60">
@@ -54,7 +53,6 @@
 			<spot x="1269.340942" y="1446.802734" z="206.815857" entity_id="2867" h="0" resolve_z="true"/>
 			<spot x="1395.918091" y="1458.083252" z="203.101822" entity_id="2875" h="0" resolve_z="true"/>
 			<spot x="1473.008545" y="1425.220093" z="201.836548" entity_id="2876" h="0" resolve_z="true"/>
-		  <spot x="1818.543213" y="1697.118530" z="225.18008"/>
 		  <spot x="1750.702881" y="1399.875122" z="292.151672" h="0" random_walk="2" resolve_z="true"/>
 		  <spot x="1807.175415" y="1435.282471" z="292.151672" h="0" random_walk="2" resolve_z="true"/>
 		</spawn>
@@ -136,7 +134,6 @@
 			<spot x="2573.664795" y="2030.559082" z="245.578278" entity_id="1219" h="0" resolve_z="true"/>
 			<spot x="2414.112061" y="1840.712646" z="229.115494" entity_id="1220" h="0" resolve_z="true"/>
 			<spot x="2310.798340" y="1957.518677" z="238.989151" entity_id="1221" h="0" resolve_z="true"/>
-		  <spot x="2448.280273" y="2000.390991" z="235.38884"/>
 		</spawn>
 		<!-- Calydon Totem -->
 		<spawn npc_id="703079" respawn_time="60">
@@ -229,7 +226,6 @@
 			<spot x="416.757751" y="2803.809082" z="231.152725" entity_id="1717" h="0" resolve_z="true"/>
 			<spot x="597.310913" y="2831.520020" z="223.866135" entity_id="1718" h="0" resolve_z="true"/>
 			<spot x="200.806976" y="2426.456299" z="241.341721" entity_id="1719" h="0" resolve_z="true"/>
-		  <spot x="597.310913" y="2831.520020" z="223.86613"/>
 		</spawn>
 		<!-- Howling Daeva Statue -->
 		<spawn npc_id="703083" respawn_time="60">
@@ -344,7 +340,6 @@
 			<spot x="691.481323" y="429.973602" z="296.250000" entity_id="3424" h="0" resolve_z="true"/>
 			<spot x="716.233521" y="456.362854" z="296.250000" entity_id="3425" h="0" resolve_z="true"/>
 			<spot x="915.478027" y="769.326111" z="264.674500" entity_id="3426" h="0" resolve_z="true"/>
-		  <spot x="691.481323" y="429.973602" z="296.25"/>
 		</spawn>
 		<!-- Suspicious Aether Fragment -->
 		<spawn npc_id="703318" respawn_time="295">

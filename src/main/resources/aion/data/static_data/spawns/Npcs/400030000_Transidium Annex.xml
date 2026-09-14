@@ -316,7 +316,6 @@
 		</spawn>
 		<!-- Herailt -->
 		<spawn npc_id="802663">
-			<spot x="292.69116" y="736.71564" z="680.1125" h="57"/>
 		  <spot x="293.671051" y="735.774963" z="681.383362" h="75" resolve_z="true"/>
 		</spawn>
 		<!-- Herailt -->

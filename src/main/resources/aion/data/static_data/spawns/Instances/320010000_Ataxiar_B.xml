@@ -33,12 +33,8 @@
 		</spawn>
 		<spawn npc_id="205038" respawn_time="1"><!-- AbProD2_Guardian_Chanter -->
 			<spot x="270.000000" y="300.250000" z="210.000000" h="0" random_walk="6" resolve_z="true"/>
-			<spot x="256.000" y="300.000" z="207.000" h="90" random_walk="6"/>
-			<spot x="232.000" y="233.250" z="207.500" h="90" random_walk="6"/>
 			<spot x="259.000000" y="218.750000" z="207.500000" h="53" random_walk="6" resolve_z="true"/>
-			<spot x="239.000" y="280.750" z="210.000" h="90" random_walk="6"/>
 			<spot x="282.000000" y="221.750000" z="209.750000" h="60" random_walk="6" resolve_z="true"/>
-			<spot x="230.000" y="274.500" z="207.500" h="90" random_walk="6"/>
 		  <spot x="256.250000" y="300.000000" z="210.000000" h="80" resolve_z="true"/>
 		  <spot x="232.500000" y="233.250000" z="207.500000" h="30" resolve_z="true"/>
 		  <spot x="239.500000" y="280.750000" z="210.000000" h="45" resolve_z="true"/>

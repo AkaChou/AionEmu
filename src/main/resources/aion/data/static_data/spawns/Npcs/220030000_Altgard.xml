@@ -2025,7 +2025,6 @@
     </spawn>
     <spawn npc_id="210598" pool="1" respawn_time="180">
       <spot x="1575.823975" y="217.533981" z="286.461609" h="60" resolve_z="true"/>
-      <spot x="1574.890015" y="217.423172" z="284.375" h="60"/>
     </spawn>
     <spawn npc_id="203689" respawn_time="60">
       <spot x="2663.726807" y="1659.337402" z="326.000000" h="116" resolve_z="true"/>

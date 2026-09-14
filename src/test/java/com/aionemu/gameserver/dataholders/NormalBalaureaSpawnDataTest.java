@@ -19,7 +19,11 @@ class NormalBalaureaSpawnDataTest {
 		assertEquals(2527, movingSpots("210050000_Inggison.xml"));
 		assertEquals(993, movingSpots("220070000_Gelkmaros.xml"));
 		assertEquals(168, movingSpots("600010000_Silentera_Canyon.xml"));
-		assertEquals(631, movingSpots("400010000_Reshanta.xml"));
+		// Reshanta 630：去重时移除了 278045 的死引用 walker_id="Tern" 残留旧点，
+		// 该点在 ai-waypoints.xml 中无对应 route，真端点已带可解析的 retail: 路径。
+		// Reshanta 630: deduplication dropped the stale walker_id="Tern" spot at 278045;
+		// that route is absent from ai-waypoints.xml, the retail spot already carries a resolvable path.
+		assertEquals(630, movingSpots("400010000_Reshanta.xml"));
 		assertEquals(531, movingSpots("400020000_Belus.xml"));
 		assertEquals(528, movingSpots("400040000_Aspida.xml"));
 		assertEquals(527, movingSpots("400050000_Atanatos.xml"));

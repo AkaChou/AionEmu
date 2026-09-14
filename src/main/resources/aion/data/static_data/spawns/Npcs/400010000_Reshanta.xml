@@ -217,7 +217,6 @@
         </spawn>
 		<!-- Haug -->
         <spawn npc_id="278040" respawn_time="60">
-            <spot h="74" z="1655.4773" y="2716.4824" x="420.30707"/>
           <spot x="418.900391" y="2716.463623" z="1655.924316" h="75" resolve_z="true"/>
         </spawn>
 		<!-- Altak -->
@@ -238,7 +237,6 @@
         </spawn>
 		<!-- Tern -->
         <spawn npc_id="278045" respawn_time="60">
-            <spot h="15" z="1642.3323" y="2617.391" x="486.45337" walker_id="Tern"/>
           <spot x="487.371277" y="2618.566406" z="1647.310181" h="75" walker_id="retail:400010000:ab1_npcpath_dark_tern" resolve_z="true"/>
         </spawn>
 		<!-- Bokbor -->
@@ -455,7 +453,6 @@
         </spawn>
 		<!-- Noiman -->
         <spawn npc_id="278136" respawn_time="60">
-            <spot h="46" z="1594.2235" y="2497.5515" x="238.77199"/>
           <spot x="238.535889" y="2497.698730" z="1595.223511" h="48" resolve_z="true"/>
         </spawn>
 		<!-- Jafnhar -->
@@ -560,7 +557,6 @@
         </spawn>
 		<!-- Lucius -->
         <spawn npc_id="278510" respawn_time="60">
-            <spot h="104" z="1546.1555" y="571.9754" x="2392.9153"/>
           <spot x="2394.222168" y="572.742920" z="1546.815552" h="105" resolve_z="true"/>
         </spawn>
 		<!-- Minon -->
@@ -686,7 +682,6 @@
         </spawn>
 		<!-- Trian -->
         <spawn npc_id="278542" respawn_time="60">
-            <spot z="1546.093" y="549.5384" x="2383.9844"/>
           <spot x="2384.333008" y="549.711426" z="1547.975342" h="75" resolve_z="true"/>
         </spawn>
 		<!-- Rupus -->
@@ -889,7 +884,6 @@
         </spawn>
 		<!-- Sileni -->
         <spawn npc_id="278628" respawn_time="60">
-            <spot h="10" z="1513.9065" y="602.0919" x="2485.9043"/>
           <spot x="2486.040039" y="602.224487" z="1515.000000" h="11" resolve_z="true"/>
         </spawn>
 		<!-- Adrastea -->
@@ -898,7 +892,6 @@
         </spawn>
 		<!-- Lachesis -->
         <spawn npc_id="278630" respawn_time="60">
-            <spot h="37" z="1513.9073" y="590.25104" x="2520.2463"/>
           <spot x="2520.104004" y="590.707886" z="1515.000000" h="40" resolve_z="true"/>
         </spawn>
 		<!-- Erdias -->
@@ -911,7 +904,6 @@
         </spawn>
 		<!-- Larentia -->
         <spawn npc_id="278633" respawn_time="60">
-            <spot h="90" z="1513.9066" y="646.02045" x="2509.2595"/>
           <spot x="2509.093750" y="645.521973" z="1515.000000" h="88" resolve_z="true"/>
         </spawn>
 		<!-- Glaucos -->
@@ -1064,7 +1056,6 @@
         </spawn>
 		<!-- Trader's Bodyguard -->
         <spawn npc_id="279021" respawn_time="60">
-            <spot h="48" z="2766.6611" y="2070.543" x="2784.9858"/>
             <spot h="116" z="2770.125000" y="2051.276611" x="2776.825195" resolve_z="true"/>
             <spot h="23" z="2770.125000" y="2068.738770" x="2738.343262" resolve_z="true"/>
             <spot h="85" z="2770.125000" y="2079.082764" x="2806.296875" resolve_z="true"/>
@@ -1084,7 +1075,6 @@
         </spawn>
 		<!-- Guuminerk -->
         <spawn npc_id="279025" respawn_time="60">
-            <spot h="10" z="1533.6819" y="671.07477" x="2330.839"/>
           <spot x="2331.474121" y="671.512451" z="1534.382080" h="30" resolve_z="true"/>
         </spawn>
 		<!-- Sienrurerk -->
@@ -1126,7 +1116,6 @@
         </spawn>
 		<!-- Juimonmonerk -->
         <spawn npc_id="279037" respawn_time="60">
-            <spot z="1639.0138" y="2521.996" x="439.95816"/>
           <spot x="440.579712" y="2522.602295" z="1641.721191" h="75" resolve_z="true"/>
         </spawn>
 		<!-- Fayrunerk -->
@@ -1215,7 +1204,6 @@
         </spawn>
 		<!-- Tostig -->
         <spawn npc_id="799870" respawn_time="60">
-            <spot h="44" z="1655.3513" y="2693.8757" x="432.61865"/>
           <spot x="432.063171" y="2694.166016" z="1656.221436" h="38" resolve_z="true"/>
         </spawn>
 		<!-- Kisment -->
@@ -1424,32 +1412,26 @@
 		</spawn>
 		<!-- Verteron Teleport Tower -->
 		<spawn npc_id="730073" respawn_time="60">
-			<spot x="2246.8882" y="563.23663" z="1542.0366" entity_id="288"/>
 			<spot x="2246.978516" y="563.484741" z="1535.000000" entity_id="992" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Eltnen Teleport Tower -->
 		<spawn npc_id="730074" respawn_time="60">
-			<spot x="2274.7598" y="645.83179" z="1536.3683" entity_id="293"/>
 			<spot x="2275.167480" y="645.801575" z="1529.000000" entity_id="998" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Heiron Teleport Tower -->
 		<spawn npc_id="730075" respawn_time="60">
 			<spot x="2359.465332" y="663.928833" z="1535.000000" entity_id="283" h="0" resolve_z="true"/>
-			<spot x="2359.3433" y="664.17615" z="1542.0487" entity_id="392"/>
 		</spawn>
 		<!-- Altgard Teleport Device -->
 		<spawn npc_id="730076" respawn_time="60">
-			<spot x="596.56152" y="2658.4795" z="1638.9587" entity_id="830"/>
 			<spot x="596.334351" y="2658.265381" z="1640.998779" entity_id="996" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Morheim Teleport Device -->
 		<spawn npc_id="730077" respawn_time="60">
 			<spot x="565.604126" y="2554.267334" z="1636.998779" entity_id="271" h="0" resolve_z="true"/>
-			<spot x="565.77783" y="2554.2268" z="1636.6040" entity_id="275"/>
 		</spawn>
 		<!-- Beluslan Teleport Device -->
 		<spawn npc_id="730078" respawn_time="60">
-			<spot x="459.78528" y="2527.0132" z="1639.5238" entity_id="276"/>
 			<spot x="459.923584" y="2527.157959" z="1639.998779" entity_id="993" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- The History Of Struggles Primum -->
@@ -3620,7 +3602,6 @@
             <spot z="1596.374390" y="1420.200073" x="618.423340" walker_id="retail:400010000:ab1_1141_mobpath_flyingeye_27_5" h="20" resolve_z="true"/>
             <spot z="1594.367310" y="1442.091431" x="499.811981" walker_id="retail:400010000:ab1_1141_mobpath_flyingeye_27_9" h="20" resolve_z="true"/>
             <spot z="1613.881470" y="1431.020142" x="311.034149" h="0" resolve_z="true"/>
-            <spot z="1566.6483" y="1365.6316" x="308.22842"/>
             <spot z="1604.270752" y="1479.391602" x="597.569336" h="40" resolve_z="true"/>
             <spot z="1599.655273" y="1382.374023" x="344.409943" walker_id="retail:400010000:ab1_1141_mobpath_flyingeye_27_8" h="0" resolve_z="true"/>
             <spot z="1604.900757" y="1516.446289" x="575.196289" h="60" resolve_z="true"/>

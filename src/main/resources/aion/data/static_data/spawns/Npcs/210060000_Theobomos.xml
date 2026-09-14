@@ -7635,7 +7635,6 @@
     </spawn>
     <spawn npc_id="798161" respawn_time="60">
       <spot x="2272.791748" y="2219.743164" z="62.979275" h="75" walker_id="LF2B_NPCPath_Sanctuary_Guard_M1" resolve_z="true"/>
-      <spot x="2273.710205" y="2219.168945" z="58.378616" h="75" walker_id="LF2B_NPCPath_Sanctuary_Guard_M1"/>
       <spot x="2276.652832" y="2214.542236" z="62.979275" h="75" walker_id="LF2B_NPCPath_Sanctuary_Guard_F1" resolve_z="true"/>
     </spawn>
     <spawn npc_id="213929" pool="1" respawn_time="300">
