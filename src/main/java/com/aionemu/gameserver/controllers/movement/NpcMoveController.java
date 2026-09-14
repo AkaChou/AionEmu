@@ -13,6 +13,7 @@ import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.NpcActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -37,6 +38,8 @@ import com.aionemu.gameserver.world.geo.path.PathService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -85,6 +88,14 @@ public class NpcMoveController
     private static final float NEAREST_PATH_RECOVERY_RADIUS = 2;
     private static final float NEAREST_PATH_RECOVERY_VERTICAL = 0.7f;
     private static final float LOCAL_AVOIDANCE_HEIGHT_TOLERANCE = 0.25f;
+    /** 足迹采样步长（米）：跟随目标位移超过该值记录一个新足迹。 / Sampling step distance for player follow trail (meters). */
+    public static final float TRAIL_STEP_DISTANCE = 2.0f;
+    /** 足迹点踩中消费阈值（米）：NPC 接近当前足迹点时出队并切换下一个。 / Arrival distance to consume a trail point (meters). */
+    public static final float TRAIL_ARRIVE_DISTANCE = 1.2f;
+    /** 最大足迹缓存点数。 / Maximum breadcrumb points kept in memory. */
+    public static final int TRAIL_MAX_POINTS = 20;
+    /** 跟随严重脱节瞬移兜底距离（米）。 / Distance threshold to trigger catch-up teleport when line of sight blocked (meters). */
+    public static final float FOLLOW_CATCHUP_TELEPORT_DISTANCE = 30.0f;
     private static final int[] TARGET_SLOT_ADJUSTMENTS = {0, 20, -20, 40, -40};
     private static final LongAdder stuckSuspected = new LongAdder();
     private static final LongAdder stuckConfirmed = new LongAdder();
@@ -188,6 +199,8 @@ public class NpcMoveController
     private float chaseSlotAnchorX, chaseSlotAnchorY, chaseSlotX, chaseSlotY, chaseSlotZ;
     /** 跟随马达 / Follow motor */
     private FollowMotor _followMotor;
+    /** 跟随足迹历史队列。 / FIFO breadcrumb trail for escort and follow movement. */
+    private final Deque<Point3D> followTrail = new ArrayDeque<>();
 
     /**
      * 使用指定 NPC 构造控制器。
@@ -237,6 +250,7 @@ public class NpcMoveController
         if ((this._followMotor != null)) {
             this._followMotor.stop();
             this._followMotor = null;
+            clearFollowTrail();
         }
     }
 
@@ -529,9 +543,16 @@ public class NpcMoveController
                 }
                 boolean following = owner != null && owner.getAi2() != null
                         && owner.getAi2().getState() == AIState.FOLLOWING;
-                if (following && MathUtil.isIn3dRange(owner, creature, FollowEventHandler.CLOSE_FOLLOW_RANGE)) {
-                    abortMove();
-                    return;
+                if (following) {
+                    if (MathUtil.isIn3dRange(owner, creature, FollowEventHandler.CLOSE_FOLLOW_RANGE)) {
+                        clearFollowTrail();
+                        abortMove();
+                        return;
+                    }
+                    if (tryFollowCatchupTeleport(creature)) {
+                        return;
+                    }
+                    advanceFollowTrail(creature, getTargetZ(GameWorldServices.pathService().usesSpatialPath(owner), creature));
                 }
                 if (usesPath()) {
                     boolean targetChanged = trackedTargetId != creature.getObjectId();
@@ -599,7 +620,7 @@ public class NpcMoveController
                     if (owner.getAi2().getState() == AIState.FOLLOWING) {
                         cancelFollow();
                         offset = FollowEventHandler.CLOSE_FOLLOW_RANGE;
-                        moveToLocation(target.getX(), target.getY(), target.getZ(), offset);
+                        moveToLocation(pointX, pointY, pointZ, offset);
                         break;
                     }
                     applyFollow(target);
@@ -699,9 +720,17 @@ public class NpcMoveController
             chaseSlotValid = false;
         }
         offset = following ? FollowEventHandler.CLOSE_FOLLOW_RANGE : attackDistance;
-        pointX = target.getX();
-        pointY = target.getY();
-        pointZ = targetZ;
+        if (following) {
+            updateFollowTrail(target, targetZ);
+            Point3D waypoint = selectFollowWaypoint(target, targetZ);
+            pointX = waypoint.getX();
+            pointY = waypoint.getY();
+            pointZ = waypoint.getZ();
+        } else {
+            pointX = target.getX();
+            pointY = target.getY();
+            pointZ = targetZ;
+        }
     }
 
     private float[] findAttackSlot(Creature target, float targetZ, float attackDistance) {
@@ -720,6 +749,139 @@ public class NpcMoveController
             }
         }
         return null;
+    }
+
+    public void clearFollowTrail() {
+        followTrail.clear();
+    }
+
+    public int followTrailSize() {
+        return followTrail.size();
+    }
+
+    void updateFollowTrail(Creature target, float targetZ) {
+        if (owner == null || target == null
+                || target.getWorldId() != owner.getWorldId()
+                || target.getInstanceId() != owner.getInstanceId()) {
+            followTrail.clear();
+            return;
+        }
+        float tx = target.getX();
+        float ty = target.getY();
+        if (followTrail.isEmpty()) {
+            float distToOwner = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), tx, ty, targetZ);
+            if (distToOwner >= TRAIL_STEP_DISTANCE) {
+                followTrail.addLast(new Point3D(tx, ty, targetZ));
+            }
+        } else {
+            Point3D last = followTrail.peekLast();
+            float distFromLast = (float) MathUtil.getDistance(last.getX(), last.getY(), last.getZ(), tx, ty, targetZ);
+            if (distFromLast >= TRAIL_STEP_DISTANCE) {
+                if (followTrail.size() >= TRAIL_MAX_POINTS) {
+                    followTrail.pollFirst();
+                }
+                followTrail.addLast(new Point3D(tx, ty, targetZ));
+            }
+        }
+    }
+
+    Point3D selectFollowWaypoint(Creature target, float targetZ) {
+        if (followTrail.isEmpty()) {
+            return new Point3D(target.getX(), target.getY(), targetZ);
+        }
+        if (canPassDirectly(target)) {
+            followTrail.clear();
+            return new Point3D(target.getX(), target.getY(), targetZ);
+        }
+        while (!followTrail.isEmpty()) {
+            Point3D head = followTrail.peekFirst();
+            if (head == null) {
+                break;
+            }
+            float dist = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(),
+                    head.getX(), head.getY(), head.getZ());
+            if (dist <= TRAIL_ARRIVE_DISTANCE) {
+                followTrail.pollFirst();
+            } else {
+                break;
+            }
+        }
+        if (followTrail.isEmpty()) {
+            return new Point3D(target.getX(), target.getY(), targetZ);
+        }
+        return followTrail.peekFirst();
+    }
+
+    boolean advanceFollowTrail(Creature target, float targetZ) {
+        if (followTrail.isEmpty()) {
+            return false;
+        }
+        if (canPassDirectly(target)) {
+            followTrail.clear();
+            pointX = target.getX();
+            pointY = target.getY();
+            pointZ = targetZ;
+            resetPath();
+            return true;
+        }
+        Point3D head = followTrail.peekFirst();
+        if (head == null) {
+            return false;
+        }
+        float dist = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(),
+                head.getX(), head.getY(), head.getZ());
+        if (dist <= TRAIL_ARRIVE_DISTANCE) {
+            followTrail.pollFirst();
+            Point3D next = followTrail.isEmpty() ? new Point3D(target.getX(), target.getY(), targetZ)
+                    : followTrail.peekFirst();
+            pointX = next.getX();
+            pointY = next.getY();
+            pointZ = next.getZ();
+            resetPath();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean canPassDirectly(Creature target) {
+        if (owner == null || target == null) {
+            return false;
+        }
+        if (!GeoDataConfig.GEO_ENABLE) {
+            return followTrail.isEmpty();
+        }
+        return GameWorldServices.geoService().canPass(owner, target);
+    }
+
+    boolean tryFollowCatchupTeleport(Creature target) {
+        if (owner == null || target == null) {
+            return false;
+        }
+        float distance = (float) MathUtil.getDistance(owner, target);
+        if (distance >= FOLLOW_CATCHUP_TELEPORT_DISTANCE && !canPassDirectly(target)) {
+            catchupTeleportTo(target);
+            return true;
+        }
+        return false;
+    }
+
+    void catchupTeleportTo(Creature target) {
+        if (owner == null || target == null) {
+            return;
+        }
+        clearFollowTrail();
+        clearPathFailureContext();
+        abortMove();
+        float targetZ = target.getZ();
+        if (GeoDataConfig.GEO_ENABLE && !owner.isFlying()) {
+            targetZ = GameWorldServices.geoService().getZ(target);
+        }
+        float oldX = owner.getX();
+        float oldY = owner.getY();
+        float oldZ = owner.getZ();
+        GameWorldBootstrapServices.world().updatePosition(owner, target.getX(), target.getY(), targetZ, target.getHeading());
+        PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), oldX, oldY, oldZ,
+                target.getX(), target.getY(), targetZ, target.getHeading(), MovementMask.IMMEDIATE));
     }
 
     private void resetTargetTracking() {
@@ -1208,6 +1370,13 @@ public class NpcMoveController
                 tryNearestPathRecovery(target);
             }
             return;
+        }
+        boolean following = owner.getAi2() != null && owner.getAi2().getState() == AIState.FOLLOWING;
+        if (following && target != null && stuckShadowConfirmed) {
+            if (stuckReplanAttemptCount >= STUCK_REPLAN_MAX_ATTEMPTS) {
+                catchupTeleportTo(target);
+                return;
+            }
         }
         if (target != null && chaseSlotTargetId == target.getObjectId() && chaseSlotValid) {
             refreshAttackSlotForRecovery(target);
@@ -1727,6 +1896,7 @@ public class NpcMoveController
             clearStuckRecoveryState();
         }
         resetStuckShadow();
+        clearFollowTrail();
     }
 
     private void recordPathFailure(float targetX, float targetY, float targetZ, boolean definitive) {

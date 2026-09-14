@@ -53,6 +53,63 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
+	void followTrailRecordsStepsWhenTargetMovesFarEnough() {
+		Player target = new ObjenesisStd().newInstance(Player.class);
+		WorldPosition targetPos = new WorldPosition(210010000);
+		targetPos.setXYZH(0f, 0f, 0f, (byte) 0);
+		target.setPosition(targetPos);
+
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition ownerPos = new WorldPosition(210010000);
+		ownerPos.setXYZH(0f, 0f, 0f, (byte) 0);
+		owner.setPosition(ownerPos);
+
+		NpcMoveController controller = new NpcMoveController(owner);
+		assertEquals(0, controller.followTrailSize());
+
+		targetPos.setXYZH(1f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(0, controller.followTrailSize());
+
+		targetPos.setXYZH(2.5f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(1, controller.followTrailSize());
+
+		targetPos.setXYZH(3.0f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(1, controller.followTrailSize());
+
+		targetPos.setXYZH(5.0f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(2, controller.followTrailSize());
+	}
+
+	@Test
+	void followTrailAdvancesAndPopsReachedWaypoints() {
+		Player target = new ObjenesisStd().newInstance(Player.class);
+		WorldPosition targetPos = new WorldPosition(210010000);
+		targetPos.setXYZH(6f, 0f, 0f, (byte) 0);
+		target.setPosition(targetPos);
+
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition ownerPos = new WorldPosition(210010000);
+		ownerPos.setXYZH(0f, 0f, 0f, (byte) 0);
+		owner.setPosition(ownerPos);
+
+		NpcMoveController controller = new NpcMoveController(owner);
+		targetPos.setXYZH(2.5f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		targetPos.setXYZH(5.0f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(2, controller.followTrailSize());
+
+		ownerPos.setXYZH(2.0f, 0f, 0f, (byte) 0);
+		boolean advanced = controller.advanceFollowTrail(target, 0);
+		assertTrue(advanced);
+		assertEquals(1, controller.followTrailSize());
+	}
+
+	@Test
 	void homeReturnReplacesAnAlreadyStartedPointMove() throws ReflectiveOperationException {
 		Npc owner = new ObjenesisStd().newInstance(Npc.class);
 		Field objectId = AionObject.class.getDeclaredField("objectId");
