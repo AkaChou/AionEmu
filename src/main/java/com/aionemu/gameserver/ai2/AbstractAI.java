@@ -377,7 +377,7 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @param owner 所有者 / owner
 	 */
-	void setOwner(Creature owner) {
+	public void setOwner(Creature owner) {
 		this.owner = owner;
 	}
 

@@ -133,11 +133,12 @@ public class AI2Engine implements GameEngine {
 		return aiInstance;
 	}
 
-	static String selectNpcAi(String fallback, int npcId, Npc npc) {
-		// These scripted action items own their interaction protocol; a retail pattern would
-		// bypass it and fall through to the generic page-10 dialog.
+	public static String selectNpcAi(String fallback, int npcId, Npc npc) {
+		// These scripted action items and follow handlers own their interaction/follow protocol;
+		// a retail pattern would bypass it and fall through to generic dialogs or drop follow events.
 		if ("quest_use_item".equals(fallback) || "quest_start_use_item".equals(fallback)
-			|| "empyrean_blessing".equals(fallback)) {
+			|| "empyrean_blessing".equals(fallback) || "following".equals(fallback)
+			|| "deliveryman".equals(fallback)) {
 			return fallback;
 		}
 		if (QUEST_SIDE_EFFECT_AI.contains(fallback)) {

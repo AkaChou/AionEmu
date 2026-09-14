@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.ai2.AI2Engine;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -28,6 +29,11 @@ class Quest14042RetailAlignmentTest {
 			.findFirst().orElseThrow();
 		assertEquals(253635, action.npcId());
 		assertTrue(follow.afterCommit().stream().anyMatch(AfterCommitAction.CloseDialog.class::isInstance));
+	}
+
+	@Test
+	void prisonerNpcTemplateRetainsFollowingAiRatherThanRetailPattern() {
+		assertEquals("following", AI2Engine.selectNpcAi("following", 253623, null));
 	}
 
 	private static CompiledQuestDefinition load() throws Exception {

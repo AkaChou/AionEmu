@@ -18,7 +18,7 @@ import com.aionemu.gameserver.utils.MathUtil;
  */
 public class FollowEventHandler {
 	/** 普通满血跟随 NPC 的贴身距离；超过该距离才重新追击。 / Close follow distance for full-health NPCs. */
-	private static final float CLOSE_FOLLOW_RANGE = 3;
+	public static final float CLOSE_FOLLOW_RANGE = 3;
 
 	/**
 	 * 开始跟随指定生物：切换到 FOLLOWING 状态并播放跟随表情。
@@ -28,11 +28,10 @@ public class FollowEventHandler {
 	 * @param creature 待跟随的生物 / creature to follow
 	 */
 	public static void follow(NpcAI2 npcAI, Creature creature) {
-		if (npcAI.setStateIfNot(AIState.FOLLOWING)) {
-			npcAI.getOwner().setTarget(creature);
-			EmoteManager.emoteStartFollowing(npcAI.getOwner());
-			FollowManager.startMoving(npcAI);
-		}
+		npcAI.setStateIfNot(AIState.FOLLOWING);
+		npcAI.getOwner().setTarget(creature);
+		EmoteManager.emoteStartFollowing(npcAI.getOwner());
+		FollowManager.startMoving(npcAI);
 	}
 
 	/**
@@ -75,13 +74,7 @@ public class FollowEventHandler {
 		if (object == null) {
 			return false;
 		}
-		if (object.isInInstance()) {
-			return MathUtil.isIn3dRange(ai.getOwner(), object, 9999);
-		} else if (ai.getOwner().getLifeStats().getHpPercentage() < 100) {
-			return MathUtil.isIn3dRange(ai.getOwner(), object, 30);
-		} else {
-			return MathUtil.isIn3dRange(ai.getOwner(), object, CLOSE_FOLLOW_RANGE);
-		}
+		return MathUtil.isIn3dRange(ai.getOwner(), object, CLOSE_FOLLOW_RANGE);
 	}
 
 	/**

@@ -47,6 +47,8 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("quest_use_item", AI2Engine.selectNpcAi("quest_use_item", 200000, null));
 			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
+			assertEquals("following", AI2Engine.selectNpcAi("following", 200000, null));
+			assertEquals("deliveryman", AI2Engine.selectNpcAi("deliveryman", 200000, null));
 			for (int npcId : bossSummonNpcIds) {
 				assertEquals("retail_pattern", AI2Engine.selectNpcAi("IDEternity_01_Boss_Summon", npcId, null));
 			}
@@ -67,5 +69,13 @@ class AI2EngineRetailSelectionTest {
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 		}
+	}
+
+	@Test
+	void preservesFollowingAiForEscortPrisonerNpcsOverRetailPattern() {
+		// NPC 253623 (captured elyos prisoner) and 253626 (captured asmodian prisoner)
+		// must retain their scripted following AI even though retail data defines AD2_Prisoner.
+		assertEquals("following", AI2Engine.selectNpcAi("following", 253623, null));
+		assertEquals("following", AI2Engine.selectNpcAi("following", 253626, null));
 	}
 }

@@ -57,8 +57,7 @@ public class FollowingNpcAI2 extends GeneralNpcAI2
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature == getOwner().getTarget())
-			FollowEventHandler.creatureMoved(this, creature);
+		FollowEventHandler.creatureMoved(this, creature);
 	}
 	
 	/**

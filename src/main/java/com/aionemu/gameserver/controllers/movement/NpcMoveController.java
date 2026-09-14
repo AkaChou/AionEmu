@@ -5,6 +5,7 @@ import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.ai2.handler.FollowEventHandler;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -362,7 +363,11 @@ public class NpcMoveController
     }
 
     static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance) {
-        return !spatialPath && attackDistance > 0.75f && attackDistance <= TARGET_SLOT_MAX_ATTACK_RANGE;
+        return shouldUseAttackSlot(spatialPath, attackDistance, false);
+    }
+
+    static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance, boolean following) {
+        return !following && !spatialPath && attackDistance > 0.75f && attackDistance <= TARGET_SLOT_MAX_ATTACK_RANGE;
     }
 
     static int attackSlotOffsetDegrees(int ownerId, int targetId) {
@@ -522,6 +527,12 @@ public class NpcMoveController
                     cancelFollow();
                     return;
                 }
+                boolean following = owner != null && owner.getAi2() != null
+                        && owner.getAi2().getState() == AIState.FOLLOWING;
+                if (following && MathUtil.isIn3dRange(owner, creature, FollowEventHandler.CLOSE_FOLLOW_RANGE)) {
+                    abortMove();
+                    return;
+                }
                 if (usesPath()) {
                     boolean targetChanged = trackedTargetId != creature.getObjectId();
                     if (targetChanged) {
@@ -587,7 +598,7 @@ public class NpcMoveController
                 } else {
                     if (owner.getAi2().getState() == AIState.FOLLOWING) {
                         cancelFollow();
-                        offset = owner.getController().getAttackDistanceToTarget();
+                        offset = FollowEventHandler.CLOSE_FOLLOW_RANGE;
                         moveToLocation(target.getX(), target.getY(), target.getZ(), offset);
                         break;
                     }
@@ -658,7 +669,9 @@ public class NpcMoveController
     }
 
     private void updateTargetDestination(Creature target, boolean spatialPath, float targetZ, float attackDistance) {
-        if (shouldUseAttackSlot(spatialPath, attackDistance)) {
+        boolean following = owner != null && owner.getAi2() != null
+                && owner.getAi2().getState() == AIState.FOLLOWING;
+        if (shouldUseAttackSlot(spatialPath, attackDistance, following)) {
             boolean refresh = chaseSlotTargetId != target.getObjectId()
                     || MathUtil.getDistance(chaseSlotAnchorX, chaseSlotAnchorY, target.getX(), target.getY())
                             >= TARGET_SLOT_RECALC_DISTANCE;
@@ -685,7 +698,7 @@ public class NpcMoveController
             chaseSlotTargetId = 0;
             chaseSlotValid = false;
         }
-        offset = attackDistance;
+        offset = following ? FollowEventHandler.CLOSE_FOLLOW_RANGE : attackDistance;
         pointX = target.getX();
         pointY = target.getY();
         pointZ = targetZ;
