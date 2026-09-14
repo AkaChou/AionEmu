@@ -272,7 +272,12 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <!-- 领奖（Aegir）：旧 sendQuestEndDialog(env, choice=1) 以奖励索引 1 完成；经验/金币/物品为 quest_data 总量，职业武器按 13830 模式逐职业发放。 Reward (Aegir): the old sendQuestEndDialog(env, choice=1) completes with reward index 1; EXP/gold/items are the quest_data totals, class weapons granted per class per the 13830 pattern. -->
+    <!--
+      领奖（Aegir）：旧 sendQuestEndDialog(env, choice=1) 以奖励索引 1 完成；经验/金币/物品为 quest_data 总量，职业武器按 13830 模式逐职业发放。
+      黄金头盔分支是可选工作物品：有则整叠清理，无则继续，不能让严格正数扣除阻断最终领奖。
+      Reward (Aegir): the old sendQuestEndDialog(env, choice=1) completes with reward index 1; EXP/gold/items are the quest_data totals, class weapons granted per class per the 13830 pattern.
+      The golden helmet branch is optional work-item cleanup: remove the whole stack when present and continue when absent, so a strict positive removal must never block the final reward.
+    -->
     <transition source="s9" target="complete" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
@@ -285,7 +290,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -306,7 +311,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -327,7 +332,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -348,7 +353,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -369,7 +374,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -390,7 +395,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -411,7 +416,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -432,7 +437,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -453,7 +458,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -474,7 +479,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
@@ -495,7 +500,7 @@
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182207037" count="1"/>
+        <remove-item item-id="182207037" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
