@@ -99,15 +99,6 @@
   <area world_id="210100000" world_name="lf6" type="MOVING_COLLISION_WINDBOX" id="135" name="lf6_WindBox84" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
   <area world_id="210100000" world_name="lf6" type="MOVING_COLLISION_WINDBOX" id="136" name="lf6_WindBox85" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
   <area world_id="210100000" world_name="lf6" type="MOVING_COLLISION_WINDBOX" id="140" name="LF6_WindBox87" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="100" name="LF4_A5_WindBox_01" ai_pattern="true" start_time="0" end_time="0" life_time="120" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="101" name="LF4_B8_WindBox_01" ai_pattern="false" start_time="9" end_time="21" life_time="0" always_enabled="false"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="102" name="LF4_B8_WindBox_02" ai_pattern="false" start_time="22" end_time="8" life_time="0" always_enabled="false"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="110" name="LF4_B2_WindBox_01" ai_pattern="true" start_time="0" end_time="0" life_time="120" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="120" name="LF4_B3_WindBox_01" ai_pattern="true" start_time="0" end_time="0" life_time="120" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="130" name="LF4_B7_WindBox_02" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="150" name="LF4_C5_WindBox_01" ai_pattern="true" start_time="0" end_time="0" life_time="1800" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="200" name="LF4_B8_WindBox_03" ai_pattern="false" start_time="0" end_time="0" life_time="300" always_enabled="true"/>
-  <area world_id="210130000" world_name="lf4_m" type="MOVING_COLLISION_WINDBOX" id="201" name="LF4_B7_WindBox_01" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
   <area world_id="220040000" world_name="df3" type="MOVING_COLLISION_WINDBOX" id="1" name="DF3_WindBox1" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
   <area world_id="220050000" world_name="df2a" type="MOVING_COLLISION_WINDBOX" id="3" name="DF2A_D1_WindBoxArea1_1" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>
   <area world_id="220050000" world_name="df2a" type="MOVING_COLLISION_WINDBOX" id="4" name="DF2A_D1_WindBoxArea1_2" ai_pattern="false" start_time="0" end_time="0" life_time="0" always_enabled="true"/>

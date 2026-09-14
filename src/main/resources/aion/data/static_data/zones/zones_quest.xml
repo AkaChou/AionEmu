@@ -65,21 +65,8 @@
 	<zone mapid="210040000" name="LF3_ITEM_USE_AREA_Q1636" area_type="SPHERE" zone_type="SUB">
 		<sphere x="181.0000" y="2712.0000" z="141.0000" r="25.0"/>
 	</zone>
-	<!-- Inggison [Master Server] -->
-	<zone mapid="210130000" name="LF4_SENSORY_AREA_Q11147_210130000" area_type="SPHERE" zone_type="SUB">
-		<sphere x="1096.5378" y="1129.3385" z="446.0" r="10.0"/>
-	</zone>
-	<zone mapid="210130000" name="LF4_SENSORY_AREA_Q11149_A_210130000" area_type="SPHERE" zone_type="SUB">
-		<sphere x="800.03" y="1412.66" z="196.0" r="10.0"/>
-	</zone>
-	<zone mapid="210130000" name="LF4_SENSORY_AREA_Q11149_B_210130000" area_type="SPHERE" zone_type="SUB">
-		<sphere x="1010.8538" y="1696.61" z="182.8" r="10.0"/>
-	</zone>
-	<zone mapid="210130000" name="LF4_SENSORY_AREA_Q11149_C_210130000" area_type="SPHERE" zone_type="SUB">
-		<sphere x="1109.1493" y="1692.0824" z="184.5" r="10.0"/>
-	</zone>
-	<!-- Inggison [Normal Server] -->
-<!-- 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11147_210050000" area_type="SPHERE" zone_type="SUB">
+	<!-- Inggison -->
+	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11147_210050000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="1096.5378" y="1129.3385" z="446.0" r="10.0"/>
 	</zone>
 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11149_A_210050000" area_type="SPHERE" zone_type="SUB">
@@ -90,7 +77,7 @@
 	</zone>
 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11149_C_210050000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="1109.1493" y="1688.0824" z="196.0" r="10.0"/>
-	</zone> -->
+	</zone>
 	<!-- Theobomos -->
 	<zone mapid="210060000" name="LF2A_SENSORY_AREA_Q3090_210060000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="208.02142" y="1346.6992" z="64.0" r="10.0"/>

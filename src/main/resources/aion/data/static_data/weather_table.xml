@@ -37,8 +37,8 @@
 		<table zone_id="0" att_ranking="1" code="2" name="Rain_After" after="true"/>
         <table zone_id="0" att_ranking="1" code="3" name="Rain_Before" before="true"/>
     </map>
-	<!-- Inggison [Master Server] -->
-    <map id="210130000" zone_count="2" weather_count="6">
+	<!-- Inggison -->
+    <map id="210050000" zone_count="2" weather_count="6">
 		<table zone_id="1" att_ranking="1" code="1" name="Rain_After" after="true"/>
 		<table zone_id="1" att_ranking="1" code="2" name="Rain_Before" before="true"/>
 		<table zone_id="1" att_ranking="2" code="3" name="Rain"/>

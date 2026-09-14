@@ -163,7 +163,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <conditions>
         <pvp-victim-level-delta minimum="-5" maximum="9"/>
@@ -174,7 +174,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <conditions>
         <pvp-victim-level-delta minimum="-5" maximum="9"/>
@@ -185,7 +185,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <conditions>
         <pvp-victim-level-delta minimum="-5" maximum="9"/>
@@ -196,7 +196,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <conditions>
         <pvp-victim-level-delta minimum="-5" maximum="9"/>
@@ -207,7 +207,7 @@
     </transition>
     <transition source="k4" target="reward">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <conditions>
         <pvp-victim-level-delta minimum="-5" maximum="9"/>

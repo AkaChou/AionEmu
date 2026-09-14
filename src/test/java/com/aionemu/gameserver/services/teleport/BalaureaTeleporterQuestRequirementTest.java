@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.dataholders.Portal2Data;
+import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.portal.PortalDialog;
@@ -30,6 +31,8 @@ class BalaureaTeleporterQuestRequirementTest {
 
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
+	private static final Path PORTAL_LOCS = Path.of(
+			"src/main/resources/aion/data/static_data/portals/portal_loc.xml");
 	private static final Path TELEPORTER_XML = Path.of(
 			"src/main/resources/aion/data/static_data/npc_teleporter.xml");
 
@@ -86,17 +89,31 @@ class BalaureaTeleporterQuestRequirementTest {
 	void externalBalaureaPortalsRequireTheRacialMissionOutsideInstances() {
 		// 未完成 10031 时从圣天界进入英吉斯温被拦截
 		assertFalse(PortalService.isBalaureaEntryAllowed(210050000, 110010000, false, false));
-		assertFalse(PortalService.isBalaureaEntryAllowed(210130000, 110010000, false, false));
 
 		// 英吉斯温内部跨地图/同区域传送放行
-		assertTrue(PortalService.isBalaureaEntryAllowed(210130000, 210050000, false, false));
-		assertTrue(PortalService.isBalaureaEntryAllowed(210050000, 210130000, false, false));
+		assertTrue(PortalService.isBalaureaEntryAllowed(210050000, 210050000, false, false));
 
 		// 副本出口放行
-		assertTrue(PortalService.isBalaureaEntryAllowed(210130000, 300150000, true, false));
+		assertTrue(PortalService.isBalaureaEntryAllowed(210050000, 300150000, true, false));
 
 		// 完成使命后正常放行
 		assertTrue(PortalService.isBalaureaEntryAllowed(210050000, 110010000, false, true));
+	}
+
+	@Test
+	void inggisonPortalLocationsTargetTheLiveWorld() throws Exception {
+		PortalLocData data = (PortalLocData) JAXBContext.newInstance(PortalLocData.class)
+				.createUnmarshaller().unmarshal(PORTAL_LOCS.toFile());
+
+		assertEquals(210050000, data.getPortalLoc(2100500).getWorldId());
+		assertEquals(210050000, data.getPortalLoc(2101300).getWorldId());
+	}
+
+	@Test
+	void inggisonTeleportsAlwaysResolveToTheLiveWorld() {
+		assertEquals(210050000, TeleportService2.resolveInggisonWorldId(210130000));
+		assertEquals(210050000, TeleportService2.resolveInggisonWorldId(210050000));
+		assertEquals(210040000, TeleportService2.resolveInggisonWorldId(210040000));
 	}
 
 	private static void assertDialogPortal(Portal2Data data, int npcId, int dialogId, int locId, Race race, int questId) {

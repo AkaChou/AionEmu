@@ -34,6 +34,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class HotspotTeleportService {
 
+	private static final int ELYOS_INGGISON_WORLD_ID = 210050000;
+	private static final int ELYOS_INGGISON_MASTER_WORLD_ID = 210130000;
+	private static final int ASMODIAN_GELKMAROS_WORLD_ID = 220070000;
+	private static final int ASMODIAN_GELKMAROS_MASTER_WORLD_ID = 220140000;
+
 	private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
 
 	/**
@@ -78,7 +83,8 @@ public class HotspotTeleportService {
 	 * @param price 基纳费用 / Kinah price
 	 */
 	public void doTeleport(final Player player, final int teleportId, final int price) {
-		final int worldId = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getMapId();
+		final int worldId = resolveLiveWorldId(
+				DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getMapId());
 		final float getX = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getX();
 		final float getY = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getY();
 		final float getZ = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getZ();
@@ -145,6 +151,21 @@ public class HotspotTeleportService {
 			PacketSendUtility.sendPacket(player,
 					new SM_USE_OBJECT(player.getObjectId(), player.getObjectId(), castTimeMillis, 1));
 		}
+	}
+
+	/**
+	 * 将热点配置中的镜像服世界 ID 归一为实际可玩的龙界世界。
+	 * Normalizes mirror-server world ids from hotspot data to the live Balaurea worlds.
+	 *
+	 * @param worldId 原始目标世界 ID / Configured target world id
+	 * @return 实际可玩世界 ID / Live world id
+	 */
+	static int resolveLiveWorldId(int worldId) {
+		return switch (worldId) {
+			case ELYOS_INGGISON_MASTER_WORLD_ID -> ELYOS_INGGISON_WORLD_ID;
+			case ASMODIAN_GELKMAROS_MASTER_WORLD_ID -> ASMODIAN_GELKMAROS_WORLD_ID;
+			default -> worldId;
+		};
 	}
 
 	static int castTimeMillis(int castTimeSeconds) {

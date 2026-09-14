@@ -68,7 +68,7 @@ class RemainingCapabilityPortTest {
 			.on(QuestDsl.addAggroList(277224)).from("start").when(QuestDsl.statusIs(QuestStatus.START))
 			.goTo("done").compile();
 		QuestAiPerceptionFacts facts = new QuestAiPerceptionFacts(7, 20, 277224, 20, true, true,
-			210130000, 210130000, 1, 1, 10d, 50, true, true);
+			210050000, 210050000, 1, 1, 10d, 50, true, true);
 		assertEquals(List.of(14211), new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)))
 			.routesFor(new QuestEvent.AddAggroList(277224, facts)).stream()
 			.map(QuestEventIndex.Route::questId).toList());
@@ -76,9 +76,9 @@ class RemainingCapabilityPortTest {
 
 	@Test
 	void capturesAuthoritativeFactsForAllRemainingEventPorts() throws Exception {
-		Player player = player(7, 210130000, 1, 1f, 2f, 3f);
-		Npc npc = npc(20, 277224, 210130000, 1, 4f, 6f, 3f);
-		Player aggroSource = player(30, 210130000, 1, 4f, 6f, 3f);
+		Player player = player(7, 210050000, 1, 1f, 2f, 3f);
+		Npc npc = npc(20, 277224, 210050000, 1, 4f, 6f, 3f);
+		Player aggroSource = player(30, 210050000, 1, 4f, 6f, 3f);
 		QuestEnv npcEnv = new QuestEnv(npc, player, 0, 0);
 
 		QuestEvent.AddAggroList ai = new PlayerQuestAiPerceptionEventPort(
@@ -99,7 +99,7 @@ class RemainingCapabilityPortTest {
 		PlayerQuestMovementEventPort movementPort = new PlayerQuestMovementEventPort();
 		QuestMovementFacts ringFacts = movementPort.passFlyingRing(
 			new QuestEnv(null, player, 0, 0), "ERACUS_TEMPLE_AIR_BOOSTER_1").facts();
-		assertEquals(210130000, ringFacts.worldId());
+		assertEquals(210050000, ringFacts.worldId());
 		assertEquals(1, ringFacts.instanceId());
 		assertEquals("ERACUS_TEMPLE_AIR_BOOSTER_1", ringFacts.actionId());
 		assertEquals("405001", movementPort.enterWindStream(
@@ -127,9 +127,9 @@ class RemainingCapabilityPortTest {
 
 	@Test
 	void portsRejectNonAuthoritativeRoutesAndRecoveryCleansPlayerResources() throws Exception {
-		Player player = player(7, 210130000, 1, 0f, 0f, 0f);
-		Npc npc = npc(20, 277224, 210130000, 1, 3f, 4f, 0f);
-		Player source = player(30, 210130000, 1, 3f, 4f, 0f);
+		Player player = player(7, 210050000, 1, 0f, 0f, 0f);
+		Npc npc = npc(20, 277224, 210050000, 1, 3f, 4f, 0f);
+		Player source = player(30, 210050000, 1, 3f, 4f, 0f);
 		QuestEnv npcEnv = new QuestEnv(npc, player, 0, 0);
 
 		assertThrows(IllegalArgumentException.class,
@@ -158,7 +158,7 @@ class RemainingCapabilityPortTest {
 
 		QuestSnapshot snapshot = new QuestSnapshot(7, 2333, QuestStatus.START, 0, Map.of(), Map.of());
 		Npc registered = new ObjenesisStd().newInstance(Npc.class);
-		registered.setPosition(new WorldPosition(210130000));
+		registered.setPosition(new WorldPosition(210050000));
 		assertTrue(QuestSpawnRegistry.global().register(snapshot, "escort", registered));
 		new PlayerQuestRecoveryEventPort().recover(new QuestEnv(null, player, 0, 0));
 		assertFalse(QuestSpawnRegistry.global().contains(snapshot, "escort"));

@@ -52,27 +52,28 @@
 	<portal_loc world_id="210080000" loc_id="2100800" x="262.998" y="200.0" z="498.762" h="27"/>
 	<!-- Habrok -->
 	<portal_loc world_id="220090000" loc_id="2200900" x="252.773" y="177.981" z="503.511" h="29"/>
-	<!-- Inggison [Master Server] -->
-	<portal_loc world_id="210130000" loc_id="2100517" x="1080.1464" y="1519.1409" z="405.72308"/>
-	<portal_loc world_id="210130000" loc_id="2101300" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
-	<portal_loc world_id="210130000" loc_id="2101301" x="543.21" y="715.02" z="484.0491" h="17"/> 
-	<portal_loc world_id="210130000" loc_id="2101302" x="536.35" y="705.89" z="484.04898" h="76"/>
-	<portal_loc world_id="210130000" loc_id="2101303" x="2514.82" y="821.68" z="415.8327" h="17"/>
-	<portal_loc world_id="210130000" loc_id="2101304" x="2507.78" y="811.96" z="415.83273" h="76"/>
-	<portal_loc world_id="210130000" loc_id="2101305" x="204.9667" y="1386.87" z="266.4227" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101306" x="332.81326" y="1353.1685" z="263.96545" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101307" x="1363.2781" y="2298.1277" z="296.6737" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101308" x="1066.0039" y="2005.531" z="370.1548" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101309" x="2756.1963" y="2141.9448" z="245.125" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101310" x="405.25473" y="2062.1338" z="332.26474" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101311" x="2894.7688" y="357.71338" z="299.4761" h="0"/>
-	<portal_loc world_id="210130000" loc_id="2101312" x="1079.5535" y="1571.55" z="407.90637" h="90"/> <!-- Esoterrace Exit -->
+	<!-- Inggison -->
+	<portal_loc world_id="210050000" loc_id="2100500" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
+	<portal_loc world_id="210050000" loc_id="2100517" x="1080.1464" y="1519.1409" z="405.72308"/>
+	<portal_loc world_id="210050000" loc_id="2101300" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
+	<portal_loc world_id="210050000" loc_id="2101301" x="543.21" y="715.02" z="484.0491" h="17"/>
+	<portal_loc world_id="210050000" loc_id="2101302" x="536.35" y="705.89" z="484.04898" h="76"/>
+	<portal_loc world_id="210050000" loc_id="2101303" x="2514.82" y="821.68" z="415.8327" h="17"/>
+	<portal_loc world_id="210050000" loc_id="2101304" x="2507.78" y="811.96" z="415.83273" h="76"/>
+	<portal_loc world_id="210050000" loc_id="2101305" x="204.9667" y="1386.87" z="266.4227" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101306" x="332.81326" y="1353.1685" z="263.96545" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101307" x="1363.2781" y="2298.1277" z="296.6737" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101308" x="1066.0039" y="2005.531" z="370.1548" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101309" x="2756.1963" y="2141.9448" z="245.125" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101310" x="405.25473" y="2062.1338" z="332.26474" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101311" x="2894.7688" y="357.71338" z="299.4761" h="0"/>
+	<portal_loc world_id="210050000" loc_id="2101312" x="1079.5535" y="1571.55" z="407.90637" h="90"/> <!-- Esoterrace Exit -->
 	<!-- Conquest/Offering Teleporter 4.8 -->
-	<portal_loc world_id="210130000" loc_id="2101313" x="1375.1648" y="366.27975" z="589.6201" h="22"/> <!-- Inggison Illusion Fortress -->
-	<portal_loc world_id="210130000" loc_id="2101314" x="461.1575" y="194.68065" z="459.5" h="24"/> <!-- Dimaia Fountainhead -->
-	<portal_loc world_id="210130000" loc_id="2101315" x="1730.1896" y="1207.7006" z="391.85815" h="13"/> <!-- Wretched Garden -->
-	<portal_loc world_id="210130000" loc_id="2101316" x="2374.9312" y="273.11795" z="458.6949" h="67"/> <!-- Phanoe Valley -->
-	<portal_loc world_id="210130000" loc_id="2101317" x="1830.978" y="1869.2764" z="309.41748" h="7"/> <!-- Hanarkand Plains -->
+	<portal_loc world_id="210050000" loc_id="2101313" x="1375.1648" y="366.27975" z="589.6201" h="22"/> <!-- Inggison Illusion Fortress -->
+	<portal_loc world_id="210050000" loc_id="2101314" x="461.1575" y="194.68065" z="459.5" h="24"/> <!-- Dimaia Fountainhead -->
+	<portal_loc world_id="210050000" loc_id="2101315" x="1730.1896" y="1207.7006" z="391.85815" h="13"/> <!-- Wretched Garden -->
+	<portal_loc world_id="210050000" loc_id="2101316" x="2374.9312" y="273.11795" z="458.6949" h="67"/> <!-- Phanoe Valley -->
+	<portal_loc world_id="210050000" loc_id="2101317" x="1830.978" y="1869.2764" z="309.41748" h="7"/> <!-- Hanarkand Plains -->
 	<!-- Theobomos -->
 	<portal_loc world_id="210060000" loc_id="2100600" x="2238.46" y="2284.2185" z="50.013657" h="0"/>
 	<portal_loc world_id="210060000" loc_id="2100601" x="2978.09" y="193.51" z="172.14" h="0"/>

@@ -50560,7 +50560,7 @@
     </actions>
     <uselimits ownership_world="301720000" usedelayid="177" usedelay="8000"/>
   </item_template>
-<item_template name_desc="scroll_return_lf4_m" race="ELYOS" level="50" item_type="NORMAL" activate_count="1" max_stack_count="1000" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" quality="COMMON" activate_target="STANDALONE" price="11700" return_world="210130000" name="scroll_return_lf4_m" id="164000532" category="NONE" return_alias="INGGISON_RETURN_AREA" mask="12360" desc="1508487">
+<item_template name_desc="scroll_return_lf4_m" race="ELYOS" level="50" item_type="NORMAL" activate_count="1" max_stack_count="1000" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" quality="COMMON" activate_target="STANDALONE" price="11700" return_world="210050000" name="scroll_return_lf4_m" id="164000532" category="NONE" return_alias="INGGISON_RETURN_AREA" mask="12360" desc="1508487">
     <actions>
       <skilluse skillid="8198" level="1"/>
     </actions>

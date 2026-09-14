@@ -150,6 +150,15 @@ class TeleportServiceQuestRequirementTest {
 	}
 
 	@Test
+	void noInggisonReturnItemTargetsTheMasterWorld() throws Exception {
+		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(ITEM_TEMPLATES_XML.toFile());
+		NodeList masterItems = (NodeList) XPathFactory.newInstance().newXPath().evaluate(
+				"//item_template[@return_world='210130000']", document, XPathConstants.NODESET);
+
+		assertEquals(0, masterItems.getLength());
+	}
+
+	@Test
 	void abyssMultiReturnDestinationsRemainBehindTheItemActionGate() throws Exception {
 		MultiReturnItemData data = (MultiReturnItemData) JAXBContext.newInstance(MultiReturnItemData.class)
 				.createUnmarshaller().unmarshal(MULTI_RETURNS_XML.toFile());

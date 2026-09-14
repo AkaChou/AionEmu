@@ -41,7 +41,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <enter-zone zone="LF4_SENSORY_AREA_Q11149_A_210130000"/>
+        <enter-zone zone="LF4_SENSORY_AREA_Q11149_A_210050000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -52,7 +52,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <enter-zone zone="LF4_SENSORY_AREA_Q11149_B_210130000"/>
+        <enter-zone zone="LF4_SENSORY_AREA_Q11149_B_210050000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -63,7 +63,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <enter-zone zone="LF4_SENSORY_AREA_Q11149_C_210130000"/>
+        <enter-zone zone="LF4_SENSORY_AREA_Q11149_C_210050000"/>
       </event>
       <conditions>
         <start-eligible/>

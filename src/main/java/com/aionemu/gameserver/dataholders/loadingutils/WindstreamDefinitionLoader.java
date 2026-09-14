@@ -44,6 +44,9 @@ public final class WindstreamDefinitionLoader {
 			// AionEmu still exposes these two pre-5.8 IDs for the same client levels.
 			worldIds.computeIfAbsent("tiamat_down", key -> new ArrayList<>()).add(600040000);
 			worldIds.computeIfAbsent("ldf5a", key -> new ArrayList<>()).add(600050000);
+			// LF4_M 客户端路线同时供实际可玩的英吉斯温世界使用。
+			// LF4_M client routes also serve the live Inggison world.
+			worldIds.computeIfAbsent("lf4_m", key -> new ArrayList<>()).add(210050000);
 
 			Map<Integer, List<WindstreamRoute>> routesByMap = new LinkedHashMap<>();
 			Element flyPaths = requiredDocument(documents, "fly_path.xml");

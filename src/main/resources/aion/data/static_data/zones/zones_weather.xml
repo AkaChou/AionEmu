@@ -164,8 +164,8 @@
             <point x="1616.058838" y="699.971924"/>
         </points>
     </zone>
-	<!-- Inggison [Master Server] -->
-	<zone mapid="210130000" name="WZ_WEATHERZONE_LF4_210130000" area_type="POLYGON" zone_type="WEATHER">
+	<!-- Inggison -->
+	<zone mapid="210050000" name="WZ_WEATHERZONE_LF4_210050000" area_type="POLYGON" zone_type="WEATHER">
         <points bottom="0.100000" top="800.100000">
             <point x="1.832263" y="777.124817"/>
             <point x="130.937119" y="791.947144"/>
@@ -311,7 +311,7 @@
             <point x="4.242123" y="2.296692"/>
         </points>
     </zone>
-    <zone mapid="210130000" name="WZ_WEATHERZONE_LF4_C_210130000" area_type="POLYGON" zone_type="WEATHER">
+    <zone mapid="210050000" name="WZ_WEATHERZONE_LF4_C_210050000" area_type="POLYGON" zone_type="WEATHER">
         <points bottom="0.100000" top="800.100000">
             <point x="491.135529" y="1474.179443"/>
             <point x="533.209961" y="1455.505737"/>

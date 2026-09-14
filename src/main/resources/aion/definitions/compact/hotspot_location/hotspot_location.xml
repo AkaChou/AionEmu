@@ -73,16 +73,16 @@
 	<hotspot_template loc_id="85" mapid="120010000" name="Vifrost Bridge" name_id="400606" price="1934" race="ASMODIANS" posX="1602.000000" posY="1389.000000" posZ="193.000000" heading="0"/>
 	<hotspot_template loc_id="86" mapid="110010000" name="Path Of Glory" name_id="404675" price="1934" race="ELYOS" posX="1363.000000" posY="1481.000000" posZ="570.000000" heading="90"/>
 	<hotspot_template loc_id="87" mapid="120010000" name="Path Of Gold" name_id="404676" price="1934" race="ASMODIANS" posX="1314.000000" posY="1426.000000" posZ="210.000000" heading="230"/>
-	<hotspot_template loc_id="72" mapid="210130000" name="HOTSPOT_LF4_01" name_id="404988" price="9321" race="ELYOS" posX="1335.000000" posY="275.000000" posZ="590.000000" heading="0"/>
-	<hotspot_template loc_id="73" mapid="210130000" name="HOTSPOT_LF4_02" name_id="404989" price="9321" race="ELYOS" posX="400.000000" posY="947.000000" posZ="461.000000" heading="270"/>
-	<hotspot_template loc_id="74" mapid="210130000" name="HOTSPOT_LF4_03" name_id="404990" price="9321" race="ELYOS" posX="2722.000000" posY="1428.000000" posZ="385.000000" heading="0"/>
-	<hotspot_template loc_id="116" mapid="210130000" name="HOTSPOT_LF4_04" name_id="404991" price="1286" race="ELYOS" posX="1063.000000" posY="1575.000000" posZ="410.000000" heading="45"/>
-	<hotspot_template loc_id="118" mapid="210130000" name="HOTSPOT_LF4_05" name_id="404992" price="1286" race="ELYOS" posX="1213.000000" posY="983.000000" posZ="465.000000" heading="225"/>
-	<hotspot_template loc_id="75" mapid="220140000" name="HOTSPOT_DF4_01" name_id="404993" price="9321" race="ASMODIANS" posX="1889.000000" posY="2864.000000" posZ="557.000000" heading="180"/>
-	<hotspot_template loc_id="76" mapid="220140000" name="HOTSPOT_DF4_02" name_id="404994" price="9321" race="ASMODIANS" posX="2497.000000" posY="2138.000000" posZ="465.000000" heading="0"/>
-	<hotspot_template loc_id="77" mapid="220140000" name="HOTSPOT_DF4_03" name_id="404995" price="9321" race="ASMODIANS" posX="796.000000" posY="1686.000000" posZ="362.000000" heading="45"/>
-	<hotspot_template loc_id="117" mapid="220140000" name="HOTSPOT_DF4_04" name_id="404996" price="1286" race="ASMODIANS" posX="1794.000000" posY="1811.000000" posZ="406.000000" heading="225"/>
-	<hotspot_template loc_id="121" mapid="220140000" name="HOTSPOT_DF4_F2P_01" name_id="404997" price="1286" race="ASMODIANS" posX="1410.000000" posY="1975.000000" posZ="352.000000" heading="0"/>
+	<hotspot_template loc_id="72" mapid="210050000" name="HOTSPOT_LF4_01" name_id="404988" price="9321" race="ELYOS" posX="1335.000000" posY="275.000000" posZ="590.000000" heading="0"/>
+	<hotspot_template loc_id="73" mapid="210050000" name="HOTSPOT_LF4_02" name_id="404989" price="9321" race="ELYOS" posX="400.000000" posY="947.000000" posZ="461.000000" heading="270"/>
+	<hotspot_template loc_id="74" mapid="210050000" name="HOTSPOT_LF4_03" name_id="404990" price="9321" race="ELYOS" posX="2722.000000" posY="1428.000000" posZ="385.000000" heading="0"/>
+	<hotspot_template loc_id="116" mapid="210050000" name="HOTSPOT_LF4_04" name_id="404991" price="1286" race="ELYOS" posX="1063.000000" posY="1575.000000" posZ="410.000000" heading="45"/>
+	<hotspot_template loc_id="118" mapid="210050000" name="HOTSPOT_LF4_05" name_id="404992" price="1286" race="ELYOS" posX="1213.000000" posY="983.000000" posZ="465.000000" heading="225"/>
+	<hotspot_template loc_id="75" mapid="220070000" name="HOTSPOT_DF4_01" name_id="404993" price="9321" race="ASMODIANS" posX="1889.000000" posY="2864.000000" posZ="557.000000" heading="180"/>
+	<hotspot_template loc_id="76" mapid="220070000" name="HOTSPOT_DF4_02" name_id="404994" price="9321" race="ASMODIANS" posX="2497.000000" posY="2138.000000" posZ="465.000000" heading="0"/>
+	<hotspot_template loc_id="77" mapid="220070000" name="HOTSPOT_DF4_03" name_id="404995" price="9321" race="ASMODIANS" posX="796.000000" posY="1686.000000" posZ="362.000000" heading="45"/>
+	<hotspot_template loc_id="117" mapid="220070000" name="HOTSPOT_DF4_04" name_id="404996" price="1286" race="ASMODIANS" posX="1794.000000" posY="1811.000000" posZ="406.000000" heading="225"/>
+	<hotspot_template loc_id="121" mapid="220070000" name="HOTSPOT_DF4_F2P_01" name_id="404997" price="1286" race="ASMODIANS" posX="1410.000000" posY="1975.000000" posZ="352.000000" heading="0"/>
 	<hotspot_template loc_id="88" mapid="220080000" name="Dragon Rest Temple" name_id="404968" price="12800" race="ASMODIANS" posX="452.000000" posY="2255.000000" posZ="223.000000" heading="90"/>
 	<hotspot_template loc_id="89" mapid="220080000" name="Dawnbreak Temple" name_id="404969" price="12800" race="ASMODIANS" posX="2688.000000" posY="1422.000000" posZ="341.000000" heading="180"/>
 	<hotspot_template loc_id="90" mapid="220080000" name="Whirlpool Temple" name_id="404970" price="12800" race="ASMODIANS" posX="1579.000000" posY="151.000000" posZ="187.000000" heading="315"/>

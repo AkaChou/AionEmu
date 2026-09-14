@@ -27,4 +27,21 @@ class HotspotLocationDataTest {
 		assertEquals(44, template.getPrice());
 		assertNotNull(data.getHotspotlocationTemplate(42));
 	}
+
+	@Test
+	void balaureaHotspotsTargetLiveWorldsInsteadOfMasterMirrors() {
+		HotspotLocationData data = HotspotLocationData.load(
+			new File("src/main/resources/aion/definitions/compact/hotspot_location/hotspot_location.xml"));
+
+		assertHotspotWorld(data, 210050000, 72, 73, 74, 116, 118);
+		assertHotspotWorld(data, 220070000, 75, 76, 77, 117, 121);
+	}
+
+	private static void assertHotspotWorld(HotspotLocationData data, int worldId, int... locIds) {
+		for (int locId : locIds) {
+			HotspotlocationTemplate template = data.getHotspotlocationTemplate(locId);
+			assertNotNull(template, "hotspot " + locId);
+			assertEquals(worldId, template.getMapId(), "hotspot " + locId);
+		}
+	}
 }

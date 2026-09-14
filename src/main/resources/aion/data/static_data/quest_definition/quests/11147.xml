@@ -207,7 +207,7 @@
     </transition>
     <transition source="s4" target="reward">
       <event>
-        <enter-zone zone="LF4_SENSORY_AREA_Q11147_210130000"/>
+        <enter-zone zone="LF4_SENSORY_AREA_Q11147_210050000"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>

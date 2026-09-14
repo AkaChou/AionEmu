@@ -108,7 +108,7 @@
   <alias world_id="210120000" world_name="arena_event_l" name="IDArena_pvp01_morph_Alias2">
     <point x="646.504578" y="1777.62732" z="187.704712" dir="0"/>
   </alias>
-  <alias world_id="210130000" world_name="lf4_m" name="LF4_Teleporter_4.8_01">
+  <alias world_id="210050000" world_name="lf4" name="LF4_Teleporter_4.8_01">
     <point x="1080.14636" y="1519.14087" z="407.777893" dir="90"/>
   </alias>
   <alias world_id="220020000" world_name="df2" name="DF2_Teleport_1">

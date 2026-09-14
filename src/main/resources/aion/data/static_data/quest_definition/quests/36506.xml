@@ -184,7 +184,7 @@
         <dialog type="TALK_TO_NPC" npc-id="206134" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <spawn-npc-current-or-default slot="36506-bladebanks" template-id="216610" world-id="210130000" x="231.029144" y="1250.353394" z="313.65802" heading="0"/>
+        <spawn-npc-current-or-default slot="36506-bladebanks" template-id="216610" world-id="210050000" x="231.029144" y="1250.353394" z="313.65802" heading="0"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">

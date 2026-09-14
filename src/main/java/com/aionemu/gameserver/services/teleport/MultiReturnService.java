@@ -50,10 +50,8 @@ public class MultiReturnService {
 			return 2100300;
 		case 210040000: // Heiron.
 			return 2100400;
-			case 210050000: // Inggison.
-				return 2100500;
-			case 210130000: // Inggison [Master Server].
-				return 2101300;
+		case 210050000: // Inggison.
+			return 2100500;
 		case 210060000: // Theobomos.
 			return 2100600;
 		case 210070000: // Cygnea.

@@ -1403,7 +1403,6 @@ public class Player extends Creature {
 					worldId != 210070000 && // Cygnea.
 					worldId != 210100000 && // Iluma.
 					worldId != 210050000 && // Inggison.
-					worldId != 210130000 && // Inggison [Master Server].
 					worldId != 220020000 && // Morheim.
 					worldId != 220040000 && // Beluslan.
 					worldId != 220050000 && // Brusthonin.

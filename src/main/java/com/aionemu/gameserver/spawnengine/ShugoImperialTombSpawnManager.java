@@ -159,7 +159,7 @@ public class ShugoImperialTombSpawnManager {
 		/** 因迪亚鲁纳克（圣所） / Indiarunark Sanctum */
 		Indiarunark_Sanctum(831117, 110010000, 1454.038f, 1520.621f, 573.0719f, (byte) 60),
 		/** 因迪亚鲁纳克（英吉斯温） / Indiarunark Inggison */
-		Indiarunark_Inggison(831117, 210130000, 1358.8662f, 299.00287f, 588.7499f, (byte) 0),
+		Indiarunark_Inggison(831117, 210050000, 1358.8662f, 299.00287f, 588.7499f, (byte) 0),
 		/** 因迪亚鲁纳克（希哥尼亚） / Indiarunark Cygnea */
 		Indiarunark_Cygnea(831117, 210070000, 2930.079f, 825.9626f, 569.5f, (byte) 71),
 		/** 阿尔贝托（伏魔殿） / Alberto Pandaemonium */

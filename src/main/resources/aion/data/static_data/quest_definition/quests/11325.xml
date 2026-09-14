@@ -38,7 +38,7 @@
     <dialog type="NPC_START" npc-id="798927" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="k1">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -46,7 +46,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-in-world world-id="210130000"/>
+        <kill-in-world world-id="210050000"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

@@ -18,7 +18,6 @@ public class AbyssService {
 			210020000, // Elten.
 			210040000, // Heiron.
 			210050000, // Inggison.
-			210130000, // Inggison [Master Server].
 			210060000, // Theobomos.
 			210070000, // Cygnea.
 			210090000, // Idian Depths.

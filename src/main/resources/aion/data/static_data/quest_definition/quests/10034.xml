@@ -322,7 +322,7 @@
         <set-variable field="var0" value="8"/>
       </actions>
       <after-commit>
-        <teleport-player-current-or-default world-id="210130000" x="389.17194" y="980.16077" z="460.25" heading="2"/>
+        <teleport-player-current-or-default world-id="210050000" x="389.17194" y="980.16077" z="460.25" heading="2"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>

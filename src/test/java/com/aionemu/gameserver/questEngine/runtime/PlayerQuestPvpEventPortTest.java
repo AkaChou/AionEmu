@@ -24,13 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class PlayerQuestPvpEventPortTest {
 	@Test
 	void soloPortCapturesAuthoritativeFactsAndZones() throws Exception {
-		Player killer = player(7, Race.ELYOS, 50, 210130000, false);
-		Player victim = player(20, Race.ASMODIANS, 55, 210130000, false);
+		Player killer = player(7, Race.ELYOS, 50, 210050000, false);
+		Player victim = player(20, Race.ASMODIANS, 55, 210050000, false);
 		QuestEnv env = new QuestEnv(victim, killer, 0, 0);
 		PlayerQuestPvpEventPort port = new PlayerQuestPvpEventPort((left, right) -> true,
 			player -> Set.of("Sulfur_Fortress_400010000"));
 
-		QuestEvent.KillInWorld event = port.killInWorld(env, killer, 3, 210130000, QuestPvpCreditSource.SOLO);
+		QuestEvent.KillInWorld event = port.killInWorld(env, killer, 3, 210050000, QuestPvpCreditSource.SOLO);
 		assertEquals(killer.getObjectId(), event.facts().recipientId());
 		assertEquals(victim.getObjectId(), event.facts().victimId());
 		assertEquals(50, event.facts().recipientLevel());
@@ -39,26 +39,26 @@ class PlayerQuestPvpEventPortTest {
 
 	@Test
 	void portRejectsWrongRaceDeadRecipientWorldAndCreditSource() throws Exception {
-		Player killer = player(7, Race.ELYOS, 50, 210130000, false);
-		Player victim = player(20, Race.ASMODIANS, 55, 210130000, false);
+		Player killer = player(7, Race.ELYOS, 50, 210050000, false);
+		Player victim = player(20, Race.ASMODIANS, 55, 210050000, false);
 		PlayerQuestPvpEventPort port = new PlayerQuestPvpEventPort((left, right) -> true, ignored -> Set.of());
 
 		assertThrows(IllegalArgumentException.class, () -> port.killInWorld(
 			new QuestEnv(victim, killer, 0, 0), killer, 3, 210070000, QuestPvpCreditSource.SOLO));
-		Player dead = player(7, Race.ELYOS, 50, 210130000, true);
+		Player dead = player(7, Race.ELYOS, 50, 210050000, true);
 		assertThrows(IllegalArgumentException.class, () -> port.killInWorld(
-			new QuestEnv(victim, dead, 0, 0), dead, 3, 210130000, QuestPvpCreditSource.SOLO));
+			new QuestEnv(victim, dead, 0, 0), dead, 3, 210050000, QuestPvpCreditSource.SOLO));
 		assertThrows(IllegalArgumentException.class, () -> port.killInWorld(
-			new QuestEnv(victim, killer, 0, 0), killer, 3, 210130000, QuestPvpCreditSource.GROUP));
-		Player sameRaceVictim = player(21, Race.ELYOS, 55, 210130000, false);
+			new QuestEnv(victim, killer, 0, 0), killer, 3, 210050000, QuestPvpCreditSource.GROUP));
+		Player sameRaceVictim = player(21, Race.ELYOS, 55, 210050000, false);
 		assertThrows(IllegalArgumentException.class, () -> port.killInWorld(
-			new QuestEnv(sameRaceVictim, killer, 0, 0), killer, 3, 210130000, QuestPvpCreditSource.SOLO));
+			new QuestEnv(sameRaceVictim, killer, 0, 0), killer, 3, 210050000, QuestPvpCreditSource.SOLO));
 	}
 
 	@Test
 	void portFailsClosedWhenRecipientIsOutOfRange() throws Exception {
-		Player killer = player(7, Race.ELYOS, 50, 210130000, false);
-		Player victim = player(20, Race.ASMODIANS, 55, 210130000, false);
+		Player killer = player(7, Race.ELYOS, 50, 210050000, false);
+		Player victim = player(20, Race.ASMODIANS, 55, 210050000, false);
 		PlayerQuestPvpEventPort port = new PlayerQuestPvpEventPort((left, right) -> false, ignored -> Set.of());
 		assertThrows(IllegalArgumentException.class, () -> port.killRanked(
 			new QuestEnv(victim, killer, 0, 0), killer, 3, QuestPvpCreditSource.SOLO));

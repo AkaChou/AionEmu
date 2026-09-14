@@ -80,9 +80,9 @@ class RemainingCapabilityDefinitionTest {
 	@Test
 	void runtimeFactsMatchDefinitionEventsWithoutPersistingFacts() {
 		QuestAiPerceptionFacts ai = new QuestAiPerceptionFacts(7, 20, 277224, 20, true, true,
-			210130000, 210130000, 1, 1, 10d, 50, true, true);
-		QuestMovementFacts movement = new QuestMovementFacts(7, 210130000, 1, 1f, 2f, 3f, true, true, "405001");
-		QuestSkillFacts skill = new QuestSkillFacts(7, 9832, 20, 277224, 0, 210130000, 1, true);
+			210050000, 210050000, 1, 1, 10d, 50, true, true);
+		QuestMovementFacts movement = new QuestMovementFacts(7, 210050000, 1, 1f, 2f, 3f, true, true, "405001");
+		QuestSkillFacts skill = new QuestSkillFacts(7, 9832, 20, 277224, 0, 210050000, 1, true);
 		assertTrue(QuestEvent.matches(new QuestEvent.AddAggroList(277224), new QuestEvent.AddAggroList(277224, ai)));
 		assertTrue(QuestEvent.matches(new QuestEvent.EnterWindStream(405001), new QuestEvent.EnterWindStream(405001, movement)));
 		assertTrue(QuestEvent.matches(new QuestEvent.UseSkill(9832), new QuestEvent.UseSkill(9832, skill)));

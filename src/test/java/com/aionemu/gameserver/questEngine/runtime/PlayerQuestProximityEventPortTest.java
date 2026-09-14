@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PlayerQuestProximityEventPortTest {
 	@Test
 	void capturesFrozenRecipientTargetWorldAndDistanceFacts() throws Exception {
-		Player player = player(7, 210130000, 0f, 0f, 0f);
-		Npc npc = npc(20, 835650, 3f, 4f, 0f, 210130000);
+		Player player = player(7, 210050000, 0f, 0f, 0f);
+		Npc npc = npc(20, 835650, 3f, 4f, 0f, 210050000);
 		PlayerQuestProximityEventPort port = new PlayerQuestProximityEventPort((target, recipient) -> true,
 			ignored -> 0);
 
@@ -29,15 +29,15 @@ class PlayerQuestProximityEventPortTest {
 		assertEquals(835650, event.npcId());
 		assertEquals(7, event.facts().recipientId());
 		assertEquals(20, event.facts().targetObjectId());
-		assertEquals(210130000, event.facts().recipientWorldId());
+		assertEquals(210050000, event.facts().recipientWorldId());
 		assertEquals(5d, event.facts().distance(), 0.001d);
 		assertEquals(20d, event.facts().maximumDistance());
 	}
 
 	@Test
 	void rejectsWrongRouteWorldAndRange() throws Exception {
-		Player player = player(7, 210130000, 0f, 0f, 0f);
-		Npc npc = npc(20, 835650, 3f, 4f, 0f, 210130000);
+		Player player = player(7, 210050000, 0f, 0f, 0f);
+		Npc npc = npc(20, 835650, 3f, 4f, 0f, 210050000);
 		PlayerQuestProximityEventPort port = new PlayerQuestProximityEventPort((target, recipient) -> false,
 			ignored -> 0);
 
@@ -49,7 +49,7 @@ class PlayerQuestProximityEventPortTest {
 		assertThrows(IllegalArgumentException.class,
 			() -> port.atDistance(new QuestEnv(npc, player, 0, 0), 835650));
 
-		npc.setPosition(new WorldPosition(210130000));
+		npc.setPosition(new WorldPosition(210050000));
 		npc.getPosition().setXYZH(30f, 0f, 0f, (byte) 0);
 		markSpawned(npc.getPosition());
 		assertThrows(IllegalArgumentException.class,

@@ -65,13 +65,13 @@ class PvpRepresentativeQuestDefinitionTest {
 		CompiledQuestDefinition definition = quest(11362)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
-			.on(killInWorld(210130000)).from("start")
+			.on(killInWorld(210050000)).from("start")
 			.when(pvpVictimLevelDelta(-5, 9)).goTo("reward").compile();
-		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 210130000, Set.of());
+		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 210050000, Set.of());
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(11362, QuestStatus.START, facts),
-			new QuestEvent.KillInWorld(210130000, facts), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(210050000, facts), definition.definition().transitions().get(0)).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, new QuestSnapshot(8, 11362, QuestStatus.START, 0, Map.of()),
-			new QuestEvent.KillInWorld(210130000), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(210050000), definition.definition().transitions().get(0)).isPresent());
 	}
 
 	@Test

@@ -9,7 +9,8 @@ import com.aionemu.gameserver.model.Race;
 class MultiReturnServiceTest {
 	@Test
 	void mapsMergedBalaureaWorldsToExistingPortalLocations() {
-		assertEquals(2101300, MultiReturnService.getTeleportWorldId(210130000, Race.ELYOS));
+		assertEquals(2100500, MultiReturnService.getTeleportWorldId(210050000, Race.ELYOS));
+		assertEquals(0, MultiReturnService.getTeleportWorldId(210130000, Race.ELYOS));
 		assertEquals(2201400, MultiReturnService.getTeleportWorldId(220140000, Race.ASMODIANS));
 	}
 }

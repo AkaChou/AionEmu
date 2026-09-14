@@ -188,8 +188,6 @@ public class RiftInformer {
 			return 220040000;
 		case 210050000: // Inggison -> Gelkmaros
 			return 220070000;
-		case 210130000: // Inggison [Master Server] -> Gelkmaros [Master Server]
-			return 220140000;
 		case 210070000: // Cygnea -> Enshar
 			return 220080000;
 		case 210060000: // Theobomos -> Marchutan Priory
@@ -209,8 +207,8 @@ public class RiftInformer {
 			return 110070000;
 		case 220070000: // Gelkmaros -> Inggison
 			return 210050000;
-		case 220140000: // Gelkmaros [Master Server] -> Inggison [Master Server]
-			return 210130000;
+		case 220140000: // Gelkmaros [Master Server] -> Inggison
+			return 210050000;
 		case 220080000: // Enshar -> Cygnea
 			return 210070000;
 		case 220110000: // Norsvold -> Iluma

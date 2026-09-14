@@ -4,7 +4,7 @@
 	Made By (Encom)
  -->
 <siege_locations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="siege_locations.xsd">
-	<siege_location id="0" type="UNDERPASS" world="210130000" name_id="730256"/>
+	<siege_location id="0" type="UNDERPASS" world="210050000" name_id="730256"/>
 	<siege_location id="0" type="UNDERPASS" world="220140000" name_id="730260"/>
 	<siege_location id="0" type="UNDERPASS" world="600100000" name_id="731464"/>
 	<siege_location id="0" type="UNDERPASS" world="600100000" name_id="731465"/>
@@ -33,12 +33,12 @@
 	<siege_location id="18" type="INDUN" world="210040000" name_id="0"/>
 	<siege_location id="18" type="INDUN" world="220040000" name_id="0"/>
 	<siege_location id="25" type="INDUN" world="210040000" name_id="0"/>
-	<siege_location id="26" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="26" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="26" type="INDUN" world="220140000" name_id="0"/>
-	<siege_location id="27" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="27" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="27" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="28" type="INDUN" world="600110000" name_id="0"/>
-	<siege_location id="29" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="29" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="29" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="29" type="INDUN" world="400010000" name_id="0"/>
 	<siege_location id="45" type="INDUN" world="210040000" name_id="0"/>
@@ -48,7 +48,7 @@
 	<siege_location id="49" type="INDUN" world="210070000" name_id="0"/>
 	<siege_location id="49" type="INDUN" world="220080000" name_id="0"/>
 	<siege_location id="50" type="INDUN" world="210070000" name_id="0"/>
-	<siege_location id="50" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="50" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="50" type="INDUN" world="220080000" name_id="0"/>
 	<siege_location id="50" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="51" type="INDUN" world="600110000" name_id="0"/>
@@ -60,7 +60,7 @@
 	<siege_location id="61" type="INDUN" world="120080000" name_id="0"/>
 	<siege_location id="62" type="INDUN" world="110070000" name_id="0"/>
 	<siege_location id="62" type="INDUN" world="120080000" name_id="0"/>
-	<siege_location id="68" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="68" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="68" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="69" type="INDUN" world="110070000" name_id="0"/>
 	<siege_location id="69" type="INDUN" world="120080000" name_id="0"/>
@@ -137,11 +137,11 @@
 	<siege_location id="169" type="INDUN" world="400010000" name_id="0"/>
 	<siege_location id="177" type="INDUN" world="110070000" name_id="0"/>
 	<siege_location id="177" type="INDUN" world="120080000" name_id="0"/>
-	<siege_location id="179" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="179" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="179" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="179" type="INDUN" world="210100000" name_id="0"/>
 	<siege_location id="179" type="INDUN" world="220110000" name_id="0"/>
-	<siege_location id="179" type="INDUN" world="210130000" name_id="0"/>
+	<siege_location id="179" type="INDUN" world="210050000" name_id="0"/>
 	<siege_location id="179" type="INDUN" world="220140000" name_id="0"/>
 	<siege_location id="180" type="INDUN" world="400010000" name_id="0"/>
 	<siege_location id="182" type="INDUN" world="400010000" name_id="0"/>
@@ -399,25 +399,25 @@
 	</siege_location>
 	
 	<!-- OUTPOST 5.8 -->
-	<siege_location id="8011" type="ARTIFACT" world="210130000" influence="6" outpost_id="101">
+	<siege_location id="8011" type="ARTIFACT" world="210050000" influence="6" outpost_id="101">
 		<artifact_activation itemid="188020001" count="2" skill="12186" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8012" type="ARTIFACT" world="210130000" influence="6" outpost_id="102">
+	<siege_location id="8012" type="ARTIFACT" world="210050000" influence="6" outpost_id="102">
 		<artifact_activation itemid="188020001" count="2" skill="12186" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8013" type="ARTIFACT" world="210130000" influence="6" outpost_id="103">
+	<siege_location id="8013" type="ARTIFACT" world="210050000" influence="6" outpost_id="103">
 		<artifact_activation itemid="188020001" count="2" skill="12187" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8014" type="ARTIFACT" world="210130000" influence="6" outpost_id="104">
+	<siege_location id="8014" type="ARTIFACT" world="210050000" influence="6" outpost_id="104">
 		<artifact_activation itemid="188020001" count="2" skill="12187" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8015" type="ARTIFACT" world="210130000" influence="6" outpost_id="105">
+	<siege_location id="8015" type="ARTIFACT" world="210050000" influence="6" outpost_id="105">
 		<artifact_activation itemid="188020001" count="2" skill="12187" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8016" type="ARTIFACT" world="210130000" influence="6" outpost_id="106">
+	<siege_location id="8016" type="ARTIFACT" world="210050000" influence="6" outpost_id="106">
 		<artifact_activation itemid="188020001" count="2" skill="12188" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
-	<siege_location id="8017" type="ARTIFACT" world="210130000" influence="6" outpost_id="107">
+	<siege_location id="8017" type="ARTIFACT" world="210050000" influence="6" outpost_id="107">
 		<artifact_activation itemid="188020001" count="2" skill="12188" repeat_count="5" repeat_interval="3" cd="900"/>
 	</siege_location>
 	<siege_location id="9011" type="ARTIFACT" world="220140000" influence="6" outpost_id="201">

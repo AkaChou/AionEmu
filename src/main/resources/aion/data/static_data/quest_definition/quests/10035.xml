@@ -211,7 +211,7 @@
     <!-- 进入 ANGRIEF GATE 区域推进 var0=4→5。 Enter Angrief Gate zone to advance. -->
     <transition source="s4" target="s5">
       <event>
-        <enter-zone zone="ANGRIEF_GATE_210130000"/>
+        <enter-zone zone="ANGRIEF_GATE_210050000"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>

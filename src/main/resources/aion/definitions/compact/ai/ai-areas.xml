@@ -254,21 +254,7 @@
     <point x="757.984985" y="1851.20862"/>
     <point x="758.333252" y="1714.37488"/>
   </area>
-  <area world_id="210130000" world_name="lf4_m" name="LF4_Dramata_OutArea" bottom="300" top="600">
-    <point x="27.34688" y="2167.31006"/>
-    <point x="32.834648" y="2243.2273"/>
-    <point x="97.378731" y="2290.4646"/>
-    <point x="173.855728" y="2282.0293"/>
-    <point x="244.317795" y="2231.98022"/>
-    <point x="271.955841" y="2177.80518"/>
-    <point x="262.538177" y="2082.95703"/>
-    <point x="216.952621" y="2031.40906"/>
-    <point x="171.646667" y="2009.84058"/>
-    <point x="106.709724" y="2003.37842"/>
-    <point x="32.176273" y="2037.05664"/>
-    <point x="23.362213" y="2122.64136"/>
-  </area>
-  <area world_id="210130000" world_name="lf4_m" name="LF4_M_Massage_Area" bottom="189.72226" top="989.72229">
+  <area world_id="210050000" world_name="lf4" name="LF4_M_Massage_Area" bottom="189.72226" top="989.72229">
     <point x="35.032459" y="36.153923"/>
     <point x="3030.77563" y="58.554749"/>
     <point x="3022.42261" y="2247.81177"/>
@@ -3476,19 +3462,19 @@
     <point x="388.829437" y="2098.86206"/>
     <point x="284.58728" y="2156.25049"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="LF4_QuestArea_PvP_Q39022" quests="39022" bottom="23.120815" top="923.120789">
+  <quest_area world_id="210050000" world_name="lf4" name="LF4_QuestArea_PvP_Q39022" quests="39022" bottom="23.120815" top="923.120789">
     <point x="18.49122" y="19.889267"/>
     <point x="3051.98047" y="19.828495"/>
     <point x="3055.17236" y="3052.49683"/>
     <point x="20.325308" y="3051.81689"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_LF4_M_PVP_Q11329" quests="11329,21331" bottom="189.777771" top="989.777771">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_LF4_M_PVP_Q11329" quests="11329,21331" bottom="189.777771" top="989.777771">
     <point x="35.032459" y="36.153923"/>
     <point x="3030.77563" y="58.554749"/>
     <point x="3022.42261" y="2247.81177"/>
     <point x="54.535866" y="2310.21313"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11360" quests="11360,21360" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11360" quests="11360,21360" bottom="100" top="700">
     <point x="750.380005" y="527.659973"/>
     <point x="799.864441" y="634.18335"/>
     <point x="863.430359" y="694.10199"/>
@@ -3550,7 +3536,7 @@
     <point x="703.915344" y="425.314911"/>
     <point x="747.476563" y="520.268677"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11361" quests="11361,21361" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11361" quests="11361,21361" bottom="100" top="700">
     <point x="2025.81006" y="449.579987"/>
     <point x="1993.0304" y="523.023193"/>
     <point x="2035.82751" y="556.470459"/>
@@ -3626,7 +3612,7 @@
     <point x="2025.46448" y="352.025848"/>
     <point x="2026.32788" y="438.208649"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11362" quests="11362,21362" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11362" quests="11362,21362" bottom="100" top="700">
     <point x="700.960022" y="1294.55005"/>
     <point x="693.890625" y="1262.03076"/>
     <point x="669.50116" y="1206.53589"/>
@@ -3694,7 +3680,7 @@
     <point x="689.255981" y="1318.2052"/>
     <point x="696.616516" y="1303.03796"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11363" quests="11363,21363" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11363" quests="11363,21363" bottom="100" top="700">
     <point x="1451.02002" y="1553.23999"/>
     <point x="1483.31555" y="1642.27087"/>
     <point x="1471.96838" y="1671.51148"/>
@@ -3735,7 +3721,7 @@
     <point x="1502.06055" y="1526.89258"/>
     <point x="1465.40076" y="1551.3324"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11364" quests="11364,21364" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11364" quests="11364,21364" bottom="100" top="700">
     <point x="2269.69995" y="930.049988"/>
     <point x="2194.67554" y="996.692932"/>
     <point x="2058.7312" y="1059.16919"/>
@@ -3783,7 +3769,7 @@
     <point x="2399.54443" y="945.841187"/>
     <point x="2290.85669" y="933.339539"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11365" quests="11365,21365" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11365" quests="11365,21365" bottom="100" top="700">
     <point x="693.849976" y="2080.15991"/>
     <point x="675.881226" y="2038.53845"/>
     <point x="670.380554" y="2045.50598"/>
@@ -3893,7 +3879,7 @@
     <point x="787.412659" y="2096.99048"/>
     <point x="710.082336" y="2083.20801"/>
   </quest_area>
-  <quest_area world_id="210130000" world_name="lf4_m" name="QuestArea_PVP_LF4_M_Q11366" quests="11366,21366" bottom="100" top="700">
+  <quest_area world_id="210050000" world_name="lf4" name="QuestArea_PVP_LF4_M_Q11366" quests="11366,21366" bottom="100" top="700">
     <point x="1811.63" y="1706.10999"/>
     <point x="1823.37085" y="1721.20532"/>
     <point x="1826.00659" y="1751.87512"/>

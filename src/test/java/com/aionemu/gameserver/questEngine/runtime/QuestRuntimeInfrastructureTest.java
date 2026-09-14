@@ -180,10 +180,10 @@ class QuestRuntimeInfrastructureTest {
 
 		var below = new QuestEvent.AttackNpc(211043,
 			new com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts(
-				7, 20, 211043, 499, 1000, 210130000, 1));
+				7, 20, 211043, 499, 1000, 210050000, 1));
 		var atBoundary = new QuestEvent.AttackNpc(211043,
 			new com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts(
-				7, 20, 211043, 500, 1000, 210130000, 1));
+				7, 20, 211043, 500, 1000, 210050000, 1));
 
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot, below, transition).isPresent());
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot, atBoundary, transition).isEmpty());

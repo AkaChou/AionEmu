@@ -87,7 +87,6 @@ public class DisputeLandService {
 		worlds.add(210020000); // Eltnen.
 		worlds.add(210040000); // Heiron.
 		worlds.add(210050000); // Inggison.
-		worlds.add(210130000); // Inggison [Master Server].
 		worlds.add(210060000); // Theobomos.
 		worlds.add(220020000); // Morheim.
 		worlds.add(220040000); // Beluslan.
@@ -132,7 +131,6 @@ public class DisputeLandService {
 			if (world == 210020000 || // Eltnen.
 					world == 210040000 || // Heiron.
 					world == 210050000 || // Inggison.
-					world == 210130000 || // Inggison [Master Server].
 					world == 210060000 || // Theobomos.
 					world == 210070000 || // Cygnea.
 					world == 220020000 || // Morheim.

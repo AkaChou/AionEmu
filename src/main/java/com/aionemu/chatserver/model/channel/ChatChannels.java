@@ -215,7 +215,6 @@ public class ChatChannels {
         addRegionChannel(210030000, "public_LF1A");
         addRegionChannel(210040000, "public_LF3");
         addRegionChannel(210050000, "public_LF4");
-		addRegionChannel(210130000, "public_LF4_M");
 		addRegionChannel(210050000, "public_LF4_M1");
 		addRegionChannel(210070000, "public_LF5");
 		addRegionChannel(210080000, "public_LF5_Ship");

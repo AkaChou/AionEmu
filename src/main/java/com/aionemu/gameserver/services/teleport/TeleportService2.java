@@ -242,6 +242,17 @@ public class TeleportService2 {
 		return isInggisonEntryWorld(worldId) || isGelkmarosEntryWorld(worldId);
 	}
 
+	/**
+	 * 将英吉斯温镜像服世界 ID 归一为实际可玩的英吉斯温世界。
+	 * Normalizes the Inggison mirror-server world id to the live Inggison world.
+	 *
+	 * @param worldId 目标世界 ID / Target world id
+	 * @return 实际可玩世界 ID / Live world id
+	 */
+	static int resolveInggisonWorldId(int worldId) {
+		return worldId == ELYOS_INGGISON_MASTER_WORLD_ID ? ELYOS_INGGISON_WORLD_ID : worldId;
+	}
+
 	public static boolean meetsBalaureaEntryRequirement(Player player, int targetWorldId) {
 		if (isInggisonEntryWorld(targetWorldId)) {
 			return meetsBalaureaEntryRequirement(Race.ELYOS, player.getRace(),
@@ -296,7 +307,8 @@ public class TeleportService2 {
 	}
 
 	private static void sendLoc(final Player player, final int mapId, final int instanceId, final float x, final float y, final float z, final byte h, final TeleportAnimation animation) {
-		boolean isInstance = DataManager.WORLD_MAPS_DATA.getTemplate(mapId).isInstance();
+		final int targetMapId = resolveInggisonWorldId(mapId);
+		boolean isInstance = DataManager.WORLD_MAPS_DATA.getTemplate(targetMapId).isInstance();
 
 		int delay = TELEPORT_DEFAULT_DELAY;
 
@@ -307,7 +319,7 @@ public class TeleportService2 {
 			player.setPortAnimation(11);
 		}
 
-		PacketSendUtility.sendPacket(player, new SM_TELEPORT_LOC(isInstance, instanceId, mapId, x, y, z, h, animation.getStartAnimationId()));
+		PacketSendUtility.sendPacket(player, new SM_TELEPORT_LOC(isInstance, instanceId, targetMapId, x, y, z, h, animation.getStartAnimationId()));
 		player.unsetPlayerMode(PlayerMode.RIDE);
 		playerTransformation(player);
 		instanceTransformation(player);
@@ -323,7 +335,7 @@ public class TeleportService2 {
 				} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
 					PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 11), 50);
 				}
-				changePosition(player, mapId, instanceId, x, y, z, h, animation);
+				changePosition(player, targetMapId, instanceId, x, y, z, h, animation);
 			}
 		}, delay);
 	}
@@ -535,12 +547,13 @@ public class TeleportService2 {
 		if (player.getLifeStats().isAlreadyDead()) {
 			return false;
 		}
+		final int targetWorldId = resolveInggisonWorldId(worldId);
 
 		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
 			GameGameplayServices.duelService().loseDuel(player);
 		}
 
-		if (player.getWorldId() != worldId) {
+		if (player.getWorldId() != targetWorldId) {
 			player.getController().onLeaveWorld();
 		}
 
@@ -549,14 +562,15 @@ public class TeleportService2 {
 			instanceTransformation(player);
 			archdaevaTransformation(player);
 			player.unsetPlayerMode(PlayerMode.RIDE);
-			changePosition(player, worldId, instanceId, x, y, z, heading, animation);
+			changePosition(player, targetWorldId, instanceId, x, y, z, heading, animation);
 		} else {
-			sendLoc(player, worldId, instanceId, x, y, z, heading, animation);
+			sendLoc(player, targetWorldId, instanceId, x, y, z, heading, animation);
 		}
 		return true;
 	}
 
 	private static void changePosition(final Player player, int worldId, int instanceId, float x, float y, float z, byte heading, TeleportAnimation animation) {
+		worldId = resolveInggisonWorldId(worldId);
 		synchronized (String.valueOf(player.getObjectId()).intern()) {
 
 			if (player.hasStore()) {
