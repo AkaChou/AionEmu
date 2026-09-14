@@ -2,7 +2,7 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-006`
+> Pattern IDs: `IR-001`–`IR-007`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
 > last_reviewed: 2026-09-14
@@ -122,3 +122,24 @@ first_check: static spawn loader, RetailConditionSpawnEngine, condition-spawns p
 
 - “坐标相近”只能触发归属审计，不能直接作为删 NPC 的依据；先判断静态加载器和条件刷怪引擎是否都实例化了同一个 producer page。
 - 在未解决前保留两个候选 ID 及其来源记录，避免把零售/legacy 的两套页面误合并成一次破坏性数据删除。
+
+## [IR-007] 七、判定 spot 是否新增禁用含 z 的坐标哈希 (SPAWN_SPOT_IDENTITY_EXCLUDES_Z)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: static spawn XML auditing and de-duplication under src/main/resources/aion/data/static_data/spawns
+first_seen: 2026-09-14
+last_verified: 2026-09-14
+symptom: 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交
+root_cause: Retail synchronisation re-projects z from terrain, so an existing spot's z changes while x/y stay; a coordinate hash that includes z reports the re-projected spot as newly added and hides the real leftover
+fix_or_guardrail: Compare spots by planar x/y only; decide “newly introduced” via block-level history (which commit introduced the retail spot, and whether the parent revision already had a coincident legacy spot in the same npc_id block) instead of hashing (x, y, z)
+evidence: commit 3fc71b693; SpawnGroup2.java:104; SpawnSurfaceResolver.java:24; NormalBalaureaSpawnDataTest.java:26; spawns/Npcs/400010000_Reshanta.xml:886
+validation: static; focused-test (dataholders and spawnengine suites passed except a pre-existing unrelated failure); runtime/client verification pending
+boundaries: The exclusion of z applies to identity and de-duplication decisions only; z still matters for spawn height and resolve_z behaviour. Legacy and retail spots with differing entity_id are different objects and must not be merged on coincidence alone
+superseded_by: none
+first_check: spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML
+-->
+
+- 真端同步会把已存在的点补上 `resolve_z="true"` 并改 z（地形重投影），x/y 不变。因此同块内两个 spot 的 z 本来就不同，**z 不能进入身份判定**。
+- 用块级历史取证代替坐标哈希：找到引入真端点 `R` 的提交，检查其父版本中同一 `npc_id` 块内是否已存在与 `L` 平面重合的 legacy 点。是则该提交在 `L` 旁新增了重合的 `R`，属制造重复。
+- 该判据在同一批数据上把候选从 68 修正到 138，并推翻了对引入提交的误判（`a5e274fd0` 并未新增点，只是补 `resolve_z`；重复源自更早的提交）。
+- 与 `IR-006` 的关系：IR-006 要求先证明加载归属再删；本条给出可执行的归属判据。两者都禁止仅凭坐标接近直接删除——`entity_id` 不同的重合点是不同对象，必须保留待人工判断。

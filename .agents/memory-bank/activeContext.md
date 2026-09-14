@@ -24,6 +24,8 @@
 1. **工作区未提交改动防御**：
    - 工作区存在并行任务与副本相关修改（如 `CelestiusAI2.java`, `KinquidAI2.java`, `RetailPatternAI2.java` 等）。
    - 动手修改代码前务必先执行 `git status`，确认当前改动范围，避免覆盖未提交的成果。
+   - `git add -A <dir>` 会连同目录内无关任务的改动一并暂存（曾把 Taloc's Hollow 等并行修改带入提交暂存区）；提交前用 `git diff --cached --name-only` 核对范围，或按文件清单精确 `git add`。
+   - 已提交：`3fc71b693` 移除 137 个非真端残留 spot（33 个文件），并沉淀 `IR-007`；判定清单与脚本在 `.agents/summary/spawn-duplicate-spots/`。
 2. **任务排查标准流程**：
    - 检查任务 XML 节点时，对照 `docs/quest/` 维护文档及旧 Handler 行为。
 
