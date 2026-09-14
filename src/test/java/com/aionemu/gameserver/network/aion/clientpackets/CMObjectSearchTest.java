@@ -107,6 +107,35 @@ class CMObjectSearchTest {
 	}
 
 	@Test
+	void resolvesTheClientDf6BantusCollisionDuringQuest14043VentusStages() {
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.START, 0)));
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.REWARD, 6)));
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.REWARD, 8)));
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241418,
+			questState(14043, QuestStatus.REWARD, 8)));
+	}
+
+	@Test
+	void keepsTheDf6BantusSlotIdsOutsideQuest14043VentusStages() {
+		assertEquals(241198, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.START, 1)));
+		assertEquals(241198, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.START, 8)));
+		assertEquals(241418, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241418,
+			questState(14043, QuestStatus.REWARD, 7)));
+		assertEquals(241198, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(2696, QuestStatus.START, 0)));
+		assertEquals(241198, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198,
+			questState(14043, QuestStatus.COMPLETE, 8)));
+		assertEquals(241198, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(241198, null));
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveVentusSearchNpcId(278532,
+			questState(14043, QuestStatus.START, 0)));
+	}
+
+	@Test
 	void resolvesTheClientAsteraNpcCollisionDuringTheMoveStage() {
 		int searchNpcId = CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
 				questState(10520, QuestStatus.START, 4));

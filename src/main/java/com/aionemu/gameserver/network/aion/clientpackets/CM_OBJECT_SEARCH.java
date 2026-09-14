@@ -36,6 +36,13 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	private static final int CLIENT_DREDGION_EREMITIA = 221524;
 	private static final int QUEST_EREMITIA = 798600;
 	private static final int EREMITIA_SEARCH_STAGE = 1;
+	private static final int QUEST_DRAWLING_BALAUR = 14043;
+	private static final int QUEST_VENTUS = 278532;
+	private static final int CLIENT_DF6_BANTUS = 241198;
+	private static final int CLIENT_DF6_BANTUS_REPLACEMENT = 241418;
+	private static final int VENTUS_INTRO_STAGE = 0;
+	private static final int VENTUS_REWARD_STAGE = 6;
+	private static final int VENTUS_EXTENDED_REWARD_STAGE = 8;
 
 	private int npcId;
 	/**
@@ -65,6 +72,7 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		if (gm) {
 			searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
 			searchNpcId = resolveEremitiaSearchNpcId(player, searchNpcId);
+			searchNpcId = resolveVentusSearchNpcId(player, searchNpcId);
 		}
 		SearchTarget target = resolveQuestSensorTarget(searchNpcId);
 		if (target == null) {
@@ -202,6 +210,63 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 			return requestedNpcId;
 		}
 		return QUEST_EREMITIA;
+	}
+
+	/**
+	 * 将 14043“学习龙族语”中的班图斯同名搜索解析为任务 NPC。
+	 * Resolves the Bantus name collision during quest 14043 "Drawling Balaur" to the quest NPC.
+	 *
+	 * <p>客户端在“和班图斯进行对话”阶段只提交按显示名解析出的 NPC ID，会把埃雷修兰塔的情报官
+	 * 278532 解析成诺斯珀德 DF6 B2_24 的同名精英怪 241198；241418 是同一刷新点的昼夜替换怪，
+	 * 现场寻找命中的正是它。只有任务状态明确处于寻找 278532 的阶段时才做别名解析，避免影响
+	 * 其他任务和其他阶段。</p>
+	 * <p>The client submits only the NPC ID it resolved from the shared display name during the
+	 * "talk to Ventus" stages, which maps to DF6 B2_24 monster 241198 instead of Reshanta
+	 * intelligence officer 278532; 241418 is the day/night replacement at the same spawn point and
+	 * is the NPC the live search reached. The alias is applied only while the quest state explicitly
+	 * targets 278532, preserving every other quest and stage.</p>
+	 *
+	 * @param player 搜索玩家 / searching player
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	private static int resolveVentusSearchNpcId(Player player, int requestedNpcId) {
+		if (isDf6BantusSlotTemplate(requestedNpcId) && player != null) {
+			QuestState state = player.getQuestStateList().getQuestState(QUEST_DRAWLING_BALAUR);
+			return resolveVentusSearchNpcId(requestedNpcId, state);
+		}
+		return requestedNpcId;
+	}
+
+	/**
+	 * 按给定任务状态解析班图斯搜索目标；空状态和不匹配状态保持原 ID。
+	 * Resolves a Bantus search target from the supplied quest state; null or non-matching states preserve the original ID.
+	 *
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @param state 14043 的当前任务状态，可为空 / current quest 14043 state, nullable
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	static int resolveVentusSearchNpcId(int requestedNpcId, QuestState state) {
+		if (!isDf6BantusSlotTemplate(requestedNpcId) || state == null
+				|| state.getQuestId() != QUEST_DRAWLING_BALAUR) {
+			return requestedNpcId;
+		}
+		int stage = state.getQuestVarById(0);
+		boolean introStage = state.getStatus() == QuestStatus.START && stage == VENTUS_INTRO_STAGE;
+		boolean rewardStage = state.getStatus() == QuestStatus.REWARD
+				&& (stage == VENTUS_REWARD_STAGE || stage == VENTUS_EXTENDED_REWARD_STAGE);
+		return introStage || rewardStage ? QUEST_VENTUS : requestedNpcId;
+	}
+
+	/**
+	 * 判断模板是否属于 DF6 B2_24 的班图斯刷新位；昼夜两个模板共用一个刷新点。
+	 * Checks whether a template belongs to the DF6 B2_24 Bantus slot; its day and night templates share one spawn point.
+	 *
+	 * @param npcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 是否属于该同名刷新位 / whether the template belongs to that shared slot
+	 */
+	private static boolean isDf6BantusSlotTemplate(int npcId) {
+		return npcId == CLIENT_DF6_BANTUS || npcId == CLIENT_DF6_BANTUS_REPLACEMENT;
 	}
 
 	/**
