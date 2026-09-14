@@ -22,7 +22,8 @@
 
 | 业务领域 | Pattern IDs | 核心避坑点速记 (Summary) | 细分指南文档 |
 |---|---|---|---|
-| **任务系统 (Quest Engine)** | `QE-001`, `QE-002`, `QE-003`, `QE-004`, `QE-005`, `QE-006`, `QE-007`, `QE-008` | target 投影会覆盖 action 变量自环计数；多 NPC 连续汇报严禁删中间 var 节点；终态自动清理 work-items；分支交付物在领奖阶段必须用 `count="ALL"` 避免阻断；同 NPC 领奖与未授权任务避免门控冲突 | [patterns/quest-engine.md](patterns/quest-engine.md) |
+| **任务系统 (Quest Engine)** | `QE-001`, `QE-002`, `QE-003`, `QE-004`, `QE-005`, `QE-006`, `QE-007`, `QE-008`, `QE-009`, `QE-010` | target 投影会覆盖 action 变量自环计数；多 NPC 连续汇报严禁删中间 var 节点；终态自动清理 work-items；分支交付物在领奖阶段必须用 `count="ALL"` 避免阻断；无任务上下文的 NPC 选择保持普通对话；欧比斯准入只允许阵营任务完成态 | [patterns/quest-engine.md](patterns/quest-engine.md) |
+| **副本与运行时 (Instance & Runtime)** | `IR-001`, `IR-002`, `IR-003`, `IR-004`, `IR-005`, `IR-006` | 副本特殊掉落注册时按物品 ID 去重；特殊属性绕过错误的 short 上限；GM 命令必须同时检查类扫描与有效运行时配置；巡逻编队按组锚点距离分组；事件日志与客户端崩溃不能仅凭时间相邻归因；重叠 NPC 先证明加载归属再删除 | [patterns/instance-runtime.md](patterns/instance-runtime.md) |
 | **静态数据与 JAXB** | `SDJ-001`, `SDJ-002` | JAXB 实体实例字段严禁声明为 `final`；动态反射包树与技能/NPC XML 存在隐式映射关系 | [patterns/static-data-jaxb.md](patterns/static-data-jaxb.md) |
 | **核心架构与运行时** | `AR-001`, `AR-002`, `AR-003` | 移除 SPI 机制改为显式注入 Provider；高频服务门面热路径严禁裸调 `getIfAvailable` 查容器 | [patterns/architecture-runtime.md](patterns/architecture-runtime.md) |
 | **构建、环境与工具** | `ENV-001`, `ENV-002`, `ENV-003`, `ENV-004` | IDEA/打包运行产物边界；Lombok 同名同参重载陷阱；standalone javac 不可信；批量文本编辑需保护代码结构 | [patterns/build-and-env.md](patterns/build-and-env.md) |

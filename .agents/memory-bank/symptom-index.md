@@ -12,6 +12,12 @@
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |
 | 批量注释后代码行丢失、括号错位、词法状态被破坏 | `ENV-004` | git diff added/removed code lines, anchor uniqueness and lexical state transitions |
+| 副本钥匙或特殊物品实际掉落两份，但基础 NPC 掉落表和任务掉落表看起来各自都只有一份 | `IR-001` | DropRegistrationService.registerDrop, NPC base drop XML, quest XML drops and instance onDropRegistered |
+| 技能 XML 配置百万级即时伤害，但角色处于特定被动修饰状态时最终伤害骤降到约数万 | `IR-002` | CreatureGameStats.getStat, StatCapUtil.getUpperCap, registered BOOST_SPELL_ATTACK modifiers and the final magic-damage chain |
+| 源码和 target/classes 中已有 GM 命令，但客户端输入 //command 后被当作普通聊天文本 | `IR-003` | launch classpath, target/classes, aion/config/administration/commands.properties, ChatProcessor registration and //reload commands |
+| rows 配置正确却出现 WalkerGroup Invalid row sizes，编队成员被拆成多个刷怪组 | `IR-004` | InstanceWalkerFormations.organizeAndSpawn, POSITION_GROUP_DISTANCE, WalkerGroupShift.DISTANCE, rows/member count and actual spawn logs |
+| 活动日志后紧接客户端断线或被报告为崩溃 | `IR-005` | startChoose branch conditions, running PID/classpath, selected-player logs, teleport packets and client dump/log |
+| 两个 NPC 在相近坐标重复出现，疑似同一训练/生产点被刷出两次 | `IR-006` | static spawn loader, RetailConditionSpawnEngine, condition-spawns producer pages and legacy/client NPC evidence |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
@@ -20,5 +26,7 @@
 | REWARD 状态无 Page 5、奖励窗口关闭或 NPC 对话无响应 | `QE-006` | QuestEvent.matches and QuestProductionDispatcher priority |
 | 多选一交付后领奖或奖励预览卡死，removalFeasible 为 BLOCKED | `QE-007` | removalFeasible, branch transitions and reward-stage remove-item actions |
 | 等级满足但无任务标记、接受动作无响应、前置任务为 999 级或不存在 | `QE-008` | production catalog, quest_data.xml and start-condition definitions |
+| 关闭普通任务标记后 NPC 选择出现 load fail、隐藏任务 owner 截获或 action 被错误回显为 dialog page | `QE-009` | CM_DIALOG_SELECT.hasQuestDialogContext, resolveRoutedQuestId, DialogService.onSimpleDialogSelect and client packet sequence |
+| 未完成进入任务仍可从主城门户、固定回城或多目标回城路径进入欧比斯 | `QE-010` | PortalService.port, permission branch, portal_use quest_req, fixed return-item handlers and MultiReturnAction target index |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |

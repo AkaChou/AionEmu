@@ -31,6 +31,7 @@
 ├── check_memory_bank.py            ← 结构、链接和路由一致性校验器
 ├── patterns/                      ← 带 Pattern ID 的长期模式卡片
 │   ├── quest-engine.md
+│   ├── instance-runtime.md
 │   ├── static-data-jaxb.md
 │   ├── architecture-runtime.md
 │   └── build-and-env.md
