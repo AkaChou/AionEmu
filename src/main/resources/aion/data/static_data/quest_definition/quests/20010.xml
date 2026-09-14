@@ -10,6 +10,9 @@
       <item id="182216182" count="1"/>
       <item id="182216183" count="1"/>
     </items>
+    <work-items>
+      <item id="182216184" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="61295166"/>
       <reward kind="ITEM" id="188056784" amount="1"/>

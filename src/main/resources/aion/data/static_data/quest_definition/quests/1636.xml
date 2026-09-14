@@ -13,6 +13,9 @@
     <inventory-items>
       <item id="182201789" count="1"/>
     </inventory-items>
+    <work-items>
+      <item id="182201785" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="2954681"/>
       <reward kind="SELECTABLE_ITEM" id="113100789" amount="1"/>

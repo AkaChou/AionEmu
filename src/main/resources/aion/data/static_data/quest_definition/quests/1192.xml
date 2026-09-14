@@ -4,6 +4,10 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182200556" count="1"/>
+    </work-items>
+    <!-- quest_data.xml:824 声明 182200556 为工作物品;retail zz_retail_simple_quests.xml:8532 在接取时发放、203701 处交出。 -->
     <rewards>
       <reward kind="EXP" id="0" amount="73200"/>
       <reward kind="ITEM" id="188051196" amount="1"/>
@@ -115,7 +119,8 @@
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO1"/>
       </event>
       <actions>
-        <!-- 无物品变更 -->
+        <!-- retail zz_retail_simple_quests.xml:8533 在此交出 182200556;存量为 0 的旧存档不得阻断。 -->
+        <remove-item item-id="182200556" count="ALL"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
