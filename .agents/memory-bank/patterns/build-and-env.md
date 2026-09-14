@@ -9,7 +9,21 @@
 
 ---
 
-## 一、IDEA 运行环境与代码生效判定（致命排查陷阱） (`ENV-001`)
+## [ENV-001] 一、IDEA 运行环境与代码生效判定（致命排查陷阱）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: IDEA and packaged runtime classpaths, resources and deployment artifacts
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 改了源码但运行行为不变、日志与源码不一致、stale class
+root_cause: The active process reads a different classpath artifact than the edited source tree
+fix_or_guardrail: Identify the launch mode and compare source mtime with target/classes or packaged artifacts
+evidence: target/classes; aion/AionEmu.jar; runtime classpath and log path rules
+validation: runtime; mtime and classpath inspection before code-level diagnosis
+boundaries: Do not mix IDEA target artifacts with packaged deployment evidence
+superseded_by: none
+first_check: launch command, target/classes, JAR or resource directory and log/console.log
+-->
 
 1. **Stale Class 陷阱与运行原理**：
    - 用户日常开发通常直接通过 IntelliJ IDEA 启动 Spring Boot 主类，CWD 为仓库根目录。
@@ -25,7 +39,21 @@
 
 ---
 
-## 二、Maven 与 JDK 编译环境 (`ENV-002`)
+## [ENV-002] 二、Maven 与 JDK 编译环境
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Maven annotation processing, JDK compatibility and test baselines
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移
+root_cause: Standalone compiler experiments omit the project annotationProcessorPaths or use a different JDK baseline
+fix_or_guardrail: Treat Maven with the configured processor paths as the authoritative compiler validation
+evidence: pom.xml annotationProcessorPaths; Maven/JDK baseline notes; known test baseline
+validation: Maven compile or test-compile when authorized; standalone javac is exploratory only
+boundaries: Host-specific JDK and Maven paths must not be generalized to every checkout
+superseded_by: none
+first_check: pom.xml, java version, Maven processor paths and baseline diff
+-->
 
 1. **Maven 路径**：
    - 本机 Maven 路径位于 `/opt/homebrew/bin/mvn`（用户终端的全局 `PATH` 可能未包含 `mvn`）。
@@ -40,7 +68,21 @@
 
 ---
 
-## 三、Lombok 源码重构规则 (`ENV-003`)
+## [ENV-003] 三、Lombok 源码重构规则
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Lombok-generated constructors and accessors in Java source
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败
+root_cause: Lombok skips generation when an existing method has the same name and parameter count or field eligibility differs
+fix_or_guardrail: Audit overload arity and required final fields before removing hand-written methods
+evidence: .agents/rules/lombok.md; Lombok annotations and overload examples in source
+validation: static; Maven compile required before accepting a Lombok refactor
+boundaries: Type differences do not avoid same-arity collisions; explicit initializers change required-constructor membership
+superseded_by: none
+first_check: same-name methods, parameter count, final-field initialization and @Override sites
+-->
 
 1. **同名同参数个数冲突规则**：
    - 类中若已存在同名且**参数个数相同**的方法（即便入参类型不同），Lombok 将拒绝生成对应方法。
@@ -52,7 +94,21 @@
 
 ---
 
-## 四、代码注释与文本处理安全纪律 (Comment Safety) (`ENV-004`)
+## [ENV-004] 四、代码注释与文本处理安全纪律 (Comment Safety)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Bulk source text edits, comment localization and lexical structure preservation
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 批量注释后代码行丢失、括号错位、词法状态被破坏
+root_cause: Broad string replacement or two-stage comment stripping crossed code and comment lexical boundaries
+fix_or_guardrail: Use minimal unique anchors, preserve code bytes and scan comments with a single-pass lexer
+evidence: .agents/rules/ai-artifacts.md; comment-safety rules; prior bulk-edit incident
+validation: diff inspection; lexical/static check; compile only when authorized
+boundaries: Comment-only edits still require structural review when strings contain comment-like tokens
+superseded_by: none
+first_check: git diff added/removed code lines, anchor uniqueness and lexical state transitions
+-->
 
 1. **批量编辑安全操作纪律（防止误伤代码）**：
    - 在进行注释汉化或格式治理时，曾发生因 old_string/new_string 缩进不匹配而误删 `if (...)` 或多加闭合括号 `}` 的事故。

@@ -1,5 +1,12 @@
 # 全量测试已知问题清单（2026-09-12 全量跑：3086 tests）
 
+> status: HISTORICAL
+> scope: AionEmu-test `quest` checkout; full-test triage from 2026-09-12 to 2026-09-13
+> source: historical `.agents/summary/quest-load-fail/full-test-known-issues.md` and the full-test record in this file
+> last_verified: 2026-09-13
+> replacement: none; reusable rules must be distilled into `patterns/`
+> read_by_default: no
+
 本会话已修复：CollectTurnInClientActionAlignmentBatchTest（18745 确认页顺序与断言）。
 
 ## 环境性失败（JDK 25 反射 / Objenesis mock 限制，与本轮改动无关）—— 113 个

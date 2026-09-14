@@ -2,14 +2,28 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-005`
+> Pattern IDs: `QE-001`–`QE-008`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
 > last_reviewed: 2026-09-14
 
 ---
 
-## 一、权威基准与对比原则 (`QE-001`)
+## [QE-001] 一、权威基准与对比原则
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Quest legacy Handler comparison, XML metadata and NPC registration
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 前置缺失、level-up 过早接取、NPC 注册或路由不一致
+root_cause: XML migration loses prerequisite or NPC registration semantics from legacy Handler
+fix_or_guardrail: Compare commit 911440146 first and restore missing prerequisites or NPC mappings
+evidence: commit 911440146; quest_data.xml; docs/quest repair rules
+validation: static; production-catalog; case-specific runtime/client validation required
+boundaries: If origin/history is unavailable record substitute evidence; static proof is not client acceptance
+superseded_by: none
+first_check: old Handler, quest_data.xml, production catalog
+-->
 - **历史权威代码基准**：
   排查任务流程 Bug、条件分支不推进或逻辑缺失时，必须以历史旧 Java Handler（Git commit `911440146`）作为权威业务逻辑对照物。
 - **旧 Handler 提取与对照命令**：
@@ -22,23 +36,63 @@
 
 ---
 
-## 二、核心状态机与变异规划器 (QuestMutationPlanner) (`QE-002`–`QE-003`)
+## 二、核心状态机与变异规划器 (QuestMutationPlanner)
 
-1. **Target 投影覆盖 Action 变量陷阱 (2026-08-12 修复)**：
+### [QE-002] Target 投影覆盖 Action 变量陷阱 (2026-08-12 修复)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: QuestMutationPlanner variable actions and target projections
+first_seen: 2026-08-12
+last_verified: 2026-09-14
+symptom: var0 不增长、自环计数卡 0、variable-at-least 不触发
+root_cause: Target projection overwrote fields already changed by transition actions
+fix_or_guardrail: Track actionTouchedFields and let actions win over target projection
+evidence: .agents/summary/quest-e2e/triage.md:83; QuestMutationPlanner; quest 18972
+validation: static; focused-test; runtime/client validation not implied
+boundaries: Applies to action and target field collisions; unrelated state projection rules still need separate proof
+superseded_by: none
+first_check: QuestMutationPlanner.build, action variable writes, target projection
+-->
    - **现象**：同节点自环计数任务（如 18972.xml 的 `started→started` 计数、击杀怪、收集道具）在玩家交互后，计数卡在 0，`variable-at-least` 完成转换永不触发。
    - **根因**：`QuestMutationPlanner.build()` 原用 `variables.putAll(projection.variables())`，Target 节点声明的 var 会无条件覆盖 Transition Actions 里的 `SetVariable` / `IncrementVariable`。
    - **引擎机制**：现已改为记录 `actionTouchedFields`，Target 投影仅覆盖 Action 未触及的字段；同节点自环计数 Action 结果被完整保留。
 
-2. **完成路径残留 Work-Item 自动清理 (2026-08-14 修复)**：
+### [QE-003] 完成路径残留 Work-Item 自动清理 (2026-08-14 修复)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Quest completion and work-item cleanup in QuestMutationPlanner
+first_seen: 2026-08-14
+last_verified: 2026-09-14
+symptom: CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称
+root_cause: Completion path omitted the legacy questWorkItems cleanup that existed on abandon
+fix_or_guardrail: Append completion cleanup unless the XML explicitly removes all required work items
+evidence: QuestMutationPlanner; QuestMutationPlannerTest; archive/2026-09-12-full-test-known-issues.md:103
+validation: static; focused-test; runtime/client validation not implied
+boundaries: Do not add duplicate removal actions when explicit count=ALL already expresses the contract
+superseded_by: none
+first_check: CompleteQuest mutation plan and work-items declarations
+-->
    - **现象**：任务完成后玩家背包仍残留任务道具（如 1122 任务完成箱子仍残留 182200216「Pernos's Robe」）。
    - **根因**：旧引擎 `QuestService.setFinishingState` 在完成时无条件清理所有 `questWorkItems`；新引擎此前只在放弃（Abandon）时清理，完成（`CompleteQuest`）路径漏了清理。
    - **引擎机制**：`QuestMutationPlanner.build()` 现已对称增加 `appendCompletionWorkItemCleanup`，凡声明了 `<work-items>` 且未显式配 `remove-item count="ALL"` 的任务，完成时由引擎自动补齐清理。
 
----
+## 三、NPC 报告链与 Var 节点守则
 
-## 三、NPC 报告链与 Var 节点守则 (`QE-004`–`QE-005`)
-
-1. **多 NPC 交付链系统性丢失修复**：
+### [QE-004] 多 NPC 交付链系统性丢失修复
+<!-- pattern-metadata
+status: CONFIRMED
+scope: XML conversion of multi-NPC quest reports and variable nodes
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: dialog 31 无路由、中间 NPC 丢失、NPC ID 错配、choice/fallback 冲突
+root_cause: XML migration omitted intermediate NPC report nodes or copied NPC identities incorrectly
+fix_or_guardrail: Restore START variable nodes, NPC_REPORT transitions and explicit choice/fallback handling
+evidence: quests/1900.xml; client dialog mapping; NPC_REPORT repair cases in this card
+validation: static; production-gate; client-contract evidence required per quest
+boundaries: METADATA_ONLY tasks cannot receive executable nodes until their catalog mode is changed
+superseded_by: none
+first_check: quest XML nodes, NPC_REPORT edges, catalog mode and client dialog mapping
+-->
    - **现象**：从 Java Handler 迁移到 XML 时，多 NPC + 多 var 档流程在 XML 中只剩起始 NPC，中间交付 NPC 丢失或 ID 错配（如 804871↔804870 孪生 ID 抄错）。玩家点击 NPC 发送 dialog 31 无匹配转换。
    - **标准修复模板 (参考 `quests/1900.xml`)**：
      - 中间 NPC 各为一个 START 状态 var 档节点（`s1`/`s2`...）；
@@ -48,7 +102,21 @@
      - `npc-complete` 的 choice/fallback 处理 `SELECTABLE_ITEM`（choice 占 8/9 时其余用 fallback dialog-ids="10..23"，避免 `DUPLICATE_DIALOG_ID`）。
      - 注意：目录清单 `mode="METADATA_ONLY"` 的任务不能有 nodes/transitions，恢复执行定义后必须在清单中改为 `EXECUTABLE`。
 
-2. **连续两步汇报误删中间 Var 节点 (7 个典型案例)**：
+### [QE-005] 连续两步汇报误删中间 Var 节点 (7 个典型案例)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Multi-step NPC_REPORT routes and intermediate quest variables
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 多 NPC 连续汇报时 var0 卡 0、任务追踪 UI 不推进、CLIENT_PAGE_UNREACHED
+root_cause: Intermediate var node was deleted during Handler to XML migration
+fix_or_guardrail: Restore the intermediate var node and route through NPC_REPORT instead of USE_OBJECT
+evidence: docs/quest/client-dialog-mapping/quest-dialog-action-details.csv; docs/quest/client-dialog-mapping/quest-order-audit.csv; seven listed cases
+validation: static; client-contract; real-client validation required for acceptance
+boundaries: The intermediate NPC and terminal NPC must be distinguished by client action mapping
+superseded_by: none
+first_check: client dialog action details, quest-order-audit and var node sequence
+-->
    - **现象**：`6d8019d8f` 误删中间 var 节点，导致 `var0` 永远卡在 0、客户端任务追踪 UI 不推进。
    - **受影响任务**：
      - `1115` The Elim's Message：删 `v1` (var0=1)，中间 NPC 203072 SETPRO1，终端 203058
@@ -67,7 +135,21 @@
 
 ---
 
-## 四、NPC 对话门控与任务路由冲突 (NPC_DIALOG_ROUTE_GATE_COLLISION)
+## [QE-006] 四、NPC 对话门控与任务路由冲突 (NPC_DIALOG_ROUTE_GATE_COLLISION)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Quest event dispatch for multiple quests attached to one NPC
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: REWARD 状态无 Page 5、奖励窗口关闭或 NPC 对话无响应
+root_cause: Broad NPC routing matched an unauthorized task before the REWARD-specific dispatcher
+fix_or_guardrail: Use exact QuestEvent.matches filtering and preserve REWARD dispatcher priority
+evidence: commit 59bba1a; .agents/summary/quest-acceptance/1006-2026-09-10-client-accepted.md:15
+validation: focused-test; client-acceptance record; runtime boundary remains explicit
+boundaries: Applies to shared NPC event routing; ordinary task authorization gates must remain intact
+superseded_by: none
+first_check: QuestEvent.matches and QuestProductionDispatcher priority
+-->
 
 - **现象**：玩家达到领奖状态（`REWARD`）后，与 NPC 对话无法打开奖励选择窗口（Page 5），直接关闭对话或无响应（如 q1006「Ascension / 重生为守护者」）。
 - **根因**：
@@ -77,7 +159,21 @@
 
 ---
 
-## 五、可选/分支收集物提前扣除致使领奖卡死 (OPTIONAL_WORK_ITEM_CLEANUP_BLOCK)
+## [QE-007] 五、可选/分支收集物提前扣除致使领奖卡死 (OPTIONAL_WORK_ITEM_CLEANUP_BLOCK)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Optional branch work-item cleanup and reward transitions
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 多选一交付后领奖或奖励预览卡死，removalFeasible 为 BLOCKED
+root_cause: Branch selection removed one item early while later routes required all alternatives with count=1
+fix_or_guardrail: Use count=ALL for reward-stage cleanup and preview routes after branch selection
+evidence: commit fb26a0d49; .agents/summary/quest-2392/2026-09-14-optional-work-item-audit.md:19
+validation: static; focused-test; production-gate; client validation required
+boundaries: count=ALL is safe only for cleanup semantics and must not replace a required exact-count consumption
+superseded_by: none
+first_check: removalFeasible, branch transitions and reward-stage remove-item actions
+-->
 
 - **现象**：任务可多选一交付物品（如 q2392「美丽的羽毛」三选一、q1922、q2947），玩家选定分支进入奖励状态（`REWARD`）后，点击 NPC 领奖或预览奖励窗口时完全卡死无响应。
 - **根因**：
@@ -90,7 +186,21 @@
 
 ---
 
-## 六、不可达/999级任务前置阻断接取 (UNREACHABLE_METADATA_PREREQUISITE)
+## [QE-008] 六、不可达/999级任务前置阻断接取 (UNREACHABLE_METADATA_PREREQUISITE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Production quest catalog prerequisites and NPC start eligibility
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 等级满足但无任务标记、接受动作无响应、前置任务为 999 级或不存在
+root_cause: Production metadata referenced an unavailable, obsolete or unreachable prerequisite
+fix_or_guardrail: Prove the prerequisite against the production catalog before removing the invalid reference
+evidence: commit adc5cbc0b; .agents/summary/quest-19055/2026-09-09-unreachable-start-prerequisite-audit.md:7; quest_data.xml
+validation: static; focused-test; client acceptance not implied
+boundaries: Do not remove a prerequisite merely because it is inconvenient; require catalog and version evidence
+superseded_by: none
+first_check: production catalog, quest_data.xml and start-condition definitions
+-->
 
 - **现象**：玩家达到等级要求，但在 NPC 处完全看不到可接任务标记或点击无接取对话（如 q19055）。
 - **根因**：

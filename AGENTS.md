@@ -18,7 +18,7 @@ Persistent architecture patterns and debugging insights are maintained in [.agen
 - **Read before action**: When diagnosing bugs or touching core systems, read [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) first to avoid known pitfalls.
 - **Active focus**: Check [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) for current focus areas across sessions.
 - **Automatic Wrap-up Protocol (自动沉淀协议)**:
-  After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. When this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
+  After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. After updating Pattern metadata, run `python3 .agents/memory-bank/sync_memory_bank.py` and `python3 .agents/memory-bank/check_memory_bank.py`; when this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
 
 ## Configuration
 

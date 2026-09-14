@@ -9,7 +9,21 @@
 
 ---
 
-## 一、动态反射加载边界（严禁按死代码删除） (`SDJ-001`)
+## [SDJ-001] 一、动态反射加载边界（严禁按死代码删除）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Dynamic script loading, AI classes, command handlers and data-text mappings
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载
+root_cause: Runtime discovers classes through package scanning, reflection and data attributes rather than static Java calls
+fix_or_guardrail: Preserve dynamic package trees and search aion data text before rename or deletion
+evidence: CompiledScriptLoader; @AIName; src/main/resources/aion/ dynamic loading paths
+validation: static; runtime loader logs when the affected package or data is exercised
+boundaries: Package allowlists do not prove every class is used; validate the specific loader and data version
+superseded_by: none
+first_check: CompiledScriptLoader, @AIName and data-text references
+-->
 
 1. **`CompiledScriptLoader.load()` 4 大动态反射包树**：
    以下 4 个包内的类由脚本加载器通过包名动态扫描与反射加载，**永远不会在代码中出现直接静态引用**。在执行死代码扫描与清理时，必须白名单保留整个包树：
@@ -28,7 +42,21 @@
 
 ---
 
-## 二、JAXB 实体绑定与 final 字段限制 (`SDJ-002`)
+## [SDJ-002] 二、JAXB 实体绑定与 final 字段限制
+<!-- pattern-metadata
+status: CONFIRMED
+scope: JAXB-bound entity fields and JDK 25 or newer reflection behavior
+first_seen: unknown
+last_verified: 2026-09-14
+symptom: JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效
+root_cause: JAXB needs to write instance fields while newer JDKs restrict reflective mutation of final fields
+fix_or_guardrail: Remove final only from XML-injected instance fields and retain static final or safe XmlTransient caches
+evidence: JAXB entity classes; JDK 25 reflection warnings; static XML loader behavior
+validation: static; focused binding test or runtime loader evidence required per entity
+boundaries: Do not remove static final constants or final fields proven to be excluded from JAXB binding
+superseded_by: none
+first_check: JAXB annotations, field declarations and runtime binding warnings
+-->
 
 1. **实例字段严禁声明为 `final`**：
    - **现象**：启动时 JVM（JDK 25+）抛出 final 字段反射改写警告（`Illegal reflective access to final field...`），或反序列化值未生效。
