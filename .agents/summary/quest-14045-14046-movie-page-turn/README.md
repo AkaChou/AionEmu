@@ -34,19 +34,21 @@
 
 规则: `TALK_TO_NPC` 的页面动作名对应该任务客户端 page id，但 `after-commit` 只有影片、没有目标页/关闭/传送。
 
-仍命中（本次未改，缺少实机路径或还需要补齐后续页）:
+家族扩展修复（2026-09-14，未提交）:
 
-- `2002` NPC 203534 `SELECT2_1` -> `play-movie(52)`；目标页 1353 的后续 `SELECT2_1_1` 也没有路由
-- `2007` NPC 203539 `SELECT3_1` -> `play-movie(55)`；目标页 1694 的后续 `SELECT3_1_1` 也没有路由
-- `2008` NPC 203550 `SELECT5_1` -> `play-movie(57)`；目标页 2376 的后续 `SELECT5_1_1` 也没有路由
-- `24045` NPC 279004 `SELECT2_1` -> `play-movie(292)`；后续 `SETPRO2` 路由已存在
-- `24052` NPC 204753 `SELECT1_1` -> `play-movie(242)`；目标页 1012 的后续 `SELECT1_2` 也没有路由
-- `24053` NPC 204787 `SELECT1_1` -> `play-movie(252)`（started/step1/step2/step3/step4 共 5 条）；其中 `actions="QUEST_SELECT SELECT1_1"` 的合并过渡需要拆分动作，不能直接补同一页面
+- `2002` NPC 203534：`SELECT2_1` 后补页 1353，并补 `SELECT2_1_1 -> 1354`；随后 SETPRO2 推进到 s2
+- `2007` NPC 203539：`SELECT3_1` 后补页 1694，并补 `SELECT3_1_1 -> 1695`；随后 SETPRO3 推进到 v3
+- `2008` NPC 203550：`SELECT5_1`（事务内移除三枚职业道具）后补页 2376，并补 `SELECT5_1_1 -> 2377`；随后 SETPRO5 进入 320020000
+- `24045` NPC 279004：`SELECT2_1` 后补页 1353；SETPRO2 已存在
+- `24052` NPC 204753：`SELECT1_1` 后补页 1012，并补 `SELECT1_2 -> 1097`；随后 SETPRO1 发放三枚道具并推进到 s1
+- `24053` NPC 204787（started）：`SELECT1_1` 后补页 1012；SETPRO1 已存在。step1-step4 的旧 handler switch fallthrough 保持 movie-only，不在客户端 1011->1012->10000 可达链上，作为有意例外
+- 回归覆盖：`MovieContinuationResponseFamilyTest`
 
 ## 验收验证
 
 ```bash
 mvn -q -Dtest=Quest14045And14046MoviePageTurnContractTest test                     # 通过
+mvn -q -Dtest=MovieContinuationResponseFamilyTest,Quest14045And14046MoviePageTurnContractTest test  # 通过
 mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
 # PRODUCTION_COMPILE_OK=6193 / FAILURES=0 / WHITELIST_VIOLATIONS=0
 ```

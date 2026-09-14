@@ -125,6 +125,15 @@
       </event>
       <after-commit>
         <play-movie movie-id="55"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="v2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203539" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
       </after-commit>
     </transition>
     <transition source="v2" target="v3">
