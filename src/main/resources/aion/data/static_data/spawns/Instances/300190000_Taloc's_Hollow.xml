@@ -21,12 +21,8 @@
             <spot h="0" z="1128.000000" y="459.431122" x="173.616150" random_walk="3" resolve_z="true"/>
 		</spawn>
 		<!-- Shishir -->
-		<spawn npc_id="215456">
-			<spot x="142.716" y="695.6153" z="1140.0204" h="95"/>
-		</spawn>
-		<!-- Ancient Octanus -->
-		<spawn npc_id="215457">
-			<spot x="203.4562" y="302.2227" z="1107.0774" h="76" random_walk="6"/>
+		<spawn npc_id="215456" initial_delay="1">
+			<spot x="145.098145" y="377.185852" z="1143" h="0" walker_id="retail:300190000:idelim_path_1f_sheluk_keynm_52_ae_1"/>
 		</spawn>
 		<!-- Mask Arachna -->
 		<spawn npc_id="215458">
@@ -136,9 +132,11 @@
             <spot h="0" z="1150.000000" y="585.417419" x="167.436493" random_walk="3" resolve_z="true"/>
             <spot h="14" z="1138.743" y="534.5071" x="145.18086" random_walk="3"/>
 		</spawn>
-		<!-- Kinquid -->
-		<spawn npc_id="215467">
-			<spot x="260.69223" y="701.72437" z="1169.504" h="29" random_walk="6"/>
+		<!-- 真端烟雾刷怪组：三个喷口中选一个，魔法/物理烟雾各 50%。 / Retail smoke group: one of three vents, 50% magic or physical. -->
+		<spawn npc_id="282008" pool="1" respawn_time="1">
+			<spot x="292.024658" y="719.713196" z="1174.000000" h="0" alternate_id="282009" select_prob="5000"/>
+			<spot x="266.706848" y="680.673279" z="1174.000000" h="0" alternate_id="282009" select_prob="5000"/>
+			<spot x="263.433411" y="716.730042" z="1174.000000" h="0" alternate_id="282009" select_prob="5000"/>
 		</spawn>
 		<!-- Poisonous Sheluk -->
 		<spawn npc_id="215468">
@@ -221,10 +219,6 @@
             <spot h="50" z="1270.941" y="835.3939" x="504.78598" random_walk="3"/>
             <spot h="70" z="1271.2133" y="867.05176" x="531.7931" random_walk="3"/>
 		</spawn>
-		<!-- Neith -->
-		<spawn npc_id="215478">
-			<spot x="508.5373" y="809.8848" z="1283.3287" h="41" random_walk="6"/>
-		</spawn>
 		<!-- Supraklaw Spotter -->
 		<spawn npc_id="215479">
 			<spot h="0" z="1267.000000" y="987.985352" x="444.307159" resolve_z="true"/>
@@ -241,14 +235,6 @@
             <spot h="0" z="1278.000000" y="872.565674" x="509.888885" resolve_z="true"/>
             <spot h="0" z="1267.000000" y="971.022156" x="456.833893" resolve_z="true"/>
             <spot h="90" z="1257.000000" y="979.779968" x="422.171326" resolve_z="true"/>
-		</spawn>
-		<!-- Queen Mosqua -->
-		<spawn npc_id="215480">
-			<spot x="676.901" y="831.546" z="1305.88" h="34" random_walk="6"/>
-		</spawn>
-		<!-- Gellmar -->
-		<spawn npc_id="215482">
-			<spot x="245.05054" y="447.3147" z="1124.9097" h="50"/>
 		</spawn>
 		<!-- Komad Elite Watcher -->
 		<spawn npc_id="215483">
@@ -283,35 +269,6 @@
 			<spot h="96" z="1384.000000" y="808.369812" x="591.149414" resolve_z="true"/>
             <spot h="96" z="1384.000000" y="824.331787" x="583.157959" resolve_z="true"/>
             <spot h="18" z="1381.000000" y="780.684631" x="666.597046" resolve_z="true"/>
-		</spawn>
-		<!-- Celestius -->
-		<spawn npc_id="215488">
-		    <spot x="543.0300" y="834.0800" z="1377.2900" h="00"/>
-		</spawn>
-		<!-- Drudge Sheluk -->
-		<spawn npc_id="216133">
-			<spot h="2" z="1108.6151" y="293.02188" x="173.20569" random_walk="3"/>
-		</spawn>
-		<!-- Drudge Sheluk -->
-		<spawn npc_id="216134">
-			<spot h="119" z="1108.3685" y="286.29208" x="177.99474" random_walk="3"/>
-		</spawn>
-		<!-- Mask Arachna -->
-		<spawn npc_id="216135">
-			<spot h="48" z="1107.7167" y="284.76718" x="216.66591" random_walk="3"/>
-		</spawn>
-		<!-- Mask Arachna -->
-		<spawn npc_id="216136">
-			<spot h="84" z="1109.536" y="316.36823" x="218.54099" random_walk="3"/>
-		</spawn>
-		<!-- Emerald Sparkle -->
-		<spawn npc_id="216137">
-			<spot h="56" z="1108.1005" y="299.96112" x="225.56729" random_walk="3"/>
-            <spot h="98" z="1108.4823" y="311.65387" x="195.15567" random_walk="3"/>
-		</spawn>
-		<!-- Emerald Sparkle -->
-		<spawn npc_id="216138">
-			<spot h="47" z="1107.7899" y="291.4436" x="219.68002" random_walk="3"/>
 		</spawn>
 		<!-- Sheluk Drone -->
 		<spawn npc_id="216139">
@@ -507,18 +464,10 @@
 		<spawn npc_id="799526">
 			<spot x="199.740005" y="235.639999" z="1100.000000" h="90" resolve_z="true"/>
 		</spawn>
-		<!-- Tealen -->
-		<spawn npc_id="799528">
-			<spot x="520.0769" y="831.70465" z="1284.2622" h="86"/>
-		</spawn>
 		<!-- Greater Blessed Relics -->
 		<spawn npc_id="831990">
             <spot x="193.50777" y="230.3859" z="1098.9164" h="53"/>
         </spawn>
-		<!-- Thorny Vines -->
-		<spawn npc_id="730527">
-			<spot x="164.37347" y="338.67148" z="1125.9337" entity_id="51"/>
-		</spawn>
 		<!-- Taloc's Soil -->
 		<spawn npc_id="700634">
 		    <spot x="238.660004" y="460.649994" z="1126.000000" entity_id="18" h="0" resolve_z="true"/>
@@ -536,10 +485,6 @@
 		<spawn npc_id="700636">
 			<spot x="545.985962" y="845.015930" z="1377.500000" entity_id="57" h="0" resolve_z="true"/>
 		</spawn>
-		<!-- Contaminated Fragment Of Aion Tower -->
-		<spawn npc_id="700740">
-			<spot x="636.35999" y="769.53003" z="1387.3800" entity_id="93"/>
-		</spawn>
 		<!-- Golden Egg Of Mutant Insect -->
 		<spawn npc_id="700742">
 			<spot x="435.917084" y="765.441162" z="1289.500000" entity_id="91" h="0" resolve_z="true"/>
@@ -552,10 +497,6 @@
 		    <spot x="506.204254" y="883.861755" z="1273.640625" h="0" resolve_z="true"/>
 		    <spot x="398.351257" y="784.893555" z="1275.311768" h="0" resolve_z="true"/>
 	    </spawn>
-		<!-- Huge Healing Plant -->
-		<spawn npc_id="700941">
-            <spot x="624.420500" y="815.068300" z="1380.684100" h="12"/>
-        </spawn>
 		<!-- Bug Fluid -->
 		<spawn npc_id="700942">
 			<spot x="190.960007" y="593.849976" z="1152.000000" entity_id="162" h="0" resolve_z="true"/>
@@ -624,9 +565,6 @@
 		</spawn>
 		<spawn npc_id="282150" respawn_time="60">
 		  <spot x="193.134537" y="276.154663" z="1109.316040" h="90" resolve_z="true"/>
-		</spawn>
-		<spawn npc_id="700738" respawn_time="60">
-		  <spot x="653.920166" y="839.162659" z="1308.000000" h="0" resolve_z="true" entity_id="90"/>
 		</spawn>
 	</spawn_map>
 </spawns>

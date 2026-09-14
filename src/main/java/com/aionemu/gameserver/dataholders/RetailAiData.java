@@ -562,10 +562,15 @@ public final class RetailAiData {
 	}
 
 	public record ConditionSpawnNpc(int id, float x, float y, float z, int heading,
-			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly) {
+			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly, int entityId) {
+		public ConditionSpawnNpc(int id, float x, float y, float z, int heading,
+				int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly) {
+			this(id, x, y, z, heading, initialDelay, initialDelayExtra, walkerId, sensoryArea, fly, 0);
+		}
+
 		public ConditionSpawnNpc(int id, float x, float y, float z, int heading,
 				int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea) {
-			this(id, x, y, z, heading, initialDelay, initialDelayExtra, walkerId, sensoryArea, false);
+			this(id, x, y, z, heading, initialDelay, initialDelayExtra, walkerId, sensoryArea, false, 0);
 		}
 	}
 }

@@ -73,6 +73,7 @@
     <xs:attribute name="initial_delay_extra" type="xs:nonNegativeInteger" use="required"/>
     <xs:attribute name="walker" type="xs:string"/>
     <xs:attribute name="fly" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="entity_id" type="xs:nonNegativeInteger" use="optional"/>
   </xs:complexType>
   <xs:complexType name="partyType">
     <xs:sequence>

@@ -124,10 +124,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000108, 1)); //Dorkin's Pocket Knife.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000139, 1)); //Neith's Sleepstone.
 		    break;
-			case 215482: //Gellmar.
+			case 215482, 246241: //Gellmar / special-server Gellmar.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000138, 1)); //Gellmar's Wardstone.
 		    break;
-			case 215488: //Celestius.
+			case 215488, 246242: //Celestius / special-server Celestius.
 			    switch (Rnd.get(1, 5)) {
 					case 1:
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
@@ -182,19 +182,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 215456: //Shishir.
-				// 希希尔尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Shishir's carcass. Obtain it, then register it in the skill window.
-		        sendMsgByRace(1400754, Race.PC_ALL, 0);
-            break;
-			case 215457: //Ancient Octanus.
-				// 你感觉塔洛克之根有动静。再不快点就见不到他了。 / You sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry.
-				sendMsgByRace(1400659, Race.PC_ALL, 0);
-            break;
-			case 215478: //Neith.
-				// 奈斯尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Neith's carcass. Obtain it, then register it in the skill window.
-		        sendMsgByRace(1400756, Race.PC_ALL, 0);
-            break;
-			case 215480: //Queen Mosqua.
+			case 215480, 246240: //Queen Mosqua / special-server Queen Mosqua.
                 deleteNpc(700738); //Huge Insect Egg.
 				sendMovie(player, 435);
 				// 解除召唤：“恩盖乌斯与阿比拉” / Release Summon: "Engeius & Abyla"
@@ -203,25 +191,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 				}
 				sp(700739, 653.63f, 838.66998f, 1304.72f, (byte) 0, 11, 0, 0, null); //Cracked Huge Insect Egg.
             break;
-			case 215482: //Gellmar.
-				// 盖尔玛尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Gellmar's carcass. Obtain it, then register it in the skill window.
-		        sendMsgByRace(1400755, Race.PC_ALL, 0);
-            break;
-            case 215488: //Celestius.
-                deleteNpc(700740); //Contaminated Fragment Of Aion Tower.
-				sendMovie(player, 437);
+			case 215488, 246242: //Celestius / special-server Celestius.
 				ItemService.addItem(player, 188900011, 1); //Blessing Box Of Growth V.
 				ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
-                spawn(799503, 539.94135f, 813.3849f, 1377.4283f, (byte) 27); // 卡斯帕的幻影 / Taloc's Mirage.
-				sp(700741, 636.35999f, 769.53003f, 1387.38f, (byte) 0, 92, 0, 0, null); //Purified Fragment Of Aion Tower.
-            break;
-			case 700739: //Cracked Huge Insect Egg.
-				despawnNpc(npc);
-				// 卵所在处升起上升气流。 / An ascending air current is rising from the spot where the egg was.
-				// 展开双翼乘气流可垂直飞升。 / You can fly vertically up by spreading your wings and riding the current.
-				sendMsgByRace(1400477, Race.PC_ALL, 5000);
-				sp(281817, 653.77478f, 838.88306f, 1303.8502f, (byte) 0, 1308, 0, 0, null); //Geyser.
             break;
 			case 700942: //Bug Fluid.
 			    despawnNpc(npc);
@@ -485,9 +458,11 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 * Clean up resources when the instance is destroyed.
 	 */
 	@Override
-    public void onInstanceDestroy() {
+	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
+		talocTask.forEach(task -> task.cancel(false));
+		talocTask.clear();
 		movies.clear();
 		doors.clear();
-    }
+	}
 }

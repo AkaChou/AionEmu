@@ -30931,27 +30931,132 @@
   </world>
   <world id="300190000" name="idelim">
     <variable name="idelim_1f_noshownpc"/>
+    <variable name="idelim_1f_startrush"/>
+    <variable name="idelim_1f_bossrush"/>
+    <variable name="idelim_2f_rescue"/>
     <variable name="idelim_2f_wind"/>
     <variable name="idelim_3f_boss"/>
     <variable name="idelim_3f_heal_plant_giant"/>
+    <variable name="specialserver_cond"/>
+    <!-- 真端 1F Rush 条件刷怪 / Retail 1F rush conditional spawns. -->
+    <condition id="5001" expression="IDElim_1F_StartRush == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="216137" probability="10000" x="225.467163" y="300.263306" z="1110" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushspakle_51_001"/>
+        </slot>
+        <slot>
+          <npc id="216135" probability="10000" x="216.959976" y="284.045746" z="1110" heading="0" initial_delay="20" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushoctaside_51_001"/>
+        </slot>
+        <slot>
+          <npc id="216136" probability="10000" x="212.456238" y="311.303009" z="1110" heading="0" initial_delay="35" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushoctaside_52_001"/>
+        </slot>
+        <slot>
+          <npc id="216138" probability="10000" x="220.482864" y="290.809113" z="1110" heading="0" initial_delay="35" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushspakle_52_001"/>
+        </slot>
+        <slot>
+          <npc id="216134" probability="10000" x="176.576599" y="286.088623" z="1110" heading="0" initial_delay="35" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushsheluk_52_001"/>
+        </slot>
+        <slot>
+          <npc id="215457" probability="10000" x="214.360855" y="321.057404" z="1114" heading="0" initial_delay="35" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_door_octaside_51_001"/>
+        </slot>
+        <slot>
+          <npc id="700633" probability="10000" x="164.816208" y="337.846405" z="1125" heading="0" initial_delay="0" initial_delay_extra="0" entity_id="51"/>
+        </slot>
+        <slot>
+          <npc id="216133" probability="10000" x="173.026352" y="293.100739" z="1110" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushsheluk_51_001"/>
+        </slot>
+        <slot>
+          <npc id="216137" probability="10000" x="201.564697" y="311.938080" z="1110" heading="0" initial_delay="20" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_srushspakle_51_002"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端 1F 金奎德 Boss 条件 / Retail 1F Kinquid boss condition. -->
+    <condition id="5002" expression="IDElim_1F_BossRush == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="215467" probability="10000" x="236.154297" y="708.597900" z="1172.648804" heading="0" initial_delay="2" initial_delay_extra="0" walker="retail:300190000:idelim_1f_path_clodwormnm_52"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端 2F Rescue 条件 / Retail 2F rescue condition. -->
+    <condition id="5003" expression="IDElim_2F_Rescue == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="799528" probability="10000" x="516.890869" y="804.869507" z="1288" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="215478" probability="10000" x="509.414307" y="806.550415" z="1288" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端 Gellmar 随机位置 / Retail Gellmar random location. -->
+    <condition id="5004" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="215482" probability="5000" x="245.422287" y="451.029999" z="1131" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="215482" probability="5000" x="170.619995" y="734.429993" z="1146" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端特殊服 Gellmar 分支 / Retail special-server Gellmar branch. -->
+    <condition id="5005" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="246241" probability="5000" x="245.422287" y="451.029999" z="1131" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246241" probability="5000" x="170.619995" y="734.429993" z="1146" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端 Queen Mosqua 条件 / Retail Queen Mosqua condition. -->
+    <condition id="5006" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-queen">
+      <group probability="1000">
+        <slot>
+          <npc id="215480" probability="10000" x="644.034363" y="830.068726" z="1307" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300190000:idelim_2f_path_neutworkmanfly_qeen_52"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端特殊服 Queen Mosqua 分支 / Retail special-server Queen Mosqua branch. -->
+    <condition id="5007" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-queen">
+      <group probability="1000">
+        <slot>
+          <npc id="246240" probability="10000" x="644.034363" y="830.068726" z="1307" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300190000:idelim_2f_path_neutworkmanfly_qeen_52"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端 Celestius 条件 / Retail Celestius condition. -->
+    <condition id="5008" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-celestius">
+      <group probability="1000">
+        <slot>
+          <npc id="215488" probability="10000" x="543.030029" y="834.080017" z="1378" heading="330" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 真端特殊服 Celestius 分支 / Retail special-server Celestius branch. -->
+    <condition id="5009" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-celestius">
+      <group probability="1000">
+        <slot>
+          <npc id="246242" probability="10000" x="543.030029" y="834.080017" z="1378" heading="330" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="3083" expression="IDElim_3F_Boss == 2" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="700741" probability="10000" x="634.214233" y="787.21283" z="1384.85999" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
+          <npc id="700741" probability="10000" x="634.214233" y="787.21283" z="1384.85999" heading="0" initial_delay="1" initial_delay_extra="1" fly="true" entity_id="92"/>
         </slot>
       </group>
     </condition>
     <condition id="3084" expression="IDElim_3F_Boss == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="700740" probability="10000" x="634.214233" y="787.21283" z="1383" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
+          <npc id="700740" probability="10000" x="634.214233" y="787.21283" z="1383" heading="0" initial_delay="1" initial_delay_extra="1" fly="true" entity_id="93"/>
         </slot>
       </group>
     </condition>
     <condition id="3085" expression="IDElim_2F_Wind == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="281817" probability="10000" x="653.900757" y="839.13562" z="1305" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="281817" probability="10000" x="653.900757" y="839.13562" z="1305" heading="0" initial_delay="1" initial_delay_extra="1" entity_id="9"/>
         </slot>
       </group>
     </condition>

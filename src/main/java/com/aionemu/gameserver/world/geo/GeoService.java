@@ -134,6 +134,7 @@ public class GeoService {
 	public void spawnPlaceableObject(int worldId, int instanceId, int staticId) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).spawnPlaceableObject(instanceId, staticId);
+			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
 		}
 	}
 
@@ -148,6 +149,7 @@ public class GeoService {
 	public void despawnPlaceableObject(int worldId, int instanceId, int staticId) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).despawnPlaceableObject(instanceId, staticId);
+			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
 		}
 	}
 

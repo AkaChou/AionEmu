@@ -44,9 +44,9 @@ public class AI2Engine implements GameEngine {
 	private static final Set<String> QUEST_SIDE_EFFECT_AI = Set.of(
 		"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
 		"colossal_forest_flavia", "coral_corask", "crimson_crested_slink", "devious_manduri_beacon",
-		"dynamic_iluma_monster", "dynamic_norsvold_monster", "forest_of_life_brohum_changeling",
+		"dynamic_iluma_monster", "dynamic_norsvold_monster", "Elim_SmogEffect", "forest_of_life_brohum_changeling",
 		"frostgullet_kirrin", "frosty_petrahulk", "gatorback_skilex", "giant_razorback_frillneck",
-		"hidden_swamp_bufo", "hugehorn_wendigo", "masked_manduri_monkey_king",
+		"hidden_swamp_bufo", "hugehorn_wendigo", "masked_manduri_monkey_king", "kinquid",
 		"masquerading_desert_gehkros", "mine_mage", "molting_honey_klaw", "mysterious_moonlight_brax",
 		"nightbloom_gargonops_shifter", "plateau_gihla_chameleon", "progo_klaw_chameleon",
 		"razor_clawed_forest_cloke", "rejuvinating_wave_wave_tauric", "roughhorn_wendigo",

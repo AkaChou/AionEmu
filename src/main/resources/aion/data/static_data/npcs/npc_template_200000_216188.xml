@@ -82609,7 +82609,7 @@
     <stats hp_regen="4439" maxHp="8877" pdef="510" walk_speed="0.937" mresist="600" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="467" main_hand_crit_rate="18" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="40400" block="0" main_hand_accuracy="1957" power="932" evasion="1218" run_speed_fight="5.5"/>
     <bound_radius side="0.8981" upper="1.9726" front="0.8568"/>
   </npc_template>
-<npc_template name_desc="IDElim_1F_ClodwormNM_52_Ae" attack_range="3" npc_type="ATTACKABLE" race="BEAST" level="52" attack_rate="1000" rating="ELITE" ai="kinquid" hpgauge_level="11" type="MONSTER" name_id="319483" attack_delay="2081" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="215467" sensory_range="30" tribe="IDELIM" name="Kinquid" rank="EXPERT" height="4.74">
+<npc_template name_desc="IDElim_1F_ClodwormNM_52_Ae" attack_range="3" npc_type="ATTACKABLE" race="LYCAN" level="52" attack_rate="1000" rating="ELITE" ai="kinquid" hpgauge_level="11" type="MONSTER" name_id="319483" attack_delay="2081" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="215467" sensory_range="30" tribe="IDELIM" name="Kinquid" rank="EXPERT" height="4.74">
     <stats hp_regen="0" maxHp="130626" pdef="741" walk_speed="1.4" mresist="1000" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="621" main_hand_crit_rate="14" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="296452" block="0" main_hand_accuracy="2002" power="1232" evasion="1221" run_speed_fight="7"/>
     <bound_radius side="4" upper="4.74" front="2.34"/>
   </npc_template>

@@ -564,6 +564,15 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleAttack(Creature creature, AttackStatus attackStatus) {
+		if (isInState(AIState.RETURNING)) {
+			// 被重新攻击时中止回位，否则底层攻击处理器会拒绝重新进入战斗。
+			// Stop returning when attacked again; otherwise the base attack handler rejects combat re-entry.
+			runEvent("on_leave_attack_state", null, null);
+			resetPatternState();
+			getOwner().getMoveController().clearHomeReturn();
+			getOwner().getMoveController().abortMove();
+			setStateIfNot(AIState.IDLE);
+		}
 		super.handleAttack(creature);
 		if (!fighting) {
 			fighting = true;
@@ -1563,7 +1572,16 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void controlDoor(Operation action) {
-		var door = getPosition().getWorldMapInstance().getDoors().get(integer(action, "id"));
+		var instance = getPosition().getWorldMapInstance();
+		int doorId = integer(action, "id");
+		if (instance.getMapId() == 300190000) {
+			doorId = switch (doorId) {
+				case 1 -> 48; // 真端 1F Boss 门 / Retail 1F boss door.
+				case 2 -> 7; // 真端 2F Boss 门 / Retail 2F boss door.
+				default -> doorId;
+			};
+		}
+		var door = instance.getDoors().get(doorId);
 		if (door != null) {
 			door.setOpen(integer(action, "method") == 1);
 		}

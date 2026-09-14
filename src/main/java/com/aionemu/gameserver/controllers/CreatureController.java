@@ -754,6 +754,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	@Override
 	public void onDespawn() {
+		super.onDespawn();
 		if (terrainMaterialActor != null) {
 			terrainMaterialActor.abort();
 			getOwner().getObserveController().removeObserver(terrainMaterialActor);

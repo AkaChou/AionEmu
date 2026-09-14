@@ -2187,6 +2187,12 @@
 			<portal_req min_level="51"/>
 		</portal_path>
 	</portal_dialog>
+	<!-- 卡斯帕内部天族主服务器入口 / Taloc's Hollow Elyos master-server entrance -->
+	<portal_dialog npc_id="835605">
+		<portal_path dialog="10000" loc_id="3001900" instance="true" race="ELYOS">
+			<portal_req min_level="51"/>
+		</portal_path>
+	</portal_dialog>
 	<!-- Taloc's Hollow Asmodians -->
 	<portal_dialog npc_id="799325">
 		<portal_path dialog="10000" loc_id="3001900" instance="true" race="ASMODIANS">

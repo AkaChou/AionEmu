@@ -59545,11 +59545,11 @@
     <stats hp_regen="6194" maxHp="12387" pdef="773" walk_speed="1.2" mresist="1208" mboost_resist="0" run_speed="4.5" accuracy="1276" main_hand_attack="371" main_hand_crit_rate="18" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="42527" block="1287" main_hand_accuracy="2002" power="43" evasion="0" run_speed_fight="4"/>
     <bound_radius side="2.3" upper="3.6" front="2.2"/>
   </npc_template>
-<npc_template name_desc="BIDElim_MSmogEffect_NoshowNPC" npc_type="NON_ATTACKABLE" level="1" rating="JUNK" ai="kinquid_debuff" hpgauge_level="0" type="MONSTER" name_id="322775" npc_id="282008" sensory_range="5" tribe="FRIENDLYTOIDELIM" name="accessory destruction" rank="NOVICE" height="3">
+<npc_template name_desc="BIDElim_MSmogEffect_NoshowNPC" npc_type="NON_ATTACKABLE" level="1" rating="JUNK" ai="Elim_SmogEffect" hpgauge_level="0" type="MONSTER" name_id="322775" npc_id="282008" sensory_range="5" tribe="FRIENDLYTOIDELIM" name="accessory destruction" rank="NOVICE" height="3">
     <stats hp_regen="69420" maxHp="1" pdef="0" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="1.728" upper="3" front="0.6"/>
   </npc_template>
-<npc_template name_desc="BIDElim_PhySmogEffect_NoshowNPC" npc_type="NON_ATTACKABLE" level="1" rating="JUNK" ai="kinquid_debuff" hpgauge_level="0" type="MONSTER" name_id="322776" npc_id="282009" sensory_range="5" tribe="FRIENDLYTOIDELIM" name="cleave armor" rank="NOVICE" height="3">
+<npc_template name_desc="BIDElim_PhySmogEffect_NoshowNPC" npc_type="NON_ATTACKABLE" level="1" rating="JUNK" ai="Elim_SmogEffect" hpgauge_level="0" type="MONSTER" name_id="322776" npc_id="282009" sensory_range="5" tribe="FRIENDLYTOIDELIM" name="cleave armor" rank="NOVICE" height="3">
     <stats hp_regen="69420" maxHp="1" pdef="0" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="1.728" upper="3" front="0.6"/>
   </npc_template>

@@ -455,7 +455,7 @@ final class RetailAiDefinitionLoader {
 			List<ConditionSpawnChoice> slot = null;
 			List<ConditionSpawnNpc> partyMembers = null;
 			String partyId = null;
-			int npcId = 0, choiceProbability = 0, npcHeading = 0, initialDelay = 0, initialDelayExtra = 0;
+			int npcId = 0, choiceProbability = 0, npcHeading = 0, initialDelay = 0, initialDelayExtra = 0, npcEntityId = 0;
 			boolean npcFly = false;
 			float npcX = 0, npcY = 0, npcZ = 0, sensoryBottom = 0, sensoryTop = 0;
 			String walker = null;
@@ -498,6 +498,7 @@ final class RetailAiDefinitionLoader {
 							npcZ = Float.parseFloat(attribute(reader, "z"));
 							npcHeading = Integer.parseInt(attribute(reader, "heading"));
 							npcFly = Boolean.parseBoolean(attribute(reader, "fly", "false"));
+							npcEntityId = Integer.parseInt(attribute(reader, "entity_id", "0"));
 							initialDelay = Integer.parseInt(attribute(reader, "initial_delay"));
 							initialDelayExtra = Integer.parseInt(attribute(reader, "initial_delay_extra"));
 							walker = attribute(reader, "walker");
@@ -522,7 +523,7 @@ final class RetailAiDefinitionLoader {
 								ZoneName.createOrGet("retail_sensory_" + worldId + "_" + npcId + "_" + npcX + "_" + npcY),
 								worldId, sensoryPoints, sensoryBottom, sensoryTop);
 							ConditionSpawnNpc npc = new ConditionSpawnNpc(npcId, npcX, npcY, npcZ, npcHeading,
-								initialDelay, initialDelayExtra, walker, sensoryArea, npcFly);
+								initialDelay, initialDelayExtra, walker, sensoryArea, npcFly, npcEntityId);
 							if (partyMembers == null) {
 								slot.add(new ConditionSpawnChoice(choiceProbability, null, List.of(npc)));
 							} else {

@@ -8,7 +8,10 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -182,7 +185,19 @@ public final class RetailConditionSpawnEngine {
 		template.setFly(npc.fly() ? 1 : 0);
 		template.setWalkerId(npc.walkerId());
 		template.setNpcPartyId(partyId);
+		if (npc.entityId() > 0) {
+			template.setEntityId(npc.entityId());
+		}
 		VisibleObject object = SpawnEngine.spawnObject(template, instance.getInstanceId());
+		if (object instanceof Npc spawnedNpc
+			&& spawnedNpc.getAi2() instanceof NpcAI2 npcAI
+			&& spawnedNpc.getSpawn() != null
+			&& spawnedNpc.getSpawn().getWalkerId() != null
+			&& !spawnedNpc.getSpawn().getWalkerId().isBlank()) {
+			// 条件刷出的巡逻 NPC 不经过 SpawnEngine.spawnAll 的组织阶段，必须在落地后启动路径。
+			// Condition-spawned walkers bypass SpawnEngine.spawnAll's organization phase and must start after entering the world.
+			WalkManager.startWalking(npcAI);
+		}
 		active.objects.add(object);
 	}
 

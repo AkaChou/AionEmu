@@ -4745,6 +4745,20 @@
     <routestep step="10" x="239.84787" y="694.892578" z="1173.76929"/>
     <routestep step="11" x="236.015396" y="708.543091" z="1172.97583"/>
   </walker_template>
+  <walker_template route_id="retail:300190000:idelim_path_1f_sheluk_keynm_52_ae_1" pool="1"><!-- idelim -->
+    <routestep step="1" x="145.139282" y="377.017792" z="1143.099976"/>
+    <routestep step="2" x="144.089294" y="392.977478" z="1143.099976"/>
+    <routestep step="3" x="144.283829" y="392.937653" z="1143.099976"/>
+    <routestep step="4" x="144.887283" y="390.541504" z="1143.099976"/>
+    <routestep step="5" x="146.921005" y="393.860657" z="1143.099976"/>
+    <routestep step="6" x="147.165253" y="393.710327" z="1143.099976"/>
+    <routestep step="7" x="145.559265" y="390.205505" z="1143.099976"/>
+    <routestep step="8" x="140.141357" y="389.953522" z="1143.099976"/>
+    <routestep step="9" x="139.068130" y="394.158020" z="1143.099976"/>
+    <routestep step="10" x="139.360611" y="394.081512" z="1143.099976"/>
+    <routestep step="11" x="140.477356" y="390.583496" z="1143.099976"/>
+    <routestep step="12" x="144.969421" y="377.106201" z="1143.099976"/>
+  </walker_template>
   <walker_template route_id="retail:300190000:idelim_1f_path_door_octaside_51_001" pool="1"><!-- idelim -->
     <routestep step="1" x="214.209061" y="320.920868" z="1114.09998"/>
     <routestep step="2" x="215.986954" y="314.257477" z="1114.09998"/>
