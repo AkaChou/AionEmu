@@ -31,5 +31,6 @@
 | 等级满足但无任务标记、接受动作无响应、前置任务为 999 级或不存在 | `QE-008` | production catalog, quest_data.xml and start-condition definitions |
 | 关闭普通任务标记后 NPC 选择出现 load fail、隐藏任务 owner 截获或 action 被错误回显为 dialog page | `QE-009` | CM_DIALOG_SELECT.hasQuestDialogContext, resolveRoutedQuestId, DialogService.onSimpleDialogSelect and client packet sequence |
 | 未完成进入任务仍可从主城门户、固定回城或多目标回城路径进入欧比斯 | `QE-010` | PortalService.port, permission branch, portal_use quest_req, fixed return-item handlers and MultiReturnAction target index |
+| 任务完成后任务道具仍留在背包、工作物品不回收、任务书显示 COMPLETE 但道具未消失 | `QE-011` | quest_data.xml quest_work_items, compiled metadata.questWorkItems(), and every transition whose source is not REWARD and target is REWARD |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
