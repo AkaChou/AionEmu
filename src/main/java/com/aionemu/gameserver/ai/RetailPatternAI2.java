@@ -173,6 +173,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		"on_leave_attack_state", "on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn");
 	private final Map<String, Future<?>> timers = new HashMap<>();
 	private final Set<Future<?>> actionTasks = ConcurrentHashMap.newKeySet();
+	// 含 despawn_self 的延迟动作链在回位时保留。 / Delayed action chains containing despawn_self survive return-home.
+	private final Set<Future<?>> terminalActionTasks = ConcurrentHashMap.newKeySet();
 	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
 	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
 	private final Set<String> flags = new HashSet<>();
@@ -568,7 +570,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			// 被重新攻击时中止回位，否则底层攻击处理器会拒绝重新进入战斗。
 			// Stop returning when attacked again; otherwise the base attack handler rejects combat re-entry.
 			runEvent("on_leave_attack_state", null, null);
-			resetPatternState();
+			resetPatternState(nonTerminalActionTasks());
 			getOwner().getMoveController().clearHomeReturn();
 			getOwner().getMoveController().abortMove();
 			setStateIfNot(AIState.IDLE);
@@ -932,7 +934,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleBackHome() {
-		Set<Future<?>> previousActionTasks = Set.copyOf(actionTasks);
+		// 回位只取消普通队列；会 despawn_self 的事件链（如卵孵化）必须继续执行，否则蛋会永久残留。
+		// Returning home only cancels ordinary queues; self-despawn event chains (such as egg hatching) must continue.
+		Set<Future<?>> previousActionTasks = nonTerminalActionTasks();
 		runEvent("on_leave_attack_state", null, null);
 		resetPatternState(previousActionTasks);
 		super.handleBackHome();
@@ -1044,9 +1048,19 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				if (duration >= 0 && i + 1 < actions.size()) {
 					int next = i + 1;
 					long delay = duration == 0 ? 0 : duration + (actions.get(next).type().equals("despawn_self") ? 1000L : 100L);
-					actionTasks.removeIf(Future::isDone);
-					actionTasks.add(GameThreadPoolServices.threadPoolManager()
-						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false), delay));
+					actionTasks.removeIf(task -> {
+						if (task.isDone()) {
+							terminalActionTasks.remove(task);
+							return true;
+						}
+						return false;
+					});
+					Future<?> task = GameThreadPoolServices.threadPoolManager()
+						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false), delay);
+					actionTasks.add(task);
+					if (containsDespawnSelf(actions, next)) {
+						terminalActionTasks.add(task);
+					}
 					return;
 				}
 			} else if (action.type().equals("despawn_self")) {
@@ -1055,6 +1069,22 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				execute(action, eventTarget, message);
 			}
 		}
+	}
+
+	private Set<Future<?>> nonTerminalActionTasks() {
+		Set<Future<?>> tasks = new HashSet<>(actionTasks);
+		tasks.removeAll(terminalActionTasks);
+		return tasks;
+	}
+
+	// 后续动作是否会在同一事件链中删除自身。 / Whether the remaining chain deletes its owner.
+	private static boolean containsDespawnSelf(List<Operation> actions, int fromIndex) {
+		for (int i = fromIndex; i < actions.size(); i++) {
+			if (actions.get(i).type().equals("despawn_self")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean matches(Rule rule, String timer, Creature eventTarget, RetailMessage message, SkillTemplate eventSkill,
@@ -2812,5 +2842,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private void cancelQueuedActions(Set<Future<?>> tasks) {
 		tasks.forEach(task -> task.cancel(false));
 		actionTasks.removeAll(tasks);
+		terminalActionTasks.removeAll(tasks);
 	}
 }
