@@ -276,7 +276,12 @@
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
-        <remove-item item-id="182206030" count="1"/>
+        <!--
+          收集物可能不在背包：整叠移除保持可选，有则清理、无则继续，绝不用严格正数扣除阻断交任务。
+          The collectible may be absent from the inventory: remove the whole stack optionally so it is
+          cleared when present and turn-in still continues when absent.
+        -->
+        <remove-item item-id="182206030" count="ALL"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
