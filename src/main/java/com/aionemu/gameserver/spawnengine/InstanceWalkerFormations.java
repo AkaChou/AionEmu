@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,16 +92,21 @@ public class InstanceWalkerFormations {
 					snpc.spawn(snpc.getNpc().getSpawn().getZ());
 				}
 			} else {
-				WalkerGroup wg = new WalkerGroup(npcs);
-				if (candidates.get(0).getWalkTemplate().getPool() != candidates.size()) {
-					log.warn(I18n.get("log.3696eb38139f", candidates.get(0).getWalkTemplate().getRouteId()));
+				WalkerTemplate template = candidates.get(0).getWalkTemplate();
+				int formationSize = template.getFormationSize();
+				List<ClusteredNpc> formationMembers = (formationSize >= 2 && npcs.size() > formationSize)
+						? new ArrayList<ClusteredNpc>(npcs.subList(0, formationSize))
+						: npcs;
+				WalkerGroup wg = new WalkerGroup(formationMembers);
+				if (template.getPool() != candidates.size()) {
+					log.warn(I18n.get("log.3696eb38139f", template.getRouteId()));
 				}
 				wg.form();
 				wg.spawn();
-				walkFormations.put(candidates.get(0).getWalkTemplate().getRouteId(), wg);
-				// 生成未进入最大近邻组的其余单位 / spawn the remaining units outside the largest proximity group
+				walkFormations.put(template.getRouteId(), wg);
+				// 生成未进入编队的其余单位 / spawn the remaining units outside the formation
 				for (ClusteredNpc snpc : candidates) {
-					if (npcs.contains(snpc)) {
+					if (formationMembers.contains(snpc)) {
 						continue;
 					}
 					snpc.spawn(snpc.getNpc().getZ());
@@ -110,11 +116,11 @@ public class InstanceWalkerFormations {
 	}
 
 	/**
-	 * 按路径池人数和 X/Y 近邻关系将候选 NPC 分组。
-	 * Groups candidate NPCs by route pool size and X/Y proximity.
+	 * 按路径队形容量和 X/Y 近邻关系将候选 NPC 分组。
+	 * Groups candidate NPCs by route formation capacity and X/Y proximity.
 	 * <p>
-	 * 候选数等于池人数时视为一个完整编队；否则回退到近邻分组以处理复用路径。
-	 * A pool-sized candidate set is one complete formation; otherwise proximity grouping handles reused routes.
+	 * 候选数恰好等于队形容量时视为一个完整编队；否则回退到近邻分组以处理复用路径或多余独立单位。
+	 * When candidate count matches formation capacity, treat as one complete formation; otherwise group by proximity to handle reused routes or extra independent units.
 	 *
 	 * @param candidates 候选列表 / candidate list
 	 * @return 候选坐标组 / candidate position groups
@@ -123,7 +129,8 @@ public class InstanceWalkerFormations {
 		if (candidates.isEmpty()) {
 			return new ArrayList<List<ClusteredNpc>>();
 		}
-		if (candidates.size() == candidates.get(0).getWalkTemplate().getPool()) {
+		int formationSize = candidates.get(0).getWalkTemplate().getFormationSize();
+		if (formationSize >= 2 && candidates.size() == formationSize) {
 			List<List<ClusteredNpc>> completeFormation = new ArrayList<List<ClusteredNpc>>();
 			completeFormation.add(new ArrayList<ClusteredNpc>(candidates));
 			return completeFormation;

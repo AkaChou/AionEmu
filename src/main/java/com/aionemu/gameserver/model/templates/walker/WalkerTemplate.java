@@ -182,13 +182,49 @@ public class WalkerTemplate {
 		return formation;
 	}
 
+	/** 设置队形类型 / Sets the formation type */
+	public void setFormation(WalkerGroupType formation) {
+		this.formation = formation;
+	}
+
+	/**
+	 * 获取队形定义的人数容量。
+	 * Returns the member capacity defined by the formation.
+	 *
+	 * @return 队形人数，非方阵或偏移队形时返回 1 / formation member capacity, or 1 if not square/offset
+	 */
+	public int getFormationSize() {
+		if (formation == WalkerGroupType.OFFSET && offsetsx != null && offsetsx.length > 0) {
+			return offsetsx.length;
+		}
+		if (formation == WalkerGroupType.SQUARE && rows != null && rows.length > 0) {
+			int sum = 0;
+			for (int row : rows) {
+				sum += row;
+			}
+			return sum;
+		}
+		return 1;
+	}
+
 	/** 获取 X 偏移量 / Gets the X offsets */
 	public int[] getoffsetsX() {
 		return offsetsx;
 	}
 
+	/** 设置行列分布 / Sets row distribution */
+	public void setRows(int[] rows) {
+		this.rows = rows;
+	}
+
 	/** 获取 Y 偏移量 / Gets the Y offsets */
 	public int[] getoffsetsY() {
 		return offsetsy;
-	}	
+	}
+
+	/** 设置 X 与 Y 偏移量 / Sets X and Y offsets */
+	public void setOffsets(int[] offsetsX, int[] offsetsY) {
+		this.offsetsx = offsetsX;
+		this.offsetsy = offsetsY;
+	}
 }

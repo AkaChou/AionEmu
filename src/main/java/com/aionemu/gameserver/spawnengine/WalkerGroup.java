@@ -92,10 +92,10 @@ public class WalkerGroup {
 	public void form() {
 		if (getWalkType() == WalkerGroupType.SQUARE) {
 			int[] rows = members.get(0).getWalkTemplate().getRows();
-			if (sumRows(rows) != members.size()) {
+			if (rows == null || sumRows(rows) != members.size()) {
 				log.warn(I18n.get("log.d3b5ea5b2bb4", members.get(0).getWalkTemplate().getRouteId()));
 			}
-			if (rows.length == 1) {
+			if (rows != null && rows.length == 1) {
 				// 一字队形：彼此间距 2 米。 / Line formation: distance 2 meters from each other (divide by 2 and multiple
 				// by 2)
 				// 左手为负、右手为正 / negative at left hand and positive at the right hand
@@ -114,7 +114,7 @@ public class WalkerGroup {
 					member.setWalkerGroupShift(shift);
 					// distance += npc.getObjectTemplate().getBoundRadius().getSide();
 				}
-			} else if (rows.length != 0) {
+			} else if (rows != null && rows.length != 0) {
 				float[] rowDistances = new float[rows.length - 1];
 				float coronalDist = 0;
 				for (int i = 0; i < rows.length - 1; i++) {
@@ -145,15 +145,26 @@ public class WalkerGroup {
 					if (i < rows.length - 1)
 						coronalDist += rowDistances[i];
 				}
+				while (index < members.size()) {
+					ClusteredNpc cnpc = members.get(index++);
+					cnpc.getNpc().setWalkerGroup(this);
+					cnpc.getNpc().setWalkerGroupShift(new WalkerGroupShift(0, 0));
+				}
 			}
 		} else if (getWalkType() == WalkerGroupType.OFFSET) {
 			int[] offsetsX = members.get(0).getWalkTemplate().getoffsetsX();
 			int[] offsetsY = members.get(0).getWalkTemplate().getoffsetsY();
+			if (offsetsX == null || offsetsY == null || offsetsX.length != members.size()
+					|| offsetsY.length != members.size()) {
+				log.warn(I18n.get("log.d3b5ea5b2bb4", members.get(0).getWalkTemplate().getRouteId()));
+			}
 			Point2D origin = new Point2D(walkerXpos, walkerYpos);
-			Point2D destination = new Point2D(members.get(0).getWalkTemplate().getRouteStep(2).getX(), members.get(0).getWalkTemplate().getRouteStep(2).getY());
-			for (int i =0; i< members.size(); i++)
-			{
-				WalkerGroupShift shift = new WalkerGroupShift(offsetsX[i], offsetsY[i]);
+			Point2D destination = new Point2D(members.get(0).getWalkTemplate().getRouteStep(2).getX(),
+					members.get(0).getWalkTemplate().getRouteStep(2).getY());
+			for (int i = 0; i < members.size(); i++) {
+				float ox = (offsetsX != null && i < offsetsX.length) ? offsetsX[i] : 0;
+				float oy = (offsetsY != null && i < offsetsY.length) ? offsetsY[i] : 0;
+				WalkerGroupShift shift = new WalkerGroupShift(ox, oy);
 				Point2D loc = getLinePoint(origin, destination, shift);
 				members.get(i).setX(loc.getX());
 				members.get(i).setY(loc.getY());
@@ -161,7 +172,7 @@ public class WalkerGroup {
 				member.setWalkerGroup(this);
 				member.setWalkerGroupShift(shift);
 			}
-		}else if (getWalkType() == WalkerGroupType.POINT) {
+		} else if (getWalkType() == WalkerGroupType.POINT) {
 			log.warn(I18n.get("log.225af1e9aeb7", members.get(0).getWalkTemplate().getRouteId()));
 		}
 	}
@@ -174,6 +185,9 @@ public class WalkerGroup {
 	 * @return 总人数 / the sum
 	 */
 	private int sumRows(int[] rows) {
+		if (rows == null) {
+			return 0;
+		}
 		int sum = 0;
 		for (int row : rows) {
 			sum += row;
