@@ -2,7 +2,7 @@
 
 quest: 14043「Drawling Balaur / 学习龙族语」；本次补记的对象是寻找班图斯（278532）的三个阶段：`START var0=0` 起始对话、`REWARD var0=6` 与 `REWARD var0=8` 两种交付/领奖分支。
 
-user acceptance confirmation: 用户 2026-09-14 原话“验证通过，提交”，未限定分支或步骤，按验收规则构成整个任务客户端游玩验收的权威证据；本次用户在追问后指示“补一次验收记”，要求把同一次验收的其余班图斯分支一并记录。分支本身未另行声明受限范围。
+user acceptance confirmation: 用户 2026-09-14 原话“验证通过，提交”，未限定分支或步骤，按验收规则构成整个任务客户端游玩验收的权威证据；本次用户在追问后指示“补一次验收记”，要求把同一次验收的其余班图斯分支一并记录。分支本身未另行声明受限范围。用户于同日再次确认“14043 已经正常完成了”（整任务、未限定分支），按验收规则不要求重复游玩或补截图材料。
 
 server launch mode: not captured（服务端由用户管理；本会话未启动、停止或重启）。本次验收窗口由 22:38:54 的启动日志标识。
 
@@ -30,7 +30,7 @@ action/page/button: 客户端“寻找”按钮（`CM_OBJECT_SEARCH`，0x00D6）
 
 expected response: 在 `START var0=0`、`REWARD var0=6`、`REWARD var0=8` 三个阶段，客户端寻找请求都解析为 278532（埃雷修兰塔），不再命中诺斯珀德 DF6 刷新位的 241198/241418；随后在 278532 处可正常交付/领奖。
 
-actual response: 用户确认“验证通过”（未限定分支，视为整个任务可用）；本次运行时日志捕获到 `REWARD var0=8` 的完整交付：22:59:26 进入该阶段，22:59:37–22:59:39 在 278532（对象 122233）完成页 10002 → 5 → 动作 23，任务进入 `COMPLETE`。`START var0=0` 与 `REWARD var0=6` 的独立运行时痕迹 not captured，按用户整体确认记录为通过。
+actual response: 用户确认“验证通过”（未限定分支，视为整个任务可用）；本次运行时日志捕获到 `REWARD var0=8` 的完整交付：22:59:26 进入该阶段，22:59:37–22:59:39 在 278532（对象 122233）完成页 10002 → 5 → 动作 23，任务进入 `COMPLETE`。`START var0=0` 与 `REWARD var0=6` 的独立运行时痕迹 not captured；用户已确认“14043 已经正常完成了”，按整体确认记录为通过，不再要求补材料。
 
 startup health: 本次验收窗口的进程于 22:38:54–22:38:59 启动：“任务引擎开始加载”→“已加载 typed 正式任务 owner：6193”→“启动完成，耗时 21s”（`log/console.log:4101/4105/4304`），窗口内未出现 typed 引擎或生产 catalog 错误。注意更早 22:21:18 的另一次启动曾报 `Can't initialize typed quest engine` / `AMBIGUOUS_TRANSITION`（`log/console.log:3443-3452`），该构建未用于验收；若该报错在当前构建复现，本次验收即失效。
 
@@ -44,4 +44,4 @@ acceptance status: ACCEPTED_EXISTING_PATTERN
 
 matched Pattern: `QUEST_SCOPED_NPC_SEARCH_ALIAS`；匹配字段：GM 寻找同名模板落到非任务对象、别名必须同时限定任务 ID/状态/阶段、修复层在 `CM_OBJECT_SEARCH`、不得影响普通玩家地图标记或做全局替换；差异字段：冲突模板是共用同一刷新点的昼夜替换对（241198/241418），因此限域别名覆盖该刷新位的两个模板，且本次覆盖三个阶段（`START 0`、`REWARD 6`、`REWARD 8`）。代表提交 `8b058d4b4de747d12df9e9af63617619d5eefcf5`，代表测试 `CMObjectSearchTest#resolvesTheQuestAcestesAliasAtTheFirstAndReportStages`。
 
-remaining risks: 未抓到 `CM_OBJECT_SEARCH` 原始 npcId；`START var0=0` 与 `REWARD var0=6` 无独立运行时痕迹与截图，仅由用户整体确认覆盖；非 GM 玩家的地图标记按 Pattern 合同不作别名；跨地图、重登、放弃/重接路径未单独复测。另注：`docs/quest/client-dialog-mapping/quest-order-audit.csv:53071-53085` 仍把 14043 的中间页（1352/1353/1354/1355/1375/1438/1693/1694/2034/2035/2375/2376/3739）标为 `EVIDENCE_REQUIRED` / `CLIENT_PAGE_UNREACHED`，但 21:42 的实机日志证明 1352 → 1353 → 1354 与 3057 均由当前 IR 正常下发，说明这些审计行相对当前构建已过期，应重新生成审计快照后再据此判定缺陷。
+remaining risks: 未抓到 `CM_OBJECT_SEARCH` 原始 npcId；`START var0=0` 与 `REWARD var0=6` 无独立运行时痕迹与截图，但已由用户“14043 已经正常完成了”的整体确认覆盖；非 GM 玩家的地图标记按 Pattern 合同不作别名；跨地图、重登、放弃/重接路径未单独复测。另注：`docs/quest/client-dialog-mapping/quest-order-audit.csv:53071-53085` 仍把 14043 的中间页（1352/1353/1354/1355/1375/1438/1693/1694/2034/2035/2375/2376/3739）标为 `EVIDENCE_REQUIRED` / `CLIENT_PAGE_UNREACHED`，但 21:42 的实机日志证明 1352 → 1353 → 1354 与 3057 均由当前 IR 正常下发，说明这些审计行相对当前构建已过期，应重新生成审计快照后再据此判定缺陷。
