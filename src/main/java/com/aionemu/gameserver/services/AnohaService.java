@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,7 +56,7 @@ public class AnohaService {
 	private Map<Integer, AnohaLocation> anoha;
 
 	// 狂暴阿诺哈 4.7 / Berserk Anoha 4.7
-	private final Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
+	private final List<VisibleObject> adventSwordEffect = Collections.synchronizedList(new ArrayList<>());
 
 	private final ConcurrentMap<Integer, BerserkAnoha<?>> activeAnoha = new ConcurrentHashMap<Integer, BerserkAnoha<?>>();
 
@@ -141,6 +140,36 @@ public class AnohaService {
 			return;
 		}
 		danuarhero.stop();
+		clearAdventObjects(id);
+	}
+
+	/**
+	 * 清理活动启动阶段创建的临时对象。
+	 * Despawns temporary objects created during the event startup sequence.
+	 *
+	 * @param id 活动地点 ID / event location id
+	 */
+	public void clearAdventObjects(int id) {
+		if (id == 1) {
+			despawnAdventObjects(adventSwordEffect);
+		}
+	}
+
+	/**
+	 * 清理一组临时对象并释放其引用。
+	 * Despawns one group of temporary objects and releases its references.
+	 *
+	 * @param objects 临时对象集合 / temporary objects
+	 */
+	private void despawnAdventObjects(List<VisibleObject> objects) {
+		synchronized (objects) {
+			for (VisibleObject object : new ArrayList<>(objects)) {
+				if (object != null && object.isSpawned()) {
+					object.getController().onDelete();
+				}
+			}
+			objects.clear();
+		}
 	}
 
 	/**
@@ -174,7 +203,9 @@ public class AnohaService {
 	public boolean adventSwordEffectSP(int id) {
 		switch (id) {
 		case 1:
-			adventSwordEffect.put(702644, SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(600090000, 702644, 791.27985f, 489.02353f, 142.90796f, (byte) 30), 1));
+			adventSwordEffect.add(SpawnEngine.spawnObject(
+					SpawnEngine.addNewSingleTimeSpawn(600090000, 702644, 791.27985f, 489.02353f, 142.90796f, (byte) 30),
+					1));
 			return true;
 		default:
 			return false;

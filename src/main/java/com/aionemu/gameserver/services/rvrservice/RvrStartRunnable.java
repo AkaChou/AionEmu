@@ -27,6 +27,8 @@ public class RvrStartRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+		GameLocationBootstrapServices.rvrService().clearAdventObjects(id);
 		// 入侵传送门。 / Invasion Portal.
 		GameLocationBootstrapServices.rvrService().adventPortalSP(id);
 		// 天族战舰将在 10 分钟后入侵。 / An Elyos warship will invade in 10 minutes.

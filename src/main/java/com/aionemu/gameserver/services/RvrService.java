@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,10 +54,10 @@ public class RvrService {
 	// 旅团将军的紧急命令 4.9.1 / Brigade General's Urgent Order 4.9.1
 	private final ConcurrentMap<Integer, Rvrlf3df3<?>> activeRvr = new ConcurrentHashMap<Integer, Rvrlf3df3<?>>();
 	// 重装特特兰/凯诺维坎 5.6 / Heavy Tetran/Kenovikan 5.6
-	private final Map<Integer, VisibleObject> adventPortal = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventEffect = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventControl = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
+	private final List<VisibleObject> adventPortal = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventEffect = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventControl = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventDirecting = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * 初始化 RvR 地点并按和平状态刷怪。
@@ -144,6 +143,39 @@ public class RvrService {
 			return;
 		}
 		directPortal.stop();
+		clearAdventObjects(id);
+	}
+
+	/**
+	 * 清理活动启动阶段创建的临时对象。
+	 * Despawns temporary objects created during the event startup sequence.
+	 *
+	 * @param id 地点 ID / location id
+	 */
+	public void clearAdventObjects(int id) {
+		if (id == 5) {
+			despawnAdventObjects(adventPortal);
+			despawnAdventObjects(adventEffect);
+			despawnAdventObjects(adventControl);
+			despawnAdventObjects(adventDirecting);
+		}
+	}
+
+	/**
+	 * 清理一组临时对象并释放其引用。
+	 * Despawns one group of temporary objects and releases its references.
+	 *
+	 * @param objects 临时对象集合 / temporary objects
+	 */
+	private void despawnAdventObjects(List<VisibleObject> objects) {
+		synchronized (objects) {
+			for (VisibleObject object : new ArrayList<>(objects)) {
+				if (object != null && object.isSpawned()) {
+					object.getController().onDelete();
+				}
+			}
+			objects.clear();
+		}
 	}
 
 	/**
@@ -763,10 +795,10 @@ public class RvrService {
 	public boolean adventControlSP(int id) {
 		switch (id) {
 		case 5:
-			adventControl.put(702529, SpawnEngine.spawnObject(
+			adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702529, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventControl.put(702529, SpawnEngine.spawnObject(
+			adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702529, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
 			return true;
@@ -785,10 +817,10 @@ public class RvrService {
 	public boolean adventEffectSP(int id) {
 		switch (id) {
 		case 5:
-			adventEffect.put(702549, SpawnEngine.spawnObject(
+			adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702549, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventEffect.put(702549, SpawnEngine.spawnObject(
+			adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702549, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
 			return true;
@@ -807,10 +839,10 @@ public class RvrService {
 	public boolean adventPortalSP(int id) {
 		switch (id) {
 		case 5:
-			adventPortal.put(702550, SpawnEngine.spawnObject(
+			adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702550, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventPortal.put(702550, SpawnEngine.spawnObject(
+			adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702550, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
 			return true;
@@ -829,10 +861,10 @@ public class RvrService {
 	public boolean adventDirectingSP(int id) {
 		switch (id) {
 		case 5:
-			adventDirecting.put(855231, SpawnEngine.spawnObject(
+			adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 855231, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventDirecting.put(855231, SpawnEngine.spawnObject(
+			adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 855231, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
 			return true;

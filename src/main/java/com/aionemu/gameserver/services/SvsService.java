@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,7 +51,7 @@ public class SvsService {
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, SvsLocation> svs;
 	// 特兰西迪姆附楼 4.7 / Transidium Annex 4.7
-	private final Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
+	private final List<VisibleObject> advanceCorridor = Collections.synchronizedList(new ArrayList<>());
 	private final ConcurrentMap<Integer, Panesterra<?>> activeSvs = new ConcurrentHashMap<Integer, Panesterra<?>>();
 
 	/**
@@ -137,6 +136,36 @@ public class SvsService {
 		}
 		distinguishedServiceMsg(id);
 		gate.stop();
+		clearAdventObjects(id);
+	}
+
+	/**
+	 * 清理活动启动阶段创建的进阶走廊对象。
+	 * Despawns the advance-corridor objects created during event startup.
+	 *
+	 * @param id 地点 ID / location id
+	 */
+	public void clearAdventObjects(int id) {
+		if (id == 5) {
+			despawnAdventObjects(advanceCorridor);
+		}
+	}
+
+	/**
+	 * 清理一组临时对象并释放其引用。
+	 * Despawns one group of temporary objects and releases its references.
+	 *
+	 * @param objects 临时对象集合 / temporary objects
+	 */
+	private void despawnAdventObjects(List<VisibleObject> objects) {
+		synchronized (objects) {
+			for (VisibleObject object : new ArrayList<>(objects)) {
+				if (object != null && object.isSpawned()) {
+					object.getController().onDelete();
+				}
+			}
+			objects.clear();
+		}
 	}
 
 	/**
@@ -274,16 +303,16 @@ public class SvsService {
 	public boolean advanceCorridorSP(int id) {
 		switch (id) {
 		case 5:
-			advanceCorridor.put(802219, SpawnEngine.spawnObject(
+			advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400020000, 802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.put(802221, SpawnEngine.spawnObject(
+			advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400040000, 802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.put(802223, SpawnEngine.spawnObject(
+			advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400050000, 802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.put(802225, SpawnEngine.spawnObject(
+			advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400060000, 802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
 			return true;

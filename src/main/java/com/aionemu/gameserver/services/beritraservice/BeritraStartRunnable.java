@@ -27,6 +27,8 @@ public class BeritraStartRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		// 清理上一轮遗留的临时特效对象。 / Despawn temporary effect objects left by the previous cycle.
+		GameLocationBootstrapServices.beritraService().clearAdventObjects(id);
 		// 贝里特拉入侵传送门。 / Beritra Invasion Portal.
 		GameLocationBootstrapServices.beritraService().adventPortalSP(id);
 		// 埃雷什基伽尔入侵传送门。 / Ereshkigal Invasion Portal.

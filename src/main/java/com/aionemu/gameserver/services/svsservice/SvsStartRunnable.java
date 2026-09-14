@@ -27,6 +27,8 @@ public class SvsStartRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+		GameLocationBootstrapServices.svsService().clearAdventObjects(id);
 		// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
 		GameLocationBootstrapServices.svsService().transidiumAnnexMsg(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

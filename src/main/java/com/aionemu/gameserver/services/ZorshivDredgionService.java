@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,10 +52,10 @@ public class ZorshivDredgionService {
 	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<Integer, ZorshivDredgion<?>>();
 
 	// 英吉斯温入侵 / Inggison Invasion
-	private final Map<Integer, VisibleObject> adventPortal = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventEffect = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventControl = new HashMap<>();
-	private final Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
+	private final List<VisibleObject> adventPortal = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventEffect = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventControl = Collections.synchronizedList(new ArrayList<>());
+	private final List<VisibleObject> adventDirecting = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * 初始化无畏舰地点并按和平状态刷怪。
@@ -138,6 +137,39 @@ public class ZorshivDredgionService {
 			return;
 		}
 		zorshiv.stop();
+		clearAdventObjects(id);
+	}
+
+	/**
+	 * 清理活动启动阶段创建的临时对象。
+	 * Despawns temporary objects created during the event startup sequence.
+	 *
+	 * @param id 地点 ID / location id
+	 */
+	public void clearAdventObjects(int id) {
+		if (id == 3) {
+			despawnAdventObjects(adventPortal);
+			despawnAdventObjects(adventEffect);
+			despawnAdventObjects(adventControl);
+			despawnAdventObjects(adventDirecting);
+		}
+	}
+
+	/**
+	 * 清理一组临时对象并释放其引用。
+	 * Despawns one group of temporary objects and releases its references.
+	 *
+	 * @param objects 临时对象集合 / temporary objects
+	 */
+	private void despawnAdventObjects(List<VisibleObject> objects) {
+		synchronized (objects) {
+			for (VisibleObject object : new ArrayList<>(objects)) {
+				if (object != null && object.isSpawned()) {
+					object.getController().onDelete();
+				}
+			}
+			objects.clear();
+		}
 	}
 
 	/**
@@ -236,7 +268,7 @@ public class ZorshivDredgionService {
 	public boolean adventControlSP(int id) {
 		switch (id) {
 		case 3:
-			adventControl.put(702529, SpawnEngine.spawnObject(
+			adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210130000, 702529, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
@@ -255,7 +287,7 @@ public class ZorshivDredgionService {
 	public boolean adventEffectSP(int id) {
 		switch (id) {
 		case 3:
-			adventEffect.put(702549, SpawnEngine.spawnObject(
+			adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210130000, 702549, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
@@ -274,7 +306,7 @@ public class ZorshivDredgionService {
 	public boolean adventPortalSP(int id) {
 		switch (id) {
 		case 3:
-			adventPortal.put(702550, SpawnEngine.spawnObject(
+			adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210130000, 702550, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
@@ -293,7 +325,7 @@ public class ZorshivDredgionService {
 	public boolean adventDirectingSP(int id) {
 		switch (id) {
 		case 3:
-			adventDirecting.put(855231, SpawnEngine.spawnObject(
+			adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210130000, 855231, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;

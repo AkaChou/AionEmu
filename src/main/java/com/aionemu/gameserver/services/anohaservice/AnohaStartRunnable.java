@@ -31,6 +31,8 @@ public class AnohaStartRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+		GameLocationBootstrapServices.anohaService().clearAdventObjects(id);
 		// 狂暴阿诺哈剑效果。 / Berserk Anoha Sword Effect.
 		GameLocationBootstrapServices.anohaService().adventSwordEffectSP(id);
 		// 狂暴阿诺哈将在 30 分钟后返回卡尔多。 / Berserk Anoha will return to Kaldor in 30 minutes.

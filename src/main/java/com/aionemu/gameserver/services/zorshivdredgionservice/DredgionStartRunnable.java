@@ -27,6 +27,8 @@ public class DredgionStartRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+		GameLocationBootstrapServices.zorshivDredgionService().clearAdventObjects(id);
 		// 入侵传送门。 / Invasion Portal.
 		GameLocationBootstrapServices.zorshivDredgionService().adventPortalSP(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
