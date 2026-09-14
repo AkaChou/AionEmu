@@ -2,14 +2,14 @@
 
 This file provides project-level guidance for AI coding agents working in this repository.
 
-> **Detailed rules are split into focused files under `.agent/rules/`.** Read the applicable files from the [Rules Index](#rules-index) for the task at hand.
+> **Detailed rules are split into focused files under `.agents/rules/`.** Read the applicable files from the [Rules Index](#rules-index) for the task at hand.
 
 ## Global Rules
 
 1. Do NOT run build commands unless explicitly requested by the user.
 2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
-3. All summary files should be stored in `.agent/summary/` if that directory is available.
-4. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agent/summary/<topic>/`; do not place them under `scripts/`.
+3. All summary files should be stored in `.agents/summary/` if that directory is available.
+4. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
 
 ## Configuration
 
@@ -53,14 +53,14 @@ AionEmu is an Aion 5.8 community server. A single Spring Boot application hosts 
 
 ## Rules Index
 
-All detailed rules are in `.agent/rules/`:
+All detailed rules are in `.agents/rules/`:
 
-| File | Scope | Description |
-|---|---|---|
-| [i18n.md](.agent/rules/i18n.md) | Entire repository | Bilingual comments, localized logging, and terminology rules / 中英双语注释、日志国际化和术语规范 |
-| [java_general.md](.agent/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
-| [backend.md](.agent/rules/backend.md) | `src/main/java/**/*.java` | Backend implementation and JDK 25 language/API conventions / 后端实现与 JDK 25 语言/API 约定 |
-| [formatting.md](.agent/rules/formatting.md) | `**/*.java`, `**/*.xml` | Java and XML formatting, whitespace, wrapping, and generated-file boundaries / Java 与 XML 格式、空白、换行和生成文件边界 |
-| [lombok.md](.agent/rules/lombok.md) | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
-| [ai-artifacts.md](.agent/rules/ai-artifacts.md) | Entire repository | AI-generated intermediate artifacts, topic directories, and script placement / AI 生成中间产物、主题目录和脚本存放规则 |
-| [quest-repair.md](.agent/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |
+| File                                             | Scope | Description |
+|--------------------------------------------------|---|---|
+| [i18n.md](.agents/rules/i18n.md)                 | Entire repository | Bilingual comments, localized logging, and terminology rules / 中英双语注释、日志国际化和术语规范 |
+| [java_general.md](.agents/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
+| [backend.md](.agents/rules/backend.md)           | `src/main/java/**/*.java` | Backend implementation and JDK 25 language/API conventions / 后端实现与 JDK 25 语言/API 约定 |
+| [formatting.md](.agents/rules/formatting.md)     | `**/*.java`, `**/*.xml` | Java and XML formatting, whitespace, wrapping, and generated-file boundaries / Java 与 XML 格式、空白、换行和生成文件边界 |
+| [lombok.md](.agents/rules/lombok.md)             | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
+| [ai-artifacts.md](.agents/rules/ai-artifacts.md) | Entire repository | AI-generated intermediate artifacts, topic directories, and script placement / AI 生成中间产物、主题目录和脚本存放规则 |
+| [quest-repair.md](.agents/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |

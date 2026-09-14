@@ -4,7 +4,7 @@
 
 修复提交：`e518518ce fix(quest): treat contextless NPC dialogs as plain dialogs`
 
-验收记录：[任务 1370 与无任务上下文 NPC 对话客户端验收记录](../../.agent/summary/quest-acceptance/1370-2026-09-13-client-accepted.md)
+验收记录：[任务 1370 与无任务上下文 NPC 对话客户端验收记录](../../.agents/summary/quest-acceptance/1370-2026-09-13-client-accepted.md)
 
 可检索 Pattern：`CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN`
 
@@ -109,7 +109,7 @@ if (hasQuestDialogContext(npcTarget, routedQuestId)) {
 
 - 聚焦测试：`mvn -o -Dtest='QuestEngineNpcDialogDispatchTest,Quest1347ClientDialogAlignmentTest,Quest1346ClientDialogAlignmentTest,DialogServiceQuestDialogTest,CMDialogSelectContextTest,QuestProductionJourneyTest' -DfailIfNoSpecifiedTests=false test`，31/31 通过。
 - 全量任务/客户端包扫描：`mvn -o -Dtest='com.aionemu.gameserver.questEngine.**,com.aionemu.gameserver.network.aion.clientpackets.**' -DfailIfNoSpecifiedTests=false test`，运行 1,317 条，仅既有 `QuestClientContractGateTest` 23 条指纹失败；规范化后与基线逐行一致。
-- Playbook 校验：`python3 .agent/summary/quest/check_quest_repair_playbook.py`，输出 `PLAYBOOK_PATTERNS=56 REPRESENTATIVE_COMMITS=46 REPRESENTATIVE_TESTS=57 DETAILED_CASES=33`。
+- Playbook 校验：`python3 .agents/summary/quest/check_quest_repair_playbook.py`，输出 `PLAYBOOK_PATTERNS=56 REPRESENTATIVE_COMMITS=46 REPRESENTATIVE_TESTS=57 DETAILED_CASES=33`。
 - 客户端验收：用户于 2026-09-13 回复“验证通过，请详细记录”；完整验收字段见文首验收记录。
 
 ## 8. 剩余风险与未捕获证据
@@ -126,4 +126,4 @@ if (hasQuestDialogContext(npcTarget, routedQuestId)) {
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)
 - [已验收代表案例 8.33](repair-playbook/CASES.zh-CN.md)
 - [客户端任务对话映射说明](client-dialog-mapping/README.zh-CN.md)
-- [验收记录模板](../../.agent/summary/quest-acceptance/README.zh-CN.md)
+- [验收记录模板](../../.agents/summary/quest-acceptance/README.zh-CN.md)

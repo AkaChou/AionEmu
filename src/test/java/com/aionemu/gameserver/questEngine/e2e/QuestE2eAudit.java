@@ -28,7 +28,7 @@ public final class QuestE2eAudit {
 		try {
 			Path mapping = args.length > 0 ? Path.of(args[0]) : Path.of("docs/quest/client-dialog-mapping");
 			Path reportDirectory = args.length > 1 ? Path.of(args[1]) : Path.of("target/quest-e2e");
-			Path summary = args.length > 2 ? Path.of(args[2]) : Path.of(".agent/summary/quest-e2e/summary.md");
+			Path summary = args.length > 2 ? Path.of(args[2]) : Path.of(".agents/summary/quest-e2e/summary.md");
 			ClientResourceOracle oracle = ClientResourceOracle.load(mapping);
 			LegacyQuestEvidenceOracle legacyEvidence = LegacyQuestEvidenceOracle.load(mapping);
 			QuestWorldReachabilityOracle worldReachability = QuestWorldReachabilityOracle.loadProductionData();

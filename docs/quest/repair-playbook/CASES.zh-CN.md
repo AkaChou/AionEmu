@@ -41,7 +41,7 @@
 - 根因：Aion 5.8 客户端对第一个普通奖励槽发送 `HACTION_SELECTED_QUEST_REWARD1(8)`，对第一个实时奖励槽发送 `HACTION_SELECTED_QUEST_AUTO_REWARD1(110)`。无目标 `CM_DIALOG_SELECT` 会把原始 action 交给 typed dispatcher，后者按 `QuestEvent.QuestDialog(110)` 查询生产索引；原 XML 只有普通奖励动作 8 的完成路由，因此实时奖励确认没有候选迁移。旧 `finishReportedQuest` 将 110..124 映射到普通奖励槽 8..22，且正式任务数据将这五个任务标记为 `can_report=true`，共同证明两个动作空间应落到等价的奖励完成合同。
 - 修复层：任务 XML + 由客户端字典和活动 XML 引用生成的 typed dialog action 枚举。五个任务的 11 个互斥职业分支同时注册普通动作 8 和实际可见的实时动作 110；事务内发放职业物品与经验、回收工作物品并完成任务，提交后按 `refresh-player-stats -> COMPLETION sync -> close-dialog` 执行。不在共享 runtime 中全局重写动作。
 - 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/13830.xml`、`13831.xml`、`13832.xml`、`13833.xml`、`13834.xml`，以及 `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest13830To13834TargetlessRewardTest.java`。
-- 验证命令和结果：`rtk mvn -Dtest=Quest13830To13834TargetlessRewardTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 8 个测试，失败 0、错误 0、跳过 0；五个 XML 均通过 XSD；`rtk python3 .agent/summary/quest/generate_quest_dialog_enums.py --check` 返回 `changed=0`；Aion 5.8 客户端实测实时奖励可领取并正常完成任务。
+- 验证命令和结果：`rtk mvn -Dtest=Quest13830To13834TargetlessRewardTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 8 个测试，失败 0、错误 0、跳过 0；五个 XML 均通过 XSD；`rtk python3 .agents/summary/quest/generate_quest_dialog_enums.py --check` 返回 `changed=0`；Aion 5.8 客户端实测实时奖励可领取并正常完成任务。
 - 复用边界：仅适用于权威数据允许实时报告、无目标奖励包确实发送 110..124，且普通与实时槽位应共享奖励完成语义的任务。必须按客户端实际可见槽位逐一映射：单一职业奖励通常只需 110；多槽奖励要分别证明 111..124 与奖励索引。动作 108、NPC 目标领奖、不同奖励索引、额外页面或副作用合同必须单独取证，不能套用本案例或做全局 remap。
 - commit：`4a23cf0a0f531182e195bfa0f662513da50d170a`。
 
@@ -422,7 +422,7 @@
 - 玩家可见症状：任务在真实游戏内完全能够正常接取、逐步推进并完成领奖，无任何卡死或阻断现象。
 - 根因：Aion 5.8 真实抓包证实多步跑腿任务的核心交互规律：第 N 步对话下发页恒为 SELECT(N+1)（1011, 1352, 1693, 2034, 2375），推进动作码恒为 SETPRO(N+1)（10000+N）；服务端处理推步后下发 SM_QUEST_ACTION 并以页面 0 关窗。客户端 HTML 中残留的子页面为 NCSoft 策划草稿废页，游戏内无任何入口能触发。
 - 修复层：审计分类器（`build_unresolved_inventory.py`）。自动识别已存在完整汇报或完成流转（NPC_REPORT/npc-item-report/npc-complete）的任务，以及通过非对话事件（enter-zone/enter-world/use-item/item-play/level-up/at-distance）自动接取的任务，将其客户端草稿废页准确归档为 INTENTIONAL_CLIENT_ONLY。
-- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 修改文件：`../../../.agents/summary/quest-load-fail/build_unresolved_inventory.py`、`../../../.agents/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：台账 EVIDENCE_BLOCKED 从 1,069 行骤降至 432 行（-637 行），INTENTIONAL_CLIENT_ONLY 规范提升至 1,532 行；全库 6,200 个任务无新缺陷。
 - 复用边界：适用于所有生产数据已形成业务闭环但在客户端 HTML 中残留废页的任务分类治理。
 - commit：`772809b10`。
@@ -454,7 +454,7 @@
   2. 5 个任务为道具起手任务，通过物品直接接取，普通对话框接受页为未实装模板资产；
   3. 12 个任务已显式声明 `QUEST_ACCEPT_1`/`QUEST_ACCEPT_SIMPLE` 与 `QUEST_REFUSE_1`，以 `close-dialog` 或下发页形成完整事务闭环。
 - 修复层：台账分类器（`build_unresolved_inventory.py`）。识别 `NPC_START` 展开事实、显式接取/拒绝路由及道具交互接取闭环，将其准确归类为 `INTENTIONAL_CLIENT_ONLY`。
-- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 修改文件：`../../../.agents/summary/quest-load-fail/build_unresolved_inventory.py`、`../../../.agents/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：`accept/start flow lacks unique contract start NPC` 阻断彻底归零（104 -> 0 行）；台账 EVIDENCE_BLOCKED 从 364 行进一步降至 260 行（净降 104 行，仅剩 110 个任务）。
 - 复用边界：适用于一切使用宏展开、显式 close-dialog 或道具起手实现接取/拒绝判定的任务台账治理。
 - commit：`bb0435fda`。
@@ -470,7 +470,7 @@
   2. `no_right`（资格不足）、`quest_complete`（任务已完成再次对话）、`quest_failed_1`（任务失败提示）属于全局引擎提示页，不属于单个任务正向对话链路；
   3. 10526/20526 等多分支任务的父页面已归档，但硬编码元组未覆盖其子分支页（如 `select4_1_1`..`select4_4`）。
 - 修复层：台账分类器（`build_unresolved_inventory.py`）。识别零对白纯动画任务、系统状态提示页与深层分支子页面，统一规范归档为 `INTENTIONAL_CLIENT_ONLY`。
-- 修改文件：`.agent/summary/quest-load-fail/build_unresolved_inventory.py`、`.agent/summary/quest-load-fail/unresolved-inventory.csv`。
+- 修改文件：`../../../.agents/summary/quest-load-fail/build_unresolved_inventory.py`、`../../../.agents/summary/quest-load-fail/unresolved-inventory.csv`。
 - 验证命令和结果：`page family needs per-quest handler/template evidence` 分类彻底清零（132 -> 0 行）；台账 EVIDENCE_BLOCKED 从 260 行降至 139 行（净降 121 行，仅剩 64 个复杂长剧情任务）。
 - 复用边界：适用于零 NPC 对话的纯动画/自动完成任务、由全局引擎按资格或完成状态接管的系统提示页，以及未被父页面实际引用的客户端深层模板残页；不能把仍有真实 NPC 触发入口的页面归入此模式。
 - commit：`bc1378767`。
