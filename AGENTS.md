@@ -8,8 +8,9 @@ This file provides project-level guidance for AI coding agents working in this r
 
 1. Do NOT run build commands unless explicitly requested by the user.
 2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
-3. All summary files should be stored in `.agents/summary/` if that directory is available.
-4. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
+3. `.agents/summary/` is the canonical directory for all summary files.
+4. `.agent/summary/` is a legacy path. Do not create a real directory or new files there; use `.agents/summary/` instead. If a legacy tool still requests the old path, its writes must resolve through the repository compatibility link to `.agents/summary/`.
+5. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
 
 ## Configuration
 
