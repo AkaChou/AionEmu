@@ -2355,25 +2355,33 @@
 	<!-- Oriel To Inggison -->
 	<portal_dialog npc_id="730529">
 		<portal_path dialog="10000" loc_id="2101300" race="ELYOS">
-			<portal_req min_level="50" kinah_req="9800" err_level="27"/>
+			<portal_req min_level="50" kinah_req="9800" err_level="27">
+				<quest_req quest_id="10031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Pernon To Gelkmaros -->
 	<portal_dialog npc_id="730530">
 		<portal_path dialog="10000" loc_id="2201400" race="ASMODIANS">
-			<portal_req min_level="50" kinah_req="9800" err_level="27"/>
+			<portal_req min_level="50" kinah_req="9800" err_level="27">
+				<quest_req quest_id="20031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Sanctum To Inggison -->
 	<portal_dialog npc_id="730218">
 		<portal_path dialog="10000" loc_id="2101300" race="ELYOS">
-			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
+			<portal_req min_level="50" kinah_req="9300" err_level="27">
+				<quest_req quest_id="10031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Pandaemonium To Gelkmaros -->
 	<portal_dialog npc_id="731833">
 		<portal_path dialog="10000" loc_id="2201400" race="ASMODIANS">
-			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
+			<portal_req min_level="50" kinah_req="9300" err_level="27">
+				<quest_req quest_id="20031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Gelkmaros To Pandaemonium & Pernon -->
@@ -2397,13 +2405,17 @@
 	<!-- Kaisinel Academy To Inggison -->
 	<portal_dialog npc_id="730425">
 		<portal_path dialog="10000" loc_id="2101300" race="ELYOS">
-			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
+			<portal_req min_level="50" kinah_req="9300" err_level="27">
+				<quest_req quest_id="10031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Marchutan Priory To Gelkmaros -->
 	<portal_dialog npc_id="730428">
 		<portal_path dialog="10000" loc_id="2201400" race="ASMODIANS">
-			<portal_req min_level="21" kinah_req="9300" err_level="27"/>
+			<portal_req min_level="21" kinah_req="9300" err_level="27">
+				<quest_req quest_id="20031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Sanctum & Inggison & Oriel [Elyos Aerolink] -->
@@ -2412,7 +2424,9 @@
 			<portal_req min_level="50" kinah_req="13240" err_level="27"/>
 		</portal_path>
 		<portal_path dialog="10001" loc_id="2101300" race="ELYOS">
-			<portal_req min_level="50" kinah_req="6400" err_level="27"/>
+			<portal_req min_level="50" kinah_req="6400" err_level="27">
+				<quest_req quest_id="10031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 		<portal_path dialog="10002" loc_id="7000100" race="ELYOS">
 			<portal_req min_level="21" kinah_req="17200" err_level="27"/>
@@ -2424,7 +2438,9 @@
 			<portal_req min_level="50" kinah_req="13240" err_level="27"/>
 		</portal_path>
 		<portal_path dialog="10001" loc_id="2201400" race="ASMODIANS">
-			<portal_req min_level="50" kinah_req="6400" err_level="27"/>
+			<portal_req min_level="50" kinah_req="6400" err_level="27">
+				<quest_req quest_id="20031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 		<portal_path dialog="10002" loc_id="7100101" race="ASMODIANS">
 			<portal_req min_level="21" kinah_req="17200" err_level="27"/>
@@ -3796,7 +3812,9 @@
 	<!-- Inggison Corridor -->
 	<portal_dialog npc_id="805606">
 	    <portal_path dialog="104" loc_id="2101300">
-		    <portal_req min_level="50" err_level="27"/>
+		    <portal_req min_level="50" err_level="27">
+				<quest_req quest_id="10031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Kaldor Corridor -->
@@ -3841,7 +3859,9 @@
 	<!-- Gelkmaros Corridor -->
 	<portal_dialog npc_id="805620">
 	    <portal_path dialog="104" loc_id="2201400">
-		    <portal_req min_level="50" err_level="27"/>
+		    <portal_req min_level="50" err_level="27">
+				<quest_req quest_id="20031" quest_step="3"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Kaldor Corridor -->

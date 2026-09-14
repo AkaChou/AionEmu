@@ -78,6 +78,12 @@ public class PortalService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
 			return;
 		}
+		if (TeleportService2.isBalaureaEntryWorld(mapId)
+				&& !isBalaureaEntryAllowed(mapId, player.getWorldId(), player.isInInstance(),
+						TeleportService2.meetsBalaureaEntryRequirement(player, mapId))) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
 		InstanceCooltime clt = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
 		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
 			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
@@ -314,6 +320,20 @@ public class PortalService {
 	static boolean isAbyssEntryAllowed(int targetWorldId, int currentWorldId, boolean inInstance,
 			boolean meetsRequirement) {
 		return targetWorldId == currentWorldId || inInstance || meetsRequirement;
+	}
+
+	static boolean isBalaureaEntryAllowed(int targetWorldId, int currentWorldId, boolean inInstance,
+			boolean meetsRequirement) {
+		return isSameBalaureaRegion(targetWorldId, currentWorldId) || inInstance || meetsRequirement;
+	}
+
+	static boolean isSameBalaureaRegion(int targetWorldId, int currentWorldId) {
+		if (TeleportService2.isInggisonEntryWorld(targetWorldId)
+				&& TeleportService2.isInggisonEntryWorld(currentWorldId)) {
+			return true;
+		}
+		return TeleportService2.isGelkmarosEntryWorld(targetWorldId)
+				&& TeleportService2.isGelkmarosEntryWorld(currentWorldId);
 	}
 
 	private static boolean checkKinah(Player player, int kinah) {

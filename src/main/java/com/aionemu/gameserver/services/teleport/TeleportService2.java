@@ -89,6 +89,14 @@ public class TeleportService2 {
 	// Entry qualification is the terminal quest of each chain: 1920->1921->1922->1044 and 2945->2946->2947->2042.
 	private static final int ELYOS_ABYSS_ENTRY_QUEST_ID = 1044;
 	private static final int ASMODIAN_ABYSS_ENTRY_QUEST_ID = 2042;
+	private static final int ELYOS_INGGISON_WORLD_ID = 210050000;
+	private static final int ELYOS_INGGISON_MASTER_WORLD_ID = 210130000;
+	private static final int ASMODIAN_GELKMAROS_WORLD_ID = 220070000;
+	private static final int ASMODIAN_GELKMAROS_MASTER_WORLD_ID = 220140000;
+	private static final int ELYOS_BALAUREA_ENTRY_QUEST_ID = 10031;
+	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_ID = 20031;
+	private static final int ELYOS_BALAUREA_ENTRY_QUEST_STEP = 3;
+	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_STEP = 3;
 
 	/**
 	 * 按传送员模板将玩家传送到指定地点（含飞行传送与费用校验）。
@@ -141,8 +149,7 @@ public class TeleportService2 {
 		if (location.getRequiredQuest() > 0) {
 			QuestState qs = player.getQuestStateList().getQuestState(location.getRequiredQuest());
 			if (!meetsQuestRequirement(qs, location.getRequiredQuestStep())) {
-				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(location.getRequiredQuest()));
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 				return;
 			}
 		}
@@ -219,6 +226,56 @@ public class TeleportService2 {
 		return switch (race) {
 		case ELYOS -> ELYOS_ABYSS_ENTRY_QUEST_ID;
 		case ASMODIANS -> ASMODIAN_ABYSS_ENTRY_QUEST_ID;
+		default -> 0;
+		};
+	}
+
+	public static boolean isInggisonEntryWorld(int worldId) {
+		return worldId == ELYOS_INGGISON_WORLD_ID || worldId == ELYOS_INGGISON_MASTER_WORLD_ID;
+	}
+
+	public static boolean isGelkmarosEntryWorld(int worldId) {
+		return worldId == ASMODIAN_GELKMAROS_WORLD_ID || worldId == ASMODIAN_GELKMAROS_MASTER_WORLD_ID;
+	}
+
+	public static boolean isBalaureaEntryWorld(int worldId) {
+		return isInggisonEntryWorld(worldId) || isGelkmarosEntryWorld(worldId);
+	}
+
+	public static boolean meetsBalaureaEntryRequirement(Player player, int targetWorldId) {
+		if (isInggisonEntryWorld(targetWorldId)) {
+			return meetsBalaureaEntryRequirement(Race.ELYOS, player.getRace(),
+					player.getQuestStateList().getQuestState(ELYOS_BALAUREA_ENTRY_QUEST_ID));
+		}
+		if (isGelkmarosEntryWorld(targetWorldId)) {
+			return meetsBalaureaEntryRequirement(Race.ASMODIANS, player.getRace(),
+					player.getQuestStateList().getQuestState(ASMODIAN_BALAUREA_ENTRY_QUEST_ID));
+		}
+		return false;
+	}
+
+	static boolean meetsBalaureaEntryRequirement(Race targetRace, Race playerRace, QuestState questState) {
+		if (playerRace != targetRace) {
+			return false;
+		}
+		int questId = getBalaureaEntryQuestId(targetRace);
+		int requiredStep = getBalaureaEntryQuestStep(targetRace);
+		return questId != 0 && questState != null && questState.getQuestId() == questId
+				&& meetsQuestRequirement(questState, requiredStep);
+	}
+
+	static int getBalaureaEntryQuestId(Race race) {
+		return switch (race) {
+		case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_ID;
+		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_ID;
+		default -> 0;
+		};
+	}
+
+	static int getBalaureaEntryQuestStep(Race race) {
+		return switch (race) {
+		case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_STEP;
+		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
 		default -> 0;
 		};
 	}
@@ -916,6 +973,10 @@ public class TeleportService2 {
 
 		if (isAbyssEntryWorld(worldId) && !meetsAbyssEntryRequirement(player)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
+			return;
+		}
+		if (isBalaureaEntryWorld(worldId) && !meetsBalaureaEntryRequirement(player, worldId)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
 

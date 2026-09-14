@@ -53,6 +53,11 @@ public class MultiReturnAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
 			return false;
 		}
+		if (TeleportService2.isBalaureaEntryWorld(returnData.getWorldId())
+				&& !TeleportService2.meetsBalaureaEntryRequirement(player, returnData.getWorldId())) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return false;
+		}
 		return true;
 	}
 

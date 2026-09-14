@@ -36,6 +36,8 @@ class TeleportServiceQuestRequirementTest {
 	private static final Path MULTI_RETURNS_XML = Path.of(
 			"src/main/resources/aion/data/static_data/items/multi_returns.xml");
 	private static final String ABYSS_RETURN_ITEMS_XPATH = "//item_template[@return_world='400010000']";
+	private static final String BALAUREA_RETURN_ITEMS_XPATH =
+			"//item_template[@return_world='210050000' or @return_world='210130000' or @return_world='220070000' or @return_world='220140000']";
 
 	@Test
 	void completedQuestAlwaysMeetsRequirement() {
@@ -74,6 +76,44 @@ class TeleportServiceQuestRequirementTest {
 	}
 
 	@Test
+	void balaureaEntryRequiresTheRacialMissionToBeCompleteOrBoardedShip() {
+		assertEquals(10031, TeleportService2.getBalaureaEntryQuestId(Race.ELYOS));
+		assertEquals(20031, TeleportService2.getBalaureaEntryQuestId(Race.ASMODIANS));
+		assertEquals(3, TeleportService2.getBalaureaEntryQuestStep(Race.ELYOS));
+		assertEquals(3, TeleportService2.getBalaureaEntryQuestStep(Race.ASMODIANS));
+		assertEquals(0, TeleportService2.getBalaureaEntryQuestId(Race.PC_ALL));
+
+		// 完成使命允许传送 / Complete quest allows entry
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.COMPLETE, 0)));
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ASMODIANS, Race.ASMODIANS,
+				questState(20031, QuestStatus.COMPLETE, 0)));
+
+		// 登舰前步骤（var0 = 0, 1, 2）未激活龙界传送资格 / Steps before boarding ship disallowed
+		assertFalse(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.START, 0)));
+		assertFalse(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.START, 2)));
+
+		// 登舰后及英吉斯温内后续步骤（var0 >= 3）均允许传送 / Boarded airship and beyond allowed
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.START, 3)));
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.START, 4)));
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ELYOS,
+				questState(10031, QuestStatus.REWARD, 10)));
+		assertTrue(TeleportService2.meetsBalaureaEntryRequirement(Race.ASMODIANS, Race.ASMODIANS,
+				questState(20031, QuestStatus.START, 3)));
+
+		// 异族不满足 / Opposing race is disallowed
+		assertFalse(TeleportService2.meetsBalaureaEntryRequirement(Race.ELYOS, Race.ASMODIANS,
+				questState(10031, QuestStatus.COMPLETE, 0)));
+		assertFalse(TeleportService2.meetsBalaureaEntryRequirement(Race.ASMODIANS, Race.ELYOS,
+				questState(20031, QuestStatus.COMPLETE, 0)));
+		assertFalse(TeleportService2.meetsBalaureaEntryRequirement(Race.ASMODIANS, Race.ASMODIANS, null));
+	}
+
+	@Test
 	void everyDirectAbyssReturnItemUsesTheGuardedSkillPath() throws Exception {
 		NodeList items = abyssReturnItems();
 		assertEquals(4, items.getLength());
@@ -92,14 +132,32 @@ class TeleportServiceQuestRequirementTest {
 	}
 
 	@Test
+	void everyDirectBalaureaReturnItemUsesTheGuardedSkillPath() throws Exception {
+		NodeList items = balaureaReturnItems();
+		assertEquals(4, items.getLength());
+
+		Map<Integer, Race> expectedItems = Map.of(
+				164000106, Race.ELYOS,
+				164000107, Race.ASMODIANS,
+				164000532, Race.ELYOS,
+				164000533, Race.ASMODIANS);
+		for (int index = 0; index < items.getLength(); index++) {
+			Element item = (Element) items.item(index);
+			int itemId = Integer.parseInt(item.getAttribute("id"));
+			assertEquals(expectedItems.get(itemId), Race.valueOf(item.getAttribute("race")), "item " + itemId);
+			assertEquals(1, evaluateCount(item, "./actions/skilluse[@skillid='8198']"), "item " + itemId);
+		}
+	}
+
+	@Test
 	void abyssMultiReturnDestinationsRemainBehindTheItemActionGate() throws Exception {
 		MultiReturnItemData data = (MultiReturnItemData) JAXBContext.newInstance(MultiReturnItemData.class)
 				.createUnmarshaller().unmarshal(MULTI_RETURNS_XML.toFile());
 
-		assertHasAbyssReturn(findMultiReturn(data, 6));
-		assertHasAbyssReturn(findMultiReturn(data, 7));
-		assertHasAbyssReturn(findMultiReturn(data, 8));
-		assertHasAbyssReturn(findMultiReturn(data, 9));
+		assertHasDestination(findMultiReturn(data, 6), 400010000);
+		assertHasDestination(findMultiReturn(data, 7), 400010000);
+		assertHasDestination(findMultiReturn(data, 8), 400010000);
+		assertHasDestination(findMultiReturn(data, 9), 400010000);
 
 		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(ITEM_TEMPLATES_XML.toFile());
 		var xpath = XPathFactory.newInstance().newXPath();
@@ -109,6 +167,15 @@ class TeleportServiceQuestRequirementTest {
 		assertMultiReturnItems((NodeList) xpath.evaluate(
 				"//item_template/actions/multireturn[@id='7']/parent::actions/parent::item_template",
 				document, XPathConstants.NODESET), Race.ASMODIANS, List.of(164020006, 164020008, 164020010));
+	}
+
+	@Test
+	void balaureaMultiReturnDestinationsRemainBehindTheItemActionGate() throws Exception {
+		MultiReturnItemData data = (MultiReturnItemData) JAXBContext.newInstance(MultiReturnItemData.class)
+				.createUnmarshaller().unmarshal(MULTI_RETURNS_XML.toFile());
+
+		assertHasDestination(findMultiReturn(data, 6), 210050000);
+		assertHasDestination(findMultiReturn(data, 7), 220070000);
 	}
 
 	@Test
@@ -134,16 +201,22 @@ class TeleportServiceQuestRequirementTest {
 				document, XPathConstants.NODESET);
 	}
 
+	private static NodeList balaureaReturnItems() throws Exception {
+		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(ITEM_TEMPLATES_XML.toFile());
+		return (NodeList) XPathFactory.newInstance().newXPath().evaluate(BALAUREA_RETURN_ITEMS_XPATH,
+				document, XPathConstants.NODESET);
+	}
+
 	private static int evaluateCount(Element root, String expression) throws Exception {
 		return ((NodeList) XPathFactory.newInstance().newXPath().evaluate(expression, root,
 				XPathConstants.NODESET)).getLength();
 	}
 
-	private static void assertHasAbyssReturn(MultiReturn multiReturn) {
+	private static void assertHasDestination(MultiReturn multiReturn, int worldId) {
 		assertNotNull(multiReturn);
 		List<MultiReturnLocationList> locations = multiReturn.getMultiReturnList();
 		assertNotNull(locations);
-		assertTrue(locations.stream().anyMatch(location -> location.getWorldId() == 400010000));
+		assertTrue(locations.stream().anyMatch(location -> location.getWorldId() == worldId));
 	}
 
 	private static MultiReturn findMultiReturn(MultiReturnItemData data, int id) {
