@@ -186,11 +186,13 @@ class QuestMutationPlannerTest {
 			"/aion/data/static_data/quest_definition/quests/2392.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
-		// 真实 quest.xml: quest_2392a/b/c 各 1 个；remove 显式 count=1 与收集数量一致（404c5814b 起 XML 用精确数量而非 ALL）
+		// 真实 quest.xml: 选定分支羽毛在 started->rN 已交并扣除；reward 路由上 3 类羽毛均使用 ALL 可选清理，防止阻断完成。
+		// Real quest.xml: the selected branch feather is already turned in and removed at started->rN;
+		// all 3 feather types on reward routes use ALL for optional cleanup to prevent blocking completion.
 		List<QuestAction> cleanup = List.of(
-			new QuestAction.RemoveItem(182204159, 1),
-			new QuestAction.RemoveItem(182204160, 1),
-			new QuestAction.RemoveItem(182204161, 1));
+			new QuestAction.RemoveItem(182204159, QuestAction.RemoveItem.ALL),
+			new QuestAction.RemoveItem(182204160, QuestAction.RemoveItem.ALL),
+			new QuestAction.RemoveItem(182204161, QuestAction.RemoveItem.ALL));
 		var routes = definition.definition().transitions().stream()
 			.filter(transition -> Set.of("r1", "r2", "r3").contains(transition.sourceNode()))
 			.filter(transition -> transition.targetNode().equals("complete")

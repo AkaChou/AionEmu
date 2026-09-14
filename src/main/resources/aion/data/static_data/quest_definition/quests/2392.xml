@@ -200,14 +200,20 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
+    <!--
+      领奖与预览（Kvasir）：玩家在前面 SETPRO1/2/3 已将选定分支的羽毛交付并扣除。
+      三类羽毛在奖励阶段属于可选清理物：有则整叠移除，无则继续，绝不能用严格正数扣除阻断奖励预览与最终交任务。
+      Reward and preview (Kvasir): the player already turned in and consumed the chosen feather branch during SETPRO1/2/3.
+      All three feather types are optional cleanups at the reward stage: remove the whole stack when present and continue when absent, so strict positive removal must never block reward preview or final turn-in.
+    -->
     <transition source="r1" target="complete">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="8"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -224,9 +230,9 @@
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -237,9 +243,9 @@
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="4"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -256,9 +262,9 @@
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
@@ -269,9 +275,9 @@
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="4"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -288,9 +294,9 @@
         <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182204159" count="1"/>
-        <remove-item item-id="182204160" count="1"/>
-        <remove-item item-id="182204161" count="1"/>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
