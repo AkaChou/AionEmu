@@ -205,6 +205,13 @@ public class Player extends Creature {
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
 	private volatile DialogSelectRepeat dialogSelectRepeat;
+	/**
+	 * 是否为该玩家开启任务追踪日志；仅内存状态，不持久化。
+	 * Whether quest trace logging is enabled for this player; in-memory only, not persisted.
+	 */
+	@Getter
+	@Setter
+	private volatile boolean questTraceEnabled = false;
 	@Getter
 	@Setter
 	private RecipeList recipeList;

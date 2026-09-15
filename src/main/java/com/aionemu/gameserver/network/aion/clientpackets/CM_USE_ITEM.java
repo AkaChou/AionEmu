@@ -92,7 +92,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			player.getController().stopProtectionActiveTask();
 		}
 		Item item = player.getInventory().getItemByObjId(uniqueItemId);
-		if (NetworkConfig.DISPLAY_QUEST_TRACE && item != null) {
+		if ((NetworkConfig.DISPLAY_QUEST_TRACE || player.isQuestTraceEnabled()) && item != null) {
 			log.info(I18n.get("log.quest_trace.use_item",
 				player.getName(),
 				item.getItemId(),

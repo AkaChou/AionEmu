@@ -23,8 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 对目标玩家启动、设置、查看或删除任务状态的管理员命令。
- * Admin command to start, set, show or delete quest state on a targeted player.
+ * 对目标玩家启动、设置、查看或删除任务状态，并为选中玩家开关任务追踪日志的管理员命令。
+ * Admin command to start, set, show or delete quest state on a targeted player, plus toggling quest trace logging for the selected player.
  */
 public class Quest extends AdminCommand {
 
@@ -37,15 +37,20 @@ public class Quest extends AdminCommand {
     }
 
     /**
-     * 分发 start/set/delete/show 子命令；目标必须为玩家。
-     * Dispatch start/set/delete/show; the target must be a player.
+     * 分发 start/set/delete/show/log 子命令；log 作用于选中玩家，未选中时默认对自己生效。
+     * Dispatch start/set/delete/show/log; log applies to the selected player, or self when no player is targeted.
      *
      * @param params 子命令与任务参数 / Subcommand and quest args
      */
     @Override
     public void execute(Player admin, String... params) {
         if (params == null || params.length < 1) {
-            PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete>");
+            PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete|log>");
+            return;
+        }
+
+        if (params[0].equals("log")) {
+            handleLog(admin, params);
             return;
         }
 
@@ -73,8 +78,38 @@ public class Quest extends AdminCommand {
             handleShow(admin, target, params);
         }
         else {
-            PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete>");
+            PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete|log>");
         }
+    }
+
+    /**
+     * 为选中玩家开关任务追踪日志；未选中玩家时默认对自己生效，无参数时翻转，支持 on/off 显式指定。
+     * Toggles quest trace logging for the selected player (self when no player is targeted); flips when no argument is given, supports explicit on/off.
+     *
+     * @param admin 执行命令的管理员 / Admin executing the command
+     * @param params 子命令参数，params[1] 可为 on/off / Subcommand args, params[1] may be on/off
+     */
+    private void handleLog(Player admin, String... params) {
+        Player target = admin;
+        if (admin.getTarget() instanceof Player) {
+            target = (Player) admin.getTarget();
+        }
+        boolean newValue = !target.isQuestTraceEnabled();
+        if (params.length >= 2 && params[1] != null && !params[1].isEmpty()) {
+            String mode = params[1].trim().toLowerCase();
+            if (mode.equals("on") || mode.equals("true") || mode.equals("enable") || mode.equals("1")) {
+                newValue = true;
+            }
+            else if (mode.equals("off") || mode.equals("false") || mode.equals("disable") || mode.equals("0")) {
+                newValue = false;
+            }
+            else {
+                PacketSendUtility.sendMessage(admin, "syntax //quest log [on|off]");
+                return;
+            }
+        }
+        target.setQuestTraceEnabled(newValue);
+        PacketSendUtility.sendMessage(admin, "Quest trace log for " + target.getName() + " is now " + (newValue ? "ON" : "OFF"));
     }
 
     private void handleStart(Player admin, Player target, String... params) {
@@ -324,6 +359,6 @@ public class Quest extends AdminCommand {
      */
     @Override
     public void onFail(Player player, String message) {
-        PacketSendUtility.sendMessage(player, "syntax //quest <start|set|show|delete>");
+        PacketSendUtility.sendMessage(player, "syntax //quest <start|set|show|delete|log>");
     }
 }

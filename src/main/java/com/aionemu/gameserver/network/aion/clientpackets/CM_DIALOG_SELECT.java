@@ -150,7 +150,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = getConnection().getActivePlayer();
-		if (NetworkConfig.DISPLAY_QUEST_TRACE) {
+		if (NetworkConfig.DISPLAY_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) {
 			int routedQuestIdTrace = questId > 0 ? questId
 				: targetObjectId > 0 && player != null && player.getKnownList().getObject(targetObjectId) instanceof Npc npc
 					? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
