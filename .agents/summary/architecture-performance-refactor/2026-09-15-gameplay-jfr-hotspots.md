@@ -89,4 +89,30 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> { ... }
 - 采样权重来自 JFR `ObjectAllocationSample`（TLAB 采样加权），用于**相对排序**，不等于精确字节数；GC 暂停、锁竞争、热点占比均为采样统计。
 - 单机、单客户端、以跑图打怪为主；组队/攻城/大规模并发未覆盖（当前无法测试）。
 - 本窗口未观察到本次改造引入的锁竞争或热点，但这**不等于**「改造带来 X% 提升」；严格收益量化需要在 `/tmp` 干净副本上跑旧提交并复现同样操作。
-- 本节的 `RealGeoData` / `PathData` 优化代码已随本提交落地并通过 172 例聚焦测试，但**尚未重启验证运行期收益**（需要在重启后再录一段同长度 JFR，对比 `Integer`/`Long` 装箱占比与 `searchLowLevel`/`getMap` 的样本占比）。
+- `RealGeoData` / `PathData` 优化已随本提交落地、通过 172 例聚焦测试，并已在重启后复测（见第七节）；复测同时暴露「窗口工作量不一致」这一口径问题，受控数字仍需按第七节末的归一化方案重测。
+
+## 七、优化前后对比（重启后复测，非受控 A/B）
+
+复测：服务重启（20:11:39，pid 69446，0 ERROR/WARN）后以完全相同参数再录 300s → `/tmp/play-2-after.jfr`（20:16:31–20:21:31）。
+
+| 指标 | 基线 `/tmp/play-1.jfr` | 后置 `/tmp/play-2-after.jfr` |
+|---|---|---|
+| `java.lang.Integer` 分配 | 1472.5 MB（42.49%） | **23.4 MB（3.45%）** |
+| `java.lang.Long` 分配 | 1105.9 MB（31.91%） | **0.7 MB（0.10%）** |
+| `RealGeoData.getMap(int)` | 1440.9 MB | **0 MB（不再出现）** |
+| `PathData.searchLowLevel(...)` | 1211.2 MB | **0 MB（不再出现）** |
+| 采样分配合计 | 3465.8 MB | **676.2 MB（−80.5%）** |
+| GC | 3 次 / 52.8 ms | 1 次 / 102 ms（单次 G1New 102ms） |
+| `jdk.JavaMonitorEnter` | 0 | **0** |
+| `searchLowLevel` CPU 占比 | 20.70% | 1.27% |
+| `RealGeoData.getMap` CPU 占比 | 11.35% | 不再进入热点 |
+| NODE_LIMIT 异常（原始计数） | 344 | 2 |
+
+**两个目标站点归零是机制级结论**（源码 + 单测证明不可能再装箱），不受工作量影响。但**聚合数字不可当作受控 A/B**：
+
+- CPU 采样总数 802 → 237（3.4 倍差距），NODE_LIMIT 344 → 2，说明后置窗口的 NPC 寻路工作量明显更小；
+- 因此 −80.5% 的分配下降里，有一部分来自“活干得更少”，不能全部归因于本次优化。
+
+若要拿到受控数字，建议按「同活动 + 同长度」再测一次，并用 `//geo path` 的 `submitted/completed/processedNodes` 作为归一化分母（分配 ÷ 处理节点数）。
+
+**后置窗口的新分配 TOP（下一步候选）**：`Object[]` 269.4 MB（39.8%，疑似 `Map.of`/不可变集合与流式调用）、`KeyValueHolder` 84.0 MB（12.4%）、`PathData$MapData$Node` 40.8 MB（6.0%，A* 节点池增长）、`WorldMapInstance.worldMapObjectsSnapshot()` 19.4 MB、`PlayerQuestEventPort.toInventoryMap/completedQuestIdsOf` 44.1 MB。
