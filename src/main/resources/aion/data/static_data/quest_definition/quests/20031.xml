@@ -392,7 +392,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799225" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <broadcast-zone-mission-end quest-ids="20031 20032 20033 20034 20035"/>
+        <broadcast-zone-mission-end quest-ids="20032 20033 20034 20035"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
@@ -409,7 +409,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <broadcast-zone-mission-end quest-ids="20031 20032 20033 20034 20035"/>
+        <broadcast-zone-mission-end quest-ids="20032 20033 20034 20035"/>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
@@ -426,7 +426,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <broadcast-zone-mission-end quest-ids="20031 20032 20033 20034 20035"/>
+        <broadcast-zone-mission-end quest-ids="20032 20033 20034 20035"/>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
@@ -442,7 +442,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <broadcast-zone-mission-end quest-ids="20031 20032 20033 20034 20035"/>
+        <broadcast-zone-mission-end quest-ids="20032 20033 20034 20035"/>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>

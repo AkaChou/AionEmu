@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-013`
+> Pattern IDs: `QE-001`–`QE-015`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-15
 
 ---
 
@@ -346,3 +346,29 @@ first_check: 冲突任务 XML 的 transitions 中同 NPC/同 action 的边、nod
 - **代表案例**：
   1. `1722.xml`（拉斯汀的秘密指令）：提交 `94636797a` 将 `s2` 推进到 `s3` 的动作从 `SELECT_QUEST_REWARD` 纠正为 `SETPRO3` 时，漏删了文件下方历史遗留的 `s2 -> s2 SETPRO3` 自循环边，导致两边重叠报错。删除冗余自循环边后闭环。
   2. `3940.xml`（米拉詹特武器忠诚任务）：提交 `0823653a7` 尝试单字段承载阶段与 300 击杀（6..306），因 `<counter>` 约束移除了 `hunt` 节点的变量声明，导致其退化为 `START:0` 与 `started` 发生投影重合。对齐魔族同型任务 `4944.xml`（潘利尔武器任务）标准设计：分离阶段字段 `var0`（6-bit）与计数字段 `var1`（9-bit，0..300），`hunt` 固定 `var0=6`，`hunt-done` 固定 `var0=6, var1=300`，彻底消除节点投影碰撞。
+
+---
+
+## [QE-015] 十三、区域任务结束广播目标必须真实拥有该事件路由 (ZONE_MISSION_BROADCAST_TARGETS_MUST_BE_ROUTABLE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: BroadcastZoneMissionEnd after-commit action, QuestProductionDispatcher.dispatchOwners target contract and production quest XML broadcast target lists
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 任务领奖/完成后刷 typed 任务已提交但有提交后动作失败、QUEST_AUDIT AFTER_COMMIT 失败、QuestAfterCommitException: after-commit action BroadcastZoneMissionEnd failed
+root_cause: 广播目标列表包含完成方自身等没有 zone-mission-end 路由的 owner；dispatchOwners 把目标路由条件不匹配视为成功投递，把目标缺路由视为失败，因此自含目标必然让整个提交后广播失败
+fix_or_guardrail: 广播目标只保留真正声明了 zone-mission-end 路由的后续任务，且绝不包含完成方自身；保持 dispatchOwners 的缺路由硬失败语义，禁止用容错掩盖目标清单错误
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/10031.xml; src/main/resources/aion/data/static_data/quest_definition/quests/20031.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10031And20031ZoneMissionBroadcastTest.java; .agents/summary/quest-10031-zone-mission-broadcast/2026-09-15-zone-mission-end-broadcast-self-target.zh-CN.md; commit 911440146
+validation: focused-test Quest10031And20031ZoneMissionBroadcastTest; production catalog 6193 executable definitions compile with 0 failures and 0 whitelist violations; production-directory broadcast audit 6231 definitions and 24 broadcasts with 0 self-includes and 0 unroutable targets; client/runtime re-verification still pending
+boundaries: 条件不匹配仍属于成功投递；只有缺路由或执行失败才算失败。旧 Handler 对未注册 onEnterZoneMissionEnd 的 quest 是静默 no-op，因此旧代码把整族含自身都发一遍的写法不能直接照搬到 typed XML
+superseded_by: none
+first_check: broadcast-zone-mission-end 的 quest-ids 是否包含自身或其他未声明 zone-mission-end 路由的 owner；目标 quest 的 transitions 是否存在 ZoneMissionEnd 事件
+-->
+
+- **判定规则**：
+  1. `PlayerQuestBroadcastPort.broadcastZoneMissionEnd()` 通过 `QuestProductionDispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), ...)` 逐 owner 投递；`dispatchOwners` 的成功条件是每个目标都有路由且没有执行失败，条件不匹配（`UNKNOWN`/`NOT_HANDLED`）不算失败。
+  2. 因此广播目标必须是声明了 `<zone-mission-end/>` 转换的 owner；完成方自身若没有该路由就不能出现在 `quest-ids` 里。
+  3. 该约束同样适用于 `schedule-event-quest-refresh` 的显式目标列表。
+- **代表案例**：
+  1. `10031.xml`/`20031.xml`：4 处领奖广播把完成方自身列入目标（`10031 10032 10033 10034 10035` / `20031 20032 20033 20034 20035`），但完成方没有 `<zone-mission-end/>` 路由，导致每次奖励预览与领奖都记录 `AFTER_COMMIT BroadcastZoneMissionEnd failed`。修复为只广播 `10032~10035` / `20032~20035`，并新增 `Quest10031And20031ZoneMissionBroadcastTest` 锁定目标集合与 after-commit 顺序。
+  2. 对照 `10520/20520`：同族广播只列后续任务（`10521 ...` / `20521 ...`），因此从未出现该审计失败。
