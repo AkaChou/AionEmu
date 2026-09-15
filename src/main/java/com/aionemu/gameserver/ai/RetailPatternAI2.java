@@ -1638,14 +1638,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), owner, paramObject);
 		int range = integer(action, "range_as_meter");
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			for (Npc npc : instance.getNpcs()) {
-				if (npc != owner && npc.isSpawned() && MathUtil.isIn3dRange(owner, npc, range)
-					&& npc.getAi2() instanceof RetailPatternAI2 ai) {
-					ai.runEvent("on_message", null, message.paramObject(), message);
-				}
+		// 广播走实例级快照遍历，避免为每条消息物化整张 NPC 列表。 / Broadcast through the instance snapshot visitor instead of materializing the whole NPC list per message.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllNpcs(npc -> {
+			if (npc != owner && npc.isSpawned() && MathUtil.isIn3dRange(owner, npc, range)
+				&& npc.getAi2() instanceof RetailPatternAI2 ai) {
+				ai.runEvent("on_message", null, message.paramObject(), message);
 			}
-		}, 1);
+		}), 1);
 	}
 
 	private void broadcastMessageToParty(Operation action, Creature eventTarget, RetailMessage sourceMessage) {

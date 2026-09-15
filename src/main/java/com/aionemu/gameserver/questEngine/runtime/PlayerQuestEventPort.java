@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
+import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
@@ -252,8 +253,9 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 
 	/** Captures quest states currently in progress (START or REWARD); absent states are not active. */
 	private static Set<Integer> activeQuestIdsOf(Player player) {
-		Set<Integer> active = new HashSet<>();
-		for (QuestState questState : player.getQuestStateList().getAllQuestState()) {
+		QuestStateList questStates = player.getQuestStateList();
+		Set<Integer> active = new HashSet<>(Math.max(16, questStates.size()));
+		for (QuestState questState : questStates.getAllQuestState()) {
 			if (questState != null && questState.getQuestId() > 0) {
 				QuestStatus status = questState.getStatus();
 				if (status == QuestStatus.START || status == QuestStatus.REWARD) {
@@ -261,18 +263,22 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 				}
 			}
 		}
-		return Set.copyOf(active);
+		// 返回可变集合，交给 QuestSnapshot 构造器做唯一一次不可变化+逐条目校验。 / Return the mutable set so QuestSnapshot performs the single immutable-copy-and-validate pass.
+		return active;
 	}
 
 	/** Captures only quest states that are explicitly COMPLETE; absent states are not completed. */
 	private static Set<Integer> completedQuestIdsOf(Player player) {
-		Set<Integer> completed = new HashSet<>();
-		for (QuestState questState : player.getQuestStateList().getAllFinishedQuests()) {
-			if (questState != null && questState.getQuestId() > 0) {
+		QuestStateList questStates = player.getQuestStateList();
+		// 直接过滤任务状态视图，避免 getAllFinishedQuests() 每次物化的中间列表。 / Filter the quest-state view directly instead of materializing getAllFinishedQuests() every call.
+		Set<Integer> completed = new HashSet<>(Math.max(16, questStates.size()));
+		for (QuestState questState : questStates.getAllQuestState()) {
+			if (questState != null && questState.getQuestId() > 0 && questState.getStatus() == QuestStatus.COMPLETE) {
 				completed.add(questState.getQuestId());
 			}
 		}
-		return Set.copyOf(completed);
+		// 同上：不可变化与校验由 QuestSnapshot 构造器统一完成。 / As above: QuestSnapshot performs the immutable copy and validation once.
+		return completed;
 	}
 
 	/** Captures NPC template presence in the player's current world instance. */
@@ -336,13 +342,15 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		if (items == null) {
 			return Map.of();
 		}
-		Map<Integer, Integer> counts = new HashMap<>();
+		// 预分配容量按条目数估算，避免逐次扩容。 / Pre-size from the entry count so the table never has to grow.
+		Map<Integer, Integer> counts = new HashMap<>((int) (items.size() / 0.75f) + 1);
 		for (Item item : items) {
 			if (item != null && item.getItemId() > 0 && item.getItemCount() > 0) {
 				counts.merge(item.getItemId(), (int) item.getItemCount(), Integer::sum);
 			}
 		}
-		return Map.copyOf(counts);
+		// 返回可变 Map，交由 QuestSnapshot 构造器统一校验与不可变化。 / Return the mutable map; QuestSnapshot validates and freezes it once.
+		return counts;
 	}
 
 	/**
@@ -350,7 +358,8 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * Project only currency balances that the quest runtime can read reliably.
 	 */
 	private static Map<QuestRewardKind, Long> currenciesOf(Player player) {
-		Map<QuestRewardKind, Long> balances = new HashMap<>();
+		// 至多 GOLD/DP/AP/GP 四项，固定小容量避免扩容。 / At most GOLD/DP/AP/GP, so a fixed small capacity avoids growth.
+		Map<QuestRewardKind, Long> balances = new HashMap<>(8);
 		Storage inventory = player.getInventory();
 		if (inventory != null && inventory.getKinah() > 0) {
 			balances.put(QuestRewardKind.GOLD, inventory.getKinah());
@@ -366,6 +375,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 				balances.put(QuestRewardKind.GP, (long) player.getAbyssRank().getGp());
 			}
 		}
-		return Map.copyOf(balances);
+		// 同上：避免在端口侧再复制一份。 / As above: no extra copy on the port side.
+		return balances;
 	}
 }

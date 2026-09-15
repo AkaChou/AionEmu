@@ -355,12 +355,12 @@ public abstract class WorldMapInstance {
 	 * @return 玩家列表 / the player list
 	 */
 	public List<Player> getPlayersInside() {
-		List<Player> playersInside = new ArrayList<Player>();
-		Iterator<Player> players = playerIterator();
-		while (players.hasNext()) {
-			playersInside.add(players.next());
+		// 单次预分配结果列表，避免快照迭代器与结果列表的双份分配。 / Single pre-sized pass instead of a snapshot iterator plus a result list.
+		synchronized (worldMapPlayers) {
+			List<Player> playersInside = new ArrayList<Player>(worldMapPlayers.size());
+			playersInside.addAll(worldMapPlayers.values());
+			return playersInside;
 		}
-		return playersInside;
 	}
 
 	/**
@@ -390,14 +390,16 @@ public abstract class WorldMapInstance {
 	 * @return 全部 NPC 列表 / the NPC list
 	 */
 	public List<Npc> getNpcs() {
-		List<Npc> npcs = new ArrayList<Npc>();
-		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
-			VisibleObject obj = iter.next();
-			if (obj instanceof Npc) {
-				npcs.add((Npc) obj);
+		// 单次预分配结果列表，避免“先复制快照、再扩容收集”的双份临时数组。 / Single pre-sized pass instead of a snapshot plus a growing result list.
+		synchronized (worldMapObjects) {
+			List<Npc> npcs = new ArrayList<Npc>(worldMapObjects.size());
+			for (VisibleObject obj : worldMapObjects.values()) {
+				if (obj instanceof Npc npc) {
+					npcs.add(npc);
+				}
 			}
+			return npcs;
 		}
-		return npcs;
 	}
 
 	/**
@@ -619,6 +621,24 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
+	 * 对全部 NPC 执行访问者：先在锁内取一次数组快照，再在锁外访问，避免构造中间集合。
+	 * Visits all NPCs: one array snapshot is taken under the map lock and visited outside it, so no intermediate collection is built.
+	 *
+	 * @param visitor NPC 访问者 / the NPC visitor
+	 */
+	public void doOnAllNpcs(Visitor<Npc> visitor) {
+		try {
+			for (VisibleObject object : worldMapObjectsArray()) {
+				if (object instanceof Npc npc) {
+					visitor.visit(npc);
+				}
+			}
+		} catch (Exception ex) {
+			log.error(I18n.get("log.cc03391ccf0f", ex));
+		}
+	}
+
+	/**
 	 * 过滤与矩形区域相交的 Zone。
 	 * Filter zones intersecting the rectangular region.
 	 *
@@ -702,6 +722,18 @@ public abstract class WorldMapInstance {
 	private List<VisibleObject> worldMapObjectsSnapshot() {
 		synchronized (worldMapObjects) {
 			return new ArrayList<VisibleObject>(worldMapObjects.values());
+		}
+	}
+
+	/**
+	 * 可见对象数组快照：单次数组分配，供锁外遍历使用。
+	 * Array snapshot of visible objects: a single array allocation for iteration outside the lock.
+	 *
+	 * @return 可见对象数组 / the visible object array
+	 */
+	private VisibleObject[] worldMapObjectsArray() {
+		synchronized (worldMapObjects) {
+			return worldMapObjects.values().toArray(new VisibleObject[0]);
 		}
 	}
 

@@ -368,26 +368,16 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			throw new IllegalArgumentException("maxDp must be non-negative");
 		}
 		if (completedQuestIds != null) {
-			completedQuestIds = Set.copyOf(completedQuestIds);
-			if (completedQuestIds.stream().anyMatch(id -> id == null || id <= 0)) {
-				throw new IllegalArgumentException("completed quest ids must be positive");
-			}
+			completedQuestIds = validatedCompletedQuestIds(completedQuestIds);
 		}
 		if (activeQuestIds != null) {
-			activeQuestIds = Set.copyOf(activeQuestIds);
-			if (activeQuestIds.stream().anyMatch(id -> id == null || id <= 0)) {
-				throw new IllegalArgumentException("active quest ids must be positive");
-			}
+			activeQuestIds = validatedActiveQuestIds(activeQuestIds);
 		}
 		if (race == Race.PC_ALL) {
 			throw new IllegalArgumentException("race must be ELYOS or ASMODIANS");
 		}
 		if (eventActivities != null) {
-			eventActivities = Map.copyOf(eventActivities);
-			if (eventActivities.entrySet().stream().anyMatch(entry -> entry.getKey() == null
-					|| entry.getKey() <= 0 || entry.getValue() == null)) {
-				throw new IllegalArgumentException("event activities contain an invalid quest fact");
-			}
+			eventActivities = validatedEventActivities(eventActivities);
 		}
 		if (interactionObjectId < 0 || targetObjectId < 0 || worldId < 0 || instanceId < 0) {
 			throw new IllegalArgumentException("object, world, and instance ids must be non-negative");
@@ -400,21 +390,13 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured = false;
 			inventory = Map.of();
 		} else {
-			inventory = Map.copyOf(inventory);
-			if (inventory.entrySet().stream().anyMatch(entry -> entry.getKey() == null || entry.getKey() <= 0
-					|| entry.getValue() == null || entry.getValue() < 0)) {
-				throw new IllegalArgumentException("inventory snapshot contains an invalid item count");
-			}
+			inventory = validatedInventory(inventory);
 		}
 		if (currencies == null) {
 			currenciesCaptured = false;
 			currencies = Map.of();
 		} else {
-			currencies = Map.copyOf(currencies);
-			if (currencies.entrySet().stream().anyMatch(entry -> entry.getKey() == null || entry.getValue() == null
-					|| entry.getValue() < 0 || !entry.getKey().isCurrency())) {
-				throw new IllegalArgumentException("currency snapshot contains an invalid balance");
-			}
+			currencies = validatedCurrencies(currencies);
 		}
 	}
 
@@ -524,5 +506,91 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			throw new IllegalStateException("craft facts are not captured in this snapshot");
 		}
 		return craftFacts.canGrantCraftSkill(skillId, targetLevel);
+	}
+
+	/**
+	 * 迁移到不可变副本：入参已是不可变副本时直接复用（{@code Map.copyOf}/{@code Set.copyOf} 对不可变入参返回同一实例），
+	 * 否则在复制后逐条目校验一次。
+	 * Moves to an immutable copy: an already-immutable input is reused as-is, otherwise the copy is element-wise validated once.
+	 *
+	 * <p>为什么这样做：每个 {@code withXxx} 都会重新进入紧凑构造器，而 {@code ImmutableCollections$MapN} 未覆写
+	 * {@code keySet()}/{@code forEach()} —— 任何遍历都会为每个条目分配一个 {@code KeyValueHolder}（JFR 实测 27MB/300s）。
+	 * 首建路径（调用方传入可变集合）仍会完整校验一次，之后的重入只做零成本复制。
+	 * Rationale: every {@code withXxx} re-enters the canonical constructor, and {@code ImmutableCollections$MapN} does not
+	 * override {@code keySet()}/{@code forEach()}, so any iteration allocates a {@code KeyValueHolder} per entry. The first
+	 * construction (mutable input) still validates once; later re-entries only copy for free.</p>
+	 *
+	 * @param questIds 完成任务 ID / completed quest ids
+	 * @return 不可变副本 / the immutable copy
+	 */
+	private static Set<Integer> validatedCompletedQuestIds(Set<Integer> questIds) {
+		Set<Integer> immutable = Set.copyOf(questIds);
+		if (immutable == questIds) {
+			return immutable;
+		}
+		for (Integer questId : immutable) {
+			if (questId == null || questId <= 0) {
+				throw new IllegalArgumentException("completed quest ids must be positive");
+			}
+		}
+		return immutable;
+	}
+
+	/** 进行中任务 ID：语义同 {@link #validatedCompletedQuestIds(Set)}。 / Active quest ids; same contract as above. */
+	private static Set<Integer> validatedActiveQuestIds(Set<Integer> questIds) {
+		Set<Integer> immutable = Set.copyOf(questIds);
+		if (immutable == questIds) {
+			return immutable;
+		}
+		for (Integer questId : immutable) {
+			if (questId == null || questId <= 0) {
+				throw new IllegalArgumentException("active quest ids must be positive");
+			}
+		}
+		return immutable;
+	}
+
+	/** 事件活动表：语义同 {@link #validatedCompletedQuestIds(Set)}。 / Event activities; same contract as above. */
+	private static Map<Integer, Boolean> validatedEventActivities(Map<Integer, Boolean> activities) {
+		Map<Integer, Boolean> immutable = Map.copyOf(activities);
+		if (immutable == activities) {
+			return immutable;
+		}
+		for (Integer questFactId : immutable.keySet()) {
+			if (questFactId == null || questFactId <= 0 || immutable.get(questFactId) == null) {
+				throw new IllegalArgumentException("event activities contain an invalid quest fact");
+			}
+		}
+		return immutable;
+	}
+
+	/** 背包快照：语义同 {@link #validatedCompletedQuestIds(Set)}。 / Inventory snapshot; same contract as above. */
+	private static Map<Integer, Integer> validatedInventory(Map<Integer, Integer> inventory) {
+		Map<Integer, Integer> immutable = Map.copyOf(inventory);
+		if (immutable == inventory) {
+			return immutable;
+		}
+		for (Integer itemId : immutable.keySet()) {
+			Integer count = immutable.get(itemId);
+			if (itemId == null || itemId <= 0 || count == null || count < 0) {
+				throw new IllegalArgumentException("inventory snapshot contains an invalid item count");
+			}
+		}
+		return immutable;
+	}
+
+	/** 货币快照：语义同 {@link #validatedCompletedQuestIds(Set)}。 / Currency snapshot; same contract as above. */
+	private static Map<QuestRewardKind, Long> validatedCurrencies(Map<QuestRewardKind, Long> currencies) {
+		Map<QuestRewardKind, Long> immutable = Map.copyOf(currencies);
+		if (immutable == currencies) {
+			return immutable;
+		}
+		for (QuestRewardKind kind : immutable.keySet()) {
+			Long balance = immutable.get(kind);
+			if (kind == null || balance == null || balance < 0 || !kind.isCurrency()) {
+				throw new IllegalArgumentException("currency snapshot contains an invalid balance");
+			}
+		}
+		return immutable;
 	}
 }
