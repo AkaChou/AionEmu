@@ -54,37 +54,25 @@ class GetMostPlayerDamageNullGateTest {
 	/** 成对的 null 容忍方法：即使玩家为 null 也安全。 / Paired null-tolerant methods: safe when the player is null. */
 	private static final List<String> NULL_TOLERANT_CALLEES = List.of("sendMovie", "sendPacket", "sendMessage", "broadcastPacket");
 
-	/** 至少应扫描到的消费点数量，防止路径或正则失效后闸门空转。 / Minimum scanned call sites so the gate cannot silently degrade. */
-	private static final int MIN_CALL_SITES = 90;
+	/**
+	 * 至少应扫描到的消费点数量，防止路径或正则失效后闸门空转；2026-09-15 清理未使用消费点后实际为 90 处，故保留余量。
+	 * Minimum scanned call sites so the gate cannot silently degrade; 90 remain after the 2026-09-15 cleanup.
+	 */
+	private static final int MIN_CALL_SITES = 85;
 
 	/**
 	 * 闸门落地时的既有未判空站点基线：文件 → 允许的违规数。
 	 * Baseline of pre-existing unguarded sites: file → allowed violations.
 	 *
-	 * <p>基线现为九处：三条 {@code stop*(player)} 形参当前未被方法体使用，因此不会 NPE（若将来开始使用该形参必须重新评估）；
-	 * 其余六处是真实的 NPE 风险（玩家奖励 / 以玩家坐标刷怪），修法涉及“跳过还是回退坐标”的玩法语义，另行决策。
-	 * {@code TalocsHollowInstance} 在 2026-09-15 运行态 NPE 后已补齐判空并移出基线，该文件再次出现未判空使用会直接失败。
-	 * The baseline now holds nine entries: three {@code stop*(player)} parameters are currently unused, so they cannot
-	 * NPE; the other six are real NPE risks (player rewards and spawning at player coordinates) whose fix depends on
-	 * gameplay semantics and is tracked separately. {@code TalocsHollowInstance} was fixed and removed from the baseline
-	 * after a 2026-09-15 runtime NPE, so a new unguarded use in that file fails the gate immediately.</p>
+	 * <p>当前为空：2026-09-15 已把全部真实 NPE 风险站点判空（{@code TalocsHollowInstance} 在运行态 NPE 后补齐，
+	 * 其余六处按“无玩家归属则跳过玩家奖励 / 回退到 NPC 坐标”处理），并把三条形参未被使用的 {@code stop*(player)}
+	 * 调用改为在调用点直接去掉未使用实参，因此任何未判空消费点都会直接失败。将来若确需豁免，在此登记并写明原因。
+	 * Currently empty: on 2026-09-15 every real NPE risk was guarded (TalocsHollowInstance after a runtime NPE; the
+	 * other six by skipping player rewards or falling back to NPC coordinates when no player can be attributed), and the
+	 * three unused {@code stop*(player)} parameters were removed at their call sites, so any unguarded consumer fails the
+	 * gate. Register an exception here with its rationale if one is ever genuinely required.</p>
 	 */
-	private static final Map<String, Integer> KNOWN_UNGUARDED_SITES = buildBaseline();
-
-	private static Map<String, Integer> buildBaseline() {
-		Map<String, Integer> baseline = new LinkedHashMap<>();
-		String scripts = "com/aionemu/gameserver/instance/handlers/scripts/";
-		baseline.put(scripts + "FallenPoetaInstance.java", 1); // stopInstance(player)：形参未使用 / parameter unused
-		baseline.put(scripts + "DrakenseerLairInstance.java", 1); // stopDrakenseerLairTimer(player)：形参未使用 / unused
-		baseline.put(scripts + "KumukiCaveInstance.java", 1); // stopInstance2(player)：形参未使用 / unused
-		baseline.put(scripts + "MirashSanctuaryInstance.java", 1); // player.getSkillList() / spawn(…, player.getX(), …)
-		baseline.put(scripts + "TrialsOfEternityInstance.java", 1); // AbyssPointsService.addGp(player, 1200)
-		baseline.put(scripts + "AturamSkyFortressInstance.java", 1); // sp(…, player.getX(), player.getY(), player.getZ(), …)
-		baseline.put(scripts + "event/Event_AturamSkyFortressInstance.java", 1); // 同上 / same as above
-		baseline.put(scripts + "event/IDEvent_Def_HInstance.java", 1); // ItemService.addItem(player, …) / player.getCommonData()
-		baseline.put(scripts + "event/Event_ContaminatedUnderpathInstance.java", 1); // 同上 / same as above
-		return Collections.unmodifiableMap(baseline);
-	}
+	private static final Map<String, Integer> KNOWN_UNGUARDED_SITES = Collections.emptyMap();
 
 	/**
 	 * 校验所有消费点，并输出违规清单。

@@ -182,6 +182,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
+		// 击杀者可能没有任何可归属玩家（无主或非玩家生物、宠物主人已离开已知列表），
+		// 因此 player 允许为 null：只跳过玩家专属效果，世界推进照常执行。
+		// The killer may have no attributable player (masterless or non-player creature, pet master gone from the known
+		// list), so player may be null: only player-specific effects are skipped while world progression still runs.
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215457: //Ancient Octanus.
@@ -196,15 +200,21 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			case 215480, 246240: //Queen Mosqua / special-server Queen Mosqua.
                 deleteNpc(700738); //Huge Insect Egg.
 				sendMovie(player, 435);
-				// 解除召唤：“恩盖乌斯与阿比拉” / Release Summon: "Engeius & Abyla"
-				if (player.getSummon() != null) {
+				// 解除召唤“恩盖乌斯与阿比拉”：无玩家归属时无法判定召唤主人，跳过但不阻断后续刷卵。
+				// Release Summon "Engeius & Abyla": without a player attribution the owner is unknown, so skip it without
+				// blocking the cracked-egg spawn below.
+				if (player != null && player.getSummon() != null) {
 					SummonsService.release(player.getSummon(), UnsummonType.UNSPECIFIED, false);
 				}
 				sp(700739, 653.63f, 838.66998f, 1304.72f, (byte) 0, 11, 0, 0, null); //Cracked Huge Insect Egg.
             break;
 			case 215488, 246242: //Celestius / special-server Celestius.
-				ItemService.addItem(player, 188900011, 1); //Blessing Box Of Growth V.
-				ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
+				// 奖励只能发给可归属玩家；无归属时保留通关广播，不把奖励发给无关玩家。
+				// Rewards require an attributable player; keep the completion broadcast and never reward an unrelated player.
+				if (player != null) {
+					ItemService.addItem(player, 188900011, 1); //Blessing Box Of Growth V.
+					ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
+				}
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
             break;
 			case 700739: //Cracked Huge Insect Egg.

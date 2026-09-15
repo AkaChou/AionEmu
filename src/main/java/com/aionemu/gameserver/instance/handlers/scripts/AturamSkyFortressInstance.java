@@ -223,33 +223,39 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
+		// 无玩家归属（无主/非玩家击杀，或主人已离开已知列表）时回退到发生器自身坐标，守护者链条照常出现。
+		// Without a player attribution (masterless or non-player kill, or a master gone from the known list) the
+		// protector falls back to the generator's own coordinates so the encounter chain still spawns.
 		Player player = npc.getAggroList().getMostPlayerDamage();
+		float spawnX = player != null ? player.getX() : npc.getX();
+		float spawnY = player != null ? player.getY() : npc.getY();
+		float spawnZ = player != null ? player.getZ() : npc.getZ();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 702654: //Dredgion Generator I.
 				// 1 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.1 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402734, Race.PC_ALL, 3000);
-				sp(282277, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Sutchin.
+				sp(282277, spawnX, spawnY, spawnZ, (byte) 0, 3000, 0, null); //Craftsman Sutchin.
 			break;
 			case 702653: //Dredgion Generator II.
 				// 2 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.2 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402735, Race.PC_ALL, 3000);
-				sp(282280, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Wichichi.
+				sp(282280, spawnX, spawnY, spawnZ, (byte) 0, 3000, 0, null); //Craftsman Wichichi.
 			break;
 			case 702650: //Dredgion Generator III.
 				// 3 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.3 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402736, Race.PC_ALL, 3000);
-				sp(282281, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Prichichi.
+				sp(282281, spawnX, spawnY, spawnZ, (byte) 0, 3000, 0, null); //Craftsman Prichichi.
 			break;
 			case 702651: //Dredgion Generator IV.
 				// 4 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.4 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402737, Race.PC_ALL, 3000);
-				sp(282279, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Pituchin.
+				sp(282279, spawnX, spawnY, spawnZ, (byte) 0, 3000, 0, null); //Craftsman Pituchin.
 			break;
 			case 702652: //Dredgion Generator V.
 				doors.get(126).setOpen(true);
 				// 5 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No. 5 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402738, Race.PC_ALL, 3000);
-				sp(282278, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Duduchin.
+				sp(282278, spawnX, spawnY, spawnZ, (byte) 0, 3000, 0, null); //Craftsman Duduchin.
 			break;
 			case 217373: //Popuchin.
 				sp(702664, 352.29132f, 424.08679f, 655.74670f, (byte) 0, 297, 3000, 0, null); // 激活的龙族瞬间移动装置 / Activated Balaur Teleporter.
@@ -297,8 +303,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 			case 217382: //Commander Barus.
 				doors.get(230).setOpen(true);
-				AbyssPointsService.addGp(player, 100);
-				AbyssPointsService.addAp(player, 2000);
+				// 无玩家归属时跳过 AP/GP 奖励，开门与提示照常执行。
+				// Without a player attribution the AP/GP rewards are skipped; the door and messages still run.
+				if (player != null) {
+					AbyssPointsService.addGp(player, 100);
+					AbyssPointsService.addAp(player, 2000);
+				}
 				// 通往阿舒纳塔尔准备室的门已打开。 / The door to Ashunatal's Ready Room is now open. You can see Ashunatal behind the door.
 				sendMsgByRace(1401048, Race.PC_ALL, 2000);
 			break;
@@ -330,8 +340,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 			break;
 			case 217376: //Ashunatal Shadowslip.
-				AbyssPointsService.addAp(player, 2000);
-				AbyssPointsService.addGp(player, 200);
+				// 无玩家归属时跳过 AP/GP 奖励，提示与后续逻辑照常执行。
+				// Without a player attribution the AP/GP rewards are skipped; the messages and later logic still run.
+				if (player != null) {
+					AbyssPointsService.addAp(player, 2000);
+					AbyssPointsService.addGp(player, 200);
+				}
 				// 这里有巨大的苏卡纳装置。 / There is a huge Surkana device here.
 				// 既然阿舒纳塔尔拼死保护它，就该摧毁它并干扰龙族计划。 / Since Ashunatal risked her life to protect it, you should destroy it and interfere with the Balaur's plans.
 				sendMsgByRace(1401401, Race.PC_ALL, 2000);

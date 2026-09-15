@@ -253,7 +253,6 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 246293: //Nutritious Ginseng.
 			    sp(703426, 155.54695f, 112.06158f, 143.79619f, (byte) 30, 3000, 0, null); //Door Activator.
@@ -273,7 +272,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 			case 246305: //Cook Bakaki.
 				despawnNpc(npc);
-				stopInstance2(player);
+				stopInstance2();
 				spawn(835057, 223.93062f, 337.54870f, 142.43079f, (byte) 90); //Kumuki Cave Exit.
 				instance.doOnAllPlayers(new Visitor<Player>() {
 			        /**
@@ -369,11 +368,9 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 stopInstance2。
 	 * Handle stopInstance2.
-	 *
-	 * @param player 玩家 / player
 	 */
 
-	protected void stopInstance2(Player player) {
+	protected void stopInstance2() {
 		stopInstanceTask();
 		onInstanceDestroy();
 		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You managed to save all <Poppy> :) ");

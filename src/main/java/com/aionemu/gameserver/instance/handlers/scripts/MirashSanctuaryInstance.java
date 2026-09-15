@@ -177,13 +177,24 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDie(Npc npc) {
+        // 无玩家归属（无主/非玩家击杀，或主人已离开已知列表）时跳过玩家专属效果；
+        // 雕像回退到 NPC 自身坐标生成，副本推进不受影响。
+        // Without a player attribution (masterless or non-player kill, or a master gone from the known list) the
+        // player-only effects are skipped; statues fall back to the NPC's own coordinates so progression still runs.
         Player player = npc.getAggroList().getMostPlayerDamage();
+        float spawnX = player != null ? player.getX() : npc.getX();
+        float spawnY = player != null ? player.getY() : npc.getY();
+        float spawnZ = player != null ? player.getZ() : npc.getZ();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 248382: //IDAbRe_Core_03_A1_Witch_An.
-			    player.getSkillList().addSkill(player, 11333, 1);
+				if (player != null) {
+				    player.getSkillList().addSkill(player, 11333, 1);
+				}
 			break;
 			case 248013: // .
-			    SkillLearnService.removeSkill(player, 11333);
+				if (player != null) {
+				    SkillLearnService.removeSkill(player, 11333);
+				}
 			    spawn(835733, npc.getX(), npc.getY(), npc.getZ(), (byte) 0); //IDAbRe_Core_03_TreasureBox04.
 			break;
 			case 248389:
@@ -200,16 +211,16 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 				}, 5000);
 			break;
 			case 248444: //IDAbRe_Core_03_Resurrect_Drakan_Statue_01.
-				spawn(248449, player.getX(), player.getY(), player.getZ(), (byte) 0);
+				spawn(248449, spawnX, spawnY, spawnZ, (byte) 0);
 			break;
 			case 248445: //IDAbRe_Core_03_Resurrect_Drakan_Statue_02.
-				spawn(248450, player.getX(), player.getY(), player.getZ(), (byte) 0);
+				spawn(248450, spawnX, spawnY, spawnZ, (byte) 0);
 			break;
 			case 248446: //IDAbRe_Core_03_Resurrect_Drakan_Statue_03.
-				spawn(248451, player.getX(), player.getY(), player.getZ(), (byte) 0);
+				spawn(248451, spawnX, spawnY, spawnZ, (byte) 0);
 			break;
 			case 248447: //IDAbRe_Core_03_Resurrect_Drakan_Statue_04.
-				spawn(248452, player.getX(), player.getY(), player.getZ(), (byte) 0);
+				spawn(248452, spawnX, spawnY, spawnZ, (byte) 0);
 			break;
 		}
     }

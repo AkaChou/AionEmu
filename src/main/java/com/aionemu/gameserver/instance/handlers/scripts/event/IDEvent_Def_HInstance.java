@@ -258,7 +258,11 @@ public class IDEvent_Def_HInstance extends GeneralInstanceHandler
 			    points = 600;
 			break;
 			case 248923: //IDEvent_Def_MutantBeast_65.
-			    ItemService.addItem(player, 186000470, 50); //战争点数。 / War Points.
+				// 无玩家归属时跳过玩家奖励，不影响波次推进与实例计分。
+				// Without a player attribution the reward is skipped; wave progression and instance scoring are unaffected.
+				if (player != null) {
+				    ItemService.addItem(player, 186000470, 50); //战争点数。 / War Points.
+				}
 			break;
 			case 248525:
 				points = 500000;
@@ -286,7 +290,9 @@ public class IDEvent_Def_HInstance extends GeneralInstanceHandler
 				}, 5000);
 			break;
 			case 246352:
-			    player.getCommonData().addExp(50000, RewardType.QUEST);
+				if (player != null) {
+				    player.getCommonData().addExp(50000, RewardType.QUEST);
+				}
 			break;
 		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addNpcKill();

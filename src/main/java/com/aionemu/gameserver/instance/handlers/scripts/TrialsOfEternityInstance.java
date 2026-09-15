@@ -435,7 +435,11 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			 * 击杀永恒试炼“波利亚之心”现获得 1200 GP（原 200）。 / You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance. http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
 			 */
 			case 246441: //Heart Of Boliag.
-			    AbyssPointsService.addGp(player, 1200);
+				// 无玩家归属时无人可领奖，跳过 GP 发放且不影响其它死亡逻辑。
+				// Without a player attribution there is nobody to reward, so the GP grant is skipped.
+				if (player != null) {
+				    AbyssPointsService.addGp(player, 1200);
+				}
 			break;
 		}
 	}

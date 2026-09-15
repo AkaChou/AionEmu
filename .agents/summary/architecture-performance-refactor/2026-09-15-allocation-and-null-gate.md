@@ -41,7 +41,7 @@
 - **基线**：`KNOWN_UNGUARDED_SITES` 登记闸门落地时已存在的 10 处未判空站点（见下节），登记的是“每文件允许的违规数”，新增站点会超基线失败。
 - **负向验证**：在 `HaramelInstance.onDie` 临时插入 `player.getObjectId();` → 闸门失败并点名该文件；还原后转绿。
 
-## 五、闸门发现的 10 处既有未判空站点（待单独决策）
+## 五、闸门发现的 10 处既有未判空站点（2026-09-15 晚已处理）
 
 | 文件 | 首次未判空使用 | 风险 |
 |---|---|---|
@@ -56,7 +56,14 @@
 | `IDEvent_Def_HInstance` | `ItemService.addItem(player, …)` / `player.getCommonData().addExp(...)` | **高** |
 | `Event_ContaminatedUnderpathInstance` | 同上 | **高** |
 
-修法涉及玩法语义（“跳过玩家奖励”还是“以 NPC 坐标回退刷怪”），因此本轮仅登记基线、不改行为。
+修法涉及玩法语义（“跳过玩家奖励”还是“以 NPC 坐标回退刷怪”），闸门落地时仅登记基线、不改行为。
+**后续（同日）已全部处理**：`TalocsHollowInstance` 因运行态 NPE（Queen Mosqua 死亡链）补齐判空，
+其余 6 处按“无归属则跳过玩家奖励 / 回退到 NPC 坐标”统一修复；三条形参未被使用的 `stop*(player)` 调用
+随后按独立清理删掉了未使用形参，因此 **`KNOWN_UNGUARDED_SITES` 现为空表**（`MIN_CALL_SITES` 90→85，实际 90 处消费点）。
+同轮还发现闸门只校验“首次使用前判空”，据此复核出并修复了 Aturam 两个文件中被放行的 8 处 AP/GP 发放；
+聚焦验证 `GetMostPlayerDamageNullGateTest,InstanceMovieNullGuardTest,ModelCollectionImplementationTest`
+= 20 例 / 0 失败 / 0 错误（BUILD SUCCESS）。
+证据与逐点决策见 `.agents/summary/talocs-hollow-mosqua-egg/2026-09-15-ondie-null-player-npe.md`。
 
 ## 六、验证 / Validation
 

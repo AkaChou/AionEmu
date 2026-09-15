@@ -181,7 +181,6 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 703293: //Dark Spore Road Iron Fence.
 			    despawnNpc(npc);
@@ -250,7 +249,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833856); //Animar.
 				deleteNpc(833860); //Kantil.
-				stopInstance(player);
+				stopInstance();
 				// 克罗班燃烧基地传送装置已创建。 / A teleport device for Krobans Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
 				// 暗孢之路已化为火海。 / The Dark Spore Road has turned into a sea of flames.
@@ -283,11 +282,9 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
-	 * @param player 玩家 / player
 	 */
 	
-	protected void stopInstance(Player player) {
+	protected void stopInstance() {
 		stopInstanceTask();
 		anuhartTaskA1.cancel(true);
 		// 阿努哈特中尉放弃追击并消失。 / Lieutenant Anuhart has given up the pursuit and has disappeared.

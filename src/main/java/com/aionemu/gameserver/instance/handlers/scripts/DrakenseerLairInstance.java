@@ -196,7 +196,6 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 857974: //Balaur Abyss Gate Enhancer A.
 			case 857975: //Balaur Abyss Gate Enhancer B.
@@ -209,7 +208,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 					// 还剩一个护盾导管。 / One Shielding Conduit remains.
 					sendMsgByRace(1403380, Race.PC_ALL, 0);
 				} else if (abyssGateEnhancerKilled == 3) {
-					stopDrakenseerLairTimer(player);
+					stopDrakenseerLairTimer();
 					// 全部护盾导管被摧毁后，阿卡哈尔终于出现。 / With all the Shielding Conduits destroyed, Akhal finally appears.
 				    sendMsgByRace(1403381, Race.PC_ALL, 2000);
 					Npc akhalTheOracle = instance.getNpc(220450); //Akhal The Oracle.
@@ -240,11 +239,9 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 stopDrakenseerLairTimer。
 	 * Handle stopDrakenseerLairTimer.
-	 *
-	 * @param player 玩家 / player
 	 */
 
-	protected void stopDrakenseerLairTimer(Player player) {
+	protected void stopDrakenseerLairTimer() {
         stopDrakenseerLairTask();
 	}
 
