@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
@@ -128,7 +128,7 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
-		if ((NetworkConfig.DISPLAY_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) && (action == 1 || action == 2)) {
+		if ((LoggingConfig.LOG_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) && (action == 1 || action == 2)) {
 			log.info(I18n.get("log.quest_trace.quest_action",
 				questId,
 				status,

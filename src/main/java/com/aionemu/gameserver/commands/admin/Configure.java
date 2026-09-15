@@ -35,6 +35,7 @@ public class Configure extends AdminCommand
 		.put("html", HTMLConfig.class)
 		.put("ingameshop", InGameShopConfig.class)
 		.put("legions", LegionConfig.class)
+		.put("logging", LoggingConfig.class)
 		.put("membership", MembershipConfig.class)
 		.put("periodicsave", PeriodicSaveConfig.class)
 		.put("prices", PricesConfig.class)

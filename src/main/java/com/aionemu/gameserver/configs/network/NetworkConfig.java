@@ -133,13 +133,6 @@ public class NetworkConfig {
 	public static boolean DISPLAY_PACKETS;
 
 	/**
-	 * 是否显示任务对话追踪调试日志。
-	 * Whether to display quest dialog interaction trace.
-	 */
-	@Property(key = "gameserver.network.display.questtrace", defaultValue = "false")
-	public static boolean DISPLAY_QUEST_TRACE = false;
-
-	/**
 	 * 是否启用连接洪水防护。
 	 * Whether flood connection protection is enabled.
 	 */

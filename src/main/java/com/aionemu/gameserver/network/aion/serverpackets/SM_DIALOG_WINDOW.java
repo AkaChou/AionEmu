@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
-		if (NetworkConfig.DISPLAY_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) {
+		if (LoggingConfig.LOG_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) {
 			log.info(I18n.get("log.quest_trace.dialog_window",
 				player != null ? player.getName() : "unknown",
 				targetObjectId,

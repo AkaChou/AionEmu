@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -92,7 +92,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			player.getController().stopProtectionActiveTask();
 		}
 		Item item = player.getInventory().getItemByObjId(uniqueItemId);
-		if ((NetworkConfig.DISPLAY_QUEST_TRACE || player.isQuestTraceEnabled()) && item != null) {
+		if ((LoggingConfig.LOG_QUEST_TRACE || player.isQuestTraceEnabled()) && item != null) {
 			log.info(I18n.get("log.quest_trace.use_item",
 				player.getName(),
 				item.getItemId(),

@@ -67,4 +67,10 @@ public class LoggingConfig {
 	 */
 	@Property(key = "gameserver.log.auction", defaultValue = "true")
 	public static boolean LOG_HOUSE_AUCTION;
+	/**
+	 * 是否显示任务对话追踪调试日志。
+	 * Whether quest dialog interaction trace logging is enabled.
+	 */
+	@Property(key = "gameserver.log.questtrace", defaultValue = "false")
+	public static boolean LOG_QUEST_TRACE = false;
 }
