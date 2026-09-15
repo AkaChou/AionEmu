@@ -34,6 +34,9 @@ public class CM_SHOW_DIALOG extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		player.clearNpcQuestDialogSelection();
+		// 打开对话是新的交互边界，重发计数必须从零开始。
+		// Opening a dialog is a new interaction boundary, so the resend counter restarts.
+		player.clearDialogSelectRepeat();
 		if (player.isTrading()) {
 			return;
 		}

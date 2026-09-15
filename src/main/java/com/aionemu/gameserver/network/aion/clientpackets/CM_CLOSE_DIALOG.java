@@ -41,6 +41,9 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		player.clearNpcQuestDialogSelection();
+		// 关闭对话同样结束当前交互，重发计数必须从零开始。
+		// Closing a dialog also ends the interaction, so the resend counter restarts.
+		player.clearDialogSelectRepeat();
 		final VisibleObject obj = player.getKnownList().getObject(targetObjectId);
 		final AionConnection client = getConnection();
 		if (obj == null) {

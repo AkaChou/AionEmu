@@ -52,12 +52,7 @@ class QuestDialogLoopBreakerProductionFlowTest {
 			int objectId = runtime.expectedDialogTargetObjectId();
 			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
 				for (int attempt = 1; attempt < LOOP_THRESHOLD; attempt++) {
-					int unansweredAttempt = attempt;
-					QuestHeadlessClient.DispatchOutcome unanswered = selectUnroutedAction(protocol, objectId);
-					assertFalse(unanswered.handled(), unanswered::toString);
-					assertTrue(unanswered.packets().isEmpty(),
-						() -> "attempt " + unansweredAttempt + " answered: " + unanswered.packets());
-					Thread.sleep(LOOP_RESEND_GAP_MILLIS);
+					dispatchUnansweredSelect(protocol, objectId, attempt);
 				}
 
 				QuestHeadlessClient.DispatchOutcome breaker = selectUnroutedAction(protocol, objectId);
@@ -69,6 +64,48 @@ class QuestDialogLoopBreakerProductionFlowTest {
 						&& packet.dialogId() == 0 && packet.targetObjectId() == 0), breaker::toString);
 			}
 		}
+	}
+
+	@Test
+	void reopeningTheDialogRestartsTheResendCounter() throws Exception {
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(definitionXml().getBytes(StandardCharsets.UTF_8)));
+		QuestTransition entry = definition.definition().transitions().getFirst();
+
+		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
+			runtime.prepare(entry);
+			assertTrue(runtime.dispatchPrepared().handled());
+			int objectId = runtime.expectedDialogTargetObjectId();
+			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
+				for (int attempt = 1; attempt < LOOP_THRESHOLD; attempt++) {
+					dispatchUnansweredSelect(protocol, objectId, attempt);
+				}
+
+				// 真实 CM_SHOW_DIALOG：重新打开对话必须清零重发计数。
+				// A real CM_SHOW_DIALOG reopens the dialog and must reset the resend counter.
+				protocol.dispatch(ClientActionRequest.useObject(QUEST_ID, NPC_ID, objectId));
+				for (int attempt = 1; attempt < LOOP_THRESHOLD; attempt++) {
+					dispatchUnansweredSelect(protocol, objectId, attempt);
+				}
+
+				QuestHeadlessClient.DispatchOutcome breaker = selectUnroutedAction(protocol, objectId);
+
+				assertFalse(breaker.handled(), breaker::toString);
+				assertTrue(breaker.packets().stream().anyMatch(packet ->
+					packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW
+						&& packet.dialogId() == 0 && packet.targetObjectId() == 0), breaker::toString);
+			}
+		}
+	}
+
+	private static void dispatchUnansweredSelect(QuestProtocolLoop protocol, int objectId, int attempt)
+			throws InterruptedException {
+		int unansweredAttempt = attempt;
+		QuestHeadlessClient.DispatchOutcome unanswered = selectUnroutedAction(protocol, objectId);
+		assertFalse(unanswered.handled(), unanswered::toString);
+		assertTrue(unanswered.packets().isEmpty(),
+			() -> "attempt " + unansweredAttempt + " answered: " + unanswered.packets());
+		Thread.sleep(LOOP_RESEND_GAP_MILLIS);
 	}
 
 	private static QuestHeadlessClient.DispatchOutcome selectUnroutedAction(QuestProtocolLoop protocol, int objectId) {
