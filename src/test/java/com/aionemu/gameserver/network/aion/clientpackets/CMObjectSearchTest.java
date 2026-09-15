@@ -7,10 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
@@ -171,6 +177,40 @@ class CMObjectSearchTest {
 		assertLocation(asmodian, 220110000, 1757.3667f, 2008.911f, 196.59653f);
 
 		assertNull(CM_OBJECT_SEARCH.resolveQuestSensorTarget(NPC_ID));
+	}
+
+	@Test
+	void resolvesSearchNpcIdForNormalPlayerWithActiveQuest() {
+		Player player = OBJENESIS.newInstance(Player.class);
+		QuestStateList qsl = OBJENESIS.newInstance(QuestStateList.class);
+		SortedMap<Integer, QuestState> quests = new TreeMap<>();
+		quests.put(14043, questState(14043, QuestStatus.START, 0));
+		setField(QuestStateList.class, qsl, "_quests", quests);
+		setField(Player.class, player, "questStateList", qsl);
+
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveSearchNpcId(player, 241198));
+		assertEquals(278532, CM_OBJECT_SEARCH.resolveSearchNpcId(player, 241418));
+	}
+
+	@Test
+	void filterLocationsByRaceFiltersEnemyFactionHomeContinents() {
+		SpawnSearchResult elyseaLoc = location(10);
+		SpawnSearchResult asmodaeLoc = new SpawnSearchResult(220110000, new SpawnSpotTemplate(4, 5, 6, (byte) 0, 0, null, null));
+		SpawnSearchResult abyssLoc = new SpawnSearchResult(400010000, new SpawnSpotTemplate(7, 8, 9, (byte) 0, 0, null, null));
+		List<SpawnSearchResult> all = List.of(elyseaLoc, asmodaeLoc, abyssLoc);
+
+		java.util.function.IntFunction<WorldType> worldTypeProvider = worldId -> switch (worldId) {
+			case WORLD_ID -> WorldType.ELYSEA;
+			case 220110000 -> WorldType.ASMODAE;
+			case 400010000 -> WorldType.ABYSS;
+			default -> WorldType.NONE;
+		};
+
+		List<SpawnSearchResult> elyosFiltered = CM_OBJECT_SEARCH.filterLocationsByRace(all, Race.ELYOS, worldTypeProvider);
+		assertEquals(List.of(elyseaLoc, abyssLoc), elyosFiltered);
+
+		List<SpawnSearchResult> asmodianFiltered = CM_OBJECT_SEARCH.filterLocationsByRace(all, Race.ASMODIANS, worldTypeProvider);
+		assertEquals(List.of(asmodaeLoc, abyssLoc), asmodianFiltered);
 	}
 
 	private static QuestState questState(int questId, QuestStatus status, int questVar0) {

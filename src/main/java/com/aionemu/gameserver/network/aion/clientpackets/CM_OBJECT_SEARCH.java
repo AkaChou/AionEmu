@@ -4,17 +4,22 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
+import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_NPC_ON_MAP;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.world.WorldType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * 在地图上搜索 NPC 出生点的客户端包。
@@ -68,15 +73,10 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		boolean gm = player != null && player.isGM();
 		int preferredWorldId = player == null ? 0 : player.getWorldId();
-		int searchNpcId = resolveAsteraSearchNpcId(player, npcId);
-		if (gm) {
-			searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
-			searchNpcId = resolveEremitiaSearchNpcId(player, searchNpcId);
-			searchNpcId = resolveVentusSearchNpcId(player, searchNpcId);
-		}
+		int searchNpcId = resolveSearchNpcId(player, npcId);
 		SearchTarget target = resolveQuestSensorTarget(searchNpcId);
 		if (target == null) {
-			target = findSearchTarget(searchNpcId, preferredWorldId, gm);
+			target = findSearchTarget(player, searchNpcId, preferredWorldId, gm);
 		}
 		if (target == null) {
 			return;
@@ -90,11 +90,32 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 			return;
 		}
 		SpawnSearchResult searchResult = target.location();
+		if (searchResult == null && target.npc() != null) {
+			SpawnSpotTemplate spot = new SpawnSpotTemplate(target.npc().getX(), target.npc().getY(),
+					target.npc().getZ(),
+							(byte) 0, 0, null, null);
+			searchResult = new SpawnSearchResult(target.npc().getWorldId(), spot);
+		}
 		if (searchResult == null) {
 			return;
 		}
 		sendPacket(new SM_SHOW_NPC_ON_MAP(searchNpcId, searchResult.getWorldId(), searchResult.getSpot().getX(),
 				searchResult.getSpot().getY(), searchResult.getSpot().getZ()));
+	}
+
+	/**
+	 * 将客户端可能因同名冲突提交的错误 NPC ID 解析为实际目标。
+	 * Resolves NPC IDs that may collide on the client to their authoritative targets.
+	 *
+	 * @param player 搜索玩家 / searching player
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	static int resolveSearchNpcId(Player player, int requestedNpcId) {
+		int searchNpcId = resolveAsteraSearchNpcId(player, requestedNpcId);
+		searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
+		searchNpcId = resolveEremitiaSearchNpcId(player, searchNpcId);
+		return resolveVentusSearchNpcId(player, searchNpcId);
 	}
 
 	/**
@@ -290,13 +311,45 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		return new SearchTarget(new SpawnSearchResult(worldId, spot), null);
 	}
 
-	private static SearchTarget findSearchTarget(int npcId, int preferredWorldId, boolean allowStaticFallback) {
+	private static SearchTarget findSearchTarget(Player player, int npcId, int preferredWorldId, boolean gm) {
 		List<SpawnSearchResult> locations = DataManager.SPAWNS_DATA2
 				.getSpawnLocationsByNpcId(preferredWorldId, npcId);
+		if (player != null && !gm) {
+			locations = filterLocationsByRace(locations, player.getRace());
+		}
+		boolean allowStaticFallback = gm || (player != null && !locations.isEmpty());
 		return selectSearchTarget(npcId, locations, GameWorldBootstrapServices.world().getNpcs(),
 				allowStaticFallback);
 	}
 
+	static List<SpawnSearchResult> filterLocationsByRace(List<SpawnSearchResult> locations, Race race) {
+		if (race == null || locations == null || locations.isEmpty() || DataManager.WORLD_MAPS_DATA == null) {
+			return locations;
+		}
+		return filterLocationsByRace(locations, race, worldId -> {
+			WorldMapTemplate template = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
+			return template != null ? template.getWorldType() : WorldType.NONE;
+		});
+	}
+
+	static List<SpawnSearchResult> filterLocationsByRace(List<SpawnSearchResult> locations, Race race,
+			IntFunction<WorldType> worldTypeProvider) {
+		if (race == null || locations == null || locations.isEmpty() || worldTypeProvider == null) {
+			return locations;
+		}
+		List<SpawnSearchResult> filtered = new ArrayList<>();
+		for (SpawnSearchResult loc : locations) {
+			WorldType type = worldTypeProvider.apply(loc.getWorldId());
+			if (race == Race.ELYOS && type == WorldType.ASMODAE) {
+				continue;
+			}
+			if (race == Race.ASMODIANS && type == WorldType.ELYSEA) {
+				continue;
+			}
+			filtered.add(loc);
+		}
+		return filtered.isEmpty() ? locations : filtered;
+	}
 	static SearchTarget selectSearchTarget(int npcId, List<SpawnSearchResult> locations,
 			Collection<? extends Npc> npcs,
 			boolean allowStaticFallback) {
