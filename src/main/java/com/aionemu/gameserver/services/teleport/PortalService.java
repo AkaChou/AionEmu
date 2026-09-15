@@ -84,6 +84,15 @@ public class PortalService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
+		// 出口或副本内传送门通往欧比斯的副本同样要求在完成欧比斯入场任务后才能进入，
+		// 该硬门禁不受管理员/会员的任务跳过权限影响。
+		// Instances leading into the Abyss by exit data or in-instance portal require Abyss entry qualification,
+		// and this hard gate is not bypassable by instance quest permissions.
+		if (isInstance && TeleportService2.grantsAbyssAccess(mapId, player.getRace())
+				&& !TeleportService2.meetsAbyssEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
+			return;
+		}
 		InstanceCooltime clt = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
 		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
 			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);

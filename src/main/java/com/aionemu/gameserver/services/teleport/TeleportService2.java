@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.services.teleport;
 
 
+import java.util.Set;
+
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -97,6 +99,11 @@ public class TeleportService2 {
 	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_ID = 20031;
 	private static final int ELYOS_BALAUREA_ENTRY_QUEST_STEP = 3;
 	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_STEP = 3;
+	/**
+	 * 配置出口不在欧比斯、但副本内部传送 NPC 直达欧比斯的世界 ID。
+	 * Instance worlds whose configured exit points elsewhere while an in-instance portal NPC leads into the Abyss.
+	 */
+	private static final Set<Integer> ABYSS_PORTAL_INSTANCE_WORLD_IDS = Set.of(300040000);
 
 	/**
 	 * 按传送员模板将玩家传送到指定地点（含飞行传送与费用校验）。
@@ -289,6 +296,34 @@ public class TeleportService2 {
 		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
 		default -> 0;
 		};
+	}
+
+	/**
+	 * 判断副本的配置出口是否位于欧比斯。
+	 * Returns whether the instance's configured exit leads into the Abyss.
+	 *
+	 * @param worldId 副本世界 ID / Instance world id
+	 * @param race 玩家种族 / Player race
+	 * @return 是否出口通往欧比斯 / whether the exit leads into the Abyss
+	 */
+	public static boolean isAbyssExitInstance(int worldId, Race race) {
+		if (DataManager.INSTANCE_EXIT_DATA == null) {
+			return false;
+		}
+		InstanceExit exit = getInstanceExit(worldId, race);
+		return exit != null && isAbyssEntryWorld(exit.getExitWorld());
+	}
+
+	/**
+	 * 判断进入该副本是否可能获得通往欧比斯的入口（配置出口或在副本内部传送门）。
+	 * Returns whether entering the instance can grant a route into the Abyss, either by its exit data or an in-instance portal.
+	 *
+	 * @param worldId 副本世界 ID / Instance world id
+	 * @param race 玩家种族 / Player race
+	 * @return 是否需要欧比斯入场资格 / whether Abyss entry qualification is required
+	 */
+	public static boolean grantsAbyssAccess(int worldId, Race race) {
+		return ABYSS_PORTAL_INSTANCE_WORLD_IDS.contains(worldId) || isAbyssExitInstance(worldId, race);
 	}
 
 	private static boolean checkKinahForTransportation(TeleportLocation location, Player player) {
@@ -887,6 +922,13 @@ public class TeleportService2 {
 		InstanceExit instanceExit = getInstanceExit(worldId, race);
 		if (instanceExit == null) {
 			log.warn(I18n.get("log.7a71dbd66b80", race, worldId));
+			moveToBindLocation(player, true);
+			return;
+		}
+
+		// 未完成欧比斯入场任务时，不得借副本出口直接进入欧比斯。
+		// Without Abyss entry qualification, instance exits must not grant access to the Abyss.
+		if (isAbyssEntryWorld(instanceExit.getExitWorld()) && !meetsAbyssEntryRequirement(player)) {
 			moveToBindLocation(player, true);
 			return;
 		}
