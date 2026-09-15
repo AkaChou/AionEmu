@@ -42,6 +42,7 @@ final class QuestXmlBlockExpander {
 					case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
 					case "equipment-exchange" -> transitions.addAll(expandEquipmentExchange(context, element));
 					case "npc-dialog" -> transitions.addAll(expandNpcDialog(context, element));
+					case "movie-page-turn" -> transitions.addAll(expandMoviePageTurn(context, element));
 					default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
 						"unsupported transitions child");
 			}
@@ -307,7 +308,41 @@ final class QuestXmlBlockExpander {
 				}
 			}
 		}
+		// 编写块同样占用 (source, npc, action) 路由；派生块必须能看到它们，否则会生成冲突的重复路由。
+		// Authoring blocks occupy (source, npc, action) routes too; derived blocks must see them or they
+		// would emit conflicting duplicate routes.
+		for (Element block : children(transitionsElement, "movie-page-turn")) {
+			String source = attribute(block, "source");
+			if (source.isBlank() || !block.hasAttribute("npc-id") || !block.hasAttribute("action")) {
+				continue;
+			}
+			QuestDialogAction action = knownAction(attribute(block, "action"));
+			if (action == null) {
+				// 未知动作交给块展开阶段带任务上下文报错，这里只登记可解析的路由。
+				// Unknown actions are reported by the block expansion with the quest context; only
+				// resolvable routes are registered here.
+				continue;
+			}
+			int npcId = Integer.parseInt(attribute(block, "npc-id"));
+			result.add(new DialogRouteKey(source, npcId, action.id()));
+			String nextAction = attribute(block, "next-action").trim();
+			if (!nextAction.isEmpty()) {
+				QuestDialogAction next = knownAction(nextAction);
+				if (next != null) {
+					result.add(new DialogRouteKey(source, npcId, next.id()));
+				}
+			}
+		}
 		return Set.copyOf(result);
+	}
+
+	/** 解析已知的对话动作；未知动作返回 null。 / Resolves a known dialog action; unknown values yield null. */
+	private static QuestDialogAction knownAction(String value) {
+		try {
+			return QuestDialogAction.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 	private static List<QuestTransition> expandDialog(Context context, Element block) {
@@ -363,6 +398,110 @@ final class QuestXmlBlockExpander {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 将 movie-page-turn 编写块降级为「影片 + 后续页」合同：播放影片的动作必须同时下发客户端合同里
+	 * 命名的目标页，否则客户端会停在原页反复重发同一个 CM_DIALOG_SELECT。
+	 * Lowers the movie-page-turn authoring block to the "movie plus continuation page" contract: the
+	 * action that plays the movie must also show the client-contract page named by that action, so the
+	 * client cannot stay on the previous page and resend the same CM_DIALOG_SELECT.
+	 */
+	private static List<QuestTransition> expandMoviePageTurn(Context context, Element block) {
+		String source = attribute(block, "source");
+		String target = attribute(block, "target");
+		requireNode(context, "movie-page-turn", "source", source);
+		requireNode(context, "movie-page-turn", "target", target);
+		int npcId = positiveInteger(context, block, "movie-page-turn", "npc-id");
+		int movieId = positiveInteger(context, block, "movie-page-turn", "movie-id");
+		QuestDialogAction action = requiredAction(context, block, "action");
+		QuestDialogPage page = block.hasAttribute("page")
+			? QuestDefinitionXmlCompiler.dialogPageSymbol(block, "page")
+			: sameNamedPage(context, block, "action", action);
+		QuestMovieType movieType = block.hasAttribute("movie-type")
+			? movieType(context, block) : QuestMovieType.CUTSCENE;
+
+		List<QuestTransition> result = new ArrayList<>(2);
+		result.add(talk(npcId, action.id(), blockConditions(context, block), blockActions(context, block),
+			source, target, null, List.of(new AfterCommitAction.PlayMovie(movieId, movieType),
+				new AfterCommitAction.ShowQuestDialog(page.id()))));
+		String nextAction = attribute(block, "next-action").trim();
+		if (!nextAction.isEmpty()) {
+			QuestDialogAction next = requiredAction(context, block, "next-action");
+			result.add(talk(npcId, next.id(), List.of(), List.of(), source, target, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(
+					sameNamedPage(context, block, "next-action", next).id()))));
+		}
+		return List.copyOf(result);
+	}
+
+	private static QuestDialogAction requiredAction(Context context, Element block, String attribute) {
+		String value = attribute(block, attribute);
+		try {
+			return QuestDialogAction.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("MOVIE_PAGE_TURN_UNKNOWN_ACTION", context, "movie-page-turn", attribute, value);
+		}
+	}
+
+	/**
+	 * 解析影片之后必须下发的客户端页。默认取与动作同名的页面；动作没有同名页面时必须显式声明 page，
+	 * 否则拒绝编译——这是「只播影片、客户端停在原页」缺陷的编写期护栏。
+	 * Resolves the client page that must follow the movie. The page defaults to the action name and the
+	 * block refuses to compile when that page is missing, which is the authoring-time guardrail against
+	 * the "movie only, client stays on the old page" defect.
+	 */
+	private static QuestDialogPage sameNamedPage(Context context, Element block, String attribute,
+			QuestDialogAction action) {
+		try {
+			return QuestDialogPage.valueOf(action.name());
+		} catch (IllegalArgumentException e) {
+			return fail("MOVIE_PAGE_TURN_PAGE_MISSING", context, "movie-page-turn", attribute,
+				action.name() + " has no same-named client page; declare page explicitly");
+		}
+	}
+
+	private static QuestMovieType movieType(Context context, Element block) {
+		String value = attribute(block, "movie-type");
+		try {
+			return QuestMovieType.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("MOVIE_PAGE_TURN_UNKNOWN_MOVIE_TYPE", context, "movie-page-turn", "movie-type", value);
+		}
+	}
+
+	private static List<QuestCondition> blockConditions(Context context, Element block) {
+		Element conditionsElement = child(block, "conditions");
+		if (conditionsElement == null) {
+			return List.of();
+		}
+		List<QuestCondition> conditions = new ArrayList<>();
+		for (Element condition : children(conditionsElement)) {
+			try {
+				conditions.add(QuestDefinitionXmlCompiler.parseCondition(condition));
+			} catch (RuntimeException e) {
+				return fail("MOVIE_PAGE_TURN_CONDITION_INVALID", context, "movie-page-turn", "conditions",
+					e.getMessage());
+			}
+		}
+		return List.copyOf(conditions);
+	}
+
+	private static List<QuestAction> blockActions(Context context, Element block) {
+		Element actionsElement = child(block, "actions");
+		if (actionsElement == null) {
+			return List.of();
+		}
+		List<QuestAction> actions = new ArrayList<>();
+		for (Element action : children(actionsElement)) {
+			try {
+				actions.add(QuestDefinitionXmlCompiler.parseAction(action));
+			} catch (RuntimeException e) {
+				return fail("MOVIE_PAGE_TURN_ACTION_INVALID", context, "movie-page-turn", "actions",
+					action.getTagName() + ": " + e.getMessage());
+			}
+		}
+		return List.copyOf(actions);
 	}
 
 	private static List<QuestTransition> expandNpcStart(Context context, Element block) {

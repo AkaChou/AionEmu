@@ -67,8 +67,25 @@ class QuestMovieContinuationGateTest {
 		try (InputStream input = getClass().getResourceAsStream(resource)) {
 			xml = new String(input.readAllBytes(), StandardCharsets.UTF_8);
 		}
-		String mutated = xml.replace(
-			"        <dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT1_1_1\"/>\n", "");
+		// 把 movie-page-turn 块替换回「只播影片」的旧写法，验证编译期仍然拒绝该形态。
+		// Replaces the movie-page-turn block with the legacy movie-only shape to prove compilation still
+		// rejects it.
+		String closing = "</movie-page-turn>";
+		int start = xml.indexOf("<movie-page-turn");
+		int end = xml.indexOf(closing);
+		assertTrue(start > 0 && end > start, "14045 must author its movie page turn with the block");
+		String mutated = xml.substring(0, start) + """
+			<transition source="started" target="started">
+			      <event>
+			        <dialog type="TALK_TO_NPC" npc-id="278506" action="SELECT1_1_1"/>
+			      </event>
+			      <conditions>
+			        <variable-is field="var0" value="0"/>
+			      </conditions>
+			      <after-commit>
+			        <play-movie movie-id="272"/>
+			      </after-commit>
+			    </transition>""" + xml.substring(end + closing.length());
 
 		QuestCompilationException failure = assertThrows(QuestCompilationException.class,
 			() -> QuestDefinitionXmlCompiler.compile(

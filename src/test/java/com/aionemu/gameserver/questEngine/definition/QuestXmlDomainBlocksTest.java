@@ -69,6 +69,48 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void moviePageTurnEqualsItsExpandedTransitions() {
+		String block = """
+			<movie-page-turn source="s1" target="s1" npc-id="203534" action="SELECT2_1" movie-id="52"
+			    next-action="SELECT2_1_1"/>
+			""";
+		String expanded = """
+			<transition source="s1" target="s1"><event><dialog type="TALK_TO_NPC" npc-id="203534" action="SELECT2_1"/></event><after-commit><play-movie movie-id="52"/><dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/></after-commit></transition>
+			<transition source="s1" target="s1"><event><dialog type="TALK_TO_NPC" npc-id="203534" action="SELECT2_1_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/></after-commit></transition>
+			""";
+
+		assertEquals(compile(moviePageTurnDefinition(expanded)).definition(),
+			compile(moviePageTurnDefinition(block)).definition());
+	}
+
+	@Test
+	void moviePageTurnCarriesConditionsActionsAndMovieType() {
+		String block = """
+			<movie-page-turn source="s1" target="s1" npc-id="278506" action="SELECT1_1_1" movie-id="272"
+			    movie-type="CUTSCENE_MOVIE">
+			  <conditions><variable-is field="var0" value="0"/></conditions>
+			  <actions><remove-item item-id="182203009" count="1"/></actions>
+			</movie-page-turn>
+			""";
+		String expanded = """
+			<transition source="s1" target="s1"><event><dialog type="TALK_TO_NPC" npc-id="278506" action="SELECT1_1_1"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><remove-item item-id="182203009" count="1"/></actions><after-commit><play-movie movie-id="272" type="CUTSCENE_MOVIE"/><dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/></after-commit></transition>
+			""";
+
+		assertEquals(compile(moviePageTurnDefinition(expanded)).definition(),
+			compile(moviePageTurnDefinition(block)).definition());
+	}
+
+	@Test
+	void moviePageTurnWithoutAContinuationPageIsRejected() {
+		QuestCompilationException failure = assertThrows(QuestCompilationException.class,
+			() -> compile(moviePageTurnDefinition("""
+				<movie-page-turn source="s1" target="s1" npc-id="203534" action="SETPRO1" movie-id="52"/>
+				""")));
+
+		assertEquals("MOVIE_PAGE_TURN_PAGE_MISSING", failure.code());
+	}
+
+	@Test
 	void counterEqualsItsTwoExpandedTransitions() {
 		String block = """
 			<counter source="started" target="reward" field="var0" required="3">
@@ -1009,6 +1051,21 @@ class QuestXmlDomainBlocksTest {
 					  <nodes>
 					    <node label="started" status="START"/>
 					    <node label="reward" status="REWARD"><var name="var0" value="3"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
+			""".formatted(transitions);
+	}
+
+	private static String moviePageTurnDefinition(String transitions) {
+		return """
+
+					<quest-definition id="990065" version="1">
+					  <metadata name="movie-page-turn-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="s1" status="START"><var name="var0" value="0"/></node>
 					  </nodes>
 					  <transitions>%s</transitions>
 					</quest-definition>

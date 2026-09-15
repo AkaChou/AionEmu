@@ -46,7 +46,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 
 ### 3.3 编译期领域积木
 
-`npc-start`、`counter`、`counter-grid`、`kill-chain`、`kill-routes`、`npc-item-report`、`npc-report`、`npc-complete` 是严格的 XML 编写简写。XML 前端先把它们展开为普通 `QuestTransition`、`QuestAction`、`AfterCommitAction`，再交给 `QuestDefinitionCompiler`。它们不增加运行时状态、IR 类型、分发分支、继承、include、模板参数或表达式语言。
+`npc-start`、`counter`、`counter-grid`、`kill-chain`、`kill-routes`、`npc-item-report`、`npc-report`、`npc-complete`、`movie-page-turn` 是严格的 XML 编写简写。XML 前端先把它们展开为普通 `QuestTransition`、`QuestAction`、`AfterCommitAction`，再交给 `QuestDefinitionCompiler`。它们不增加运行时状态、IR 类型、分发分支、继承、include、模板参数或表达式语言。
 
 标准 NPC 接取：
 
@@ -162,6 +162,29 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 ```
 
 每个 dimension 按 NPC 声明顺序生成原有的无动作击杀边。matcher 只接受“恰好当前字段增加 1”的目标节点，并要求全部 START 节点恰好构成各 dimension `0..required` 的笛卡尔积；投影字段集合必须与 dimension 集合完全一致，NPC ID 在维度内及维度间不得重复。`source-order="NODE"`（默认）按 nodes 文档顺序展开；`VALUE_THEN_NODE` 先按字段值 `0..required-1`，再按 nodes 文档顺序展开，用于精确复现旧生成器顺序。字段必须存在且能表示 `0..required`，每条网格 transition 必须连续相邻且只有标准击杀协议。缺少投影、缺少唯一目标、网格不完整、注释/额外动作或复杂行为时保留显式 transition；本积木不删除节点，也不改变运行时状态。
+
+影片翻页：
+
+```xml
+<movie-page-turn source="started" target="started"
+                 npc-id="278506" action="SELECT1_1_1" movie-id="272">
+  <conditions><variable-is field="var0" value="0"/></conditions>
+</movie-page-turn>
+```
+
+固定展开为一条影片路径：`TALK_TO_NPC(action)` 在 source 自环，提交后先播放 `movie-id`，再显示与动作同名的客户端页面
+（上例为 `SELECT1_1_1`）。`page` 可显式覆盖默认页面；`movie-type` 默认 `CUTSCENE`，也可写 `CUTSCENE_MOVIE`；
+`conditions`、`actions` 分别复制到该路径的条件与事务动作。
+
+`next-action` 会在同一 source/target 追加一条只做页面响应的中继路径：`TALK_TO_NPC(next-action)` 提交后显示与
+`next-action` 同名的页面。上例的客户端链路是「点按钮 → 播影片 → 显示目标页 → 点下一页按钮 → 显示中继页」。
+
+积木不提供「只播影片」的写法：动作没有同名页面且未显式声明 `page` 时编译失败（`MOVIE_PAGE_TURN_PAGE_MISSING`）。
+这正是影片 self-loop 缺页、客户端反复重发 `CM_DIALOG_SELECT` 缺陷的编写期护栏；显式 `<transition>` 里的
+`play-movie` 仍由编译期 `MOVIE_WITHOUT_CONTINUATION` 检查兜底。
+
+运行时还有一层断路器：同一目标、同一上一页、同一动作、同一任务在 5 秒窗口内连续出现 4 次仍未得到后续页时，
+服务端记录 `log.quest_dialog_select_loop` 告警、清除任务列表记忆并向客户端关闭对话窗口，避免无限重发。
 
 ### 3.4 完整示例：1138「A Mother's Worry」（真实任务，无 work item 的 report_to 模板）
 

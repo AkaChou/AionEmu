@@ -347,6 +347,21 @@
   </xs:complexType>
 
 
+  <xs:complexType name="movie-page-turn-type">
+    <xs:sequence>
+      <xs:element name="conditions" type="conditions-type" minOccurs="0"/>
+      <xs:element name="actions" type="actions-type" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="source" use="required"/>
+    <xs:attribute name="target" use="required"/>
+    <xs:attribute name="npc-id" type="xs:int" use="required"/>
+    <xs:attribute name="action" use="required"/>
+    <xs:attribute name="movie-id" type="xs:int" use="required"/>
+    <xs:attribute name="movie-type" type="quest-movie-type" default="CUTSCENE"/>
+    <xs:attribute name="page"/>
+    <xs:attribute name="next-action"/>
+  </xs:complexType>
+
   <xs:complexType name="npc-dialog-type">
     <xs:choice>
       <xs:element name="show-quest-dialog"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -410,6 +425,7 @@
               <xs:element name="npc-complete" type="npc-complete-type"/>
               <xs:element name="equipment-exchange" type="equipment-exchange-type"/>
               <xs:element name="npc-dialog" type="npc-dialog-type"/>
+              <xs:element name="movie-page-turn" type="movie-page-turn-type"/>
             </xs:choice>
             <xs:attribute name="reported-reward-mode" type="reported-reward-mode"/>
           </xs:complexType>
