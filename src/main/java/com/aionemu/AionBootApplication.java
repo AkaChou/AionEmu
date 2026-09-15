@@ -1,6 +1,5 @@
 package com.aionemu;
 
-import com.aionemu.boot.callback.CallbackWeavingBootstrap;
 import com.aionemu.boot.config.AionGameProperties;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyChatProperties;
@@ -28,13 +27,12 @@ public class AionBootApplication {
 
     /**
      * 启用内嵌运行模式、按需织入回调字节码后启动 Spring 应用。
-     * Enables embedded runtime mode, weaves callback bytecode if needed, then starts Spring.
+     * Enables embedded runtime mode, then starts Spring.
      *
      * @param args 命令行参数 / command-line arguments
      */
     public static void main(String[] args) {
         AionRuntimeMode.enableBootEmbeddedMode();
-        CallbackWeavingBootstrap.weaveExplodedClassesIfNeeded(AionBootApplication.class);
         new SpringApplicationBuilder(AionBootApplication.class)
             .web(WebApplicationType.NONE)
             .run(args);

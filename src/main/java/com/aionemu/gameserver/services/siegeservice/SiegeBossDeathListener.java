@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.siegeservice;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.services.SiegeService;
 
 /**
@@ -11,7 +10,7 @@ import com.aionemu.gameserver.services.SiegeService;
  * Siege boss death listener settling the siege after the boss dies.
  */
 @SuppressWarnings("rawtypes")
-public class SiegeBossDeathListener extends OnDieEventCallback {
+public class SiegeBossDeathListener implements AbstractAI.AiDeathListener {
 
 	private final Siege<?> siege;
 

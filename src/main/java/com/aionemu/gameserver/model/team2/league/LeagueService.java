@@ -8,10 +8,9 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
-import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceDisbandCallback;
+import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.league.events.LeagueDisbandEvent;
 import com.aionemu.gameserver.model.team2.league.events.LeagueEnteredEvent;
 import com.aionemu.gameserver.model.team2.league.events.LeagueInvite;
@@ -32,7 +31,20 @@ public class LeagueService {
 	private static final Map<Integer, League> leagues = new ConcurrentHashMap<Integer, League>();
 
 	static {
-		GlobalCallbackHelper.addCallback(new AllianceDisbandListener());
+		PlayerAllianceService.addListener(new PlayerAllianceService.PlayerAllianceListener() {
+			@Override
+			public void onAfterAllianceDisbanded(PlayerAlliance alliance) {
+				try {
+					for (League league : leagues.values()) {
+						if (league.hasMember(alliance.getTeamId())) {
+							league.onEvent(new LeagueLeftEvent(league, alliance));
+						}
+					}
+				} catch (Throwable t) {
+					// log.error(I18n.get("log.9c4581cffa3e", t));
+				}
+			}
+		});
 	}
 
 	/** 邀请战团 / Invite To League*/
@@ -123,26 +135,5 @@ public class LeagueService {
 		Preconditions.checkState(league.onlineMembers() <= 1, "Can't disband league with more than one online member");
 		leagues.remove(league.getTeamId());
 		league.onEvent(new LeagueDisbandEvent(league));
-	}
-
-	static class AllianceDisbandListener extends PlayerAllianceDisbandCallback {
-		/** 在 alliance disband 前 / On Before Alliance Disband */
-		@Override
-		public void onBeforeAllianceDisband(PlayerAlliance alliance) {
-		}
-
-		/** 在 alliance disband 后 / On After Alliance Disband */
-		@Override
-		public void onAfterAllianceDisband(PlayerAlliance alliance) {
-			try {
-				for (League league : leagues.values()) {
-					if (league.hasMember(alliance.getTeamId())) {
-						league.onEvent(new LeagueLeftEvent(league, alliance));
-					}
-				}
-			} catch (Throwable t) {
-				// log.error(I18n.get("log.9c4581cffa3e", t));
-			}
-		}
 	}
 }

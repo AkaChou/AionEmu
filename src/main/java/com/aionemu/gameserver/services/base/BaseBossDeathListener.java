@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.model.Race;
@@ -32,7 +31,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * @reworked Ranastic
  */
 @SuppressWarnings("rawtypes")
-public class BaseBossDeathListener extends OnDieEventCallback {
+public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	private final Base<?> base;
 
 	/**

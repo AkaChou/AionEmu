@@ -94,7 +94,6 @@ public class LoginServerConnection extends AConnection {
 		 */
 		this.sendPacket(new SM_GS_AUTH());
 	}
-
 	/**
 	 * 由传输层帧处理器调用；缓冲区中包含一个待处理封包。
 	 * Called by the transport frame handler; buffer holds one packet to process.

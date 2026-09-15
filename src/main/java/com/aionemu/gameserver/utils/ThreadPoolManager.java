@@ -39,6 +39,7 @@ public final class ThreadPoolManager {
 
 	/** 可选 Spring 实例提供者 / Optional Spring instance provider */
 	private static volatile ObjectProvider<ThreadPoolManager> instanceProvider;
+	private static volatile ThreadPoolManager resolvedInstance;
 
 	/** 定时任务池 / Scheduled task pool */
 	private final ScheduledThreadPoolExecutor scheduledPool;
@@ -366,11 +367,17 @@ public final class ThreadPoolManager {
 	 * @return ThreadPoolManager 实例 / ThreadPoolManager instance
 	 */
 	public static ThreadPoolManager getInstance() {
+		ThreadPoolManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ThreadPoolManager> provider = instanceProvider;
 		if (provider == null) {
 			return SingletonHolder.INSTANCE;
 		}
-		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		resolved = provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -381,5 +388,6 @@ public final class ThreadPoolManager {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ThreadPoolManager> instanceProvider) {
 		ThreadPoolManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

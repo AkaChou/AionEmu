@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -43,7 +44,7 @@ public class KnownList {
 	 * Objects known by the owner (objectId → object).
 	 */
 	@Getter
-	protected final Map<Integer, VisibleObject> knownObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
+	protected final Map<Integer, VisibleObject> knownObjects = new ConcurrentHashMap<>();
 
 	/**
 	 * 所有者已知的玩家映射（懒初始化）。
@@ -55,7 +56,7 @@ public class KnownList {
 	 * 所有者当前可见的对象映射（objectId → 对象）。
 	 * Objects currently visual to the owner (objectId → object).
 	 */
-	protected final Map<Integer, VisibleObject> visualObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
+	protected final Map<Integer, VisibleObject> visualObjects = new ConcurrentHashMap<>();
 
 	/**
 	 * 所有者当前可见的玩家映射（懒初始化）。
@@ -223,7 +224,7 @@ public class KnownList {
 		MapRegion[] regions = owner.getActiveRegion().getNeighbours();
 		for (int i = 0; i < regions.length; i++) {
 			MapRegion r = regions[i];
-			for (VisibleObject newObject : r.getObjectsSnapshot()) {
+			for (VisibleObject newObject : r.getObjects().values()) {
 				if (newObject == owner || newObject == null) {
 					continue;
 				}
@@ -305,11 +306,11 @@ public class KnownList {
 		int counter = 0;
 		try {
 			for (VisibleObject newObject : knownObjectsSnapshot()) {
-				if (newObject != null && newObject instanceof Npc) {
+				if (newObject instanceof Npc npc) {
 					if ((++counter) == iterationLimit) {
 						break;
 					}
-					visitor.visit((Npc) newObject);
+					visitor.visit(npc);
 				}
 			}
 		} catch (Exception ex) {
@@ -340,11 +341,11 @@ public class KnownList {
 		int counter = 0;
 		try {
 			for (VisibleObject newObject : knownObjectsSnapshot()) {
-				if (newObject != null && newObject instanceof Npc) {
+				if (newObject instanceof Npc npc) {
 					if ((++counter) == iterationLimit) {
 						break;
 					}
-					visitor.visit((Npc) newObject, owner);
+					visitor.visit(npc, owner);
 				}
 			}
 		} catch (Exception ex) {
@@ -417,6 +418,14 @@ public class KnownList {
 	/**
 	 * 已知对象值的线程安全快照。
 	 * Thread-safe snapshot of known-object values.
+	 *
+	 * <p>遍历已知列表必须走快照：容器虽为 {@link ConcurrentHashMap}（弱一致迭代器），
+	 * 但访问回调会在遍历过程中增删对象，弱一致迭代会让“遍历期间新加入的对象”被立即访问，
+	 * 破坏既有快照语义。该约定由 {@code KnownListIterationSafetyTest} 静态闸门守护。
+	 * Iteration must go through a snapshot: although the container is a {@link ConcurrentHashMap}
+	 * (weakly consistent iterator), visitors add/remove entries while iterating, and a weakly
+	 * consistent iterator would immediately visit objects added during the visit. The rule is
+	 * enforced by the {@code KnownListIterationSafetyTest} gate.</p>
 	 *
 	 * @return 快照列表 / snapshot list
 	 */
@@ -514,7 +523,7 @@ public class KnownList {
 		if (knownPlayers == null) {
 			synchronized (this) {
 				if (knownPlayers == null) {
-					knownPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+					knownPlayers = new ConcurrentHashMap<>();
 				}
 			}
 		}
@@ -528,7 +537,7 @@ public class KnownList {
 		if (visualPlayers == null) {
 			synchronized (this) {
 				if (visualPlayers == null) {
-					visualPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+					visualPlayers = new ConcurrentHashMap<>();
 				}
 			}
 		}

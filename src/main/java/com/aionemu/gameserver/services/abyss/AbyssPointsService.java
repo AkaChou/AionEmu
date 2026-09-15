@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.services.abyss;
 
-import com.aionemu.commons.callbacks.Callback;
-import com.aionemu.commons.callbacks.CallbackResult;
-import com.aionemu.commons.callbacks.metadata.GlobalCallback;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,30 +19,81 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 public class AbyssPointsService {
 
+	/** 欧比斯点数监听器接口 / Abyss points listener interface */
+	public interface AbyssPointsListener {
+		void onAbyssPointsAdded(Player player, int abyssPoints);
+	}
+
+	/** 荣耀点数监听器接口 / Glory points listener interface */
+	public interface GloryPointsListener {
+		void onGloryPointsAdded(Player player, int gloryPoints);
+	}
+
+	private static final List<AbyssPointsListener> apListeners = new CopyOnWriteArrayList<>();
+	private static final List<GloryPointsListener> gpListeners = new CopyOnWriteArrayList<>();
+
+	public static void addListener(AbyssPointsListener listener) {
+		apListeners.add(listener);
+	}
+
+	public static void addListener(GloryPointsListener listener) {
+		gpListeners.add(listener);
+	}
+
+	public static void removeListener(GloryPointsListener listener) {
+		gpListeners.remove(listener);
+	}
+
+	public static void removeListener(AbyssPointsListener listener) {
+		apListeners.remove(listener);
+	}
+
 	/**
 	 * 带全局回调的 AP 增加入口（按击杀对象触发）。
-	 * AP-add entry with global callback (keyed by killed object).
+	 * AP-add entry with listener dispatch (keyed by killed object).
 	 *
 	 * @param player 玩家 / Player
 	 * @param obj 关联可见对象 / related visible object
 	 * @param value AP 变化量 / AP delta
 	 */
-	@GlobalCallback(AddAPGlobalCallback.class)
 	public static void addAp(Player player, VisibleObject obj, int value) {
 		addAp(player, value);
+		notifyAbyssPointsAdded(player, obj, value);
 	}
 
 	/**
 	 * 带全局回调的 GP 增加入口（按击杀对象触发）。
-	 * GP-add entry with global callback (keyed by killed object).
+	 * GP-add entry with listener dispatch (keyed by killed object).
 	 *
 	 * @param player 玩家 / Player
 	 * @param obj 关联可见对象 / related visible object
 	 * @param value GP 变化量 / GP delta
 	 */
-	@GlobalCallback(AddGPGlobalCallback.class)
 	public static void addGp(Player player, VisibleObject obj, int value) {
 		addGp(player, value);
+		notifyGloryPointsAdded(player, obj, value);
+	}
+
+	private static void notifyAbyssPointsAdded(Player player, VisibleObject obj, int value) {
+		if (apListeners.isEmpty() || !isKillObject(obj)) {
+			return;
+		}
+		for (AbyssPointsListener listener : apListeners) {
+			listener.onAbyssPointsAdded(player, value);
+		}
+	}
+
+	private static void notifyGloryPointsAdded(Player player, VisibleObject obj, int value) {
+		if (gpListeners.isEmpty() || !isKillObject(obj)) {
+			return;
+		}
+		for (GloryPointsListener listener : gpListeners) {
+			listener.onGloryPointsAdded(player, value);
+		}
+	}
+
+	private static boolean isKillObject(VisibleObject obj) {
+		return obj instanceof Player || (obj instanceof SiegeNpc && !((SiegeNpc) obj).getSpawn().isPeace());
 	}
 
 	/**
@@ -224,83 +274,5 @@ public class AbyssPointsService {
 			PacketSendUtility.sendPacket(player, new SM_ABYSS_RANK_UPDATE(0, player));
 			PacketSendUtility.sendPacket(player, new SM_ABYSS_RANK(player.getAbyssRank()));
 		}
-	}
-
-	/**
-	 * AP 增加全局回调：在玩家/攻城 NPC（非和平）击杀后通知扩展点。
-	 * AP-add global callback: notifies extensions after player/siege-NPC (non-peace) kills.
-	 */
-	@SuppressWarnings("rawtypes")
-	public abstract static class AddAPGlobalCallback implements Callback {
-		@Override
-		public CallbackResult beforeCall(Object obj, Object[] args) {
-			return CallbackResult.newContinue();
-		}
-
-		@Override
-		public CallbackResult afterCall(Object obj, Object[] args, Object methodResult) {
-			Player player = (Player) args[0];
-			VisibleObject creature = (VisibleObject) args[1];
-			int abyssPoints = (Integer) args[2];
-			if ((creature instanceof Player)) {
-				onAbyssPointsAdded(player, abyssPoints);
-			} else if (((creature instanceof SiegeNpc)) && (!((SiegeNpc) creature).getSpawn().isPeace())) {
-				onAbyssPointsAdded(player, abyssPoints);
-			}
-			return CallbackResult.newContinue();
-		}
-
-		@Override
-		public Class<? extends Callback> getBaseClass() {
-			return AddAPGlobalCallback.class;
-		}
-
-		/**
-		 * AP 已增加后的扩展钩子。
-		 * Extension hook after AP was added.
-		 *
-		 * @param player 玩家 / Player
-		 * @param abyssPoints AP 数量 / AP amount
-		 */
-		public abstract void onAbyssPointsAdded(Player player, int abyssPoints);
-	}
-
-	/**
-	 * GP 增加全局回调：在玩家/攻城 NPC（非和平）击杀后通知扩展点。
-	 * GP-add global callback: notifies extensions after player/siege-NPC (non-peace) kills.
-	 */
-	@SuppressWarnings("rawtypes")
-	public abstract static class AddGPGlobalCallback implements Callback {
-		@Override
-		public CallbackResult beforeCall(Object obj, Object[] args) {
-			return CallbackResult.newContinue();
-		}
-
-		@Override
-		public CallbackResult afterCall(Object obj, Object[] args, Object methodResult) {
-			Player player = (Player) args[0];
-			VisibleObject creature = (VisibleObject) args[1];
-			int gloryPoints = (Integer) args[2];
-			if ((creature instanceof Player)) {
-				onGloryPointsAdded(player, gloryPoints);
-			} else if (((creature instanceof SiegeNpc)) && (!((SiegeNpc) creature).getSpawn().isPeace())) {
-				onGloryPointsAdded(player, gloryPoints);
-			}
-			return CallbackResult.newContinue();
-		}
-
-		@Override
-		public Class<? extends Callback> getBaseClass() {
-			return AddGPGlobalCallback.class;
-		}
-
-		/**
-		 * GP 已增加后的扩展钩子。
-		 * Extension hook after GP was added.
-		 *
-		 * @param player 玩家 / Player
-		 * @param gloryPoints GP 数量 / GP amount
-		 */
-		public abstract void onGloryPointsAdded(Player player, int gloryPoints);
 	}
 }

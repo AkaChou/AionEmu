@@ -68,6 +68,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      */
     private static volatile ObjectProvider<BattlefieldUnionService> battlefieldUnionServiceProvider;
 
+    private static volatile DropService resolvedDropService;
+    private static volatile MailService resolvedMailService;
+    private static volatile PvpService resolvedPvpService;
+    private static volatile AutoGroupService resolvedAutoGroupService;
+    private static volatile AbyssRankingCache resolvedAbyssRankingCache;
+    private static volatile LegionService resolvedLegionService;
+    private static volatile BalaurAssaultService resolvedBalaurAssaultService;
+    private static volatile BattlefieldUnionService resolvedBattlefieldUnionService;
+
     /**
      * 构造并注册各核心玩法服务的静态访问器。
      * Construct and register static accessors for core gameplay services.
@@ -93,6 +102,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
             ObjectProvider<BattlefieldUnionService> battlefieldUnionServiceProvider) {
         GameCoreGameplayServices.dropServiceProvider = dropServiceProvider;
         DropService.setInstanceProvider(dropServiceProvider);
+        clearResolvedServices();
         GameCoreGameplayServices.mailServiceProvider = mailServiceProvider;
         MailService.setInstanceProvider(mailServiceProvider);
         GameCoreGameplayServices.pvpServiceProvider = pvpServiceProvider;
@@ -117,11 +127,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static DropService dropService() {
-        ObjectProvider<DropService> provider = dropServiceProvider;
-        if (provider == null) {
-            return DropService.getInstance();
+        DropService resolved = resolvedDropService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(DropService::getInstance);
+        ObjectProvider<DropService> provider = dropServiceProvider;
+        resolved = provider == null ? DropService.getInstance()
+                : provider.getIfAvailable(DropService::getInstance);
+        resolvedDropService = resolved;
+        return resolved;
     }
 
     /**
@@ -131,11 +145,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static MailService mailService() {
-        ObjectProvider<MailService> provider = mailServiceProvider;
-        if (provider == null) {
-            return MailService.getInstance();
+        MailService resolved = resolvedMailService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(MailService::getInstance);
+        ObjectProvider<MailService> provider = mailServiceProvider;
+        resolved = provider == null ? MailService.getInstance()
+                : provider.getIfAvailable(MailService::getInstance);
+        resolvedMailService = resolved;
+        return resolved;
     }
 
     /**
@@ -145,11 +163,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static PvpService pvpService() {
-        ObjectProvider<PvpService> provider = pvpServiceProvider;
-        if (provider == null) {
-            return PvpService.getInstance();
+        PvpService resolved = resolvedPvpService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(PvpService::getInstance);
+        ObjectProvider<PvpService> provider = pvpServiceProvider;
+        resolved = provider == null ? PvpService.getInstance()
+                : provider.getIfAvailable(PvpService::getInstance);
+        resolvedPvpService = resolved;
+        return resolved;
     }
 
     /**
@@ -159,11 +181,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 缓存实例 / Cache instance
      */
     public static AbyssRankingCache abyssRankingCache() {
-        ObjectProvider<AbyssRankingCache> provider = abyssRankingCacheProvider;
-        if (provider == null) {
-            return AbyssRankingCache.getInstance();
+        AbyssRankingCache resolved = resolvedAbyssRankingCache;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(AbyssRankingCache::getInstance);
+        ObjectProvider<AbyssRankingCache> provider = abyssRankingCacheProvider;
+        resolved = provider == null ? AbyssRankingCache.getInstance()
+                : provider.getIfAvailable(AbyssRankingCache::getInstance);
+        resolvedAbyssRankingCache = resolved;
+        return resolved;
     }
 
     /**
@@ -173,11 +199,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static LegionService legionService() {
-        ObjectProvider<LegionService> provider = legionServiceProvider;
-        if (provider == null) {
-            return LegionService.getInstance();
+        LegionService resolved = resolvedLegionService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(LegionService::getInstance);
+        ObjectProvider<LegionService> provider = legionServiceProvider;
+        resolved = provider == null ? LegionService.getInstance()
+                : provider.getIfAvailable(LegionService::getInstance);
+        resolvedLegionService = resolved;
+        return resolved;
     }
 
     /**
@@ -187,11 +217,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static AutoGroupService autoGroupService() {
-        ObjectProvider<AutoGroupService> provider = autoGroupServiceProvider;
-        if (provider == null) {
-            return AutoGroupService.getInstance();
+        AutoGroupService resolved = resolvedAutoGroupService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(AutoGroupService::getInstance);
+        ObjectProvider<AutoGroupService> provider = autoGroupServiceProvider;
+        resolved = provider == null ? AutoGroupService.getInstance()
+                : provider.getIfAvailable(AutoGroupService::getInstance);
+        resolvedAutoGroupService = resolved;
+        return resolved;
     }
 
     /**
@@ -201,11 +235,15 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static BalaurAssaultService balaurAssaultService() {
-        ObjectProvider<BalaurAssaultService> provider = balaurAssaultServiceProvider;
-        if (provider == null) {
-            return BalaurAssaultService.getInstance();
+        BalaurAssaultService resolved = resolvedBalaurAssaultService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(BalaurAssaultService::getInstance);
+        ObjectProvider<BalaurAssaultService> provider = balaurAssaultServiceProvider;
+        resolved = provider == null ? BalaurAssaultService.getInstance()
+                : provider.getIfAvailable(BalaurAssaultService::getInstance);
+        resolvedBalaurAssaultService = resolved;
+        return resolved;
     }
 
     /**
@@ -215,11 +253,30 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     public static BattlefieldUnionService battlefieldUnionService() {
-        ObjectProvider<BattlefieldUnionService> provider = battlefieldUnionServiceProvider;
-        if (provider == null) {
-            return BattlefieldUnionService.getInstance();
+        BattlefieldUnionService resolved = resolvedBattlefieldUnionService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(BattlefieldUnionService::getInstance);
+        ObjectProvider<BattlefieldUnionService> provider = battlefieldUnionServiceProvider;
+        resolved = provider == null ? BattlefieldUnionService.getInstance()
+                : provider.getIfAvailable(BattlefieldUnionService::getInstance);
+        resolvedBattlefieldUnionService = resolved;
+        return resolved;
+    }
+
+    /**
+     * 清空已解析的服务单例缓存。
+     * Clear resolved service-singleton caches.
+     */
+    static void clearResolvedServices() {
+        resolvedDropService = null;
+        resolvedMailService = null;
+        resolvedPvpService = null;
+        resolvedAutoGroupService = null;
+        resolvedAbyssRankingCache = null;
+        resolvedLegionService = null;
+        resolvedBalaurAssaultService = null;
+        resolvedBattlefieldUnionService = null;
     }
 
     /**
@@ -229,6 +286,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
     @Override
     public void destroy() {
         dropServiceProvider = null;
+        clearResolvedServices();
         DropService.setInstanceProvider(null);
         mailServiceProvider = null;
         MailService.setInstanceProvider(null);

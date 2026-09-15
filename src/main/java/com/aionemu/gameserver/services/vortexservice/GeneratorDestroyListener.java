@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.vortexservice;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 /**
@@ -11,7 +10,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
  * @author Rinzler (Encom)
  */
 @SuppressWarnings("rawtypes")
-public class GeneratorDestroyListener extends OnDieEventCallback {
+public class GeneratorDestroyListener implements AbstractAI.AiDeathListener {
 
 	private final DimensionalVortex<?> vortex;
 

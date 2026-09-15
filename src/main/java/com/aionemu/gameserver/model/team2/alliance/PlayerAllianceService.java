@@ -10,16 +10,14 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TeamType;
-import com.aionemu.gameserver.model.team2.alliance.callback.AddPlayerToAllianceCallback;
-import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceCreateCallback;
-import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceDisbandCallback;
 import com.aionemu.gameserver.model.team2.alliance.events.AllianceDisbandEvent;
 import com.aionemu.gameserver.model.team2.alliance.events.AssignViceCaptainEvent;
 import com.aionemu.gameserver.model.team2.alliance.events.AssignViceCaptainEvent.AssignType;
@@ -57,6 +55,55 @@ import com.google.common.base.Predicate;
 public class PlayerAllianceService {
 	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<Integer, PlayerAlliance>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
+
+	/** 联盟事件监听器接口 / Player alliance event listener interface */
+	public interface PlayerAllianceListener {
+		default void onAllianceCreated(Player leader) {}
+		default void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {}
+		default void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {}
+		default void onBeforeAllianceDisbanded(PlayerAlliance alliance) {}
+		default void onAfterAllianceDisbanded(PlayerAlliance alliance) {}
+	}
+
+	private static final List<PlayerAllianceListener> allianceListeners = new CopyOnWriteArrayList<>();
+
+	public static void addListener(PlayerAllianceListener listener) {
+		allianceListeners.add(listener);
+	}
+
+	public static void removeListener(PlayerAllianceListener listener) {
+		allianceListeners.remove(listener);
+	}
+
+	private static void notifyAllianceCreated(Player leader) {
+		for (PlayerAllianceListener listener : allianceListeners) {
+			listener.onAllianceCreated(leader);
+		}
+	}
+
+	private static void notifyBeforePlayerAdded(PlayerAlliance alliance, Player player) {
+		for (PlayerAllianceListener listener : allianceListeners) {
+			listener.onBeforePlayerAddToAlliance(alliance, player);
+		}
+	}
+
+	private static void notifyPlayerAdded(PlayerAlliance alliance, Player player) {
+		for (PlayerAllianceListener listener : allianceListeners) {
+			listener.onAfterPlayerAddToAlliance(alliance, player);
+		}
+	}
+
+	private static void notifyAllianceDisbanded(PlayerAlliance alliance) {
+		for (PlayerAllianceListener listener : allianceListeners) {
+			listener.onBeforeAllianceDisbanded(alliance);
+		}
+	}
+
+	private static void notifyAllianceDisbandedAfter(PlayerAlliance alliance) {
+		for (PlayerAllianceListener listener : allianceListeners) {
+			listener.onAfterAllianceDisbanded(alliance);
+		}
+	}
 
 	/** Invite 联盟 / Invite To Alliance */
 	public static final void inviteToAlliance(final Player inviter, final Player invited) {
@@ -117,7 +164,6 @@ public class PlayerAllianceService {
 		return RestrictionsManager.canInviteToAlliance(inviter, invited);
 	}
 
-	@GlobalCallback(PlayerAllianceCreateCallback.class)
 	/** 创建联盟。 / Create alliance. */
 	public static final PlayerAlliance createAlliance(Player leader, Player invited, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
@@ -127,10 +173,10 @@ public class PlayerAllianceService {
 		if (offlineCheckStarted.compareAndSet(false, true)) {
 			initializeOfflineCheck();
 		}
+		notifyAllianceCreated(leader);
 		return newAlliance;
 	}
 
-	@GlobalCallback(PlayerAllianceCreateCallback.class)
 	/** 创建指定协议类型的单人联盟。 / Creates a single-player alliance of the given team type. */
 	public static final PlayerAlliance createAlliance(Player leader, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
@@ -139,6 +185,7 @@ public class PlayerAllianceService {
 		if (offlineCheckStarted.compareAndSet(false, true)) {
 			initializeOfflineCheck();
 		}
+		notifyAllianceCreated(leader);
 		return newAlliance;
 	}
 
@@ -146,10 +193,11 @@ public class PlayerAllianceService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
 	}
 
-	@GlobalCallback(AddPlayerToAllianceCallback.class)
 	/** 添加玩家到联盟 / Adds player to alliance*/
 	public static final void addPlayerToAlliance(PlayerAlliance alliance, Player invited) {
+		notifyBeforePlayerAdded(alliance, invited);
 		alliance.addMember(new PlayerAllianceMember(invited));
+		notifyPlayerAdded(alliance, invited);
 	}
 
 	/** 更改小队规则 / Change Group Rules */
@@ -221,13 +269,14 @@ public class PlayerAllianceService {
 		}
 	}
 
-	@GlobalCallback(PlayerAllianceDisbandCallback.class)
 	/** 解散 / disband. */
 	public static void disband(PlayerAlliance alliance) {
 		Preconditions.checkState(alliance.onlineMembers() <= 1,
 				"Can't disband alliance with more than one online member");
+		notifyAllianceDisbanded(alliance);
 		alliances.remove(alliance.getTeamId());
 		alliance.onEvent(new AllianceDisbandEvent(alliance));
+		notifyAllianceDisbandedAfter(alliance);
 	}
 
 	/** 更换队长 / change Leader. */

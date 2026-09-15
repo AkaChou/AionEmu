@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.account.AccountTime;
@@ -61,6 +62,12 @@ public class LoginServer {
 	 * Current connection to the LoginServer.
 	 */
 	private volatile LoginServerConnection loginServer;
+
+	/**
+	 * 登录消息分发器。
+	 * Login message dispatcher.
+	 */
+	private volatile LoginMessageDispatcher dispatcher;
 
 	/**
 	 * 底层 Netty 客户端实例。
@@ -191,6 +198,18 @@ public class LoginServer {
 	 */
 	private boolean connectOnce() {
 		loginServer = null;
+		if (AionRuntimeMode.isBootEmbedded()) {
+			try {
+				DirectMemoryLoginChannel channel = DirectMemoryLoginChannel.open();
+				loginServer = channel.gameServerConnection();
+				dispatcher = channel;
+				log.info(I18n.get("log.0548078e4933", "in-memory"));
+				return true;
+			} catch (Exception e) {
+				log.warn(I18n.get("log.26fdd67c39d5", e.getMessage()), e);
+				return false;
+			}
+		}
 		log.info(I18n.get("log.0548078e4933", NetworkConfig.LOGIN_ADDRESS));
 		return connectWithNetty();
 	}
@@ -207,6 +226,7 @@ public class LoginServer {
 			NettyClient client = new NettyClient(NetworkConfig.LOGIN_ADDRESS, "LoginServer", transport -> {
 				LoginServerConnection connection = new LoginServerConnection(transport);
 				loginServer = connection;
+				dispatcher = new SocketLoginMessageDispatcher(connection);
 				return connection;
 			});
 			nettyClient = client;
@@ -214,6 +234,7 @@ public class LoginServer {
 			return loginServer != null;
 		} catch (Exception e) {
 			loginServer = null;
+			dispatcher = null;
 			shutdownNettyClient();
 			log.info(I18n.get("log.26fdd67c39d5", e.getMessage()));
 			return false;
@@ -228,6 +249,11 @@ public class LoginServer {
 		log.warn(I18n.get("log.8bebb9784be8"));
 
 		loginServer = null;
+		LoginMessageDispatcher currentDispatcher = dispatcher;
+		dispatcher = null;
+		if (currentDispatcher != null) {
+			currentDispatcher.close();
+		}
 		shutdownNettyClient();
 		synchronized (this) {
 			/**
@@ -272,7 +298,7 @@ public class LoginServer {
 	private void sendAccountDisconnected(int accountId) {
 		log.info(I18n.get("log.2affe124175e", accountId));
 		if (loginServer != null && loginServer.getState() == State.AUTHED) {
-			loginServer.sendPacket(new SM_ACCOUNT_DISCONNECTED(accountId));
+			sendPacket(new SM_ACCOUNT_DISCONNECTED(accountId));
 		}
 	}
 
@@ -304,7 +330,7 @@ public class LoginServer {
 			}
 			loginRequests.put(accountId, client);
 		}
-		loginServer.sendPacket(new SM_ACCOUNT_AUTH(accountId, loginOk, playOk1, playOk2));
+		sendPacket(new SM_ACCOUNT_AUTH(accountId, loginOk, playOk1, playOk2));
 	}
 
 	/**
@@ -391,7 +417,7 @@ public class LoginServer {
 			}
 			loginRequests.put(client.getAccount().getId(), client);
 		}
-		loginServer.sendPacket(new SM_ACCOUNT_RECONNECT_KEY(client.getAccount().getId()));
+		sendPacket(new SM_ACCOUNT_RECONNECT_KEY(client.getAccount().getId()));
 	}
 
 	/**
@@ -526,7 +552,7 @@ public class LoginServer {
 	 */
 	public void sendLsControlPacket(String accountName, String playerName, String adminName, int param, int type) {
 		if (loginServer != null && loginServer.getState() == State.AUTHED) {
-			loginServer.sendPacket(new SM_LS_CONTROL(accountName, playerName, adminName, param, type));
+			sendPacket(new SM_LS_CONTROL(accountName, playerName, adminName, param, type));
 		}
 	}
 
@@ -565,7 +591,7 @@ public class LoginServer {
 	 */
 	public void sendBanPacket(byte type, int accountId, String ip, int time, int adminObjId) {
 		if (loginServer != null && loginServer.getState() == State.AUTHED) {
-			loginServer.sendPacket(new SM_BAN(type, accountId, ip, time, adminObjId));
+			sendPacket(new SM_BAN(type, accountId, ip, time, adminObjId));
 		}
 	}
 
@@ -577,12 +603,8 @@ public class LoginServer {
 	 * @return 是否发送成功 / Whether the packet was sent
 	 */
 	public boolean sendPacket(LsServerPacket pk) {
-		if (loginServer != null && loginServer.getState() == State.AUTHED) {
-			loginServer.sendPacket(pk);
-			return true;
-		} else {
-			return false;
-		}
+		LoginMessageDispatcher current = dispatcher;
+		return current != null && current.sendPacket(pk);
 	}
 
 	/**

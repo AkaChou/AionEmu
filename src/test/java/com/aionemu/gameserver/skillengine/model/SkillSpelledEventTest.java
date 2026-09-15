@@ -3,6 +3,7 @@ package com.aionemu.gameserver.skillengine.model;
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.world.knownlist.KnownList;
@@ -61,6 +62,13 @@ class SkillSpelledEventTest {
 		TestCreature caster = objenesis.newInstance(TestCreature.class);
 		TestCreature target = objenesis.newInstance(TestCreature.class);
 		Npc observer = objenesis.newInstance(Npc.class);
+		/**
+		 * Objenesis 跳过构造函数，objectId 为 null；knownObjects 现为 ConcurrentHashMap（拒绝 null 键），
+		 * 生产环境中 objectId 永不为 null，因此这里补一个真实 ID。
+		 * Objenesis skips constructors, so objectId would be null; knownObjects is now a
+		 * ConcurrentHashMap (rejects null keys) while production ids are never null, so assign a real id.
+		 */
+		setField(AionObject.class, observer, "objectId", 20001);
 		RecordingAI observerAi = new RecordingAI();
 		observer.setAi2(observerAi);
 		caster.setKnownlist(new KnownList(caster));
@@ -147,6 +155,25 @@ class SkillSpelledEventTest {
 		@Override
 		public void onSeeSpell(Creature caster, Creature target, int skillId, int skillLevel) {
 			seeSpellCalls++;
+		}
+	}
+
+	/**
+	 * 反射写入被测对象的字段（含 final 的 objectId）。
+	 * Writes a field (including the final objectId) on the object under test.
+	 *
+	 * @param owner  字段声明类 / declaring class
+	 * @param target 目标对象 / target object
+	 * @param name   字段名 / field name
+	 * @param value  字段值 / field value
+	 */
+	private static void setField(Class<?> owner, Object target, String name, Object value) {
+		try {
+			Field field = owner.getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(target, value);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.conquestservice;
 
-import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
@@ -170,8 +169,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 */
 	protected void addConquestBossListeners() {
 		AbstractAI ai = (AbstractAI) getConquestBoss().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.addCallback(getConquestBossDestroyListener());
+		ai.addAiDeathListener(getConquestBossDestroyListener());
 	}
 
 	/**
@@ -183,8 +181,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 			return;
 		}
 		AbstractAI ai = (AbstractAI) getConquestBoss().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.removeCallback(getConquestBossDestroyListener());
+		ai.removeAiDeathListener(getConquestBossDestroyListener());
 	}
 
     /**

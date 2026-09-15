@@ -6,7 +6,6 @@ import java.util.Collections;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.Race;
@@ -15,13 +14,9 @@ import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.FindGroup;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
-import com.aionemu.gameserver.model.team2.alliance.callback.AddPlayerToAllianceCallback;
-import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceCreateCallback;
-import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceDisbandCallback;
+import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
-import com.aionemu.gameserver.model.team2.group.callback.AddPlayerToGroupCallback;
-import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupCreateCallback;
-import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupDisbandCallback;
+import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -29,6 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 寻找队伍服务：维护天族/魔族的招募与申请列表，并在组队/联盟变更时自动清理过期条目。
@@ -39,6 +35,7 @@ import java.util.Map;
 public class FindGroupService {
 
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
+	private static final AtomicBoolean LISTENERS_REGISTERED = new AtomicBoolean();
 	/** 天族招募列表。 / Elyos recruit listings. */
 	private final Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
 	/** 天族申请列表。 / Elyos apply listings. */
@@ -53,13 +50,78 @@ public class FindGroupService {
 	 * Registers group/alliance callbacks that keep find-group listings consistent.
 	 */
 	public FindGroupService() {
+		if (!LISTENERS_REGISTERED.compareAndSet(false, true)) {
+			return;
+		}
 
-		GlobalCallbackHelper.addCallback(new FindGroupOnAddPlayerToGroupListener());
-		GlobalCallbackHelper.addCallback(new FindGroupPlayerGroupdDisbandListener());
-		GlobalCallbackHelper.addCallback(new FindGroupPlayerGroupdCreateListener());
-		GlobalCallbackHelper.addCallback(new FindGroupOnAddPlayerToAllianceListener());
-		GlobalCallbackHelper.addCallback(new FindGroupAllianceDisbandListener());
-		GlobalCallbackHelper.addCallback(new FindGroupAllianceCreateListener());
+		PlayerGroupService.addListener(new PlayerGroupService.PlayerGroupListener() {
+			@Override
+			public void onGroupCreated(Player leader) {
+				FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+						leader.getRace(), 0x00, leader.getObjectId());
+				if (inviterFindGroup == null) {
+					inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+							leader.getRace(), 0x04, leader.getObjectId());
+				}
+				if (inviterFindGroup != null) {
+					GameRuntimeServices.findGroupService().addFindGroupList(leader, 0x02,
+							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
+				}
+			}
+
+			@Override
+			public void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {
+				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+			}
+
+			@Override
+			public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
+				if (group.isFull()) {
+					GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getObjectId());
+				}
+			}
+
+			@Override
+			public void onGroupDisbanded(PlayerGroup group) {
+				GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getTeamId());
+			}
+		});
+
+		PlayerAllianceService.addListener(new PlayerAllianceService.PlayerAllianceListener() {
+			@Override
+			public void onAllianceCreated(Player leader) {
+				FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+						leader.getRace(), 0x00, leader.getObjectId());
+				if (inviterFindGroup == null) {
+					inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+							leader.getRace(), 0x04, leader.getObjectId());
+				}
+				if (inviterFindGroup != null) {
+					GameRuntimeServices.findGroupService().addFindGroupList(leader, 0x02,
+							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
+				}
+			}
+
+			@Override
+			public void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
+				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+			}
+
+			@Override
+			public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
+				if (alliance.isFull()) {
+					GameRuntimeServices.findGroupService().removeFindGroup(
+							alliance.getRace(), 0, alliance.getObjectId());
+				}
+			}
+
+			@Override
+			public void onBeforeAllianceDisbanded(PlayerAlliance alliance) {
+				GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
+			}
+		});
 	}
 
 	/**
@@ -302,127 +364,5 @@ public class FindGroupService {
 	private static class SingletonHolder {
 
 		protected static final FindGroupService instance = new FindGroupService();
-	}
-
-	/**
-	 * 玩家加入小队前清理个人寻找条目；小队满员后移除小队招募。
-	 * Clears personal listings before join; removes group recruit when full.
-	 */
-	static class FindGroupOnAddPlayerToGroupListener extends AddPlayerToGroupCallback {
-
-		@Override
-		public void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
-		}
-
-		@Override
-		public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
-			if (group.isFull()) {
-				GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getObjectId());
-			}
-		}
-	}
-
-	/**
-	 * 小队解散前移除对应寻找条目。
-	 * Removes the group listing before disband.
-	 */
-	static class FindGroupPlayerGroupdDisbandListener extends PlayerGroupDisbandCallback {
-
-		@Override
-		public void onBeforeGroupDisband(PlayerGroup group) {
-			GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getTeamId());
-		}
-
-		@Override
-		public void onAfterGroupDisband(PlayerGroup group) {
-		}
-	}
-
-	/**
-	 * 小队创建后将发起者个人条目迁移为小队招募。
-	 * After group create, migrates the initiator's personal listing to a group recruit.
-	 */
-	static class FindGroupPlayerGroupdCreateListener extends PlayerGroupCreateCallback {
-
-		@Override
-		public void onBeforeGroupCreate(Player player) {
-		}
-
-		@Override
-		public void onAfterGroupCreate(Player player) {
-			FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00,
-					player.getObjectId());
-			if (inviterFindGroup == null) {
-				inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04,
-						player.getObjectId());
-			}
-			if (inviterFindGroup != null) {
-				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
-						inviterFindGroup.getGroupType());
-			}
-		}
-	}
-
-	/**
-	 * 联盟解散前移除对应寻找条目。
-	 * Removes the alliance listing before disband.
-	 */
-	static class FindGroupAllianceDisbandListener extends PlayerAllianceDisbandCallback {
-
-		@Override
-		public void onBeforeAllianceDisband(PlayerAlliance alliance) {
-			GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
-		}
-
-		@Override
-		public void onAfterAllianceDisband(PlayerAlliance alliance) {
-		}
-	}
-
-	/**
-	 * 联盟创建后将发起者个人条目迁移为联盟招募。
-	 * After alliance create, migrates the initiator's personal listing to an alliance recruit.
-	 */
-	static class FindGroupAllianceCreateListener extends PlayerAllianceCreateCallback {
-
-		@Override
-		public void onBeforeAllianceCreate(Player player) {
-		}
-
-		@Override
-		public void onAfterAllianceCreate(Player player) {
-			FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00,
-					player.getObjectId());
-			if (inviterFindGroup == null) {
-				inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04,
-						player.getObjectId());
-			}
-			if (inviterFindGroup != null) {
-				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
-						inviterFindGroup.getGroupType());
-			}
-		}
-	}
-
-	/**
-	 * 玩家加入联盟前清理个人寻找条目；联盟满员后移除联盟招募。
-	 * Clears personal listings before join; removes alliance recruit when full.
-	 */
-	static class FindGroupOnAddPlayerToAllianceListener extends AddPlayerToAllianceCallback {
-
-		@Override
-		public void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
-		}
-
-		@Override
-		public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
-			if (alliance.isFull()) {
-				GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getObjectId());
-			}
-		}
 	}
 }

@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.aionemu.commons.callbacks.Callback;
-import com.aionemu.commons.callbacks.CallbackResult;
-import com.aionemu.commons.callbacks.metadata.ObjectCallback;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -39,6 +38,29 @@ public class AggroList {
 	/** 对象 ID → 仇恨条目 / object id → aggro entry */
 	private final Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
 
+	/** 伤害监听器接口 / Damage listener interface */
+	public interface DamageListener {
+		void onDamageAdded(Creature creature, int damage);
+	}
+
+	private final List<DamageListener> damageListeners = new CopyOnWriteArrayList<>();
+
+	public void addDamageListener(DamageListener listener) {
+		damageListeners.add(listener);
+	}
+
+	public void removeDamageListener(DamageListener listener) {
+		damageListeners.remove(listener);
+	}
+
+	public void addListener(DamageListener listener) {
+		addDamageListener(listener);
+	}
+
+	public void removeListener(DamageListener listener) {
+		removeDamageListener(listener);
+	}
+
 	/**
 	 * 为指定单位创建仇恨列表。
 	 * Creates an aggro list for the given owner.
@@ -56,12 +78,10 @@ public class AggroList {
 	 * @param attacker 攻击者 / attacker
 	 * @param damage 伤害量 / damage amount
 	 */
-	@ObjectCallback(AddDamageValueCallback.class)
 	public void addDamage(Creature attacker, int damage) {
 		addDamageInternal(attacker, damage, AttackStatus.NORMALHIT);
 	}
 
-	@ObjectCallback(AddDamageValueCallback.class)
 	public void addDamage(Creature attacker, int damage, AttackStatus status) {
 		addDamageInternal(attacker, damage, status);
 	}
@@ -82,6 +102,11 @@ public class AggroList {
 		}
 		notifyMostHatedChanged(previousMostHated);
 		owner.getAi2().onAttacked(attacker, status);
+		if (!damageListeners.isEmpty()) {
+			for (DamageListener listener : damageListeners) {
+				listener.onDamageAdded(attacker, damage);
+			}
+		}
 	}
 
 	/**
@@ -499,66 +524,5 @@ public class AggroList {
 	protected boolean isAware(Creature creature) {
 		return creature != null && !creature.getObjectId().equals(owner.getObjectId()) && (creature.isEnemy(owner)
 				|| DataManager.TRIBE_RELATIONS_DATA.isHostileRelation(owner.getTribe(), creature.getTribe()));
-	}
-
-	/**
-	 * 伤害累加后的回调钩子基类。
-	 * Base callback hook invoked after damage is added.
-	 */
-	public static abstract class AddDamageValueCallback implements Callback<AggroList> {
-
-		/**
-		 * 调用前：始终继续。
-		 * Before call: always continue.
-		 *
-		 * @param obj 仇恨列表 / aggro list
-		 * @param args 调用参数 / call arguments
-		 * @return 继续执行 / continue result
-		 */
-		@Override
-		public final CallbackResult beforeCall(AggroList obj, Object[] args) {
-			return CallbackResult.newContinue();
-		}
-
-		/**
-		 * 调用后：若感知攻击者则触发 {@link #onDamageAdded}。
-		 * After call: invokes {@link #onDamageAdded} when the attacker is aware.
-		 *
-		 * @param obj 仇恨列表 / aggro list
-		 * @param args 参数（攻击者、伤害） / arguments (attacker, damage)
-		 * @param methodResult 方法返回值 / method result
-		 * @return 继续执行 / continue result
-		 */
-		@Override
-		public final CallbackResult afterCall(AggroList obj, Object[] args, Object methodResult) {
-
-			Creature creature = (Creature) args[0];
-			Integer damage = (Integer) args[1];
-
-			if (obj.isAware(creature)) {
-				onDamageAdded(creature, damage);
-			}
-			return CallbackResult.newContinue();
-		}
-
-		/**
-		 * 返回回调基类类型。
-		 * Returns the callback base class type.
-		 *
-		 * @return 基类类型 / base class
-		 */
-		@Override
-		public final Class<? extends Callback> getBaseClass() {
-			return AddDamageValueCallback.class;
-		}
-
-		/**
-		 * 伤害成功写入后的业务钩子。
-		 * Business hook after damage has been recorded.
-		 *
-		 * @param creature 攻击者 / attacker
-		 * @param damage 伤害量 / damage amount
-		 */
-		public abstract void onDamageAdded(Creature creature, int damage);
 	}
 }

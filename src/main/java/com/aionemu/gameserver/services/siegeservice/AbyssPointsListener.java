@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
  * Abyss points listener attributing AP changes into siege counters.
  */
 @AllArgsConstructor
-public class AbyssPointsListener extends AbyssPointsService.AddAPGlobalCallback {
+public class AbyssPointsListener implements AbyssPointsService.AbyssPointsListener {
 
 	private final Siege<?> siege;
 
@@ -21,6 +21,7 @@ public class AbyssPointsListener extends AbyssPointsService.AddAPGlobalCallback 
 	 * @param player 玩家 / player
 	 * @param abyssPoints 欧比斯点数 / abyss points
 	 */
+	@Override
 	public void onAbyssPointsAdded(Player player, int abyssPoints) {
 		SiegeLocation fortress = siege.getSiegeLocation();
 

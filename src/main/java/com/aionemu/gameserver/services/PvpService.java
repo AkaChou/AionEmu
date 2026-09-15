@@ -52,6 +52,7 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 public class PvpService {
 
 	private static volatile ObjectProvider<PvpService> instanceProvider;
+	private static volatile PvpService resolvedInstance;
 
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。
@@ -60,9 +61,15 @@ public class PvpService {
 	 * service instance
 	 */
 	public static final PvpService getInstance() {
+		PvpService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PvpService> provider = instanceProvider;
 		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolved = provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolvedInstance = resolved;
+			return resolved;
 		}
 		return SingletonHolder.instance;
 	}
@@ -86,6 +93,7 @@ public class PvpService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<PvpService> provider) {
 		instanceProvider = provider;
+		resolvedInstance = null;
 	}
 
 	/**

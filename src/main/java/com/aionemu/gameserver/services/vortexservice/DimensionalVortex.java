@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -200,8 +199,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 */
 	protected void registerSiegeBossListeners() {
 		AbstractAI ai = (AbstractAI) getGenerator().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.addCallback(getGeneratorDestroyListener());
+		ai.addAiDeathListener(getGeneratorDestroyListener());
 	}
 
 	/**
@@ -210,8 +208,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 */
 	protected void unregisterSiegeBossListeners() {
 		AbstractAI ai = (AbstractAI) getGenerator().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.removeCallback(getGeneratorDestroyListener());
+		ai.removeAiDeathListener(getGeneratorDestroyListener());
 	}
 
 	/**

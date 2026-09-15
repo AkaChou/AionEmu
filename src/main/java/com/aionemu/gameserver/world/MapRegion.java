@@ -6,12 +6,12 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -70,7 +70,7 @@ public class MapRegion {
 	 * Visible objects in this region.
 	 */
 	@Getter
-	private final Map<Integer, VisibleObject> objects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
+	private final Map<Integer, VisibleObject> objects = new ConcurrentHashMap<>();
 
 	/** 区域内玩家计数 / player count in this region */
 	private final AtomicInteger playerCount = new AtomicInteger(0);
@@ -125,18 +125,6 @@ public class MapRegion {
 	}
 
 	/**
-	 * 对象值快照。
-	 * Snapshot of object values.
-	 *
-	 * @return 对象值列表 / the object list
-	 */
-	public List<VisibleObject> getObjectsSnapshot() {
-		synchronized (objects) {
-			return new ArrayList<>(objects.values());
-		}
-	}
-
-	/**
 	 * 本区域内的静态门。
 	 * Static doors in this region.
 	 *
@@ -144,7 +132,7 @@ public class MapRegion {
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
-		for (VisibleObject obj : getObjectsSnapshot()) {
+		for (VisibleObject obj : objects.values()) {
 			if (obj instanceof StaticDoor door) {
 				doors.put(door.getSpawn().getEntityId(), door);
 			}
@@ -271,7 +259,7 @@ public class MapRegion {
 	 * Send ACTIVATE event to creatures with AI2.
 	 */
 	private final void activateObjects() {
-		for (VisibleObject visObject : getObjectsSnapshot()) {
+		for (VisibleObject visObject : objects.values()) {
 			if (visObject instanceof Creature creature) {
 				creature.getAi2().onGeneralEvent(AIEventType.ACTIVATE);
 			}
@@ -293,7 +281,7 @@ public class MapRegion {
 	 * Send DEACTIVATE to creatures with AI2 and stop walking.
 	 */
 	private void deactivateObjects() {
-		for (VisibleObject visObject : getObjectsSnapshot()) {
+		for (VisibleObject visObject : objects.values()) {
 			if (visObject instanceof Creature creature && !(SiegeConfig.BALAUR_AUTO_ASSAULT && visObject instanceof SiegeNpc || !(visObject instanceof BaseNpc))) { // Tweak
 				creature.getAi2().onGeneralEvent(AIEventType.DEACTIVATE);
 

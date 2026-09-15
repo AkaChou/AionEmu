@@ -53,7 +53,7 @@ public class PacketProcessor<T extends AConnection> {
      * 数据包队列。
      * Packet queue.
      */
-    private final List<BaseClientPacket<T>> packets;
+    private final LinkedList<BaseClientPacket<T>> packets;
 
     /**
      * 处理线程列表。
@@ -230,6 +230,12 @@ public class PacketProcessor<T extends AConnection> {
             if (this.packets.isEmpty()) {
                 this.notEmpty.await();
             } else {
+                BaseClientPacket<T> first = this.packets.peekFirst();
+                if (first != null && first.getConnection().tryLockConnection()) {
+                    this.packets.pollFirst();
+                    return first;
+                }
+
                 ListIterator<BaseClientPacket<T>> it = this.packets.listIterator();
 
                 while (it.hasNext()) {
@@ -299,6 +305,9 @@ public class PacketProcessor<T extends AConnection> {
                 try {
                     if (packet != null) {
                         packet.getConnection().unlockConnection();
+                        if (!packets.isEmpty()) {
+                            notEmpty.signal();
+                        }
                     }
 
                     if (Thread.interrupted()) {

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.conquestservice;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 
 /**
  * 征服/供奉 BOSS 死亡监听器（当前为空实现，预留钩子）。
@@ -10,7 +9,7 @@ import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
  * @author Rinzler (Encom)
  */
 @SuppressWarnings("rawtypes")
-public class ConquestBossDestroyListener extends OnDieEventCallback {
+public class ConquestBossDestroyListener implements AbstractAI.AiDeathListener {
 
 	private final ConquestOffering<?> conquestOffering;
 

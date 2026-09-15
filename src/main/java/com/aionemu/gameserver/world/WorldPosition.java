@@ -76,7 +76,7 @@ public class WorldPosition {
 	 * @return 实例 ID / the instance id
 	 */
 	public int getInstanceId() {
-		return mapRegion.getParent().getInstanceId();
+		return mapRegion == null ? 0 : mapRegion.getParent().getInstanceId();
 	}
 
 	/**

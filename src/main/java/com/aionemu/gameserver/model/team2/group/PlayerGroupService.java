@@ -8,10 +8,11 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,9 +22,6 @@ import com.aionemu.gameserver.model.team2.common.events.ShowBrandEvent;
 import com.aionemu.gameserver.model.team2.common.events.TeamKinahDistributionEvent;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
-import com.aionemu.gameserver.model.team2.group.callback.AddPlayerToGroupCallback;
-import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupCreateCallback;
-import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupDisbandCallback;
 import com.aionemu.gameserver.model.team2.group.events.ChangeGroupLeaderEvent;
 import com.aionemu.gameserver.model.team2.group.events.ChangeGroupLootRulesEvent;
 import com.aionemu.gameserver.model.team2.group.events.GroupDisbandEvent;
@@ -54,6 +52,48 @@ import java.util.LinkedHashMap;
 public class PlayerGroupService {
 	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<Integer, PlayerGroup>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
+
+	/** 队伍事件监听器接口 / Player group event listener interface */
+	public interface PlayerGroupListener {
+		default void onGroupCreated(Player leader) {}
+		default void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {}
+		default void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {}
+		default void onGroupDisbanded(PlayerGroup group) {}
+	}
+
+	private static final List<PlayerGroupListener> groupListeners = new CopyOnWriteArrayList<>();
+
+	public static void addListener(PlayerGroupListener listener) {
+		groupListeners.add(listener);
+	}
+
+	public static void removeListener(PlayerGroupListener listener) {
+		groupListeners.remove(listener);
+	}
+
+	private static void notifyGroupCreated(Player leader) {
+		for (PlayerGroupListener listener : groupListeners) {
+			listener.onGroupCreated(leader);
+		}
+	}
+
+	private static void notifyBeforePlayerAdded(PlayerGroup group, Player player) {
+		for (PlayerGroupListener listener : groupListeners) {
+			listener.onBeforePlayerAddToGroup(group, player);
+		}
+	}
+
+	private static void notifyPlayerAdded(PlayerGroup group, Player player) {
+		for (PlayerGroupListener listener : groupListeners) {
+			listener.onAfterPlayerAddToGroup(group, player);
+		}
+	}
+
+	private static void notifyGroupDisbanded(PlayerGroup group) {
+		for (PlayerGroupListener listener : groupListeners) {
+			listener.onGroupDisbanded(group);
+		}
+	}
 
 	/** 邀请小队 / Invite To Group*/
 	public static final void inviteToGroup(final Player inviter, final Player invited) {
@@ -98,7 +138,6 @@ public class PlayerGroupService {
 		return RestrictionsManager.canInviteToGroup(inviter, invited);
 	}
 
-	@GlobalCallback(PlayerGroupCreateCallback.class)
 	/** 创建队伍。 / Create group. */
 	public static final PlayerGroup createGroup(Player leader, Player invited, TeamType type) {
 		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), type);
@@ -115,6 +154,7 @@ public class PlayerGroupService {
 		if (offlineCheckStarted.compareAndSet(false, true)) {
 			initializeOfflineCheck();
 		}
+		notifyGroupCreated(leader);
 		return newGroup;
 	}
 
@@ -123,7 +163,6 @@ public class PlayerGroupService {
 		return createGroup(leader, TeamType.GROUP);
 	}
 
-	@GlobalCallback(PlayerGroupCreateCallback.class)
 	/** 创建指定协议类型的单人队伍。 / Creates a single-player group with the given team type. */
 	public static final PlayerGroup createGroup(Player leader, TeamType type) {
 		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), type);
@@ -132,6 +171,7 @@ public class PlayerGroupService {
 		if (offlineCheckStarted.compareAndSet(false, true)) {
 			initializeOfflineCheck();
 		}
+		notifyGroupCreated(leader);
 		return newGroup;
 	}
 
@@ -139,10 +179,11 @@ public class PlayerGroupService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerChecker(), 1000, 30 * 1000);
 	}
 
-	@GlobalCallback(AddPlayerToGroupCallback.class)
 	/** 添加玩家到小队 / Adds player to group*/
 	public static final void addPlayerToGroup(PlayerGroup group, Player invited) {
+		notifyBeforePlayerAdded(group, invited);
 		group.addMember(new PlayerGroupMember(invited));
+		notifyPlayerAdded(group, invited);
 	}
 
 	/** Change 小队 Rules / Change Group Rules */
@@ -224,10 +265,10 @@ public class PlayerGroupService {
 		}
 	}
 
-	@GlobalCallback(PlayerGroupDisbandCallback.class)
 	/** 解散 / disband. */
 	public static void disband(PlayerGroup group) {
 		Preconditions.checkState(group.onlineMembers() <= 1, "Can't disband group with more than one online member");
+		notifyGroupDisbanded(group);
 		groups.remove(group.getTeamId());
 		group.onEvent(new GroupDisbandEvent(group));
 	}

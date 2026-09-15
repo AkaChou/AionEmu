@@ -24,8 +24,8 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import java.sql.*;
 import java.util.*;
@@ -40,9 +40,9 @@ import java.util.*;
 public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
     /** 按对象 ID 缓存的玩家公共数据 / Player common data cache by object ID */
-    private final Map<Integer, PlayerCommonData> playerCommonData = new LinkedHashMap<Integer, PlayerCommonData>();
+    private final Map<Integer, PlayerCommonData> playerCommonData = new ConcurrentHashMap<Integer, PlayerCommonData>();
     /** 按角色名（小写）缓存的玩家公共数据 / Player common data cache by name (lowercase) */
-    private final Map<String, PlayerCommonData> playerCommonDataByName = new LinkedHashMap<String, PlayerCommonData>();
+    private final Map<String, PlayerCommonData> playerCommonDataByName = new ConcurrentHashMap<String, PlayerCommonData>();
 
     // 查询 / Queries
     /** 检查角色名是否占用 / Check if character name is used */

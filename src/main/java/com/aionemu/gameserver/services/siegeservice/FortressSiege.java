@@ -12,7 +12,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
+import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -73,7 +73,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		getSiegeLocation().setUnderShield(true);
 		broadcastState(getSiegeLocation());
 		getSiegeLocation().clearLocation();
-		GlobalCallbackHelper.addCallback(addAPListener);
+		AbyssPointsService.addListener(addAPListener);
 		deSpawnNpcs(getSiegeLocationId());
 		clearPlayers();
 		// GameCoreGameplayServices.battlefieldUnionService().onSiegeStart(getSiegeLocation().getLocationId());
@@ -181,7 +181,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	 */
 	@Override
 	public void onSiegeFinish() {
-		GlobalCallbackHelper.removeCallback(addAPListener);
+		AbyssPointsService.removeListener(addAPListener);
 		unregisterSiegeBossListeners();
 		GameFeatureServices.siegeService().deSpawnNpcs(getSiegeLocationId());
 		getSiegeLocation().setVulnerable(false);

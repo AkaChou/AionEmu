@@ -126,9 +126,15 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
                     return;
                 }
 
-                byte[] chunk = new byte[writableBytes];
-                byteBuf.readBytes(chunk);
-                readBuffer.put(chunk);
+                // ByteBuf#readBytes(ByteBuffer) 按目标缓冲 remaining 读取，必须先把 limit 收敛到本次可写长度。
+                // ByteBuf#readBytes(ByteBuffer) reads dst.remaining(), so narrow the limit to this chunk first.
+                int readLimit = readBuffer.limit();
+                readBuffer.limit(readBuffer.position() + writableBytes);
+                try {
+                    byteBuf.readBytes(readBuffer);
+                } finally {
+                    readBuffer.limit(readLimit);
+                }
 
                 if (!processReadyFrames()) {
                     close(true);

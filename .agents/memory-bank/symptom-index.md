@@ -11,6 +11,8 @@
 | 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
 | ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件 | `AR-002` | DAOManager provider parameter and startup bridge construction |
 | 封包无响应、opcode 已实现但 handler 未触发、收发链路失败 | `AR-003` | opcode map, handler registration and client protocol version |
+| 连接建立后立即断开、5 秒无限重连、"连接已丢失"/"游戏服务器已断开"、IndexOutOfBoundsException、ping/pong NPE、内嵌模式登录服侧始终无 CM_GS_AUTH 认证成功、登录服日志刷 "未实现类 BannedMacDAO/SvStatsDAO 的 DAO" | `AR-004` | NettyConnectionHandler.read 的 buffer 传递方式、ConnectionTransport 实现是否触发 initialized/onDisconnect |
+| 移除快照遍历后出现遍历期间新增对象被访问；KnownListIterationSafetyTest / KnownListTest 失败 | `AR-005` | KnownListIterationSafetyTest 的正则闸门、KnownListTest 的快照语义用例 |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |

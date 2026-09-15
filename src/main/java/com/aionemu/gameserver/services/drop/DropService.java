@@ -63,6 +63,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class DropService {
 
 	private static volatile ObjectProvider<DropService> instanceProvider;
+	private static volatile DropService resolvedInstance;
 
 	/**
 	 * 获取单例实例。
@@ -71,9 +72,15 @@ public class DropService {
 	 * service instance
 	 */
 	public static DropService getInstance() {
+		DropService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<DropService> provider = instanceProvider;
 		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolved = provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolvedInstance = resolved;
+			return resolved;
 		}
 		return SingletonHolder.instance;
 	}
@@ -86,6 +93,7 @@ public class DropService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<DropService> provider) {
 		instanceProvider = provider;
+		resolvedInstance = null;
 	}
 
 	/**

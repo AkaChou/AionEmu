@@ -67,6 +67,7 @@ public class MailService {
 
 	/** Spring ObjectProvider used to override the default singleton / Spring ObjectProvider used to override the default singleton */
 	private static volatile ObjectProvider<MailService> instanceProvider;
+	private static volatile MailService resolvedInstance;
 
 	/** 新登录玩家队列（预留）。 / Queue of newly logged-in players (reserved). */
 	protected Queue<Player> newPlayers;
@@ -78,9 +79,15 @@ public class MailService {
 	 * service instance
 	 */
 	public static final MailService getInstance() {
+		MailService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MailService> provider = instanceProvider;
 		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolved = provider.getIfAvailable(() -> SingletonHolder.instance);
+			resolvedInstance = resolved;
+			return resolved;
 		}
 		return SingletonHolder.instance;
 	}
@@ -101,6 +108,7 @@ public class MailService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<MailService> provider) {
 		instanceProvider = provider;
+		resolvedInstance = null;
 	}
 
 	/**

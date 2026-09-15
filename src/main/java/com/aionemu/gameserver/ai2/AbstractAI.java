@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai2;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.aionemu.commons.callbacks.metadata.ObjectCallback;
 import com.aionemu.gameserver.ai2.event.AIEventLog;
 import com.aionemu.gameserver.ai2.event.AIEventType;
-import com.aionemu.gameserver.ai2.eventcallback.OnHandleAIGeneralEvent;
 import com.aionemu.gameserver.ai2.handler.FollowEventHandler;
 import com.aionemu.gameserver.ai2.handler.FreezeEventHandler;
 import com.aionemu.gameserver.ai2.manager.SimpleAttackManager;
@@ -40,6 +40,30 @@ import lombok.Setter;
  * @author ATracer
  */
 public abstract class AbstractAI implements AI2 {
+
+	/** AI 死亡监听器接口 / AI death listener interface */
+	public interface AiDeathListener {
+		default void onBeforeDie(AbstractAI obj) {}
+		void onAfterDie(AbstractAI obj);
+	}
+
+	private final List<AiDeathListener> aiDeathListeners = new CopyOnWriteArrayList<>();
+
+	public void addAiDeathListener(AiDeathListener listener) {
+		aiDeathListeners.add(listener);
+	}
+
+	public void removeAiDeathListener(AiDeathListener listener) {
+		aiDeathListeners.remove(listener);
+	}
+
+	public void addListener(AiDeathListener listener) {
+		addAiDeathListener(listener);
+	}
+
+	public void removeListener(AiDeathListener listener) {
+		removeAiDeathListener(listener);
+	}
 
 	/**
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
@@ -524,7 +548,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @param event 事件类型 / event type
 	 */
-	@ObjectCallback(OnHandleAIGeneralEvent.class)
 	protected void handleGeneralEvent(AIEventType event) {
 		if (this.isLogging()) {
 			AI2Logger.info(this, "Handle general event " + event);
@@ -547,7 +570,17 @@ public abstract class AbstractAI implements AI2 {
 			handleDespawned();
 			break;
 		case DIED:
+			if (!aiDeathListeners.isEmpty()) {
+				for (AiDeathListener listener : aiDeathListeners) {
+					listener.onBeforeDie(this);
+				}
+			}
 			handleDied();
+			if (!aiDeathListeners.isEmpty()) {
+				for (AiDeathListener listener : aiDeathListeners) {
+					listener.onAfterDie(this);
+				}
+			}
 			break;
 		case ATTACK_COMPLETE:
 			handleAttackComplete();

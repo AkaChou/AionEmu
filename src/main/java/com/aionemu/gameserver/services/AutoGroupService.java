@@ -65,6 +65,7 @@ import java.util.Map;
 public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
+	private static volatile AutoGroupService resolvedInstance;
 	private final Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
 	private final Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
 	private final Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
@@ -1024,9 +1025,15 @@ public class AutoGroupService {
 	 * service instance
 	 */
 	public static AutoGroupService getInstance() {
+		AutoGroupService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AutoGroupService> provider = instanceProvider;
 		if (provider != null) {
-			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+			resolved = provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+			resolvedInstance = resolved;
+			return resolved;
 		}
 		return NewSingletonHolder.INSTANCE;
 	}
@@ -1039,6 +1046,7 @@ public class AutoGroupService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AutoGroupService> provider) {
 		instanceProvider = provider;
+		resolvedInstance = null;
 	}
 
 	private static class NewSingletonHolder {

@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-003`
+> Pattern IDs: `AR-001`–`AR-005`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
 > last_reviewed: 2026-09-14
@@ -85,3 +85,63 @@ first_check: opcode map, handler registration and client protocol version
 
 1. **封包类字面量注册守则**：
    - 网络封包（Server Packet / Client Packet）必须在 `ServerPacketsOpcodes` 或 `AionPacketHandler` 中以类字面量显式注册映射关系。未完成注册的封包处理器即便实现了接口亦无法收发处理。
+
+---
+
+## [AR-004] 四、传输层缓冲区与连接生命周期契约
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Netty 入站读取、ConnectionTransport 适配器与进程内直连通道
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 连接建立后立即断开、5 秒无限重连、"连接已丢失"/"游戏服务器已断开"、IndexOutOfBoundsException、ping/pong NPE、内嵌模式登录服侧始终无 CM_GS_AUTH 认证成功、登录服日志刷 "未实现类 BannedMacDAO/SvStatsDAO 的 DAO"
+root_cause: Netty ByteBuf#readBytes(ByteBuffer) 按目标 remaining 读取而非调用方算出的可写长度；进程内直连通道绕过 initialized()/onDisconnect() 生命周期回调；直连投递在 writeData 之后重复 flip 导致整帧被丢弃，slice() 载荷视图默认大端序；直连交付未切到接收方 ServiceContext 导致对端在错误上下文运行
+fix_or_guardrail: 读入 NIO buffer 前必须把 limit 收敛到 position()+writableBytes 并恢复；ConnectionTransport 适配器必须复刻 initialized() 与 onDisconnect()；writeData 返回后缓冲已是读模式禁止再 flip，载荷视图必须显式 order(LITTLE_ENDIAN)；跨服务交付必须切到接收方 serviceContext（清理回调同理）
+evidence: src/main/java/com/aionemu/commons/network/NettyConnectionHandler.java:123; src/main/java/com/aionemu/commons/network/NettyConnectionHandler.java:131; src/main/java/com/aionemu/commons/network/NettyConnectionHandler.java:290; src/main/java/com/aionemu/gameserver/network/loginserver/DirectMemoryLoginChannel.java:93; src/main/java/com/aionemu/gameserver/network/loginserver/DirectMemoryLoginChannel.java:104; src/main/java/com/aionemu/gameserver/network/loginserver/DirectMemoryLoginChannel.java:126; src/main/java/com/aionemu/commons/database/dao/DAOManager.java:45; src/test/java/com/aionemu/gameserver/network/loginserver/DirectMemoryLoginChannelTest.java:20; src/test/java/com/aionemu/commons/network/NettyConnectionHandlerTest.java:22; .agents/summary/architecture-performance-refactor/2026-09-15-p0-p2-implementation.md
+validation: focused-test + runtime; NettyConnectionHandlerTest 缺陷写法 2 例失败/修复后 5 例全通；DirectMemoryLoginChannelTest 缺陷写法 2 例失败/修复后 3 例全通；另有 166 个聚焦用例通过；真实客户端端到端通过（18:48 客户端登录 → 账号认证 → 进入世界，全程 0 ERROR/WARN）
+boundaries: 不改变包头/长度帧/opcode 契约；直连通道仅在 AionRuntimeMode.isBootEmbedded() 下启用，外部 socket 路径未随本次改动重新验证分布式多机部署
+superseded_by: none
+first_check: NettyConnectionHandler.read 的 buffer 传递方式、ConnectionTransport 实现是否触发 initialized/onDisconnect
+-->
+
+1. **禁止把整个读缓冲直接交给 Netty 读取**：
+   - `AbstractByteBuf#readBytes(ByteBuffer dst)` 的长度取 `dst.remaining()`，随后执行 `checkReadableBytes(length)`。
+   - 若把 `connection.readBuffer`（16KB/64KB 容量）整体传入，任何小于剩余容量的小包（握手、认证包）都会抛 `IndexOutOfBoundsException` → `exceptionCaught` → `close(true)`，表现为“连上就掉、无限重连”。
+   - 正确写法：`int readLimit = readBuffer.limit(); readBuffer.limit(readBuffer.position() + writableBytes); try { byteBuf.readBytes(readBuffer); } finally { readBuffer.limit(readLimit); }`，既零堆分配又不改变帧语义。
+
+2. **进程内直连必须复刻传输层生命周期**：
+   - socket 模式的 `initialized()` 由 Netty `channelActive` 触发；自建 `ConnectionTransport` 时必须显式调用它，否则连接状态、ping/pong 线程等初始化副作用全部丢失（`loginserver.server.pingpong=true` 时会在 `setState(AUTHED)` 对 `null` 排程）。
+   - 关闭路径同样要走 `onDisconnect()`（直连实现里由 `DirectTransport.close` 统一触发），保证账号解绑与门面重连逻辑与 socket 模式一致。
+
+3. **内存传输必须复刻 socket 的缓冲约定**：
+   - `AConnection.writeData` 返回时缓冲已是**读模式**（`position=0`、`limit=帧长`），投递方禁止再 `flip()`；重复 `flip()` 会把 `limit` 归零，整帧被静默丢弃（包已从队列取出，等于双向丢包），且不会抛异常、不会打日志。
+   - `ByteBuffer.slice()` 产出的视图是 **BIG_ENDIAN**，必须显式 `order(ByteOrder.LITTLE_ENDIAN)` 才能与 `NettyConnectionHandler.parse` / `AConnection.readBuffer` 的端序一致，否则 `readH/readD/readS` 全部错位。
+   - 因此判断“内嵌直连是否真的通”不能只看 `正在连接登录服务器：in-memory`，要看对端业务日志（如登录服 `CM_GS_AUTH - 游戏服务器 #N 现已在线`）。
+
+4. **跨服务投递必须切换 ServiceContext**：
+   - `ServiceContext` 是 `InheritableThreadLocal`（默认 `default`），`RunnableWrapper` 在**提交任务时**捕获上下文，`DAOManager` 又按上下文分表（`login` / `game` / `chat` 各一份 DAO 注册表）。
+   - 进程内直连时，对端的 `processData` 是在**调用方线程**上执行的；若交付时不切到接收方上下文，接收方状态机及其 `schedule(...)` 延迟任务会带着发送方上下文运行 → `DAOManager.getDAO(...)` 抛 `未实现类 X 的 DAO`（典型：`login` 专属的 `BannedMacDAO`、`SvStatsDAO` 在 `game` 上下文里找不到）。
+   - 排查要点：`DAONotFoundException` 说明上下文本身已初始化（否则是 `IllegalStateException`），可直接用启动日志“已加载 N 个 DAO … 服务上下文：X”缩小到错误的上下文；关闭/断线回调同样要在各端自己的上下文中执行。
+
+---
+
+## [AR-005] 五、集合遍历契约：先取快照再遍历
+<!-- pattern-metadata
+status: CONFIRMED
+scope: KnownList / MapRegion 等可见对象集合的遍历与“去分配”类性能优化
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 移除快照遍历后出现遍历期间新增对象被访问；KnownListIterationSafetyTest / KnownListTest 失败
+root_cause: 仓库把“遍历前取快照”作为契约（静态闸门 + 快照语义测试），ConcurrentHashMap 弱一致迭代器会立即访问遍历期间新增的条目
+fix_or_guardrail: 容器可从 synchronizedMap 换成 ConcurrentHashMap 提升并发安全，但遍历已知/可见集合必须保留 synchronized(map) 快照；改遍历前先跑 KnownListIterationSafetyTest 与 KnownListTest
+evidence: src/main/java/com/aionemu/gameserver/world/knownlist/KnownList.java:416; src/test/java/com/aionemu/gameserver/world/knownlist/KnownListIterationSafetyTest.java:27; src/test/java/com/aionemu/gameserver/world/knownlist/KnownListTest.java:78; .agents/summary/architecture-performance-refactor/2026-09-15-p0-p2-implementation.md
+validation: focused-test + full-suite; 全量 3247 例中该 7 例已修复并全通，剩余 13 例经 HEAD 基线对照确认为既有失败
+boundaries: MapRegion 内部扫描（getDoors/activateObjects/deactivateObjects/findVisibleObjects）不在此闸门覆盖范围，可按需保留免拷贝遍历
+superseded_by: none
+first_check: KnownListIterationSafetyTest 的正则闸门、KnownListTest 的快照语义用例
+-->
+
+1. **性能优化不能取消快照语义**：
+   - `knownObjects` / `knownPlayers` / `visualObjects` / `visualPlayers` 的遍历必须经 `knownObjectsSnapshot()` / `knownPlayersSnapshot()` / `getVisibleObjectsSnapshot()`；这些助手内部 `synchronized (map)` 复制一份。
+   - 换成 `ConcurrentHashMap` 只解决“并发读写不损坏结构”，不解决“遍历期间新增对象是否应被访问”——后者是本仓库明确要求的快照语义。
+   - `KnownListIterationSafetyTest` 是**源码级正则闸门**：任何 `for (... : knownObjects.values())` / `getKnownObjects().values()` 形式都会让它失败。

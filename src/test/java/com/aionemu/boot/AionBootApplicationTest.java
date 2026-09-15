@@ -166,18 +166,25 @@ class AionBootApplicationTest {
     @Test
     void productionSourcesExposeOnlyBootMain() throws IOException {
         Path mainSource = Path.of("src/main/java");
-        Path callbackBuildToolSource = mainSource.resolve("com/aionemu/commons/callbacks/weaver");
         List<Path> productionMainFiles;
         try (var paths = Files.walk(mainSource)) {
             productionMainFiles = paths
                 .filter(path -> path.toString().endsWith(".java"))
-                .filter(path -> !path.startsWith(callbackBuildToolSource))
                 .filter(AionBootApplicationTest::declaresPublicStaticMain)
                 .sorted()
                 .toList();
         }
 
         assertEquals(List.of(mainSource.resolve("com/aionemu/AionBootApplication.java")), productionMainFiles);
+    }
+
+    @Test
+    void javassistCallbackWeavingIsRemovedFromBuildAndRuntime() throws IOException {
+        String pom = Files.readString(Path.of("pom.xml"));
+        assertFalse(pom.contains("javassist"));
+        assertFalse(pom.contains("CallbackBuildTimeWeaver"));
+        assertFalse(pom.contains("exec-maven-plugin"));
+        assertFalse(Files.exists(Path.of("src/main/java/com/aionemu/commons/callbacks/weaver")));
     }
 
     @Test

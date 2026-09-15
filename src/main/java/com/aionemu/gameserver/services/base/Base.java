@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -732,14 +731,12 @@ public class Base<BL extends BaseLocation> {
 
 	protected void addBaseBossListeners() {
 		AbstractAI ai = (AbstractAI) getBoss().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.addCallback(getBaseBossDeathListener());
+		ai.addAiDeathListener(getBaseBossDeathListener());
 	}
 
 	protected void rmvBaseBossListener() {
 		AbstractAI ai = (AbstractAI) getBoss().getAi2();
-		EnhancedObject eo = (EnhancedObject) ai;
-		eo.removeCallback(getBaseBossDeathListener());
+		ai.removeAiDeathListener(getBaseBossDeathListener());
 	}
 
 	/**

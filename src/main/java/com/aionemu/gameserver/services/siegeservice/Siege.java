@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -216,11 +215,9 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * Registers siege boss listeners.
 	 */
 	protected void registerSiegeBossListeners() {
-		EnhancedObject eo = (EnhancedObject) getBoss().getAggroList();
-		eo.addCallback(getSiegeBossDoAddDamageListener());
+		getBoss().getAggroList().addDamageListener(getSiegeBossDoAddDamageListener());
 		AbstractAI ai = (AbstractAI) getBoss().getAi2();
-		eo = (EnhancedObject) ai;
-		eo.addCallback(getSiegeBossDeathListener());
+		ai.addAiDeathListener(getSiegeBossDeathListener());
 	}
 
 	/**
@@ -228,11 +225,9 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * Unregisters siege boss listeners.
 	 */
 	protected void unregisterSiegeBossListeners() {
-		EnhancedObject eo = (EnhancedObject) getBoss().getAggroList();
-		eo.removeCallback(getSiegeBossDoAddDamageListener());
+		getBoss().getAggroList().removeDamageListener(getSiegeBossDoAddDamageListener());
 		AbstractAI ai = (AbstractAI) getBoss().getAi2();
-		eo = (EnhancedObject) ai;
-		eo.removeCallback(getSiegeBossDeathListener());
+		ai.removeAiDeathListener(getSiegeBossDeathListener());
 	}
 
 	/**

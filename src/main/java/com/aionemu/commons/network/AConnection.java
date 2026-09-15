@@ -144,6 +144,16 @@ public abstract class AConnection {
     }
 
     /**
+     * 获取底层传输实现。
+     * Get the underlying transport implementation.
+     *
+     * @return 传输实现 / transport implementation
+     */
+    public final ConnectionTransport transport() {
+        return this.transport;
+    }
+
+    /**
      * 尝试锁定连接以独占处理包。
      * Try to lock the connection for exclusive packet processing.
      *
