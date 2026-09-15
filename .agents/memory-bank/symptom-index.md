@@ -14,6 +14,8 @@
 | 连接建立后立即断开、5 秒无限重连、"连接已丢失"/"游戏服务器已断开"、IndexOutOfBoundsException、ping/pong NPE、内嵌模式登录服侧始终无 CM_GS_AUTH 认证成功、登录服日志刷 "未实现类 BannedMacDAO/SvStatsDAO 的 DAO" | `AR-004` | NettyConnectionHandler.read 的 buffer 传递方式、ConnectionTransport 实现是否触发 initialized/onDisconnect |
 | 移除快照遍历后出现遍历期间新增对象被访问；KnownListIterationSafetyTest / KnownListTest 失败 | `AR-005` | KnownListIterationSafetyTest 的正则闸门、KnownListTest 的快照语义用例 |
 | 游戏内 JFR 显示 Integer/Long 装箱占分配 74%，单站点 RealGeoData.getMap 占 41.6% 分配 + 11.35% CPU | `AR-006` | RealGeoData.getMap、PathData.visited、任何 Map<Long,...>/Map<Integer,...> 的逐节点 put/get |
+| 游戏内 JFR（300s）：Object[] 占采样分配 39.6%（其中 WorldMapInstance.getNpcs 单站点 207MB）、KeyValueHolder 占 12.5% 且全部来自 QuestSnapshot 的 withXxx 校验链 | `AR-007` | Map.of/Map.copyOf 结果上的 entrySet()/forEach/stream；实例级 getNpcs()/getPlayersInside() 的新增调用点 |
+| 游戏内 JFR（300s）：TemporarySpawn.getTime 单站点占采样分配 52.4MB / 17.2%（另见同源 String[] 2.83%） | `AR-008` | 任何在每次事件里 String.split/String.format/Pattern.compile 的模板读取点 |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |

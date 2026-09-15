@@ -116,3 +116,74 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> { ... }
 若要拿到受控数字，建议按「同活动 + 同长度」再测一次，并用 `//geo path` 的 `submitted/completed/processedNodes` 作为归一化分母（分配 ÷ 处理节点数）。
 
 **后置窗口的新分配 TOP（下一步候选）**：`Object[]` 269.4 MB（39.8%，疑似 `Map.of`/不可变集合与流式调用）、`KeyValueHolder` 84.0 MB（12.4%）、`PathData$MapData$Node` 40.8 MB（6.0%，A* 节点池增长）、`WorldMapInstance.worldMapObjectsSnapshot()` 19.4 MB、`PlayerQuestEventPort.toInventoryMap/completedQuestIdsOf` 44.1 MB。
+
+## 八、第二轮复测：`AR-007` 改动前后（非受控 A/B）
+
+复测：21:32:26 重启（修复字节码已确认加载：`javap` 可见 `doOnAllNpcs`）后，以同样参数录 300s → `/tmp/play-3-round2.jfr`（21:33:26–21:38:26）。
+
+| 指标 | 修复前 `/tmp/play-2-after.jfr` | 修复后 `/tmp/play-3-round2.jfr` |
+|---|---|---|
+| 采样分配总量 | 687.4 MB | **304.1 MB（−55.8%）** |
+| `jdk.ExecutionSample`（归一化口径） | 237 | 272（同量级） |
+| `ObjectAllocationSample` 样本数 | 1463 | 603 |
+| `WorldMapInstance.getNpcs()` | **207.2 MB（30.1%）** | **0（不再出现）** |
+| `WorldMapInstance.worldMapObjectsSnapshot()` | 19.9 MB | **0** |
+| `QuestStateList.getAllFinishedQuests()` | 5.2 MB | **0** |
+| `QuestSnapshot.<init>` | 111.6 MB | 28.2 MB |
+| └ `KeyValueHolder`（来源为 QuestSnapshot） | 84.9 MB | 27.1 MB（**未归零**） |
+| `PlayerQuestEventPort.completedQuestIdsOf` | 36.8 MB | 8.3 MB |
+| `PlayerQuestEventPort.toInventoryMap` | 23.1 MB | 6.1 MB |
+| 新 TOP：`TemporarySpawn.getTime`（`String.split`） | — | **52.4 MB（17.2%）** |
+| 新 TOP：`RewardServiceDAO.getAvailable` | — | 33.2 MB（10.9%） |
+| `PathData$MapData$SearchWorkspace.node` | 45.8 MB | 35.0 MB |
+| IDE 调试器 `CaptureStorage`（非游戏代码） | 18.1 MB | 31.9 MB（10.5%） |
+
+**归零是机制级结论**（源码 + 单测证明该调用链已不存在），不依赖窗口工作量：`getNpcs` / `worldMapObjectsSnapshot` / `getAllFinishedQuests` 三处。
+
+**必须更正的结论**：`KeyValueHolder` 没有归零。JFR 调用链是 `AbstractMap$KeyIterator.next() → MapN$MapNIterator.next()` —— 查 JDK 源码（`ImmutableCollections.MapN`）可知它只覆写了 `entrySet()`，**没有覆写 `keySet()`/`forEach()`/`values()`**，所以 `entrySet`、`keySet`、`forEach` 三条路径都会每条目分配一个 `KeyValueHolder`。把 `entrySet().stream()` 换成 `keySet()` 循环只能省掉 stream 管道对象，**不能**消除该分配；真正修法是把 `withXxx` 链上的逐次校验合并为一次。
+
+**下一轮候选（按收益排序）**：
+
+1. `TemporarySpawn.getTime`：每次 `isInSpawnTime()` 都 `String.split(":")` 解析时间窗（17.2%，且有 57 MB 级 `String[]` 同源）→ 改为加载期解析一次。
+2. `QuestSnapshot` 校验一次化（27.1 MB `KeyValueHolder` + 相关遍历）。
+3. `RewardServiceDAO.getAvailable`（10.9%）、`PathData$MapData$SearchWorkspace.node`（A* 节点池）。
+4. `ArrayList.grow` 5.59% / `Arrays.copyOfRange(byte[])` 5.76%（传输层，需另查）。
+
+## 九、第三轮改动（针对第八节暴露的新热点）
+
+| 站点（第八节实测） | 改动 | 预期 |
+|---|---|---|
+| `TemporarySpawn.getTime` 52.4 MB（17.2%） | `TemporarySpawn` 首次使用时解析 `时.日.月` 并缓存（`volatile Integer[3]`），`isInSpawnTime()` 不再做 6 次 `String.split("\\.")`；解析失败语义与旧实现一致（段数不足仍抛数组越界） | 该站点与同源 `String[]` 归零 |
+| `QuestSnapshot` 校验链 27.1 MB `KeyValueHolder` | 容器校验改为“入参还不是不可变副本才逐条目校验”（`Set.copyOf(x) == x` / `Map.copyOf(x) == x` 识别），首建路径由 `PlayerQuestEventPort` 返回可变集合以保证仍校验一次；新增 `QuestSnapshotValidationTest` 锁定该契约 | `KeyValueHolder` 归零 |
+| `PlayerQuestEventPort` | 端口侧不再 `Map.copyOf`/`Set.copyOf`（改由快照构造器统一冻结），减少一次复制 | 小幅下降 |
+
+新增/更新闸门与用例：`TemporarySpawnTimeWindowTest`（4 例，含“首次读取后改写字段不影响结果”的缓存契约）、`QuestSnapshotValidationTest`（3 例：可变入参仍被校验、结果被冻结）。
+
+复测口径：重启后按同一方式再录 300s，对比 `TemporarySpawn.getTime`、`KeyValueHolder`、`Arrays.copyOfRange(byte[])` 与总权重；同时保留 `jdk.ExecutionSample` 计数作为工作量归一化分母。
+
+## 十、第三轮复测：`AR-007`/`AR-008` 改动确认
+
+复测：23:23:16 重启（字节码已确认含 `spawnTimeParts` 与 `validated*` 助手），23:36:15–23:41:15 录 300s → `/tmp/play-4-round3.jfr`。
+
+| 指标 | play-2（改造前） | play-3（第二轮） | **play-4（第三轮）** |
+|---|---|---|---|
+| `TemporarySpawn.getTime`（我方首帧） | 7.9 MB | **52.4 MB** | **0（消失）** |
+| `KeyValueHolder`（合计） | 85.9 MB | 27.5 MB | **1.66 MB** |
+| └ 其中 `withXxx` 重入路径 | 84.9 MB | 27.1 MB | **0** |
+| └ 剩余来源 | — | — | `QuestCraftSnapshot.<init>` 0.79MB、`validatedInventory` 0.67MB（首建校验一次，设计如此）、`RetailPatternAI2.hasCompleteMasterData` 0.10MB |
+| `WorldMapInstance.getNpcs` | 207.2 MB | 0 | **0** |
+| `QuestStateList.getAllFinishedQuests` | 5.2 MB | 0 | **0** |
+| `QuestSnapshot` 相关合计 | 116.6 MB | 28.9 MB | **11.7 MB** |
+| `PlayerQuestEventPort.toInventoryMap` | 23.1 MB | 6.1 MB | **2.3 MB** |
+| 采样分配总量 | 687.5 MB | 304.1 MB | 551.6 MB（**本窗口 geo 碰撞工作量显著更大**） |
+| `jdk.ExecutionSample`（归一化分母） | 237 | 272 | **362** |
+| 分配样本数 | 1463 | 603 | 1791 |
+
+**结论**：本轮三个目标站点全部达成（`getTime` 归零、`KeyValueHolder` 的 `withXxx` 重入归零、`getNpcs` 持续为 0）。**总权重上升不可解读为回归**：本窗口 CPU 采样 272→362，且分配结构被 geo 碰撞主导（`BIHNode.intersectWhere` 151.2 MB / 21.2%、`BoundingBox.collideWithRay` 82.9 MB、`Matrix4f.invert` 35.2 MB、`CollisionResults.addCollision` 30.9 MB、`Vector3f.clone` 24.5 MB；类占比 `Vector3f` 18.4%、`float[]` 9.0%、`Matrix4f` 6.4%）。
+
+**下一轮候选（新 TOP，全部在 geoEngine 碰撞/射线路径）**：
+
+1. `BIHNode.intersectWhere` + `BoundingBox.collideWithRay`（合计 234 MB / 33%）：射线查询的临时对象（`BIHStackData`、`CollisionResult`、`CollisionResults`）——可考虑查询对象复用或线程本地缓冲。
+2. `Matrix4f.invert`（35.2 MB）与 `Vector3f.clone`（24.5 MB）：矩阵求逆/向量克隆在每次查询中重复计算，可缓存逆矩阵或改写为无克隆路径。
+3. `ArrayList.grow` 12.08%：多与上面两类临时集合同源。
+4. 仍未处理：`Throwable.fillInStackTrace` 4.04%（异常做控制流）。

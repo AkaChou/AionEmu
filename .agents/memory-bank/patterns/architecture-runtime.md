@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-006`
+> Pattern IDs: `AR-001`–`AR-008`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
 > last_reviewed: 2026-09-14
@@ -167,3 +167,49 @@ first_check: RealGeoData.getMap、PathData.visited、任何 Map<Long,...>/Map<In
 1. **名字带 Int 不等于无装箱**：`IntObjectHashMap<V> extends LinkedHashMap<Integer, V>` 只提供 `contains(int)`/`keys()` 便利方法，键仍是 `Integer`；worldId 等大值每次查表都会新建 `Integer`。
 2. **实测代价**：300s 游戏内窗口内，`RealGeoData.getMap(int)`（仅一行 `geoMaps.get(worldId)`）独占采样分配 1440.9MB / 41.6% 与 11.35% CPU；A* 的 `Map<Long, SearchNode> visited` 再占 34.9%（`Long.valueOf`）。
 3. **正确姿势**：先在调用点做 last-lookup 缓存（worldId 在单线程内长期稳定），再考虑自写开放寻址 primitive 容器；引入 fastutil 等依赖需团队评估。
+
+---
+
+## [AR-007] 七、不可变 Map 迭代与实例级遍历的分配陷阱
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 热路径上的 Map.copyOf/Map.of 结果迭代、WorldMapInstance 级整表遍历
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 游戏内 JFR（300s）：Object[] 占采样分配 39.6%（其中 WorldMapInstance.getNpcs 单站点 207MB）、KeyValueHolder 占 12.5% 且全部来自 QuestSnapshot 的 withXxx 校验链
+root_cause: (1) ImmutableCollections.MapN 的 entrySet 迭代器每次 next() 都新建 KeyValueHolder；QuestSnapshot 紧凑构造器对 inventory/currencies/eventActivities 反复做 entrySet().stream().anyMatch 校验，而每个 withXxx 都会重走一遍；(2) WorldMapInstance.getNpcs() 先复制整表快照、再扩容收集结果，broadcast 路径只遍历一次却物化两份列表
+fix_or_guardrail: (1) 减少遍历次数才是消除 KeyValueHolder 的正解——MapN 未覆写 keySet()/forEach，任一遍历都每条目分配；落地手法：迁移到不可变副本时用 `Set.copyOf(x) == x` / `Map.copyOf(x) == x` 识别“已校验过的不可变入参”并跳过逐条目校验（首建仍从可变集合完整校验一次）；(2) 实例级遍历提供 doOnAllNpcs(Visitor)（锁内取一次数组快照、锁外访问）；getNpcs()/getPlayersInside() 改为锁内单次预分配收集
+evidence: src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestSnapshot.java:366; src/main/java/com/aionemu/gameserver/world/WorldMapInstance.java:390; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1641; src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestEventPort.java:270; .agents/summary/architecture-performance-refactor/2026-09-15-allocation-and-null-gate.md
+validation: focused-test（175 例）+ 两轮 300s 运行期 JFR：第二轮 getNpcs 207.2MB→0、worldMapObjectsSnapshot 19.9MB→0；第三轮（校验一次化后）KeyValueHolder 85.9MB→1.66MB 且 withXxx 重入路径归零、QuestSnapshot 相关 116.6MB→11.7MB
+boundaries: 采样权重仅用于相对排序；WorldMapInstance 仍保留 LinkedHashMap 的插入序，未改 ConcurrentHashMap（会改变 getNpc 的“先到先得”语义）
+superseded_by: none
+first_check: Map.of/Map.copyOf 结果上的 entrySet()/forEach/stream；实例级 getNpcs()/getPlayersInside() 的新增调用点
+-->
+
+1. **不可变小 Map 的迭代是要花钱的**：`Map.of(k,v)`、`Map.copyOf(...)` 产生 `ImmutableCollections$MapN`。它只覆写 `entrySet()`，**没有覆写 `keySet()`、`forEach()` 或 `values()`**，因此 `entrySet()`、`keySet()`、`forEach()` 三条路径都会经由 `AbstractMap$KeyIterator`/`MapNIterator` 为每个条目 `new KeyValueHolder`（2026-09-15 复测 JFR 的调用链证实：`AbstractMap$KeyIterator.next() → MapN$MapNIterator.next()`）。改 `entrySet().stream()` 为 `keySet()` 循环**不能**消除该分配，只能省掉 stream 管道对象；真正的修法是减少遍历次数（例如把逐次校验合并为一次）。
+2. **“复制 + 校验”每一步都做**：`QuestSnapshot` 的紧凑构造器对 `inventory`/`currencies`/`eventActivities` 逐个校验，而每个 `withXxx` 都要走一次构造器。`Map.copyOf` 对已是不可变的入参是**零成本**（返回同一实例），剩余成本是校验时的逐条目遍历。复测显示该站点从 84.9MB 降到 27.1MB（同一路径上的 `getAllFinishedQuests` 中间列表与结果集预分配也被移除），但**没有归零**——待做“校验一次”的设计改造。
+3. **广播不要物化整表**：`WorldMapInstance.getNpcs()` 被 `broadcast_message` AI 动作按次调用，先 `new ArrayList<>(values)` 再收集 NPC，两次物化合计 227MB/300s。改为 `doOnAllNpcs(Visitor)`（锁内一次数组快照、锁外访问）后只剩单次快照，且保持原有“快照语义”（对应 AR-004）。
+4. **判空也是分配问题**：`Set.copyOf(...).stream().anyMatch(...)` 与 `entrySet().stream().anyMatch(...)` 在每次快照构造时创建管道对象；`for` 循环同义且无分配。
+
+
+---
+
+## [AR-008] 八、模板字符串在热路径重复解析
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 由 XML/静态数据注入、随后在运行期被反复读取的字符串字段
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 游戏内 JFR（300s）：TemporarySpawn.getTime 单站点占采样分配 52.4MB / 17.2%（另见同源 String[] 2.83%）
+root_cause: TemporarySpawn 把 XML 注入的 "时.日.月" 字符串留到每次读取时用 String.split("\\.") 拆分；"." 不是 String.split 的单字符快路径，每次调用都会走正则匹配并分配 String[]，而 isInSpawnTime() 一次要调用 6 个取值器
+fix_or_guardrail: 加载期或首次使用时解析一次并缓存（TemporarySpawn 用 volatile Integer[3] 缓存，模板加载后不再变化）；热路径禁止对同一常量字符串重复 split/正则/格式化
+evidence: src/main/java/com/aionemu/gameserver/model/templates/spawns/TemporarySpawn.java:26; src/test/java/com/aionemu/gameserver/model/templates/spawns/TemporarySpawnTimeWindowTest.java; .agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md
+validation: focused-test（TemporarySpawnTimeWindowTest 4 例 + TemporarySpawnEngineTest + RetailOpenWorldSpawnDataTest）+ 运行期 JFR 复测（2026-09-15 23:36 300s）：TemporarySpawn.getTime 站点 52.4MB→0（我方首帧不再出现）
+boundaries: 缓存后模板字段不再可变（无生产代码写这些字段）；解析失败的语义与旧实现一致（段数不足仍抛数组越界）
+superseded_by: none
+first_check: 任何在每次事件里 String.split/String.format/Pattern.compile 的模板读取点
+-->
+
+1. **`String.split("\\.")` 不走快路径**：JDK 只对“单字符且非正则元字符”的分隔符做快路径；`.` 是元字符，因此每次调用都会做正则匹配并分配 `String[]`。
+2. **调用次数被放大 6 倍**：`TemporarySpawn.isInSpawnTime()` 依次取时/日/月 × 刷新/消失共 6 次，每次都要重新拆分同一个字符串。
+3. **正确姿势**：字段注入后只解析一次（首次使用懒解析 + `volatile` 缓存即可，无需改写 JAXB 绑定）；缓存的前提是模板加载后不再被修改——本仓库的 `TemporarySpawn` 只有 `@Getter`，无写入方。
