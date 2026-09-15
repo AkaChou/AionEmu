@@ -20,6 +20,8 @@ Persistent architecture patterns and debugging insights are maintained in [.agen
 - **Active focus**: Check [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) for current focus areas across sessions.
 - **Automatic Wrap-up Protocol (自动沉淀协议)**:
   After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. After updating Pattern metadata, run `python3 .agents/memory-bank/sync_memory_bank.py` and `python3 .agents/memory-bank/check_memory_bank.py`; when this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
+- **Document Co-Commit (沉淀文档随提交)**:
+  A commit is still created only after explicit user authorization. Once authorized, automatically review and explicitly stage the retained summary, memory-bank, Playbook, and acceptance documents produced by the current task together with the related source changes. Do not use `git add -A`; do not stage raw intermediate artifacts, ignored runtime outputs, or unrelated dirty files. If a document contains unrelated hunks, stage only the task-owned hunks or leave that file uncommitted.
 
 ## Configuration
 

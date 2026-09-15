@@ -33,6 +33,8 @@
 | 关闭普通任务标记后 NPC 选择出现 load fail、隐藏任务 owner 截获或 action 被错误回显为 dialog page | `QE-009` | CM_DIALOG_SELECT.hasQuestDialogContext, resolveRoutedQuestId, DialogService.onSimpleDialogSelect and client packet sequence |
 | 未完成进入任务仍可从主城门户、固定回城或多目标回城路径进入欧比斯 | `QE-010` | PortalService.port, permission branch, portal_use quest_req, fixed return-item handlers and MultiReturnAction target index |
 | 任务完成后任务道具仍留在背包、工作物品不回收、任务书显示 COMPLETE 但道具未消失 | `QE-011` | quest_data.xml quest_work_items, compiled metadata.questWorkItems(), and every transition whose source is not REWARD and target is REWARD |
+| 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示 | `QE-012` | Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width |
 | 继续听、电影重复播放、动画结束仍是原按钮、点击后无下一页 | `QE-013` | 客户端当前页 action、电影 transition 的完整 after-commit、后续页是否存在 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
+| 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

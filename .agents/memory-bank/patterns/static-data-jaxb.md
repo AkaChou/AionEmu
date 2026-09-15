@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 静态模板数据、XML 映射及动态反射加载的底层事实。
 
-> Pattern IDs: `SDJ-001`–`SDJ-002`
+> Pattern IDs: `SDJ-001`–`SDJ-003`
 > card_status: ACTIVE; verify source and runtime evidence before treating a claim as universal
 > scope: static data loaders, XML/JAXB entities, and dynamically loaded server classes
 > last_reviewed: 2026-09-14
@@ -67,3 +67,25 @@ first_check: JAXB annotations, field declarations and runtime binding warnings
      - `@XmlTransient` 标记的内部缓存字段（如只读 Map）不受 JAXB 反射影响，可安全保持 final。
    - **编译与设计安全性**：
      - 移除实体实例字段的 `final` 绝对不会破坏编译安全，不影响 definite assignment 语义、Lombok 生成访问器，亦不影响 switch 模式匹配。
+
+---
+
+## [SDJ-003] 三、英吉斯温实际世界 ID 与镜像服静态数据边界
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Inggison player-facing teleport, portal, instance-exit, return-item, quest, zone, weather, event, siege and AI static data
+first_seen: 2026-09-14
+last_verified: 2026-09-14
+symptom: 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标
+root_cause: Retail master-server data retained 210130000 for Inggison while the live world is 210050000; hotspot and portal templates consumed the master ID directly
+fix_or_guardrail: Player-facing Inggison targets must use 210050000; keep 210130000 only as a legacy map definition and compatibility sentinel, migrate paired zones/assets, and normalize TeleportService2 plus HotspotTeleportService
+evidence: commit a7da0ad67; src/main/java/com/aionemu/gameserver/services/teleport/TeleportService2.java; src/main/java/com/aionemu/gameserver/services/teleport/HotspotTeleportService.java; src/main/resources/aion/data/static_data/portals/portal_loc.xml; src/main/resources/aion/data/static_data/quest_definition/quests/10034.xml; src/main/resources/aion/data/static_data/zones/zones_quest.xml
+validation: static; client
+boundaries: 210130000 map/zone/spawn assets remain inert legacy definitions; Gelkmaros mirror 220140000 is not folded into 210050000
+superseded_by: none
+first_check: hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names
+-->
+
+1. **实际世界不变量**：玩家可见的英吉斯温世界 ID 固定为 `210050000`；`210130000` 只允许存在于旧镜像服地图定义、其 zone/spawn 资源和兼容性归一代码中。
+2. **迁移面**：热点、门户坐标、副本出口、回城物品、剧情传送、任务世界/区域条件、风轨、天气、活动、攻城和 AI 区域必须同时迁移；只改热点会把传送入口和任务判定拆到两个世界。
+3. **运行时护栏**：`TeleportService2` 和 `HotspotTeleportService` 对英吉斯温镜像服目标做最终归一；数据回退或漏改时仍应落到 `210050000`。
