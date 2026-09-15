@@ -124,6 +124,7 @@ mvn -Dtest=QuestXmlDomainBlocksTest,CM_DIALOG_SELECTRepeatGuardTest,CMDialogSele
 3. 断路器阈值常量恢复包内可见（不再为跨包测试放宽），e2e 测试改为声明与生产一致的本地期望值
 4. 新增 `MOVIE_PAGE_TURN_DUPLICATE_ACTION`：`next-action` 与 `action` 相同时显式失败，不再依赖编译器 `AMBIGUOUS_TRANSITION` 兜底；`QuestXmlDomainBlocksTest` 新增对应用例
 5. 交互边界清零：`CM_SHOW_DIALOG` / `CM_CLOSE_DIALOG` 现在调用 `player.clearDialogSelectRepeat()`，重新打开或关闭对话不再延续之前的重发计数；`QuestDialogLoopBreakerProductionFlowTest#reopeningTheDialogRestartsTheResendCounter` 用真实 `CM_SHOW_DIALOG` 断言「边界后需重新累计 4 次才触发」
+6. 新增同族编译期门禁 `PAGE_TURN_WITHOUT_ANY_RESPONSE`（`QuestPageTurnResponseGate`）：`TALK_TO_NPC` 动作在客户端合同里对应「有按钮的页面」但 `after-commit` 完全为空时编译失败，堵住「静默死按钮」整类；24053 的影片静默形态不受影响（仍由影片 ledger 豁免）。扫描确认现网该形态为 0 例
 
 验证（2026-09-15，主工作区，用户授权后执行；未建 worktree）：
 
@@ -147,3 +148,18 @@ mvn -Dtest='CM_DIALOG_SELECTRepeatGuardTest,QuestDialogLoopBreakerProductionFlow
 ```
 
 注意：e2e 用例驱动真实 `CM_SHOW_DIALOG` 时，测试替身 NPC 的 AI 工厂会打印一条 `AI 工厂出错` ERROR 日志（`AI2Engine` 预存在行为，测试环境噪声，不影响断言）。
+
+第 6 项（静默死按钮门禁）验证（2026-09-15，主工作区 + 临时验证目录，用户授权后执行）：
+
+```bash
+# 主工作区（不需要生产目录）
+mvn -Dtest='QuestPageTurnResponseGateTest,QuestXmlDomainBlocksTest,CM_DIALOG_SELECTRepeatGuardTest' test
+# Tests run: 51, Failures: 0, Errors: 0
+
+# 临时验证目录（含生产目录门禁，跑完立即删除）
+mvn -Dtest='ProductionCatalogWhitelistVerificationTest,QuestMovieContinuationGateTest,QuestPageTurnResponseGateTest' test
+# Tests run: 9, Failures: 0, Errors: 0
+# PRODUCTION_COMPILE_OK=6193 / FAILURES=0 / WHITELIST_VIOLATIONS=0
+```
+
+结论：新增门禁对现网 6193 个任务零违规（与静态扫描的「0 例」一致），影片 ledger 例外不受影响。

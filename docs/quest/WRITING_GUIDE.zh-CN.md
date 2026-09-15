@@ -183,6 +183,10 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 这正是影片 self-loop 缺页、客户端反复重发 `CM_DIALOG_SELECT` 缺陷的编写期护栏；显式 `<transition>` 里的
 `play-movie` 仍由编译期 `MOVIE_WITHOUT_CONTINUATION` 检查兜底。
 
+同族还有一条更宽的门禁：`TALK_TO_NPC` 的翻页动作（客户端合同里该动作对应「有按钮的页面」）如果
+`after-commit` **完全为空**，编译失败（`PAGE_TURN_WITHOUT_ANY_RESPONSE`）——服务端一个包都不回，客户端只能
+停在原页反复重发。需要「有回包但停留原页」的拒绝类交互（例如提示后不跳转）请显式写 `system-message` 等回包。
+
 运行时还有一层断路器：同一目标、同一上一页、同一动作、同一任务按客户端重发节奏（相邻间隔 0.8–5 秒）连续出现
 4 次仍未得到后续页时，服务端记录 `log.quest_dialog_select_loop` 告警、清除任务列表记忆并向客户端关闭对话窗口，
 避免无限重发。人类快速连点的间隔更短，会被排除；重新打开或关闭对话（`CM_SHOW_DIALOG`/`CM_CLOSE_DIALOG`）

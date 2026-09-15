@@ -204,6 +204,7 @@ public final class QuestDefinitionCompiler {
 		}
 		validateTransitionConflicts(definition.transitions(), nodes);
 		validateMovieContinuationContract(definition, contract);
+		validatePageTurnResponseContract(definition, contract);
 		return new CompiledQuestDefinition(definition);
 	}
 
@@ -712,6 +713,21 @@ public final class QuestDefinitionCompiler {
 				+ " (" + contract.pageName(violation.questId(), violation.dialogId()) + ")"
 				+ " plays movie(s) " + violation.movieIds()
 				+ " without a continuation page, close, teleport, or movie-end route");
+		}
+	}
+
+	/**
+	 * 拒绝「翻页动作完全无回包」的转换：服务端不回任何包时客户端会停在原页反复重发。
+	 * Rejects page-turn transitions that answer nothing at all: with no outbound packet the client stays
+	 * on the page and keeps resending the same selection.
+	 */
+	private static void validatePageTurnResponseContract(QuestDefinition definition, QuestDialogContract contract) {
+		for (QuestPageTurnResponseGate.Violation violation : QuestPageTurnResponseGate.violations(definition,
+				contract)) {
+			fail("PAGE_TURN_WITHOUT_ANY_RESPONSE", "quest " + violation.questId() + " "
+				+ violation.sourceNode() + " dialog " + violation.dialogId()
+				+ " (" + contract.pageName(violation.questId(), violation.dialogId()) + ")"
+				+ " has an empty after-commit; the client would stay on the page and resend CM_DIALOG_SELECT");
 		}
 	}
 
