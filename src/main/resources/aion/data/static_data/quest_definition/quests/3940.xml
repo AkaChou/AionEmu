@@ -40,7 +40,8 @@
     </class-rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="9" min="0" max="511" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="9" min="0" max="300" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -49,9 +50,12 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="hunt" status="START"/>
+    <node label="hunt" status="START">
+      <var name="var0" value="6"/>
+    </node>
     <node label="hunt-done" status="START">
-      <var name="var0" value="306"/>
+      <var name="var0" value="6"/>
+      <var name="var1" value="300"/>
     </node>
     <node label="s3" status="START">
       <var name="var0" value="3"/>
@@ -135,7 +139,7 @@
       </after-commit>
     </transition>
 
-    <counter source="hunt" target="hunt-done" field="var0" required="306">
+    <counter source="hunt" target="hunt-done" field="var1" required="300">
       <event>
         <kill-npc npc-ids="220257 220258 220259 220260 220261 220262 220263 220265 220266 220267 220268 220269 220270 220271 220272 220273 220274 220275 220276 220277 220278 220279 220280 220281 220282 220283 220284 220285 220286 220287 220288 220289 220290 220291 220292 220293 220294 220295 220296"/>
       </event>
@@ -148,9 +152,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="306"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
@@ -159,9 +160,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT3_1"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="306"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
@@ -170,9 +168,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO3"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="306"/>
-      </conditions>
       <actions>
         <set-variable field="var0" value="3"/>
       </actions>
