@@ -111,6 +111,17 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void moviePageTurnRejectsTheSameActionAsItsRelay() {
+		QuestCompilationException failure = assertThrows(QuestCompilationException.class,
+			() -> compile(moviePageTurnDefinition("""
+				<movie-page-turn source="s1" target="s1" npc-id="203534" action="SELECT2_1" movie-id="52"
+				    next-action="SELECT2_1"/>
+				""")));
+
+		assertEquals("MOVIE_PAGE_TURN_DUPLICATE_ACTION", failure.code());
+	}
+
+	@Test
 	void counterEqualsItsTwoExpandedTransitions() {
 		String block = """
 			<counter source="started" target="reward" field="var0" required="3">

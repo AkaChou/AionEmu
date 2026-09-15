@@ -33,9 +33,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CM_DIALOG_SELECT extends AionClientPacket {
 	/** 连续相同对话选择达到该次数即判定为客户端重发死循环。 / Consecutive identical selections that mark a client resend loop. */
-	public static final int MAX_IDENTICAL_DIALOG_SELECTS = 4;
+	static final int MAX_IDENTICAL_DIALOG_SELECTS = 4;
 	/** 相邻相同对话选择的最大间隔；超过后重新计数。 / Maximum gap between identical selections before the counter restarts. */
-	public static final long DIALOG_SELECT_REPEAT_WINDOW_MILLIS = 5_000;
+	static final long DIALOG_SELECT_REPEAT_WINDOW_MILLIS = 5_000;
+	/**
+	 * 计入死循环的最小重发间隔：更快的重复视为人类连点或客户端重放，不计入循环计数。
+	 * Minimum resend gap that counts towards a loop: faster repeats are human rapid clicks or client
+	 * replays and restart the counter.
+	 */
+	static final long MIN_DIALOG_SELECT_RESEND_GAP_MILLIS = 800;
 
 	private int targetObjectId;
 	private int dialogId;
@@ -240,11 +246,15 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * Tracks consecutive resends of the same dialog selection; on reaching the threshold it logs a
 	 * warning, clears the dialog context, and closes the client window to break the loop.
 	 *
-	 * <p>触发条件是「同一目标、同一上一页、同一动作、同一任务」在窗口内连续出现：这种情况下服务端仍然
-	 * 没有下发后续页，客户端会一直重发 {@code CM_DIALOG_SELECT}（例如 movie self-loop 缺少目标页）。</p>
-	 * <p>The trigger is the same target, previous page, action, and quest id repeating inside the window,
-	 * which means the server still produced no continuation and the client keeps resending
-	 * {@code CM_DIALOG_SELECT} (for example a movie self-loop that lacks its target page).</p>
+	 * <p>触发条件是「同一目标、同一上一页、同一动作、同一任务」按客户端重发节奏（间隔在
+	 * {@link #MIN_DIALOG_SELECT_RESEND_GAP_MILLIS} 与 {@link #DIALOG_SELECT_REPEAT_WINDOW_MILLIS} 之间）
+	 * 连续出现：这种情况下服务端仍然没有下发后续页，客户端会一直重发 {@code CM_DIALOG_SELECT}
+	 * （例如 movie self-loop 缺少目标页）。人类连点比该节奏更快，会被排除，避免误伤。</p>
+	 * <p>The trigger is the same target, previous page, action, and quest id repeating at the client resend
+	 * cadence (gap between {@link #MIN_DIALOG_SELECT_RESEND_GAP_MILLIS} and
+	 * {@link #DIALOG_SELECT_REPEAT_WINDOW_MILLIS}), which means the server still produced no continuation
+	 * and the client keeps resending {@code CM_DIALOG_SELECT} (for example a movie self-loop that lacks its
+	 * target page). Human rapid clicks are faster than that cadence and are excluded.</p>
 	 *
 	 * @param player 发包玩家 / sending player
 	 * @param targetObjectId 交互目标对象 ID / interaction target object id
@@ -272,16 +282,26 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	}
 
 	/**
-	 * 计算本次对话选择的重发跟踪快照：签名相同且仍在窗口内则计数加一，否则从 1 重新开始。
-	 * Computes the repeat-tracking snapshot for the current dialog selection: identical signatures inside
-	 * the window increment the counter and anything else restarts it at one.
+	 * 计算本次对话选择的重发跟踪快照：签名相同且间隔落在死循环节奏内则计数加一，否则从 1 重新开始。
+	 * Computes the repeat-tracking snapshot for the current dialog selection: identical signatures whose
+	 * gap matches the loop cadence increment the counter and anything else restarts it at one.
 	 */
 	static DialogSelectRepeat nextDialogSelectRepeat(DialogSelectRepeat previous, int targetObjectId,
 			int lastPage, int dialogId, int questId, long nowMillis) {
 		if (previous != null && previous.matches(targetObjectId, lastPage, dialogId, questId)
-				&& nowMillis - previous.lastMillis() <= DIALOG_SELECT_REPEAT_WINDOW_MILLIS) {
+				&& isLoopResendGap(nowMillis - previous.lastMillis())) {
 			return previous.incremented(nowMillis);
 		}
 		return new DialogSelectRepeat(targetObjectId, lastPage, dialogId, questId, 1, nowMillis);
+	}
+
+	/**
+	 * 判断重发间隔是否落在死循环节奏内：太快（人类连点）与太慢（间隔超过窗口）都会重新计数。
+	 * Checks whether the resend gap matches the loop cadence: both rapid human clicks and slow gaps
+	 * restart the counter.
+	 */
+	private static boolean isLoopResendGap(long gapMillis) {
+		return gapMillis >= MIN_DIALOG_SELECT_RESEND_GAP_MILLIS
+			&& gapMillis <= DIALOG_SELECT_REPEAT_WINDOW_MILLIS;
 	}
 }

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
-import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
@@ -30,6 +29,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestDialogLoopBreakerProductionFlowTest {
 	private static final int QUEST_ID = 990066;
 	private static final int NPC_ID = 203534;
+	/**
+	 * 与 CM_DIALOG_SELECT 的断路器阈值一致：连续相同选择达到该次数即判定循环。
+	 * Mirrors the CM_DIALOG_SELECT breaker threshold: identical consecutive selections that mark a loop.
+	 */
+	private static final int LOOP_THRESHOLD = 4;
+	/**
+	 * 高于生产最小重发间隔（800ms），复现真实客户端约 2 秒的自动重发节奏。
+	 * Above the production minimum resend gap (800 ms) so the test reproduces the client resend cadence.
+	 */
+	private static final long LOOP_RESEND_GAP_MILLIS = 900;
 
 	@Test
 	void breaksTheResendLoopAfterTheConfiguredNumberOfIdenticalSelections() throws Exception {
@@ -42,12 +51,13 @@ class QuestDialogLoopBreakerProductionFlowTest {
 			assertTrue(runtime.dispatchPrepared().handled());
 			int objectId = runtime.expectedDialogTargetObjectId();
 			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
-				for (int attempt = 1; attempt < CM_DIALOG_SELECT.MAX_IDENTICAL_DIALOG_SELECTS; attempt++) {
+				for (int attempt = 1; attempt < LOOP_THRESHOLD; attempt++) {
 					int unansweredAttempt = attempt;
 					QuestHeadlessClient.DispatchOutcome unanswered = selectUnroutedAction(protocol, objectId);
 					assertFalse(unanswered.handled(), unanswered::toString);
 					assertTrue(unanswered.packets().isEmpty(),
 						() -> "attempt " + unansweredAttempt + " answered: " + unanswered.packets());
+					Thread.sleep(LOOP_RESEND_GAP_MILLIS);
 				}
 
 				QuestHeadlessClient.DispatchOutcome breaker = selectUnroutedAction(protocol, objectId);

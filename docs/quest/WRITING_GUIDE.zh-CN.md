@@ -183,8 +183,9 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 这正是影片 self-loop 缺页、客户端反复重发 `CM_DIALOG_SELECT` 缺陷的编写期护栏；显式 `<transition>` 里的
 `play-movie` 仍由编译期 `MOVIE_WITHOUT_CONTINUATION` 检查兜底。
 
-运行时还有一层断路器：同一目标、同一上一页、同一动作、同一任务在 5 秒窗口内连续出现 4 次仍未得到后续页时，
-服务端记录 `log.quest_dialog_select_loop` 告警、清除任务列表记忆并向客户端关闭对话窗口，避免无限重发。
+运行时还有一层断路器：同一目标、同一上一页、同一动作、同一任务按客户端重发节奏（相邻间隔 0.8–5 秒）连续出现
+4 次仍未得到后续页时，服务端记录 `log.quest_dialog_select_loop` 告警、清除任务列表记忆并向客户端关闭对话窗口，
+避免无限重发。人类快速连点的间隔更短，会被排除，不触发该断路器。
 
 ### 3.4 完整示例：1138「A Mother's Worry」（真实任务，无 work item 的 report_to 模板）
 

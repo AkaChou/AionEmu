@@ -323,7 +323,15 @@ final class QuestXmlBlockExpander {
 				// resolvable routes are registered here.
 				continue;
 			}
-			int npcId = Integer.parseInt(attribute(block, "npc-id"));
+			int npcId;
+			try {
+				npcId = Integer.parseInt(attribute(block, "npc-id"));
+			} catch (NumberFormatException e) {
+				// 非法 npc-id 同样交给块展开阶段报错，预扫描只登记可解析路由。
+				// Malformed npc-id values are reported by the block expansion; the pre-scan registers
+				// only resolvable routes.
+				continue;
+			}
 			result.add(new DialogRouteKey(source, npcId, action.id()));
 			String nextAction = attribute(block, "next-action").trim();
 			if (!nextAction.isEmpty()) {
@@ -428,6 +436,10 @@ final class QuestXmlBlockExpander {
 		String nextAction = attribute(block, "next-action").trim();
 		if (!nextAction.isEmpty()) {
 			QuestDialogAction next = requiredAction(context, block, "next-action");
+			if (next == action) {
+				return fail("MOVIE_PAGE_TURN_DUPLICATE_ACTION", context, "movie-page-turn", "next-action",
+					next.name() + " is already the movie page-turn action");
+			}
 			result.add(talk(npcId, next.id(), List.of(), List.of(), source, target, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(
 					sameNamedPage(context, block, "next-action", next).id()))));

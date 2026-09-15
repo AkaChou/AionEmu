@@ -59,6 +59,17 @@ class CM_DIALOG_SELECTRepeatGuardTest {
 	}
 
 	@Test
+	void rapidClicksNeverCountAsLoopResends() {
+		DialogSelectRepeat state = null;
+		long now = 20_000;
+		for (int index = 0; index < 10; index++) {
+			state = CM_DIALOG_SELECT.nextDialogSelectRepeat(state, TARGET_OBJECT, LAST_PAGE, ACTION, QUEST, now);
+			assertEquals(1, state.count());
+			now += CM_DIALOG_SELECT.MIN_DIALOG_SELECT_RESEND_GAP_MILLIS - 100;
+		}
+	}
+
+	@Test
 	void alternatingSelectionsNeverReachTheThreshold() {
 		DialogSelectRepeat state = null;
 		long now = 5_000;

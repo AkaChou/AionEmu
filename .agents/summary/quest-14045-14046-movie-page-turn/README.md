@@ -100,7 +100,7 @@ mvn -Dtest=QuestDefinitionCatalogManifestTest,QuestEngineNpcDialogDispatchTest,Q
 
 ## Phase 4 运行时断路器（2026-09-15，未提交）
 
-- `CM_DIALOG_SELECT` 在路由前调用 `breakDialogSelectLoop(...)`：同一目标、同一上一页、同一动作、同一任务在 5 秒窗口内连续出现 4 次仍未获得后续页时判定死循环
+- `CM_DIALOG_SELECT` 在路由前调用 `breakDialogSelectLoop(...)`：同一目标、同一上一页、同一动作、同一任务按客户端重发节奏（相邻间隔 0.8–5 秒）连续出现 4 次仍未获得后续页时判定死循环；间隔过短（人类连点/重放）或过长都会重新计数，避免误伤
 - 触发动作：写 `log.quest_dialog_select_loop` 告警（含玩家、npcId、targetObj、动作、上一页、questId、连续次数）、清除 NPC 任务行记忆、发送 `SM_DIALOG_WINDOW(0, 0)` 关闭窗口，并跳过本次任务路由
 - 状态载体：`Player` 上的瞬时 `DialogSelectRepeat` 快照（不持久化，随玩家对象回收）；同一签名之外的选择、超过窗口的间隔都会重新计数
 - 回归覆盖：`CM_DIALOG_SELECTRepeatGuardTest`（计数/签名变化/窗口过期/交替选择）+ `QuestDialogLoopBreakerProductionFlowTest`（真实协议：3 次无响应后第 4 次下发关闭窗口且任务状态不变）
@@ -114,3 +114,25 @@ mvn -Dtest=QuestXmlDomainBlocksTest,CM_DIALOG_SELECTRepeatGuardTest,CMDialogSele
 ```
 
 未在真实 Aion 5.8 客户端上验证断路器表现（无法在客户端复现死循环）；`QuestDialogLoopBreakerProductionFlowTest` 走的是真实 `CM_DIALOG_SELECT` 包与生产 dispatcher，不等于真实客户端验收。
+
+## 审查修复（2026-09-15，待验证）
+
+代码审查（`/review`）后修复 4 项：
+
+1. 断路器加入最小重发间隔 `MIN_DIALOG_SELECT_RESEND_GAP_MILLIS = 800`：只有间隔落在 0.8–5 秒的连续相同选择才计数，人类连点不再可能触发关窗；`QuestDialogLoopBreakerProductionFlowTest` 改为按 900ms 节奏驱动，`CM_DIALOG_SELECTRepeatGuardTest` 新增快速连点用例
+2. `explicitDialogRoutes` 的 `npc-id` 预扫描改为容错解析：非法值不登记路由，由块展开阶段用 `XML_BLOCK_INVALID_INTEGER` 带任务上下文报错
+3. 断路器阈值常量恢复包内可见（不再为跨包测试放宽），e2e 测试改为声明与生产一致的本地期望值
+4. 新增 `MOVIE_PAGE_TURN_DUPLICATE_ACTION`：`next-action` 与 `action` 相同时显式失败，不再依赖编译器 `AMBIGUOUS_TRANSITION` 兜底；`QuestXmlDomainBlocksTest` 新增对应用例
+
+验证（2026-09-15，主工作区，用户授权后执行；未建 worktree）：
+
+```bash
+mvn -Dtest='QuestXmlDomainBlocksTest,CM_DIALOG_SELECTRepeatGuardTest,QuestDialogLoopBreakerProductionFlowTest,QuestMovieContinuationGateTest#compilerRejectsMovieOnlyPageTurnWithoutLedger+checkedInContractMatchesTheTrackedClientMappingCsv+externalDefinitionsDirectoryTakesPrecedenceOverTheClasspathCopy+classpathContractIsUsedWhenTheDefinitionsDirectoryHasNoCopy+invalidatingTheDefaultContractReloadsFromTheDefinitionsDirectory' -DfailIfNoTests=false test
+# Tests run: 55, Failures: 0, Errors: 0
+# QuestXmlDomainBlocksTest 44 / CM_DIALOG_SELECTRepeatGuardTest 5 / QuestDialogLoopBreakerProductionFlowTest 1 / QuestMovieContinuationGateTest 5
+```
+
+仍待验证（主工作区被并行 WIP 的 3939/3940 等改动阻塞，需干净目录）：
+
+- `QuestMovieContinuationGateTest#sameStateMovieOnlyPageTurnsMatchTheProductionLedger`（遍历全生产目录）
+- `ProductionCatalogWhitelistVerificationTest`（6193 个任务目录编译 + 白名单）
