@@ -1567,6 +1567,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 
 	private void sendMovie(Player player, int movie) {
+		if (player == null) {
+			return;
+		}
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));

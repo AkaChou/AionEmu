@@ -181,14 +181,19 @@ public class PacketSendUtility {
 	}
 
 	/**
-	 * 向玩家发送服务端数据包（连接存在时）。
-	 * Send a server packet to a player when the connection exists.
+	 * 向玩家发送服务端数据包（玩家或连接不存在时静默跳过）。
+	 * Sends a server packet to a player, silently skipping when the player or the connection is absent.
 	 *
-	 * @param player 目标玩家 / Target player
+	 * <p>实例脚本常把 {@code AggroList#getMostPlayerDamage()} 的结果直接传入（无玩家伤害时为 {@code null}），
+	 * 这里必须容忍 null，否则会在 NPC 死亡处理中途抛 NPE 并中断后续点位/刷怪逻辑。
+	 * Instance scripts commonly pass {@code AggroList#getMostPlayerDamage()} straight in (null when no player
+	 * dealt damage); this method must tolerate null, otherwise an NPE aborts the rest of the NPC death handling.</p>
+	 *
+	 * @param player 目标玩家，可为 {@code null} / target player, may be {@code null}
 	 * @param packet 服务器包 / Server packet
 	 */
 	public static void sendPacket(Player player, AionServerPacket packet) {
-		if (player.getClientConnection() != null) {
+		if (player != null && player.getClientConnection() != null) {
 			player.getClientConnection().sendPacket(packet);
 		}
 	}

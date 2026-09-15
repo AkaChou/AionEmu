@@ -2,7 +2,7 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-007`
+> Pattern IDs: `IR-001`–`IR-008`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
 > last_reviewed: 2026-09-14
@@ -143,3 +143,25 @@ first_check: spot identity comparison code, resolve_z handling in SpawnSurfaceRe
 - 用块级历史取证代替坐标哈希：找到引入真端点 `R` 的提交，检查其父版本中同一 `npc_id` 块内是否已存在与 `L` 平面重合的 legacy 点。是则该提交在 `L` 旁新增了重合的 `R`，属制造重复。
 - 该判据在同一批数据上把候选从 68 修正到 138，并推翻了对引入提交的误判（`a5e274fd0` 并未新增点，只是补 `resolve_z`；重复源自更早的提交）。
 - 与 `IR-006` 的关系：IR-006 要求先证明加载归属再删；本条给出可执行的归属判据。两者都禁止仅凭坐标接近直接删除——`entity_id` 不同的重合点是不同对象，必须保留待人工判断。
+
+---
+
+## [IR-008] 八、NPC 死亡链路上的玩家对象可为 null (NPC_DEATH_PLAYER_MAY_BE_NULL)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 实例脚本 onDie/掉落/播片等以 AggroList 结果作为玩家入参的链路
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility）
+root_cause: AggroList#getMostPlayerDamage() 在没有玩家伤害（NPC/环境/无 aggro）时返回 null，而实例脚本直接把该值当非空使用
+fix_or_guardrail: 消费 getMostPlayerDamage() 的结果必须先判空；实例 sendMovie(Player,int) 必须在标记“已播”之前判空；PacketSendUtility.sendPacket 已容忍 null 玩家（静默跳过）
+evidence: src/main/java/com/aionemu/gameserver/controllers/attack/AggroList.java:264; src/main/java/com/aionemu/gameserver/utils/PacketSendUtility.java:191; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DarkPoetaInstance.java:868; src/test/java/com/aionemu/gameserver/instance/handlers/InstanceMovieNullGuardTest.java; src/test/java/com/aionemu/gameserver/utils/PacketSendUtilityTest.java
+validation: focused-test + full-suite; 全量 3262 例仅剩 13 个既有 quest/AI 失败；闸门经“移除守卫即失败”负向验证；运行态验收 2026-09-15 20:58 重启（PacketSendUtility.class 字节码含 ifnull 判空）后进入暗黑波伊塔 300040000，至 21:05 NPE/ERROR 均为 0，任务 3502 由状态 3 推进到状态 4
+boundaries: 中央判空只保证不崩，不会补发封包；若语义上需要“播给副本内玩家”，必须另做（当前 sendMovie 仍是“首个有玩家伤害者”语义）
+superseded_by: none
+first_check: getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度
+-->
+
+- 触发条件很常见：NPC 被另一个 NPC、环境伤害、GM 命令杀死，或对玩家已离线/aggro 已清空时死亡 → `getMostPlayerDamage()` 返回 `null`。
+- 危害不止“少发一个包”：异常会**中断 onDie 剩余逻辑**（点位累加、`deleteNpc`、`spawn` 都不会执行），因此必须彻底消除。
+- 两层防护：① `PacketSendUtility.sendPacket` 判空（覆盖全部 94 个 `getMostPlayerDamage()` 消费点的崩溃面）；② 25 个实例脚本的 `sendMovie` 在 `movies.add` 之前判空（避免“播给 null 却标记已播”），由 `InstanceMovieNullGuardTest` 闸门守护（要求至少扫到 20 个声明文件，防止包路径变动导致闸门静默失效）。

@@ -25,6 +25,7 @@
 | 活动日志后紧接客户端断线或被报告为崩溃 | `IR-005` | startChoose branch conditions, running PID/classpath, selected-player logs, teleport packets and client dump/log |
 | 两个 NPC 在相近坐标重复出现，疑似同一训练/生产点被刷出两次 | `IR-006` | static spawn loader, RetailConditionSpawnEngine, condition-spawns producer pages and legacy/client NPC evidence |
 | 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交 | `IR-007` | spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML |
+| NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility） | `IR-008` | getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
