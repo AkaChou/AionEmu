@@ -40,6 +40,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -1934,6 +1935,7 @@ public class QuestEngine implements GameEngine {
 
 	/** 从显式 production catalog 加载已通过 owner 审核的 typed 定义。 */
 	private QuestCatalog loadProductionCatalog() throws Exception {
+		QuestDialogContract.invalidateDefault();
 		return QuestDefinitionCatalogManifest.compile(
 			Config.dataFile("./data/static_data/quest_definition").toPath());
 	}

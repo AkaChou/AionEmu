@@ -106,6 +106,17 @@ python3 .agents/summary/quest/extract_legacy_quest_dialog_contracts.py --check
 python3 .agents/summary/quest/align_client_quest_dialog_lifecycle.py --check
 ```
 
+重新生成任务引擎编译期使用的页面契约（`quest-dialog-pages.csv`、`quest-dialog-action-details.csv` 任一变化后都必须执行，否则 `QuestMovieContinuationGateTest` 的新鲜度断言失败）：
+
+```bash
+python3 .agents/summary/quest/generate_quest_dialog_contract.py
+python3 .agents/summary/quest/generate_quest_dialog_contract.py --check
+```
+
+产物是 `src/main/resources/aion/definitions/quest_dialog/client_dialog_contract.tsv`（active + exact + 含按钮的页面），与该目录下的
+`movie_continuation_exceptions.tsv` 一起构成 `MOVIE_CONTINUATION_RESPONSE` 的编译期护栏：未登记账的同状态 movie-only
+翻页会以 `MOVIE_WITHOUT_CONTINUATION` 让生产目录编译失败。新增例外必须先在任务证据中说明不可达或有意保留的原因，再写进 ledger。
+
 合同生成器会从 `origin/history:src/main/resources/aion/definitions/compact/quests/scripts/` 动态发现全部 XML。
 同一任务同时出现在聚合文件和专用区域文件时，有效合同表优先采用专用区域模板；只有多个专用模板互相冲突时才将有效合同降级为 `PARTIAL`。
 完整模板索引不做覆盖，因此可以用 `source_resource`、Git object 和 SHA-256 追溯每一条原始证据。

@@ -58,11 +58,15 @@ public final class QuestDefinitionXmlCompiler {
 	}
 
 	public static CompiledQuestDefinition compile(InputStream input) {
-		return compile(input, classpathSchema());
+		return compile(input, classpathSchema(), QuestDialogContract.loadDefault());
 	}
 
 	static CompiledQuestDefinition compile(InputStream input, Schema schema) {
-		return QuestDefinitionCompiler.compile(parse(input, schema));
+		return compile(input, schema, QuestDialogContract.loadDefault());
+	}
+
+	static CompiledQuestDefinition compile(InputStream input, Schema schema, QuestDialogContract contract) {
+		return QuestDefinitionCompiler.compile(parse(input, schema), contract);
 	}
 
 	/**

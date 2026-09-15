@@ -1,0 +1,7 @@
+# 同状态 movie-only page-turn 的显式例外；新增条目必须经过任务证据评审。
+# Explicit same-state movie-only page-turn exceptions; new entries require quest evidence review.
+# quest_id	source_node	dialog_id	reason
+24053	step1	1012	old handler switch fallthrough; var 1 is not on the reachable 1011->1012->10000 chain
+24053	step2	1012	old handler switch fallthrough; var 2 is not on the reachable 1011->1012->10000 chain
+24053	step3	1012	old handler switch fallthrough; var 3 is not on the reachable 1011->1012->10000 chain
+24053	step4	1012	old handler switch fallthrough; var 4 entry page is SELECT5(2375)

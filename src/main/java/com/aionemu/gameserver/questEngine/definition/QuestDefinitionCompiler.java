@@ -21,6 +21,11 @@ public final class QuestDefinitionCompiler {
 	}
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
+		return compile(definition, QuestDialogContract.empty());
+	}
+
+	public static CompiledQuestDefinition compile(QuestDefinition definition, QuestDialogContract contract) {
+		Objects.requireNonNull(contract, "contract");
 		definition = restoreStartEligibilityContract(Objects.requireNonNull(definition, "definition"));
 		definition = restoreRepeatStartDialogContract(definition);
 		definition = restoreRewardPreviewContract(definition);
@@ -198,6 +203,7 @@ public final class QuestDefinitionCompiler {
 			fail("UNREACHABLE_NODE", "node is not reachable from the first node: " + unreachable);
 		}
 		validateTransitionConflicts(definition.transitions(), nodes);
+		validateMovieContinuationContract(definition, contract);
 		return new CompiledQuestDefinition(definition);
 	}
 
@@ -693,6 +699,20 @@ public final class QuestDefinitionCompiler {
 
 	private static boolean mutuallyExclusive(List<QuestCondition> left, List<QuestCondition> right) {
 		return QuestCondition.listsAreMutuallyExclusive(left, right);
+	}
+
+	private static void validateMovieContinuationContract(QuestDefinition definition, QuestDialogContract contract) {
+		for (QuestMovieContinuation.Violation violation : QuestMovieContinuation.violations(definition, contract)) {
+			if (contract.isMovieContinuationException(violation.questId(), violation.sourceNode(),
+					violation.dialogId())) {
+				continue;
+			}
+			fail("MOVIE_WITHOUT_CONTINUATION", "quest " + violation.questId() + " "
+				+ violation.sourceNode() + " dialog " + violation.dialogId()
+				+ " (" + contract.pageName(violation.questId(), violation.dialogId()) + ")"
+				+ " plays movie(s) " + violation.movieIds()
+				+ " without a continuation page, close, teleport, or movie-end route");
+		}
 	}
 
 	private static void fail(String code, String message) {
