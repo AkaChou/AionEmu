@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,11 +40,14 @@ class QuestClientContractGateTest {
 
 	@Test
 	void productionQuestDialogsDoNotIntroduceFatalClientContractRegressions() throws Exception {
-		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(
-			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()),
-			QuestDialogOrderAudit.readClientPages(
-				CLIENT_MAPPING.resolve("quest-dialog-pages.csv"),
-				CLIENT_MAPPING.resolve("quest-dialog-action-details.csv")));
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> clientQuests = QuestDialogOrderAudit.readClientPages(
+			CLIENT_MAPPING.resolve("quest-dialog-pages.csv"),
+			CLIENT_MAPPING.resolve("quest-dialog-action-details.csv"));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(catalog, clientQuests);
+		List<QuestPrematureRewardRouteAudit.Violation> prematureRewardRoutes =
+			QuestPrematureRewardRouteAudit.audit(catalog, clientQuests);
+		assertTrue(prematureRewardRoutes.isEmpty(), () -> prematureRewardFailureMessage(prematureRewardRoutes));
 
 		Set<String> current = rows.stream()
 			.map(QuestClientContractGateTest::fatalFingerprint)
@@ -110,5 +114,16 @@ class QuestClientContractGateTest {
 			.collect(Collectors.joining("\n"));
 		return heading + " count=" + fingerprints.size()
 			+ (sample.isEmpty() ? "" : "\n" + sample);
+	}
+
+	private static String prematureRewardFailureMessage(
+		List<QuestPrematureRewardRouteAudit.Violation> violations) {
+		String sample = violations.stream().limit(MAX_REPORTED_FINGERPRINTS)
+			.map(violation -> "  " + violation.questId() + "|" + violation.sourceNode() + "|"
+				+ violation.npcId() + "|" + violation.dialogId() + "|" + violation.reason() + "|"
+				+ violation.evidence())
+			.collect(Collectors.joining("\n"));
+		return "SETPRO 直接领奖路由缺少高置信保护 / high-confidence SETPRO premature reward routes count="
+			+ violations.size() + (sample.isEmpty() ? "" : "\n" + sample);
 	}
 }

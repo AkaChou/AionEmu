@@ -167,16 +167,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
       </after-commit>
     </transition>
-    <transition source="s2" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" action="SETPRO3"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
     <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT3_1_1_1"/>
@@ -187,7 +177,7 @@
     </transition>
     <transition source="s2" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SETPRO3"/>
       </event>
       <actions>
         <set-variable field="var0" value="3"/>
