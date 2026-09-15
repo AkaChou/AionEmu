@@ -21,7 +21,7 @@
       <reward kind="SELECTABLE_ITEM" id="120001078" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="215488" item-id="182215620" chance="100" each-member="true" collecting-step="6"/>
+      <drop npc-id="215488" item-id="182215620" chance="100" each-member="true" collecting-step="20"/>
     </drops>
     <start-conditions>
       <condition type="unfinished" quest-id="10025"/>
@@ -29,39 +29,41 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="4" width="5" min="0" max="19" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- var0：当前阶段进度计数（眼泪使用次数，客户端任务说明读取的槽位）。 / var0: current-stage progress count (Taloc's Tears uses, the slot the client journal reads). -->
+    <!-- var1：阶段索引，等于客户端任务说明行索引。 / var1: stage index, equal to the client journal line index. -->
+    <bit-field name="var0" offset="0" width="6" min="0" max="20" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s1" status="START">
-      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="s2" status="START">
-      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="s3" status="START">
-      <var name="var0" value="3"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="s4" status="START">
-      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="s5" status="START">
-      <var name="var0" value="5"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="s6" status="START">
-      <var name="var0" value="6"/>
+      <var name="var1" value="6"/>
     </node>
     <node label="s7" status="START">
-      <var name="var0" value="7"/>
+      <var name="var1" value="7"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="8"/>
+      <var name="var1" value="8"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -94,7 +96,7 @@
         <dialog type="TALK_TO_NPC" npc-id="798952" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var1" value="0"/>
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
@@ -105,10 +107,10 @@
         <dialog type="TALK_TO_NPC" npc-id="798952" action="SETPRO1"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var1" value="0"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -120,7 +122,7 @@
         <dialog type="TALK_TO_NPC" npc-id="798954" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var1" value="1"/>
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
@@ -131,10 +133,11 @@
         <dialog type="TALK_TO_NPC" npc-id="798954" action="SETPRO2"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var1" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -146,7 +149,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799022" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="2"/>
+        <variable-is field="var1" value="2"/>
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
@@ -157,7 +160,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799022" action="SETPRO3"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="2"/>
+        <variable-is field="var1" value="2"/>
         <player-in-group/>
       </conditions>
       <after-commit>
@@ -178,11 +181,11 @@
         <dialog type="TALK_TO_NPC" npc-id="799022" action="SETPRO3"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="2"/>
+        <variable-is field="var1" value="2"/>
         <player-in-group expected="false"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="3"/>
       </actions>
       <after-commit>
         <teleport-player-next-available-instance world-id="300190000" x="202.26694" y="226.0532" z="1098.236" heading="30"/>
@@ -196,10 +199,10 @@
       </event>
       <conditions>
         <world-is world-id="300190000"/>
-        <variable-is field="var0" value="3"/>
+        <variable-is field="var1" value="3"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="4"/>
+        <set-variable field="var1" value="4"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -211,11 +214,12 @@
       </event>
       <conditions>
         <world-is world-id="300190000"/>
-        <variable-is field="var0" value="4"/>
+        <variable-is field="var1" value="4"/>
         <has-item item-id="182215618" count="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="5"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="5"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -227,12 +231,12 @@
       </event>
       <conditions>
         <world-is world-id="300190000"/>
-        <variable-is field="var0" value="5"/>
-        <variable-below field="var1" value="19"/>
+        <variable-is field="var1" value="5"/>
+        <variable-below field="var0" value="19"/>
         <has-item item-id="182215619" count="1"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -244,12 +248,13 @@
       </event>
       <conditions>
         <world-is world-id="300190000"/>
-        <variable-is field="var0" value="5"/>
-        <variable-at-least field="var1" value="19"/>
+        <variable-is field="var1" value="5"/>
+        <variable-at-least field="var0" value="19"/>
         <has-item item-id="182215619" count="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="6"/>
+        <set-variable field="var0" value="20"/>
+        <set-variable field="var1" value="6"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -260,10 +265,10 @@
         <kill-npc npc-id="215488"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="6"/>
+        <variable-is field="var1" value="6"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="7"/>
+        <set-variable field="var1" value="7"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -274,7 +279,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799503" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="7"/>
+        <variable-is field="var1" value="7"/>
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
@@ -285,7 +290,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799503" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="7"/>
+        <variable-is field="var1" value="7"/>
         <has-item item-id="182215620" count="1"/>
       </conditions>
       <actions>
@@ -310,7 +315,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799503" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="7"/>
+        <variable-is field="var1" value="7"/>
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
@@ -324,9 +329,10 @@
         <world-is world-id="300190000" expected="false"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -340,9 +346,10 @@
         <world-is world-id="300190000" expected="false"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -356,9 +363,10 @@
         <world-is world-id="300190000" expected="false"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -372,9 +380,9 @@
         <world-is world-id="300190000" expected="false"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="8"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var1" value="8"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -385,9 +393,10 @@
         <die/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -398,9 +407,10 @@
         <die/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -411,9 +421,10 @@
         <die/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -424,9 +435,10 @@
         <log-out/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -437,9 +449,10 @@
         <log-out/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -450,9 +463,10 @@
         <log-out/>
       </event>
       <actions>
-        <remove-item item-id="182215618" count="1"/>
-        <remove-item item-id="182215619" count="1"/>
-        <set-variable field="var0" value="2"/>
+        <remove-item item-id="182215618" count="ALL"/>
+        <remove-item item-id="182215619" count="ALL"/>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

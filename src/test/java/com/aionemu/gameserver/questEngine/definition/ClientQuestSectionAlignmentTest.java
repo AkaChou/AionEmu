@@ -124,6 +124,22 @@ class ClientQuestSectionAlignmentTest {
 	}
 
 	@Test
+	void talocItemSkillCountersUseTheirFixedSixBitSections() {
+		for (int questId : List.of(11468, 21468)) {
+			CompiledQuestDefinition definition = load(questId);
+			QuestSnapshot state = snapshot(questId, QuestStatus.START, 0);
+			for (int skillId : List.of(9832, 9833, 9834)) {
+				state = apply(definition, state, new QuestEvent.UseSkill(skillId));
+			}
+
+			QuestVars vars = new QuestVars(state.packedVariables());
+			assertEquals(0, vars.getVarById(0), () -> "quest " + questId + " moved SECTION_0");
+			assertEquals(List.of(1, 1, 1), List.of(vars.getVarById(1), vars.getVarById(2),
+				vars.getVarById(3)), () -> "quest " + questId + " did not update SECTION_1..3");
+		}
+	}
+
+	@Test
 	void extendedEightyKillCountersRemainExplicitLegacyExceptions() {
 		for (int questId : EXTENDED_COUNTER_QUESTS) {
 			ProgressLayout layout = load(questId).definition().progressLayout();
