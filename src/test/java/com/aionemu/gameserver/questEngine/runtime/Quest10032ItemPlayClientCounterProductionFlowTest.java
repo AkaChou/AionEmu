@@ -23,15 +23,17 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证卡斯帕任务把「眼泪使用次数」放在客户端任务说明读取的低位槽（var0），阶段放在 var1，
- * 并且离开副本/死亡/下线的回退在缺少道具时仍能生效。
+ * 验证卡斯帕任务把「阶段索引」放在客户端任务说明行索引读取的 SECTION_0（var0），
+ * 把「眼泪使用次数」放在 SECTION_1（var1，offset 6），并保证离开副本/死亡/下线的
+ * 回退在缺少道具时仍能生效。
  *
- * Verifies the Caspa chain keeps the Taloc's Tears use counter in the low slot the 5.8 client
- * journal reads (var0), keeps the stage index in var1, and still rolls back on instance exit,
- * death, or logout even when the quest items are no longer in the cube.
+ * Verifies the Caspa chain keeps the stage index in SECTION_0 (var0), the slot the 5.8 client
+ * journal line index reads, keeps the Taloc's Tears use counter in SECTION_1 (var1, offset 6),
+ * and still rolls back on instance exit, death, or logout even when the quest items are gone.
  */
 class Quest10032ItemPlayClientCounterProductionFlowTest {
 	private static final int TALOCS_HOLLOW_WORLD_ID = 300190000;
@@ -42,10 +44,10 @@ class Quest10032ItemPlayClientCounterProductionFlowTest {
 	private static final int STAGE_KILL = 6;
 	private static final int ROLLBACK_STAGE = 2;
 	private static final int LOTHA_REPORT_NPC_ID = 799503;
-	private static final int CLIENT_COUNTER_MASK = 0x3F;
+	private static final int SECTION_MASK = 0x3F;
 
 	@TestFactory
-	Stream<DynamicTest> keepsClientReadableTearsCounterAndReliableRollback() {
+	Stream<DynamicTest> keepsClientJournalStageAndReadableTearsCounter() {
 		return Stream.of(
 			new QuestContract(10032, 182215618, 182215619, 182215620),
 			new QuestContract(20032, 182215593, 182215592, 0))
@@ -61,68 +63,84 @@ class Quest10032ItemPlayClientCounterProductionFlowTest {
 		assertStageProjections(definition);
 		assertTearsCounterFlow(compiled, contract);
 		assertRollbackWorksWithoutQuestItems(compiled, contract);
-		assertDropGateFollowsClientCounter(definition, contract);
+		assertKillStageSurvivesLeavingTheInstance(compiled);
+		assertHeartStageTurnsInOnLeaving(compiled, contract);
+		assertDropGateFollowsStageSlot(definition, contract);
 		assertHeartHandoverKeepsExactCount(definition, contract);
 	}
 
 	private static void assertClientReadableLayout(QuestDefinition definition) {
-		BitField counter = definition.progressLayout().field("var0");
-		BitField stage = definition.progressLayout().field("var1");
-		assertEquals(0, counter.offset(), "眼泪次数必须占用客户端读取的最低位槽");
-		assertEquals(TEARS_COUNT, counter.maxValue());
-		assertEquals(6, stage.offset(), "阶段必须离开客户端计数槽，与 6 位步进约定一致");
+		BitField stage = definition.progressLayout().field("var0");
+		BitField counter = definition.progressLayout().field("var1");
+		assertEquals(0, stage.offset(), "阶段必须占用客户端任务说明行索引读取的 SECTION_0");
 		assertEquals(8, stage.maxValue());
+		assertEquals(6, counter.offset(), "眼泪次数必须放在 SECTION_1（offset 6），不能占用步进行");
+		assertEquals(TEARS_COUNT, counter.maxValue());
+
+		for (int stageIndex = 0; stageIndex <= 8; stageIndex++) {
+			int expectedStage = stageIndex;
+			int packed = definition.progressLayout().pack(Map.of("var0", expectedStage, "var1", 0));
+			assertEquals(expectedStage, packed & SECTION_MASK,
+				() -> "客户端任务说明行索引必须等于阶段: " + expectedStage);
+		}
 		for (int uses = 0; uses <= TEARS_COUNT; uses++) {
 			int expectedUses = uses;
 			int packed = definition.progressLayout().pack(
-				Map.of("var0", expectedUses, "var1", STAGE_TEARS));
-			assertEquals(expectedUses, packed & CLIENT_COUNTER_MASK,
-				() -> "客户端读取的低位槽必须等于真实使用次数: " + expectedUses);
+				Map.of("var0", STAGE_TEARS, "var1", expectedUses));
+			assertEquals(STAGE_TEARS, packed & SECTION_MASK,
+				"眼泪阶段的任务说明行索引必须保持 5");
+			assertEquals(expectedUses, (packed >> 6) & SECTION_MASK,
+				() -> "SECTION_1 必须等于真实使用次数: " + expectedUses);
 		}
 	}
 
 	private static void assertStageProjections(QuestDefinition definition) {
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var1", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of("var1", 0));
-		assertNode(definition, "s3", QuestStatus.START, Map.of("var1", 3));
-		assertNode(definition, "s4", QuestStatus.START, Map.of("var1", 4));
-		assertNode(definition, "s5", QuestStatus.START, Map.of("var1", STAGE_TEARS));
-		assertNode(definition, "s6", QuestStatus.START, Map.of("var1", STAGE_KILL));
-		assertNode(definition, "s7", QuestStatus.START, Map.of("var1", 7));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var1", 8));
+		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
+		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
+		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
+		assertNode(definition, "s4", QuestStatus.START, Map.of("var0", 4));
+		assertNode(definition, "s5", QuestStatus.START, Map.of("var0", STAGE_TEARS));
+		assertNode(definition, "s6", QuestStatus.START, Map.of("var0", STAGE_KILL));
+		assertNode(definition, "s7", QuestStatus.START, Map.of("var0", 7));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 8));
 	}
 
 	private static void assertTearsCounterFlow(CompiledQuestDefinition compiled, QuestContract contract) {
 		QuestEvent useTears = new QuestEvent.UseItem(contract.tearsItemId());
 		QuestSnapshot snapshot = snapshot(QuestStatus.START,
-			Map.of("var0", 0, "var1", STAGE_TEARS), Map.of(contract.tearsItemId(), 1),
+			Map.of("var0", STAGE_TEARS, "var1", 0), Map.of(contract.tearsItemId(), 1),
 			TALOCS_HOLLOW_WORLD_ID, compiled.definition());
 
 		for (int uses = 1; uses < TEARS_COUNT; uses++) {
 			QuestMutationPlan plan = dispatch(compiled, snapshot, useTears);
-			assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), plan.requiredActions());
+			assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), plan.requiredActions());
 			snapshot = nextSnapshot(snapshot, plan);
 			assertEquals(QuestStatus.START, snapshot.status());
-			assertEquals(Map.of("var0", uses, "var1", STAGE_TEARS),
+			assertEquals(Map.of("var0", STAGE_TEARS, "var1", uses),
 				compiled.definition().progressLayout().unpack(snapshot.packedVariables()));
-			assertEquals(uses, snapshot.packedVariables() & CLIENT_COUNTER_MASK);
+			assertEquals(STAGE_TEARS, snapshot.packedVariables() & SECTION_MASK,
+				"使用过程中任务说明行索引必须保持眼泪阶段");
+			assertEquals(uses, (snapshot.packedVariables() >> 6) & SECTION_MASK,
+				"SECTION_1 必须逐步增长");
 		}
 
 		QuestMutationPlan finalUse = dispatch(compiled, snapshot, useTears);
 		assertEquals(List.of(
-			new QuestAction.SetVariable("var0", TEARS_COUNT),
-			new QuestAction.SetVariable("var1", STAGE_KILL)), finalUse.requiredActions());
+			new QuestAction.SetVariable("var1", TEARS_COUNT),
+			new QuestAction.SetVariable("var0", STAGE_KILL)), finalUse.requiredActions());
 		snapshot = nextSnapshot(snapshot, finalUse);
 		assertEquals(QuestStatus.START, snapshot.status());
-		assertEquals(Map.of("var0", TEARS_COUNT, "var1", STAGE_KILL),
+		assertEquals(Map.of("var0", STAGE_KILL, "var1", TEARS_COUNT),
 			compiled.definition().progressLayout().unpack(snapshot.packedVariables()));
-		assertEquals(TEARS_COUNT, snapshot.packedVariables() & CLIENT_COUNTER_MASK);
+		assertEquals(STAGE_KILL, snapshot.packedVariables() & SECTION_MASK,
+			"第 20 次使用必须把任务说明切到击杀阶段");
+		assertEquals(TEARS_COUNT, (snapshot.packedVariables() >> 6) & SECTION_MASK);
 	}
 
 	private static void assertRollbackWorksWithoutQuestItems(CompiledQuestDefinition compiled,
 			QuestContract contract) {
 		QuestSnapshot snapshot = snapshot(QuestStatus.START,
-			Map.of("var0", 3, "var1", STAGE_TEARS), Map.of(), INGGISON_WORLD_ID, compiled.definition());
+			Map.of("var0", STAGE_TEARS, "var1", 3), Map.of(), INGGISON_WORLD_ID, compiled.definition());
 
 		QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.EnterWorld());
 		List<QuestAction> actions = plan.requiredActions();
@@ -132,32 +150,67 @@ class Quest10032ItemPlayClientCounterProductionFlowTest {
 			new QuestAction.RemoveItem(contract.tearsItemId(), QuestAction.RemoveItem.ALL)),
 			Set.copyOf(actions.subList(0, 2)), "回退必须回收两件任务道具且不再因缺物品被判不可行");
 		assertEquals(List.of(
-			new QuestAction.SetVariable("var0", 0),
-			new QuestAction.SetVariable("var1", ROLLBACK_STAGE)), actions.subList(2, 4));
+			new QuestAction.SetVariable("var1", 0),
+			new QuestAction.SetVariable("var0", ROLLBACK_STAGE)), actions.subList(2, 4));
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			plan.afterCommit());
 
 		QuestSnapshot rolledBack = nextSnapshot(snapshot, plan);
 		assertEquals(QuestStatus.START, rolledBack.status());
-		assertEquals(Map.of("var0", 0, "var1", ROLLBACK_STAGE),
+		assertEquals(Map.of("var0", ROLLBACK_STAGE, "var1", 0),
 			compiled.definition().progressLayout().unpack(rolledBack.packedVariables()));
 	}
 
-	private static void assertDropGateFollowsClientCounter(QuestDefinition definition,
+	private static void assertKillStageSurvivesLeavingTheInstance(CompiledQuestDefinition compiled) {
+		QuestSnapshot snapshot = snapshot(QuestStatus.START,
+			Map.of("var0", STAGE_KILL, "var1", TEARS_COUNT), Map.of(), INGGISON_WORLD_ID, compiled.definition());
+		for (QuestEvent event : List.of(new QuestEvent.EnterWorld(), new QuestEvent.Die(), new QuestEvent.LogOut())) {
+			assertFalse(hasMatchingPlan(compiled, snapshot, event),
+				"完成 20 次眼泪后离开副本/死亡/下线不得回退: " + event);
+		}
+	}
+
+	private static void assertHeartStageTurnsInOnLeaving(CompiledQuestDefinition compiled,
+			QuestContract contract) {
+		QuestSnapshot snapshot = snapshot(QuestStatus.START,
+			Map.of("var0", 7, "var1", TEARS_COUNT), Map.of(), INGGISON_WORLD_ID, compiled.definition());
+		QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.EnterWorld());
+		assertEquals(QuestStatus.REWARD, plan.nextStatus());
+		assertEquals(Map.of("var0", 8, "var1", TEARS_COUNT),
+			compiled.definition().progressLayout().unpack(plan.nextPackedVariables()));
+		List<QuestAction> actions = plan.requiredActions();
+		assertEquals(Set.of(
+			new QuestAction.RemoveItem(contract.fruitItemId(), QuestAction.RemoveItem.ALL),
+			new QuestAction.RemoveItem(contract.tearsItemId(), QuestAction.RemoveItem.ALL)),
+			Set.copyOf(actions.subList(0, 2)), "离副本转 reward 时必须回收两件任务道具");
+		assertTrue(actions.subList(2, actions.size()).contains(new QuestAction.SetVariable("var0", 8)),
+			"离副本转 reward 时必须提交阶段 8");
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), plan.afterCommit());
+	}
+
+	private static boolean hasMatchingPlan(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
+			QuestEvent event) {
+		return compiled.definition().transitions().stream()
+			.anyMatch(transition -> QuestMutationPlanner.plan(compiled, snapshot, event, transition).isPresent());
+	}
+
+	private static void assertDropGateFollowsStageSlot(QuestDefinition definition,
 			QuestContract contract) {
 		if (contract.heartItemId() == 0) {
 			return;
 		}
 		assertTrue(definition.metadata().drops().stream().anyMatch(drop ->
 			drop.npcId() == KILL_NPC_ID && drop.itemId() == contract.heartItemId()
-				&& drop.collectingStep() == TEARS_COUNT),
-			"掉落门禁必须匹配击杀阶段的槽位 0 值（满 20 次）");
+				&& drop.collectingStep() == STAGE_KILL),
+			"掉落门禁必须匹配击杀阶段的 SECTION_0 = 6");
 		int killStagePacked = definition.progressLayout().pack(
-			Map.of("var0", TEARS_COUNT, "var1", STAGE_KILL));
-		assertEquals(TEARS_COUNT, killStagePacked & CLIENT_COUNTER_MASK);
-		assertEquals(19, definition.progressLayout().pack(
-			Map.of("var0", 19, "var1", STAGE_TEARS)) & CLIENT_COUNTER_MASK,
-			"眼泪阶段未满 20 次时不得掉落心脏");
+			Map.of("var0", STAGE_KILL, "var1", TEARS_COUNT));
+		assertEquals(STAGE_KILL, killStagePacked & SECTION_MASK);
+		int tearsStagePacked = definition.progressLayout().pack(
+			Map.of("var0", STAGE_TEARS, "var1", 19));
+		assertEquals(STAGE_TEARS, tearsStagePacked & SECTION_MASK,
+			"眼泪阶段未满 20 次时不得满足击杀阶段门禁");
 	}
 
 	private static void assertHeartHandoverKeepsExactCount(QuestDefinition definition,

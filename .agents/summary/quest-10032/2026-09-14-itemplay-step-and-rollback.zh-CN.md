@@ -86,6 +86,8 @@
   引擎侧 `collecting-step` 比较的是节点投影的 `var0`（`QuestInteractionObjectValidator`），
   改字段后需一并复核该掉落过滤。
 
+> **2026-09-15 修正**：本节把阶段搬到 var1 的结论已被真机否定；阶段必须留在 SECTION_0（var0），见 [2026-09-15-section0-stage-correction.zh-CN.md](2026-09-15-section0-stage-correction.zh-CN.md)。
+
 ## 七、2026-09-14 实施（用户授权"开始+构建授权"）
 
 改动文件：

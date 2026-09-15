@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-015`
+> Pattern IDs: `QE-001`–`QE-016`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
 > last_reviewed: 2026-09-15
@@ -278,22 +278,24 @@ first_check: quest_data.xml quest_work_items, compiled metadata.questWorkItems()
 
 ## [QE-012] 十、客户端多 SECTION 计数必须使用固定 6-bit 位段 (CLIENT_SECTION_PACKING_MISMATCH)
 <!-- pattern-metadata
-status: PROVISIONAL
+status: CONFIRMED
 scope: Quest progress bit-field layout for item/skill counters and Aion 5.8 client quest-summary SECTION placeholders
 first_seen: 2026-09-14
-last_verified: 2026-09-14
-symptom: 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示
-root_cause: 多段计数被紧凑放在 offset 0/4/8，而客户端脚本和旧 QuestVars 按 SECTION_n = 6*n 读取
-fix_or_guardrail: 当 Quest.pak 的 quest_script/HTML summary 引用 SECTION_N 时，varN 必须放在 offset=6*N 的 6-bit 位段，并用客户端脚本或旧 setQuestVarById(N) 对齐
-evidence: .agents/summary/quest-11468-taloc-item-sections/2026-09-14-client-section-mismatch.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/definition/ClientQuestSectionAlignmentTest.java
-validation: static; IDE no-error; focused regression added but Maven and real-client acceptance pending
+last_verified: 2026-09-15
+symptom: 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示；任务推进后客户端任务说明仍停留在上一行、不跟随服务端阶段
+root_cause: 多段计数被紧凑放在 offset 0/4/8，而客户端脚本和旧 QuestVars 按 SECTION_n = 6*n 读取；或把任务说明行索引（阶段）从 SECTION_0 交换到 SECTION_1，使客户端行索引读到计数槽而停在固定行
+fix_or_guardrail: 当 Quest.pak 的 quest_script/HTML summary 引用 SECTION_N 时，varN 必须放在 offset=6*N 的 6-bit 位段，并用客户端脚本或旧 setQuestVarById(N) 对齐；阶段/任务说明行索引必须留在 SECTION_0，计数只能放 SECTION_1+，不得为了隔离计数而交换两者
+evidence: .agents/summary/quest-11468-taloc-item-sections/2026-09-14-client-section-mismatch.zh-CN.md; .agents/summary/quest-10032/2026-09-15-section0-stage-correction.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/definition/ClientQuestSectionAlignmentTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest10032ItemPlayClientCounterProductionFlowTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPacketOrderRegressionTest.java
+validation: focused regression ClientQuestSectionAlignmentTest, Quest10032ItemPlayClientCounterProductionFlowTest and QuestPacketOrderRegressionTest passed; production catalog 6193 definitions compiled with 0 failures and 0 whitelist violations; corrected 10032 layout still needs real-client re-verification
 boundaries: 有客户端证据证明的单字段紧凑布局可以保留；只有客户端脚本或旧 handler 明确寻址独立 SECTION 时才应用该规则
 superseded_by: none
-first_check: Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width
+first_check: Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width、任务说明行索引是否仍读取 SECTION_0
 -->
 
 - **判定规则**：5.8 客户端的 `SECTION_0..3` 分别对应 `quest_vars` 的 `0..5`、`6..11`、`12..17`、`18..23` 位段。任务 XML 中的 `varN` 若参与客户端摘要或脚本条件，必须与 `SECTION_N` 对齐，不能仅因为当前最大值较小就紧凑改到 `var(N-1)` 的位段。
-- **代表案例**：11468/21468 需要 `SECTION_1<10`、`SECTION_2<5`、`SECTION_3<3`，且进行中要求 `SECTION_0==0`。旧 XML 把三个字段放在 `0/4/8`，第一次使用物品就把 `SECTION_0` 置 1，客户端摘要整体隐藏；修复为 `6/12/18` 后恢复计数段。
+- **代表案例**：
+  1. 11468/21468 需要 `SECTION_1<10`、`SECTION_2<5`、`SECTION_3<3`，且进行中要求 `SECTION_0==0`。旧 XML 把三个字段放在 `0/4/8`，第一次使用物品就把 `SECTION_0` 置 1，客户端摘要整体隐藏；修复为 `6/12/18` 后恢复计数段。
+  2. 10032/20032：真机在服务端已到 s1（交换布局 wire=64，var1=1）时，客户端任务说明仍显示第 0 行；`//quest set 10032 START 65`（SECTION_0=1）后说明行立即前进，证明行索引读 SECTION_0。修正为 `var0=阶段(0..8, offset 0)`、`var1=眼泪次数(0..20, offset 6)`，掉落门禁恢复阶段 6；`Quest10032ItemPlayClientCounterProductionFlowTest` 锁定新合同，既有 `QuestPacketOrderRegressionTest` 的 `var0=7` 断言同时恢复通过。
 
 ---
 
@@ -372,3 +374,24 @@ first_check: broadcast-zone-mission-end 的 quest-ids 是否包含自身或其�
 - **代表案例**：
   1. `10031.xml`/`20031.xml`：4 处领奖广播把完成方自身列入目标（`10031 10032 10033 10034 10035` / `20031 20032 20033 20034 20035`），但完成方没有 `<zone-mission-end/>` 路由，导致每次奖励预览与领奖都记录 `AFTER_COMMIT BroadcastZoneMissionEnd failed`。修复为只广播 `10032~10035` / `20032~20035`，并新增 `Quest10031And20031ZoneMissionBroadcastTest` 锁定目标集合与 after-commit 顺序。
   2. 对照 `10520/20520`：同族广播只列后续任务（`10521 ...` / `20521 ...`），因此从未出现该审计失败。
+
+---
+
+## [QE-016] 十四、实例回退边只覆盖旧 handler 声明的阶段区间 (ROLLBACK_STAGE_SCOPE_MUST_MATCH_LEGACY)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Quest instance rollback transitions (enter-world/die/log-out) and their legacy var range boundaries
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 完成副本阶段后离副本/死亡/下线，已完成的计数被清空并回退到前置节点
+root_cause: XML 迁移把旧 handler 的 var >= X && var < Y 回退区间扩大到了已完成的后续阶段
+fix_or_guardrail: 回退/清空边必须逐条对照旧 handler 的变量区间；例如 10032 只有 var0 4..5 回退，s6 完成 20 次后离副本/死亡/下线都必须保留进度，s7 离副本才转 reward
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/10032.xml; src/main/resources/aion/data/static_data/quest_definition/quests/20032.xml; src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest10032ItemPlayClientCounterProductionFlowTest.java; .agents/summary/quest-10032/2026-09-15-section0-stage-correction.zh-CN.md; commit 911440146
+validation: focused-test Quest10032ItemPlayClientCounterProductionFlowTest (s6 survives leave/die/logout, s7 turns in on leave); production catalog 6193 definitions compiled with 0 failures and 0 whitelist violations; real-client re-verification pending
+boundaries: 死亡、下线、离副本三个事件在旧 handler 中可能各自不同区间，必须分别对照，不能用统一区间覆盖
+superseded_by: none
+first_check: 旧 handler onEnterWorldEvent/onDieEvent/onLogOutEvent 的 var 区间与 XML source/target 回退边逐条比对
+-->
+
+- **判定规则**：从 Java handler 迁移实例任务的回退/清空边时，先提取每个事件里的 `var` 区间（如 `var >= 4 && var < 6`），再决定 XML 需要哪些 `source` 节点；区间之后的完成阶段不得挂回退边，否则玩家已完成目标的进度会被错误清空。
+- **代表案例**：10032 旧 handler 的 `onEnterWorldEvent`/`onDieEvent`/`onLogOutEvent` 都只在 `var0 4..5` 时回退到 2，`var0=6`（20 次眼泪已完成）不回退，`var0=7` 离副本转 reward。XML 曾为 s4/s5/s6 都挂回退边，导致完成 20 次后出副本被清空；修正为只保留 s4/s5 回退，并新增回归断言 s6 离副本/死亡/下线无匹配计划、s7 离副本转 reward。
