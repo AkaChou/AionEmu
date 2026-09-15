@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-005`
+> Pattern IDs: `AR-001`–`AR-006`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
 > last_reviewed: 2026-09-14
@@ -14,12 +14,12 @@
 status: CONFIRMED
 scope: Spring startup, static-data loading pools and high-frequency service facades
 first_seen: 2026-08-23
-last_verified: 2026-09-14
+last_verified: 2026-09-15
 symptom: 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean
 root_cause: XML parsing and container singleton locks dominate startup while uncached lookups add hot-path contention
 fix_or_guardrail: Size pools for nested waits, share parsed resources and cache injected facade references
-evidence: .agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md:31; startup JFR findings
-validation: runtime JFR; performance claim requires the same workload and environment
+evidence: .agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md:31; .agents/summary/architecture-performance-refactor/2026-09-15-runtime-jfr-after-refactor.md; startup JFR findings
+validation: runtime JFR; 2026-09-15 复测（commit de4a66e20）未再出现 DefaultSingletonBeanRegistry 竞争，GC 708ms/33 次；性能结论仍需同工作量对比
 boundaries: JFR conclusions are workload-specific; do not infer a universal optimal pool size
 superseded_by: none
 first_check: startup JFR, static-data pool, resource parse count and facade lookup sites
@@ -145,3 +145,25 @@ first_check: KnownListIterationSafetyTest 的正则闸门、KnownListTest 的快
    - `knownObjects` / `knownPlayers` / `visualObjects` / `visualPlayers` 的遍历必须经 `knownObjectsSnapshot()` / `knownPlayersSnapshot()` / `getVisibleObjectsSnapshot()`；这些助手内部 `synchronized (map)` 复制一份。
    - 换成 `ConcurrentHashMap` 只解决“并发读写不损坏结构”，不解决“遍历期间新增对象是否应被访问”——后者是本仓库明确要求的快照语义。
    - `KnownListIterationSafetyTest` 是**源码级正则闸门**：任何 `for (... : knownObjects.values())` / `getKnownObjects().values()` 形式都会让它失败。
+
+---
+
+## [AR-006] 六、原始类型容器陷阱（热路径装箱）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 所有运行期热路径上的 int/long 键容器选型
+first_seen: 2026-09-15
+last_verified: 2026-09-15
+symptom: 游戏内 JFR 显示 Integer/Long 装箱占分配 74%，单站点 RealGeoData.getMap 占 41.6% 分配 + 11.35% CPU
+root_cause: com.aionemu.commons.utils.collections.IntObjectHashMap 直接 extends LinkedHashMap<Integer,V>，每次 get(int)/put(int,V) 都自动装箱
+fix_or_guardrail: 热路径禁用 IntObjectHashMap（名字像 primitive map，实为装箱 LinkedHashMap）；改用 LongObjectHashMap（原始 long 键，int 自动宽化）或升序 int 数组 + 二分
+evidence: src/main/java/com/aionemu/commons/utils/collections/IntObjectHashMap.java:13; src/main/java/com/aionemu/commons/utils/collections/LongObjectHashMap.java; src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java:185; src/main/java/com/aionemu/gameserver/world/geo/path/PathData.java:1520; .agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md
+validation: runtime JFR（300s 真实游戏内）+ focused-test（172 例含 PathDataTest/PathServiceConcurrencyTest/NpcMoveControllerPathTest/LongObjectHashMapTest/RealGeoDataLookupTest）；运行期收益待重启后复测
+boundaries: 87 个使用点中多数为加载期数据表，本次只修了 RealGeoData 与 PathData 两处热点；采样权重仅用于相对排序
+superseded_by: none
+first_check: RealGeoData.getMap、PathData.visited、任何 Map<Long,...>/Map<Integer,...> 的逐节点 put/get
+-->
+
+1. **名字带 Int 不等于无装箱**：`IntObjectHashMap<V> extends LinkedHashMap<Integer, V>` 只提供 `contains(int)`/`keys()` 便利方法，键仍是 `Integer`；worldId 等大值每次查表都会新建 `Integer`。
+2. **实测代价**：300s 游戏内窗口内，`RealGeoData.getMap(int)`（仅一行 `geoMaps.get(worldId)`）独占采样分配 1440.9MB / 41.6% 与 11.35% CPU；A* 的 `Map<Long, SearchNode> visited` 再占 34.9%（`Long.valueOf`）。
+3. **正确姿势**：先在调用点做 last-lookup 缓存（worldId 在单线程内长期稳定），再考虑自写开放寻址 primitive 容器；引入 fastutil 等依赖需团队评估。

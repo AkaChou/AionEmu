@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
+
+import com.aionemu.commons.utils.collections.LongObjectHashMap;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -453,7 +454,7 @@ public final class PathData {
 				HeightProvider terrain, EdgePassability passability, BitSet allowedBlocks) {
 			SearchWorkspace workspace = workspace();
 			workspace.beginLowLevelSearch();
-			Map<Long, SearchNode> visited = workspace.visited;
+			LongObjectHashMap<SearchNode> visited = workspace.visited;
 			PriorityQueue<OpenNode> open = workspace.open;
 			try {
 				long sequence = 0;
@@ -520,7 +521,7 @@ public final class PathData {
 		private BlockPath findBlockPath(int startBlock, int targetBlock) {
 			SearchWorkspace workspace = workspace();
 			workspace.beginBlockSearch();
-			Map<Integer, BlockSearchNode> visited = workspace.blockVisited;
+			LongObjectHashMap<BlockSearchNode> visited = workspace.blockVisited;
 			PriorityQueue<BlockOpenNode> open = workspace.blockOpen;
 			try {
 				long sequence = 0;
@@ -657,8 +658,8 @@ public final class PathData {
 			}
 			SearchWorkspace workspace = workspace();
 			workspace.beginPortalSearch();
-			Map<Long, PortalStep> goals = workspace.portalGoals;
-			Map<Long, SearchNode> visited = workspace.visited;
+			LongObjectHashMap<PortalStep> goals = workspace.portalGoals;
+			LongObjectHashMap<SearchNode> visited = workspace.visited;
 			PriorityQueue<OpenNode> open = workspace.open;
 			try {
 				for (PortalStep portal : portals) {
@@ -1511,10 +1512,14 @@ public final class PathData {
 			private int openNodeIndex;
 			private int blockSearchNodeIndex;
 			private int blockOpenNodeIndex;
-			private final Map<Long, SearchNode> visited = new HashMap<>();
+			/**
+			 * 逐节点访问集合：使用原始 long 键容器，避免 A* 每个节点产生 Long 装箱。
+			 * Per-node visited set using a primitive long-keyed map, avoiding Long boxing per A* node.
+			 */
+			private final LongObjectHashMap<SearchNode> visited = new LongObjectHashMap<>(512);
 			private final PriorityQueue<OpenNode> open = new PriorityQueue<>(OPEN_NODE_ORDER);
-			private final Map<Long, PortalStep> portalGoals = new HashMap<>();
-			private final Map<Integer, BlockSearchNode> blockVisited = new HashMap<>();
+			private final LongObjectHashMap<PortalStep> portalGoals = new LongObjectHashMap<>(32);
+			private final LongObjectHashMap<BlockSearchNode> blockVisited = new LongObjectHashMap<>(64);
 			private final PriorityQueue<BlockOpenNode> blockOpen = new PriorityQueue<>(BLOCK_OPEN_NODE_ORDER);
 
 			private void resetNodes() {

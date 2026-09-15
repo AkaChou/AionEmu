@@ -26,6 +26,9 @@ log/
 /log
 /aion
 
+# JFR flight recordings (per-run profiling output, never committed)
+*.jfr
+
 # Python bytecode caches from memory-bank maintenance scripts
 __pycache__/
 *.py[cod]
