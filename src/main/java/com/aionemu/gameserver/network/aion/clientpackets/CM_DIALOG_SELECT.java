@@ -9,9 +9,11 @@ import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.gameobjects.player.DialogSelectRepeat;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -22,6 +24,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 选择 NPC/任务对话选项的客户端包。
  * Client packet selecting an NPC or quest dialog option.
@@ -29,6 +32,11 @@ import com.aionemu.gameserver.services.QuestService;
 @Slf4j
 
 public class CM_DIALOG_SELECT extends AionClientPacket {
+	/** 连续相同对话选择达到该次数即判定为客户端重发死循环。 / Consecutive identical selections that mark a client resend loop. */
+	public static final int MAX_IDENTICAL_DIALOG_SELECTS = 4;
+	/** 相邻相同对话选择的最大间隔；超过后重新计数。 / Maximum gap between identical selections before the counter restarts. */
+	public static final long DIALOG_SELECT_REPEAT_WINDOW_MILLIS = 5_000;
+
 	private int targetObjectId;
 	private int dialogId;
 	private int extendedRewardIndex;
@@ -150,6 +158,9 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				lastPage,
 				dialogId));
 		}
+		if (player != null && breakDialogSelectLoop(player, targetObjectId, dialogId, lastPage, questId)) {
+			return;
+		}
 		QuestEngine questEngine = GameEngineServices.questEngine();
 		var metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		QuestEnv env = new QuestEnv(null, player, questId, 0);
@@ -222,5 +233,55 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
 			}
 		}
+	}
+
+	/**
+	 * 跟踪同一个对话选择的连续重发；达到阈值时记录告警、清除对话上下文并关闭客户端窗口，打断死循环。
+	 * Tracks consecutive resends of the same dialog selection; on reaching the threshold it logs a
+	 * warning, clears the dialog context, and closes the client window to break the loop.
+	 *
+	 * <p>触发条件是「同一目标、同一上一页、同一动作、同一任务」在窗口内连续出现：这种情况下服务端仍然
+	 * 没有下发后续页，客户端会一直重发 {@code CM_DIALOG_SELECT}（例如 movie self-loop 缺少目标页）。</p>
+	 * <p>The trigger is the same target, previous page, action, and quest id repeating inside the window,
+	 * which means the server still produced no continuation and the client keeps resending
+	 * {@code CM_DIALOG_SELECT} (for example a movie self-loop that lacks its target page).</p>
+	 *
+	 * @param player 发包玩家 / sending player
+	 * @param targetObjectId 交互目标对象 ID / interaction target object id
+	 * @param dialogId 对话动作 ID / dialog action id
+	 * @param lastPage 客户端发包前所在页面 / page shown by the client before sending the packet
+	 * @param questId 客户端携带或记忆的任务 ID / quest id carried or remembered for this selection
+	 * @return 是否已判定并打断循环 / whether the loop was detected and broken
+	 */
+	static boolean breakDialogSelectLoop(Player player, int targetObjectId, int dialogId, int lastPage,
+			int questId) {
+		DialogSelectRepeat repeat = nextDialogSelectRepeat(player.getDialogSelectRepeat(), targetObjectId,
+			lastPage, dialogId, questId, System.currentTimeMillis());
+		player.setDialogSelectRepeat(repeat);
+		if (repeat.count() < MAX_IDENTICAL_DIALOG_SELECTS) {
+			return false;
+		}
+		player.clearDialogSelectRepeat();
+		player.clearNpcQuestDialogSelection();
+		VisibleObject target = targetObjectId > 0 ? player.getKnownList().getObject(targetObjectId) : null;
+		int npcId = target instanceof Npc npc ? npc.getNpcId() : 0;
+		log.warn(I18n.get("log.quest_dialog_select_loop", player.getName(), npcId, targetObjectId, dialogId,
+			lastPage, questId, repeat.count()));
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+		return true;
+	}
+
+	/**
+	 * 计算本次对话选择的重发跟踪快照：签名相同且仍在窗口内则计数加一，否则从 1 重新开始。
+	 * Computes the repeat-tracking snapshot for the current dialog selection: identical signatures inside
+	 * the window increment the counter and anything else restarts it at one.
+	 */
+	static DialogSelectRepeat nextDialogSelectRepeat(DialogSelectRepeat previous, int targetObjectId,
+			int lastPage, int dialogId, int questId, long nowMillis) {
+		if (previous != null && previous.matches(targetObjectId, lastPage, dialogId, questId)
+				&& nowMillis - previous.lastMillis() <= DIALOG_SELECT_REPEAT_WINDOW_MILLIS) {
+			return previous.incremented(nowMillis);
+		}
+		return new DialogSelectRepeat(targetObjectId, lastPage, dialogId, questId, 1, nowMillis);
 	}
 }

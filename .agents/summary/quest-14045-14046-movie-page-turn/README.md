@@ -89,3 +89,28 @@ mvn -Dtest=QuestDefinitionCatalogManifestTest,QuestEngineNpcDialogDispatchTest,Q
 负向验证（不属于默认测试）：删除 14045 的 `SHOW_QUEST_PAGE SELECT1_1_1` 后编译报 `MOVIE_WITHOUT_CONTINUATION`；篡改 `quest-dialog-pages.csv` 后新鲜度门禁失败。
 
 用户使用 Aion 5.8 客户端复测 14045/14046 的 1011->1012->1013 与 1352->1353->10001 路径并确认通过；启动日志、成功协议 trace、截图和重登/死亡/重复路径 not captured。
+
+## Phase 3 `<movie-page-turn>` 编写块（2026-09-15，未提交）
+
+- 新积木 `QuestXmlBlockExpander#expandMoviePageTurn`：`source`/`target`/`npc-id`/`action`/`movie-id` 必填，`page` 默认取与动作同名的客户端页面；`movie-type` 默认 `CUTSCENE`；可选 `conditions`、`actions` 子元素；可选 `next-action` 追加一条中继页路径
+- 结构护栏：动作没有同名页面且未显式声明 `page` 时抛 `MOVIE_PAGE_TURN_PAGE_MISSING`，即积木无法表达「只播影片」这一缺陷形态；`movie-page-turn` 路由同时登记到 `explicitDialogRoutes`，派生积木不会再生成冲突路由
+- `quest_definition.xsd` 新增 `movie-page-turn` 元素与 `movie-page-turn-type`；`docs/quest/WRITING_GUIDE.zh-CN.md` §3.3 增补作者合同
+- 代表性迁移：14045（`SELECT1_1_1` + movie 272）、14046（`SELECT2_1` + movie 102）已改写成积木，`Quest14045And14046MoviePageTurnContractTest` 与 `MovieContinuationResponseFamilyTest` 断言 IR 完全不变
+- 回归覆盖：`QuestXmlDomainBlocksTest` 新增 3 条（等价展开、条件/动作/movie-type 透传、缺页拒绝）
+
+## Phase 4 运行时断路器（2026-09-15，未提交）
+
+- `CM_DIALOG_SELECT` 在路由前调用 `breakDialogSelectLoop(...)`：同一目标、同一上一页、同一动作、同一任务在 5 秒窗口内连续出现 4 次仍未获得后续页时判定死循环
+- 触发动作：写 `log.quest_dialog_select_loop` 告警（含玩家、npcId、targetObj、动作、上一页、questId、连续次数）、清除 NPC 任务行记忆、发送 `SM_DIALOG_WINDOW(0, 0)` 关闭窗口，并跳过本次任务路由
+- 状态载体：`Player` 上的瞬时 `DialogSelectRepeat` 快照（不持久化，随玩家对象回收）；同一签名之外的选择、超过窗口的间隔都会重新计数
+- 回归覆盖：`CM_DIALOG_SELECTRepeatGuardTest`（计数/签名变化/窗口过期/交替选择）+ `QuestDialogLoopBreakerProductionFlowTest`（真实协议：3 次无响应后第 4 次下发关闭窗口且任务状态不变）
+
+Phase 3/4 在干净 HEAD `569ba10d8` 的临时 worktree（叠加本批改动）验证：
+
+```bash
+mvn -Dtest=QuestXmlDomainBlocksTest,CM_DIALOG_SELECTRepeatGuardTest,CMDialogSelectContextTest,QuestDialogLoopBreakerProductionFlowTest,Quest14045And14046MoviePageTurnContractTest,MovieContinuationResponseFamilyTest,QuestMovieContinuationGateTest,ProductionCatalogWhitelistVerificationTest,LocalizedLogCallsTest,QuestE2eInfrastructureTest,QuestEquippedStartProductionFlowTest,QuestPacketOrderRegressionTest test
+# Tests run: 118, Failures: 0, Errors: 0
+# PRODUCTION_COMPILE_OK=6193 / FAILURES=0 / WHITELIST_VIOLATIONS=0
+```
+
+未在真实 Aion 5.8 客户端上验证断路器表现（无法在客户端复现死循环）；`QuestDialogLoopBreakerProductionFlowTest` 走的是真实 `CM_DIALOG_SELECT` 包与生产 dispatcher，不等于真实客户端验收。

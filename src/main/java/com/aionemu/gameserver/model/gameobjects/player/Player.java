@@ -204,6 +204,7 @@ public class Player extends Creature {
 	private QuestStateList questStateList;
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
+	private volatile DialogSelectRepeat dialogSelectRepeat;
 	@Getter
 	@Setter
 	private RecipeList recipeList;
@@ -968,6 +969,21 @@ public class Player extends Creature {
 	/** 清除 NPC 任务对话授权。 / Clears NPC quest-dialog authorization. */
 	public void clearNpcQuestDialogSelection() {
 		npcQuestDialogSelection = null;
+	}
+
+	/** 返回上一次客户端对话选择的重发跟踪状态；没有记录时为 null。 / Returns the repeat-tracking state of the last client dialog selection, or null when absent. */
+	public DialogSelectRepeat getDialogSelectRepeat() {
+		return dialogSelectRepeat;
+	}
+
+	/** 记录本次客户端对话选择的重发跟踪状态。 / Stores the repeat-tracking state of the current client dialog selection. */
+	public void setDialogSelectRepeat(DialogSelectRepeat repeat) {
+		dialogSelectRepeat = repeat;
+	}
+
+	/** 清除客户端对话选择的重发跟踪。 / Clears client dialog-selection repeat tracking. */
+	public void clearDialogSelectRepeat() {
+		dialogSelectRepeat = null;
 	}
 
 	private record NpcQuestDialogSelection(int interactionObjectId, int questId) {
