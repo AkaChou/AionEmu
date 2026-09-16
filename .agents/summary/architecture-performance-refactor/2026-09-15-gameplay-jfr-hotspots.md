@@ -212,3 +212,113 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> { ... }
 2. `Matrix4f.invert` 27.1 MB：世界矩阵的逆每次查询重算，可缓存。
 3. `PathData$MapData$SearchWorkspace.node/openNode` 175 MB：A* 节点池增长（本窗口寻路更多）。
 4. `Throwable.fillInStackTrace` 37.1 MB（+67%）：疑似用异常做控制流，需定位抛出点。
+
+## 十二、第五/第六轮：BIH 遍历栈、水中寻路死区与 play-7 复测
+
+> 本节的分配数字统一按「栈中第一个 `com.aionemu.` 帧」聚合，与第十一节口径略有差异（同一件事：`intersectWhere` 在 `play-5` 为 108.1 MB、`play-6` 为 17.2 MB）。
+
+### 12.1 BIH 遍历栈 + 线程本地逆矩阵（第五轮，`/tmp/play-6-stack.jfr`）
+
+服务 16:22 重启（`target/classes` 已含未提交的数组栈与 `INVERSE_MATRIX`），16:48–16:53 录 300s。
+
+| 站点 | `play-5` | `play-6` | 变化 |
+|---|---|---|---|
+| `BIHNode.intersectWhere` | 108.1 MB | 17.2 MB | −84% |
+| `Matrix4f.invert` | 26.4 MB | 0 | 归零 |
+| `SearchWorkspace.node` | 147.2 MB | 5674.8 MB | 池上限实验值，已回退 |
+
+**池上限实验教训（AR-010）**：把 `PathData.SearchWorkspace.nodes` 的每线程池截到 8192 后，`node()` 在每次搜索里重新分配，产生 5.7 GB churn；`jcmd GC.class_histogram` 显示存活 `PathData$MapData$Node` 从 **329 万 / 158 MB** 降到 2.8 万 / 1.35 MB —— 内存便宜、churn 昂贵。该实验已 `git checkout` 回退。
+
+### 12.2 水中寻路死区（第六轮，`/tmp/play-7-water.jfr`）
+
+症状：Taloc's Hollow（300190000）被拉进水池的怪停在水面不动；水边（浅）60s 回家，水里（深一点）永不回家。
+
+定位（用 `water-volumes.bin` 与模板数据实算）：
+
+- 卡住点 (486.12, 839.28, 1270.83) 在 volume 497 内，`surfaceZ = 1271.519`（没入 0.688m）；`bound_radius = 0.78/1.096`。
+- `isSubmerged` 的水面余量写死 0.5m → 判为"游泳"；`waterEdge/allows` 用 `max(0.5, collision) = 0.78m` → 位置不合法。**0.5m~clearance 之间的死区**：被判为游泳却过不了空间寻路，地面 A* 又被跳过 → 必然 NO_PATH。
+- `NpcMoveController` 的 HOME 30s/60s 瞬移兜底写在 `case HOME` 内，会被 `canPerformMove`、`prepareGroundPath() == false` 的提前 return 绕过，回家兜底不可达。
+
+修复：
+
+- `PathService.immersionMargin(owner) = max(max(0.5, collision), boundRadius.upper - 0.1)`，`isSubmerged` 使用该余量 —— 保证「判为游泳 ⇒ 一定过得了 waterEdge」，同时贴近客户端「没入水面才算游泳」的表现（与 `ZoneLevelService` 的 `noseHeight` 同源）。
+- `NpcMoveController.abortTimedOutHomeReturn()` 提前到 `moveToDestination()` 入口，任何早退分支都不能绕过归家兜底。
+
+验证：用户真机确认水池里的怪恢复正常移动；`play-7` 于 17:42:39–17:47:35 录 296s（该窗口开着 AI 日志，含水中场景）。
+
+| 站点 | `play-5` | `play-7` | 说明 |
+|---|---|---|---|
+| 采样分配总量 | 590.3 MB | 449.9 MB | 本轮还额外开着 AI 日志 |
+| `SearchWorkspace.node` | 147.2 MB | 159.9 MB | 池实验回退后回到常态 |
+| `BIHNode.intersectWhere` | 108.1 MB | 18.2 MB | 数组栈改造生效 |
+| `Matrix4f.invert` | 26.4 MB | 0 | 归零 |
+| `Vector3f$1.create` | 15.0 MB | 28.6 MB | `newInstance <- intersectWhere`，池耗尽时新建 |
+
+**`play-7` CPU 采样（1625 样本，A* 相关约 75%）**：
+
+| 站点 | 样本 | 说明 |
+|---|---|---|
+| `searchLowLevel`（含子调用） | 1389 | A* 主体 |
+| ├ 优先队列复合比较器（`comparingInt/Double` + `siftUp/siftDown`） | 434 | `OPEN_NODE_ORDER` 的 lambda 间接层 |
+| ├ `Sector.simpleNeighbor/simpleNode/heightAt` | 337 | 邻居展开与地形采样 |
+| ├ `workspace()` ThreadLocal（初始化 + 探测） | 182 | 每线程首次建工作区；`setInitialValue` 103 + `getEntryAfterMiss` 80 |
+| ├ `getTerrainZ → RealGeoData.indexOfWorldId` | 174 | 每个采样点都做一次 worldId 二分查找 |
+| └ `LongObjectHashMap.indexOf` | 83 | visited 表散列 |
+
+GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141ms。
+
+**下一轮候选（按 ROI）**：
+
+1. A* 搜索期缓存 `GeoMap`：`PathService.terrain(worldId)` 的 lambda 每次采样都走 `getTerrainZ → WorldMapLookup.find`（174 样本 / 11%）。
+2. 工作区池化 + 显式传递（`ConcurrentLinkedDeque` + 租约、用完归还）：省 `workspace()` 的 ThreadLocal 初始化/查找（182 样本 / 11%），并把 67 份工作区降到 5~10 份（约 −130 MB 堆）。
+3. `BIHNode.intersectWhere` 的 5 个 scratch `Vector3f` 改线程本地 float 数组（28.6 MB 分配 + 池交互）。
+4. 优先队列比较器内联（手写比较器或让节点实现 `Comparable`）。
+5. Spring 门面引用固化：`GameServerNetworkServices.packetLoggerService()` 13.5 MB（网络写路径）、`GameEngineServices.questEngine()` 12.8 MB。
+6. Quest 快照集合复制：`QuestSnapshot.withCompletedQuestIds` 14.2 MB + `PlayerQuestEventPort.completedQuestIdsOf` 7.8 MB。
+
+**待补**：本轮 `jcmd GC.class_histogram` attach 失败（Azul 26 报 `state is not ready to participate in attach handshake`），下次重启后补抓存活对象（重点 `PathData$MapData$Node` 数量与工作区份数）。
+
+### 12.3 工作区租约池、地形缓存与节点槽位回退（第七/第八轮，`play-8`/`play-9`）
+
+按 ROI 落地了四项改动（`play-8`，`/tmp/play-8-alloc.jfr`）：
+
+1. **A* 搜索期缓存世界地图**：`GeoService.getGeoMap(worldId)` + `PathService.terrain(worldId)` 把 `geoData.getMap` 提到 lambda 外，四个地形入口统一走它。
+2. **工作区租约池**：`WORKSPACE_LEASE` + `WORKSPACE_POOL` + `MAX_POOLED_WORKSPACES=16`，四个顶层入口 acquire/`finally` release，`SearchWorkspace.resetState()` 归还前清状态但保留节点池实例。
+3. **`BIHNode` 射线 scratch**：5 个 `Vector3f` 由对象池改每线程固定 `RayScratch`（删除 `recycleScratch` 与两个回收出口）。
+5. **Spring 门面引用固化**：`questEngine()`/`packetLoggerService()` 只在解析到真实 bean 时缓存，`destroy()` 清空。
+
+`play-8` 对 `play-7` 的结果：
+
+| 指标 | `play-7` | `play-8` | 结论 |
+|---|---|---|---|
+| `workspace()` CPU 样本 | 182 | **15** | −92% |
+| `ThreadLocal.setInitialValue` | 103 | **0** | 归零 |
+| `getTerrainZ → indexOfWorldId` | 174 | **0** | 归零 |
+| `Vector3f$1.create` | 28.64 MB | **0.74 MB** | −97% |
+| `packetLoggerService()` / `questEngine()` | 13.53 / 12.77 MB | **0 / 0** | 归零 |
+| 存活 `SearchWorkspace` | 67 | **8** | 池化生效 |
+| **`PathData$MapData$Node` 分配** | 132.3 MB | **188.4 MB** | ❌ 副作用 |
+| **存活 `Node`** | 329 万 / 158 MB | **464 万 / 222.7 MB** | ❌ 副作用 |
+
+副作用根因：池化把 67 份工作区收敛到 8 份后，**这 8 份全部被重度 A* 膨胀**（以前只有 5~8 个 pathfinder 线程的工作区是大的，其余 59 个线程各只占几千槽位）。而 `searchLowLevel`/`searchToAnyPortal` 的邻居展开对**每个方向**都先 `step()` 取一个 Node 槽位，即使该邻居随即被 `continue` 或已在 `visited` 中——槽位数 ≈ 8 × 处理节点数。
+
+**第八轮修复（节点槽位回退）**：`SearchWorkspace.nodeMark()` / `rollbackNodes(mark)`，只有真正写入 `visited` 的邻居（`known == null` 分支）保留槽位，其余展开用完即回退复用。`findBlockPath` 无需改动（它本就在需要时才取块节点）。
+
+`play-9`（`/tmp/play-9-rollback.jfr`，300s，同 profile）：
+
+| 指标 | `play-8` | `play-9` | 变化 |
+|---|---|---|---|
+| 采样分配总量 | 434.2 MB | **278.0 MB** | **−36%** |
+| `SearchWorkspace.node` | 242.0 MB | **59.7 MB** | **−75%** |
+| `PathData$MapData$Node`（class） | 188.4 MB | **48.9 MB** | −74% |
+| `PathData$MapData$Node[]` | 53.6 MB | **10.8 MB** | −80% |
+| 存活 `Node` | 464 万 / 222.7 MB | **95.2 万 / 45.7 MB** | **−79%** |
+| 存活 `Node[]` | 29.4 MB | 5.6 MB | −81% |
+| 存活 `SearchWorkspace` | 8 | 9 | 个位数 |
+| CPU 样本（A* 占比） | 288 / 964 | 94 / 524 | 负载不同，结构不变 |
+
+**验证**：`mvn -Dtest=PathDataTest,PathServiceCompressionTest,PathServiceConcurrencyTest,SpatialPathfinderTest,NpcMoveControllerPathTest test` → **128 例全绿**（`PathDataTest.reusesThreadLocalAStarWorkspace` 改为 `reusesPooledAStarWorkspace`：断言工作区归还共享池且两次搜索复用同一实例）；用户真机确认水中场景正常。
+
+**待观察**：`OpenNode`/`SearchNode` 的绝对分配量在 `play-9` 上升（6.4→10.8 MB、6.9→9.2 MB），当前无法区分是负载差异还是槽位复用带来的搜索次数变化，需下一轮归一化确认。
+
+**新的最大分配站点（quest 侧）**：`PlayerQuestEventPort.completedQuestIdsOf` 17.1 MB + `QuestSnapshot.validatedCompletedQuestIds` 14.0 MB + `QuestSnapshot.validatedInventory` 8.4 MB ≈ **40 MB**，属于任务引擎快照复制，需与 quest 侧的并行改动一并评估。
