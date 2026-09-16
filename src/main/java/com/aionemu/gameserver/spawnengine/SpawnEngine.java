@@ -12,17 +12,21 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.agentspawns.AgentSpawnTemplate;
@@ -69,6 +73,13 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 @Slf4j
 public class SpawnEngine {
+
+	/** geo 兜底与数据 Z 偏差超过该值（米）时记录 WARN。 / Warn when the geo fallback deviates from the authored Z by more than this many meters. */
+	private static final float GEO_FALLBACK_WARN_DELTA = 10.0f;
+
+	/** 已告警的 (worldId, npcId) 与上限，避免同一模板在启动期刷屏。 / Warned (worldId, npcId) pairs and their cap, to avoid startup log flooding. */
+	private static final Set<Long> GEO_FALLBACK_WARNED = ConcurrentHashMap.newKeySet();
+	private static final int GEO_FALLBACK_WARN_CAP = 2048;
 
 	/**
 	 * 根据刷怪模板创建并刷出 VisibleObject。
@@ -289,11 +300,18 @@ public class SpawnEngine {
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector) {
 		return projectedSpawnZ(visibleObject, spawn, projector, npc ->
-			GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY()));
+			GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY()), npc ->
+			GameWorldServices.geoService().projectGroundZ(spawn.getWorldId(), spawn.getX(), spawn.getY(),
+				spawn.getZ(), npc.getInstanceId()));
 	}
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
 			Function<Npc, Float> terrainHeight) {
+		return projectedSpawnZ(visibleObject, spawn, projector, terrainHeight, npc -> Float.NaN);
+	}
+
+	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
+			Function<Npc, Float> terrainHeight, Function<Npc, Float> geoGround) {
 		// 零移速交互物可能使用水面或摆件高度，必须保留静态数据中的 Z。 / Immobile objects may use authored water/prop height.
 		if (!(visibleObject instanceof Npc npc) || spawn.canFly()
 				|| !(npc.getAi2() instanceof NpcAI2 ai) || !ai.isMoveSupported()) {
@@ -305,7 +323,47 @@ public class SpawnEngine {
 		}
 		// PATH 节点容差外的出生点（如出生 Z 悬空于树冠上方）：用地形高度兜底，避免出生即悬空
 		float terrainZ = terrainHeight.apply(npc);
-		return Float.isNaN(terrainZ) ? spawn.getZ() : terrainZ;
+		if (!Float.isNaN(terrainZ)) {
+			return terrainZ;
+		}
+		// 非攻击对象（要塞护盾/发生器、机关、传送门等）的高度是数据作者摆放的，
+		// geo 兜底会把它们压到下层地面，因此保留作者高度。
+		// Non-attackable objects (siege shields, traps, portals) keep their authored height:
+		// the geo fallback would drag them down to a lower surface.
+		if (keepsAuthoredZ(npc)) {
+			return spawn.getZ();
+		}
+		// 无地形图的 world（TERRAIN_DISABLED_MAPS 或缺少 PNG）再退一步用 geo 碰撞面兜底，
+		// 否则只能退回 XML 的 z，出生即可能悬空。 / Terrain-less maps fall back to the geo surface.
+		float geoZ = geoGround.apply(npc);
+		if (!Float.isFinite(geoZ)) {
+			return spawn.getZ();
+		}
+		float delta = Math.abs(geoZ - spawn.getZ());
+		long warnKey = ((long) spawn.getWorldId() << 32) | (spawn.getNpcId() & 0xFFFFFFFFL);
+		if (delta > GEO_FALLBACK_WARN_DELTA && GEO_FALLBACK_WARNED.size() < GEO_FALLBACK_WARN_CAP
+				&& GEO_FALLBACK_WARNED.add(warnKey)) {
+			log.warn(I18n.get("log.4e874ec198eb", spawn.getWorldId(), spawn.getNpcId(), npc.getObjectId(),
+				spawn.getX(), spawn.getY(), spawn.getZ(), geoZ, Math.round(delta * 100f) / 100f));
+		}
+		return geoZ;
+	}
+
+	/**
+	 * 判断是否为作者摆放的非生物对象（NON_ATTACKABLE / UNKNOWN），这类对象不参与 geo 贴地兜底。
+	 * Returns whether the NPC is an authored non-creature object (NON_ATTACKABLE / UNKNOWN), which must keep
+	 * its authored Z instead of being snapped to the geo surface.
+	 *
+	 * @param npc NPC / npc
+	 * @return 保留作者高度时为 true / true when the authored Z must be kept
+	 */
+	static boolean keepsAuthoredZ(Npc npc) {
+		NpcTemplate template = npc.getObjectTemplate();
+		if (template == null) {
+			return false;
+		}
+		NpcType type = template.getNpcType();
+		return type == NpcType.NON_ATTACKABLE || type == NpcType.UNKNOWN;
 	}
 
 	/**
