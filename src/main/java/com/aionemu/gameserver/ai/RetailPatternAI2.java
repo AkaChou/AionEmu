@@ -1,7 +1,9 @@
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
+import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
@@ -62,6 +64,8 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.world.WorldMapInstance;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,6 +84,7 @@ import java.util.concurrent.Future;
  * General AI that executes retail NPC AI patterns.
  */
 @AIName("retail_pattern")
+@Slf4j
 public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private static final Set<String> SUPPORTED_EVENTS = Set.of(
@@ -967,11 +972,25 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	protected void handleKilled(Creature killer) {
 		deathKiller = killer;
 		Creature source = killer == null ? null : killer.getMaster();
+		if (isLogging()) {
+			AI2Logger.info(this, "handleKilled killer=" + creatureName(killer) + " source=" + creatureName(source));
+		}
 		if (source instanceof Player) {
 			runEvent("on_killed_by_user", null, source);
 		} else if (source instanceof Npc) {
 			runEvent("on_killed_by_npc", null, source);
 		}
+	}
+
+	/**
+	 * 返回生物的可读标识，用于 AI 调试日志。
+	 * Returns a readable creature identifier for AI debug logging.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 标识文本 / identifier text
+	 */
+	private static String creatureName(Creature creature) {
+		return creature == null ? "none" : creature.getClass().getSimpleName() + '(' + creature.getObjectId() + ')';
 	}
 
 	private void runDeathEvent() {
@@ -1037,6 +1056,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		for (Rule rule : pattern.event(event)) {
 			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
+				if (isLogging() && SPAWNER_END_EVENTS.contains(event)) {
+					AI2Logger.info(this, "Terminal event " + event + " rule priority=" + rule.priority()
+						+ " actions=" + rule.actions().size() + " target=" + creatureName(eventTarget));
+				}
 				boolean previousSpawnerEndEvent = spawnerEndEventInProgress;
 				spawnerEndEventInProgress = previousSpawnerEndEvent || SPAWNER_END_EVENTS.contains(event);
 				try {
@@ -2155,8 +2178,25 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 	}
 
+	/**
+	 * 解析 spawn 动作的目标 NPC 模板，解析失败时记录告警。
+	 * Resolves the spawn action target and logs a warning when it cannot be resolved.
+	 *
+	 * @param action spawn 动作 / the spawn action
+	 * @return NPC 模板 ID；解析失败返回 null / npc template id, or null when unresolved
+	 */
+	private Integer spawnTargetNpcId(Operation action) {
+		String nameId = value(action, "npc_nameid");
+		Integer npcId = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.findNpcId(nameId);
+		if (npcId == null) {
+			log.warn(I18n.get("log.retail_ai.spawn_target_unresolved", nameId,
+				getOwner() == null ? 0 : getOwner().getNpcId()));
+		}
+		return npcId;
+	}
+
 	private void spawn(Operation action) {
-		Integer npcId = DataManager.RETAIL_AI_DATA.findNpcId(value(action, "npc_nameid"));
+		Integer npcId = spawnTargetNpcId(action);
 		if (npcId == null) {
 			return;
 		}
@@ -2173,6 +2213,50 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	static String retailWalkerId(int worldId, String pathname) {
 		return "retail:" + worldId + ':' + pathname.toLowerCase(Locale.ROOT);
+	}
+
+	/**
+	 * 按真端 pattern 的 spawn 动作在实例里补刷目标对象（幂等）。
+	 * Spawns the object declared by a retail pattern spawn action, idempotently.
+	 *
+	 * <p>供实例脚本在真端 pattern 未接管时驱动同一份真端数据：同一实例内已存在同模板 NPC 时直接跳过，
+	 * 因此 pattern 正常执行时不会产生第二份实体；坐标、朝向与飞行标记全部取自真端动作本身。
+	 * Used by instance scripts to drive the same retail data when the pattern did not take over: it skips when an NPC of
+	 * the same template already exists in the instance, so a working pattern never produces a second copy. Coordinates,
+	 * heading and the aerial flag all come from the retail action itself.
+	 *
+	 * @param instance 目标实例 / target instance
+	 * @param ownerNpcId 触发 NPC 的模板 ID / template id of the triggering NPC
+	 * @param event 真端事件名 / retail event name
+	 * @param npcNameId 动作中的 {@code npc_nameid} / {@code npc_nameid} used by the action
+	 * @return 刷出的对象；已存在或数据缺失时返回 null / spawned object, or null when it already exists or data is missing
+	 */
+	public static VisibleObject spawnRetailActionNpc(WorldMapInstance instance, int ownerNpcId, String event,
+			String npcNameId) {
+		if (instance == null || DataManager.RETAIL_AI_DATA == null) {
+			return null;
+		}
+		Integer npcId = DataManager.RETAIL_AI_DATA.findNpcId(npcNameId);
+		Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(ownerNpcId);
+		if (npcId == null || pattern == null || !instance.getNpcs(npcId).isEmpty()) {
+			return null;
+		}
+		for (Rule rule : pattern.event(event)) {
+			for (Operation action : rule.actions()) {
+				if (!action.type().equals("spawn") || !npcNameId.equals(value(action, "npc_nameid"))) {
+					continue;
+				}
+				Point3D point = resolveSpawnPoint(action, 0, 0, 0, null);
+				if (point == null) {
+					continue;
+				}
+				SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npcId, point.getX(),
+					point.getY(), point.getZ(), (byte) integer(action, "dir"));
+				template.setFly(value(action, "is_aerial_spawn").equals("TRUE") ? 1 : 0);
+				return SpawnEngine.spawnObject(template, instance.getInstanceId());
+			}
+		}
+		return null;
 	}
 
 	static Point3D resolveSpawnPoint(Operation action, float ownerX, float ownerY, float ownerZ,
@@ -2192,7 +2276,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void spawnOnTarget(Operation action, Creature eventTarget, RetailMessage message) {
-		Integer npcId = DataManager.RETAIL_AI_DATA.findNpcId(value(action, "npc_nameid"));
+		Integer npcId = spawnTargetNpcId(action);
 		Creature target = resolveObject(value(action, "target_obj"), eventTarget, message);
 		if (npcId == null || target == null
 			|| !MathUtil.isIn3dRange(getOwner(), target, integer(action, "valid_distance"))) {
@@ -2203,7 +2287,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void spawnOnAttacker(Operation action) {
-		Integer npcId = DataManager.RETAIL_AI_DATA.findNpcId(value(action, "npc_nameid"));
+		Integer npcId = spawnTargetNpcId(action);
 		Creature target = selectAttacker(action);
 		if (npcId == null || target == null
 			|| !MathUtil.isIn3dRange(getOwner(), target, integer(action, "valid_distance"))) {
@@ -2214,7 +2298,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void spawnOnMultiTarget(Operation action) {
-		Integer npcId = DataManager.RETAIL_AI_DATA.findNpcId(value(action, "npc_nameid"));
+		Integer npcId = spawnTargetNpcId(action);
 		if (npcId == null) {
 			return;
 		}
@@ -2263,6 +2347,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			}
 			template.setFly(value(action, "is_aerial_spawn").equals("TRUE") ? 1 : 0);
 			VisibleObject spawned = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
+			if (isLogging()) {
+				AI2Logger.info(this, "Spawn action npc=" + npcId + " spawnId=" + value(action, "spawn_id")
+					+ " at " + spawnX + "/" + spawnY + "/" + z
+					+ " objectId=" + (spawned == null ? "none" : spawned.getObjectId()));
+			}
 			boolean trackedBySpawnId = !value(action, "spawn_id").equals("SPAWN_ID_NONE");
 			int liveTime = integer(action, "live_time");
 			if (trackedBySpawnId || liveTime > 0) {

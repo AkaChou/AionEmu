@@ -14,6 +14,7 @@ import com.aionemu.commons.utils.Rnd;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -216,6 +217,12 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 					ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
 				}
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
+				// 真端由 Elim_ComadAe.on_killed_by_user 的 spawn 动作刷新卡斯帕的幻影；pattern 未接管时按同一份
+				// 真端数据幂等补刷（先让 pattern 执行，实例内已有同模板 NPC 则跳过，不会产生第二份实体）。
+				// Retail spawns Taloc's mirage from the Elim_ComadAe.on_killed_by_user spawn action; replay that same
+				// retail data as an idempotent fallback when the pattern did not take over (the pattern runs first and an
+				// existing copy in the instance is kept, so no second entity is created).
+				spawnMirageIfPatternMissed(npc.getObjectTemplate().getTemplateId());
             break;
 			case 700739: //Cracked Huge Insect Egg.
 				// 真端 pattern `Elim_WindEventB` 用条件变量在卵的位置升起气流，并开启地面移动碰撞；
@@ -236,6 +243,28 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	    SpawnTemplate IDElim2FEntity = SpawnEngine.addNewSingleTimeSpawn(300190000, 700738, 653.63f, 838.66998f, 1304.72f, (byte) 0);
 		IDElim2FEntity.setEntityId(90);
 		objects.put(700738, SpawnEngine.spawnObject(IDElim2FEntity, instanceId));
+	}
+
+	/**
+	 * 真端 pattern 未接管时按同一份真端数据补刷卡斯帕的幻影。
+	 * Replays the retail Taloc's mirage spawn when the pattern did not take over.
+	 *
+	 * <p>延迟一秒执行，让 Celestius 自己的 {@code on_killed_by_user} 动作先跑；实例内已有同模板 NPC 时
+	 * {@link RetailPatternAI2#spawnRetailActionNpc} 直接返回，因此不会与 pattern 产生第二份实体。
+	 * Runs one second later so Celestius' own {@code on_killed_by_user} actions run first; when an NPC of the same
+	 * template already exists, {@link RetailPatternAI2#spawnRetailActionNpc} returns without spawning a second entity.
+	 *
+	 * @param ownerNpcId 死亡的 Celestius 模板 ID / template id of the dead Celestius
+	 */
+	private void spawnMirageIfPatternMissed(final int ownerNpcId) {
+		talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					RetailPatternAI2.spawnRetailActionNpc(instance, ownerNpcId, "on_killed_by_user", "CaspaGhost_01");
+				}
+			}
+		}, 1000));
 	}
 
 	/**

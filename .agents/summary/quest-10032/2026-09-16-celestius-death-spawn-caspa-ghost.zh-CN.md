@@ -93,3 +93,33 @@ onGeneralEvent(DIED)               → handleDied → runDeathEvent() → resetP
 2. 与 799503 对话可交付心脏 `182215620`，任务 10032 进入领奖/完成。
 3. 反例护栏：普通召唤物（如 mosqua egg 孵化的 282082）仍按 `live_time` 存活后消失；
    脱战（`on_leave_attack_state`）产生的标记物仍会随回位被清理。
+
+## 八、实机仍未出现后的补充修复（同日第二轮）
+
+### 8.1 实机证据复核
+
+- `log/console.log` 在 16:48:58（副本 ID=2 创建）到 16:57 之间**没有任何 10032 任务包**
+  （`SM_QUEST_ACTION` / `CM_DIALOG_SELECT` 均无），而 `kill-npc 215488` 的 s6→s7 转换会下发
+  `sync-quest-state mode="PACKET_ONLY"`，正常应留下 `步数=7` 的 trace；这一轮很可能没有真正击杀 Celestius。
+- 真正带击杀的失败样本是 15:54:42（`SM_QUEST_ACTION 任务=10032 状态=3 步数=7`）：s6→s7 已触发但幻影未出现，
+  而那一次运行时尚不含 IR-011 修复。
+- DB 侧：`players.online=1`（未登出，最后落盘 16:19），`player_quests` / `inventory` 只是旧快照，
+  不能用来判断本轮是否击杀。
+
+### 8.2 追加改动
+
+| 位置 | 改动 |
+|---|---|
+| `RetailPatternAI2#spawnRetailActionNpc` | 新增公开静态工具：按**真端 pattern 动作本身**（`npc_nameid` + 坐标/朝向/飞行标记）在实例中补刷对象；同实例已存在同模板 NPC 时直接返回，天然幂等 |
+| `RetailPatternAI2` 诊断 | `@Slf4j` + `I18n`；`log.retail_ai.spawn_target_unresolved` 告警（nameid 解析失败原来静默丢弃）；`handleKilled` / terminal event / `spawnAt` 增加 `isLogging()` 门控的 `AI2Logger` 轨迹，可用 `//ai2 log` 开关 |
+| `TalocsHollowInstance` | Celestius（215488/246242）死亡分支延迟 1 秒调用 `spawnRetailActionNpc(..., "on_killed_by_user", "CaspaGhost_01")`：pattern 先跑，缺了才补刷，不会产生第二份幻影 |
+| `messages*.properties` | 新增 `log.retail_ai.spawn_target_unresolved`（中英对齐） |
+
+### 8.3 验证状态
+
+- **客户端实机复验通过（2026-09-16）**：用户报告击杀 Celestius 后流程正常完成（幻影现身、对话交付、
+  任务 10032 正常推进），确认本次“实例幂等补刷 + IR-011 释放语义”组合修复有效。
+- 聚焦测试 `mvn -B test -Dtest='RetailPatternAI2Test,LocalizedLogCallsTest'` → **PENDING**（本轮未授权执行；
+  上一轮 `RetailPatternAI2Test` 79 例已在含 IR-011 的工作区通过）。
+- i18n 键静态核对：`log.retail_ai.spawn_target_unresolved` 在 `messages.properties` 与
+  `messages_zh_CN.properties` 均存在且占位符一致（未跑 `LocalizedLogCallsTest`）。

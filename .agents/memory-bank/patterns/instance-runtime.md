@@ -200,9 +200,9 @@ first_seen: 2026-09-14
 last_verified: 2026-09-16
 symptom: 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去）
 root_cause: 实例脚本里原先把副作用写死的兜底（直接 spawn 特效 NPC、广播系统消息）被删除，改为完全依赖真端 pattern；该 NPC 的模板 AI 名不是真端 pattern 名，AI2Engine.selectNpcAi 在 RetailPatternAI2.supports 门禁不通过时会静默回落到模板 AI，副作用整块不执行且日志无报错
-fix_or_guardrail: 迁移时在实例生命周期事件里保留幂等适配器，直接驱动真端执行器（RetailConditionSpawnEngine.setVariable 设条件变量、RetailDynamicAreaEngine.setEnabled 开地面移动碰撞），坐标与实体 ID 仍取真端数据；条件已激活时不重复刷怪，因此 pattern 正常接管时不会产生第二份实体
+fix_or_guardrail: 迁移时在实例生命周期事件里保留幂等适配器，直接驱动真端执行器（RetailConditionSpawnEngine.setVariable 设条件变量、RetailDynamicAreaEngine.setEnabled 开地面移动碰撞），坐标与实体 ID 仍取真端数据；对象类副作用可用 RetailPatternAI2#spawnRetailActionNpc 按同一份真端 spawn 动作补刷（同实例已存在同模板 NPC 即跳过）；条件已激活/对象已存在时不重复刷怪，因此 pattern 正常接管时不会产生第二份实体
 evidence: commit 5830ece07; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java:220; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:31056; src/main/resources/aion/definitions/compact/ai/dynamic-areas.xml:218; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:59884; .agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md
-validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；全量 Maven 测试 3282 例、0 失败、2 跳过（2026-09-16 mvn -B test，含当时工作区并行改动）；未按 A/B 隔离 pattern 是否接管
+validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；全量 Maven 测试 3282 例、0 失败、2 跳过（2026-09-16 mvn -B test，含当时工作区并行改动）；未按 A/B 隔离 pattern 是否接管；追加：Celestius 死亡后卡斯帕的幻影 799503 的同类适配器（spawnRetailActionNpc）同日实机验收通过
 boundaries: 适配器只允许驱动真端执行器，禁止把真端刷怪坐标复制进实例脚本；同一条件变量/动态区域重复开启必须保持幂等；不改变真端 pattern 自身的动作顺序与清理语义
 superseded_by: none
 first_check: 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径
@@ -223,7 +223,7 @@ symptom: 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完�
 root_cause: NpcController 先抛 DIED 触发 on_killed_by_user（spawn 登记进 spawned[SPAWN_ID_n]），再抛 DIED 触发 handleDied → resetPatternState → releaseTrackedSpawns；live_time=0 的子对象不属于 selfManagedSpawns，被 despawnForLifecycle 在同一调用栈内 onDelete，客户端看不到实体
 fix_or_guardrail: 新增 SPAWNER_END_EVENTS(on_die/on_killed_by_user/on_killed_by_npc/on_despawn) 与 spawnerEndEventInProgress 标记，spawnAt 用 hasIndependentLifetime(liveTime, spawnerEndEventInProgress) 判断；这类子对象与 live_time 对象一样只保留登记、不随生成者状态重置删除
 evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:176; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1040; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2271; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2315; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2343; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1127; src/main/java/com/aionemu/gameserver/controllers/NpcController.java:244; src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelim_osy.xml:11; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:10453; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:65623; src/main/resources/aion/data/static_data/quest_definition/quests/10032.xml:279; commit 5ccb10261; .agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md
-validation: 静态取证（死亡事件链顺序、登记与释放判定、799503 无其它生成入口）已完成；聚焦测试 mvn -B test -Dtest='RetailPatternAI2Test' 通过（2026-09-16，79 例 0 失败 0 错误，BUILD SUCCESS，工作区含并行改动、非 A/B 隔离）；客户端实机验收 PENDING
+validation: 静态取证（死亡事件链顺序、登记与释放判定、799503 无其它生成入口）已完成；聚焦测试 mvn -B test -Dtest='RetailPatternAI2Test' 通过（2026-09-16，79 例 0 失败 0 错误，BUILD SUCCESS，工作区含并行改动、非 A/B 隔离）；客户端实机验收通过（2026-09-16 用户报告击杀 Celestius 后幻影现身、10032 正常完成）；另有实例层幂等补刷适配器（spawnRetailActionNpc）兜底 pattern 未接管的情况
 boundaries: 显式 <despawn spawn_id> 与 live_time 到期任务语义不变；可逆的 on_leave_attack_state（脱战，90 处 spawn 动作）仍随回位重置释放；这类子对象不再随生成者回位/重生自动回收，清理交给真端显式动作或副本销毁；异步延迟链（技能后接 spawn）在死亡处理中本就会被 resetPatternState 取消，不在本护栏范围内；护栏只影响此前“生成后立刻被同一调用栈删除”的无效 spawn，不会改变已在生效的交互对象
 superseded_by: none
 first_check: resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开
@@ -237,4 +237,5 @@ first_check: resetPatternState/releaseTrackedSpawns 是否把“生成者生命�
 - **真端依据**：真端 `<spawn_id>` 只用于显式 `<despawn spawn_id>`；`Elim_ComadAe.on_killed_by_user` 刷出 799503 后**没有**任何对该 spawn_id 的 despawn，说明它必须活到副本结束（IR-009 的同一原则，只是对象没有 `live_time`）。
 - **修复与边界**：死亡/消失事件链（`on_die`/`on_killed_by_user`/`on_killed_by_npc`/`on_despawn`）里生成的子对象只保留登记、不随生成者状态重置删除，显式 `<despawn>` 与 `live_time` 语义不变；可逆的脱战事件（`on_leave_attack_state`）仍随重置释放，避免每次脱战泄漏标记物。
 - **安全性论证**：这四类事件之后紧跟着 `resetPatternState()`，被标记的子对象此前一定是“生成后立即删除”的无效 spawn；护栏只让它们按真端意图可见，不会改变本已生效的对象。
+- **实机闭环**：2026-09-16 击杀 Celestius 后幻影 799503 正常现身、10032 正常完成；由于“终端事件是否送达”仍不可静态判定，实例层同时保留 `RetailPatternAI2#spawnRetailActionNpc` 幂等补刷（见 IR-010），pattern 与适配器不会产生第二份实体。
 - **教训**：真端对齐把“实例脚本兜底 spawn”删掉时，必须同时确认真端动作的产物能活过引擎自己的状态重置；`live_time>0` 与 `live_time=0` 两条路径要分开核对。
