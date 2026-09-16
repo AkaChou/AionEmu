@@ -395,3 +395,24 @@ first_check: 旧 handler onEnterWorldEvent/onDieEvent/onLogOutEvent 的 var 区�
 
 - **判定规则**：从 Java handler 迁移实例任务的回退/清空边时，先提取每个事件里的 `var` 区间（如 `var >= 4 && var < 6`），再决定 XML 需要哪些 `source` 节点；区间之后的完成阶段不得挂回退边，否则玩家已完成目标的进度会被错误清空。
 - **代表案例**：10032 旧 handler 的 `onEnterWorldEvent`/`onDieEvent`/`onLogOutEvent` 都只在 `var0 4..5` 时回退到 2，`var0=6`（20 次眼泪已完成）不回退，`var0=7` 离副本转 reward。XML 曾为 s4/s5/s6 都挂回退边，导致完成 20 次后出副本被清空；修正为只保留 s4/s5 回退，并新增回归断言 s6 离副本/死亡/下线无匹配计划、s7 离副本转 reward。
+
+---
+
+## [QE-017] 十五、未处理的任务动作不得回显成对话页 (UNHANDLED_QUEST_ACTION_ECHOED_AS_DIALOG_PAGE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: DialogService fallback after QuestEngine declines a quest action; quest action id vs dialog page id namespaces
+first_seen: 2026-09-13
+last_verified: 2026-09-16
+symptom: 点任务按钮后弹 HtmlPageId 10000 / HtmlPageId 1002 load fail、窗口不关闭、任务卡在原阶段
+root_cause: DialogService 在 QuestEngine.onDialog 返回 false 后把客户端按钮的 dialogId 当对话页面 ID 回显；动作 ID 与页面 ID 是两个独立命名空间
+fix_or_guardrail: questId != 0 且 dialogId != QUEST_SELECT(31) 的未处理动作必须清空 NPC 任务对话选择并关窗（SM_DIALOG_WINDOW(0,0)）；通用任务列表动作 31 保留第 10 页合同，questId == 0 仍走普通对话
+evidence: commit 2169b6332; src/main/java/com/aionemu/gameserver/services/DialogService.java; src/test/java/com/aionemu/gameserver/services/DialogServiceQuestDialogTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1220ClientDialogAlignmentTest.java; .agents/summary/quest-acceptance/1220-2026-09-16-client-accepted.md; docs/quest/repair-playbook/CASES.zh-CN.md
+validation: focused-test DialogServiceQuestDialogTest 三分支（未处理动作关窗、31 保留第 10 页、questId==0 普通对话）+ Quest1220ClientDialogAlignmentTest + QuestProductionJourneyTest；production catalog 6200 条 0 编译失败 0 白名单违规；2026-09-16 用户回复「1220 也过」完成客户端验收
+boundaries: 只覆盖 questId != 0 的未处理任务动作；questId == 0 的普通 NPC 对话复用 QE-009 / CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN；通用任务列表动作 31 必须保留第 10 页回显；任务本该显示真实页面时应回任务 XML 与客户端页面图补路由，不得放宽本条关窗规则
+superseded_by: none
+first_check: CM_DIALOG_SELECT 的 targetObjectId/dialogId/lastPage/questId 与 QuestEngine.onDialog 返回值；DialogService 回退分支发出的页面 ID 是否等于按钮动作 ID
+-->
+
+- **判定规则**：任务动作 ID 与对话页面 ID 是两个命名空间。`QuestEngine` 拒绝某个 `questId != 0` 的动作时，客户端点的是按钮而不是页面，服务端只能关窗（或按任务 XML 明确路由到真实页面），绝不能把动作 ID 当作页面 ID 回显，否则客户端会加载不存在的 html 页并报 load fail。
+- **边界保留**：`questId == 0` 的普通 NPC 对话保持 plain dialog 回显（见 [QE-009]）；通用任务列表动作 `QUEST_SELECT(31)` 继续使用第 10 页合同。代表案例：Playbook 案例 8.36（`2169b6332`，1220 与 9550 同根因；见 [CASES.zh-CN.md](../../../docs/quest/repair-playbook/CASES.zh-CN.md)）。
