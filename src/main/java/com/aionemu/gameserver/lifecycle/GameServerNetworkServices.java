@@ -50,6 +50,12 @@ public final class GameServerNetworkServices implements DisposableBean {
      * Packet-logger service provider.
      */
     private static volatile ObjectProvider<PacketLoggerService> packetLoggerServiceProvider;
+    /**
+     * 已解析的数据包日志服务单例；仅在真正解析到 Spring bean 后缓存，避免把回退实例钉住。
+     * Resolved packet-logger singleton; cached only after a real Spring bean is resolved, so a fallback
+     * instance is never pinned.
+     */
+    private static volatile PacketLoggerService resolvedPacketLoggerService;
 
     /**
      * Aion 数据包处理器工厂提供者。
@@ -140,11 +146,20 @@ public final class GameServerNetworkServices implements DisposableBean {
      * @return 数据包日志服务 / Packet logger service
      */
     public static PacketLoggerService packetLoggerService() {
+        PacketLoggerService resolved = resolvedPacketLoggerService;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<PacketLoggerService> provider = packetLoggerServiceProvider;
         if (provider == null) {
             return GameServerNetworkFallbacks.packetLoggerService();
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::packetLoggerService);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameServerNetworkFallbacks.packetLoggerService();
+        }
+        resolvedPacketLoggerService = resolved;
+        return resolved;
     }
 
     /**
@@ -228,6 +243,7 @@ public final class GameServerNetworkServices implements DisposableBean {
         bannedMacManagerProvider = null;
         networkControllerProvider = null;
         packetLoggerServiceProvider = null;
+        resolvedPacketLoggerService = null;
         aionPacketHandlerFactoryProvider = null;
         packetFloodFilterProvider = null;
         lsPacketHandlerFactoryProvider = null;

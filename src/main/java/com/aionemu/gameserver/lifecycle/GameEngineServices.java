@@ -28,6 +28,12 @@ public final class GameEngineServices implements DisposableBean {
     private static volatile ObjectProvider<SkillEngine> skillEngineProvider;
     private static volatile SkillEngine resolvedSkillEngine;
     /**
+     * 已解析的任务引擎单例；仅在真正解析到 Spring bean 后缓存，避免把回退实例钉住。
+     * Resolved quest-engine singleton; cached only after a real Spring bean is resolved, so a fallback
+     * instance is never pinned.
+     */
+    private static volatile QuestEngine resolvedQuestEngine;
+    /**
      * 副本引擎的 Spring 提供者。
      * Spring provider for the instance engine.
      */
@@ -76,11 +82,20 @@ public final class GameEngineServices implements DisposableBean {
      * @return 任务引擎 / Quest engine
      */
     public static QuestEngine questEngine() {
+        QuestEngine resolved = resolvedQuestEngine;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<QuestEngine> provider = questEngineProvider;
         if (provider == null) {
             return GameEngineServiceFallbacks.questEngine();
         }
-        return provider.getIfAvailable(GameEngineServiceFallbacks::questEngine);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEngineServiceFallbacks.questEngine();
+        }
+        resolvedQuestEngine = resolved;
+        return resolved;
     }
 
     /**
@@ -152,6 +167,7 @@ public final class GameEngineServices implements DisposableBean {
         questEngineProvider = null;
         skillEngineProvider = null;
         resolvedSkillEngine = null;
+        resolvedQuestEngine = null;
         instanceEngineProvider = null;
         ai2EngineProvider = null;
         chatProcessorProvider = null;
