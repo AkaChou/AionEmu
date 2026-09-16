@@ -502,6 +502,9 @@ public class NpcMoveController
         if (owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(owner, "moveToDestination destination: " + destination);
         }
+        if (abortTimedOutHomeReturn()) {
+            return;
+        }
         if (NpcActions.isAlreadyDead(owner)) {
             abortMove();
             return;
@@ -635,14 +638,6 @@ public class NpcMoveController
                 long now = System.currentTimeMillis();
                 boolean retryFailedPath = shouldRetryFailedPath(failedPathX, failedPathY, failedPathZ, pointX, pointY,
                         pointZ, failedPathObstacleVersion, currentObstacleVersion());
-                if (shouldTeleportFailedHomeReturn(isSpReturn(owner), homeReturnStartedAt, now)) {
-                    finishFailedHomeReturn();
-                    return;
-                }
-                if (hasHomeReturnTimedOut(homeReturnStartedAt, HOME_RETURN_TIMEOUT_MS, now)) {
-                    finishFailedHomeReturn();
-                    return;
-                }
                 if (!usesPath()) {
                     moveToLocation(pointX, pointY, pointZ, offset);
                     break;
@@ -1947,6 +1942,34 @@ public class NpcMoveController
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, target.getX(), target.getY(),
                 target.getZ(), heading);
         owner.getAi2().onGeneralEvent(AIEventType.BACK_HOME);
+    }
+
+    /**
+     * 判定归家是否已超时；超时则瞬移回出生点。
+     * Evaluates the home-return timeout and teleports the NPC back to its spawn when exceeded.
+     *
+     * <p>该判定必须发生在 {@link #moveToDestination()} 的所有提前返回之前：水中寻路持续失败时，
+     * 早退分支会让 {@code case HOME} 永远不被执行，归家兜底也就永远不会触发。
+     * This check must run before every early return of {@link #moveToDestination()}: while swimming,
+     * failing pathing keeps the method from ever reaching {@code case HOME}, so the return-home
+     * fallback could never fire.</p>
+     *
+     * @return 本次移动帧是否因归家超时而中止 / whether this move frame was aborted by the home-return timeout
+     */
+    private boolean abortTimedOutHomeReturn() {
+        if (destination != Destination.HOME || homeReturnStartedAt <= 0) {
+            return false;
+        }
+        long now = System.currentTimeMillis();
+        if (!shouldTeleportFailedHomeReturn(isSpReturn(owner), homeReturnStartedAt, now)
+                && !hasHomeReturnTimedOut(homeReturnStartedAt, HOME_RETURN_TIMEOUT_MS, now)) {
+            return false;
+        }
+        if (owner.getAi2().isLogging()) {
+            AI2Logger.moveinfo(owner, "MC: home return timed out, teleporting to spawn");
+        }
+        finishFailedHomeReturn();
+        return true;
     }
 
     static float[][] remainingPath(float[][] path, boolean reached) {
