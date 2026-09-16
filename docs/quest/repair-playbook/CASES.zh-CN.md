@@ -532,3 +532,23 @@
 - 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd` 对全部 180 个改动文件通过；`git diff --check` 通过；`PRODUCTION_COMPILE_OK=6193`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`；`QuestWorkItemMigrationCoverageTest` 3 项全通过；`Quest1192ClientDialogAlignmentTest`、`QuestMutationPlannerTest`、`QuestDefinitionCatalogManifestTest` 等相关套件全通过。已知既有失败（改动前基线一致，与本修复无关）：`QuestClientContractGateTest` 的 23 条 `BUTTON_WITHOUT_ROUTE`、`QuestDraupnirNpcVariantContractTest` 的 quest 80805 kill route。本会话未运行客户端验证，未启动或重启服务端；用户尚未回复本任务的客户端确认，**实现完成、验收待定**。
 - 复用边界：适用于 legacy `quest_data.xml` 声明了 `quest_work_items`、而迁移后的 typed XML 丢失或写错 `<work-items>` 声明的任务；也适用于「某条进入 REWARD 的路由未交出工作物品」的 1192 型缺陷。`quest_data.xml` 的 `<quest_work_items>` 是可回收性的权威来源，但遇到三方证据冲突时不得自动收敛：4942 的旧 handler 移除 `186000085`、`quest_data.xml` 声明 `182207122`、当前 XML 声明 6 个 `152206*` 分支图纸（`category="RECIPE"`），三者互不相同，已作为证据冲突案例登记在测试的 `EVIDENCE_CONFLICT_QUESTS` 中待人工裁定。若物品是普通收集物 `<items>` 而非工作物品，复用 `COLLECT_ITEM_TURNIN_REMOVAL_MISSING`；若症状是奖励预览页 load fail 而非残留，复用 `REWARD_PREVIEW_OPTIONAL_WORK_ITEM`。
 - commit：`de7c36d9d`（实现完成；客户端验收待定）。
+
+## 8.36 未处理的任务动作 ID 被回显成对话页导致 load fail
+
+- Pattern ID：`UNHANDLED_QUEST_ACTION_ECHOED_AS_DIALOG_PAGE`。
+- 代表任务：1220「A Secret Delivery / 秘密快递」（ELYOS，NPC 乌内 203172 接取、努蒙 798004 中转、玛平恩恩 205240 交付领奖）；同批同根因的 9550「[Event] Solorius Donations」由装备起始条件正常拒绝 `QUEST_ACCEPT_1(1002)` 触发同一条回显路径，不重复建立案例。
+- 搜索症状：点击任务按钮后客户端弹 `HtmlPageId 10000` / `HtmlPageId 1002` load fail、按钮点了窗口不关、任务卡在原阶段但服务端没有 XML 编译错误。
+- 玩家可见症状：1220 接取后到努蒙 798004 处按客户端按钮 `select2(1352) → select2_1(1353) → SETPRO1(10000)` 交出革命团宝箱时，客户端弹出不存在的 `HtmlPageId 10000`；9550 因装备条件正确拒绝 `QUEST_ACCEPT_1(1002)`，同样弹出不存在的 `HtmlPageId 1002`。
+- 根因：
+  1. `DialogService` 在 `QuestEngine.onDialog(env)` 返回 false 后，把客户端按钮的 `dialogId` 当页面 ID 回显下发。任务动作 ID 与页面 ID 是两个独立命名空间，动作 10000/1002 在客户端没有对应 html 页，于是 load fail；
+  2. 1220 的接取 transition 没有发放革命团宝箱 182200568，努蒙 798004 的 `SETPRO1` 交换无法提交，任务引擎因此拒绝该动作，才走到回显分支；
+  3. 1220 迁移时接取页、中转 NPC 与完成 owner 也没有按客户端按钮图重建，且两个宝箱没有声明为 `work-items`，完成/放弃都不会回收。
+- 修复层：共享 `DialogService` 回退分支 + 任务 1220 typed XML。
+  1. `DialogService`：`questId != 0` 且 `dialogId != QUEST_SELECT(31)` 时清空 NPC 任务对话选择并发送 `SM_DIALOG_WINDOW(0, 0)` 关窗；通用任务列表动作 31 保留第 10 页回显合同，`questId == 0` 的普通对话仍走 plain dialog；
+  2. `1220.xml`：乌内 203172 的 `NPC_START` 在接取事务内发放 182200568；努蒙 798004 按 `QUEST_SELECT → SELECT2_1 → SETPRO1` 交出 182200568 换取 182200569；玛平恩恩 205240 独占 `SELECT5 → 1009` 的报告与完成路由；两个宝箱登记为 `<work-items>`。
+- 修改文件：`src/main/java/com/aionemu/gameserver/services/DialogService.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/1220.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1220ClientDialogAlignmentTest.java`、`src/test/java/com/aionemu/gameserver/services/DialogServiceQuestDialogTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/e2e/QuestProductionJourneyTest.java`。
+- 第一检查点：先看原始 `CM_DIALOG_SELECT` 的 `targetObjectId/dialogId/lastPage/questId`，确认 `QuestEngine.onDialog` 是否返回 false；再确认 `DialogService` 回退分支发出的页面 ID 是否等于按钮动作 ID。不要用「客户端页面上存在这个按钮」推断服务端应该回显同 ID 页面，也不要用给任务加通配路由来掩盖动作/页面命名空间错误。
+- 代表测试：`DialogServiceQuestDialogTest#unhandledQuestAcceptActionClosesTheWindowInsteadOfEchoingTheActionId`；`DialogServiceQuestDialogTest#unhandledQuestStepActionClosesTheWindowInsteadOfEchoingTheActionId`；`DialogServiceQuestDialogTest#refusedQuestActionReturnsToTheQuestListPageWithoutEchoingTheActionId`；`Quest1220ClientDialogAlignmentTest#startGrantsTheTreasureBoxAndOnlyUneOwnsTheQuestStart`；`Quest1220ClientDialogAlignmentTest#numonerkExchangesTheBoxAndMappinerkSettlesTheReward`；`Quest1220ClientDialogAlignmentTest#treasureBoxesStayRegisteredAsQuestWorkItems`。
+- 验证命令和结果：修复提交 `2169b6332` 记录 questEngine 专项 1277 条用例；`Quest1220ClientDialogAlignmentTest` 锁定编译后的 source/target/条件/动作/after-commit 全合同；`QuestProductionJourneyTest` 从生产 XML 与客户端按钮规划并执行 1220 全链到 `COMPLETE`；`DialogServiceQuestDialogTest` 覆盖「未处理动作关窗 / 31 保留第 10 页 / questId==0 保持普通对话」三分支；`ProductionCatalogWhitelistVerificationTest` 6200 条任务 0 编译失败、0 白名单违规。用户于 2026-09-16 回复「1220 也过」，视为整条任务客户端验收完成；本次未捕获运行日志、协议抓包与截图。服务端由用户管理，本会话未启动、停止或重启。
+- 复用边界：适用于 `QuestEngine` 明确拒绝某个 `questId != 0` 的任务动作、而 `DialogService` 回退把该动作 ID 当页面回显的场景；不适用于 `questId == 0` 的普通 NPC 对话（复用 `CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN`），也不适用于通用任务列表动作 `31`（必须保留第 10 页合同）。若症状是接取介绍链最后一跳没有桥接到 page 4，复用 `INTRO_CHAIN_ACCEPT_PROMPT_BRIDGE_MISSING`；若任务本该显示某个真实页面却没显示，应回到任务 XML 与客户端页面图补路由，而不是放宽本条关窗规则。
+- commit：`2169b6332`。
