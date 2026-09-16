@@ -11,145 +11,150 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START"/>
     <node label="reward" status="REWARD">
-      <var name="var0" value="10"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="11"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由结界守护团军官 Caez (804935) 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="ASK_QUEST_ACCEPT"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="ASK_QUEST_ACCEPT" />
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW" />
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_ACCEPT_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_ACCEPT_1" />
       </event>
       <conditions>
-        <start-eligible/>
+        <start-eligible />
       </conditions>
       <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH" />
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1" />
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_ACCEPT_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_ACCEPT_SIMPLE" />
       </event>
       <conditions>
-        <start-eligible/>
+        <start-eligible />
       </conditions>
       <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <sync-quest-state mode="VISIBILITY_REFRESH" />
+        <close-dialog />
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="SETPRO1" />
       </event>
       <conditions>
-        <start-eligible/>
+        <start-eligible />
       </conditions>
       <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <sync-quest-state mode="VISIBILITY_REFRESH" />
+        <close-dialog />
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE" />
       </event>
       <after-commit>
-        <close-dialog/>
+        <close-dialog />
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="FINISH_DIALOG" />
       </event>
       <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST" />
       </after-commit>
     </transition>
-    <!-- 进行中:Caez (804935) 对话查看任务详情。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀科拉斯克 (219754/219755) 10 只:var0 计数 0→10,priority 1 计数、0 完成进入奖励。 -->
+    <!-- 击杀 0..9 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="219754 219755"/>
       </event>
       <conditions>
-        <variable-below field="var0" value="10"/>
+        <variable-below field="var1" value="10"/>
       </conditions>
       <actions>
-        <increment-variable field="var0" delta="1"/>
+        <set-variable field="var0" value="0"/>
+        <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 第 11 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
     <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="219754 219755"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="10"/>
+        <variable-at-least field="var1" value="10"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="10"/>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="11"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 奖励:Caez (804935) 领取固定奖励 (exp/物品)。 -->
-    <transition source="reward" target="reward">
+    <!-- 满计数恢复路线：若处于 started 但击杀已满，允许与报告 NPC 对话报告并转移至 reward -->
+    <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <variable-at-least field="var1" value="11"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804935" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="11"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1965437"/>
-        <grant-reward kind="ITEM" id="186000103" amount="7"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-        <transition source="reward" target="reward">
+    <!-- 领奖阶段：向报告 NPC 报告并领取奖励 -->
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804935" action="QUEST_SELECT"/>
       </event>
@@ -157,14 +162,28 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-
-    <transition source="started" target="reward">
+    <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804935" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="804935" actions="USE_OBJECT SELECT_QUEST_REWARD" />
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
       </after-commit>
-    </transition></transitions>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804935" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" />
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1965437" />
+        <grant-reward kind="ITEM" id="186000103" amount="7" />
+        <complete-quest reward-index="0" />
+      </actions>
+      <after-commit>
+        <refresh-player-stats />
+        <sync-quest-state mode="COMPLETION" />
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST" />
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<quest-definition id="13964" version="1">
+  <metadata name="[Instanced Dungeon/Union] Operation Under The Detachment Leader" display-name-id="1803244" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="608580" />
+      <reward kind="EXP" id="0" amount="53500712" />
+      <reward kind="ITEM" id="188100391" amount="700" />
+    </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="246709" />
+      </kill>
+    </kills>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0" />
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0" />
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1" />
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1" />
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0" />
+    </node>
+  </nodes>
+  <transitions>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="246709" />
+    </counter-grid>
+    <dialog type="NPC_START" npc-id="835218" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE" />
+    <dialog type="NPC_REPORT" npc-id="835217" source="k1" target="reward" page="DEFAULT_SUCCESS" />
+    <npc-complete npc-id="835217" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+    </npc-complete>
+  </transitions>
+</quest-definition>

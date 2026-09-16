@@ -16,27 +16,71 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="806216" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
+    <dialog type="NPC_START" npc-id="806216" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <!-- 击杀 1 次达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="220427"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 满计数恢复路线：若处于 started 但击杀已满，允许与报告 NPC 对话报告并转移至 reward -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806216" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806216" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖阶段：向报告 NPC 报告并领取奖励 -->
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806216" action="QUEST_SELECT"/>
       </event>
@@ -44,29 +88,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <counter-grid>
-      <dimension field="var0" required="1" npc-ids="220427"/>
-    </counter-grid>
-    <transition source="k1" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806216" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
     <npc-complete npc-id="806216" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
-
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806216" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition></transitions>
+  </transitions>
 </quest-definition>

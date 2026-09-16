@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13921" version="1">
+  <metadata name="[Alliance] Siel's Western Fortress Commander" display-name-id="1803113" min-level="45" max-level="2147483647" category="SEEN_MARKER">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="2603450"/>
+      <reward kind="ITEM" id="188056966" amount="1"/>
+    </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="263086"/>
+        <npc id="263087"/>
+        <npc id="263088"/>
+        <npc id="263089"/>
+        <npc id="263090"/>
+        <npc id="263101"/>
+        <npc id="263102"/>
+        <npc id="263103"/>
+        <npc id="263104"/>
+        <npc id="263105"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="263086"/>
+        <npc id="263087"/>
+        <npc id="263088"/>
+        <npc id="263089"/>
+        <npc id="263090"/>
+        <npc id="263101"/>
+        <npc id="263102"/>
+        <npc id="263103"/>
+        <npc id="263104"/>
+        <npc id="263105"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="263086"/>
+        <npc id="263087"/>
+        <npc id="263088"/>
+        <npc id="263089"/>
+        <npc id="263090"/>
+        <npc id="263101"/>
+        <npc id="263102"/>
+        <npc id="263103"/>
+        <npc id="263104"/>
+        <npc id="263105"/>
+      </kill>
+    </kills>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <counter-grid>
+      <dimension field="var0" required="3" npc-ids="263086 263087 263088 263089 263090 263101 263102 263103 263104 263105"/>
+    </counter-grid>
+    <dialog type="NPC_START" npc-id="278517" source="unaccepted" target="started" selection-sources="unaccepted k3" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="278517" source="k3" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="278517" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
+</quest-definition>

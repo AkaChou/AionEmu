@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="51129" version="1">
+  <metadata name="[Daily] Destroy the Protectorate Legion Drakan" display-name-id="1803950" min-level="66" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="53023500"/>
+      <reward kind="ITEM" id="186000507" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="205960" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205960" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀 22 种军团 Drakan 合计 20 只:priority1 自环计数 var0<19 时 increment,priority0 在 var0>=19 时转 REWARD(引擎条件基于杀前快照,below N-1 + at-least N-1 = N 杀)。 -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="218544 218545 218546 218547 218548 218549 218550 218551 219166 219167 219168 219169 219187 219188 219189 219190 219194 219195 219196 219197 219202 219207"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="19"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="218544 218545 218546 218547 218548 218549 218550 218551 219166 219167 219168 219169 219187 219188 219189 219190 219194 219195 219196 219197 219202 219207"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="19"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="20"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="205960" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+        <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205960" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205960" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition></transitions>
+</quest-definition>

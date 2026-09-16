@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13943" version="1">
+  <metadata name="[Union] Eliminate the Divine Fortress Protection Squad" display-name-id="1803576" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="93626245"/>
+      <reward kind="ITEM" id="188058110" amount="1"/>
+    </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="4">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="5">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="6">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="7">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="8">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="9">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+      <kill sequence="10">
+        <npc id="884946"/>
+        <npc id="884947"/>
+        <npc id="884948"/>
+        <npc id="884949"/>
+        <npc id="884950"/>
+        <npc id="884951"/>
+        <npc id="884952"/>
+        <npc id="884953"/>
+        <npc id="884954"/>
+        <npc id="884955"/>
+        <npc id="884941"/>
+        <npc id="884942"/>
+        <npc id="884943"/>
+        <npc id="884944"/>
+        <npc id="884945"/>
+        <npc id="884992"/>
+        <npc id="884993"/>
+        <npc id="884994"/>
+        <npc id="884995"/>
+        <npc id="884996"/>
+        <npc id="884997"/>
+        <npc id="884998"/>
+        <npc id="884999"/>
+        <npc id="885000"/>
+        <npc id="885001"/>
+        <npc id="884987"/>
+        <npc id="884988"/>
+        <npc id="884989"/>
+        <npc id="884990"/>
+        <npc id="884991"/>
+      </kill>
+    </kills>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="k8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="k9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="k10" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <counter-grid>
+      <dimension field="var0" required="10" npc-ids="884946 884947 884948 884949 884950 884951 884952 884953 884954 884955 884941 884942 884943 884944 884945 884992 884993 884994 884995 884996 884997 884998 884999 885000 885001 884987 884988 884989 884990 884991"/>
+    </counter-grid>
+    <dialog type="NPC_START" npc-id="835722" source="unaccepted" target="started" selection-sources="unaccepted k10" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="835722" source="k10" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="835722" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
+</quest-definition>

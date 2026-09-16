@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="19691" version="1">
+  <metadata name="[Premium] Attack on the Fissure of Oblivion Instanced Dungeon" display-name-id="1803406" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="250000000"/>
+    </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="246200"/>
+        <npc id="246201"/>
+        <npc id="246202"/>
+        <npc id="246203"/>
+        <npc id="246204"/>
+        <npc id="246205"/>
+        <npc id="246206"/>
+        <npc id="246207"/>
+        <npc id="246208"/>
+        <npc id="246209"/>
+        <npc id="246210"/>
+        <npc id="246211"/>
+        <npc id="246212"/>
+        <npc id="246213"/>
+        <npc id="246214"/>
+        <npc id="246215"/>
+        <npc id="246216"/>
+        <npc id="246217"/>
+        <npc id="246218"/>
+        <npc id="246219"/>
+        <npc id="246220"/>
+        <npc id="246221"/>
+        <npc id="246222"/>
+        <npc id="246223"/>
+        <npc id="246224"/>
+        <npc id="246225"/>
+        <npc id="246226"/>
+        <npc id="246227"/>
+        <npc id="246228"/>
+        <npc id="246229"/>
+        <npc id="246230"/>
+        <npc id="246231"/>
+        <npc id="246232"/>
+        <npc id="246233"/>
+        <npc id="246234"/>
+        <npc id="246235"/>
+        <npc id="246236"/>
+        <npc id="246237"/>
+        <npc id="246238"/>
+        <npc id="246239"/>
+        <npc id="248037"/>
+        <npc id="248038"/>
+        <npc id="248039"/>
+        <npc id="248040"/>
+        <npc id="248041"/>
+        <npc id="248042"/>
+        <npc id="248043"/>
+        <npc id="248044"/>
+        <npc id="248045"/>
+        <npc id="248046"/>
+        <npc id="248047"/>
+        <npc id="248048"/>
+        <npc id="248049"/>
+        <npc id="248050"/>
+        <npc id="248051"/>
+        <npc id="248052"/>
+        <npc id="248053"/>
+        <npc id="248054"/>
+        <npc id="248055"/>
+        <npc id="248056"/>
+        <npc id="248057"/>
+        <npc id="248058"/>
+        <npc id="248059"/>
+        <npc id="248060"/>
+        <npc id="248061"/>
+        <npc id="248062"/>
+        <npc id="248063"/>
+        <npc id="248064"/>
+        <npc id="248065"/>
+        <npc id="248066"/>
+        <npc id="248067"/>
+        <npc id="248068"/>
+        <npc id="248069"/>
+        <npc id="248070"/>
+        <npc id="248071"/>
+        <npc id="248072"/>
+        <npc id="248073"/>
+        <npc id="248074"/>
+        <npc id="248075"/>
+        <npc id="248076"/>
+      </kill>
+    </kills>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="806698" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806698" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="k3" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806698" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="806698" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <counter-grid>
+      <dimension field="var0" required="3" npc-ids="246200 246201 246202 246203 246204 246205 246206 246207 246208 246209 246210 246211 246212 246213 246214 246215 246216 246217 246218 246219 246220 246221 246222 246223 246224 246225 246226 246227 246228 246229 246230 246231 246232 246233 246234 246235 246236 246237 246238 246239 248037 248038 248039 248040 248041 248042 248043 248044 248045 248046 248047 248048 248049 248050 248051 248052 248053 248054 248055 248056 248057 248058 248059 248060 248061 248062 248063 248064 248065 248066 248067 248068 248069 248070 248071 248072 248073 248074 248075 248076"/>
+    </counter-grid>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806698" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition></transitions>
+</quest-definition>

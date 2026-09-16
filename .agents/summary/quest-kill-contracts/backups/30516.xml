@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30516" version="1">
+  <metadata name="[Spy/Group] Rentus Recovery Mission" display-name-id="1801109" min-level="65" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3568486"/>
+      <reward kind="ITEM" id="186000236" amount="5"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="1"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="805156" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 击杀 7Named 236300 完成(var0 0→1)。Kill the 7Named 236300 to finish (var0 0→1). -->
+    <transition source="started" target="ready" priority="1">
+      <event>
+        <kill-npc npc-ids="236300"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="799670" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799670" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799670" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
+</quest-definition>

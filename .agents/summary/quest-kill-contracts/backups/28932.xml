@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="28932" version="1">
+  <metadata name="[Instanced Dungeon/Daily/Group] Eliminating the Frigate Commander" display-name-id="1141633" min-level="66" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="7911702"/>
+      <reward kind="ITEM" id="188056947" amount="1"/>
+      <reward kind="ITEM" id="188056970" amount="1"/>
+      <reward kind="ITEM" id="166100011" amount="50"/>
+      <reward kind="ITEM" id="152012753" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="806261" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="k1" target="k1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="243953"/>
+    </counter-grid>
+    <transition source="k1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="806261" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <dialog type="NPC_START" npc-id="806260" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="k1" target="k1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806260" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806260" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="806260" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete></transitions>
+</quest-definition>

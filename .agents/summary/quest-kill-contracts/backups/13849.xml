@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13849" version="1">
+  <metadata name="[Daily] Secure Sulfur Tree" display-name-id="1802993" min-level="45" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="1407270"/>
+      <reward kind="AP" id="0" amount="400"/>
+    </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="4">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="5">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="6">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="7">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="8">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="9">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="10">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="11">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="12">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="13">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="14">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="15">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="16">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="17">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="18">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="19">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="20">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="21">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="22">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="23">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="24">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="25">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="26">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="27">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="28">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="29">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="30">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="31">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="32">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="33">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="34">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="35">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="36">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="37">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="38">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="39">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+      <kill sequence="40">
+        <npc id="214733"/>
+        <npc id="214734"/>
+        <npc id="214735"/>
+        <npc id="214736"/>
+        <npc id="214737"/>
+        <npc id="214738"/>
+        <npc id="214739"/>
+      </kill>
+    </kills>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="k8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="k9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="k10" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="k11" status="START">
+      <var name="var0" value="11"/>
+    </node>
+    <node label="k12" status="START">
+      <var name="var0" value="12"/>
+    </node>
+    <node label="k13" status="START">
+      <var name="var0" value="13"/>
+    </node>
+    <node label="k14" status="START">
+      <var name="var0" value="14"/>
+    </node>
+    <node label="k15" status="START">
+      <var name="var0" value="15"/>
+    </node>
+    <node label="k16" status="START">
+      <var name="var0" value="16"/>
+    </node>
+    <node label="k17" status="START">
+      <var name="var0" value="17"/>
+    </node>
+    <node label="k18" status="START">
+      <var name="var0" value="18"/>
+    </node>
+    <node label="k19" status="START">
+      <var name="var0" value="19"/>
+    </node>
+    <node label="k20" status="START">
+      <var name="var0" value="20"/>
+    </node>
+    <node label="k21" status="START">
+      <var name="var0" value="21"/>
+    </node>
+    <node label="k22" status="START">
+      <var name="var0" value="22"/>
+    </node>
+    <node label="k23" status="START">
+      <var name="var0" value="23"/>
+    </node>
+    <node label="k24" status="START">
+      <var name="var0" value="24"/>
+    </node>
+    <node label="k25" status="START">
+      <var name="var0" value="25"/>
+    </node>
+    <node label="k26" status="START">
+      <var name="var0" value="26"/>
+    </node>
+    <node label="k27" status="START">
+      <var name="var0" value="27"/>
+    </node>
+    <node label="k28" status="START">
+      <var name="var0" value="28"/>
+    </node>
+    <node label="k29" status="START">
+      <var name="var0" value="29"/>
+    </node>
+    <node label="k30" status="START">
+      <var name="var0" value="30"/>
+    </node>
+    <node label="k31" status="START">
+      <var name="var0" value="31"/>
+    </node>
+    <node label="k32" status="START">
+      <var name="var0" value="32"/>
+    </node>
+    <node label="k33" status="START">
+      <var name="var0" value="33"/>
+    </node>
+    <node label="k34" status="START">
+      <var name="var0" value="34"/>
+    </node>
+    <node label="k35" status="START">
+      <var name="var0" value="35"/>
+    </node>
+    <node label="k36" status="START">
+      <var name="var0" value="36"/>
+    </node>
+    <node label="k37" status="START">
+      <var name="var0" value="37"/>
+    </node>
+    <node label="k38" status="START">
+      <var name="var0" value="38"/>
+    </node>
+    <node label="k39" status="START">
+      <var name="var0" value="39"/>
+    </node>
+    <node label="k40" status="START">
+      <var name="var0" value="40"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="40"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions reported-reward-mode="FIXED">
+    <counter-grid>
+      <dimension field="var0" required="40" npc-ids="214733 214734 214735 214736 214737 214738 214739"/>
+    </counter-grid>
+    <dialog type="NPC_START" npc-id="264797" source="unaccepted" target="started" selection-sources="unaccepted k40" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="264797" source="k40" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="264797" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
+</quest-definition>

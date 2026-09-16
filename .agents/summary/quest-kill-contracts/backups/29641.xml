@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="29641" version="1">
+  <metadata name="Move Along Now" display-name-id="1800429" min-level="50" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="6937236"/>
+      <reward kind="SELECTABLE_ITEM" id="112101625" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112301729" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112301730" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112501678" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112501679" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112601596" amount="1"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="29640"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="216045 216046 215942"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="9"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="ready" priority="0">
+      <event>
+        <kill-npc npc-ids="216045 216046 215942"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="9"/>
+          <variable-below field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="799248" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="799297" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799297" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799297" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
+</quest-definition>

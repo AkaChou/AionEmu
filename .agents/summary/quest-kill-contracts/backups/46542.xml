@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="46542" version="1">
+  <metadata name="[Daily] Bounty on Jzas the Tyrant" display-name-id="1800691" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="2297677"/>
+      <reward kind="ITEM" id="186000105" amount="4"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取:派系悬赏任务无接取 NPC(start_npc_ids="0"),由赏金猎人协会 NPC DF5_Hahmiring_E (804961) 对话接取。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <!-- 进行中:与赏金猎人协会 NPC 对话查看任务详情。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀目标 Jzas the Tyrant (220054) 1 只:var0 计数 0→1,priority 1 计数、0 完成进入奖励。 -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-id="220054"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-id="220054"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励:向 DF5_Hahmiring_E (804961) 领取固定奖励 (exp/猎手币)。 -->
+    <npc-complete npc-id="804961" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+        <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804961" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition></transitions>
+</quest-definition>

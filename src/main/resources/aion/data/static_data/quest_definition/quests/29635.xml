@@ -18,54 +18,89 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START"/>
-    <node label="ready" status="START">
-      <var name="var0" value="10"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="10"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="10"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <dialog type="NPC_START" npc-id="205164" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <!-- 击杀 0..8 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="214486 214487 214482 214483"/>
       </event>
       <conditions>
-        <variable-below field="var0" value="9"/>
+        <variable-below field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var0" delta="1"/>
+        <set-variable field="var0" value="0"/>
+        <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="ready" priority="0">
+    <!-- 第 10 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
+    <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="214486 214487 214482 214483"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="9"/>
-          <variable-below field="var0" value="10"/>
+        <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var0" delta="1"/>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="10"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="205164" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="205164" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 满计数恢复路线：若处于 started 但击杀已满，允许与报告 NPC 对话报告并转移至 reward -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205164" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205164" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖阶段：向报告 NPC 报告并领取奖励 -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205164" action="QUEST_SELECT"/>
@@ -75,12 +110,12 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="205164" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1" />
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2" />
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3" />
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4" />
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5" />
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
   </transitions>
 </quest-definition>
