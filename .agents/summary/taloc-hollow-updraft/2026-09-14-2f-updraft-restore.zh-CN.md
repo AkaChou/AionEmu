@@ -3,6 +3,7 @@
 - 时间：2026-09-14
 - 地图：`300190000`（客户端 level 名 `idelim`）
 - 报告：打碎虫卵后地面没有气流特效（可正常展开翅膀飞行，属表现缺失）
+- 验收：2026-09-16 用户实机确认通过（打破破裂巨虫卵后卵位置升起地面气流）
 
 ## 真端链路（静态证据）
 
@@ -38,10 +39,14 @@
 两处调用都与真端 pattern 的副作用一致且幂等（条件已激活时不重复刷怪），因此 pattern 正常接管时
 不产生重复实体，pattern 未接管时气流视觉与碰撞仍会开启。
 
-## 验收边界
+## 验收结果
 
-- 未执行 Maven 构建、未重启服务端、未做真实客户端验证（按项目规则由用户控制构建与生命周期）。
-- 待实机确认：新建副本 → 击杀莫斯夸女王 → 打破破裂巨虫卵 → 卵位置应升起气流，站在气流中应可被垂直托起。
-- 若实机仍无表现，下一个排查点是客户端侧链路：`SM_WINDSTREAM_ANNOUNCE` 的 moving-collision 类型字节
-  （`RetailDynamicAreaEngine.packetType`：WINDBOX=0 / JUMP=2）是否与 5.8 客户端一致，以及 sunzone 100 的初始开关状态
-  （`dynamic-areas.xml` 中该区域为 `always_enabled="true"`，与 Esoterrace 的 `false` 相反）。
+- **2026-09-16 实机验收通过（用户确认）**：打破破裂巨虫卵后，卵位置地面升起气流，可骑乘气流垂直上升。
+- 提交：修复代码由 `5830ece07` 落库（`TalocsHollowInstance.java:220-228`）；本证据文档随 `0823653a7` 落库。
+- 未按 A/B 隔离取证：没有单独验证 `Elim_WindEventB` pattern 当时是否已被 `AI2Engine.selectNpcAi` 接管，因此“适配器是本次唯一生效路径”未经隔离证明；可复用的结论与边界已提炼为 `IR-010`（`.agents/memory-bank/patterns/instance-runtime.md`）。
+
+## 验收边界（历史记录）
+
+- 修复当时未执行 Maven 构建、未重启服务端、未做真实客户端验证（按项目规则由用户控制构建与生命周期）；上述实机验收由用户在 `5830ece07` 之后的构建上完成。
+- 当时列为下一步、且已被本次验收覆盖的客户端侧疑点：`SM_WINDSTREAM_ANNOUNCE` 的 moving-collision 类型字节
+  （`RetailDynamicAreaEngine.packetType`：WINDBOX=0 / JUMP=2）与 sunzone 100 的初始开关（`dynamic-areas.xml` 中该区域为 `always_enabled="true"`）——验收通过说明气流视觉与托起碰撞均可由现有链路产生。

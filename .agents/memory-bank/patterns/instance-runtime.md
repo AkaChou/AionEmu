@@ -2,7 +2,7 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-009`
+> Pattern IDs: `IR-001`–`IR-010`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
 > last_reviewed: 2026-09-16
@@ -191,3 +191,24 @@ first_check: resetPatternState/releaseTrackedSpawns 是否按 live_time 区分�
   3. 原实现对 `spawned` 一律 `despawnForLifecycle`，而该对象 `despawn_at_attack_state=TRUE`、且不在战斗 → 立即 `onDelete()`：召唤物活不到自己的 18 秒。
 - **真端依据**：真端只在需要“随生成者清理”时写显式 `<despawn spawn_id>`（同一个文件里 `Elim_NeutflyNm.on_die` 就是这样清理 SPAWN_ID_1/2/3 的），而 `Elim_NeutflyEgg` 对 SPAWN_ID_1 没有任何 despawn——孵化物应当独立活满 `live_time`。
 - **修复与边界**：按对象是否自带 `live_time` 区分——自带者只保留登记（显式 despawn 仍有效），由到期任务删除；`live_time=0` 的标记物/门继续随重置删除。`shouldDelayLifecycleDespawn`（战斗中延迟删除）语义未变。
+
+## [IR-010] 十、真端对齐删除硬编码副作用后必须保留幂等实例适配器 (RETAIL_ALIGNMENT_KEEPS_IDEMPOTENT_ADAPTER)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 实例脚本从硬编码副作用迁移到真端 pattern（AI2Engine 门禁接管 + RetailConditionSpawnEngine / RetailDynamicAreaEngine）
+first_seen: 2026-09-14
+last_verified: 2026-09-16
+symptom: 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去）
+root_cause: 实例脚本里原先把副作用写死的兜底（直接 spawn 特效 NPC、广播系统消息）被删除，改为完全依赖真端 pattern；该 NPC 的模板 AI 名不是真端 pattern 名，AI2Engine.selectNpcAi 在 RetailPatternAI2.supports 门禁不通过时会静默回落到模板 AI，副作用整块不执行且日志无报错
+fix_or_guardrail: 迁移时在实例生命周期事件里保留幂等适配器，直接驱动真端执行器（RetailConditionSpawnEngine.setVariable 设条件变量、RetailDynamicAreaEngine.setEnabled 开地面移动碰撞），坐标与实体 ID 仍取真端数据；条件已激活时不重复刷怪，因此 pattern 正常接管时不会产生第二份实体
+evidence: commit 5830ece07; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java:220; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:31056; src/main/resources/aion/definitions/compact/ai/dynamic-areas.xml:218; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:59884; .agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md
+validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；未按 A/B 隔离 pattern 是否接管，未执行 Maven/JUnit
+boundaries: 适配器只允许驱动真端执行器，禁止把真端刷怪坐标复制进实例脚本；同一条件变量/动态区域重复开启必须保持幂等；不改变真端 pattern 自身的动作顺序与清理语义
+superseded_by: none
+first_check: 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径
+-->
+
+- **症状**：`5ccb10261` 删除 `TalocsHollowInstance.onDie` 中“打破卵即 spawn 气流 NPC `281817`”的兜底、改为只依赖真端 pattern 之后，游戏内打破卵完全没有气流（视觉与托起碰撞同时缺失），而飞行本身正常。
+- **根因链**：真端副作用由 `Elim_WindEventB.on_die` 承担（置 `IDElim_2F_Wind=1` → 条件 3085 刷 `281817`，并开 `MOVING_COLLISION_WINDBOX` sunzone 100）；该 NPC 模板 AI 名是 `noaction`，`RetailPatternAI2.supports` 门禁不通过时 `AI2Engine.selectNpcAi` 静默回落到模板 AI，既无日志也无异常，表现就是“整块特效消失”。
+- **护栏**：实例层用条件变量 + 动态区域 API 触发真端链路，与 pattern 的副作用等价且幂等（条件激活后不重复刷怪）；坐标、`entity_id`、sunzone 全部以真端数据为唯一来源。
+- **边界**：这条兜底只保证副作用一定发生，不替代 pattern 行为取证；模板 AI 名 ≠ 真端 pattern 名时门禁失败是静默的，判断“pattern 是否接管”必须逐 NPC 核对。
