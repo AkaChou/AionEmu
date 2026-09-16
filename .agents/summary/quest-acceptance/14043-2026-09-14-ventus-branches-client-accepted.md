@@ -10,7 +10,7 @@ repository commit: `e460582304f741163ce6b1d174a1456eee1600f8`（`fix(quest): res
 
 working tree: dirty；本源修复提交只包含 `CM_OBJECT_SEARCH.java` 与 `CMObjectSearchTest.java`。工作区其余改动（quests/10032、11468、20032、21468、3934、hotspot teleport、memory-bank 等）属于其他进行中工作，均保留未提交。
 
-Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库内证据为 `../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-dialog-action-details.csv`、`quest-sequence-audit.csv:11803-11805`、`quest-order-audit.csv:53069-53087`，客户端页面为 `10000_19999/quest_q14043.html`；客户端包 md5 与同名解析链见 `../quest-14043-ventus-search-alias/2026-09-14-ventus-search-alias.zh-CN.md`（`data/Quest/Quest.pak` md5 `27bd5122412bfeb6ae14ab6b0385a2c7`、`data/Npcs/npcs.pak` md5 `2d296a9ba9a9aca5ba1d66f250cc17bd`）。本次未重新采集客户端包哈希。
+Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库内证据为 `../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-dialog-action-details.csv`、`quest-order-audit.csv:53069-53087`，客户端页面为 `10000_19999/quest_q14043.html`；客户端包 md5 与同名解析链见 `../quest-14043-ventus-search-alias/2026-09-14-ventus-search-alias.zh-CN.md`（`data/Quest/Quest.pak` md5 `27bd5122412bfeb6ae14ab6b0385a2c7`、`data/Npcs/npcs.pak` md5 `2d296a9ba9a9aca5ba1d66f250cc17bd`）。本次未重新采集客户端包哈希。
 
 npc template/object: 三个阶段的权威目标均为 template 278532（班图斯，埃雷修兰塔情报官），静态刷点 `spawns/Npcs/400010000_Reshanta.xml:643`；同名解析冲突模板 241198（诺斯珀德 DF6 B2_24 精英怪）与 241418（同一刷新点的昼夜替换怪）。本次唯一捕获到的运行时对象是 `REWARD var0=8` 阶段的 122233；`START var0=0`、`REWARD var0=6` 的 runtime object ID not captured。
 

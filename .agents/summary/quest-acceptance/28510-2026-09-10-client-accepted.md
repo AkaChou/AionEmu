@@ -10,7 +10,7 @@ repository commit: `366d05508d78d8b0d9d49d4fd4f8e537afd85a15`（`fix(quest): ali
 
 working tree: dirty；28510 XML 与专项测试已包含在 `366d05508`；当前剩余修改和未跟踪文件属于数据库初始化、Kromede 副本、任务 1192/18602、JFR 及其他用户工作，均未纳入本次提交。
 
-Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据为 `../../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-sequence-audit.csv` 和 `client-lifecycle-alignment.csv`；对应 `20000_29999/quest_q28510.html`；本次未重新采集客户端包哈希。
+Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据为 `../../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-order-audit.csv` 和 `client-lifecycle-alignment.csv`；对应 `20000_29999/quest_q28510.html`；本次未重新采集客户端包哈希。
 
 npc template/object: 接取 NPC template 804605；加工奥鲁卡交互 NPC template 700953；最终领奖 NPC template 203560；runtime object ID not captured；700953 的 `quest_use_item` 模板和 Haramel/Kumuki 静态出生数据为仓库证据。
 
