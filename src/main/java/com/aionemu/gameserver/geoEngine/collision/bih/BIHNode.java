@@ -260,7 +260,8 @@ public final class BIHNode {
 							  CollisionResults results) {
 		float tHit = Float.POSITIVE_INFINITY;
 
-		Vector3f v1 = new Vector3f(), v2 = new Vector3f(), v3 = new Vector3f();
+		// 三角形顶点只用局部临时量，走对象池避免每次查询新建 3 个向量。 / The triangle vertices are pure scratch, so pool them instead of allocating three per query.
+		Vector3f v1 = Vector3f.newInstance(), v2 = Vector3f.newInstance(), v3 = Vector3f.newInstance();
 
 		int cols = 0;
 
@@ -323,8 +324,10 @@ public final class BIHNode {
 		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 
 		// float tHit = Float.POSITIVE_INFINITY;
-		Vector3f o = r.getOrigin().clone();
-		Vector3f d = r.getDirection().clone();
+		// 临时向量全部走对象池：Ray#setOrigin/setDirection 是拷贝，循环内的临时 Ray 用完即弃，故回收安全。
+		// All scratch vectors come from the pool: Ray#setOrigin/setDirection copy, and the in-loop temporary Ray is discarded.
+		Vector3f o = Vector3f.newInstance().set(r.getOrigin());
+		Vector3f d = Vector3f.newInstance().set(r.getDirection());
 
 		Matrix4f inv = worldMatrix.invert();
 
@@ -421,6 +424,7 @@ public final class BIHNode {
 					cr.setContactNormal(contactNormal);
 					results.addCollision(cr);
 					if (results.isOnlyFirst()) {
+						recycleScratch(o, d, v1, v2, v3);
 						return 1;
 					}
 					cols++;
@@ -430,6 +434,25 @@ public final class BIHNode {
 
 		r.setOrigin(o);
 		r.setDirection(d);
+		recycleScratch(o, d, v1, v2, v3);
 		return cols;
+	}
+
+	/**
+	 * 归还本次查询复用的临时向量（射线原值/方向与三角形顶点）。
+	 * Returns the scratch vectors reused by this query (saved ray origin/direction and triangle vertices).
+	 *
+	 * @param o 射线原值 / saved ray origin
+	 * @param d 射线方向 / saved ray direction
+	 * @param v1 第一个顶点 / first vertex
+	 * @param v2 第二个顶点 / second vertex
+	 * @param v3 第三个顶点 / third vertex
+	 */
+	private static void recycleScratch(Vector3f o, Vector3f d, Vector3f v1, Vector3f v2, Vector3f v3) {
+		Vector3f.recycle(o);
+		Vector3f.recycle(d);
+		Vector3f.recycle(v1);
+		Vector3f.recycle(v2);
+		Vector3f.recycle(v3);
 	}
 }

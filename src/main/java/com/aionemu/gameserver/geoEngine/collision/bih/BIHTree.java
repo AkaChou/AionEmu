@@ -46,6 +46,12 @@ public class BIHTree implements CollisionData {
 	/** 按轴的三角形比较器。 / Per-axis triangle comparators. */
 	private static final TriangleAxisComparator[] comparators = new TriangleAxisComparator[3];
 
+	/**
+	 * 包围盒预剪枝复用的 t 区间缓冲（每线程一份，避免每次查询分配）。
+	 * Scratch t-range buffer reused by the bound pre-cull (one per thread, so no allocation per query).
+	 */
+	private static final ThreadLocal<float[]> BOUND_RANGE = ThreadLocal.withInitial(() -> new float[2]);
+
 	static {
 		comparators[0] = new TriangleAxisComparator(0);
 		comparators[1] = new TriangleAxisComparator(1);
@@ -467,16 +473,46 @@ public class BIHTree implements CollisionData {
 	 * @return 命中数 / hit count
 	 */
 	private int collideWithRay(Ray r, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results) {
-
-		CollisionResults boundResults = new CollisionResults(results.getIntentions(), results.isOnlyFirst(),
-				results.getInstanceId(), results.getIgnoreProperties());
-		worldBound.collideWith(r, boundResults);
-		if (boundResults.size() > 0 || worldBound.contains(r.getOrigin())) {
+		// 只需要 t 区间的预剪枝走无分配路径；其它包围体类型保持原实现。 / The t-range-only pre-cull avoids per-query CollisionResults; other bound types keep the original path.
+		boolean boundHit;
+		float closest = 0f;
+		float farthest = 0f;
+		if (worldBound instanceof BoundingBox box) {
+			float[] range = BOUND_RANGE.get();
+			if (box.clipRayRange(r, range)) {
+				float t0 = range[0];
+				float t1 = range[1];
+				if (t1 > t0) {
+					// 与 CollisionResults#addCollision 一致：NaN 距离不计入结果。 / Mirror addCollision: NaN distances are dropped.
+					boolean firstAdded = !Float.isNaN(t0);
+					boolean secondAdded = !Float.isNaN(t1);
+					boundHit = firstAdded || secondAdded;
+					closest = firstAdded ? t0 : t1;
+					farthest = secondAdded ? t1 : t0;
+				} else {
+					boundHit = !Float.isNaN(t0);
+					closest = t0;
+					farthest = t0;
+				}
+			} else {
+				boundHit = false;
+			}
+		} else {
+			CollisionResults boundResults = new CollisionResults(results.getIntentions(), results.isOnlyFirst(),
+					results.getInstanceId(), results.getIgnoreProperties());
+			worldBound.collideWith(r, boundResults);
+			boundHit = boundResults.size() > 0;
+			if (boundHit) {
+				closest = boundResults.getClosestCollision().getDistance();
+				farthest = boundResults.getFarthestCollision().getDistance();
+			}
+		}
+		if (boundHit || worldBound.contains(r.getOrigin())) {
 			float tMin = 0;
 			float tMax = r.getLimit();
-			if (boundResults.size() > 0) {
-				tMin = boundResults.getClosestCollision().getDistance();
-				tMax = boundResults.getFarthestCollision().getDistance();
+			if (boundHit) {
+				tMin = closest;
+				tMax = farthest;
 
 				if (tMax <= 0) {
 					tMax = Float.POSITIVE_INFINITY;

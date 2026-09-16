@@ -607,20 +607,8 @@ public class BoundingBox extends BoundingVolume {
 	 * @return 碰撞点数量（0/1/2） / number of collision points (0/1/2)
 	 */
 	private int collideWithRay(Ray ray, CollisionResults results) {
-		Vector3f diff = Vector3f.newInstance().set(ray.origin).subtractLocal(center);
-		Vector3f direction = Vector3f.newInstance().set(ray.direction);
-
-		float[] t = { 0f, Float.POSITIVE_INFINITY };
-
-		float saveT0 = t[0], saveT1 = t[1];
-		boolean notEntirelyClipped = clip(+direction.x, -diff.x - xExtent, t)
-				&& clip(-direction.x, +diff.x - xExtent, t) && clip(+direction.y, -diff.y - yExtent, t)
-				&& clip(-direction.y, +diff.y - yExtent, t) && clip(+direction.z, -diff.z - zExtent, t)
-				&& clip(-direction.z, +diff.z - zExtent, t);
-		Vector3f.recycle(diff);
-		Vector3f.recycle(direction);
-
-		if (notEntirelyClipped && (t[0] != saveT0 || t[1] != saveT1)) {
+		float[] t = new float[2];
+		if (clipRayRange(ray, t)) {
 			if (t[1] > t[0]) {
 				float[] distances = t;
 				Vector3f[] points = new Vector3f[] {
@@ -640,6 +628,35 @@ public class BoundingBox extends BoundingVolume {
 			return 1;
 		}
 		return 0;
+	}
+
+	/**
+	 * 只计算射线与本包围盒相交的 t 区间，不构造碰撞结果对象。
+	 * Computes the ray's intersection t range with this box without building collision results.
+	 *
+	 * <p>供只需要 t 区间的调用方（如 BIH 树的包围盒预剪枝）使用，避免为一次预检分配
+	 * {@code CollisionResults} 与其内部的 {@code CollisionResult}/{@code Vector3f}。
+	 * Used by callers that only need the t range (BIH tree bound pre-culling), avoiding the
+	 * {@code CollisionResults} and its {@code CollisionResult}/{@code Vector3f} entries per pre-check.</p>
+	 *
+	 * @param ray 射线 / the ray
+	 * @param range 长度 2 的输出数组，写入 t0/t1 / two-element output array receiving t0/t1
+	 * @return 与盒体相交且区间被裁剪时返回 true / true when the box is hit and the range was clipped
+	 */
+	public boolean clipRayRange(Ray ray, float[] range) {
+		Vector3f diff = Vector3f.newInstance().set(ray.origin).subtractLocal(center);
+		Vector3f direction = Vector3f.newInstance().set(ray.direction);
+
+		range[0] = 0f;
+		range[1] = Float.POSITIVE_INFINITY;
+		boolean notEntirelyClipped = clip(+direction.x, -diff.x - xExtent, range)
+				&& clip(-direction.x, +diff.x - xExtent, range) && clip(+direction.y, -diff.y - yExtent, range)
+				&& clip(-direction.y, +diff.y - yExtent, range) && clip(+direction.z, -diff.z - zExtent, range)
+				&& clip(-direction.z, +diff.z - zExtent, range);
+		Vector3f.recycle(diff);
+		Vector3f.recycle(direction);
+
+		return notEntirelyClipped && (range[0] != 0f || range[1] != Float.POSITIVE_INFINITY);
 	}
 
 	/**
