@@ -119,7 +119,8 @@ onGeneralEvent(DIED)               → handleDied → runDeathEvent() → resetP
 
 - **客户端实机复验通过（2026-09-16）**：用户报告击杀 Celestius 后流程正常完成（幻影现身、对话交付、
   任务 10032 正常推进），确认本次“实例幂等补刷 + IR-011 释放语义”组合修复有效。
-- 聚焦测试 `mvn -B test -Dtest='RetailPatternAI2Test,LocalizedLogCallsTest'` → **PENDING**（本轮未授权执行；
-  上一轮 `RetailPatternAI2Test` 79 例已在含 IR-011 的工作区通过）。
+- 聚焦测试 `mvn -B test -Dtest='RetailPatternAI2Test,LocalizedLogCallsTest'` → **PASSED**
+  （2026-09-16 17:53:26，`Tests run: 80, Failures: 0, Errors: 0, Skipped: 0`，BUILD SUCCESS；
+  主源码全量编译通过，含并行任务未提交改动，非 A/B 隔离）。
 - i18n 键静态核对：`log.retail_ai.spawn_target_unresolved` 在 `messages.properties` 与
-  `messages_zh_CN.properties` 均存在且占位符一致（未跑 `LocalizedLogCallsTest`）。
+  `messages_zh_CN.properties` 均存在、占位符一致，并由 `LocalizedLogCallsTest` 覆盖。
