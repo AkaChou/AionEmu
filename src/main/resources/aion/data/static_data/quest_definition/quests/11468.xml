@@ -103,7 +103,23 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <use-skill skill-id="9832"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="9"/>
+        <variable-at-least field="var2" value="5"/>
+        <variable-at-least field="var3" value="3"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
         <use-skill skill-id="9832"/>
       </event>
@@ -117,7 +133,23 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <use-skill skill-id="9833"/>
+      </event>
+      <conditions>
+        <variable-is field="var2" value="4"/>
+        <variable-at-least field="var1" value="10"/>
+        <variable-at-least field="var3" value="3"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
         <use-skill skill-id="9833"/>
       </event>
@@ -131,7 +163,23 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <use-skill skill-id="9834"/>
+      </event>
+      <conditions>
+        <variable-is field="var3" value="2"/>
+        <variable-at-least field="var1" value="10"/>
+        <variable-at-least field="var2" value="5"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var3" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
         <use-skill skill-id="9834"/>
       </event>
@@ -183,6 +231,11 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799503" action="SELECT_QUEST_REWARD"/>
       </event>
+      <conditions>
+        <variable-at-least field="var1" value="10"/>
+        <variable-at-least field="var2" value="5"/>
+        <variable-at-least field="var3" value="3"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
