@@ -22,6 +22,17 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	private static final long serialVersionUID = 7902148320917998146L;
 
 	/**
+	 * 叶子分片阈值：小于该长度时不再二分，直接在当前任务内顺序处理。
+	 * Leaf slice threshold: slices shorter than this are processed sequentially inside the current task.
+	 *
+	 * <p>原来的递归会把每个元素拆成一个任务对象（JFR 实测 3.4MB/300s 的 {@code ForEach} 实例）；
+	 * 批量叶子在保持并行度的同时把任务数降到约 1/8。The recursive split used to create one task object per
+	 * element (3.4MB/300s of {@code ForEach} instances); batching the leaves keeps the parallelism while
+	 * cutting the task count to roughly 1/8.</p>
+	 */
+	private static final int LEAF_SIZE = 8;
+
+	/**
 	 * 对集合元素构建并行 for-each 任务；空集合返回 null。
 	 * Build a parallel for-each task over a collection; returns null if empty.
 	 *
@@ -108,15 +119,15 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	@Override
 	public void compute() {
 		int l = lo, h = hi;
-		while (h - l >= 2) {
+		while (h - l > LEAF_SIZE) {
 			int mid = (l + h) >>> 1;
 			addToPendingCount(1);
 			new ForEach<E>(this, operation, mid, h, list).fork();
 			h = mid;
 		}
-		if (h > l) {
+		for (int i = l; i < h; i++) {
 			try {
-				operation.apply(list[l]);
+				operation.apply(list[i]);
 			} catch (Throwable ex) {
 				onExceptionalCompletion(ex, this);
 			}

@@ -514,11 +514,13 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 	 * Moves to an immutable copy: an already-immutable input is reused as-is, otherwise the copy is element-wise validated once.
 	 *
 	 * <p>为什么这样做：每个 {@code withXxx} 都会重新进入紧凑构造器，而 {@code ImmutableCollections$MapN} 未覆写
-	 * {@code keySet()}/{@code forEach()} —— 任何遍历都会为每个条目分配一个 {@code KeyValueHolder}（JFR 实测 27MB/300s）。
-	 * 首建路径（调用方传入可变集合）仍会完整校验一次，之后的重入只做零成本复制。
+	 * {@code keySet()}/{@code forEach()} —— 遍历副本会额外分配条目视图、迭代器与 {@code KeyValueHolder}（JFR 实测
+	 * 数 MB/300s）。首建路径（调用方传入可变集合）仍会完整校验一次，之后的重入只做零成本复制；校验遍历调用方
+	 * 传入的容器本身，因此不会为校验再付一次视图/迭代器分配。
 	 * Rationale: every {@code withXxx} re-enters the canonical constructor, and {@code ImmutableCollections$MapN} does not
-	 * override {@code keySet()}/{@code forEach()}, so any iteration allocates a {@code KeyValueHolder} per entry. The first
-	 * construction (mutable input) still validates once; later re-entries only copy for free.</p>
+	 * override {@code keySet()}/{@code forEach()}, so iterating the copy allocates entry views, iterators and a
+	 * {@code KeyValueHolder} per entry. The first construction (mutable input) still validates once; later re-entries only
+	 * copy for free, and validation walks the caller's container so it never pays for those views itself.</p>
 	 *
 	 * @param questIds 完成任务 ID / completed quest ids
 	 * @return 不可变副本 / the immutable copy
@@ -528,7 +530,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (immutable == questIds) {
 			return immutable;
 		}
-		for (Integer questId : immutable) {
+		for (Integer questId : questIds) {
 			if (questId == null || questId <= 0) {
 				throw new IllegalArgumentException("completed quest ids must be positive");
 			}
@@ -542,7 +544,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (immutable == questIds) {
 			return immutable;
 		}
-		for (Integer questId : immutable) {
+		for (Integer questId : questIds) {
 			if (questId == null || questId <= 0) {
 				throw new IllegalArgumentException("active quest ids must be positive");
 			}
@@ -556,8 +558,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (immutable == activities) {
 			return immutable;
 		}
-		for (Integer questFactId : immutable.keySet()) {
-			if (questFactId == null || questFactId <= 0 || immutable.get(questFactId) == null) {
+		for (Map.Entry<Integer, Boolean> activity : activities.entrySet()) {
+			if (activity.getKey() == null || activity.getKey() <= 0 || activity.getValue() == null) {
 				throw new IllegalArgumentException("event activities contain an invalid quest fact");
 			}
 		}
@@ -570,9 +572,9 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (immutable == inventory) {
 			return immutable;
 		}
-		for (Integer itemId : immutable.keySet()) {
-			Integer count = immutable.get(itemId);
-			if (itemId == null || itemId <= 0 || count == null || count < 0) {
+		for (Map.Entry<Integer, Integer> entry : inventory.entrySet()) {
+			if (entry.getKey() == null || entry.getKey() <= 0 || entry.getValue() == null
+				|| entry.getValue() < 0) {
 				throw new IllegalArgumentException("inventory snapshot contains an invalid item count");
 			}
 		}
@@ -585,9 +587,9 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (immutable == currencies) {
 			return immutable;
 		}
-		for (QuestRewardKind kind : immutable.keySet()) {
-			Long balance = immutable.get(kind);
-			if (kind == null || balance == null || balance < 0 || !kind.isCurrency()) {
+		for (Map.Entry<QuestRewardKind, Long> entry : currencies.entrySet()) {
+			Long balance = entry.getValue();
+			if (entry.getKey() == null || balance == null || balance < 0 || !entry.getKey().isCurrency()) {
 				throw new IllegalArgumentException("currency snapshot contains an invalid balance");
 			}
 		}

@@ -77,6 +77,18 @@ public abstract class WorldMapInstance {
 	private final Map<Integer, VisibleObject> worldMapObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
+	 * 可见对象扫描缓存：对象表未变化时复用同一数组，避免每次实例广播都整表复制。
+	 * Cached visible-object scan array: reused while the object table is unchanged, so an instance-wide
+	 * broadcast does not copy the whole table every time.
+	 *
+	 * <p>数组只在 {@link #worldMapObjects} 的监视器内重建，对象表的每次增删都会清空缓存，因此语义与
+	 * 「每次锁内重新复制」一致：调用方拿到的仍是某个真实表状态的完整快照，变化后不会被继续沿用。
+	 * The array is only rebuilt under the {@link #worldMapObjects} monitor and every insert/removal clears the
+	 * cache, so the published snapshot still corresponds to a real table state and never outlives a change.</p>
+	 */
+	private volatile VisibleObject[] worldMapObjectsCache;
+
+	/**
 	 * 本实例内玩家。
 	 * Players spawned in this instance.
 	 */
@@ -244,7 +256,7 @@ public abstract class WorldMapInstance {
 			}
 			removeQuestIds(addedQuestIds);
 			if (objectStored) {
-				worldMapObjects.remove(object.getObjectId());
+				removeVisibleObject(object.getObjectId());
 			}
 			throw e;
 		}
@@ -267,6 +279,20 @@ public abstract class WorldMapInstance {
 						+ this.getMapId() + " " + this.getInstanceId());
 			}
 			worldMapObjects.put(object.getObjectId(), object);
+			worldMapObjectsCache = null;
+		}
+	}
+
+	/**
+	 * 从可见对象表移除对象并使扫描缓存失效。
+	 * Removes an object from the visible-object table and invalidates the scan cache.
+	 *
+	 * @param objectId 对象 ID / object id
+	 */
+	private void removeVisibleObject(int objectId) {
+		synchronized (worldMapObjects) {
+			worldMapObjects.remove(objectId);
+			worldMapObjectsCache = null;
 		}
 	}
 
@@ -319,7 +345,7 @@ public abstract class WorldMapInstance {
 	 * @param object 对象 / the aion object
 	 */
 	public void removeObject(AionObject object) {
-		worldMapObjects.remove(object.getObjectId());
+		removeVisibleObject(object.getObjectId());
 		if (object instanceof Player) {
 			if (this.getParent().isPossibleFly()) {
 				((Player) object).unsetInsideZoneType(ZoneType.FLY);
@@ -726,14 +752,24 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * 可见对象数组快照：单次数组分配，供锁外遍历使用。
-	 * Array snapshot of visible objects: a single array allocation for iteration outside the lock.
+	 * 可见对象数组快照：对象表未变化时复用缓存数组，变化后重建一次，供锁外遍历使用。
+	 * Array snapshot of visible objects: the cached array is reused while the object table is unchanged and
+	 * rebuilt once after a change, for iteration outside the lock.
 	 *
 	 * @return 可见对象数组 / the visible object array
 	 */
 	private VisibleObject[] worldMapObjectsArray() {
+		VisibleObject[] snapshot = worldMapObjectsCache;
+		if (snapshot != null) {
+			return snapshot;
+		}
 		synchronized (worldMapObjects) {
-			return worldMapObjects.values().toArray(new VisibleObject[0]);
+			snapshot = worldMapObjectsCache;
+			if (snapshot == null) {
+				snapshot = worldMapObjects.values().toArray(new VisibleObject[0]);
+				worldMapObjectsCache = snapshot;
+			}
+			return snapshot;
 		}
 	}
 

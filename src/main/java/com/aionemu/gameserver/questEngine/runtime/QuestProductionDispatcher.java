@@ -144,8 +144,14 @@ public final class QuestProductionDispatcher {
 		if (questId <= 0) {
 			return false;
 		}
-		return index.routesFor(event, questId).stream()
-			.anyMatch(route -> QuestEvent.matches(route.transition().event(), event));
+		// 逐路由短路判定即可，无需 stream 管道与中间列表（JFR 实测数 MB/300s）。
+		// A short-circuiting loop is enough here; the stream pipeline and its intermediate list showed up in JFR.
+		for (QuestEventIndex.Route route : index.routesFor(event)) {
+			if (route.questId() == questId && QuestEvent.matches(route.transition().event(), event)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */

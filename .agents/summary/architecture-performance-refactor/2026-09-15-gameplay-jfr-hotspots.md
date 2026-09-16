@@ -322,3 +322,59 @@ GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141
 **待观察**：`OpenNode`/`SearchNode` 的绝对分配量在 `play-9` 上升（6.4→10.8 MB、6.9→9.2 MB），当前无法区分是负载差异还是槽位复用带来的搜索次数变化，需下一轮归一化确认。
 
 **新的最大分配站点（quest 侧）**：`PlayerQuestEventPort.completedQuestIdsOf` 17.1 MB + `QuestSnapshot.validatedCompletedQuestIds` 14.0 MB + `QuestSnapshot.validatedInventory` 8.4 MB ≈ **40 MB**，属于任务引擎快照复制，需与 quest 侧的并行改动一并评估。
+
+### 12.4 第九轮：quest 快照容器、路由 stream 与三个小项（`play-10`）
+
+本轮同时修掉 quest 侧三个容器站点与三个小项（7 个文件，`mvn -Dtest=PlayerQuestEventPortTest,... test` 105 例全绿）：
+
+| 改动 | 文件 |
+|---|---|
+| 任务 ID 集合单次构建（`questIdsOf`/`questIdSet`，取代 `completedQuestIdsOf`+`activeQuestIdsOf`+`Set.copyOf` 双哈希表） | `PlayerQuestEventPort` |
+| 容器校验改为遍历入参（去掉 `MapN.keySet()` 视图/迭代器/`KeyValueHolder`） | `QuestSnapshot` |
+| 路由 `routesFor(event, questId)`、`hasMatchingRoutes` 改普通循环（去掉 stream 管道与中间列表） | `QuestEventIndex` / `QuestProductionDispatcher` |
+| `Monthes.values()` 缓存、实例广播数组快照按变更失效、`ForEach` 叶子分片 | `GameTime` / `WorldMapInstance` / `ForEach` |
+
+#### 口径修正：采样重量不可跨轮直接比较
+
+`play-9` 录到 587 个 `jdk.ObjectAllocationSample`，`play-10` 录到 2191 个，其中 **1772 个来自 `RMI TCP Connection`**（JMX 监视线程的小额样本）。样本数/权重的分布不同，导致同一站点在采样口径下的绝对字节不可直接对比；本轮的「目标站点归零」是**结构性事实**（方法已不存在），但「省了多少 MB」必须用非采样口径核对：
+
+`jdk.ThreadAllocationStatistics`（每线程 `allocated` 累计值，取窗口首末差值）给出 300s 内精确分配量：
+
+| 线程组 | `play-9` | `play-10` | 变化 |
+|---|---|---|---|
+| **`pool-4-thread-*`（游戏工作池：quest 串行执行器、调度任务、广播）** | 174.1 MB | **151.5 MB** | **−22.6 MB（−13%）** |
+| `LongRunningPool-*`（AI/长时间任务） | 456.4 MB | 459.5 MB | +3.1 MB |
+| `PacketProcessor:*`（客户端包处理，工作量对照） | 46.5 MB | 47.0 MB | +0.5 MB |
+| `ForkJoinPool-*-worker-*` | 37.9 MB | 21.4 MB | −16.5 MB |
+| `pathfinder` | 30.4 MB | 18.0 MB | −12.4 MB |
+| `static-data-loader`（**录制窗口内仍在加载静态数据**） | 415.4 MB | 449.8 MB | +34.4 MB |
+| 进程内全部线程合计 | 1180.7 MB | 1166.4 MB | −14.3 MB（−1.2%） |
+
+结论：**quest 工作池的精确分配量下降 22.6 MB（−13%），而客户端包处理量与 AI 负载基本不变**（46.5→47.0、456.4→459.5），因此该下降不是负载变轻造成的。进程总量只降 1.2%，是因为录制窗口内 `static-data-loader` 还在加载静态数据（415~450 MB，占总量约 1/3，且两轮都如此）——**下一轮应在静态数据加载完成后再开始录制**，否则总量口径被启动负载污染。
+
+#### 采样口径的目标站点（首帧+类，同 30 层栈深度）
+
+| 站点 | `play-9` | `play-10` | 说明 |
+|---|---|---|---|
+| `GameTime$Monthes.values()` | 9.05 MB | **0** | 缓存枚举数组 |
+| `completedQuestIdsOf` + `activeQuestIdsOf` + `validatedCompletedQuestIds` | 32.00 MB | **0** | 方法已移除 |
+| 替换路径 `questIdsOf` + `questIdSet` | — | 12.51 MB | 单次遍历 + 一次 `Set.of` |
+| `validatedInventory`（含 `MapN$1`/`KeyValueHolder`/`MapNIterator`） | 11.80 MB | 6.55 MB | 校验不再遍历副本 |
+| `routesFor` + `hasMatchingRoutes`（stream 管道） | 14.51 MB | **0** | 改普通循环 |
+| `WorldMapInstance.worldMapObjectsArray()` | 6.74 MB | **0.30 MB** | 按变更失效的缓存数组 |
+| `ForEach` 任务实例 | 1.70 MB | **0** | 叶子 8 元素分片 |
+
+#### 下一轮候选（`play-10` 暴露的 quest 侧新热点）
+
+容器站点解决后，quest 侧剩下的是**每次（事件 × 路由）都全量捕获的事实**与**快照记录重建链**：
+
+| 站点 | `play-10` | 性质 |
+|---|---|---|
+| `craftFactsOf`（含 `PlayerSkillList.getAllSkills` 9.96） | 16.23 MB | 每个快照遍历全部技能 |
+| `equipmentFactsOf`（含 `ItemSetData.getItemSetTemplateByItemId` 4.18） | 9.66 MB | 每个快照遍历装备与套装 |
+| `toInventoryMap`（含 `inventoryOf`） | 8.43 MB | 背包聚合 HashMap + `Map.copyOf` |
+| `questIdSet` + `questIdsOf` | 12.51 MB | `Integer` 装箱 + `Set.of` 表 + 两个 `int` 缓冲 |
+| `QuestSnapshot.withXxx` 链（`withEquipmentFacts` 2.90、`withMaxDp` 1.50、`withStartingClass`/`withGender`/`withTeamFacts` 各 0.82、`withWorldFacts` 0.55） | ≈7.7 MB | 每快照重建约 10 个 record |
+| `QuestCraftSnapshot.<init>` | 4.07 MB | 技能/配方表投影 |
+
+优先级建议：**A. 版本化缓存**（按玩家给这四类事实加版本号，未变化时复用上一次不可变快照，注意登出清理与线程安全）＞ **C. 按需捕获**（条件集合决定是否需要 craft/equipment/membership）＞ 记录重建链合并构造。

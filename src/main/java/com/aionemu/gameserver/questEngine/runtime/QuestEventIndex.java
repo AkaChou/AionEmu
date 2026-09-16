@@ -61,7 +61,21 @@ public record QuestEventIndex(Map<QuestEvent, List<Route>> routes) {
 		if (questId <= 0) {
 			throw new IllegalArgumentException("questId must be positive");
 		}
-		return routesFor(event).stream().filter(route -> route.questId() == questId).toList();
+		// 逐个 owner 派发都会调用一次，且通常只有 0~1 个匹配：用普通循环替代 stream，
+		// 避免为判空/派发分配整条管道与中间列表（JFR 实测数 MB/300s）。
+		// Called once per owner dispatch, usually matching 0~1 routes: a plain loop avoids the
+		// stream pipeline and intermediate list (several MB/300s measured).
+		List<Route> candidates = routesFor(event);
+		List<Route> matched = null;
+		for (Route route : candidates) {
+			if (route.questId() == questId) {
+				if (matched == null) {
+					matched = new ArrayList<>(2);
+				}
+				matched.add(route);
+			}
+		}
+		return matched == null ? List.of() : List.copyOf(matched);
 	}
 
 	/**

@@ -76,6 +76,16 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
+	 * 月份枚举缓存。
+	 * Cached month enum values.
+	 *
+	 * <p>{@code Enum.values()} 每次调用都会克隆一份数组（JFR 实测 9MB/300s）；月份表是常量，直接缓存复用。
+	 * {@code Enum.values()} clones its backing array on every call (9MB/300s measured); the month table is a
+	 * constant, so it is cached here and reused.</p>
+	 */
+	private static final Monthes[] MONTHES = Monthes.values();
+
+	/**
 	 * 以自 01.01.0000 起的分钟数构造游戏时间。
 	 * Construct game time from minutes since 01.01.0000.
 	 *
@@ -186,7 +196,7 @@ public class GameTime implements Cloneable {
 	public int getMonth() {
 		int answer = 1;
 		int minutesInYear = gameTime % MINUTES_IN_YEAR;
-		for (Monthes m : Monthes.values()) {
+		for (Monthes m : MONTHES) {
 			if ((minutesInYear - getProperMinutesInMonth(m)) > 0) {
 				minutesInYear = minutesInYear - getProperMinutesInMonth(m);
 				answer = answer + 1;
@@ -209,7 +219,7 @@ public class GameTime implements Cloneable {
 	public int getDay() {
 		int answer = 1;
 		int minutesInYear = gameTime % MINUTES_IN_YEAR;
-		for (Monthes m : Monthes.values()) {
+		for (Monthes m : MONTHES) {
 			if ((minutesInYear - getProperMinutesInMonth(m)) > 0) {
 				minutesInYear = minutesInYear - getProperMinutesInMonth(m);
 			} else if ((minutesInYear - getProperMinutesInMonth(m)) == 0) {

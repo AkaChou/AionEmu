@@ -18,6 +18,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -153,6 +154,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			&& player.getAbyssRank() != null;
 		var target = player.getTarget();
 		boolean positionCaptured = player.getPosition() != null;
+		QuestIdFacts questIds = questIdsOf(player);
 		QuestSnapshot snapshot = new QuestSnapshot(player.getObjectId(), questId, status, packed,
 			inventoryCaptured ? inventoryOf(player) : null,
 			currenciesCaptured ? currenciesOf(player) : null,
@@ -165,8 +167,8 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			positionCaptured ? player.getHeading() : (byte) 0,
 			craftFactsOf(player), null).withWorldFacts(includeWorldFacts ? worldFactsOf(player) : null)
 			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
-			.withCompletedQuestIds(completedQuestIdsOf(player))
-			.withActiveQuestIds(activeQuestIdsOf(player))
+			.withCompletedQuestIds(questIds.completed())
+			.withActiveQuestIds(questIds.active())
 			.withCompleteCount(state == null ? 0 : state.getCompleteCount());
 		snapshot = snapshot.withEventActive(eventActiveOf(questId));
 		QuestEquipmentFacts equipmentFacts = equipmentFactsOf(player);
@@ -251,34 +253,88 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		return maxDp < 0 ? null : maxDp;
 	}
 
-	/** Captures quest states currently in progress (START or REWARD); absent states are not active. */
-	private static Set<Integer> activeQuestIdsOf(Player player) {
-		QuestStateList questStates = player.getQuestStateList();
-		Set<Integer> active = new HashSet<>(Math.max(16, questStates.size()));
-		for (QuestState questState : questStates.getAllQuestState()) {
-			if (questState != null && questState.getQuestId() > 0) {
-				QuestStatus status = questState.getStatus();
-				if (status == QuestStatus.START || status == QuestStatus.REWARD) {
-					active.add(questState.getQuestId());
-				}
-			}
-		}
-		// 返回可变集合，交给 QuestSnapshot 构造器做唯一一次不可变化+逐条目校验。 / Return the mutable set so QuestSnapshot performs the single immutable-copy-and-validate pass.
-		return active;
+	/**
+	 * 已完成与进行中任务 ID 的不可变事实。
+	 * Immutable facts for completed and in-progress quest ids.
+	 *
+	 * @param completed 已完成任务 ID / completed quest ids
+	 * @param active    进行中任务 ID / in-progress quest ids
+	 */
+	private record QuestIdFacts(Set<Integer> completed, Set<Integer> active) {
 	}
 
-	/** Captures only quest states that are explicitly COMPLETE; absent states are not completed. */
-	private static Set<Integer> completedQuestIdsOf(Player player) {
+	/**
+	 * 单次遍历任务状态视图，直接构造已完成/进行中任务 ID 的不可变集合。
+	 * Builds the immutable completed/in-progress quest-id sets from a single pass over the quest-state view.
+	 *
+	 * <p>任务状态视图来自 {@link QuestStateList} 的 TreeMap：键唯一且按任务 ID 升序，因此不需要哈希去重。
+	 * 旧实现先建可变 {@code HashSet}，再由 {@code QuestSnapshot} 紧凑构造器的 {@code Set.copyOf} 复制一遍
+	 * （内部分配第二套哈希表），同一个快照要为同一批 ID 付两份哈希表与节点（JFR 实测 31MB/300s）；这里按
+	 * 任务状态总数预留 {@code int} 缓冲、单次遍历收集，装箱成等长数组后交给 {@code Set.of} 建表一次。
+	 * The view is a TreeMap (unique keys, ascending), so no hash-based dedup is needed. The old code built a
+	 * mutable {@code HashSet} and then let {@code QuestSnapshot}'s canonical constructor {@code Set.copyOf} it
+	 * again (a second hash table internally), paying twice for the same ids (31MB/300s measured). This version
+	 * pre-sizes {@code int} buffers from the state count, collects in one pass and lets {@code Set.of} lay out
+	 * the table once from the boxed ids.</p>
+	 *
+	 * @param player 玩家 / the player
+	 * @return 不可变的已完成/进行中任务 ID / immutable completed and in-progress quest ids
+	 */
+	private static QuestIdFacts questIdsOf(Player player) {
 		QuestStateList questStates = player.getQuestStateList();
-		// 直接过滤任务状态视图，避免 getAllFinishedQuests() 每次物化的中间列表。 / Filter the quest-state view directly instead of materializing getAllFinishedQuests() every call.
-		Set<Integer> completed = new HashSet<>(Math.max(16, questStates.size()));
+		// 状态总数是本次收集的上界（同一线程内视图不变），据此预留避免扩容。
+		// The state count bounds this collection (the view does not change on this thread), so the buffers never grow.
+		int capacity = Math.max(4, questStates.size());
+		int[] completed = new int[capacity];
+		int[] active = new int[capacity];
+		int completedCount = 0;
+		int activeCount = 0;
 		for (QuestState questState : questStates.getAllQuestState()) {
-			if (questState != null && questState.getQuestId() > 0 && questState.getStatus() == QuestStatus.COMPLETE) {
-				completed.add(questState.getQuestId());
+			if (questState == null || questState.getQuestId() <= 0) {
+				continue;
+			}
+			QuestStatus status = questState.getStatus();
+			if (status == QuestStatus.COMPLETE) {
+				completed = ensureQuestIdCapacity(completed, completedCount);
+				completed[completedCount++] = questState.getQuestId();
+			} else if (status == QuestStatus.START || status == QuestStatus.REWARD) {
+				active = ensureQuestIdCapacity(active, activeCount);
+				active[activeCount++] = questState.getQuestId();
 			}
 		}
-		// 同上：不可变化与校验由 QuestSnapshot 构造器统一完成。 / As above: QuestSnapshot performs the immutable copy and validation once.
-		return completed;
+		// 已不可变，QuestSnapshot 构造器走“已校验”快路径，不会再次复制。 / Already immutable, so QuestSnapshot's constructor takes the validated fast path without copying again.
+		return new QuestIdFacts(questIdSet(completed, completedCount), questIdSet(active, activeCount));
+	}
+
+	/**
+	 * 保证任务 ID 缓冲可写入下一个位置。
+	 * Ensures the quest-id buffer can accept the next entry.
+	 *
+	 * @param ids  当前缓冲 / current buffer
+	 * @param size 已写入数量 / number of recorded ids
+	 * @return 可写入的缓冲 / a buffer with room for one more id
+	 */
+	private static int[] ensureQuestIdCapacity(int[] ids, int size) {
+		return size < ids.length ? ids : Arrays.copyOf(ids, Math.max(4, ids.length * 2));
+	}
+
+	/**
+	 * 把已收集的任务 ID 装箱成不可变集合；空集合复用 {@code Set.of()}。
+	 * Boxes the collected quest ids into an immutable set; an empty collection reuses {@code Set.of()}.
+	 *
+	 * @param ids  任务 ID 缓冲 / quest-id buffer
+	 * @param size 已写入数量 / number of recorded ids
+	 * @return 不可变任务 ID 集合 / immutable quest-id set
+	 */
+	private static Set<Integer> questIdSet(int[] ids, int size) {
+		if (size == 0) {
+			return Set.of();
+		}
+		Integer[] boxed = new Integer[size];
+		for (int i = 0; i < size; i++) {
+			boxed[i] = ids[i];
+		}
+		return Set.of(boxed);
 	}
 
 	/** Captures NPC template presence in the player's current world instance. */
