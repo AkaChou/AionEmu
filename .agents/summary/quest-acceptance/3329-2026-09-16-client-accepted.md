@@ -6,7 +6,7 @@ user acceptance confirmation: 用户原话「3329 客户端验证成功」（202
 
 server launch mode: not captured（服务端由用户管理；本会话未启动、停止或重启）
 
-repository commit: not committed；`src/main/resources/aion/data/static_data/quest_definition/quests/3329.xml` 仍为工作区未暂存改动，同批 28301/80805 XML、契约测试与 baseline 亦未提交。
+repository commit: 2026-09-16 quest 契约收敛提交（`fix(quest): converge remaining client contract gates`）；本批 3329/28301/80805 XML、契约测试、baseline 与本文档均包含在该提交中。
 
 working tree: dirty；含 3329/28301/80805 任务 XML、任务契约测试、`quest-client-contract-baseline.tsv`、geoEngine/BIH、taloc 摘要等并行改动。
 
