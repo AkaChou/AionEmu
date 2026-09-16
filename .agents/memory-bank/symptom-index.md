@@ -22,7 +22,7 @@
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |
 | 批量注释后代码行丢失、括号错位、词法状态被破坏 | `ENV-004` | git diff added/removed code lines, anchor uniqueness and lexical state transitions |
-| 副本钥匙或特殊物品实际掉落两份，但基础 NPC 掉落表和任务掉落表看起来各自都只有一份 | `IR-001` | DropRegistrationService.registerDrop, NPC base drop XML, quest XML drops and instance onDropRegistered |
+| 副本钥匙或特殊物品实际掉落两份，且点击任意掉落行都提示同一限持物品已拥有 | `IR-001` | DropRegistrationService.registerDrop/normalizeDropIndices, NPC base drop XML, quest XML drops and instance onDropRegistered |
 | 技能 XML 配置百万级即时伤害，但角色处于特定被动修饰状态时最终伤害骤降到约数万 | `IR-002` | CreatureGameStats.getStat, StatCapUtil.getUpperCap, registered BOOST_SPELL_ATTACK modifiers and the final magic-damage chain |
 | 源码和 target/classes 中已有 GM 命令，但客户端输入 //command 后被当作普通聊天文本 | `IR-003` | launch classpath, target/classes, aion/config/administration/commands.properties, ChatProcessor registration and //reload commands |
 | rows 配置正确却出现 WalkerGroup Invalid row sizes，编队成员被拆成多个刷怪组 | `IR-004` | InstanceWalkerFormations.organizeAndSpawn, POSITION_GROUP_DISTANCE, WalkerGroupShift.DISTANCE, rows/member count and actual spawn logs |

@@ -29,11 +29,13 @@
 - 新增 `Quest11468And21468SkillCompletionTest`：锁定六条计数路线的事务动作、条件、priority、
   after-commit，以及最后使用三种技能分别进入 `REWARD` 的 runtime planner 结果。
 
-## 验证边界：PENDING
+## 验证与验收
 
+- 2026-09-16 用户确认 11468 与 21468 均正常完成，客户端验证成功；最终计数、
+  `REWARD`、报告领奖与 `COMPLETE` 已闭环。
 - 已执行：`xmllint --noout --schema .../quest_definition.xsd` 对两个 XML 均通过；IDE 对 XML
   与新增测试无 error；静态 transition dump 与合同一致；`git diff --check` 通过。
-- 未执行：Maven 专项测试、生产 catalog/白名单门禁、服务端重启、真实客户端复测。
+- 未执行：Maven 专项测试、生产 catalog/白名单门禁。
 - 待授权命令：
   `mvn -q -Dtest='Quest11468And21468SkillCompletionTest,ClientQuestSectionAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
 - 现有满计数存档可在新代码加载后与 `799503` 对话并点击报告，由带门禁的

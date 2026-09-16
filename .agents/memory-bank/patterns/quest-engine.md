@@ -235,7 +235,7 @@ first_check: CM_DIALOG_SELECT.hasQuestDialogContext, resolveRoutedQuestId, Dialo
 
 ## [QE-010] 八、欧比斯外部准入必须满足阵营任务完成态 (ABYSS_ENTRY_REQUIRES_QUEST_COMPLETION)
 <!-- pattern-metadata
-status: PROVISIONAL
+status: CONFIRMED
 scope: PortalService, TeleportService2 and fixed/multi-return item paths targeting Aion 5.8 Abyss world 400010000
 first_seen: 2026-09-13
 last_verified: 2026-09-14
@@ -429,7 +429,7 @@ symptom: 多项实时计数已经全部达到上限但状态仍是 START；最�
 root_cause: XML 迁移只保留 started -> started 的计数自环，漏掉旧 handler 在全部计数满足后立即 setStatus(REWARD) 的 priority 0 最终路线
 fix_or_guardrail: 每个计数字段保留 priority 1 的继续自环；追加 priority 0 的最终事件路线，当前字段等于 required-1 且其他字段达到阈值时执行最后一次 increment，目标 REWARD，after-commit 使用 LEVEL_AND_VISIBILITY_REFRESH；已持久化满计数存档由带阈值的 SELECT_QUEST_REWARD 恢复路线处理
 evidence: commit 7f824dc78; src/main/resources/aion/data/static_data/quest_definition/quests/11468.xml; src/main/resources/aion/data/static_data/quest_definition/quests/21468.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest11468And21468SkillCompletionTest.java; .agents/summary/quest-11468-taloc-item-sections/2026-09-16-final-counter-reward.zh-CN.md; .agents/summary/quest-acceptance/11468-2026-09-16-final-counter-client-accepted.md; docs/quest/repair-playbook/CASES.zh-CN.md
-validation: XML XSD 与 IDE/diff 静态检查通过；2026-09-16 用户回复「出现下一步了」确认最终计数事件后的下一步/REWARD 流转；专项 Maven 与生产 catalog/白名单门禁未运行，奖励领取/COMPLETE 未单独复验
+validation: XML XSD 与 IDE/diff 静态检查通过；2026-09-16 用户确认 11468/21468 均正常完成，客户端验收成功，最终计数 -> REWARD -> 报告领奖 -> COMPLETE 已闭环；专项 Maven 与生产 catalog/白名单门禁未运行
 boundaries: 适用于多个实时计数字段共享 START 状态、最终事件同时完成计数与状态迁移的任务；若根因是 START 节点固定投影了实时字段，复用 QE-002 与 COUNTER_SOURCE_PROJECTION_NO_LOCK；位掩码多地点侦察复用 MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION
 superseded_by: none
 first_check: 每个计数字段的 continuing/completing priority、最终字段条件、target status、事务动作与完整 after-commit；旧 handler 是否在全部计数满足后立即进入 REWARD
