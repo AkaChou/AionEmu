@@ -598,3 +598,122 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
 `AionEmu-test/target/classes`，故本次测试对运行中的进程零干扰。
 
 **状态**：代码已改、静态检查与聚焦测试（138 + 16 例）均通过；`play-13` 复测待重启后进行。
+
+### 12.9 第十三轮复测（`play-13`）：AI 视线射线链路分配归零
+
+**采样**：`/tmp/play-13.jfr`，2026-09-16 22:18:54–22:23:54（300 s），进程 PID 20730（22:17:30 启动，
+含提交 `0b480cb1b`）。解析：`/tmp/play-13-alloc.txt`（`ObjectAllocationSample` 45 个，总权重 21.5 MB）、
+`/tmp/play-13-cpu.txt`（`ExecutionSample` 382 个）、`/tmp/play-13-histogram.txt`。
+
+#### 12.9.1 线程聚合（按 `javaThreadId`，max−min，MB）
+
+| 线程组 | play-10 | play-11 | play-12 | **play-13** |
+|---|---|---|---|---|
+| `pool-*-thread-*` | 152.7 | 133.5 | 75.0 | **43.7** |
+| `pathfinder` | 39.8 | 138.5 | 28.5 | **20.5** |
+| `ForkJoinPool-*-worker-*` | 21.4 | 48.0 | 20.2 | **25.3** |
+| `PacketProcessor:*` | 32.0 | 12.5 | 4.3 | **2.5** |
+| `multiThreadIoEventLoopGroup-*` | 9.4 | 11.6 | 7.2 | **7.9** |
+| `RMI TCP Connection(*)` | 7.2 | 7.0 | 7.1 | **5.9** |
+| **合计（有增量的线程）** | **264.0** | **352.6** | **143.8** | **107.7** |
+| 其中 `pool-4` 单组 | 151.7 | 132.6 | 74.0 | **42.8** |
+
+`pool-4` 轨迹：174.1（play-9）→ 151.5 → 132.3 → 74.0 → **42.8 MB**（相对 play-12 再 −42%）。
+`ForkJoinPool-*-worker-*` 由 20.2 → 25.3 MB 是**未归因**项：本轮采样在该线程组没有任何样本落点
+（见 12.9.3），需要下一轮专门看。
+
+#### 12.9.2 站点验证：目标站点全归零（`ObjectAllocationSample`，任意帧匹配）
+
+| 站点 | play-12 | **play-13** |
+|---|---|---|
+| `GeoService.canSee` 子树 | 55.767 MB (55) | **0.000 MB（0 样本）** |
+| ↳ `SimpleAttackManager.isTargetInAttackRange` | 54.193 MB (52) | **0.000 MB（0 样本）** |
+| ↳ `Ray.intersect*` / `Vector3f$1.create` | 33.542 MB (37) | **0.000 MB（0 样本）** |
+| ↳ `Terrain.collide*` | 45.647 MB (45) | **0.000 MB（0 样本）** |
+| ↳ `BIHNode.intersectWhere` | 9.747 MB (11) | **0.000 MB（0 样本）** |
+| `AbstractImmutableList.iterator`（`ListItr`） | 6.393 MB (16) | **0.246 MB（1）** |
+| `RetailPatternAI2`（整类） | 9.311 MB (24) | **3.464 MB（12）** |
+| `PathData$MapData$SearchWorkspace` | 9.764 MB (14) | **0.000 MB（0）** |
+| `questEngine` | 1.574 MB (3) | **1.473 MB（3）** |
+| **采样合计** | **135.7 MB (336)** | **21.5 MB（45）** |
+
+**功能未被绕过的证据（CPU 剖面，同一链路仍在跑）**：
+
+| `ExecutionSample` 标记 | play-12 | **play-13** |
+|---|---|---|
+| `GeoService.canSee` | 88 | **78** |
+| `GeoMap.canSee` | 41 | **39** |
+| `Terrain.collide` | 6 | **5** |
+| `Ray.intersects` | 1 | **4** |
+| `SimpleAttackManager.isTargetInAttackRange` | 38 | **35** |
+| `RetailPatternAI2.runEvent` | 19 | **34** |
+| `PathService.findGroundPath` | 72 | **78** |
+
+射线链路 CPU 命中数与 play-12 持平（78 vs 88），但分配从 55.77 MB 直接归零 —— 即「同一条路径、同样的调用量，
+只是不再产生临时向量」，与 12.8.4 的预期一致，也说明 12.9 的低采样量不是「这段逻辑没跑」。
+
+#### 12.9.3 `play-13` 剩余 top 站点（45 样本 / 21.5 MB）
+
+| 权重 | 站点 | 说明 |
+|---|---|---|
+| 4.245 MB | `HashMap.newNode` | `HashMap$Node` |
+| 3.500 MB | Netty `newPromise` | `DefaultChannelPromise`（网络层） |
+| 1.473 MB | `ConcurrentHashMap.putVal` | |
+| 1.228 MB | `CreatureGameStats.getStat` | `AdditionStat`，正常业务对象 |
+| 1.227 MB | `Long.valueOf` | |
+| 0.983 MB | `Object.clone`（`MemberName`） | 方法/反射元数据 |
+| 0.736 MB | `RetailPatternAI2.<init>` | 每个 AI 实例一个 `ConcurrentHashMap` |
+| 0.736 MB | `CHM$CollectionView.toArray` | |
+| 0.736 MB | `Creature.<init>` / 0.491 `Npc.setupStatContainers` | NPC 生成固有成本 |
+| 0.491 MB | `Integer.valueOf` / `CHM.newKeySet` / `ScheduledFutureTask` / `CHM.transfer` | |
+
+已经没有任何「每次判定都 new 一个几何对象」的站点；剩下的都是容器扩容、网络 Promise、实体构造这类固有成本。
+
+#### 12.9.4 结论与下一轮候选
+
+1. **第十二轮 5 项改动全部确认生效**：目标站点 0 样本，采样总量 135.7 → 21.5 MB（−84%），线程总量
+   143.8 → 107.7 MB（−25%），`pool-4` 74.0 → 42.8 MB。CPU 证据显示链路未被绕过。
+2. 剩余真实大头：`pool-4`（42.8 MB）、`ForkJoinPool-*-worker-*`（25.3 MB，本轮**无采样落点**，需专门看）、
+   `pathfinder`（20.5 MB）。
+3. **口径更正（用户确认）**：`play-13` 的窗口本身**就是**「持续战斗 + 大量 NPC 移动」的目标场面，
+   所以 12.9.2 的归零不是「这段逻辑没跑」，而是**同场景**下把 55.77 MB 的临时几何对象全部省掉了；
+   12.9.1 的 143.8 → 107.7 MB 也是在同一级负载下取得的（`ExecutionSample` 382 个，FJP 组满载）。
+4. 下一轮采样建议：改用细粒度分配事件定位剩余项（见 12.9.6），不再用 throttled 的
+   `ObjectAllocationSample` 做单线程组归因。
+
+#### 12.9.5 `play-13` 剩余分配逐条归因（45 个样本的栈判读）
+
+| 权重 | 栈摘要（分配点 → 根因） | 归属 |
+|---|---|---|
+| 4.000 MB | `HashMap$Node ← putVal ← add ← getClassDataLayout0` | JMX/RMI 监控侧，**非游戏逻辑** |
+| 3.500 MB | `DefaultChannelPromise ← write ← flushWrites` | Netty 出站包 |
+| 1.227 MB | `Long.valueOf ← currenciesOf ← freeze ← snapshot ← executeSerialized`（2 处） | quest 快照货币装箱 |
+| 0.983 MB | `MemberName.clone ← resolve ← findConstructor ← newInstanceWithCaller` | AI 实例化反射 |
+| 0.981 MB | `Object[] ← toArray ← knownObjectsSnapshot ← doOnAllNpcsWithOwner` | KnownList 快照（既有不变量） |
+| 0.736 MB | `TransformModel <init> ← spawnBaseNpc` | NPC 生成 |
+| 0.736 MB | `AdditionStat ← getStat ← adjustDamages ← splitPhysicalDamage ← calculateAutoAttackPhysical` | 伤害计算（战斗固有） |
+| 0.982 MB | `CHM$Node/transfer ← putVal ← addVisualObject ← findVisibleObjects ← doUpdate`（4 处） | 可见性/knownlist 更新 |
+| 0.491 MB | `Integer.valueOf ← getNpcShouts ← hasAnyShout ← canHandleEvent ← onCreatureEvent` | NPC 喊话 |
+| 1.227 MB | `CHM.newKeySet/<init> ← newInstance ← setupAI`（4 处） | 每个 AI 实例的 CHM 集合 |
+| 0.491 MB | `ScheduledFutureTask ← schedule ← broadcastMessage ← executeActions` | AI 定时广播 |
+| 0.273 MB | `VisibleObject[] ← prepareArray ← toArray ← worldMapObjectsArray` | 世界对象数组（12.4 已改失效缓存） |
+| 0.736 MB | `MatchOps$MatchOp/$$Lambda ← allMatch ← supports ← selectNpcAi` | **12.7 有意留下的 stream 残留** |
+| 0.492 MB | `MapN$1 entrySet / ListItr ← hasActionType/hasCompleteMasterData ← supports` | 同上（内联 `Set.of`/List 迭代） |
+| 0.246 MB | `RandomAccessSpliterator ← stream ← hasQuestTemplates` | quest 模板判定 |
+| 0.245 MB | `HashMap$KeyIterator ← spawn ← onHourChange ← checkDayTimeChange` | 昼夜刷新 |
+| 0.245 MB | `Vector3f ← getZ ← getClosestCollision ← run` | 寻路结果取高度 |
+| 0.245 MB | `ArrayList$Itr ← getMappedAbnormals ← clearEffect ← endEffect` | 异常状态清理 |
+| 0.245 MB | `Object[]/setupStatContainers ← spawnNpc ← spawnObject ← spawn` | NPC 生成 |
+
+已无「每次判定都 new 几何对象」的站点；剩下的要么是实体/战斗固有成本，要么是 12.7 刻意保留的那一处。
+
+#### 12.9.6 FJP 25.3 MB 的定位与下一轮细粒度方案
+
+- FJP 组 8 个 worker 各增 1.5–5.5 MB（合计 25.3 MB），但本轮 `ObjectAllocationSample` **没有一个样本落在该组**——
+  throttled 采样在「低速率、小对象」线程上有空洞。方向只能由 CPU 给：99 个 FJP 样本落在
+  `collideWith` 90 / `canSee` 66 / `searchAStar` 50 / `moveToDestination` 46 / `canReachWaypoint*` 56 /
+  `prepareGroundPath` 27 / `poll` 27 / `isTargetInAttackRange` 23 / `getZ` 19，即**寻路准备 + GEO 碰撞 + AI 轮询**；
+  对应分配应是路径结果数组、`CollisionResults`/`Ray`/`pos`/`dir` 与 `knownObjectsSnapshot` 的 `ArrayList`/`Object[]`。
+- 细粒度方案（`play-14` 待授权）：自定义 JFR 配置开启 `jdk.ObjectAllocationInNewTLAB` +
+  `jdk.ObjectAllocationOutsideTLAB`（带栈）。当前服务器总分配仅 ~0.36 MB/s（107.7 MB/300 s），TLAB 事件代价可忽略，
+  但能精确给出每个分配栈，替代 throttled 采样的空洞。配置已备：`/tmp/alloc-detail.jfc`。
