@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import java.io.InputStream;
+import java.util.Objects;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
@@ -114,6 +118,36 @@ class QuestFactRequirementsTest {
 
 		assertThrows(UnsupportedOperationException.class, () -> requirements.eventActivityQuestIds().add(1));
 		assertThrows(NullPointerException.class, () -> QuestFactRequirements.conservative(false, null, false));
+	}
+
+	/**
+	 * 接取转换（从 NONE 到 START）必须继承元数据声明的前置条件所需事实族（如前置任务完成集合）。
+	 * 任务 19638 要求前置 19637 finished，接取时必须采集 questIdSets；任务 19637 无前置，不额外采集。
+	 */
+	@Test
+	void acquiringTransitionInheritsMetadataPrerequisites() throws Exception {
+		CompiledQuestDefinition quest19638 = loadQuest(19638);
+		QuestTransition accept19638 = findTransition(quest19638, "unaccepted", "started");
+		QuestFactRequirements req19638 = QuestFactRequirements.of(quest19638, accept19638.event(), accept19638);
+		assertTrue(req19638.questIdSets(), "19638 接取时必须采集前置任务 ID 集合以校验 19637 完成状态");
+
+		CompiledQuestDefinition quest19637 = loadQuest(19637);
+		QuestTransition accept19637 = findTransition(quest19637, "unaccepted", "started");
+		QuestFactRequirements req19637 = QuestFactRequirements.of(quest19637, accept19637.event(), accept19637);
+		assertFalse(req19637.questIdSets(), "19637 无前置条件，接取转换不应多采 questIdSets");
+	}
+
+	private static CompiledQuestDefinition loadQuest(int questId) throws Exception {
+		try (InputStream in = QuestFactRequirementsTest.class.getResourceAsStream(
+				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(in, "missing quest " + questId));
+		}
+	}
+
+	private static QuestTransition findTransition(CompiledQuestDefinition compiled, String source, String target) {
+		return compiled.definition().transitions().stream()
+			.filter(t -> Objects.equals(t.sourceNode(), source) && Objects.equals(t.targetNode(), target))
+			.findFirst().orElseThrow();
 	}
 
 	private static QuestFactRequirements requirements(List<QuestCondition> conditions, List<QuestAction> actions) {

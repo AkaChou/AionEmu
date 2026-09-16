@@ -1,9 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -40,6 +43,60 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 
 	public QuestFactRequirements {
 		eventActivityQuestIds = Set.copyOf(Objects.requireNonNull(eventActivityQuestIds, "eventActivityQuestIds"));
+	}
+
+	/**
+	 * 从 definition 与 transition 推导最小事实集。
+	 * 包含元数据声明的前置条件（从 NONE 状态获取未接取任务时读取的完成/进行中任务 ID 集合及装备事实）。
+	 * Derives the minimal fact set from definition and transition, including metadata-declared
+	 * prerequisites (completed/in-progress quest-id sets and equipment facts read when acquiring an unaccepted quest).
+	 *
+	 * @param definition 任务定义 / quest definition
+	 * @param event      运行时事件 / the runtime event
+	 * @param transition 转换 / the transition
+	 * @return 该转换真正需要的事实族 / the fact families this transition reads
+	 */
+	public static QuestFactRequirements of(CompiledQuestDefinition definition, QuestEvent event,
+			QuestTransition transition) {
+		Objects.requireNonNull(definition, "definition");
+		QuestFactRequirements base = of(definition.id(), event, transition);
+		boolean questIdSets = base.questIdSets();
+		boolean equipment = base.equipment();
+
+		// 接取转换（从 NONE 状态进入非 NONE 状态）会由 planner 隐式执行 metadataPrerequisitesSatisfied，
+		// 该检查需要预读元数据声明的前置任务（完成/未完成/已接/未接）以及装备前置事实。
+		// Transitions that acquire an unaccepted quest (from NONE to non-NONE) implicitly run
+		// metadataPrerequisitesSatisfied in the planner, which reads metadata-declared prerequisites
+		// (finished/unfinished/acquired/noacquired) and equipped start conditions.
+		if (transition.sourceNode() != null && transition.targetNode() != null) {
+			QuestNode source = definition.definition().nodes().stream()
+				.filter(node -> node.label().equals(transition.sourceNode())).findFirst().orElse(null);
+			QuestNode target = definition.definition().nodes().stream()
+				.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElse(null);
+			if (source != null && target != null
+					&& source.projection().status() == QuestStatus.NONE
+					&& target.projection().status() != QuestStatus.NONE) {
+				var metadata = definition.definition().metadata();
+				if (!metadata.prerequisites().isEmpty()) {
+					questIdSets = true;
+				}
+				for (var group : metadata.startConditionGroups()) {
+					for (var condition : group.conditions()) {
+						switch (condition.type().toLowerCase(java.util.Locale.ROOT)) {
+							case "finished", "unfinished", "noacquired", "acquired" -> questIdSets = true;
+							case "equipped" -> equipment = true;
+							default -> { }
+						}
+					}
+				}
+			}
+		}
+
+		if (questIdSets == base.questIdSets() && equipment == base.equipment()) {
+			return base;
+		}
+		return new QuestFactRequirements(base.startEligibility(), base.eventActivityQuestIds(),
+			base.worldFacts(), questIdSets, base.inventory(), equipment, base.craft());
 	}
 
 	/**

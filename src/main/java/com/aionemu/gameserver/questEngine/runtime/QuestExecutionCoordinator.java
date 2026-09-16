@@ -110,7 +110,7 @@ public final class QuestExecutionCoordinator {
 			// 事实需求由 transition 静态推导：不读的事实族不会被采集（读取方 fail-closed）。
 			// Fact requirements are derived from the transition: families it never reads are never captured,
 			// and reading them fails closed.
-			QuestFactRequirements requirements = QuestFactRequirements.of(definition.id(), event, transition);
+			QuestFactRequirements requirements = QuestFactRequirements.of(definition, event, transition);
 			QuestSnapshot snapshot = eventPort.snapshot(playerId, definition.id(), event, requirements);
 			if (snapshot == null) {
 				throw new IllegalStateException("event port returned no snapshot");
