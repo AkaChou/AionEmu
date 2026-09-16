@@ -187,3 +187,28 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> { ... }
 2. `Matrix4f.invert`（35.2 MB）与 `Vector3f.clone`（24.5 MB）：矩阵求逆/向量克隆在每次查询中重复计算，可缓存逆矩阵或改写为无克隆路径。
 3. `ArrayList.grow` 12.08%：多与上面两类临时集合同源。
 4. 仍未处理：`Throwable.fillInStackTrace` 4.04%（异常做控制流）。
+
+## 十一、第四轮：geo 碰撞预剪枝无分配化（复测确认）
+
+复测：服务 13:36:26 重启（字节码含 `clipRayRange`/`recycleScratch`/`BOUND_RANGE`），15:44:51–15:49:51 录 300s → `/tmp/play-5-geo.jfr`。
+
+| 站点 | geo 改动前 `play-4` | geo 改动后 `play-5` | 变化 |
+|---|---|---|---|
+| `BoundingBox.collideWithRay` | 97.2 MB | **0.0 MB（消失）** | **−100%** |
+| `CollisionResults.addCollision` | 30.9 MB | 2.1 MB | −93% |
+| `Vector3f.clone` | 24.5 MB | **0.0 MB（消失）** | **−100%** |
+| `BIHNode.intersectWhere` | 217.9 MB | 158.0 MB | −28% |
+| `Matrix4f.invert` | 35.2 MB | 27.1 MB | −23% |
+| `ArrayList.grow` | 68.7 MB | 28.4 MB | −59% |
+| `jdk.ExecutionSample`（归一化分母） | 362 | 527 | 本窗口工作量更大 |
+| 采样分配总量 | 551.6 MB | 602.0 MB | 原始值不可比 |
+| **每 CPU 采样分配量** | 1.52 MB | **1.14 MB** | **−25%** |
+
+改动内容（见提交）：`BoundingBox.clipRayRange` 抽取 t 区间计算；`BIHTree` 预剪枝对 `BoundingBox` 走零分配路径（线程本地 `float[2]`，其余包围体保持原路径）；`BIHNode.intersectWhere` 的 5 个临时向量改对象池并在两个出口回收。数值等价由 `BoundingBoxRayIntersectionTest#clipRayRangeMatchesCollisionResultsPath`（6 种射线形态对拍 closest/farthest）与 181 例 geo 套件守护。
+
+**剩余与下一轮候选**：
+
+1. `BIHNode.intersectWhere` 158 MB 的主体是 `ArrayList<BIHStackData>` + 每次分裂 `new BIHStackData`（见 `BIHNode.java:396`）——改为每线程原始数组栈。
+2. `Matrix4f.invert` 27.1 MB：世界矩阵的逆每次查询重算，可缓存。
+3. `PathData$MapData$SearchWorkspace.node/openNode` 175 MB：A* 节点池增长（本窗口寻路更多）。
+4. `Throwable.fillInStackTrace` 37.1 MB（+67%）：疑似用异常做控制流，需定位抛出点。

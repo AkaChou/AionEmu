@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-008`
+> Pattern IDs: `AR-001`–`AR-009`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
 > last_reviewed: 2026-09-14
@@ -213,3 +213,27 @@ first_check: 任何在每次事件里 String.split/String.format/Pattern.compile
 1. **`String.split("\\.")` 不走快路径**：JDK 只对“单字符且非正则元字符”的分隔符做快路径；`.` 是元字符，因此每次调用都会做正则匹配并分配 `String[]`。
 2. **调用次数被放大 6 倍**：`TemporarySpawn.isInSpawnTime()` 依次取时/日/月 × 刷新/消失共 6 次，每次都要重新拆分同一个字符串。
 3. **正确姿势**：字段注入后只解析一次（首次使用懒解析 + `volatile` 缓存即可，无需改写 JAXB 绑定）；缓存的前提是模板加载后不再被修改——本仓库的 `TemporarySpawn` 只有 `@Getter`，无写入方。
+
+
+---
+
+## [AR-009] 九、几何查询热路径的临时对象（预剪枝只取标量 + scratch 复用）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: geoEngine 碰撞/射线查询等每帧或每事件高频调用的几何路径
+first_seen: 2026-09-15
+last_verified: 2026-09-16
+symptom: 跑图窗口 JFR：BoundingBox.collideWithRay 97.2MB、CollisionResults.addCollision 30.9MB、Vector3f.clone 24.5MB、ArrayList.grow 68.7MB，均为“为拿一个 t 区间/一次遍历”而构造的临时对象
+root_cause: (1) BIHTree 的包围盒预剪枝只需要最近/最远 t，却调用产出 CollisionResults 的完整碰撞路径（含 ArrayList、CollisionResult、Vector3f[]、float[]）；(2) BIHNode.intersectWhere 每次查询 new/clone 5 个 Vector3f
+fix_or_guardrail: 预剪枝提供“只算标量 t 区间”的重载（BoundingBox.clipRayRange）并用线程本地缓冲承接；遍历用 scratch 对象走既有对象池（Vector3f.newInstance/recycle）并在所有出口回收；注意 Ray(Vector3f,Vector3f) 持有引用而 setOrigin/setDirection 是拷贝，决定哪些实例可回收
+evidence: src/main/java/com/aionemu/gameserver/geoEngine/bounding/BoundingBox.java:609; src/main/java/com/aionemu/gameserver/geoEngine/collision/bih/BIHTree.java:469; src/main/java/com/aionemu/gameserver/geoEngine/collision/bih/BIHNode.java:321; src/test/java/com/aionemu/gameserver/geoEngine/bounding/BoundingBoxRayIntersectionTest.java
+validation: 数值对拍（clipRayRange vs CollisionResults，6 种射线形态）+ geo 聚焦 181 例 + 300s 运行期 JFR 复测（collideWithRay/Vector3f.clone 归零、addCollision −93%、ArrayList.grow −59%、每 CPU 采样分配量 −25%）
+boundaries: 非 BoundingBox 的包围体仍走原路径；BIH 遍历栈与 Matrix4f.invert 尚未处理
+superseded_by: none
+first_check: 为“只要一个标量/区间”的判定而构造集合或结果对象的碰撞调用；每查询 new 的向量/矩阵
+-->
+
+1. **预剪枝不需要结果对象**：`BIHTree.collideWithRay` 原本为世界包围盒建 `CollisionResults` 只为取 min/max t；改成 `clipRayRange` + 线程本地 `float[2]` 后该站点归零，且 NaN 跳过、`tMax<=0 → +Inf`、`tMin==tMax → 0` 等旧语义逐条对齐。
+2. **scratch 必须走池并且“每个出口”都回收**：`intersectWhere` 有两个返回点（`onlyFirst` 提前返回、正常返回），漏掉任一处都会泄漏池化对象。
+3. **先确认所有权再决定能否回收**：`Ray.setOrigin/setDirection` 是拷贝（可回收调用方临时量），而 `Ray(origin,direction)` 构造函数持有引用（传入的向量在其存活期内不可回收）。
+4. **验证方式**：用同一批射线对拍改造前后的最近/最远距离与命中条数，再跑 geo 套件；仅靠"测试通过"不足以证明几何数值等价。

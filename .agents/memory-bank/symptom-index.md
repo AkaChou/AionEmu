@@ -17,6 +17,7 @@
 | 游戏内 JFR 显示 Integer/Long 装箱占分配 74%，单站点 RealGeoData.getMap 占 41.6% 分配 + 11.35% CPU | `AR-006` | RealGeoData.getMap、PathData.visited、任何 Map<Long,...>/Map<Integer,...> 的逐节点 put/get |
 | 游戏内 JFR（300s）：Object[] 占采样分配 39.6%（其中 WorldMapInstance.getNpcs 单站点 207MB）、KeyValueHolder 占 12.5% 且全部来自 QuestSnapshot 的 withXxx 校验链 | `AR-007` | Map.of/Map.copyOf 结果上的 entrySet()/forEach/stream；实例级 getNpcs()/getPlayersInside() 的新增调用点 |
 | 游戏内 JFR（300s）：TemporarySpawn.getTime 单站点占采样分配 52.4MB / 17.2%（另见同源 String[] 2.83%） | `AR-008` | 任何在每次事件里 String.split/String.format/Pattern.compile 的模板读取点 |
+| 跑图窗口 JFR：BoundingBox.collideWithRay 97.2MB、CollisionResults.addCollision 30.9MB、Vector3f.clone 24.5MB、ArrayList.grow 68.7MB，均为“为拿一个 t 区间/一次遍历”而构造的临时对象 | `AR-009` | 为“只要一个标量/区间”的判定而构造集合或结果对象的碰撞调用；每查询 new 的向量/矩阵 |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |
@@ -30,6 +31,7 @@
 | 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交 | `IR-007` | spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML |
 | NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility） | `IR-008` | getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度 |
 | 卵孵化出的召唤物只短暂出现就消失（真端数据写的是 live_time=18）；同类“带 live_time 的临时召唤物”都如此 | `IR-009` | resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放 |
+| 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去） | `IR-010` | 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
