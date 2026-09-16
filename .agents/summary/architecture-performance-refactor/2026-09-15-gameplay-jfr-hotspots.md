@@ -486,4 +486,21 @@ GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141
 
 **有意未做**：同文件还有约 40 处内联 `Set.of(...)`。按 `play-10` 的构成拆分，3+ 元素 `Set.of` 产生的 `Object[]` 只占该子树 21.97 MB 中的 1.92 MB，其余多是 2 元素 `Set.of("TRUE","FALSE")`（单个 `List12`，约 32 B/次）；机械替换 30+ 处字面量收益有限而 typo 风险偏高，等 `play-12` 复测确认剩余量再决定。
 
+3. **`CreatureGameStats.getStatsByStatEnum` 去掉整表复制**：原实现每次调用都 `new TreeSet` 复制该 stat 的全部函数，
+   而它被 `getStat(...)` 在**每个 SM_STATS_INFO 属性包**路径上调用（`play-11` 栈：
+   `getStatsByStatEnum ← getStat ← PlayerGameStats.getKnowledge ← SM_STATS_INFO.writeImpl`）。现在没有 SET 类型函数
+   （priority ≥ MAX-10，绝大多数情况）时直接返回底层 `TreeSet` 视图，有 SET 函数时行为不变。返回类型
+   `TreeSet<IStatFunction>` → `Set<IStatFunction>`（4 个调用点只做遍历与 `isEmpty()`）。锁前提已核实：`stats` 的
+   所有写入（构造、`addEffectOnly`、`endEffect`）都在写锁内，3 个内部调用点都在读锁内；唯一无锁调用方
+   `commands/admin/Stat.java` 改为自行复制并在注释里声明视图的锁约束。
+
+**撤销项：`KnownList.knownObjectsSnapshot`**。原本准备让 `clear()/forgetObjects()/doOnAllNpcs*()` 直接迭代
+`knownObjects.values()`（ConcurrentHashMap 弱一致迭代）以省掉每次 despawn 的 `ArrayList`；但仓库存在架构守卫测试
+`KnownListIterationSafetyTest`，它正则扫描 `src/main/java`，**禁止** `for (... : knownObjects|knownPlayers|visualObjects|
+visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)` 快照。这是刻意约定（循环体会 `del()` 改动已知
+关系，弱一致迭代会漏访/重复），因此该项撤销、文件还原；该站点在 `play-11` 实际只有 0.91 MB/300s（此前 6.05 MB 是
+「任意帧包含」的放大统计），不值得为它破坏既有不变量。
+
+**测试**：`mvn -Dtest=CreatureGameStatsBytecodeTest,NpcGameStatsTest,StatFunctionsTest,AbsoluteStatEffectTest,PetrificationEffectTest,AbsoluteSnareEffectTest,WeaponDualEffectTest,KnownListTest,KnownListIterationSafetyTest,TargetRangePropertyTest test` → **46 例全绿**（含 `KnownListIterationSafetyTest` 5 例，确认还原干净）。
+
 **状态**：本轮改动尚未复测，`play-12` 数据出来后回填本节与 12.6 的对照表。

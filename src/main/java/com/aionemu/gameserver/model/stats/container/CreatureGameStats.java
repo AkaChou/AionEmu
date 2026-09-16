@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.stats.container;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -172,7 +172,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 	public Stat2 getStat(StatEnum statEnum, Stat2 stat, CalculationType... calculationTypes) {
 		lock.readLock().lock();
 		try {
-			TreeSet<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
 			if (functions == null) {
 				return stat;
 			}
@@ -196,7 +196,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 	public Integer getSetStatValue(StatEnum statEnum) {
 		lock.readLock().lock();
 		try {
-			TreeSet<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
 			if (functions == null) {
 				return null;
 			}
@@ -218,7 +218,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 	public Stat2 getItemStatBoost(StatEnum statEnum, Stat2 stat) {
 		lock.readLock().lock();
 		try {
-			TreeSet<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
 			if (functions == null || functions.isEmpty()) {
 				return stat;
 			}
@@ -412,30 +412,40 @@ public abstract class CreatureGameStats<T extends Creature> {
 	public void updateSpeedInfo() {
 	}
 
-	/** 按 stat enum 返回 stats / Returns the stats by stat enum */
-	public TreeSet<IStatFunction> getStatsByStatEnum(StatEnum stat) {
+	/**
+	 * 按 stat enum 返回需要应用的函数视图。
+	 * Returns the view of the functions to apply for the given stat.
+	 *
+	 * <p>没有 SET 类型函数（priority ≥ MAX-10）时直接返回底层 {@link TreeSet}，不再每次复制整表 ——
+	 * {@code getStat(...)} 会被每个 SM_STATS_INFO 属性包触发，JFR 实测该复制路径分配数 MB/300s 的 {@code TreeSet}。
+	 * 返回值是只读视图：调用方必须已经持有 stats 锁（本类内部调用点都在读锁内；无锁的调用方需自行复制）。
+	 * When no SET-type function (priority >= MAX-10) exists the backing {@link TreeSet} is returned as-is instead of
+	 * copying the whole set per query: {@code getStat(...)} runs for every SM_STATS_INFO packet and JFR showed
+	 * megabytes of {@code TreeSet} per 300s on that copy. The result is a read-only view; callers must already hold
+	 * the stats lock (internal callers do, unlocked callers must copy).</p>
+	 *
+	 * @param stat stat 名 / stat enum
+	 * @return 函数视图或 null / the function view, or null
+	 */
+	public Set<IStatFunction> getStatsByStatEnum(StatEnum stat) {
 		TreeSet<IStatFunction> allStats = stats.get(stat);
 		if (allStats == null) {
 			return null;
 		}
-		TreeSet<IStatFunction> tmp = new TreeSet<IStatFunction>();
-		List<IStatFunction> setFuncs = null;
+		// SET 类型函数优先：存在时只返回这些函数（沿用原行为与顺序假设）。
+		// SET-type functions win: when present only those are returned (previous behaviour and ordering assumption).
+		TreeSet<IStatFunction> setFuncs = null;
 		for (IStatFunction func : allStats) {
 			if (func.getPriority() >= Integer.MAX_VALUE - 10) {
 				if (setFuncs == null) {
-					setFuncs = new ArrayList<IStatFunction>();
+					setFuncs = new TreeSet<IStatFunction>();
 				}
 				setFuncs.add(func);
 			} else if (setFuncs != null) {
 				break;
 			}
 		}
-		if (setFuncs == null) {
-			tmp.addAll(allStats);
-		} else {
-			tmp.addAll(setFuncs);
-		}
-		return tmp;
+		return setFuncs == null ? allStats : setFuncs;
 	}
 
 	private void addFunction(StatEnum stat, IStatFunction function) {

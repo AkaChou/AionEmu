@@ -45,7 +45,11 @@ public class Stat extends AdminCommand {
 			}
 			if (target instanceof Creature creature) {
 
-				TreeSet<IStatFunction> stats = creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0]));
+				// 门面返回的是受属性锁保护的只读视图；管理命令不加锁，先复制一份再遍历。
+				// The facade returns a read-only view guarded by the stats lock; the admin command does not take
+				// that lock, so it copies the view before iterating.
+				TreeSet<IStatFunction> stats =
+					new TreeSet<IStatFunction>(creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0])));
 
 				if (params.length == 1) {
 					for (IStatFunction stat : stats) {
