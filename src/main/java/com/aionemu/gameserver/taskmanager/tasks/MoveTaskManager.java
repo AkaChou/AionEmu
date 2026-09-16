@@ -57,8 +57,8 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		@Override
 		public boolean apply(MoveRegistration registration) {
 			Creature creature = registration.creature();
-			int objectId = creature.getObjectId();
-			if (movingCreatures.get(objectId) != registration) {
+			Integer key = registration.key;
+			if (movingCreatures.get(key) != registration) {
 				return true;
 			}
 			long now = System.currentTimeMillis();
@@ -68,11 +68,11 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 			registration.processing = true;
 			try {
 				creature.getMoveController().moveToDestination();
-				if (movingCreatures.get(objectId) != registration) {
+				if (movingCreatures.get(key) != registration) {
 					return true;
 				}
 				if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
-					if (movingCreatures.remove(objectId, registration)) {
+					if (movingCreatures.remove(key, registration)) {
 						creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
 						GameMovementLoopServices.zoneUpdateService().add(creature);
 					}
@@ -102,19 +102,23 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * @param creature 生物 / Creature
 	 */
 	public void addCreature(Creature creature) {
-		int objectId = creature.getObjectId();
+		// 注册对象自带装箱后的 objectId 键（每注册一次），此后所有查表复用同一实例：
+		// 每 100ms 的移动步进不再为 ConcurrentHashMap 的 int 键反复装箱（play-14 该站点 7.4MB/300s）。
+		// The registration owns the boxed objectId key (created once); every later lookup reuses that
+		// instance so the 100ms move step stops boxing the ConcurrentHashMap key (7.4MB/300s in play-14).
+		MoveRegistration replacement = new MoveRegistration(creature);
+		Integer key = replacement.key;
 		while (true) {
-			MoveRegistration current = movingCreatures.get(objectId);
+			MoveRegistration current = movingCreatures.get(key);
 			if (current != null && current.creature == creature && !current.processing) {
 				current.nextUpdateAt = 0;
 				return;
 			}
-			MoveRegistration replacement = new MoveRegistration(creature);
 			if (current == null) {
-				if (movingCreatures.putIfAbsent(objectId, replacement) == null) {
+				if (movingCreatures.putIfAbsent(key, replacement) == null) {
 					return;
 				}
-			} else if (movingCreatures.replace(objectId, current, replacement)) {
+			} else if (movingCreatures.replace(key, current, replacement)) {
 				return;
 			}
 		}
@@ -169,11 +173,14 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	private static final class MoveRegistration {
 
 		private final Creature creature;
+		/** 装箱后的 objectId 键：复用同一实例，避免 Hot 路径重复装箱。 / Boxed objectId key reused to avoid re-boxing on the hot path. */
+		private final Integer key;
 		private volatile boolean processing;
 		private volatile long nextUpdateAt;
 
 		private MoveRegistration(Creature creature) {
 			this.creature = creature;
+			this.key = creature.getObjectId();
 		}
 
 		private Creature creature() {

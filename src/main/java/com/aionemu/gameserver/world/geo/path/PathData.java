@@ -50,6 +50,13 @@ public final class PathData {
 	private final Map<Integer, MapData> maps = new LinkedHashMap<>(16, 0.75f, true);
 	private final Map<Integer, ReentrantLock> locks = new ConcurrentHashMap<>();
 	private final Set<Integer> failedMaps = ConcurrentHashMap.newKeySet();
+	/**
+	 * 最近一次成功解析的 (worldId → MapData)：只要缓存结构未变即可无锁、无装箱直接返回。
+	 * Last successfully resolved (worldId → MapData): returned without locking or boxing while the cache is unchanged.
+	 */
+	private volatile MapLookup memoLookup = MapLookup.EMPTY;
+	/** 每次 {@link #maps} 结构变更（装载/淘汰）递增，使 memo 失效。 / Bumped on every structural change of {@link #maps}. */
+	private volatile int mapsEpoch;
 
 	public int scan() {
 		files.clear();
@@ -81,12 +88,19 @@ public final class PathData {
 		if (!GeoDataConfig.GEO_PATH_ENABLE) {
 			return null;
 		}
+		// 快速路径：移动任务每个 tick 都会查同一张地图，命中时不再装箱、不再进 synchronized 块。
+		// Fast path: the move task queries the same map every tick; a hit avoids boxing and the synchronized block.
+		MapLookup memo = memoLookup;
+		if (memo.map != null && memo.worldId == worldId && memo.epoch == mapsEpoch) {
+			return memo.map;
+		}
 		if (failedMaps.contains(worldId)) {
 			throw new IllegalStateException("PATH map is unavailable: " + worldId);
 		}
 		synchronized (maps) {
 			MapData cached = maps.get(worldId);
 			if (cached != null) {
+				memoLookup = new MapLookup(worldId, cached, mapsEpoch);
 				return cached;
 			}
 		}
@@ -110,10 +124,13 @@ public final class PathData {
 			}
 			try {
 				MapData loaded = loadMap(worldId, source);
+				int epoch;
 				synchronized (maps) {
 					maps.put(worldId, loaded);
 					evictIfNeeded();
+					epoch = ++mapsEpoch;
 				}
+				memoLookup = new MapLookup(worldId, loaded, epoch);
 				if (Thread.currentThread().isInterrupted()) {
 					throw interruptedLoad(worldId, null);
 				}
@@ -163,9 +180,28 @@ public final class PathData {
 
 	private void evictIfNeeded() {
 		int limit = GeoDataConfig.GEO_PATH_CACHE_SIZE;
+		boolean evicted = false;
 		while (limit > 0 && maps.size() > limit) {
 			maps.remove(maps.keySet().iterator().next());
+			evicted = true;
 		}
+		if (evicted) {
+			// 不让 memo 把刚被淘汰的 MapData 钉在内存里。 / Do not let the memo pin an evicted MapData.
+			memoLookup = MapLookup.EMPTY;
+		}
+	}
+
+	/**
+	 * 无锁快速路径的不可变快照（一次 volatile 写完成发布，避免多字段撕裂）。
+	 * Immutable snapshot for the lock-free fast path (published by a single volatile write).
+	 *
+	 * @param worldId 世界 ID / world id
+	 * @param map 缓存的地图数据 / cached map data
+	 * @param epoch 生成该快照时的 {@link #mapsEpoch} / {@link #mapsEpoch} when the snapshot was created
+	 */
+	private record MapLookup(int worldId, MapData map, int epoch) {
+
+		private static final MapLookup EMPTY = new MapLookup(Integer.MIN_VALUE, null, 0);
 	}
 
 	int loadedMapCount() {
@@ -268,6 +304,12 @@ public final class PathData {
 	public static final class MapData {
 
 		private static final int MAX_PROCESSED_NODES = 49_999;
+		/**
+		 * visited 预分配上限（条目数）：按搜索预算一次性预分配，避免深搜过程中反复 resize。
+		 * Upper bound for the visited pre-allocation (entries): sized once from the search budget so deep searches
+		 * stop resizing the backing arrays.
+		 */
+		private static final int VISITED_PREALLOC_ENTRIES = 8_192;
 		private static final int MAX_PATH_POINTS = 20_000;
 		private static final int HIERARCHICAL_MIN_BLOCK_DISTANCE = 8;
 		private static final int HIERARCHICAL_MAX_ABSTRACT_NODES = 2_048;
@@ -475,7 +517,7 @@ public final class PathData {
 				float targetX, float targetY, float targetZ, float searchRadiusSquared, int budget,
 				HeightProvider terrain, EdgePassability passability, BitSet allowedBlocks) {
 			SearchWorkspace workspace = workspace();
-			workspace.beginLowLevelSearch();
+			workspace.beginLowLevelSearch(budget);
 			LongObjectHashMap<SearchNode> visited = workspace.visited;
 			PriorityQueue<OpenNode> open = workspace.open;
 			try {
@@ -688,7 +730,7 @@ public final class PathData {
 				return PortalSearchResult.failed(SearchStatus.NO_PATH, 0);
 			}
 			SearchWorkspace workspace = workspace();
-			workspace.beginPortalSearch();
+			workspace.beginPortalSearch(budget);
 			LongObjectHashMap<PortalStep> goals = workspace.portalGoals;
 			LongObjectHashMap<SearchNode> visited = workspace.visited;
 			PriorityQueue<OpenNode> open = workspace.open;
@@ -1250,7 +1292,7 @@ public final class PathData {
 					return null;
 				}
 				long key = (long) block.id << 24 | (long) layer << 10 | (y & 31) * 32L | x & 31;
-				return workspace().node(this, x, y, -1, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
+				return workspace().node(this, x, y, -1, key, z);
 			}
 
 			private Node complexNode(int offset) {
@@ -1262,7 +1304,7 @@ public final class PathData {
 				int y = Short.toUnsignedInt(data.getShort(position + 6));
 				float z = data.getInt(position) / 100f;
 				long key = Long.MIN_VALUE | Integer.toUnsignedLong(offset);
-				return workspace().node(this, x, y, offset, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
+				return workspace().node(this, x, y, offset, key, z);
 			}
 
 			private int[] nodeOffsets() {
@@ -1468,14 +1510,12 @@ public final class PathData {
 			private float z;
 
 			private Node reset(Sector sector, int gridX, int gridY, int complexOffset, long key,
-					float x, float y, float z) {
+					float z) {
 				this.sector = sector;
 				this.gridX = gridX;
 				this.gridY = gridY;
 				this.complexOffset = complexOffset;
 				this.key = key;
-				this.x = x;
-				this.y = y;
 				this.z = z;
 				return this;
 			}
@@ -1500,12 +1540,17 @@ public final class PathData {
 				return key;
 			}
 
+			/**
+			 * 世界 X 由网格索引推导：原实现把推导结果另存一个 float，52 万节点下等于白占 4 字节/节点。
+			 * World X derived from the grid index: storing the derived float cost 4 bytes per node (~520k nodes).
+			 */
 			private float x() {
-				return x;
+				return gridX * 0.5f + 0.25f;
 			}
 
+			/** 世界 Y 由网格索引推导（同 {@link #x()}）。 / World Y derived from the grid index (see {@link #x()}). */
 			private float y() {
-				return y;
+				return gridY * 0.5f + 0.25f;
 			}
 
 			private float z() {
@@ -1673,8 +1718,7 @@ public final class PathData {
 				blockOpen.clear();
 			}
 
-			private Node node(Sector sector, int gridX, int gridY, int complexOffset, long key,
-					float x, float y, float z) {
+			private Node node(Sector sector, int gridX, int gridY, int complexOffset, long key, float z) {
 				if (nodeIndex == nodes.length) {
 					nodes = Arrays.copyOf(nodes, nodes.length * 2);
 				}
@@ -1683,11 +1727,14 @@ public final class PathData {
 					node = nodes[nodeIndex] = new Node();
 				}
 				nodeIndex++;
-				return node.reset(sector, gridX, gridY, complexOffset, key, x, y, z);
+				return node.reset(sector, gridX, gridY, complexOffset, key, z);
 			}
 
-			private void beginLowLevelSearch() {
+			private void beginLowLevelSearch(int budget) {
 				visited.clear();
+				// 按预算预分配（上限 VISITED_PREALLOC_ENTRIES）：512→…→16384 的多次 resize 只剩一次分配。
+				// Pre-size from the budget (capped): the repeated 512→…→16384 resizes collapse into one allocation.
+				visited.ensureCapacity(Math.min(budget, VISITED_PREALLOC_ENTRIES));
 				open.clear();
 				searchNodeIndex = 0;
 				openNodeIndex = 0;
@@ -1698,8 +1745,8 @@ public final class PathData {
 				open.clear();
 			}
 
-			private void beginPortalSearch() {
-				beginLowLevelSearch();
+			private void beginPortalSearch(int budget) {
+				beginLowLevelSearch(budget);
 				portalGoals.clear();
 			}
 

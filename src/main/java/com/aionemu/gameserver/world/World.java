@@ -3,8 +3,10 @@ package com.aionemu.gameserver.world;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,8 +57,10 @@ public class World {
 	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<Collection<OutpostNpc>>();
 	/** 全部 NPC / all NPCs */
 	private final Map<Integer, Npc> allNpcs;
-	/** 全部世界地图 / all world maps */
-	private final IntObjectHashMap<WorldMap> worldMaps;
+	/** 全部世界地图的 ID（升序，供二分查找）。 / Ids of all world maps (ascending, binary searchable). */
+	private final int[] worldMapIds;
+	/** 与 {@link #worldMapIds} 平行的世界地图数组。 / World maps parallel to {@link #worldMapIds}. */
+	private final WorldMap[] worldMaps;
 
 	/**
 	 * 构造世界并加载全部地图模板。
@@ -67,11 +71,20 @@ public class World {
 		allPlayers = new PlayerContainer();
 		allObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 		allNpcs = Collections.synchronizedMap(new LinkedHashMap<Integer, Npc>());
-		worldMaps = new IntObjectHashMap<WorldMap>();
+		List<WorldMapTemplate> templates = new ArrayList<>();
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
-			worldMaps.put(template.getMapId(), new WorldMap(template, this));
+			templates.add(template);
 		}
-		log.info(I18n.get("log.e9ec75b7b736", worldMaps.size()));
+		// 固定为升序数组：getWorldMap(int) 每 tick 都会被调用，Map<Integer,…> 的装箱在这里是可以省掉的。
+		// Freeze into ascending arrays: getWorldMap(int) is called every tick and must not box the map key.
+		templates.sort(Comparator.comparingInt(WorldMapTemplate::getMapId));
+		worldMapIds = new int[templates.size()];
+		worldMaps = new WorldMap[templates.size()];
+		for (int i = 0; i < templates.size(); i++) {
+			worldMapIds[i] = templates.get(i).getMapId();
+			worldMaps[i] = new WorldMap(templates.get(i), this);
+		}
+		log.info(I18n.get("log.e9ec75b7b736", worldMaps.length));
 	}
 
 	/**
@@ -363,11 +376,11 @@ public class World {
 	 * @return 世界地图 / the world map
 	 */
 	public WorldMap getWorldMap(int id) {
-		WorldMap map = worldMaps.get(id);
-		if (map == null) {
+		int index = Arrays.binarySearch(worldMapIds, id);
+		if (index < 0) {
 			throw new WorldMapNotExistException("Map: " + id + " not exist!");
 		}
-		return map;
+		return worldMaps[index];
 	}
 
 	/**

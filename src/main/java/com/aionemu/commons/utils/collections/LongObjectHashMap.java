@@ -130,6 +130,26 @@ public final class LongObjectHashMap<V> {
     }
 
     /**
+     * 预分配到可容纳期望条目数，避免首次深搜时反复扩容搬移底层数组。
+     * Pre-sizes the table for the expected entry count so a first deep search does not resize repeatedly.
+     *
+     * <p>调用方必须保证当前表为空（例如搜索开始前刚执行过 {@link #clear()}），因为该方法会重建底层数组。
+     * The caller must guarantee the map is empty (for example right after {@link #clear()}), because the backing
+     * arrays are rebuilt.</p>
+     *
+     * @param expectedEntries 期望条目数 / expected entry count
+     */
+    public void ensureCapacity(int expectedEntries) {
+        int capacity = MIN_CAPACITY;
+        while (capacity * LOAD_FACTOR < expectedEntries) {
+            capacity <<= 1;
+        }
+        if (capacity > keys.length) {
+            init(capacity);
+        }
+    }
+
+    /**
      * 定位键所在槽位（命中返回该槽，未命中返回第一个空槽）。
      * Locates the slot for the key (existing slot on hit, first free slot on miss).
      *

@@ -717,3 +717,126 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
 - 细粒度方案（`play-14` 待授权）：自定义 JFR 配置开启 `jdk.ObjectAllocationInNewTLAB` +
   `jdk.ObjectAllocationOutsideTLAB`（带栈）。当前服务器总分配仅 ~0.36 MB/s（107.7 MB/300 s），TLAB 事件代价可忽略，
   但能精确给出每个分配栈，替代 throttled 采样的空洞。配置已备：`/tmp/alloc-detail.jfc`。
+
+### 12.10 第十四轮复测（`play-14`，重负载）：细粒度分配归因与下一轮候选
+
+**采样**：`/tmp/play-14.jfr`，2026-09-16 22:54–22:59（300 s），PID 26773（代码 = `0b480cb1b`），配置
+`/tmp/alloc-detail.jfc`（`ObjectAllocationInNewTLAB` + `OutsideTLAB` 带栈）。用户确认窗口是**持续战斗 +
+大量 NPC 移动**。产物：`play-14-tlab.txt`（875）、`play-14-outside.txt`（82）、`play-14-alloc.txt`（399 样本，
+总权重 182.6 MB）、`play-14-cpu.txt`（343）、`play-14-histogram.txt`。
+
+**本轮是重负载窗口**，用于验证上一轮结论在更大压力下依然成立：
+
+| 线程组 | play-11 | play-12 | play-13 | **play-14** |
+|---|---|---|---|---|
+| `pathfinder` | 138.5 | 28.5 | 20.5 | **67.5** |
+| `pool-*-thread-*` | 133.5 | 75.0 | 43.7 | **75.0** |
+| `ForkJoinPool-*-worker-*` | 48.0 | 20.2 | 25.3 | **14.5** |
+| `PacketProcessor:*` | 12.5 | 4.3 | 2.5 | **9.9** |
+| `multiThreadIoEventLoopGroup-*` | 11.6 | 7.2 | 7.9 | **9.8** |
+| `RMI TCP Connection(*)` | 7.0 | 7.1 | 5.9 | **7.0** |
+| **合计** | 352.6 | 143.8 | 107.7 | **185.4** |
+| 其中 `pool-4` | 132.6 | 74.0 | 42.8 | **74.1** |
+
+`GeoService.canSee` 链路在重负载下依然 0 样本采样（12.9.2 结论保持），FJP 组由 25.3 → **14.5 MB**。
+
+#### 12.10.1 按权重的前 15 个分配站点（`ObjectAllocationSample`，首次 `com.aionemu` 帧）
+
+| 权重 | 样本 | 站点 | 性质 |
+|---|---|---|---|
+| 29.46 MB | 71 | `PathData$MapData$SearchWorkspace.node` | A\* 节点槽位 |
+| 12.74 MB | 10 | `NpcShoutData.getNpcShouts` | **每次生物事件复制喊话列表 + npcId 装箱** |
+| 9.39 MB | 13 | `PathData$MapData.reconstruct` | 路径重建 `PathPoint`/列表 |
+| 7.55 MB | 16 | `SearchWorkspace.searchNode` | A\* 搜索节点 |
+| 6.49 MB | 16 | （无 `com.aionemu` 帧） | JDK/Netty/监控内部 |
+| 6.48 MB | 14 | `KnownList.knownObjectsSnapshot` | 快照（既有不变量，不动） |
+| 6.09 MB | 4 | `MoveTaskManager$1.apply` | 移动步进里的 `Integer.valueOf`（`movingCreatures.get(objectId)`） |
+| 5.49 MB | 10 | `PathService.waypoints` | 路径结果 `float[]` |
+| 5.39 MB | 8 | `WaterVolumeStore.find` | 每次移动 tick 的 `worldId` 装箱 |
+| 4.66 MB | 10 | `BIHNode.intersectWhere` | 命中点/结果对象 |
+| 4.52 MB | 9 | `LongObjectHashMap.init` | A\* visited 表扩容 |
+| 4.16 MB | 7 | `PathData$MapData.releaseWorkspace` | 工作区归还 |
+| 4.14 MB | 6 | `NettyConnectionHandler.writeAndConsume` | `HeapByteBuffer.duplicate()` |
+| 4.10 MB | 12 | `SearchWorkspace.openNode` | A\* 开放节点 |
+| 3.63 MB | 6 | `PathData$MapData.point` | 网格点对象 |
+
+**分配点（栈顶帧）前三**：`Integer.valueOf` **29.49 MB (32)**、`SearchWorkspace.node` 26.06 MB (66)、
+`Arrays.copyOf` 11.21 MB (19)。
+
+#### 12.10.2 装箱（`Integer.valueOf` 29.49 MB）逐条归因
+
+| 权重 | 调用点 | 说明 |
+|---|---|---|
+| 12.74 MB | `NpcShoutData.getNpcShouts:101/102` ← `hasAnyShout(worldId,npcId,type)` ← `GeneralNpcAI2.canHandleEvent` ← `onCreatureEvent` ← `MovementNotifyTask` | 每次生物事件：内层 `Map<Integer,…>.get(npcId)` 装箱（`shoutsByWorldNpcs` 外层已是 `IntObjectHashMap`，但内层不是）+ **列表复制** |
+| 6.09 MB | `MoveTaskManager$1.apply:75` | `movingCreatures` 是 `ConcurrentHashMap<Integer,MoveRegistration>`，每次步进 `get(objectId)` 装箱 |
+| 2.95 MB | `PathData.getMap:84` | 每次 `groundWaypointStatus → canReachWaypoint` 的 `maps.get(worldId)`（还带 `synchronized`） |
+| 2.80 MB | `WaterVolumeStore.find:81` | 每次移动 tick `volumesByWorld.get(worldId)` |
+| 1.29 MB | `MoveTaskManager.addCreature` | 同上（`putIfAbsent/replace`） |
+| 0.61 / 0.60 / 0.54 / 0.54 MB | `World.getWorldMap`、`QuestStateList.getQuestState`、`PlayerQuestEventPort.toInventoryMap/questIdSet` | 其余零星装箱 |
+
+注：`com.aionemu.commons.utils.collections.IntObjectHashMap` 只是 `LinkedHashMap<Integer,V>` 的包装（AR-003 的「假原始类型容器」），
+**不能**用来消除装箱；真要消掉应改用 `LongObjectHashMap`（真原始键）或「注册时缓存装箱键」的做法。
+
+#### 12.10.3 下一轮候选（按「收益 ÷ 风险」排序）
+
+1. **`NpcShoutData`（≈13 MB）**：① `hasAnyShout(worldId,npcId,type)` 不再调 `getNpcShouts` 复制列表，直接在底层列表上找类型
+   （与 2 参版本一致）；② 内层 `Map<Integer,List<NpcShout>>` 换成排序 `int[] npcIds` + 二分，或注册期缓存装箱键。风险低、语义纯。
+2. **`MoveTaskManager` 装箱（≈7.4 MB）**：把 `Integer` 键缓存在 `MoveRegistration` 里（每注册一次），`apply`/`addCreature`/`remove`
+   全部复用同一个键实例，`ConcurrentHashMap` 的并发语义完全不变。风险低。
+3. **`PathData.getMap` / `WaterVolumeStore.find` / `World.getWorldMap`（≈6.4 MB）**：per-tick 世界查表；可用
+   `LongObjectHashMap` 或「实体级缓存 worldId→map/volume 列表」。风险中（缓存失效语义）。
+4. **寻路 A\* 工作区（≈29.5 + 7.6 + 4.1 + 4.5 + 4.2 ≈ 50 MB，另加 `reconstruct`/`waypoints`/`point` ≈ 18 MB）**：
+   本轮最大单项域，但 12.3 已经做过租约池与节点槽位回退，继续要动 `SearchWorkspace` 的节点生命周期，**单独一轮**做。
+5. `NettyConnectionHandler.writeAndConsume` 的 `HeapByteBuffer.duplicate()`（4.1 MB）属网络层，收益中等。
+
+**结论**：`play-14` 证明重负载下 12.8 的射线优化仍保持归零；剩余分配已收敛为**寻路 A\* 工作区**与
+**若干 per-tick/per-event 装箱与列表复制**两类，前者是大头（≈68 MB），后者是低风险快赢（≈27 MB）。
+
+### 12.11 第十五轮：per-event/per-tick 装箱与列表复制 + 寻路 A\* 工作区（A 阶段）
+
+依据 12.10 的归因（以及 `play-14-histogram.txt`：`PathData$MapData$Node` 存活 **523,557** 个 / 25.1 MB，`OpenNode` 139,205 / 5.6 MB，`SearchNode` 138,340 / 4.4 MB）。
+
+#### 12.11.1 低风险快赢三项（≈27 MB/300 s）
+
+1. **`NpcShoutData`（12.74 MB）**：每次生物事件（`MovementNotifyTask → onCreatureEvent → GeneralNpcAI2.canHandleEvent → hasAnyShout(…, type)`）
+   都会 `getNpcShouts` 复制列表并给内层 `Map<Integer,List<NpcShout>>` 的 `npcId` 装箱。现在加载期把结构**冻结成升序 `int[]` + 平行列表**（`WorldShouts` record，
+   `Arrays.binarySearch` 查询），3 参 `hasAnyShout` 直接在底层列表上判定类型，不再复制。合并顺序、防御性复制契约、`size()` 计数全部保持。
+2. **`MoveTaskManager`（7.4 MB）**：`movingCreatures` 是 `ConcurrentHashMap<Integer,MoveRegistration>`，每 100 ms 的移动步进都为
+   `get/remove/putIfAbsent/replace` 的 int 键装箱。现在 `MoveRegistration` 自带一个装箱后的 `key`（每注册一次），此后所有查表复用同一实例，
+   并发语义（身份比较、`replace(k,old,new)`、`remove(k,v)`）不变。
+3. **per-tick 世界查表（6.4 MB）**：
+   - `PathData.getMap`：新增 `volatile MapLookup(worldId,map,epoch)` + `mapsEpoch`，命中时不再进 `synchronized(maps)`、不再装箱；装载/淘汰时 `mapsEpoch++`，
+     淘汰时清 memo（不钉住被淘汰的 `MapData`）；
+   - `WaterVolumeStore`：`Map<Integer,List<Volume>>` → 冻结的升序 `int[]` + 平行列表（单次 volatile 发布）；
+   - `World.getWorldMap`：`IntObjectHashMap<WorldMap>` → 构造期排序的 `int[]` + `WorldMap[]`，缺失 id 仍抛 `WorldMapNotExistException`。
+
+#### 12.11.2 寻路 A\* 工作区：A2 + A3（A1 未做，理由见下）
+
+- **A2（visited 预分配，≈4.5 MB）**：`LongObjectHashMap` 新增 `ensureCapacity(expectedEntries)`（前提：表为空，会重建底层数组）；
+  `SearchWorkspace.beginLowLevelSearch(int budget)` / `beginPortalSearch(int budget)` 在搜索开始时一次性预分配到
+  `min(budget, 8192)` 条目，原先 `512→…→16384` 的多次 `resize` 只剩一次分配。`clear()` 仍保留容量。
+- **A3（`Node` 去派生字段，≈4 MB 分配 + 4.2 MB 常驻）**：`Node.x/y` 存的是 `gridX * 0.5f + 0.25f` 的推导结果（两处调用点公式完全相同），
+  现在由 `x()`/`y()` 按需推导，字段删除；`reset(...)`/`workspace().node(...)` 签名相应收窄。
+- **A1（节点数组扩容）未做**：`Arrays.copyOf` 实测仅 3.4 MB/300 s，且属工作区首次长到峰值的一次性搬移；唯一"低风险替代"
+  是按 50k 预算提前预分配，等于把内存提前吃满、把分配挪到启动期，不符合"不干扰功能、不涨常驻内存"的原则。
+- **未做（C 类）**：`reconstruct`/`waypoints`/`point`（≈18.5 MB/300 s）是交给 `NpcMoveController` 跨 tick 消费、
+  还可能被 `canReachWaypointCached` 缓存的结果对象，复用 buffer 会串数据，保持不动。
+
+#### 12.11.3 golden 差分护栏（本轮的验收核心）
+
+新增 `PathGoldenDiffTest`：8×4 块合成路径图（第 3/4 列有墙、最后一行留缺口）+ 6 条固定用例
+（`short`/`around-wall`/`diagonal`/`same-cell`/`node-limit`/`no-path`），快照包含
+`status | mode | processedNodes | abstractNodes | 路径点逐点坐标`。两层断言：
+
+1. **工作区复用护栏**：先跑用例集 → 再跑一次整图对角深搜（50k 预算）→ 重放用例集，两次输出必须逐字相同
+   （专防节点池/`visited` 残留与容量策略改动带来的隐性状态）；
+2. **golden 比对**：与 `src/test/resources/aion/geo/path-golden.txt` 逐字比对。
+
+流程与证据：**基线在改 A 之前录制**（`-Dpath.golden.record=true`，2026-09-16 23:47；`around-wall` = FOUND/LOW_LEVEL/13081 节点/256 点，
+`diagonal` = FOUND/11521/256，`node-limit` = NODE_LIMIT/5，`no-path` = NO_PATH/16384），**改 A 之后再比对通过**（23:59），
+`path-golden.txt` 未被重写 → 13,081 节点那条绕墙路径的 256 个坐标一字不差。
+
+**测试**：`mvn -Dtest=PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,PlayerMoveTaskManagerTest test`
+→ **BUILD SUCCESS，6 个测试类 125 例全绿**；更早一轮 `NpcShoutDataTest`(新 4)+`ShoutEventHandlerTest`+`WaterVolumeStoreTest`+`PathDataTest`+
+`PathServiceConcurrencyTest`+`PathServiceCompressionTest`+`NpcMoveControllerPathTest`+`MoveTaskManagerTest`+`PlayerMoveTaskManagerTest`+
+`WorldTest`+`WorldMapTest`+`WorldMapInstanceTest` → **153 例全绿**。

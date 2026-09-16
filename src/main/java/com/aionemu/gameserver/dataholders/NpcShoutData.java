@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -16,7 +18,6 @@ import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutGroup;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutList;
 
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,8 +35,16 @@ public class NpcShoutData {
 	@XmlElement(name = "shout_group")
 	protected List<ShoutGroup> shoutGroups;
 
+	/**
+	 * 冻结后的世界索引（worldId 升序，供二分查找）。
+	 * Frozen world index (world ids ascending, binary searchable).
+	 */
 	@XmlTransient
-	private final IntObjectHashMap<Map<Integer, List<NpcShout>>> shoutsByWorldNpcs = new IntObjectHashMap<Map<Integer, List<NpcShout>>>();
+	private int[] worldIds = new int[0];
+
+	/** 与 {@link #worldIds} 平行的单世界喊话索引。 / Per-world shout indexes parallel to {@link #worldIds}. */
+	@XmlTransient
+	private List<WorldShouts> shoutsByWorld = List.of();
 
 	@XmlTransient
 	private int count = 0;
@@ -45,16 +54,13 @@ public class NpcShoutData {
 	 * After JAXB unmarshalling, indexes shouts by world and npc, then clears raw groups.
 	 */
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
+		Map<Integer, Map<Integer, List<NpcShout>>> byWorld = new LinkedHashMap<>();
 		for (ShoutGroup group : shoutGroups) {
 			for (int i = group.getShoutNpcs().size() - 1; i >= 0; i--) {
 				ShoutList shoutList = group.getShoutNpcs().get(i);
 				int worldId = shoutList.getRestrictWorld();
 
-				Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(worldId);
-				if (worldShouts == null) {
-					worldShouts = new LinkedHashMap<>();
-					this.shoutsByWorldNpcs.put(worldId, worldShouts);
-				}
+				Map<Integer, List<NpcShout>> worldShouts = byWorld.computeIfAbsent(worldId, ignored -> new LinkedHashMap<>());
 
 				this.count += shoutList.getNpcShouts().size();
 				for (int j = shoutList.getNpcIds().size() - 1; j >= 0; j--) {
@@ -75,6 +81,64 @@ public class NpcShoutData {
 		}
 		this.shoutGroups.clear();
 		this.shoutGroups = null;
+		freeze(byWorld);
+	}
+
+	/**
+	 * 将加载期容器冻结为升序 int 数组索引：查询时不再为 worldId/npcId 装箱，也不再复制列表。
+	 * Freezes the load-time containers into ascending int-array indexes so lookups neither box
+	 * worldId/npcId nor copy the shout lists.
+	 *
+	 * @param byWorld 加载期按世界与 NPC 建立的索引 / load-time index by world and npc
+	 */
+	private void freeze(Map<Integer, Map<Integer, List<NpcShout>>> byWorld) {
+		List<Integer> worlds = new ArrayList<>(byWorld.keySet());
+		Collections.sort(worlds);
+		int[] ids = new int[worlds.size()];
+		List<WorldShouts> frozen = new ArrayList<>(worlds.size());
+		for (int i = 0; i < worlds.size(); i++) {
+			ids[i] = worlds.get(i);
+			frozen.add(WorldShouts.of(byWorld.get(ids[i])));
+		}
+		this.worldIds = ids;
+		this.shoutsByWorld = List.copyOf(frozen);
+	}
+
+	/**
+	 * 返回指定世界与 NPC 的喊话列表（不复制，调用方禁止修改）。
+	 * Returns the shout list of one world and npc (no copy; callers must not modify it).
+	 *
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / npc id
+	 * @return 列表或 null / list or null
+	 */
+	private List<NpcShout> shouts(int worldId, int npcId) {
+		int index = Arrays.binarySearch(worldIds, worldId);
+		return index < 0 ? null : shoutsByWorld.get(index).find(npcId);
+	}
+
+	/**
+	 * 单个世界的冻结索引：npcId 升序的键数组 + 平行列表。
+	 * Frozen index of one world: ascending npc ids plus the parallel shout lists.
+	 */
+	private record WorldShouts(int[] npcIds, List<List<NpcShout>> shouts) {
+
+		private static WorldShouts of(Map<Integer, List<NpcShout>> byNpcId) {
+			List<Integer> ids = new ArrayList<>(byNpcId.keySet());
+			Collections.sort(ids);
+			int[] npcIds = new int[ids.size()];
+			List<List<NpcShout>> lists = new ArrayList<>(ids.size());
+			for (int i = 0; i < ids.size(); i++) {
+				npcIds[i] = ids.get(i);
+				lists.add(byNpcId.get(npcIds[i]));
+			}
+			return new WorldShouts(npcIds, List.copyOf(lists));
+		}
+
+		private List<NpcShout> find(int npcId) {
+			int index = Arrays.binarySearch(npcIds, npcId);
+			return index < 0 ? null : shouts.get(index);
+		}
 	}
 
 	/**
@@ -96,21 +160,15 @@ public class NpcShoutData {
 	 * @return 喊话列表，不存在则为 null / shout list or null
 	 */
 	public List<NpcShout> getNpcShouts(int worldId, int npcId) {
-		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
-
-		if (worldShouts == null || worldShouts.get(npcId) == null) {
-			worldShouts = shoutsByWorldNpcs.get(worldId);
-			if (worldShouts == null || worldShouts.get(npcId) == null)
-				return null;
-			return new ArrayList<NpcShout>(worldShouts.get(npcId));
+		List<NpcShout> globalShouts = shouts(0, npcId);
+		List<NpcShout> worldShouts = shouts(worldId, npcId);
+		if (globalShouts == null) {
+			return worldShouts == null ? null : new ArrayList<NpcShout>(worldShouts);
 		}
-
-		List<NpcShout> npcShouts = new ArrayList<NpcShout>(worldShouts.get(npcId));
-		worldShouts = shoutsByWorldNpcs.get(worldId);
-		if (worldShouts == null || worldShouts.get(npcId) == null)
-			return npcShouts;
-		npcShouts.addAll(worldShouts.get(npcId));
-
+		List<NpcShout> npcShouts = new ArrayList<NpcShout>(globalShouts);
+		if (worldShouts != null) {
+			npcShouts.addAll(worldShouts);
+		}
 		return npcShouts;
 	}
 
@@ -123,13 +181,7 @@ public class NpcShoutData {
 	 * @return 存在喊话则为 true / true if any shout exists
 	 */
 	public boolean hasAnyShout(int worldId, int npcId) {
-		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
-
-		if (worldShouts == null || worldShouts.get(npcId) == null) {
-			worldShouts = shoutsByWorldNpcs.get(worldId);
-			return worldShouts != null && worldShouts.get(npcId) != null;
-		}
-		return true;
+		return shouts(0, npcId) != null || shouts(worldId, npcId) != null;
 	}
 
 	/**
@@ -142,12 +194,25 @@ public class NpcShoutData {
 	 * @return 存在匹配喊话则为 true / true if any matching shout exists
 	 */
 	public boolean hasAnyShout(int worldId, int npcId, ShoutEventType type) {
-		List<NpcShout> shouts = getNpcShouts(worldId, npcId);
+		// 这里每次生物事件都会走到：只判定“是否存在该类型”，既不复制列表也不再装箱。
+		// This runs on every creature event: test for a matching type without copying the lists or boxing.
+		return matchesType(shouts(0, npcId), type) || matchesType(shouts(worldId, npcId), type);
+	}
+
+	/**
+	 * 是否存在指定事件类型的喊话。
+	 * Whether the given list contains a shout of the requested event type.
+	 *
+	 * @param shouts 喊话列表（可为 null） / shout list (may be null)
+	 * @param type 事件类型 / event type
+	 * @return 存在则为 true / true if present
+	 */
+	private static boolean matchesType(List<NpcShout> shouts, ShoutEventType type) {
 		if (shouts == null) {
 			return false;
 		}
-		for (NpcShout s : shouts) {
-			if (s.getWhen() == type) {
+		for (NpcShout shout : shouts) {
+			if (shout.getWhen() == type) {
 				return true;
 			}
 		}

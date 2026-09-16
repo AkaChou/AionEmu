@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,18 +27,23 @@ final class WaterVolumeStore {
 	private static final int MAGIC = 0x41495756; // AIWV
 	private static final int VERSION = 1;
 	private static final String FILE_NAME = "water-volumes.bin";
-	private volatile Map<Integer, List<Volume>> volumesByWorld = Map.of();
+
+	/**
+	 * 冻结后的世界水体索引（worldId 升序 + 平行列表），一次 volatile 发布保证可见性。
+	 * Frozen per-world water index (ascending world ids plus the parallel lists), published with one volatile write.
+	 */
+	private volatile WorldVolumes volumes = WorldVolumes.EMPTY;
 
 	int load() {
 		File file = Config.geoFile(FILE_NAME);
 		if (!file.isFile()) {
-			volumesByWorld = Map.of();
+			volumes = WorldVolumes.EMPTY;
 			return 0;
 		}
 		try (InputStream input = new FileInputStream(file)) {
 			return load(input);
 		} catch (IOException | RuntimeException e) {
-			volumesByWorld = Map.of();
+			volumes = WorldVolumes.EMPTY;
 			log.error(I18n.get("log.path.water_volumes_load_failed", file), e);
 			return 0;
 		}
@@ -73,18 +80,20 @@ final class WaterVolumeStore {
 			loaded.computeIfAbsent(worldId, ignored -> new ArrayList<>()).add(new Volume(id, x, y, z));
 		}
 		loaded.replaceAll((ignored, volumes) -> List.copyOf(volumes));
-		volumesByWorld = Map.copyOf(loaded);
+		volumes = WorldVolumes.of(loaded);
 		return count;
 	}
 
 	Volume find(int worldId, float x, float y, float z) {
-		List<Volume> volumes = volumesByWorld.get(worldId);
-		if (volumes == null) {
+		// 每移动 tick 都会调用：worldId 走 int 数组二分，不再为 Map<Integer,…> 装箱。
+		// Called on every movement tick: worldId is resolved by binary search instead of boxing a Map key.
+		List<Volume> worldVolumes = volumes.find(worldId);
+		if (worldVolumes == null) {
 			return null;
 		}
 		Volume nearest = null;
 		float nearestSurface = Float.POSITIVE_INFINITY;
-		for (Volume volume : volumes) {
+		for (Volume volume : worldVolumes) {
 			if (!volume.contains(x, y)) {
 				continue;
 			}
@@ -95,6 +104,32 @@ final class WaterVolumeStore {
 			}
 		}
 		return nearest;
+	}
+
+	/**
+	 * 冻结的水体索引：worldId 升序键数组 + 平行列表。
+	 * Frozen water index: ascending world ids plus the parallel volume lists.
+	 */
+	private record WorldVolumes(int[] worldIds, List<List<Volume>> byWorldIndex) {
+
+		private static final WorldVolumes EMPTY = new WorldVolumes(new int[0], List.of());
+
+		private static WorldVolumes of(Map<Integer, List<Volume>> loaded) {
+			List<Integer> worlds = new ArrayList<>(loaded.keySet());
+			Collections.sort(worlds);
+			int[] worldIds = new int[worlds.size()];
+			List<List<Volume>> lists = new ArrayList<>(worlds.size());
+			for (int i = 0; i < worlds.size(); i++) {
+				worldIds[i] = worlds.get(i);
+				lists.add(loaded.get(worldIds[i]));
+			}
+			return new WorldVolumes(worldIds, List.copyOf(lists));
+		}
+
+		private List<Volume> find(int worldId) {
+			int index = Arrays.binarySearch(worldIds, worldId);
+			return index < 0 ? null : byWorldIndex.get(index);
+		}
 	}
 
 	static final class Volume {
