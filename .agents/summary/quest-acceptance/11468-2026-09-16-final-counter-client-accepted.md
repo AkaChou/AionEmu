@@ -25,4 +25,5 @@ screenshots/recordings and SHA-256: not captured；用户只提供文字确认
 
 acceptance status: ACCEPTED_NEW_PATTERN
 matched Pattern: MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD；匹配最终计数事件进入 REWARD 与 LEVEL_AND_VISIBILITY_REFRESH；差异为 UseSkill 三维计数而非 KillNpcSet，且本任务 source projection 原本未锁
-remaining risks: Maven 专项、生产 catalog/白名单门禁未运行；未捕获 startup、协议、日志和截图附件；未逐项记录每个最终计数分支和页面/按钮细节
+validation commands/results: `mvn -q -Dtest='Quest11468And21468SkillCompletionTest,ClientQuestSectionAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test` 通过；`PRODUCTION_COMPILE_OK=6193`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`
+remaining risks: 未捕获 startup、协议、日志和截图附件；未逐项记录每个最终计数分支和页面/按钮细节；这些不影响本次两个任务的完整客户端验收

@@ -35,8 +35,7 @@
   `REWARD`、报告领奖与 `COMPLETE` 已闭环。
 - 已执行：`xmllint --noout --schema .../quest_definition.xsd` 对两个 XML 均通过；IDE 对 XML
   与新增测试无 error；静态 transition dump 与合同一致；`git diff --check` 通过。
-- 未执行：Maven 专项测试、生产 catalog/白名单门禁。
-- 待授权命令：
-  `mvn -q -Dtest='Quest11468And21468SkillCompletionTest,ClientQuestSectionAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+- 已执行：`mvn -q -Dtest='Quest11468And21468SkillCompletionTest,ClientQuestSectionAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+  通过；`PRODUCTION_COMPILE_OK=6193`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`。
 - 现有满计数存档可在新代码加载后与 `799503` 对话并点击报告，由带门禁的
   `SELECT_QUEST_REWARD` 恢复路线进入 `REWARD`；新产生的最后一件物品使用会自动进入 `REWARD`。
