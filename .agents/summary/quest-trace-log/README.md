@@ -38,8 +38,16 @@
   在 `config/main/logging.properties` 写入 `gameserver.log.questtrace`；否则旧键被忽略后只剩默认关闭加玩家级开关。
 - 本次已同步本地未跟踪部署目录 `aion/config`（`network.properties` 删除旧键、`main/logging.properties` 增加新键）。
 
-## 未执行 / 剩余风险
+## 门禁结果（2026-09-16 授权执行）
 
-- 本轮未执行 Maven/编译/测试（未获授权），静态检查仅 `git diff --check` 通过。
+- 编译：`mvn -B -DskipTests compile`（先 touch 本次变更源文件以强制全量重编译）→ 4718 个源文件、`release 25`、BUILD SUCCESS。
+- 聚焦测试：`mvn -B -Dtest=QuestClientListSyncTest,QuestReloadAtomicityTest,QuestStatePersistenceSafetyTest,LocalizedLogCallsTest,ConfigBindingTest,LegacyConfigOverridesTest,LegacyServerConfigOverridesTest test` → 16/16 通过。
+- 全量测试：`mvn -B test` → 3277 用例、12 failures / 0 errors / 2 skipped。12 项失败均为与本改动无关的既有失败（零售 AI 定义与路径数量、windstream 模板、任务 1722/1367/3935/80805 路由、SETPRO 提前领奖审计、实例编队分组），与 `57bd4ec21` 记录的历史失败集一致。
+- 门禁发现并修复本次改动引入的回归：`SM_QUEST_ACTION.writeImpl` 新增的 `con.getActivePlayer()` 在 `con == null` 时抛 NPE（`SM_QUEST_ACTIONTest` 以 null 连接驱动 `writeImpl` 校验包体），导致 3 个用例报错；改为 `con == null ? null : con.getActivePlayer()` 后该测试 3/3 通过，全量 errors 归零。修复文件 `src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_QUEST_ACTION.java` 与本记录同批提交。
+- 运行环境：检测到 IDEA 启动的服务进程（`com.aionemu.AionBootApplication`）在跑，因此未执行 `mvn clean`（避免删除运行中的 `target/classes`），也未做任何服务生命周期操作；构建日志留在仓库外的 `/tmp/aion-mvn-*-2026-09-16.log`。
+
+## 剩余风险
+
 - 键名变更属破坏性迁移：外部 `mygs.properties` 若仍写旧键将不生效。
+- 全量套件的 12 项既有失败仍未处理，不属于本任务范围。
 - 该改动未形成跨域新不变量，未新增 Pattern，也未更新 memory-bank。

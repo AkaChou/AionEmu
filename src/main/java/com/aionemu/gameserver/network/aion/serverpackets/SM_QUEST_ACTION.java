@@ -127,7 +127,9 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		Player player = con.getActivePlayer();
+		// 连接可能为空（单元测试直接驱动 writeImpl 校验包体），因此先判空再取玩家。
+		// The connection may be null (unit tests drive writeImpl directly to assert the payload), so null-check before resolving the player.
+		Player player = con == null ? null : con.getActivePlayer();
 		if ((LoggingConfig.LOG_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) && (action == 1 || action == 2)) {
 			log.info(I18n.get("log.quest_trace.quest_action",
 				questId,
