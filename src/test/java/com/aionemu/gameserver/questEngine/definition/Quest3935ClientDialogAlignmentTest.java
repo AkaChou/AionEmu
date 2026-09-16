@@ -147,7 +147,9 @@ class Quest3935ClientDialogAlignmentTest {
 
 		assertTrue(definition.definition().transitions().stream()
 			.noneMatch(transition -> transition.targetNode().equals("reward")
-				&& List.of("started", "s1", "s2", "s3", "s4").contains(transition.sourceNode())),
+				// s4 是带誓约石条件的最终交付阶段，不属于需要阻断的中间阶段；
+				// s4 is the oath-stone-guarded final delivery stage, not an intermediate stage to block.
+				&& List.of("started", "s1", "s2", "s3").contains(transition.sourceNode())),
 			"an intermediate stage must not enter REWARD");
 
 		QuestTransition prompt = route(definition, "reward", "reward", REWARD_NPC_ID, QuestDialogAction.USE_OBJECT);

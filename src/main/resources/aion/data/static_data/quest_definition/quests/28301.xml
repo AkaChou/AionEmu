@@ -153,16 +153,18 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- SELECT2_1 上的 SETPRO2 只在 k7 阶段有效（legacy handler：var==7 才取动力装置）；
+         其余阶段按 legacy 的 default 分支结束对话，避免提前领奖。 -->
+    <!-- The SETPRO2 button on SELECT2_1 is only valid at k7 (legacy handler grants the device when
+         var==7); other stages end the conversation as the legacy default did, never granting the reward. -->
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799530" action="SETPRO2"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="k7" target="k7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799530" action="SELECT2_1"/>
@@ -179,12 +181,20 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-      <transition source="started" target="started">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730373" action="SELECT2_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730373" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -195,21 +205,11 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-<transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730373" action="SETPRO2"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-<transition source="started" target="reward">
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730374" action="SETPRO2"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

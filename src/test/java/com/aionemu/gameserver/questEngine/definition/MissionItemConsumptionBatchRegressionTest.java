@@ -131,7 +131,12 @@ class MissionItemConsumptionBatchRegressionTest {
 
 		// 1362 & 1367: 旁路交付与领奖交付分支道具扣除
 		assertTransitionRemovesItems(1362, "started", "reward", Set.of(182201328, 182201329));
-		assertTransitionRemovesItems(1367, "started", "reward", Set.of(182201331, 182201332, 182201333));
+		// 1367 由 94636797a 拆成三个带材料条件的交付分支（reward0/1/2），每个分支扣除整套收集物。
+		// 94636797a split 1367 into three material-guarded delivery branches (reward0/1/2); each branch
+		// consumes the full collection set, replacing the former unconditional started -> reward route.
+		for (String rewardNode : List.of("reward0", "reward1", "reward2")) {
+			assertTransitionRemovesItems(1367, "started", rewardNode, Set.of(182201331, 182201332, 182201333));
+		}
 	}
 
 	private static void assertTransitionRemovesItems(int questId, String source, String target,

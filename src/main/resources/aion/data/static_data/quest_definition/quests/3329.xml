@@ -241,14 +241,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2" />
       </after-commit>
     </transition>
-<transition source="a0b0" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203956" action="SETPRO1" />
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
-        <close-dialog />
-      </after-commit>
-    </transition>
+    <!-- SELECT2_2 的 SETPRO1 是“结束对话”按钮：非法阶段只关闭对话，不再提前领奖。 -->
+    <!-- SELECT2_2's SETPRO1 is the end-conversation button: close only, never grant the reward early. -->
+    <transition source="a0b0" target="a0b0"><event><dialog type="TALK_TO_NPC" npc-id="203956" action="SETPRO1" /></event><after-commit><close-dialog /></after-commit></transition>
     <transition source="a0b0" target="a0b0"><event><dialog type="TALK_TO_NPC" npc-id="203909" action="SETPRO1" /></event><after-commit><close-dialog /></after-commit></transition></transitions>
 </quest-definition>

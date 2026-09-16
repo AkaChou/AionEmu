@@ -39,18 +39,24 @@ class QuestPrematureRewardRouteAuditTest {
 
 		assertEquals(1, violations.size());
 		assertEquals(QuestPrematureRewardRouteAudit.SOURCE_HAS_PROGRESS_ROUTE, violations.getFirst().reason());
-		assertEquals("[stage]", violations.getFirst().evidence());
+		// 审计对外证据固定带 progress-targets= 前缀（生产门禁按同一格式输出）。
+		// The audit always prefixes this evidence with progress-targets= (the production gate prints the same shape).
+		assertEquals("progress-targets=[stage]", violations.getFirst().evidence());
 	}
 
 	@Test
 	void reportsEveryUnconditionalChoiceOnTheSameClientPage() {
+		// 同一 NPC、同一来源、指向同一奖励节点的多个无条件选择才算“重复领奖选择”；
+		// 指向不同奖励节点的分支由 allowsDistinctRewardBranchesOnTheSameClientPage 放行。
+		// Only multiple unconditional choices from the same source and NPC into the same reward node
+		// count as duplicate reward choices; distinct reward branches are allowed by the sibling test.
 		QuestDefinition definition = definition(List.of(
 				node("unaccepted", QuestStatus.NONE), node("started", QuestStatus.START),
-				node("reward0", QuestStatus.REWARD, 1), node("reward1", QuestStatus.REWARD, 2)), List.of(
+				node("reward", QuestStatus.REWARD)), List.of(
 			new QuestTransition(new QuestEvent.TalkToNpc(900003, QuestDialogAction.SETPRO1.id()),
-				List.of(), List.of(), "reward0", List.of(), 0, "started"),
+				List.of(), List.of(), "reward", List.of(), 0, "started"),
 			new QuestTransition(new QuestEvent.TalkToNpc(900003, QuestDialogAction.SETPRO2.id()),
-				List.of(), List.of(), "reward1", List.of(), 0, "started")));
+				List.of(), List.of(), "reward", List.of(), 0, "started")));
 
 		List<QuestPrematureRewardRouteAudit.Violation> violations = QuestPrematureRewardRouteAudit.audit(definition,
 			clientQuest(900003, QuestDialogAction.SETPRO1.id(), QuestDialogAction.SETPRO2.id()));

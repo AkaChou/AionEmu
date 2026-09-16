@@ -220,8 +220,11 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			new DialogRoute(1640, "unaccepted", 730033, 10000, "started",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 					new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1722, "s2", 278544, 10002, "s2",
-				List.of(new AfterCommitAction.CloseDialog())),
+			// 1722 的 SETPRO3 是把 var0=2 推进到 var0=3（legacy handler 的 var+1），目标为 s3。
+			// 1722's SETPRO3 advances var0=2 to var0=3 (the legacy handler's var+1), so the target is s3.
+			new DialogRoute(1722, "s2", 278544, 10002, "s3",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+					new AfterCommitAction.CloseDialog())),
 			new DialogRoute(2002, "s10", 790002, 10003, "s11",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 					new AfterCommitAction.CloseDialog())),
@@ -280,11 +283,15 @@ class LegacyTemplateMirrorRouteRegressionTest {
 				List.of(new AfterCommitAction.CloseDialog())))) {
 			QuestDefinition definition = compile(expected.questId());
 			List<QuestTransition> routes = talkRoutes(definition, expected.source(), expected.npcId(),
-				expected.actionId());
+				expected.actionId()).stream()
+				.filter(route -> route.targetNode().equals(expected.targetNode()))
+				.toList();
+			// 94636797a 起，材料不足时的回显自环与领奖路由共用同一个客户端动作，
+			// 因此按期望目标节点筛选后再要求唯一，而不是要求整组动作只有一条路由。
+			// Since 94636797a a material-failure self-loop shares the same client action as the reward
+			// route, so filter by the expected target node before requiring a unique route.
 			assertEquals(1, routes.size(), "quest " + expected.questId() + " action " + expected.actionId());
 			QuestTransition route = routes.getFirst();
-			assertEquals(expected.targetNode(), route.targetNode(),
-				"quest " + expected.questId() + " action " + expected.actionId() + " target");
 			assertEquals(expected.afterCommit(), route.afterCommit(),
 				"quest " + expected.questId() + " action " + expected.actionId() + " response");
 		}

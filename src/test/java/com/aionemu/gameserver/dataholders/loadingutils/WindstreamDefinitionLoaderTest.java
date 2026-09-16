@@ -35,7 +35,12 @@ class WindstreamDefinitionLoaderTest {
 		assertFalse(kasparReturn.contains(500, 2450.58f, 332.34f, 501.94f, 45));
 		WindstreamRoute kasparHill = data.getRoute(210050000, 407001);
 		assertTrue(kasparHill.contains(9500, 2514.431f, 333.30823f, 485.11697f, 45));
-		assertNull(data.getRoute(210050000, 77001));
+		// 77001 对应 group 77，属于 LF4（可玩世界 210050000）自身的风轨；
+		// a7da0ad67 将 LF4_M 路线也映射到该世界后，这里必须断言它在真正归属的地图存在、且不混入兼容地图。
+		// 77001 maps to group 77, which belongs to LF4 (live world 210050000); after a7da0ad67 also
+		// routed LF4_M paths there, assert it exists on its owning map and never leaks into the compatibility map.
+		assertNotNull(data.getRoute(210050000, 77001));
+		assertNull(data.getRoute(210130000, 77001));
 		assertNotNull(data.getRoute(600041100, 218001));
 		assertNotNull(data.getRoute(600040000, 218001));
 		assertNotNull(data.getRoute(600051000, 241001));

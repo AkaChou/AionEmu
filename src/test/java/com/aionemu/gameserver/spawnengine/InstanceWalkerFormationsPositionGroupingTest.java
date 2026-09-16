@@ -84,8 +84,11 @@ class InstanceWalkerFormationsPositionGroupingTest {
 			"NPCPathLF2B_NPC_Town3", 3, 2);
 
 		assertEquals(2, groups.size());
-		assertEquals(1, groups.get(0).size());
-		assertEquals(2, groups.get(1).size());
+		// 组顺序取决于 spawn 文档中 spot 的书写顺序；本用例要锁定的不变量是“孤立单位不与 2 人小队合并”，
+		// 因此断言组的尺寸集合而不是组序。
+		// Group order follows the spot order in the spawn document; the invariant under test is that the
+		// extra unit is not merged into the pair, so assert the size set instead of the group order.
+		assertEquals(List.of(1, 2), groups.stream().map(List::size).sorted().toList());
 	}
 
 	@Test

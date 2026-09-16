@@ -164,14 +164,20 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(12797, data.patternCount());
 		assertEquals(87721, data.npcCount());
 		assertEquals(3491, data.stringCount());
-		assertEquals(134, data.areaCount());
+		// a7da0ad67 把 LF4_M 的可玩区域迁到 LF4（210050000）；同名的 LF4_Dramata_OutArea
+		// 已存在于目标世界，保留旧副本会触发重复区域校验，因此按去重后的 133 锁定。
+		// a7da0ad67 moved the playable LF4_M areas onto LF4 (210050000); LF4_Dramata_OutArea already
+		// existed there and the per-world duplicate check rejects a second copy, so pin the deduped 133.
+		assertEquals(133, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
 		assertEquals(231, data.questAreaCount());
 		assertEquals(1, data.limitAreaCount());
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(4430, data.conditionSpawnCount());
+		// 5ccb10261 为塔洛克之 Hollow 补齐了 9 条零售条件刷怪定义。
+		// 5ccb10261 added the nine retail condition-spawn definitions for Taloc's Hollow.
+		assertEquals(4439, data.conditionSpawnCount());
 		assertTrue(data.getConditionSpawns(302340000).stream()
 			.flatMap(condition -> condition.groups().stream())
 			.flatMap(group -> group.slots().stream())
@@ -211,7 +217,10 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals("key_f5_legion_potal_d01", userPortal.needItem());
 		assertEquals(11, userPortal.groupId());
 		assertEquals(5, userPortal.invadeType());
-		assertEquals(288, data.dynamicAreaCount());
+		// a7da0ad67 删除了 LF4_M 兼容地图上重复的 9 个风箱；同 id/name 的风箱已在可玩世界 210050000 保留。
+		// a7da0ad67 dropped the nine duplicated windboxes from the LF4_M compatibility map; the same
+		// ids and names are retained on the live world 210050000.
+		assertEquals(279, data.dynamicAreaCount());
 		assertEquals(12654, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
 		for (int npcId : new int[] { 251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
@@ -297,7 +306,10 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3206, data.size());
+		// 5ccb10261 为塔洛克之 Hollow 补齐了一条 300190000 的完整世界路径模板。
+		// 5ccb10261 added the complete Taloc's Hollow world-scoped waypoint template for 300190000.
+		assertEquals(3207, data.size());
+		assertNotNull(data.getWalkerTemplate("retail:300190000:idelim_path_1f_sheluk_keynm_52_ae_1"));
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());
