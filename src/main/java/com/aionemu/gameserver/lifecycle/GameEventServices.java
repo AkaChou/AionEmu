@@ -23,30 +23,61 @@ public final class GameEventServices implements DisposableBean {
      */
     private static volatile ObjectProvider<EventService> eventServiceProvider;
     /**
+     * 已解析的事件服务单例；仅在真正解析到 Spring bean 后缓存，避免把回退实例钉住。
+     * Resolved event-service singleton; cached only after a real Spring bean is resolved, so a fallback
+     * instance is never pinned.
+     */
+    private static volatile EventService resolvedEventService;
+    /**
      * 玩家事件服务的 Spring 提供者。
      * Spring provider for the player-event service.
      */
     private static volatile ObjectProvider<PlayerEventService> playerEventServiceProvider;
+    /**
+     * 已解析的玩家事件服务单例；语义同 {@link #resolvedEventService}。
+     * Resolved player-event service singleton; same contract as {@link #resolvedEventService}.
+     */
+    private static volatile PlayerEventService resolvedPlayerEventService;
     /**
      * 疯狂守护者服务的 Spring 提供者。
      * Spring provider for the Crazy-Daeva service.
      */
     private static volatile ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
     /**
+     * 已解析的疯狂守护者服务单例；语义同 {@link #resolvedEventService}。
+     * Resolved Crazy-Daeva service singleton; same contract as {@link #resolvedEventService}.
+     */
+    private static volatile CrazyDaevaService resolvedCrazyDaevaService;
+    /**
      * 欧比斯排名更新服务的 Spring 提供者。
      * Spring provider for the abyss-rank update service.
      */
     private static volatile ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
+    /**
+     * 已解析的欧比斯排名更新服务单例；语义同 {@link #resolvedEventService}。
+     * Resolved abyss-rank update service singleton; same contract as {@link #resolvedEventService}.
+     */
+    private static volatile AbyssRankUpdateService resolvedAbyssRankUpdateService;
     /**
      * 数据包广播器的 Spring 提供者。
      * Spring provider for the packet broadcaster.
      */
     private static volatile ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
     /**
+     * 已解析的数据包广播器单例；语义同 {@link #resolvedEventService}。
+     * Resolved packet-broadcaster singleton; same contract as {@link #resolvedEventService}.
+     */
+    private static volatile PacketBroadcaster resolvedPacketBroadcaster;
+    /**
      * 事件调度器的 Spring 提供者。
      * Spring provider for the event scheduler.
      */
     private static volatile ObjectProvider<EventScheduler> eventSchedulerProvider;
+    /**
+     * 已解析的事件调度器单例；语义同 {@link #resolvedEventService}。
+     * Resolved event-scheduler singleton; same contract as {@link #resolvedEventService}.
+     */
+    private static volatile EventScheduler resolvedEventScheduler;
 
     /**
      * 构造并注册各事件运行时实例提供者。
@@ -86,11 +117,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 事件服务 / Event service
      */
     public static EventService eventService() {
+        EventService resolved = resolvedEventService;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<EventService> provider = eventServiceProvider;
         if (provider == null) {
             return EventService.getInstance();
         }
-        return provider.getIfAvailable(EventService::getInstance);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return EventService.getInstance();
+        }
+        resolvedEventService = resolved;
+        return resolved;
     }
 
     /**
@@ -100,11 +140,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 玩家事件服务 / Player-event service
      */
     public static PlayerEventService playerEventService() {
+        PlayerEventService resolved = resolvedPlayerEventService;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<PlayerEventService> provider = playerEventServiceProvider;
         if (provider == null) {
             return GameEventRuntimeFallbacks.playerEventService();
         }
-        return provider.getIfAvailable(GameEventRuntimeFallbacks::playerEventService);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEventRuntimeFallbacks.playerEventService();
+        }
+        resolvedPlayerEventService = resolved;
+        return resolved;
     }
 
     /**
@@ -114,11 +163,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     public static CrazyDaevaService crazyDaevaService() {
+        CrazyDaevaService resolved = resolvedCrazyDaevaService;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<CrazyDaevaService> provider = crazyDaevaServiceProvider;
         if (provider == null) {
             return GameEventRuntimeFallbacks.crazyDaevaService();
         }
-        return provider.getIfAvailable(GameEventRuntimeFallbacks::crazyDaevaService);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEventRuntimeFallbacks.crazyDaevaService();
+        }
+        resolvedCrazyDaevaService = resolved;
+        return resolved;
     }
 
     /**
@@ -128,11 +186,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     public static AbyssRankUpdateService abyssRankUpdateService() {
+        AbyssRankUpdateService resolved = resolvedAbyssRankUpdateService;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<AbyssRankUpdateService> provider = abyssRankUpdateServiceProvider;
         if (provider == null) {
             return GameEventRuntimeFallbacks.abyssRankUpdateService();
         }
-        return provider.getIfAvailable(GameEventRuntimeFallbacks::abyssRankUpdateService);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEventRuntimeFallbacks.abyssRankUpdateService();
+        }
+        resolvedAbyssRankUpdateService = resolved;
+        return resolved;
     }
 
     /**
@@ -142,11 +209,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 数据包广播器 / Packet broadcaster
      */
     public static PacketBroadcaster packetBroadcaster() {
+        PacketBroadcaster resolved = resolvedPacketBroadcaster;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<PacketBroadcaster> provider = packetBroadcasterProvider;
         if (provider == null) {
             return GameEventRuntimeFallbacks.packetBroadcaster();
         }
-        return provider.getIfAvailable(GameEventRuntimeFallbacks::packetBroadcaster);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEventRuntimeFallbacks.packetBroadcaster();
+        }
+        resolvedPacketBroadcaster = resolved;
+        return resolved;
     }
 
     /**
@@ -156,11 +232,20 @@ public final class GameEventServices implements DisposableBean {
      * @return 事件调度器 / Event scheduler
      */
     public static EventScheduler eventScheduler() {
+        EventScheduler resolved = resolvedEventScheduler;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<EventScheduler> provider = eventSchedulerProvider;
         if (provider == null) {
             return GameEventRuntimeFallbacks.eventScheduler();
         }
-        return provider.getIfAvailable(GameEventRuntimeFallbacks::eventScheduler);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return GameEventRuntimeFallbacks.eventScheduler();
+        }
+        resolvedEventScheduler = resolved;
+        return resolved;
     }
 
     /**
@@ -175,6 +260,12 @@ public final class GameEventServices implements DisposableBean {
         abyssRankUpdateServiceProvider = null;
         packetBroadcasterProvider = null;
         eventSchedulerProvider = null;
+        resolvedEventService = null;
+        resolvedPlayerEventService = null;
+        resolvedCrazyDaevaService = null;
+        resolvedAbyssRankUpdateService = null;
+        resolvedPacketBroadcaster = null;
+        resolvedEventScheduler = null;
         EventService.setInstanceProvider(null);
         PlayerEventService.setInstanceProvider(null);
         CrazyDaevaService.setInstanceProvider(null);

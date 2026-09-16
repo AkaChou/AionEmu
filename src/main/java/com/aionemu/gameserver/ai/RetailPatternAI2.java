@@ -180,6 +180,26 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	// Events that end the spawner's own lifecycle: children spawned by them must outlive the spawner's state reset.
 	private static final Set<String> SPAWNER_END_EVENTS = Set.of(
 		"on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn");
+	/**
+	 * 允许的 rule category 白名单。
+	 * Allowed rule-category whitelist.
+	 *
+	 * <p>原来写成内联 {@code Set.of(...)}，而它位于「每个 rule 一次」的判断里（JFR 实测该位置的
+	 * {@code Object[]} 分配达数 MB/300s），提为常量后不再逐次分配。The literal used to sit inside the per-rule
+	 * check (JFR showed megabytes of {@code Object[]} per 300s there); hoisting it removes that allocation.</p>
+	 */
+	private static final Set<String> SUPPORTED_RULE_CATEGORIES = Set.of("PLANNED", "DIRECT", "INSTANT");
+	/**
+	 * 支持移动类型白名单。
+	 * Supported move-type whitelist.
+	 */
+	private static final Set<String> SUPPORTED_MOVE_TYPES = Set.of("MOVETYPE_NOT_SPECIFIED", "MOVETYPE_WALK",
+		"MOVETYPE_RUN");
+	/**
+	 * 需要 world-scene 消费者的世界 ID。
+	 * Worlds that require a world-scene consumer.
+	 */
+	private static final Set<Integer> WORLD_SCENE_WORLDS = Set.of(300300000, 300320000);
 	private final Map<String, Future<?>> timers = new HashMap<>();
 	private final Set<Future<?>> actionTasks = ConcurrentHashMap.newKeySet();
 	// 含 despawn_self 的延迟动作链在回位时保留。 / Delayed action chains containing despawn_self survive return-home.
@@ -236,7 +256,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				return false;
 			}
 			for (Rule rule : event.getValue()) {
-				if (!(rule.category() == null || rule.category().isBlank() || Set.of("PLANNED", "DIRECT", "INSTANT").contains(rule.category()))
+				if (!(rule.category() == null || rule.category().isBlank() || SUPPORTED_RULE_CATEGORIES.contains(rule.category()))
 					|| !rule.conditions().stream().allMatch(condition -> supportsCondition(event.getKey(), condition))
 					|| !rule.actions().stream().allMatch(action -> supportsAction(event.getKey(), action, allowNpcScore))
 					|| !supportsNpcPartyRule(event.getKey(), rule)
@@ -283,8 +303,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return false;
 		}
 		if (pattern.events().containsKey("on_arrived_at_point")
-			&& pattern.events().values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())
-				.noneMatch(action -> action.type().equals("goto_alias"))) {
+			&& !hasActionType(pattern, "goto_alias")) {
 			return false;
 		}
 		for (List<Rule> rules : pattern.events().values()) {
@@ -396,9 +415,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean hasWorldSceneConsumer(Pattern pattern, int worldId) {
-		return Set.of(300300000, 300320000).contains(worldId)
-			|| pattern.events().values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())
-				.noneMatch(action -> action.type().equals("change_world_scene_status"));
+		if (WORLD_SCENE_WORLDS.contains(worldId)) {
+			return true;
+		}
+		return !hasActionType(pattern, "change_world_scene_status");
 	}
 
 	static boolean hasCompleteNpcPartyData(Pattern pattern, Npc npc) {
@@ -408,8 +428,34 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private static boolean usesNpcParty(Pattern pattern) {
 		return !Collections.disjoint(pattern.events().keySet(), NPC_PARTY_EVENTS)
-			|| pattern.events().values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())
-				.anyMatch(action -> action.type().equals("broadcast_message_to_party"));
+			|| hasActionType(pattern, "broadcast_message_to_party");
+	}
+
+	/**
+	 * 模式里是否存在指定类型的动作。
+	 * Whether the pattern contains an action of the given type.
+	 *
+	 * <p>原先用 {@code values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())} 判定，
+	 * 而这段代码在每次 NPC 生成的模式校验里都会跑（JFR 实测该帧分配数 MB/300s 的管道对象、lambda 与迭代器）；
+	 * 普通嵌套循环语义相同且零分配。The stream pipeline used to run inside the per-spawn pattern validation (JFR
+	 * showed megabytes per 300s of pipeline objects, lambdas and iterators); a nested loop is allocation-free and
+	 * equivalent.</p>
+	 *
+	 * @param pattern    模式 / the pattern
+	 * @param actionType 动作类型 / action type
+	 * @return 是否存在该类型动作 / whether such an action exists
+	 */
+	private static boolean hasActionType(Pattern pattern, String actionType) {
+		for (List<Rule> rules : pattern.events().values()) {
+			for (Rule rule : rules) {
+				for (Operation action : rule.actions()) {
+					if (action.type().equals(actionType)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private static boolean supportsNpcPartyRule(String event, Rule rule) {
@@ -518,10 +564,22 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean hasCompleteMasterData(Pattern pattern, Npc npc) {
-		return pattern == null || Collections.disjoint(pattern.events().keySet(), MASTER_EVENTS)
-			&& pattern.events().values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())
-				.noneMatch(action -> value(action, "target").equals("USERI_MASTER"))
-			|| npc != null && npc.getMaster() != npc;
+		if (pattern == null || npc != null && npc.getMaster() != npc) {
+			return true;
+		}
+		if (!Collections.disjoint(pattern.events().keySet(), MASTER_EVENTS)) {
+			return false;
+		}
+		for (List<Rule> rules : pattern.events().values()) {
+			for (Rule rule : rules) {
+				for (Operation action : rule.actions()) {
+					if (value(action, "target").equals("USERI_MASTER")) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -2829,8 +2887,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static boolean supportsMoveType(Operation operation) {
-		return Set.of("MOVETYPE_NOT_SPECIFIED", "MOVETYPE_WALK", "MOVETYPE_RUN")
-			.contains(value(operation, "move_type"));
+		return SUPPORTED_MOVE_TYPES.contains(value(operation, "move_type"));
 	}
 
 	private static boolean supportsCutsceneTarget(String event, String target) {

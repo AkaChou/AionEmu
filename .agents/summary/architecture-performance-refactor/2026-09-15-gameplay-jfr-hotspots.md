@@ -462,3 +462,28 @@ GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141
 2. 采样口径已定位、待处理：`RetailPatternAI2` 条件评估（`usesNpcParty`/`supports`/`hasCompleteMasterData`/`supportsMoveType`/`hasWorldSceneConsumer`）、`CreatureGameStats.getStatsByStatEnum`、`KnownList.knownObjectsSnapshot`、`GameEventServices.eventService()`（同类漏网门面缓存）。
 
 **口径纪律**：此后所有 per-thread 统计一律按 `javaThreadId` 聚合，再按名字分组展示。
+
+### 12.7 第十一轮：事件门面缓存与 AI 模式校验零分配化（待 `play-12` 复测）
+
+第 4 步的前两项（`static-data-loader` 立项已按 12.6 取消）：
+
+1. **`GameEventServices` 六个解析器补缓存**：`eventService()` / `playerEventService()` / `crazyDaevaService()` /
+   `abyssRankUpdateService()` / `packetBroadcaster()` / `eventScheduler()` 原先是每次调用都走
+   `provider.getIfAvailable(...)`；现在按 `GameEngineServices` 的既有模式补 `resolvedX`（只在解析到真实 Spring
+   bean 后缓存，回退实例不钉住，`destroy()` 清空）。依据：`play-11` 采样里 `GameEventServices.eventService()`
+   3.56 MB。
+2. **`RetailPatternAI2` 模式校验零分配化**：这条路径在**每次 NPC 生成**时都会跑（
+   `AI2Engine.selectNpcAi → RetailPatternAI2.supports(pattern, npc)`），`play-10` 采样子树 **21.97 MB**：
+   `usesNpcParty` 6.38、`hasCompleteMasterData` 5.06、`hasWorldSceneConsumer` 3.24、`supportsMoveType` 0.27，
+   分配物是 `ReferencePipeline$Head/$7`、`MatchOps$MatchOp`、lambda、迭代器与 `Object[]`。改动：
+   - 常量提升：`SUPPORTED_RULE_CATEGORIES`（原来内联在**每个 rule** 的判断里）、`SUPPORTED_MOVE_TYPES`、
+     `WORLD_SCENE_WORLDS`；
+   - 四处 `values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream()).anyMatch/noneMatch(...)`
+     改成嵌套循环（新增零分配的 `hasActionType(pattern, type)`）：`usesNpcParty`、`hasWorldSceneConsumer`、
+     `hasCompleteMasterData`、`on_arrived_at_point` 校验。语义等价（均为纯谓词，短路顺序变化不影响结果）。
+
+**测试**：`mvn -Dtest=RetailPatternAI2Test,AI2EngineRetailSelectionTest,RetailAiDefinitionLoaderTest,RetailNpcPartyEngineTest,RetailConditionSpawnEngineTest,CreatureEventHandlerTest,GetMostPlayerDamageNullGateTest,GameServiceProviderCompatibilityTest,GameRuntimeServiceBridgeTest test` → **113 例全绿**（`RetailPatternAI2Test` 79 例覆盖模式校验正反例）。
+
+**有意未做**：同文件还有约 40 处内联 `Set.of(...)`。按 `play-10` 的构成拆分，3+ 元素 `Set.of` 产生的 `Object[]` 只占该子树 21.97 MB 中的 1.92 MB，其余多是 2 元素 `Set.of("TRUE","FALSE")`（单个 `List12`，约 32 B/次）；机械替换 30+ 处字面量收益有限而 typo 风险偏高，等 `play-12` 复测确认剩余量再决定。
+
+**状态**：本轮改动尚未复测，`play-12` 数据出来后回填本节与 12.6 的对照表。
