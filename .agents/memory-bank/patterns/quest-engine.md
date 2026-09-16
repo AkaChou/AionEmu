@@ -437,3 +437,25 @@ first_check: 每个计数字段的 continuing/completing priority、最终字段
 
 - **判定规则**：多段计数的每个字段都需要成对的 continuing 与 completing 路线。只在未完成时自环、到上限后返回空计划，会让所有计数满但状态仍停在 START；最后一个事件必须以 priority 0 直接进入 `REWARD`，不能等下一次交互或只依赖无门禁的报告路线。
 - **代表案例**：Playbook 案例 8.37（`7f824dc78`），11468/21468 的三个 UseSkill 计数分别为 `var1=10`、`var2=5`、`var3=3`，最终技能使用后目标 `reward`；`Quest11468And21468SkillCompletionTest#finalItemSkillEntersRewardAndPersistedFullCountersCanReport` 锁定三条 completing 路线和满计数恢复路线。
+
+---
+
+## [QE-019] 十七、接取转换必须继承元数据前置条件事实需求 (QUEST_FACT_ACQUISITION_METADATA_PREREQUISITES)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务最小快照事实采集（QuestFactRequirements）、任务接取转换与元数据前置条件校验（metadataPrerequisitesSatisfied）
+first_seen: 2026-09-16
+last_verified: 2026-09-16
+symptom: 任务在客户端对话列表中可见、点击后能打开详情页，但点击“接受任务”（动作 20000 / QUEST_ACCEPT_SIMPLE 等）后无反应直接关闭对话框，服务端未下发 SM_QUEST_ACTION
+root_cause: QuestFactRequirements 只静态扫描了 transition 显式声明的 conditions/actions，未感知任务元数据中的 prerequisites 与 startConditionGroups；接取转换（NONE -> 非 NONE）在 planner 隐式执行 metadataPrerequisitesSatisfied 时读取 snapshot 未捕获的完成任务集合（questIdSets=false），fail-closed 直接判定不匹配导致拒接
+fix_or_guardrail: QuestFactRequirements 重载支持 CompiledQuestDefinition；对接取转换自动从元数据继承事实需求：声明 prerequisites 或 finished/unfinished/acquired/noacquired 时开启 questIdSets=true，声明 equipped 时开启 equipment=true；QuestExecutionCoordinator 统一传入 definition；QuestFactRequirementsTest 锁定该断言
+evidence: commit af2304f67; commit 3b4e7fc4c; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestFactRequirements.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinator.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestFactRequirementsTest.java; .agents/summary/quest-kill-contracts/2026-09-16-quest-19638-start-condition-prerequisite-fix.zh-CN.md
+validation: 专项测试 QuestFactRequirementsTest（9 tests）全绿；QuestMonsterProgressContractAuditTest（2 tests）全绿；生产目录编译门禁 ProductionCatalogWhitelistVerificationTest（6193 OK）通过；2026-09-16 游戏实机验证通过
+boundaries: 仅在从 QuestStatus.NONE 迁移到非 NONE 状态的接取转换中生效；中途杀怪/对话或无前置元数据的任务不额外采集事实，保持零内存性能损耗
+superseded_by: none
+see_also: .agents/summary/quest-kill-contracts/2026-09-16-quest-19638-start-condition-prerequisite-fix.zh-CN.md
+first_check: 任务元数据是否声明 prerequisites 或 start-conditions；接取转换推导出的 questIdSets/equipment 是否为 true；snapshot 中 completedQuestsCaptured 是否为 true
+-->
+
+- **判定规则**：任务执行协调器在采集快照前，推导事实需求不能仅看 transition 本身声明的条件。若该转换是从 `NONE` 状态进入非 `NONE` 状态（接取任务），由于 `QuestMutationPlanner` 会隐式执行 `metadataPrerequisitesSatisfied`，推导器必须同步解析任务元数据，将前置任务 ID 集合及装备事实纳入需求，防止读取方按 fail-closed 策略误判为前置未满足。
+- **代表案例**：天族特别任务 2（19638），配置 `<condition type="finished" quest-id="19637"/>`；修复提交 `af2304f67`；由 `QuestFactRequirementsTest#acquiringTransitionInheritsMetadataPrerequisites` 锁定契约，2026-09-16 客户端实机验收通过。
