@@ -50,6 +50,7 @@
 | 任务领奖/完成后刷 typed 任务已提交但有提交后动作失败、QUEST_AUDIT AFTER_COMMIT 失败、QuestAfterCommitException: after-commit action BroadcastZoneMissionEnd failed | `QE-015` | broadcast-zone-mission-end 的 quest-ids 是否包含自身或其他未声明 zone-mission-end 路由的 owner；目标 quest 的 transitions 是否存在 ZoneMissionEnd 事件 |
 | 完成副本阶段后离副本/死亡/下线，已完成的计数被清空并回退到前置节点 | `QE-016` | 旧 handler onEnterWorldEvent/onDieEvent/onLogOutEvent 的 var 区间与 XML source/target 回退边逐条比对 |
 | 点任务按钮后弹 HtmlPageId 10000 / HtmlPageId 1002 load fail、窗口不关闭、任务卡在原阶段 | `QE-017` | CM_DIALOG_SELECT 的 targetObjectId/dialogId/lastPage/questId 与 QuestEngine.onDialog 返回值；DialogService 回退分支发出的页面 ID 是否等于按钮动作 ID |
+| 多项实时计数已经全部达到上限但状态仍是 START；最后一件任务物品使用后下一步不出现，客户端无法进入领奖阶段 | `QE-018` | 每个计数字段的 continuing/completing priority、最终字段条件、target status、事务动作与完整 after-commit；旧 handler 是否在全部计数满足后立即进入 REWARD |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

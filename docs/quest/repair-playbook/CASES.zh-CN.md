@@ -552,3 +552,22 @@
 - 验证命令和结果：修复提交 `2169b6332` 记录 questEngine 专项 1277 条用例；`Quest1220ClientDialogAlignmentTest` 锁定编译后的 source/target/条件/动作/after-commit 全合同；`QuestProductionJourneyTest` 从生产 XML 与客户端按钮规划并执行 1220 全链到 `COMPLETE`；`DialogServiceQuestDialogTest` 覆盖「未处理动作关窗 / 31 保留第 10 页 / questId==0 保持普通对话」三分支；`ProductionCatalogWhitelistVerificationTest` 6200 条任务 0 编译失败、0 白名单违规。用户于 2026-09-16 回复「1220 也过」，视为整条任务客户端验收完成；本次未捕获运行日志、协议抓包与截图。服务端由用户管理，本会话未启动、停止或重启。
 - 复用边界：适用于 `QuestEngine` 明确拒绝某个 `questId != 0` 的任务动作、而 `DialogService` 回退把该动作 ID 当页面回显的场景；不适用于 `questId == 0` 的普通 NPC 对话（复用 `CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN`），也不适用于通用任务列表动作 `31`（必须保留第 10 页合同）。若症状是接取介绍链最后一跳没有桥接到 page 4，复用 `INTRO_CHAIN_ACCEPT_PROMPT_BRIDGE_MISSING`；若任务本该显示某个真实页面却没显示，应回到任务 XML 与客户端页面图补路由，而不是放宽本条关窗规则。
 - commit：`2169b6332`。
+
+## 8.37 多段使用技能计数最后一击没有进入奖励
+
+- Pattern ID：`MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。
+- 代表任务：11468「With Friends Like These / 拥有强大力量的东西」（ELYOS）；21468 为同型 Asmodian 任务，不重复建立案例。
+- 搜索症状：三维计数已经达到 10/5/3 但仍是 START、最后一件任务道具使用后任务不推进、下一步不出现、领奖状态无法触发、道具用完但任务卡住。
+- 玩家可见症状：11468 的三项任务物品计数分别为 `var1=10`、`var2=5`、`var3=3`，GM 信息仍显示 `Status: START`；客户端下一步/REWARD 不出现。
+- 根因：旧 Handler 在每次 `onUseSkillEvent` 后调用 `reward(qs, env)`；当 `10/5/3` 全部满足时立即 `setStatus(REWARD)`。迁移后的 XML 只保留三条 `started -> started` 的计数自环，缺少“最后一个计数事件优先进入 REWARD”的 priority 0 路线；前序计数虽正确累积，终态却永远停留在 START。
+- 修复层：任务 XML 的显式 transition。
+  1. 技能 `9832/9833/9834` 各自保留 priority 1 的 `started -> started` 自环；
+  2. 新增 priority 0 的 `started -> reward` 最终路线：当前字段等于 `required-1` 且其他字段达到阈值时执行最后一次 `increment-variable`；
+  3. 最终路线 after-commit 提交 `LEVEL_AND_VISIBILITY_REFRESH`；
+  4. `SELECT_QUEST_REWARD` 的 `started -> reward` 恢复路线添加 `var1>=10 && var2>=5 && var3>=3` 门禁，允许已持久化满计数存档继续报告领奖。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/11468.xml`、`src/main/resources/aion/data/static_data/quest_definition/quests/21468.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest11468And21468SkillCompletionTest.java`。
+- 第一检查点：枚举每个实时计数字段的继续路线与最终路线，核对 `priority`、`variable-is required-1`、其他字段阈值、target status 与 after-commit；再对照旧 handler 是否在全部计数满足后立即进入 REWARD。不要只断言最终状态而遗漏 continuing/completing 两条 route。
+- 代表测试：`Quest11468And21468SkillCompletionTest#finalItemSkillEntersRewardAndPersistedFullCountersCanReport`，锁定三个技能分别作为最后一击时的完整 IR 与 runtime planner 结果，并断言满计数 `SELECT_QUEST_REWARD` 恢复路线。
+- 验证命令和结果：静态 `xmllint --noout --schema .../quest_definition.xsd` 对两个 XML 通过，IDE 对 XML/测试无 error，`git diff --check` 通过；用户于 2026-09-16 回复「出现下一步了」，确认最终计数事件后的下一步/REWARD 流转恢复。当前会话未运行 Maven 专项、生产 catalog/白名单门禁；未捕获 startup、协议、日志或截图附件。奖励领取和 COMPLETE 分支未重新验收。
+- 复用边界：适用于多个实时计数字段共用同一状态、旧 handler 在最后一个事件内同时完成计数与状态迁移的任务。最终路线必须保留 continuing priority 1 与 completing priority 0；若缺失的是 source node 投影锁，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK`；若完成条件是位掩码或多地点侦察，复用 `MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION`。
+- commit：`7f824dc78`。

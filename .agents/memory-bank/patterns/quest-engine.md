@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-016`
+> Pattern IDs: `QE-001`–`QE-018`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-15
+> last_reviewed: 2026-09-16
 
 ---
 
@@ -416,3 +416,24 @@ first_check: CM_DIALOG_SELECT 的 targetObjectId/dialogId/lastPage/questId 与 Q
 
 - **判定规则**：任务动作 ID 与对话页面 ID 是两个命名空间。`QuestEngine` 拒绝某个 `questId != 0` 的动作时，客户端点的是按钮而不是页面，服务端只能关窗（或按任务 XML 明确路由到真实页面），绝不能把动作 ID 当作页面 ID 回显，否则客户端会加载不存在的 html 页并报 load fail。
 - **边界保留**：`questId == 0` 的普通 NPC 对话保持 plain dialog 回显（见 [QE-009]）；通用任务列表动作 `QUEST_SELECT(31)` 继续使用第 10 页合同。代表案例：Playbook 案例 8.36（`2169b6332`，1220 与 9550 同根因；见 [CASES.zh-CN.md](../../../docs/quest/repair-playbook/CASES.zh-CN.md)）。
+
+---
+
+## [QE-018] 十六、多段计数的最终事件必须进入 REWARD (MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD)
+<!-- pattern-metadata
+status: PROVISIONAL
+scope: Multi-dimensional skill/item counters sharing a START node, final-event timing, and persisted full-counter recovery
+first_seen: 2026-09-14
+last_verified: 2026-09-16
+symptom: 多项实时计数已经全部达到上限但状态仍是 START；最后一件任务物品使用后下一步不出现，客户端无法进入领奖阶段
+root_cause: XML 迁移只保留 started -> started 的计数自环，漏掉旧 handler 在全部计数满足后立即 setStatus(REWARD) 的 priority 0 最终路线
+fix_or_guardrail: 每个计数字段保留 priority 1 的继续自环；追加 priority 0 的最终事件路线，当前字段等于 required-1 且其他字段达到阈值时执行最后一次 increment，目标 REWARD，after-commit 使用 LEVEL_AND_VISIBILITY_REFRESH；已持久化满计数存档由带阈值的 SELECT_QUEST_REWARD 恢复路线处理
+evidence: commit 7f824dc78; src/main/resources/aion/data/static_data/quest_definition/quests/11468.xml; src/main/resources/aion/data/static_data/quest_definition/quests/21468.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest11468And21468SkillCompletionTest.java; .agents/summary/quest-11468-taloc-item-sections/2026-09-16-final-counter-reward.zh-CN.md; .agents/summary/quest-acceptance/11468-2026-09-16-final-counter-client-accepted.md; docs/quest/repair-playbook/CASES.zh-CN.md
+validation: XML XSD 与 IDE/diff 静态检查通过；2026-09-16 用户回复「出现下一步了」确认最终计数事件后的下一步/REWARD 流转；专项 Maven 与生产 catalog/白名单门禁未运行，奖励领取/COMPLETE 未单独复验
+boundaries: 适用于多个实时计数字段共享 START 状态、最终事件同时完成计数与状态迁移的任务；若根因是 START 节点固定投影了实时字段，复用 QE-002 与 COUNTER_SOURCE_PROJECTION_NO_LOCK；位掩码多地点侦察复用 MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION
+superseded_by: none
+first_check: 每个计数字段的 continuing/completing priority、最终字段条件、target status、事务动作与完整 after-commit；旧 handler 是否在全部计数满足后立即进入 REWARD
+-->
+
+- **判定规则**：多段计数的每个字段都需要成对的 continuing 与 completing 路线。只在未完成时自环、到上限后返回空计划，会让所有计数满但状态仍停在 START；最后一个事件必须以 priority 0 直接进入 `REWARD`，不能等下一次交互或只依赖无门禁的报告路线。
+- **代表案例**：Playbook 案例 8.37（`7f824dc78`），11468/21468 的三个 UseSkill 计数分别为 `var1=10`、`var2=5`、`var3=3`，最终技能使用后目标 `reward`；`Quest11468And21468SkillCompletionTest#finalItemSkillEntersRewardAndPersistedFullCountersCanReport` 锁定三条 completing 路线和满计数恢复路线。
