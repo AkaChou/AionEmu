@@ -260,8 +260,7 @@ public final class BIHNode {
 							  CollisionResults results) {
 		float tHit = Float.POSITIVE_INFINITY;
 
-		// 三角形顶点只用局部临时量，走对象池避免每次查询新建 3 个向量。 / The triangle vertices are pure scratch, so pool them instead of allocating three per query.
-		Vector3f v1 = Vector3f.newInstance(), v2 = Vector3f.newInstance(), v3 = Vector3f.newInstance();
+		Vector3f v1 = new Vector3f(), v2 = new Vector3f(), v3 = new Vector3f();
 
 		int cols = 0;
 
@@ -343,7 +342,7 @@ public final class BIHNode {
 
 		r.getDirection().normalizeLocal();
 
-		Vector3f v1 = new Vector3f(), v2 = new Vector3f(), v3 = new Vector3f();
+		Vector3f v1 = Vector3f.newInstance(), v2 = Vector3f.newInstance(), v3 = Vector3f.newInstance();
 		int cols = 0;
 
 		stack.add(new BIHStackData(this, sceneMin, sceneMax));
