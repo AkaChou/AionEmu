@@ -320,15 +320,23 @@ public final class BIHNode {
 	public int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 							  CollisionResults results) {
 
-		List<BIHStackData> stack = new ArrayList<BIHStackData>();
+		// 该遍历不再为每次分裂新建栈条目：改用每线程复用的数组栈。 / No per-split stack entries: reuse a per-thread array stack.
+		RayTraversalStack stack = RAY_TRAVERSAL_STACK.get();
+		stack.size = 0;
 
 		// float tHit = Float.POSITIVE_INFINITY;
-		// 临时向量全部走对象池：Ray#setOrigin/setDirection 是拷贝，循环内的临时 Ray 用完即弃，故回收安全。
-		// All scratch vectors come from the pool: Ray#setOrigin/setDirection copy, and the in-loop temporary Ray is discarded.
-		Vector3f o = Vector3f.newInstance().set(r.getOrigin());
-		Vector3f d = Vector3f.newInstance().set(r.getDirection());
+		// 临时向量改用每线程固定实例：既不再走对象池（池空时会新建，play-7 有 28.6MB 该站点的分配），
+		// 也不再需要回收；Ray#setOrigin/setDirection 是拷贝，循环内的临时 Ray 用完即弃。
+		// Scratch vectors now live in fixed per-thread instances: no pool interaction (which allocated when the
+		// pool ran dry, 28.6MB in play-7) and no recycle step; Ray#setOrigin/setDirection copy and the in-loop
+		// temporary Ray is discarded.
+		RayScratch scratch = RAY_SCRATCH.get();
+		Vector3f o = scratch.origin.set(r.getOrigin());
+		Vector3f d = scratch.direction.set(r.getDirection());
 
-		Matrix4f inv = worldMatrix.invert();
+		// 逆矩阵写入线程本地 scratch，避免每次查询分配 Matrix4f 与其内部数组。 / Invert into a per-thread scratch matrix instead of allocating one per query.
+		Matrix4f inv = INVERSE_MATRIX.get();
+		worldMatrix.invert(inv);
 
 		inv.mult(r.getOrigin(), r.getOrigin());
 
@@ -342,15 +350,15 @@ public final class BIHNode {
 
 		r.getDirection().normalizeLocal();
 
-		Vector3f v1 = Vector3f.newInstance(), v2 = Vector3f.newInstance(), v3 = Vector3f.newInstance();
+		Vector3f v1 = scratch.v1, v2 = scratch.v2, v3 = scratch.v3;
 		int cols = 0;
 
-		stack.add(new BIHStackData(this, sceneMin, sceneMax));
-		stackloop: while (stack.size() > 0) {
+		pushRayStack(stack, this, sceneMin, sceneMax);
+		stackloop: while (stack.size > 0) {
 
-			BIHStackData data = stack.remove(stack.size() - 1);
-			BIHNode node = data.node;
-			float tMin = data.min, tMax = data.max;
+			int stackIndex = --stack.size;
+			BIHNode node = stack.nodes[stackIndex];
+			float tMin = stack.minTs[stackIndex], tMax = stack.maxTs[stackIndex];
 
 			if (tMax < tMin) {
 				continue;
@@ -392,7 +400,7 @@ public final class BIHNode {
 					tMax = min(tMax, tNearSplit);
 					node = nearNode;
 				} else {
-					stack.add(new BIHStackData(farNode, max(tMin, tFarSplit), tMax));
+					pushRayStack(stack, farNode, max(tMin, tFarSplit), tMax);
 					tMax = min(tMax, tNearSplit);
 					node = nearNode;
 				}
@@ -423,7 +431,6 @@ public final class BIHNode {
 					cr.setContactNormal(contactNormal);
 					results.addCollision(cr);
 					if (results.isOnlyFirst()) {
-						recycleScratch(o, d, v1, v2, v3);
 						return 1;
 					}
 					cols++;
@@ -433,25 +440,65 @@ public final class BIHNode {
 
 		r.setOrigin(o);
 		r.setDirection(d);
-		recycleScratch(o, d, v1, v2, v3);
 		return cols;
 	}
 
 	/**
-	 * 归还本次查询复用的临时向量（射线原值/方向与三角形顶点）。
-	 * Returns the scratch vectors reused by this query (saved ray origin/direction and triangle vertices).
+	 * 射线遍历用的数组栈（每线程一份，避免每次查询分配栈条目与列表扩容）。
+	 * Array stack for ray traversal (one per thread; no per-entry allocation or list growth).
 	 *
-	 * @param o 射线原值 / saved ray origin
-	 * @param d 射线方向 / saved ray direction
-	 * @param v1 第一个顶点 / first vertex
-	 * @param v2 第二个顶点 / second vertex
-	 * @param v3 第三个顶点 / third vertex
+	 * <p>容量不足时翻倍扩容，因此不依赖“栈深必有硬上限”的假设。
+	 * Doubles its capacity when full, so it does not rely on a hard depth bound.</p>
 	 */
-	private static void recycleScratch(Vector3f o, Vector3f d, Vector3f v1, Vector3f v2, Vector3f v3) {
-		Vector3f.recycle(o);
-		Vector3f.recycle(d);
-		Vector3f.recycle(v1);
-		Vector3f.recycle(v2);
-		Vector3f.recycle(v3);
+	private static final class RayTraversalStack {
+		/** 初始容量。 / Initial capacity. */
+		private BIHNode[] nodes = new BIHNode[32];
+		private float[] minTs = new float[32];
+		private float[] maxTs = new float[32];
+		private int size;
+	}
+
+	/** 每线程的逆矩阵 scratch（只在本方法内使用，不逃逸）。 / Per-thread inverse-matrix scratch (local use only). */
+	private static final ThreadLocal<Matrix4f> INVERSE_MATRIX = ThreadLocal.withInitial(Matrix4f::new);
+
+	/**
+	 * 射线查询用的固定 scratch（射线原值/方向与三角形顶点）。
+	 * Fixed per-thread scratch for ray queries (saved ray origin/direction and triangle vertices).
+	 */
+	private static final class RayScratch {
+		private final Vector3f origin = new Vector3f();
+		private final Vector3f direction = new Vector3f();
+		private final Vector3f v1 = new Vector3f();
+		private final Vector3f v2 = new Vector3f();
+		private final Vector3f v3 = new Vector3f();
+	}
+
+	/** 每线程的射线查询 scratch。 / Per-thread ray-query scratch. */
+	private static final ThreadLocal<RayScratch> RAY_SCRATCH = ThreadLocal.withInitial(RayScratch::new);
+
+	/** 每线程的射线遍历栈。 / Per-thread ray traversal stack. */
+	private static final ThreadLocal<RayTraversalStack> RAY_TRAVERSAL_STACK =
+			ThreadLocal.withInitial(RayTraversalStack::new);
+
+	/**
+	 * 压入数组栈，必要时翻倍扩容。
+	 * Pushes onto the array stack, doubling its capacity when needed.
+	 *
+	 * @param stack 目标栈 / target stack
+	 * @param node 待遍历节点 / node to visit
+	 * @param minT 区间下限 / lower t bound
+	 * @param maxT 区间上限 / upper t bound
+	 */
+	private static void pushRayStack(RayTraversalStack stack, BIHNode node, float minT, float maxT) {
+		if (stack.size == stack.nodes.length) {
+			int grown = stack.size << 1;
+			stack.nodes = java.util.Arrays.copyOf(stack.nodes, grown);
+			stack.minTs = java.util.Arrays.copyOf(stack.minTs, grown);
+			stack.maxTs = java.util.Arrays.copyOf(stack.maxTs, grown);
+		}
+		stack.nodes[stack.size] = node;
+		stack.minTs[stack.size] = minT;
+		stack.maxTs[stack.size] = maxT;
+		stack.size++;
 	}
 }
