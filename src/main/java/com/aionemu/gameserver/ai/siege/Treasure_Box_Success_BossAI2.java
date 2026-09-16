@@ -133,11 +133,13 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
 				for (DropChance drop : DropList) {
 					if (Rnd.chance(drop.chance)) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, drop.itemId, drop.count));
+						dropItems.add(GameWorldServices.dropRegistrationService()
+							.regDropItem(1, 0, npc.getObjectId(), drop.itemId, drop.count));
 					}
 				}
 				break;
 		}
+		GameWorldServices.dropRegistrationService().normalizeDropIndices(dropItems);
 	}
 	
 	private class DropChance {

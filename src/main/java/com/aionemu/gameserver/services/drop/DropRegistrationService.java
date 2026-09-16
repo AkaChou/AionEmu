@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -173,6 +174,9 @@ public class DropRegistrationService {
 			npc.getPosition().getWorldMapInstance().getInstanceHandler().onDropRegistered(npc);
 		}
 		npc.getAi2().onGeneralEvent(AIEventType.DROP_REGISTERED);
+		// 客户端只回传一个字节的掉落索引；必须在任何列表/自动拾取包发出前重排为唯一值。
+		// The client returns only one byte as the loot index; renumber it before any list or auto-loot packet is sent.
+		normalizeDropIndices(droppedItems);
 		for (Player p : dropPlayers) {
 			PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npcObjId, Status.LOOT_ENABLE));
 		}
@@ -401,6 +405,26 @@ public class DropRegistrationService {
 		item.setCount(count);
 		item.setIndex(index);
 		return item;
+	}
+
+	/**
+	 * 将同一尸体的掉落索引重排为唯一连续值。
+	 * Renumbers drop indices for one corpse into unique sequential values.
+	 *
+	 * <p>多个实例 Handler 都用固定索引 1 追加掉落；客户端只回传索引，重复值会让所有行命中同一条
+	 * 记录。 / Several instance handlers append drops with the fixed index 1; the client returns only the
+	 * index, so duplicate values make every row resolve to the same entry.
+	 *
+	 * @param dropItems 掉落集合 / drop set
+	 */
+	public void normalizeDropIndices(Set<DropItem> dropItems) {
+		Objects.requireNonNull(dropItems, "dropItems");
+		synchronized (dropItems) {
+			int index = 1;
+			for (DropItem dropItem : dropItems) {
+				dropItem.setIndex(index++);
+			}
+		}
 	}
 
 	/**

@@ -7,13 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.configs.main.DropConfig;
+import com.aionemu.gameserver.model.drop.Drop;
+import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.drop.DropModifiers;
 import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalRule;
+import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 class DropRegistrationServiceTest {
 	@Test
@@ -86,5 +91,53 @@ class DropRegistrationServiceTest {
 		DropRegistrationService service = new DropRegistrationService();
 		assertEquals(100f, service.calculateGlobalDropChance(rule, ItemId.KINAH.value(), modifiers));
 		assertEquals(0f, service.calculateGlobalDropChance(rule, 1, modifiers));
+	}
+
+	@Test
+	void normalizesDuplicateDropIndicesToUniqueSequentialValues() {
+		DropRegistrationService service = new DropRegistrationService();
+		Set<DropItem> dropItems = new HashSet<>();
+		dropItems.add(dropItem(1));
+		dropItems.add(dropItem(1));
+		dropItems.add(dropItem(7));
+
+		service.normalizeDropIndices(dropItems);
+
+		Set<Integer> indices = new HashSet<>();
+		for (DropItem dropItem : dropItems) {
+			indices.add(dropItem.getIndex());
+		}
+		assertEquals(dropItems.size(), indices.size());
+		assertEquals(Set.of(1, 2, 3), indices);
+	}
+
+	@Test
+	void normalizesDropIndicesAfterInstanceRegistrationAndBeforeLootPackets() throws Exception {
+		String source = Files.readString(
+			Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
+		String registerDrop = source.substring(
+			source.indexOf("public void registerDrop(Npc npc, Player player, int highestLevel"),
+			source.indexOf("public DropModifiers createDropModifiers"));
+		int instanceHook = registerDrop.indexOf("onDropRegistered(npc)");
+		int normalize = registerDrop.indexOf("normalizeDropIndices(droppedItems)");
+		int lootPacket = registerDrop.indexOf("new SM_LOOT_STATUS(npcObjId, Status.LOOT_ENABLE)");
+
+		assertTrue(instanceHook >= 0 && normalize > instanceHook && lootPacket > normalize);
+	}
+
+	private static DropItem dropItem(int index) {
+		DropItem item = new DropItem(new Drop() {
+			@Override
+			public int getItemId() {
+				return 1;
+			}
+
+			@Override
+			public ItemTemplate getItemTemplate() {
+				return new ItemTemplate();
+			}
+		});
+		item.setIndex(index);
+		return item;
 	}
 }

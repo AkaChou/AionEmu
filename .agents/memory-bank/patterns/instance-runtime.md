@@ -14,19 +14,20 @@
 status: CONFIRMED
 scope: DropRegistrationService and instance-specific onDropRegistered handlers
 first_seen: 2026-09-13
-last_verified: 2026-09-14
-symptom: 副本钥匙或特殊物品实际掉落两份，但基础 NPC 掉落表和任务掉落表看起来各自都只有一份
-root_cause: Base NPC drops and quest drops are registered before the instance handler, which then unconditionally appends the same item
-fix_or_guardrail: Before adding an instance fallback drop, check existing DropItem entries by dropItem.getDropTemplate().getItemId(); append only when the item ID is absent
-evidence: commit e9b4bb129; DropRegistrationService.java:116-175; KromedesTrialInstance.java:194-217,453-459; KromedesTrialInstanceTest
-validation: static; focused regression test added but Maven/JUnit not run; runtime/client drop verification pending
-boundaries: Deduplicate by item ID only for the intended special-drop contract; do not delete task or base sources before auditing random-boss and quest-state branches
+last_verified: 2026-09-16
+symptom: 副本钥匙或特殊物品实际掉落两份，且点击任意掉落行都提示同一限持物品已拥有
+root_cause: Base NPC drops and quest drops are registered before the instance handler, which then unconditionally appends the same item; multiple fallback entries also reuse index 1 although the client returns only the index byte
+fix_or_guardrail: Before adding an instance fallback drop, check existing DropItem entries by item ID and append only when absent; after all registration hooks, normalizeDropIndices(droppedItems) must renumber the corpse drop set to unique sequential indices before any loot status/auto-loot packet
+evidence: commit e9b4bb129; DropRegistrationService.java:176-179,420-429; TalocsHollowInstance.java:118-173; Treasure_Box_Success_BossAI2.java:133-142; DropRegistrationServiceTest#normalizesDuplicateDropIndicesToUniqueSequentialValues; TalocsHollowInstanceTest
+validation: static/IDE checks; mvn -B test -Dtest='DropRegistrationServiceTest,TalocsHollowInstanceTest' passed (10 tests, 2026-09-16); related mvn -B test -Dtest='DropServiceTest,DropDistributionServiceTest,KromedesTrialInstanceTest' passed (14 tests); client loot verification succeeded (2026-09-16)
+boundaries: Normalization covers the initial registerDrop path and the direct siege-chest drop set; drops appended after the loot list is released must still allocate a free index. Deduplicate by item ID only for the intended special-drop contract; do not delete task or base sources before auditing random-boss and quest-state branches
 superseded_by: none
-first_check: DropRegistrationService.registerDrop, NPC base drop XML, quest XML drops and instance onDropRegistered
+first_check: DropRegistrationService.registerDrop/normalizeDropIndices, NPC base drop XML, quest XML drops and instance onDropRegistered
 -->
 
 - 注册顺序是关键：基础 NPC 掉落、任务 XML 掉落先合并，实例 Handler 后补充。因此“Handler 里看到缺钥匙就追加”不能写成无条件 `add`。
 - Kromedes Trial 的修复保留随机 Boss/阵营分支的补钥匙能力，同时保证同一物品 ID 最终只注册一份；类似掉落问题先找重复来源，再决定是否改数量或删数据。
+- 客户端 `CM_LOOT_ITEM` 只回传目标对象 ID 和一个字节的索引；同一尸体的 `DropItem.index` 必须唯一。实例 Handler 的固定索引会在 `registerDrop` 释放掉落前由 `normalizeDropIndices` 统一重排；异步追加动态掉落仍需自行分配未占用索引。
 
 ## [IR-002] 二、BOOST_SPELL_ATTACK 不得套用 short 属性上限 (BOOST_SPELL_ATTACK_INTEGER_CAP)
 <!-- pattern-metadata

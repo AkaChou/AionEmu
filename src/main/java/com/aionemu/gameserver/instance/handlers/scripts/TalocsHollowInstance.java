@@ -120,35 +120,58 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 215456: //Shishir.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000088, 1)); //Shishir's Corrosive Fluid.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000137, 1)); //Shishir's Powerstone.
-		    break;
+				registerDropItemIfAbsent(dropItems, npc, 185000088, 1); //Shishir's Corrosive Fluid.
+				registerDropItemIfAbsent(dropItems, npc, 164000137, 1); //Shishir's Powerstone.
+			break;
 			case 215478: //Neith.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000108, 1)); //Dorkin's Pocket Knife.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000139, 1)); //Neith's Sleepstone.
-		    break;
+				registerDropItemIfAbsent(dropItems, npc, 185000108, 1); //Dorkin's Pocket Knife.
+				registerDropItemIfAbsent(dropItems, npc, 164000139, 1); //Neith's Sleepstone.
+			break;
 			case 215482, 246241: //Gellmar / special-server Gellmar.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000138, 1)); //Gellmar's Wardstone.
-		    break;
+				registerDropItemIfAbsent(dropItems, npc, 164000138, 1); //Gellmar's Wardstone.
+			break;
 			case 215488, 246242: //Celestius / special-server Celestius.
-			    switch (Rnd.get(1, 5)) {
+				switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
+						registerDropItemIfAbsent(dropItems, npc, 190080005, 2); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
+						registerDropItemIfAbsent(dropItems, npc, 190080006, 2); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
+						registerDropItemIfAbsent(dropItems, npc, 190080007, 2); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
+						registerDropItemIfAbsent(dropItems, npc, 190080008, 2); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+						registerDropItemIfAbsent(dropItems, npc, 190200000, 50); //Minium.
 					break;
 				}
 			break;
+		}
+	}
+
+	/**
+	 * 仅当基础掉落尚未包含目标物品时补充一条实例兜底掉落。
+	 * Adds an instance fallback drop only when the base drop data does not already contain the item.
+	 *
+	 * <p>基础 NPC 掉落与任务掉落先于实例 Handler 注册；无条件追加会产生重复条目。索引暂用 1
+	 * 占位，registerDrop 在释放掉落列表前会统一重排为唯一值。 /
+	 * Base NPC and quest drops are registered before the instance handler; unconditional additions create
+	 * duplicate entries. The index is a placeholder because registerDrop renumbers all entries before release.
+	 *
+	 * @param dropItems 当前掉落集合 / current drop set
+	 * @param npc 死亡 NPC / dead NPC
+	 * @param itemId 物品 ID / item id
+	 * @param count 数量 / count
+	 */
+	private void registerDropItemIfAbsent(Set<DropItem> dropItems, Npc npc, int itemId, long count) {
+		boolean alreadyRegistered = dropItems.stream()
+			.anyMatch(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
+		if (!alreadyRegistered) {
+			dropItems.add(GameWorldServices.dropRegistrationService()
+				.regDropItem(1, 0, npc.getObjectId(), itemId, count));
 		}
 	}
 
