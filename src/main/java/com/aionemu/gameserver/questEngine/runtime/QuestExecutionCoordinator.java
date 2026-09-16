@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -109,15 +107,11 @@ public final class QuestExecutionCoordinator {
 		List<RuntimeException> committedFailures = new ArrayList<>();
 		try {
 			stage = QuestFailureStage.SNAPSHOT;
-			boolean includeStartEligibility = transition.conditions().stream()
-				.anyMatch(QuestCondition.StartEligible.class::isInstance);
-			Set<Integer> eventActivityQuestIds = transition.conditions().stream()
-				.filter(QuestCondition.EventActive.class::isInstance)
-				.map(QuestCondition.EventActive.class::cast)
-				.map(condition -> condition.questId() == 0 ? definition.id() : condition.questId())
-				.collect(Collectors.toUnmodifiableSet());
-			QuestSnapshot snapshot = eventPort.snapshot(playerId, definition.id(), event,
-				includeStartEligibility, eventActivityQuestIds, requiresWorldFacts(transition));
+			// 事实需求由 transition 静态推导：不读的事实族不会被采集（读取方 fail-closed）。
+			// Fact requirements are derived from the transition: families it never reads are never captured,
+			// and reading them fails closed.
+			QuestFactRequirements requirements = QuestFactRequirements.of(definition.id(), event, transition);
+			QuestSnapshot snapshot = eventPort.snapshot(playerId, definition.id(), event, requirements);
 			if (snapshot == null) {
 				throw new IllegalStateException("event port returned no snapshot");
 			}

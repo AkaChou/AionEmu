@@ -4,6 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Set;
 
 /** 权威玩家事实的只读领域边界。 / Read-only domain boundary for authoritative player facts. */
@@ -42,5 +43,20 @@ public interface QuestEventPort {
 			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds,
 			boolean includeWorldFacts) throws SQLException {
 		return snapshot(playerId, questId, event, includeStartEligibility, eventActivityQuestIds);
+	}
+
+	/**
+	 * 按 transition 推导出的最小事实集捕获只读事实。
+	 * Captures read-only facts according to the minimal fact set derived from the transition.
+	 *
+	 * <p>默认实现回落到三个旧门控（其余事实族保守全采），因此自定义端口与测试替身无需改动即可继续工作。
+	 * The default implementation falls back to the three legacy gates with every other family captured, so
+	 * custom ports and test doubles keep working unchanged.</p>
+	 */
+	default QuestSnapshot snapshot(int playerId, int questId, QuestEvent event,
+			QuestFactRequirements requirements) throws SQLException {
+		Objects.requireNonNull(requirements, "requirements");
+		return snapshot(playerId, questId, event, requirements.startEligibility(),
+			requirements.eventActivityQuestIds(), requirements.worldFacts());
 	}
 }

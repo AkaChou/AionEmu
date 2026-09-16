@@ -39,15 +39,30 @@ public final class GameEngineServices implements DisposableBean {
      */
     private static volatile ObjectProvider<InstanceEngine> instanceEngineProvider;
     /**
+     * 已解析的副本引擎单例；语义同 {@link #resolvedQuestEngine}。
+     * Resolved instance-engine singleton; same contract as {@link #resolvedQuestEngine}.
+     */
+    private static volatile InstanceEngine resolvedInstanceEngine;
+    /**
      * AI2 引擎的 Spring 提供者。
      * Spring provider for the AI2 engine.
      */
     private static volatile ObjectProvider<AI2Engine> ai2EngineProvider;
     /**
+     * 已解析的 AI2 引擎单例；语义同 {@link #resolvedQuestEngine}。
+     * Resolved AI2-engine singleton; same contract as {@link #resolvedQuestEngine}.
+     */
+    private static volatile AI2Engine resolvedAi2Engine;
+    /**
      * 聊天处理器的 Spring 提供者。
      * Spring provider for the chat processor.
      */
     private static volatile ObjectProvider<ChatProcessor> chatProcessorProvider;
+    /**
+     * 已解析的聊天处理器单例；语义同 {@link #resolvedQuestEngine}。
+     * Resolved chat-processor singleton; same contract as {@link #resolvedQuestEngine}.
+     */
+    private static volatile ChatProcessor resolvedChatProcessor;
 
     /**
      * 构造并注册各引擎的实例提供者。
@@ -123,11 +138,20 @@ public final class GameEngineServices implements DisposableBean {
      * @return 副本引擎 / Instance engine
      */
     public static InstanceEngine instanceEngine() {
+        InstanceEngine resolved = resolvedInstanceEngine;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<InstanceEngine> provider = instanceEngineProvider;
         if (provider == null) {
             return InstanceEngine.getInstance();
         }
-        return provider.getIfAvailable(InstanceEngine::getInstance);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return InstanceEngine.getInstance();
+        }
+        resolvedInstanceEngine = resolved;
+        return resolved;
     }
 
     /**
@@ -137,11 +161,20 @@ public final class GameEngineServices implements DisposableBean {
      * @return AI2 引擎 / AI2 engine
      */
     public static AI2Engine ai2Engine() {
+        AI2Engine resolved = resolvedAi2Engine;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<AI2Engine> provider = ai2EngineProvider;
         if (provider == null) {
             return AI2Engine.getInstance();
         }
-        return provider.getIfAvailable(AI2Engine::getInstance);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return AI2Engine.getInstance();
+        }
+        resolvedAi2Engine = resolved;
+        return resolved;
     }
 
     /**
@@ -151,11 +184,20 @@ public final class GameEngineServices implements DisposableBean {
      * @return 聊天处理器 / Chat processor
      */
     public static ChatProcessor chatProcessor() {
+        ChatProcessor resolved = resolvedChatProcessor;
+        if (resolved != null) {
+            return resolved;
+        }
         ObjectProvider<ChatProcessor> provider = chatProcessorProvider;
         if (provider == null) {
             return ChatProcessor.getInstance();
         }
-        return provider.getIfAvailable(ChatProcessor::getInstance);
+        resolved = provider.getIfAvailable();
+        if (resolved == null) {
+            return ChatProcessor.getInstance();
+        }
+        resolvedChatProcessor = resolved;
+        return resolved;
     }
 
     /**
@@ -171,6 +213,9 @@ public final class GameEngineServices implements DisposableBean {
         instanceEngineProvider = null;
         ai2EngineProvider = null;
         chatProcessorProvider = null;
+        resolvedInstanceEngine = null;
+        resolvedAi2Engine = null;
+        resolvedChatProcessor = null;
         QuestEngine.setInstanceProvider(null);
         SkillEngine.setInstanceProvider(null);
         InstanceEngine.setInstanceProvider(null);

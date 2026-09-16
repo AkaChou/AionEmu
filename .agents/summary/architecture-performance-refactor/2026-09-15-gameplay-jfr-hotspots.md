@@ -378,3 +378,54 @@ GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141
 | `QuestCraftSnapshot.<init>` | 4.07 MB | 技能/配方表投影 |
 
 优先级建议：**A. 版本化缓存**（按玩家给这四类事实加版本号，未变化时复用上一次不可变快照，注意登出清理与线程安全）＞ **C. 按需捕获**（条件集合决定是否需要 craft/equipment/membership）＞ 记录重建链合并构造。
+
+### 12.5 第十轮：按需捕获 + 单次构造 + 漏网门面缓存（`play-11`）
+
+第十轮落地了三件事（代码 + 测试一次提交）：
+
+1. **Spring 门面补缓存**：`GameEngineServices.instanceEngine()/ai2Engine()/chatProcessor()` 之前每次调用都走 `provider.getIfAvailable(...)`，按 `questEngine()` 的既有模式补 `resolvedX` 缓存（只在解析到真实 bean 时缓存，`destroy()` 清空）。
+2. **事实按需捕获（新 `QuestFactRequirements`）**：由 transition 的 `conditions()`+`actions()` 静态推导本转换真正读取的事实族，`QuestExecutionCoordinator` 推导一次后交给 `QuestEventPort.snapshot(..., requirements)`；`QuestEventPort` 新增的默认方法回落旧门控，自定义端口/测试替身零改动。未采集的事实族保持未捕获，读取方 fail-closed。`QuestCondition`(33)/`QuestAction`(17) 都是 sealed，推导用**无 `default` 的穷尽 switch**，新增类型会直接编译失败——这是「不可能静默漏采」的编译期保证。
+3. **快照单次构造**：删掉 `snapshotOf` + 8 连 `withXxx`，所有事实先算好再一次构造 record。
+
+触发条件映射（全部读取点经 grep 审计）：`craftFacts` ← `RecipeKnown`/`CanGrantCraftSkill`；`equipmentFacts` ← `EquipmentSetEquipped`/`EquippedItem`/`UnequipItem`；`inventory` ← `HasItem`/`RemoveItem`/`GiveItem` **外加完成与放弃**（`QuestMutationPlanner` 会为 `questWorkItems` 追加 `RemoveItem(ALL)`，`PlayerQuestInventoryPort.preflight` 仍读 `itemCount`）；`questIdSets` ← `QuestsFinished`/`UnfinishedQuest`/`AcquiredQuest`/`NoAcquiredQuest`；货币、DP、队伍、会员、位置不门控（始终采集）。
+
+#### 精确口径（`ThreadAllocationStatistics`，300s 窗口）
+
+| 线程组 | `play-9` | `play-10` | `play-11` | Δ（11−10） |
+|---|---|---|---|---|
+| **`pool-*-thread-*`（含 quest 串行执行器 pool-4）** | 175.1 MB | 152.5 MB | **133.2 MB** | **−19.3 MB** |
+| `LongRunningPool-*`（AI/长任务） | 456.4 MB | 459.5 MB | 408.5 MB | −51.0 MB |
+| `static-data-loader`（**并行 XML 加载池，见下**） | 415.4 MB | 449.8 MB | 411.5 MB | −38.3 MB |
+| `ForkJoinPool-*-worker-*` | 37.9 MB | 21.4 MB | 47.9 MB | +26.5 MB |
+| `pathfinder` | 30.4 MB | 18.0 MB | 47.3 MB | +29.3 MB |
+| `PacketProcessor:*` | 46.5 MB | 47.0 MB | 16.0 MB | −31.0 MB |
+| 进程合计 | 1180.7 MB | 1166.4 MB | **1084.6 MB** | −81.8 MB |
+
+工作量提示：`NativeMethodSample` 14,082 → 14,139（总体活动量相当），但**构成不同**（包处理 −31 MB、寻路 +56 MB），所以本轮以「站点归零」为主证据、`pool-*` 的 −19.3 MB 为次证据。
+
+只看 quest 串行执行器所在的 `pool-4`：**174.1 → 151.5 → 132.3 MB**（play-9/10/11），两轮 quest 侧优化合计 **−41.8 MB（−24%）**。
+
+#### 采样口径：目标站点（play-10 → play-11）
+
+| 站点 | `play-10` | `play-11` | 说明 |
+|---|---|---|---|
+| `craftFactsOf` + `QuestCraftSnapshot.<init>` + `PlayerSkillList.getAllSkills` | 16.23 + 4.07 + 9.96 MB | **0 / 0 / 0** | 只有制作条件才采 |
+| `equipmentFactsOf` + `ItemSetData.getItemSetTemplateByItemId` | 9.66 + 4.18 MB | 0.32 / 0.32 MB | 只有装备条件/卸下动作才采 |
+| `toInventoryMap` + `QuestSnapshot.validatedInventory` | 8.16 + 4.78 MB | 0.63 / **0** | 按需采集 |
+| `QuestSnapshot.withXxx` 链 + `QuestSnapshot.<init>` | 8.50 + 5.05 MB | **0 / 0** | 单次构造生效 |
+| `questIdsOf` + `questIdSet` | 12.51 MB | **0**（替换为 `QuestFactRequirements` 6.60 + `freeze` 6.23） | 只被四个完成/进行中条件读时才采 |
+| `GameEngineServices.ai2Engine()` | 6.57 MB | **0** | 门面缓存 |
+| `QuestProductionDispatcher.dispatch`（栈深 30 截断，仅供参考） | 64.21 MB | **8.83 MB** | 同一路径采样分配 −86% |
+
+**测试**：`mvn -Dtest=QuestFactRequirementsTest,PlayerQuestEventPortTest,QuestExecutionCoordinatorTest,QuestProductionDispatcherTest,QuestMutationPlannerTest,QuestRuntimeInfrastructureTest,QuestSnapshotValidationTest,QuestSnapshotCurrencyCaptureTest,QuestEventConditionTest,QuestPlayerFactsConditionTest,GameServiceProviderCompatibilityTest,GameRuntimeServiceBridgeTest test` → **132 例全绿**（含新增 `QuestFactRequirementsTest` 8 例）。
+
+#### 新发现：`static-data-loader` 不是一次性启动负担
+
+`XmlDataLoader` 的这个线程名属于**常驻并行 XML 加载池**（`CPU + 5` 线程，`DataManager` 的并行物品/技能路径共用），不是启动期的一次性线程：`play-10`（启动后 ~1.3 分钟开始录）与 `play-11`（**启动后 ~8.5 分钟**开始录）在该池上的分配几乎相同（449.8 / 411.5 MB），占进程总量约 38%。因此「等静态数据加载完再录」并不能消除它——它是当前**最大的单线程组分配源**，值得单独立项（确认它到底在反复加载什么、能否按需/缓存/复用解析缓冲）。
+
+#### 下一轮（第 4 步）候选，按证据排序
+
+1. `static-data-loader` 池：411 MB/300s，先查清它在加载什么（`XmlDataLoader` / `DataManager` 并行路径 / 按地图懒加载）。
+2. `GameEventServices.eventService()` 3.56 MB：与 1a 完全同类的漏网门面缓存（全仓 `getIfAvailable(` 有 604 处，应按 JFR 热点逐个补，而不是全量重构）。
+3. `RetailPatternAI2` 条件评估（`usesNpcParty` 4.67 / `supports` / `hasCompleteMasterData` / `supportsMoveType` / `hasWorldSceneConsumer`）与 `CreatureGameStats.getStatsByStatEnum`（2.85 + 每 stat 一个 `TreeMap$Entry`）、`KnownList.knownObjectsSnapshot`（6.05，长列表拷贝）。
+4. 之后才是 quest 侧第 3 步（版本化缓存）：当前 quest 侧剩余成本已明显下降，需要重新测量后再决定是否值得引入高风险的失效点清单。

@@ -3,7 +3,9 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.configs.main.CraftConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -12,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
+import com.aionemu.gameserver.questEngine.definition.QuestPvpKillFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -81,72 +84,45 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	public QuestSnapshot snapshot(int playerId, int questId, QuestEvent event,
 			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds,
 			boolean includeWorldFacts) throws SQLException {
+		// 旧入口只声明三个门控：其余事实族保守全采，行为与改动前一致。
+		// The legacy entry point declares only three gates, so every other family stays captured.
+		return snapshot(playerId, questId, event,
+			QuestFactRequirements.conservative(includeStartEligibility, eventActivityQuestIds, includeWorldFacts));
+	}
+
+	@Override
+	public QuestSnapshot snapshot(int playerId, int questId, QuestEvent event,
+			QuestFactRequirements requirements) throws SQLException {
 		Objects.requireNonNull(event, "event");
-		Objects.requireNonNull(eventActivityQuestIds, "eventActivityQuestIds");
+		Objects.requireNonNull(requirements, "requirements");
 		Player player = players.find(playerId);
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + playerId);
 		}
-		QuestSnapshot snapshot = snapshotOf(player, questId, includeWorldFacts);
-		Map<Integer, Boolean> eventActivities = eventActivitiesOf(eventActivityQuestIds);
-		if (eventActivities != null) {
-			snapshot = snapshot.withEventActivities(eventActivities);
-		}
-		snapshot = enrich(snapshot, event);
-		if (includeStartEligibility && startEligibilityPort != null) {
-			snapshot = snapshot.withStartEligibility(startEligibilityPort.snapshot(playerId, questId, event));
-		}
-		PlayerCommonData commonData = player.getCommonData();
-		if (commonData != null) {
-			if (commonData.getPlayerClass() != null) {
-				PlayerClass actualClass = commonData.getPlayerClass();
-				snapshot = snapshot.withStartingClass(PlayerClass.getStartingClassFor(actualClass))
-					.withPlayerClass(actualClass);
-			}
-			if (commonData.getGender() != null) {
-				snapshot = snapshot.withGender(commonData.getGender());
-			}
-			if (commonData.getRace() != null) {
-				snapshot = snapshot.withRace(commonData.getRace());
-			}
-		}
-		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
-			case QuestEvent.AttackNpc attack when attack.facts() != null
-					&& attack.facts().attackerId() == playerId -> snapshot
-				.withInteractionObjectId(attack.facts().npcObjectId())
-				.withTargetlessDialog();
-			// 只有 TalkToNpc 携带权威的对话所有者。AttackNpc 可携带权威事件 NPC，供提交后生命周期动作使用，
-			// 但仍必须标记为无对话目标；其他事件也不能从玩家当前目标或模板 ID 猜测对话对象。
-			// Only TalkToNpc carries an authoritative dialog owner. AttackNpc may carry an
-			// authoritative event NPC for post-commit lifecycle actions, but remains dialog-targetless.
-			// Other events must not guess a dialog object from the player's current target or a template id.
-			default -> snapshot.withTargetlessDialog();
-		};
-	}
-
-	/** Applies only server-attached event facts; definition events have no mutable facts. */
-	static QuestSnapshot enrich(QuestSnapshot snapshot, QuestEvent event) {
-		if (event instanceof QuestEvent.KillRanked ranked && ranked.facts() != null) {
-			return snapshot.withPvpFacts(ranked.facts());
-		}
-		if (event instanceof QuestEvent.KillInWorld world && world.facts() != null) {
-			return snapshot.withPvpFacts(world.facts());
-		}
-		return snapshot;
+		// 所有事实先算好再一次构造：既避免每个 withXxx 重建一个 record，也让「本转换不读的事实族」
+		// 根本不进入快照。 / Every fact is computed before a single construction: no per-withXxx record
+		// rebuild, and families this transition never reads never enter the snapshot at all.
+		return freeze(player, questId, event, requirements);
 	}
 
 	/**
-	 * 从在线玩家冻结一个任务事件快照，不修改玩家状态。
-	 * Freeze one quest-event snapshot from an online player without mutating player state.
+	 * 从在线玩家冻结一个任务事件快照，不修改玩家状态；只采集 requirements 声明的事实族。
+	 * Freezes one quest-event snapshot from an online player without mutating player state, capturing only the
+	 * fact families declared by the requirements.
+	 *
+	 * @param player       在线玩家 / the online player
+	 * @param questId      任务 ID / quest id
+	 * @param event        事件 / the event
+	 * @param requirements 事实需求 / required fact families
+	 * @return 冻结快照 / the frozen snapshot
 	 */
-	private QuestSnapshot snapshotOf(Player player, int questId, boolean includeWorldFacts) {
+	private QuestSnapshot freeze(Player player, int questId, QuestEvent event,
+			QuestFactRequirements requirements) throws SQLException {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state == null ? QuestStatus.NONE : state.getStatus();
 		int packed = state == null ? 0 : state.getQuestVars().getQuestVars();
 		Storage inventory = player.getInventory();
-		boolean inventoryCaptured = inventory != null;
+		boolean inventoryCaptured = inventory != null && requirements.inventory();
 		// 货币条件要求所有持久化货币来源都已捕获；部分玩家投影不能把未知 AP/DP 当成 0。
 		// Currency conditions require every persistent source to be captured; a partial
 		// player projection must never turn an unavailable AP/DP balance into zero.
@@ -154,36 +130,97 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			&& player.getAbyssRank() != null;
 		var target = player.getTarget();
 		boolean positionCaptured = player.getPosition() != null;
-		QuestIdFacts questIds = questIdsOf(player);
-		QuestSnapshot snapshot = new QuestSnapshot(player.getObjectId(), questId, status, packed,
+
+		// 事件级事实：PvP 事实只来自服务端附加的击杀事件，对话所有者只由 TalkToNpc/AttackNpc 提供。
+		// Event-scoped facts: PvP facts come only from server-attached kill events, and only TalkToNpc or
+		// AttackNpc supplies a dialog owner.
+		Boolean eventActive = eventActiveOf(questId);
+		Map<Integer, Boolean> eventActivities = eventActivitiesOf(requirements.eventActivityQuestIds());
+		QuestPvpKillFacts pvpFacts = pvpFactsOf(event, player.getObjectId());
+		QuestStartEligibility startEligibility = requirements.startEligibility() && startEligibilityPort != null
+			? startEligibilityPort.snapshot(player.getObjectId(), questId, event) : null;
+		PlayerCommonData commonData = player.getCommonData();
+		PlayerClass playerClass = commonData == null ? null : commonData.getPlayerClass();
+		PlayerClass startingClass = playerClass == null ? null : PlayerClass.getStartingClassFor(playerClass);
+		Gender gender = commonData == null ? null : commonData.getGender();
+		Race race = commonData == null ? null : commonData.getRace();
+		boolean targetlessDialog = true;
+		int interactionObjectId = 0;
+		if (event instanceof QuestEvent.TalkToNpc talk) {
+			// 只有 TalkToNpc 携带权威的对话所有者。AttackNpc 可携带权威事件 NPC，供提交后生命周期动作使用，
+			// 但仍必须标记为无对话目标；其他事件也不能从玩家当前目标或模板 ID 猜测对话对象。
+			// Only TalkToNpc carries an authoritative dialog owner. AttackNpc may carry an authoritative event
+			// NPC for post-commit lifecycle actions, but remains dialog-targetless. Other events must not guess
+			// a dialog object from the player's current target or a template id.
+			interactionObjectId = talk.interactionObjectId();
+			targetlessDialog = false;
+		} else if (event instanceof QuestEvent.AttackNpc attack && attack.facts() != null
+				&& attack.facts().attackerId() == player.getObjectId()) {
+			interactionObjectId = attack.facts().npcObjectId();
+		}
+
+		// 玩家级事实：只采集本转换真正读取的事实族；未采集的事实族保持未捕获并由读取方 fail-closed。
+		// Player-scoped facts: capture only the families this transition reads; skipped families stay
+		// uncaptured and fail closed on the reading side.
+		Set<Integer> completedQuestIds = null;
+		Set<Integer> activeQuestIds = null;
+		if (requirements.questIdSets()) {
+			QuestIdFacts questIds = questIdsOf(player);
+			completedQuestIds = questIds.completed();
+			activeQuestIds = questIds.active();
+		}
+		return new QuestSnapshot(player.getObjectId(), questId, status, packed,
 			inventoryCaptured ? inventoryOf(player) : null,
 			currenciesCaptured ? currenciesOf(player) : null,
-			inventoryCaptured, currenciesCaptured, 0, target == null ? 0 : target.getObjectId(),
+			inventoryCaptured, currenciesCaptured, interactionObjectId,
+			target == null ? 0 : target.getObjectId(),
 			positionCaptured ? player.getWorldId() : 0,
 			positionCaptured ? player.getInstanceId() : 0,
 			positionCaptured ? player.getX() : 0f,
 			positionCaptured ? player.getY() : 0f,
 			positionCaptured ? player.getZ() : 0f,
 			positionCaptured ? player.getHeading() : (byte) 0,
-			craftFactsOf(player), null).withWorldFacts(includeWorldFacts ? worldFactsOf(player) : null)
-			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
-			.withCompletedQuestIds(questIds.completed())
-			.withActiveQuestIds(questIds.active())
-			.withCompleteCount(state == null ? 0 : state.getCompleteCount());
-		snapshot = snapshot.withEventActive(eventActiveOf(questId));
-		QuestEquipmentFacts equipmentFacts = equipmentFactsOf(player);
-		if (equipmentFacts != null) {
-			snapshot = snapshot.withEquipmentFacts(equipmentFacts);
+			requirements.craft() ? craftFactsOf(player) : null,
+			pvpFacts,
+			startEligibility,
+			startingClass,
+			playerClass,
+			gender,
+			targetlessDialog,
+			requirements.worldFacts() ? worldFactsOf(player) : null,
+			new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()),
+			state == null ? 0 : state.getCompleteCount(),
+			completedQuestIds,
+			requirements.equipment() ? equipmentFactsOf(player) : null,
+			maxDpOf(player),
+			membershipFactsOf(player),
+			eventActive,
+			activeQuestIds,
+			race,
+			eventActivities);
+	}
+
+	/**
+	 * 只接受服务端附加的 PvP 击杀事实；事实不属于该玩家时保持原异常。
+	 * Accepts only server-attached PvP kill facts and keeps the original failure when they belong to another player.
+	 *
+	 * @param event    事件 / the event
+	 * @param playerId 拥有者 / the owner
+	 * @return PvP 事实或 null / the PvP facts, or null
+	 */
+	private static QuestPvpKillFacts pvpFactsOf(QuestEvent event, int playerId) {
+		QuestPvpKillFacts facts = switch (event) {
+			case QuestEvent.KillRanked ranked -> ranked.facts();
+			case QuestEvent.KillInWorld world -> world.facts();
+			default -> null;
+		};
+		if (facts == null) {
+			return null;
 		}
-		Integer maxDp = maxDpOf(player);
-		if (maxDp != null) {
-			snapshot = snapshot.withMaxDp(maxDp);
+		if (facts.recipientId() != playerId) {
+			throw new IllegalArgumentException("PvP facts do not belong to this player snapshot");
 		}
-		QuestMembershipFacts membershipFacts = membershipFactsOf(player);
-		if (membershipFacts != null) {
-			snapshot = snapshot.withMembershipFacts(membershipFacts);
-		}
-		return snapshot;
+		return facts;
 	}
 
 	/** Event data may be unavailable during partial startup or isolated tests; preserve unknown facts. */
