@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executors;
@@ -163,7 +164,7 @@ class PathDataTest {
 	}
 
 	@Test
-	void reusesThreadLocalAStarWorkspace() throws Exception {
+	void reusesPooledAStarWorkspace() throws Exception {
 		Path path = directory.resolve("1.path");
 		Path index = directory.resolve("1.idx");
 		byte[] data = flatLinkedPath();
@@ -172,7 +173,7 @@ class PathDataTest {
 		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100, (x, y) -> Float.NaN);
-		Object workspace = currentSearchWorkspace();
+		Object workspace = pooledSearchWorkspace();
 		Object firstNode = ((Object[]) field(workspace, "nodes"))[0];
 		Object firstSearchNode = ((Object[]) field(workspace, "searchNodes"))[0];
 		Object firstOpenNode = ((Object[]) field(workspace, "openNodes"))[0];
@@ -184,6 +185,7 @@ class PathDataTest {
 		assertSame(firstSearchNode, ((Object[]) field(workspace, "searchNodes"))[0]);
 		assertSame(firstOpenNode, ((Object[]) field(workspace, "openNodes"))[0]);
 		assertSame(openQueue, field(workspace, "open"));
+		assertSame(workspace, pooledSearchWorkspace());
 	}
 
 	@Test
@@ -733,10 +735,12 @@ class PathDataTest {
 		return buffer.array();
 	}
 
-	private static Object currentSearchWorkspace() throws Exception {
-		Field workspace = PathData.MapData.class.getDeclaredField("SEARCH_WORKSPACE");
-		workspace.setAccessible(true);
-		return ((ThreadLocal<?>) workspace.get(null)).get();
+	private static Object pooledSearchWorkspace() throws Exception {
+		Field pool = PathData.MapData.class.getDeclaredField("WORKSPACE_POOL");
+		pool.setAccessible(true);
+		Object workspace = ((Deque<?>) pool.get(null)).peekFirst();
+		assertNotNull(workspace, "workspace must be returned to the shared pool after a search");
+		return workspace;
 	}
 
 	private static Object field(Object target, String name) throws Exception {

@@ -27,6 +27,8 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -280,8 +282,23 @@ public final class PathData {
 				.thenComparing(Comparator.comparingLong(OpenNode::sequence).reversed());
 		private static final Comparator<BlockOpenNode> BLOCK_OPEN_NODE_ORDER = Comparator.comparingDouble(BlockOpenNode::score)
 				.thenComparing(Comparator.comparingLong(BlockOpenNode::sequence).reversed());
-		// ponytail: 每线程保留峰值工作区；只有实测极端搜索长期占内存时才增加容量上限。
-		private static final ThreadLocal<SearchWorkspace> SEARCH_WORKSPACE = ThreadLocal.withInitial(SearchWorkspace::new);
+		/**
+		 * 逐线程租约：只在寻路调用期间绑定工作区，用完归还共享池。
+		 * Thread-local lease that binds a workspace only for the duration of a search call.
+		 */
+		private static final ThreadLocal<WorkspaceLease> WORKSPACE_LEASE = ThreadLocal.withInitial(WorkspaceLease::new);
+		/**
+		 * 工作区共享池：并发寻路的线程远少于调用过寻路的线程总数，闲置线程不再各自钉住一份峰值节点池。
+		 * Shared workspace pool: far fewer threads search concurrently than have ever called search, so idle callers
+		 * no longer pin one peak-sized node pool each.
+		 */
+		private static final ConcurrentLinkedDeque<SearchWorkspace> WORKSPACE_POOL = new ConcurrentLinkedDeque<>();
+		private static final AtomicInteger POOLED_WORKSPACES = new AtomicInteger();
+		/**
+		 * 池上限只限制闲置工作区实例数；单个工作区内部的节点池仍按峰值增长，不受此上限影响。
+		 * This cap bounds idle workspace instances only; the per-workspace node pool keeps growing to peak as before.
+		 */
+		private static final int MAX_POOLED_WORKSPACES = 16;
 		private final ByteBuffer data;
 		private final int width;
 		private final int height;
@@ -409,44 +426,49 @@ public final class PathData {
 
 		SearchResult searchAStar(float startX, float startY, float startZ, float targetX, float targetY,
 				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability, boolean hierarchical) {
-			workspace().resetNodes();
-			Node start = findNode(startX, startY, startZ, terrain);
-			Node target = findNode(targetX, targetY, targetZ, terrain);
-			if (start == null || target == null) {
-				return SearchResult.failed(SearchStatus.INVALID_POSITION, 0);
-			}
-			float deltaX = targetX - startX;
-			float deltaY = targetY - startY;
-			float deltaZ = targetZ - startZ;
-			float distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-			if (canWalkStraight(start, target, terrain, passability)) {
-				return SearchResult.direct(List.of(point(start), point(target)));
-			}
-			float searchRadiusSquared = Math.max(2_500, 2 * distanceSquared);
-			int budget = Math.min(MAX_PROCESSED_NODES, Math.max(1, maxNodes));
-			if (hierarchical && usesHierarchicalSearch(start, target)) {
-				BlockPath corridor = findBlockPath(start.sector().block.id(), target.sector().block.id());
-				if (corridor.status() == SearchStatus.INTERRUPTED) {
-					return SearchResult.failed(SearchStatus.INTERRUPTED, 0)
-							.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+			SearchWorkspace leased = acquireWorkspace();
+			try {
+				leased.resetNodes();
+				Node start = findNode(startX, startY, startZ, terrain);
+				Node target = findNode(targetX, targetY, targetZ, terrain);
+				if (start == null || target == null) {
+					return SearchResult.failed(SearchStatus.INVALID_POSITION, 0);
 				}
-				if (corridor.blocks() != null) {
-					SearchResult refined = refineBlockPath(start, target, corridor.blocks(),
-							Math.min(budget, HIERARCHICAL_FINE_MAX_NODES), terrain, passability);
-					if (refined.status() == SearchStatus.FOUND || refined.status() == SearchStatus.INTERRUPTED) {
-						return refined.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+				float deltaX = targetX - startX;
+				float deltaY = targetY - startY;
+				float deltaZ = targetZ - startZ;
+				float distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+				if (canWalkStraight(start, target, terrain, passability)) {
+					return SearchResult.direct(List.of(point(start), point(target)));
+				}
+				float searchRadiusSquared = Math.max(2_500, 2 * distanceSquared);
+				int budget = Math.min(MAX_PROCESSED_NODES, Math.max(1, maxNodes));
+				if (hierarchical && usesHierarchicalSearch(start, target)) {
+					BlockPath corridor = findBlockPath(start.sector().block.id(), target.sector().block.id());
+					if (corridor.status() == SearchStatus.INTERRUPTED) {
+						return SearchResult.failed(SearchStatus.INTERRUPTED, 0)
+								.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+					}
+					if (corridor.blocks() != null) {
+						SearchResult refined = refineBlockPath(start, target, corridor.blocks(),
+								Math.min(budget, HIERARCHICAL_FINE_MAX_NODES), terrain, passability);
+						if (refined.status() == SearchStatus.FOUND || refined.status() == SearchStatus.INTERRUPTED) {
+							return refined.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+						}
+						SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
+								targetZ, searchRadiusSquared, budget, terrain, passability, null);
+						return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, refined.processedNodes(),
+								corridor.processedNodes());
 					}
 					SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
 							targetZ, searchRadiusSquared, budget, terrain, passability, null);
-					return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, refined.processedNodes(),
-							corridor.processedNodes());
+					return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, 0, corridor.processedNodes());
 				}
-				SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
-						targetZ, searchRadiusSquared, budget, terrain, passability, null);
-				return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, 0, corridor.processedNodes());
+				return searchLowLevel(start, target, startX, startY, startZ, targetX, targetY, targetZ,
+						searchRadiusSquared, budget, terrain, passability, null);
+			} finally {
+				releaseWorkspace(leased);
 			}
-			return searchLowLevel(start, target, startX, startY, startZ, targetX, targetY, targetZ,
-					searchRadiusSquared, budget, terrain, passability, null);
 		}
 
 		private SearchResult searchLowLevel(Node start, Node target, float startX, float startY, float startZ,
@@ -476,15 +498,21 @@ public final class PathData {
 								: SearchResult.found(path, processed);
 					}
 					for (int direction = 0; direction < 8; direction++) {
+						// 记录游标：只有被 visited 保留的邻居才占用节点槽位，其余临时节点回退复用。
+						// Mark the cursor: only neighbors kept by the visited set hold a node slot; temporary nodes
+						// are rolled back so the next direction reuses the same slots.
+						int nodeMark = workspace.nodeMark();
 						Node neighbor = step(current.node, direction, terrain, passability);
 						if (neighbor == null || allowedBlocks != null && !allowedBlocks.get(neighbor.sector().block.id())
 								|| !withinSearchArea(neighbor, startX, startY, startZ, targetX, targetY, targetZ,
 										searchRadiusSquared)) {
+							workspace.rollbackNodes(nodeMark);
 							continue;
 						}
 						float cost = current.cost + distance(current.node, neighbor);
 						SearchNode known = visited.get(neighbor.key());
 						if (known != null && known.closed) {
+							workspace.rollbackNodes(nodeMark);
 							continue;
 						}
 						if (known == null || cost + 0.5f < known.cost) {
@@ -496,8 +524,11 @@ public final class PathData {
 								known.parent = current;
 								known.cost = cost;
 								known.score = score;
+								workspace.rollbackNodes(nodeMark);
 							}
 							open.add(workspace.openNode(neighbor.key(), cost, score, sequence++));
+						} else {
+							workspace.rollbackNodes(nodeMark);
 						}
 					}
 				}
@@ -690,13 +721,18 @@ public final class PathData {
 								: PortalSearchResult.found(path, reached, processed);
 					}
 					for (int direction = 0; direction < 8; direction++) {
+						// 与低层搜索一致：只有被 visited 保留的邻居才占用节点槽位。
+						// Same as the low-level search: only neighbors kept by the visited set hold a node slot.
+						int nodeMark = workspace.nodeMark();
 						Node neighbor = step(current.node, direction, terrain, passability);
 						if (neighbor == null || neighbor.sector().block.id() != blockId) {
+							workspace.rollbackNodes(nodeMark);
 							continue;
 						}
 						float cost = current.cost + distance(current.node, neighbor);
 						SearchNode known = visited.get(neighbor.key());
 						if (known != null && (known.closed || cost + 0.5f >= known.cost)) {
+							workspace.rollbackNodes(nodeMark);
 							continue;
 						}
 						float score = cost + portalDistance(neighbor, portals);
@@ -707,6 +743,7 @@ public final class PathData {
 							known.parent = current;
 							known.cost = cost;
 							known.score = score;
+							workspace.rollbackNodes(nodeMark);
 						}
 						open.add(workspace.openNode(neighbor.key(), cost, score, sequence++));
 					}
@@ -821,51 +858,66 @@ public final class PathData {
 
 		boolean canWalkStraight(float startX, float startY, float startZ, float targetX, float targetY,
 				float targetZ, HeightProvider terrain, EdgePassability passability) {
-			workspace().resetNodes();
-			Node current = findNode(startX, startY, startZ, terrain);
-			Node target = findNode(targetX, targetY, targetZ, terrain);
-			return current != null && target != null && canWalkStraight(current, target, terrain, passability);
+			SearchWorkspace leased = acquireWorkspace();
+			try {
+				leased.resetNodes();
+				Node current = findNode(startX, startY, startZ, terrain);
+				Node target = findNode(targetX, targetY, targetZ, terrain);
+				return current != null && target != null && canWalkStraight(current, target, terrain, passability);
+			} finally {
+				releaseWorkspace(leased);
+			}
 		}
 
 		PathPoint projectPoint(float x, float y, float z, HeightProvider terrain) {
-			workspace().resetNodes();
-			Node node = findNode(x, y, z, terrain);
-			return node == null ? null : point(node);
+			SearchWorkspace leased = acquireWorkspace();
+			try {
+				leased.resetNodes();
+				Node node = findNode(x, y, z, terrain);
+				return node == null ? null : point(node);
+			} finally {
+				releaseWorkspace(leased);
+			}
 		}
 
 		PathPoint nearestPathPoint(float x, float y, float z, float maxRadius, float maxVerticalDelta,
 				HeightProvider terrain, PointPassability passability) {
-			workspace().resetNodes();
-			int centerX = (int) (x * 2);
-			int centerY = (int) (y * 2);
-			int radius = Math.max(0, (int) Math.ceil(Math.max(0, maxRadius) * 2));
-			float radiusSquared = maxRadius * maxRadius;
-			Node best = null;
-			float bestDistance = Float.POSITIVE_INFINITY;
-			for (int offsetX = -radius; offsetX <= radius; offsetX++) {
-				for (int offsetY = -radius; offsetY <= radius; offsetY++) {
-					int gridX = centerX + offsetX;
-					int gridY = centerY + offsetY;
-					float pointX = gridX * 0.5f + 0.25f;
-					float pointY = gridY * 0.5f + 0.25f;
-					float distance = square(pointX - x) + square(pointY - y);
-					if (distance > radiusSquared || distance > bestDistance) {
-						continue;
-					}
-					Block block = block(gridX, gridY);
-					if (block == null) {
-						continue;
-					}
-					for (Sector sector : block.sectors) {
-						Node node = sector.find(gridX, gridY, z, terrain, maxVerticalDelta);
-						if (node != null && (passability == null || passability.canPass(node.x(), node.y(), node.z()))) {
-							best = node;
-							bestDistance = distance;
+			SearchWorkspace leased = acquireWorkspace();
+			try {
+				leased.resetNodes();
+				int centerX = (int) (x * 2);
+				int centerY = (int) (y * 2);
+				int radius = Math.max(0, (int) Math.ceil(Math.max(0, maxRadius) * 2));
+				float radiusSquared = maxRadius * maxRadius;
+				Node best = null;
+				float bestDistance = Float.POSITIVE_INFINITY;
+				for (int offsetX = -radius; offsetX <= radius; offsetX++) {
+					for (int offsetY = -radius; offsetY <= radius; offsetY++) {
+						int gridX = centerX + offsetX;
+						int gridY = centerY + offsetY;
+						float pointX = gridX * 0.5f + 0.25f;
+						float pointY = gridY * 0.5f + 0.25f;
+						float distance = square(pointX - x) + square(pointY - y);
+						if (distance > radiusSquared || distance > bestDistance) {
+							continue;
+						}
+						Block block = block(gridX, gridY);
+						if (block == null) {
+							continue;
+						}
+						for (Sector sector : block.sectors) {
+							Node node = sector.find(gridX, gridY, z, terrain, maxVerticalDelta);
+							if (node != null && (passability == null || passability.canPass(node.x(), node.y(), node.z()))) {
+								best = node;
+								bestDistance = distance;
+							}
 						}
 					}
 				}
+				return best == null ? null : point(best);
+			} finally {
+				releaseWorkspace(leased);
 			}
-			return best == null ? null : point(best);
 		}
 
 		private boolean canWalkStraight(Node current, Node target, HeightProvider terrain, EdgePassability passability) {
@@ -1344,7 +1396,63 @@ public final class PathData {
 		}
 
 		private static SearchWorkspace workspace() {
-			return SEARCH_WORKSPACE.get();
+			WorkspaceLease lease = WORKSPACE_LEASE.get();
+			if (lease.depth == 0) {
+				// 防御：内部叶子若在顶层作用域之外被调用，仍按旧行为就地取一份工作区。
+				// Defensive: an inner leaf invoked outside a top-level scope still gets a usable workspace.
+				return acquireWorkspace();
+			}
+			return lease.workspace;
+		}
+
+		/**
+		 * 取得当前线程的工作区：首次调用时从共享池借出，嵌套调用复用同一份。
+		 * Acquires the thread's workspace: borrows one from the shared pool on first use and reuses it for nested calls.
+		 *
+		 * @return 工作区 / workspace
+		 */
+		private static SearchWorkspace acquireWorkspace() {
+			WorkspaceLease lease = WORKSPACE_LEASE.get();
+			if (lease.depth++ == 0) {
+				SearchWorkspace workspace = WORKSPACE_POOL.pollFirst();
+				if (workspace != null) {
+					POOLED_WORKSPACES.decrementAndGet();
+				} else {
+					workspace = new SearchWorkspace();
+				}
+				lease.workspace = workspace;
+			}
+			return lease.workspace;
+		}
+
+		/**
+		 * 归还工作区：只在租约深度归零时回到共享池，超出上限的实例直接丢弃。
+		 * Releases the workspace: it returns to the shared pool only when the lease depth reaches zero,
+		 * and instances beyond the cap are dropped.
+		 *
+		 * @param workspace 本次租约的工作区 / workspace held by this lease
+		 */
+		private static void releaseWorkspace(SearchWorkspace workspace) {
+			WorkspaceLease lease = WORKSPACE_LEASE.get();
+			if (lease.depth == 0 || lease.workspace != workspace) {
+				return;
+			}
+			if (--lease.depth > 0) {
+				return;
+			}
+			lease.workspace = null;
+			workspace.resetState();
+			if (POOLED_WORKSPACES.incrementAndGet() <= MAX_POOLED_WORKSPACES) {
+				WORKSPACE_POOL.offerFirst(workspace);
+			} else {
+				POOLED_WORKSPACES.decrementAndGet();
+			}
+		}
+
+		/** 线程本地的租约状态。 / Thread-local lease state. */
+		private static final class WorkspaceLease {
+			private SearchWorkspace workspace;
+			private int depth;
 		}
 
 		private record Block(int id, Sector[] sectors) {}
@@ -1524,6 +1632,45 @@ public final class PathData {
 
 			private void resetNodes() {
 				nodeIndex = 0;
+			}
+
+			/**
+			 * 记录节点池游标，供邻居展开回退未被保留的临时节点。
+			 * Records the node-pool cursor so neighbor expansion can roll back temporary nodes it does not keep.
+			 *
+			 * @return 当前游标 / current cursor
+			 */
+			private int nodeMark() {
+				return nodeIndex;
+			}
+
+			/**
+			 * 回退到给定游标：本次展开中未被访问集合保留的节点槽位重新可用。
+			 * Rolls back to the given cursor so node slots from this expansion that the visited set did not keep
+			 * become reusable again.
+			 *
+			 * @param mark 由 {@link #nodeMark()} 记录的游标 / cursor recorded by {@link #nodeMark()}
+			 */
+			private void rollbackNodes(int mark) {
+				nodeIndex = mark;
+			}
+
+			/**
+			 * 归还共享池前清空搜索状态；节点池保留实例，避免下次寻路重新分配。
+			 * Clears search state before returning to the shared pool; the node pool keeps its instances so the
+			 * next search does not re-allocate them.
+			 */
+			private void resetState() {
+				nodeIndex = 0;
+				searchNodeIndex = 0;
+				openNodeIndex = 0;
+				blockSearchNodeIndex = 0;
+				blockOpenNodeIndex = 0;
+				visited.clear();
+				open.clear();
+				portalGoals.clear();
+				blockVisited.clear();
+				blockOpen.clear();
 			}
 
 			private Node node(Sector sector, int gridX, int gridY, int complexOffset, long key,

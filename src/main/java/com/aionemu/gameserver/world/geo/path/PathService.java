@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -217,7 +218,7 @@ public final class PathService implements DisposableBean {
 			return 0;
 		}
 		float[] start = {owner.getX(), owner.getY(), owner.getZ()};
-		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		PathData.HeightProvider terrain = terrain(owner.getWorldId());
 		SegmentAllowed pathAllowed = (from, to) -> map.canWalkStraight(from[0], from[1], from[2], to[0], to[1],
 				to[2], terrain, null);
 		SegmentAllowed geoAllowed = (from, to) -> {
@@ -308,7 +309,12 @@ public final class PathService implements DisposableBean {
 	}
 
 	private static PathData.HeightProvider terrain(int worldId) {
-		return (x, y) -> GameWorldServices.geoService().getTerrainZ(worldId, x, y);
+		// 每次搜索只解析一次世界地图：getTerrainZ 内部同样走 geoData.getMap，这里把它提到 lambda 外，
+		// 避免每个地形采样点都做一次 worldId 二分查找（play-7 有 174 个 CPU 样本停在该查找里）。
+		// Resolve the world map once per search: getTerrainZ resolves geoData.getMap on every sample, so hoist
+		// it out of the lambda instead of paying a world-id lookup per terrain sample.
+		GeoMap map = GameWorldServices.geoService().getGeoMap(worldId);
+		return (x, y) -> map.getTerrainPathHeight(x, y);
 	}
 
 	private boolean canMoveStraight(Creature owner, float x, float y, float z, WaterArea water, boolean spatial) {
@@ -317,8 +323,7 @@ public final class PathService implements DisposableBean {
 		}
 		if (spatial) {
 			float clearance = Math.max(0.5f, owner.getCollision());
-			PathData.HeightProvider terrain = (sampleX, sampleY) ->
-					GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), sampleX, sampleY);
+			PathData.HeightProvider terrain = terrain(owner.getWorldId());
 			if (water != null && !waterEdge(owner, water, clearance, new HashMap<>()).test(owner.getX(), owner.getY(), owner.getZ(),
 					x, y, z)) {
 				return false;
@@ -338,8 +343,7 @@ public final class PathService implements DisposableBean {
 		if (map == null) {
 			return PathData.SearchStatus.INVALID_POSITION;
 		}
-		PathData.HeightProvider terrain = (sampleX, sampleY) ->
-				GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), sampleX, sampleY);
+		PathData.HeightProvider terrain = terrain(owner.getWorldId());
 		return map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), x, y, z, WAYPOINT_SEARCH_MAX_NODES, terrain,
 				null).status();
 	}
@@ -638,7 +642,7 @@ public final class PathService implements DisposableBean {
 		if (map == null) {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
-		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(request.worldId(), x, y);
+		PathData.HeightProvider terrain = terrain(request.worldId());
 		PathData.PathPoint pathStart = map.projectPoint(request.startX(), request.startY(), request.startZ(), terrain);
 		float[] bridge = null;
 		if (pathStart == null) {
@@ -724,7 +728,7 @@ public final class PathService implements DisposableBean {
 		boolean swimming = water != null;
 		float clearance = request.clearance();
 		int worldSize = GameWorldBootstrapServices.world().getWorldMap(request.worldId()).getWorldSize();
-		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(request.worldId(), x, y);
+		PathData.HeightProvider terrain = terrain(request.worldId());
 		float targetGround = terrain.get(targetX, targetY);
 		if (Float.isFinite(targetGround)) {
 			targetZ = Math.max(targetZ, targetGround + clearance);
@@ -761,26 +765,51 @@ public final class PathService implements DisposableBean {
 	}
 
 	private WaterArea waterArea(Creature owner, float x, float y, float z) {
+		// “算不算浸没”的水面余量取“空间寻路净空”与“口鼻没入水面”两者的较大者：
+		// 前者保证被判为游泳的位置一定能通过 waterEdge（否则会落进死区，两种寻路都失败），
+		// 后者与客户端“没入水面才算游泳”的表现一致（与 ZoneLevelService 的溺水判据同源）。
+		// The submersion margin is the larger of the spatial-path clearance and the nose-height clearance:
+		// the first keeps every "swimming" position acceptable to waterEdge (no dead zone between the two
+		// path modes), the second matches the client's submerge-below-the-nose presentation.
+		float immersionMargin = immersionMargin(owner);
 		float ground = GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
 		WaterVolumeStore.Volume volume = waterVolumes.find(owner.getWorldId(), x, y, z);
 		if (volume != null) {
 			float surface = volume.surfaceZ(x, y);
-			if (isSubmerged(z, ground, surface)) {
+			if (isSubmerged(z, ground, surface, immersionMargin)) {
 				return new WaterArea(volume, surface);
 			}
 		}
 		float waterLevel = GameWorldBootstrapServices.world().getWorldMap(owner.getWorldId()).getWaterLevel();
-		boolean openToSurface = isSubmerged(z, ground, waterLevel)
+		boolean openToSurface = isSubmerged(z, ground, waterLevel, immersionMargin)
 				&& canPass(owner, x, y, z, x, y, waterLevel - 0.5f, true);
-		return acceptsGlobalWater(z, ground, waterLevel, openToSurface) ? new WaterArea(null, waterLevel) : null;
+		return acceptsGlobalWater(z, ground, waterLevel, openToSurface, immersionMargin) ? new WaterArea(null, waterLevel)
+				: null;
+	}
+
+	/**
+	 * 浸没判定使用的水面余量：不小于空间寻路净空，也不小于“口鼻没入水面”所需高度。
+	 * Submersion margin: never smaller than the spatial-path clearance nor than the nose-height clearance.
+	 *
+	 * @param owner 生物 / creature
+	 * @return 水面余量 / margin below the water surface
+	 */
+	static float immersionMargin(Creature owner) {
+		float clearance = Math.max(0.5f, owner.getCollision());
+		float noseHeight = owner.getObjectTemplate().getBoundRadius().getUpper() - 0.1f;
+		return Math.max(clearance, noseHeight);
 	}
 
 	static boolean acceptsGlobalWater(float z, float ground, float surface, boolean openToSurface) {
-		return openToSurface && isSubmerged(z, ground, surface);
+		return acceptsGlobalWater(z, ground, surface, openToSurface, 0.5f);
 	}
 
-	private static boolean isSubmerged(float z, float ground, float surface) {
-		return z < surface - 0.5f && (!Float.isFinite(ground) || z > ground + 0.75f);
+	static boolean acceptsGlobalWater(float z, float ground, float surface, boolean openToSurface, float clearance) {
+		return openToSurface && isSubmerged(z, ground, surface, clearance);
+	}
+
+	private static boolean isSubmerged(float z, float ground, float surface, float clearance) {
+		return z < surface - clearance && (!Float.isFinite(ground) || z > ground + 0.75f);
 	}
 
 	private static SpatialPathfinder.EdgeAllowed waterEdge(Creature owner, WaterArea water, float clearance,

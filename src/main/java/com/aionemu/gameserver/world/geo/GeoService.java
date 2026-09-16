@@ -318,6 +318,18 @@ public class GeoService {
 	}
 
 	/**
+	 * 返回世界的几何地图，供寻路等批量采样复用，避免每个采样点重复解析 worldId。
+	 * Returns the geo map for a world so batch samplers (pathfinding) can reuse it instead of
+	 * resolving the world id on every sample.
+	 *
+	 * @param worldId 世界 ID / world id
+	 * @return 几何地图（未加载时返回占位地图） / geo map (placeholder when not loaded)
+	 */
+	public GeoMap getGeoMap(int worldId) {
+		return this.geoData.getMap(worldId);
+	}
+
+	/**
 	 * 仅按 XY 采样地表高度（水下兼容路径）。
 	 * Samples ground height from X/Y only (water-compatible path).
 	 *
