@@ -8,6 +8,7 @@
 | 护送 NPC 对话后原地不动、跟随不启动、FOLLOW_ME 被静默丢弃、npc-lost-target 回退 | `AIM-001` | AI2Engine.selectNpcAi whitelist, npc-ai.xml pattern and FollowEventHandler FOLLOW_ME |
 | 跟随 NPC 在玩家身边无限转圈、停不下来、到达条件永不满足、卡死恢复角度轮转 | `AIM-002` | shouldUseAttackSlot, CLOSE_FOLLOW_RANGE and refreshAttackSlotForRecovery |
 | 拐角与门廊卡墙、贴墙无法脱困、NPC 切墙穿模、护送任务因模型死角超时失败 | `AIM-003` | followTrail sampling, canPassDirectly and catchupTeleportTo |
+| 卵/固定怪每次被攻击都“脱离战斗”，客户端反复播放脱战表现（Taloc's Hollow 的 mosqua egg 282006 一波多只时连续响） | `AIM-004` | AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARGET_GIVEUP |
 | 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
 | ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件 | `AR-002` | DAOManager provider parameter and startup bridge construction |
 | 封包无响应、opcode 已实现但 handler 未触发、收发链路失败 | `AR-003` | opcode map, handler registration and client protocol version |
@@ -28,6 +29,7 @@
 | 两个 NPC 在相近坐标重复出现，疑似同一训练/生产点被刷出两次 | `IR-006` | static spawn loader, RetailConditionSpawnEngine, condition-spawns producer pages and legacy/client NPC evidence |
 | 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交 | `IR-007` | spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML |
 | NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility） | `IR-008` | getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度 |
+| 卵孵化出的召唤物只短暂出现就消失（真端数据写的是 live_time=18）；同类“带 live_time 的临时召唤物”都如此 | `IR-009` | resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |

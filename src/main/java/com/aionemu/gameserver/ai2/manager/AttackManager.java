@@ -10,18 +10,12 @@ import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.skill.NpcSkillEntry;
-import com.aionemu.gameserver.model.skill.NpcSkillList;
-import com.aionemu.gameserver.skillengine.effect.DamageEffect;
-import com.aionemu.gameserver.skillengine.model.SkillSubType;
-import com.aionemu.gameserver.skillengine.model.SkillTemplate;
-
 /**
  * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
  * NPC attack manager: schedules attacks, chooses attack intention, and handles chase/give-up logic.
  *
  * @author ATracer
- * @modified Yon (Aion Reconstruction Project) -- removed non-retail-like leash in {@link #checkGiveupDistance(NpcAI2)}.
+ * @modified Yon (Aion Reconstruction Project) -- 移除非真端式的超距脱战处理 / removed the non-retail-like leash handling.
  */
 public class AttackManager {
 
@@ -152,37 +146,13 @@ public class AttackManager {
 			npc.getMoveController().moveToTargetObject();
 			return;
 		}
-		if (!shouldKeepTargetWhenImmobile(npc.getObjectTemplate().getStatsTemplate().getMaxDamage(),
-				hasOffensiveSkill(npc.getSkillList()))) {
-			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
-		}
-	}
-
-	static boolean shouldKeepTargetWhenImmobile(int maxDamage, boolean hasOffensiveSkill) {
-		return maxDamage == 0 && !hasOffensiveSkill;
-	}
-
-	private static boolean hasOffensiveSkill(NpcSkillList skills) {
-		for (int i = 0; i < skills.size(); i++) {
-			NpcSkillEntry skill = skills.getSkillByIndex(i);
-			if (skill != null && !skill.isUltraSkill() && skill.hasUsesLeft() && isOffensiveSkill(skill.getSkillTemplate())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	static boolean isOffensiveSkill(SkillTemplate skill) {
-		if (skill == null) {
-			return false;
-		}
-		SkillSubType type = skill.getSubType();
-		if (type == SkillSubType.ATTACK || type == SkillSubType.DEBUFF || type == SkillSubType.SUMMON
-				|| type == SkillSubType.SUMMONHOMING || type == SkillSubType.SUMMONTRAP) {
-			return true;
-		}
-		return skill.getEffects() != null
-				&& skill.getEffects().getEffects().stream().anyMatch(DamageEffect.class::isInstance);
+		// 不可移动的 NPC（卵、固定炮台等）不因“够不着”放弃目标：真端数据里没有这个驱动
+		// （0 移速不会产生寻路失败、max_chase_time=0 不设追击超时、pattern 在进入战斗时 do_nothing），
+		// 而放弃会清空仇恨，并被下一次受击/视野事件立刻重新拉进战斗，客户端就会反复播放脱战表现。
+		// Immobile NPCs (eggs, fixed turrets) must not abandon an unreachable target: retail data defines no such
+		// driver (zero move speed cannot fail a path, max_chase_time=0 sets no chase timeout, and the pattern does
+		// nothing on entering the attack state). Giving up clears hate only to be re-added by the next hit or sight
+		// event, which makes the client replay the disengage animation over and over.
 	}
 
 	/**

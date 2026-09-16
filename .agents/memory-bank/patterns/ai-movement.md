@@ -2,10 +2,10 @@
 
 本文档记录脚本 AI 选型、跟随/护送行为与移动控制器在非凸几何下的实战避坑经验。
 
-> Pattern IDs: `AIM-001`–`AIM-003`
+> Pattern IDs: `AIM-001`–`AIM-004`
 > card_status: ACTIVE; movement conclusions are tied to the observed geometry and path-data availability
 > scope: AI2Engine selection, follow/escort handlers, and NpcMoveController pathing
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-16
 
 ---
 
@@ -95,3 +95,30 @@ first_check: followTrail sampling, canPassDirectly and catchupTeleportTo
 - **排查与修复规范**：
   - 足迹点**只能来自玩家实际走过的路线**，不得用插值或几何投影生成，否则会制造新的穿墙路径。
   - 拉回是**兜底安全网而非寻路替代**：正常路线可用时不应触发；新增室内场景时要先确认该区域的 `.path` 网格连通性与视线判定是否可靠。
+
+---
+
+## [AIM-004] 四、不可移动 NPC 不因“够不着”放弃目标 (IMMOBILE_NPC_KEEPS_UNREACHABLE_TARGET)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: AttackManager#targetTooFar 与 0 移速 NPC（卵、固定炮台、结构物）的战斗状态机
+first_seen: 2026-09-16
+last_verified: 2026-09-16
+symptom: 卵/固定怪每次被攻击都“脱离战斗”，客户端反复播放脱战表现（Taloc's Hollow 的 mosqua egg 282006 一波多只时连续响）
+root_cause: AttackManager#targetTooFar 里对不可移动 NPC 存在“有伤害就放弃目标”分支，清空仇恨后又被下一次受击或视野事件立刻拉回战斗，形成 FIGHT→IDLE→FIGHT 抖动
+fix_or_guardrail: 不可移动 NPC 在此处不放弃目标；战斗只由目标离开已知列表（NpcController#notSee 移出仇恨）或真端 max_chase_time 规则结束
+evidence: src/main/java/com/aionemu/gameserver/ai2/manager/AttackManager.java:145; src/main/java/com/aionemu/gameserver/ai2/handler/TargetEventHandler.java:105; src/main/java/com/aionemu/gameserver/ai2/handler/ThinkEventHandler.java:95; src/test/java/com/aionemu/gameserver/ai2/manager/AttackManagerTest.java:37
+validation: focused-test（AttackManagerTest / AttackManagerLeashTest / TargetEventHandlerTest / RetailPatternAI2Test 等 95 例 0 失败，2026-09-16）；真端数据核对（58Server/Map/XML/npcs_std_monsters.xml 的 282006：0 移速、max_chase_time=0；NpcAIPatterns_IDElim_OSY.xml 的 Elim_NeutflyEgg：on_enter_attack_state=do_nothing）；runtime/client validation not implied
+boundaries: 仅适用于不可移动 NPC；可移动 NPC 仍按 max_chase_time / react_to_pathfind_fail 处理。被删除的 shouldKeepTargetWhenImmobile / hasOffensiveSkill / isOffensiveSkill 若要恢复，必须先给出真端证据
+superseded_by: none
+first_check: AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARGET_GIVEUP
+-->
+
+- **症状**：固定怪被远程攻击后每次攻击周期都“脱离战斗”一次；一波多只时客户端连续播放脱战表现与音效。
+- **根因链**：
+  1. 卵这类 NPC 是 0 移速（真端 `npcs_std_monsters.xml` 的 `move_speed_normal_run=0`），`NpcAI2#isMoveSupported()` 因速度为 0 返回 false；
+  2. 目标够不着时 `AttackManager#targetTooFar` 原先走到“有伤害就放弃目标”分支（`shouldKeepTargetWhenImmobile` 语义与真端相悖）→ `TARGET_GIVEUP`；
+  3. `TargetEventHandler#onTargetGiveup` 清仇恨并 `think()` → `ThinkEventHandler#thinkAttack` 无最高仇恨 → `BACK_HOME` → `ReturningEventHandler#onBackHome` 广播 `SM_EMOTION(NEUTRALMODE)`（客户端脱战表现）；
+  4. 卵是 aggressive、感知 20m，且每次受击都会重新加仇恨 → 立刻回到 FIGHT，循环往复。
+- **真端依据**：卵的 `max_chase_time=0`（不设追击超时）、0 移速不会产生寻路失败、pattern `Elim_NeutflyEgg` 在 `on_enter_attack_state` / `on_enter_idle_state` 都是 `do_nothing`——真端没有任何“够不着就清仇恨回位”的驱动。
+- **修复与后续**：删除该分支后，攻击管理器只在“目标离开已知列表”或真端 `max_chase_time` 规则生效时结束战斗，固定怪不再抖动。若将来要为某些固定怪恢复“脱战”，必须先从真端数据找到驱动字段（例如该 NPC 的 `max_chase_time` 取值）而不是在代码里按伤害大小判断。

@@ -177,6 +177,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private final Set<Future<?>> terminalActionTasks = ConcurrentHashMap.newKeySet();
 	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
 	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
+	// 自带 live_time、由自己的到期任务管理生命周期的子对象。 / Spawns whose lifetime is managed by their own live_time task.
+	private final Set<VisibleObject> selfManagedSpawns = new HashSet<>();
 	private final Set<String> flags = new HashSet<>();
 	private final Map<String, Integer> intVars = new HashMap<>();
 	private final Set<Integer> usersInSensoryArea = ConcurrentHashMap.newKeySet();
@@ -2251,6 +2253,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			if (trackedBySpawnId || liveTime > 0) {
 				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
 			}
+			if (liveTime > 0) {
+				selfManagedSpawns.add(spawned);
+			}
 			if (trackedBySpawnId) {
 				this.spawned.computeIfAbsent(value(action, "spawn_id"), _ -> new ArrayList<>()).add(spawned);
 			}
@@ -2266,6 +2271,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private void despawnForLifecycle(VisibleObject object) {
 		if (!object.isSpawned()) {
 			despawnAtAttackState.remove(object);
+			selfManagedSpawns.remove(object);
 			return;
 		}
 		boolean duringAttack = object instanceof Npc npc && npc.getAi2() instanceof AbstractAI ai
@@ -2275,6 +2281,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return;
 		}
 		despawnAtAttackState.remove(object);
+		selfManagedSpawns.remove(object);
 		object.getController().onDelete();
 	}
 
@@ -2282,11 +2289,53 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		return !despawnAtAttackState && duringAttack;
 	}
 
+	/**
+	 * pattern 状态重置（回位/死亡/despawn）时是否释放登记的临时子对象。
+	 * Whether a tracked temporary spawn is released when the pattern state resets.
+	 *
+	 * @param selfManagedLifetime 是否自带 {@code live_time} / whether the spawn owns a {@code live_time}
+	 * @return 需要释放返回 {@code true}，保留返回 {@code false} / {@code true} when it must be released
+	 */
+	static boolean shouldReleaseOnPatternReset(boolean selfManagedLifetime) {
+		return !selfManagedLifetime;
+	}
+
+	/**
+	 * 释放 pattern 状态登记的临时子对象。
+	 * 自带 {@code live_time} 的对象（例如卵孵化出的召唤物）由自己的到期任务清理，只保留登记，不随生成者状态重置删除；
+	 * 其余对象（{@code live_time=0} 的标记物、门等）没有别的清理路径，继续随重置删除。
+	 * Releases tracked temporary spawns. Objects with their own {@code live_time} (such as a summon hatched by an egg) are
+	 * cleaned up by their expiry task and only stay tracked; the rest (markers, doors and similar {@code live_time=0}
+	 * spawns) have no other cleanup path and keep being deleted together with the reset.
+	 */
+	private void releaseTrackedSpawns() {
+		for (List<VisibleObject> objects : spawned.values()) {
+			objects.removeIf(this::releaseTrackedSpawn);
+		}
+		spawned.values().removeIf(List::isEmpty);
+	}
+
+	/**
+	 * 处理一个登记对象：自带 live_time 的保留登记，其余释放。
+	 * Handles one tracked spawn: self-managed ones stay tracked, the rest are released.
+	 *
+	 * @param object 登记对象 / tracked spawn
+	 * @return 已释放返回 {@code true}，保留登记返回 {@code false} / {@code true} when released
+	 */
+	private boolean releaseTrackedSpawn(VisibleObject object) {
+		if (!shouldReleaseOnPatternReset(selfManagedSpawns.contains(object))) {
+			return false;
+		}
+		despawnForLifecycle(object);
+		return true;
+	}
+
 	private void despawn(Operation action) {
 		List<VisibleObject> objects = spawned.remove(value(action, "spawn_id"));
 		if (objects != null) {
 			objects.forEach(object -> {
 				despawnAtAttackState.remove(object);
+				selfManagedSpawns.remove(object);
 				if (object.isSpawned()) {
 					object.getController().onDelete();
 				}
@@ -2307,6 +2356,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			float dy = npc.getY() - getOwner().getY();
 			if (npc.isSpawned() && dx * dx + dy * dy < radius * radius) {
 				despawnAtAttackState.remove(npc);
+				selfManagedSpawns.remove(npc);
 				npc.getController().onDelete();
 				if (++count == maxCount) {
 					return;
@@ -2822,8 +2872,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		cancelQueuedActions(tasksToCancel);
 		fleeMoveTask = null;
 		fleeStopTask = null;
-		spawned.values().stream().flatMap(List::stream).forEach(this::despawnForLifecycle);
-		spawned.clear();
+		releaseTrackedSpawns();
 		pendingCutsceneTeleports.clear();
 		flags.clear();
 		intVars.clear();

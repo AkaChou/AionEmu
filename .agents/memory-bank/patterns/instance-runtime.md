@@ -2,10 +2,10 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-008`
+> Pattern IDs: `IR-001`–`IR-009`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-16
 
 ---
 
@@ -165,3 +165,29 @@ first_check: getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(p
 - 触发条件很常见：NPC 被另一个 NPC、环境伤害、GM 命令杀死，或对玩家已离线/aggro 已清空时死亡 → `getMostPlayerDamage()` 返回 `null`。
 - 危害不止“少发一个包”：异常会**中断 onDie 剩余逻辑**（点位累加、`deleteNpc`、`spawn` 都不会执行），因此必须彻底消除。
 - 两层防护：① `PacketSendUtility.sendPacket` 判空（覆盖全部 94 个 `getMostPlayerDamage()` 消费点的崩溃面）；② 25 个实例脚本的 `sendMovie` 在 `movies.add` 之前判空（避免“播给 null 却标记已播”），由 `InstanceMovieNullGuardTest` 闸门守护（要求至少扫到 20 个声明文件，防止包路径变动导致闸门静默失效）。
+
+---
+
+## [IR-009] 九、pattern 临时子对象的 live_time 与生成者状态重置解耦 (PATTERN_SPAWN_LIVE_TIME_SURVIVES_SPAWNER_RESET)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: RetailPatternAI2 的 spawn/spawn_on_target 系列动作创建的临时 NPC，及其在 resetPatternState 中的清理
+first_seen: 2026-09-16
+last_verified: 2026-09-16
+symptom: 卵孵化出的召唤物只短暂出现就消失（真端数据写的是 live_time=18）；同类“带 live_time 的临时召唤物”都如此
+root_cause: despawn_self → NpcController#onDespawn → AIEventType.DESPAWNED → handleDespawned → resetPatternState 把所有 spawn_id 登记对象统一 despawnForLifecycle，忽略对象自带的 live_time，刚生成的召唤物在同一调用栈内被删除
+fix_or_guardrail: 自带 live_time 的对象在 resetPatternState 中只保留登记（显式 <despawn spawn_id> 仍可清理），由自己的到期任务删除；live_time=0 的标记物/门等继续随重置删除
+evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2257; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2299; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2311; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2875; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1105
+validation: focused-test（RetailPatternAI2Test 78 例 0 失败，2026-09-16；新增 patternResetKeepsSelfManagedLiveTimeSpawns 断言 live_time 对象不随重置删除、live_time=0 对象仍被删除）；runtime/client validation not implied（孵化物是否活满 18 秒需真端复核）
+boundaries: 真端只用显式 <despawn spawn_id> 表达“随生成者清理”；本护栏不得让显式 despawn 失效。despawn_at_attack_state=FALSE 的“战斗中延迟删除”语义保持不变
+superseded_by: none
+first_check: resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放
+-->
+
+- **症状**：Taloc's Hollow 的 mosqua egg（282006）孵化出的 workmanfly（282082）只闪一下/存活极短就消失，而真端 pattern 给它的是 `live_time=18`。
+- **根因链**：
+  1. `spawn_on_target` 生成 282082 时带 `spawn_id=SPAWN_ID_1`，被登记进 `RetailPatternAI2#spawned`，同时排了自己的 18 秒到期任务；
+  2. 同一条动作链末尾的 `despawn_self` 删除卵自身 → `NpcController#onDespawn` 抛 `AIEventType.DESPAWNED` → `handleDespawned()` → `resetPatternState()`；
+  3. 原实现对 `spawned` 一律 `despawnForLifecycle`，而该对象 `despawn_at_attack_state=TRUE`、且不在战斗 → 立即 `onDelete()`：召唤物活不到自己的 18 秒。
+- **真端依据**：真端只在需要“随生成者清理”时写显式 `<despawn spawn_id>`（同一个文件里 `Elim_NeutflyNm.on_die` 就是这样清理 SPAWN_ID_1/2/3 的），而 `Elim_NeutflyEgg` 对 SPAWN_ID_1 没有任何 despawn——孵化物应当独立活满 `live_time`。
+- **修复与边界**：按对象是否自带 `live_time` 区分——自带者只保留登记（显式 despawn 仍有效），由到期任务删除；`live_time=0` 的标记物/门继续随重置删除。`shouldDelayLifecycleDespawn`（战斗中延迟删除）语义未变。

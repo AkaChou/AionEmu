@@ -1102,6 +1102,28 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void patternResetKeepsSelfManagedLiveTimeSpawns() throws ReflectiveOperationException {
+		// 自带 live_time 的召唤物（如卵孵化出的 workmanfly）由自己的到期任务清理，不随生成者状态重置被删除。
+		// Spawns with their own live_time (e.g. the workmanfly hatched from the mosqua egg) are cleaned up by their own
+		// expiry task and survive the spawner's state reset.
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		RecordingVisibleObjectController summonController = new RecordingVisibleObjectController();
+		RecordingVisibleObject summon = new RecordingVisibleObject(summonController);
+		RecordingVisibleObjectController markerController = new RecordingVisibleObjectController();
+		RecordingVisibleObject marker = new RecordingVisibleObject(markerController);
+		spawned(ai).put("SPAWN_ID_1", new ArrayList<>(List.of(summon)));
+		spawned(ai).put("SPAWN_ID_2", new ArrayList<>(List.of(marker)));
+		selfManagedSpawns(ai).add(summon);
+
+		resetPatternState(ai);
+
+		assertEquals(0, summonController.deletes, "自带 live_time 的召唤物不应随 pattern 重置被删除");
+		assertEquals(1, markerController.deletes, "live_time=0 的登记对象仍应随 pattern 重置被删除");
+		assertTrue(spawned(ai).containsKey("SPAWN_ID_1"), "自带 live_time 的对象应保留登记，显式 despawn 仍然有效");
+		assertFalse(spawned(ai).containsKey("SPAWN_ID_2"), "已释放对象的登记应被清理");
+	}
+
+	@Test
 	void supportsSpawningOnSelectedAttacker() {
 		Operation spawn = new Operation("spawn_on_target_by_attacker_indicator", Map.ofEntries(
 			Map.entry("target", "ATTACKERI_RANDOM_ONE"), Map.entry("spawn_id", "SPAWN_ID_1"),
@@ -1971,6 +1993,13 @@ class RetailPatternAI2Test {
 		Field field = RetailPatternAI2.class.getDeclaredField("spawned");
 		field.setAccessible(true);
 		return (Map<String, List<VisibleObject>>) field.get(ai);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Set<VisibleObject> selfManagedSpawns(RetailPatternAI2 ai) throws ReflectiveOperationException {
+		Field field = RetailPatternAI2.class.getDeclaredField("selfManagedSpawns");
+		field.setAccessible(true);
+		return (Set<VisibleObject>) field.get(ai);
 	}
 
 	@SuppressWarnings("unchecked")
