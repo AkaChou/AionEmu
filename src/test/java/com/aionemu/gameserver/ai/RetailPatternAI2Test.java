@@ -1124,6 +1124,28 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void spawnerEndEventSpawnsKeepIndependentLifetime() throws ReflectiveOperationException {
+		// 生成者死亡/消失事件链里生成的子对象（例如 Celestius 死后现身的卡斯帕的幻影 799503）必须活过生成者自身的
+		// 状态重置，否则会在同一次死亡处理里被删除；可逆的脱战事件仍随重置释放子对象。
+		// Children spawned by the spawner's death/despawn event chain (e.g. CaspaGhost_01 / 799503 that only appears
+		// after Celestius dies) must outlive the spawner's own state reset, otherwise they are deleted inside the same
+		// death handling; reversible combat-exit events keep releasing their children with the reset.
+		assertEquals(Set.of("on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn"),
+			spawnerEndEvents(), "只有生成者生命周期结束的事件才把子对象交给独立生命周期");
+		assertFalse(spawnerEndEvents().contains("on_leave_attack_state"), "脱战事件不是生命周期结束，子对象仍随重置释放");
+		assertFalse(RetailPatternAI2.hasIndependentLifetime(0, false), "普通战斗子对象仍随 pattern 重置删除");
+		assertTrue(RetailPatternAI2.hasIndependentLifetime(18, false), "自带 live_time 的子对象独立于重置");
+		assertTrue(RetailPatternAI2.hasIndependentLifetime(0, true), "死亡/消失事件链里生成的子对象独立于重置");
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Set<String> spawnerEndEvents() throws ReflectiveOperationException {
+		Field field = RetailPatternAI2.class.getDeclaredField("SPAWNER_END_EVENTS");
+		field.setAccessible(true);
+		return (Set<String>) field.get(null);
+	}
+
+	@Test
 	void supportsSpawningOnSelectedAttacker() {
 		Operation spawn = new Operation("spawn_on_target_by_attacker_indicator", Map.ofEntries(
 			Map.entry("target", "ATTACKERI_RANDOM_ONE"), Map.entry("spawn_id", "SPAWN_ID_1"),

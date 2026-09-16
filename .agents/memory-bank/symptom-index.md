@@ -32,6 +32,7 @@
 | NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility） | `IR-008` | getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度 |
 | 卵孵化出的召唤物只短暂出现就消失（真端数据写的是 live_time=18）；同类“带 live_time 的临时召唤物”都如此 | `IR-009` | resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放 |
 | 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去） | `IR-010` | 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径 |
+| 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付） | `IR-011` | resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |

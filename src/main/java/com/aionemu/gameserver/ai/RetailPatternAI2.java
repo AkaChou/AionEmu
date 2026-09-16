@@ -171,13 +171,20 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		"on_party_mbr_enter_attack_state");
 	private static final Set<String> TERMINAL_EVENTS = Set.of(
 		"on_leave_attack_state", "on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn");
+	// 生成者生命周期结束的事件：这些事件里生成的子对象要活过生成者自身的状态重置。
+	// Events that end the spawner's own lifecycle: children spawned by them must outlive the spawner's state reset.
+	private static final Set<String> SPAWNER_END_EVENTS = Set.of(
+		"on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn");
 	private final Map<String, Future<?>> timers = new HashMap<>();
 	private final Set<Future<?>> actionTasks = ConcurrentHashMap.newKeySet();
 	// 含 despawn_self 的延迟动作链在回位时保留。 / Delayed action chains containing despawn_self survive return-home.
 	private final Set<Future<?>> terminalActionTasks = ConcurrentHashMap.newKeySet();
 	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
 	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
-	// 自带 live_time、由自己的到期任务管理生命周期的子对象。 / Spawns whose lifetime is managed by their own live_time task.
+	// 生命周期独立于生成者状态重置的子对象：自带 live_time 的由到期任务管理；生成者死亡/消失事件链里生成的
+	// 子对象（例如死亡后才现身的对话 NPC）没有到期任务，但同样不能在生成者重置时被删除。
+	// Spawns whose lifetime is independent of the spawner's state reset: own live_time tasks, plus children spawned by
+	// the spawner's death/despawn event chains (they have no expiry task but must not die with the spawner).
 	private final Set<VisibleObject> selfManagedSpawns = new HashSet<>();
 	private final Set<String> flags = new HashSet<>();
 	private final Map<String, Integer> intVars = new HashMap<>();
@@ -185,6 +192,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private final Map<Player, ItemUseObserver> gaugeObservers = new ConcurrentHashMap<>();
 	private final Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = new ConcurrentHashMap<>();
 	private Pattern pattern;
+	// 是否正在执行生成者生命周期结束事件链 / whether a spawner-ending event chain is executing
+	private boolean spawnerEndEventInProgress;
 	private Area sensoryArea;
 	private boolean fighting;
 	private volatile long wakeUpUntil;
@@ -1028,8 +1037,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		for (Rule rule : pattern.event(event)) {
 			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
-				executeActions(rule.actions(), 0, eventTarget, message, TERMINAL_EVENTS.contains(event),
-					supportsImmediateTerminalCleanup(event, rule.actions()));
+				boolean previousSpawnerEndEvent = spawnerEndEventInProgress;
+				spawnerEndEventInProgress = previousSpawnerEndEvent || SPAWNER_END_EVENTS.contains(event);
+				try {
+					executeActions(rule.actions(), 0, eventTarget, message, TERMINAL_EVENTS.contains(event),
+						supportsImmediateTerminalCleanup(event, rule.actions()));
+				} finally {
+					spawnerEndEventInProgress = previousSpawnerEndEvent;
+				}
 				return;
 			}
 		}
@@ -2253,7 +2268,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			if (trackedBySpawnId || liveTime > 0) {
 				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
 			}
-			if (liveTime > 0) {
+			if (hasIndependentLifetime(liveTime, spawnerEndEventInProgress)) {
 				selfManagedSpawns.add(spawned);
 			}
 			if (trackedBySpawnId) {
@@ -2290,23 +2305,40 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	/**
+	 * 子对象是否与生成者的状态重置解耦。
+	 * Whether a child spawn keeps its lifetime independent of the spawner's state reset.
+	 *
+	 * @param liveTime 自带存活秒数 / own lifetime in seconds
+	 * @param spawnerEndEvent 是否在生成者生命周期结束事件链中生成 / whether it was spawned by a spawner-ending event chain
+	 * @return 解耦返回 {@code true} / {@code true} when the spawn survives the spawner's reset
+	 */
+	static boolean hasIndependentLifetime(int liveTime, boolean spawnerEndEvent) {
+		return liveTime > 0 || spawnerEndEvent;
+	}
+
+	/**
 	 * pattern 状态重置（回位/死亡/despawn）时是否释放登记的临时子对象。
 	 * Whether a tracked temporary spawn is released when the pattern state resets.
 	 *
-	 * @param selfManagedLifetime 是否自带 {@code live_time} / whether the spawn owns a {@code live_time}
+	 * @param independentLifetime 生命周期是否独立于生成者 / whether the spawn owns an independent lifetime
 	 * @return 需要释放返回 {@code true}，保留返回 {@code false} / {@code true} when it must be released
 	 */
-	static boolean shouldReleaseOnPatternReset(boolean selfManagedLifetime) {
-		return !selfManagedLifetime;
+	static boolean shouldReleaseOnPatternReset(boolean independentLifetime) {
+		return !independentLifetime;
 	}
 
 	/**
 	 * 释放 pattern 状态登记的临时子对象。
-	 * 自带 {@code live_time} 的对象（例如卵孵化出的召唤物）由自己的到期任务清理，只保留登记，不随生成者状态重置删除；
-	 * 其余对象（{@code live_time=0} 的标记物、门等）没有别的清理路径，继续随重置删除。
-	 * Releases tracked temporary spawns. Objects with their own {@code live_time} (such as a summon hatched by an egg) are
-	 * cleaned up by their expiry task and only stay tracked; the rest (markers, doors and similar {@code live_time=0}
-	 * spawns) have no other cleanup path and keep being deleted together with the reset.
+	 * 生命周期独立于生成者的对象只保留登记、不随生成者状态重置删除：自带 {@code live_time} 的（例如卵孵化出的
+	 * 召唤物）由自己的到期任务清理；生成者死亡/消失事件链里生成的（例如死亡后才现身的对话 NPC）由显式
+	 * {@code despawn}、{@code live_time} 或副本清理接管。其余对象（{@code live_time=0} 的标记物、门等）没有别的
+	 * 清理路径，继续随重置删除。
+	 * Releases tracked temporary spawns. Spawns whose lifetime is independent of the spawner only stay tracked and are
+	 * not deleted with the spawner's state reset: spawns with their own {@code live_time} (such as a summon hatched by an
+	 * egg) are cleaned up by their expiry task, and spawns created by the spawner's death/despawn event chain (such as a
+	 * dialogue NPC that only appears after the kill) are handed to explicit {@code despawn}, {@code live_time} or
+	 * instance teardown. The rest (markers, doors and similar {@code live_time=0} spawns) have no other cleanup path and
+	 * keep being deleted together with the reset.
 	 */
 	private void releaseTrackedSpawns() {
 		for (List<VisibleObject> objects : spawned.values()) {

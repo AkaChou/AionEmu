@@ -212,3 +212,29 @@ first_check: 对齐真端时被删除的实例脚本副作用（特效实体、�
 - **根因链**：真端副作用由 `Elim_WindEventB.on_die` 承担（置 `IDElim_2F_Wind=1` → 条件 3085 刷 `281817`，并开 `MOVING_COLLISION_WINDBOX` sunzone 100）；该 NPC 模板 AI 名是 `noaction`，`RetailPatternAI2.supports` 门禁不通过时 `AI2Engine.selectNpcAi` 静默回落到模板 AI，既无日志也无异常，表现就是“整块特效消失”。
 - **护栏**：实例层用条件变量 + 动态区域 API 触发真端链路，与 pattern 的副作用等价且幂等（条件激活后不重复刷怪）；坐标、`entity_id`、sunzone 全部以真端数据为唯一来源。
 - **边界**：这条兜底只保证副作用一定发生，不替代 pattern 行为取证；模板 AI 名 ≠ 真端 pattern 名时门禁失败是静默的，判断“pattern 是否接管”必须逐 NPC 核对。
+
+## [IR-011] 十一、生成者死亡/消失事件链生成的子对象不随生成者状态重置删除 (PATTERN_SPAWN_SURVIVES_SPAWNER_DEATH_RESET)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: RetailPatternAI2 的 spawn/spawn_on_target 系列动作在 on_die / on_killed_by_user / on_killed_by_npc / on_despawn 事件链里创建的子对象及其释放时机
+first_seen: 2026-09-16
+last_verified: 2026-09-16
+symptom: 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付）
+root_cause: NpcController 先抛 DIED 触发 on_killed_by_user（spawn 登记进 spawned[SPAWN_ID_n]），再抛 DIED 触发 handleDied → resetPatternState → releaseTrackedSpawns；live_time=0 的子对象不属于 selfManagedSpawns，被 despawnForLifecycle 在同一调用栈内 onDelete，客户端看不到实体
+fix_or_guardrail: 新增 SPAWNER_END_EVENTS(on_die/on_killed_by_user/on_killed_by_npc/on_despawn) 与 spawnerEndEventInProgress 标记，spawnAt 用 hasIndependentLifetime(liveTime, spawnerEndEventInProgress) 判断；这类子对象与 live_time 对象一样只保留登记、不随生成者状态重置删除
+evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:176; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1040; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2271; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2315; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2343; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1127; src/main/java/com/aionemu/gameserver/controllers/NpcController.java:244; src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelim_osy.xml:11; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:10453; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:65623; src/main/resources/aion/data/static_data/quest_definition/quests/10032.xml:279; commit 5ccb10261; .agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md
+validation: 静态取证（死亡事件链顺序、登记与释放判定、799503 无其它生成入口）已完成；聚焦测试 mvn -B test -Dtest='RetailPatternAI2Test' 通过（2026-09-16，79 例 0 失败 0 错误，BUILD SUCCESS，工作区含并行改动、非 A/B 隔离）；客户端实机验收 PENDING
+boundaries: 显式 <despawn spawn_id> 与 live_time 到期任务语义不变；可逆的 on_leave_attack_state（脱战，90 处 spawn 动作）仍随回位重置释放；这类子对象不再随生成者回位/重生自动回收，清理交给真端显式动作或副本销毁；异步延迟链（技能后接 spawn）在死亡处理中本就会被 resetPatternState 取消，不在本护栏范围内；护栏只影响此前“生成后立刻被同一调用栈删除”的无效 spawn，不会改变已在生效的交互对象
+superseded_by: none
+first_check: resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开
+-->
+
+- **症状**：击杀 Celestius（215488/246242）后，真端 pattern `Elim_ComadAe.on_killed_by_user` 应当刷出卡斯帕的幻影 799503（`CaspaGhost_01`，`SPAWN_ID_4`、`live_time=0`），但副本里完全没有该 NPC，任务 10032 拿到心脏后无法交付；同类“死亡时刷 NPC/传送门/控制物”的 pattern 共 127 条记录都受影响。
+- **根因链**：
+  1. `NpcController:244` 先抛 `AIEventType.DIED` 给自身 AI → `handleKilled` → `runEvent("on_killed_by_user")` → `spawn` 生成 799503 并登记进 `spawned[SPAWN_ID_4]`；
+  2. `NpcController:245` 紧接着抛 `AIEventType.DIED` 通用事件 → `handleDied()` → `runDeathEvent()` → `resetPatternState()`；
+  3. `releaseTrackedSpawns()` 只放过 `selfManagedSpawns`（IR-009 起仅 `live_time>0`），`live_time=0` 的对象走 `despawnForLifecycle()`：`despawn_at_attack_state=FALSE` 且自己不在战斗 → 立即 `onDelete()`，同一次死亡处理里被删除。
+- **真端依据**：真端 `<spawn_id>` 只用于显式 `<despawn spawn_id>`；`Elim_ComadAe.on_killed_by_user` 刷出 799503 后**没有**任何对该 spawn_id 的 despawn，说明它必须活到副本结束（IR-009 的同一原则，只是对象没有 `live_time`）。
+- **修复与边界**：死亡/消失事件链（`on_die`/`on_killed_by_user`/`on_killed_by_npc`/`on_despawn`）里生成的子对象只保留登记、不随生成者状态重置删除，显式 `<despawn>` 与 `live_time` 语义不变；可逆的脱战事件（`on_leave_attack_state`）仍随重置释放，避免每次脱战泄漏标记物。
+- **安全性论证**：这四类事件之后紧跟着 `resetPatternState()`，被标记的子对象此前一定是“生成后立即删除”的无效 spawn；护栏只让它们按真端意图可见，不会改变本已生效的对象。
+- **教训**：真端对齐把“实例脚本兜底 spawn”删掉时，必须同时确认真端动作的产物能活过引擎自己的状态重置；`live_time>0` 与 `live_time=0` 两条路径要分开核对。

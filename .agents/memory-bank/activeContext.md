@@ -17,6 +17,7 @@
   - Quest 任务流转、状态机与 NPC 交互（Taloc's Hollow 副本实例脚本、Condition Spawns、Retail AI 判定）。
   - **已沉淀**：跟随 NPC 寻路轨迹（Breadcrumb trail）与护送 AI 选型优化已修复并提炼为 `AIM-001`–`AIM-003`（见 [patterns/ai-movement.md](patterns/ai-movement.md)），证据留在 `docs/movement/escort-follow-movement-repair.md`。不再作为未完成焦点。
   - **已沉淀**：Taloc's Hollow 卵的脱战抖动与孵化物过早消失已修复并提炼为 `AIM-004`（不可移动 NPC 不因够不着放弃目标）与 `IR-009`（pattern 子对象 `live_time` 与生成者状态重置解耦）；聚焦测试 95 例 + 客户端实机验证均通过，证据留在 `.agents/summary/talocs-hollow-mosqua-egg/2026-09-16-egg-disengage-and-summon-live-time.zh-CN.md`。不再作为未完成焦点。
+  - **待验收**：任务 10032 击杀 Celestius 后卡斯帕的幻影 799503 不出现 → 已在 `RetailPatternAI2` 增加“死亡/消失事件链子对象不随生成者状态重置删除”护栏并沉淀 `IR-011`，证据在 `.agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md`；聚焦测试 `RetailPatternAI2Test` 79 例已通过（2026-09-16），**客户端实机复验仍 PENDING**（需重启后击杀 Celestius 确认 799503 现身）。
 
 ---
 
