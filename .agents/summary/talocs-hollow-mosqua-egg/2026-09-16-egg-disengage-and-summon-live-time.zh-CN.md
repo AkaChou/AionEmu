@@ -1,6 +1,6 @@
 # Queen Mosqua 卵的脱战抖动与孵化物生命周期 / Mosqua egg disengage churn and hatchling lifetime
 
-日期 / Date: 2026-09-16 · 分支 / Branch: `quest` · 状态 / Status: **已修复并通过聚焦测试；真端复测未执行**
+日期 / Date: 2026-09-16 · 分支 / Branch: `quest` · 状态 / Status: **已修复；聚焦测试与客户端实机验证均通过**
 
 关联 / Related: `AIM-004`（`patterns/ai-movement.md`）、`IR-009`（`patterns/instance-runtime.md`）、
 `.agents/summary/talocs-hollow-mosqua-egg/evidence.md`（09-14 孵化链被回位取消的修复）
@@ -58,11 +58,14 @@
 
 - `mvn test -Dtest='AttackManagerTest,AttackManagerLeashTest,RetailPatternAI2Test,TargetEventHandlerTest,SimpleAttackManagerTargetSafetyTest,SkillAttackManagerBytecodeTest,FollowManagerTest,GetMostPlayerDamageNullGateTest,InstanceMovieNullGuardTest'`
   → **95 例 / 0 失败 / 0 错误，BUILD SUCCESS**（主源码 4718 文件编译通过）。
-- 沉淀校验：`sync_memory_bank.py` + `check_memory_bank.py` → `MEMORY_BANK_OK ROUTER_IDS=44 PATTERNS=44 SYMPTOM_INDEX=44`。
-- **未做**：真端/客户端复测。
+- 沉淀校验（本修复提交 `6d847cc7c` 时）：`sync_memory_bank.py` + `check_memory_bank.py` →
+  `MEMORY_BANK_OK ROUTER_IDS=44 PATTERNS=44 SYMPTOM_INDEX=44`。此后并行任务新增的 `IR-010` 卡片尚未挂路由，
+  当前 `check_memory_bank.py` 会报 `unrouted IR-010`——与本修复无关。
+- **客户端实机验证（2026-09-16）**：用户报告通过，覆盖本次两个症状（卵反复脱战、孵化物过早消失）。
+  用户未逐项复述细节，如需可将具体现象/时间补记在本节。
 
 ## 六、真端对照验收项 / Retail acceptance
 
-1. 真端（或我们的修复后）在 300190000 远程攻击卵：不应出现反复脱战表现/音效；卵保持仇恨直到被杀。
-2. 打破卵后跟踪 282082：应存活约 18 秒、主动追击并施放技能（`NWA_Satk_Nr` 等）。
+1. 300190000 远程攻击卵：不应出现反复脱战表现/音效；卵保持仇恨直到被杀。→ **客户端验证通过（2026-09-16，用户报告）**
+2. 打破卵后跟踪 282082：应存活约 18 秒、主动追击并施放技能（`NWA_Satk_Nr` 等）。→ **客户端验证通过（2026-09-16，用户报告）**
 3. 若真端实测出现“卵也会脱战”，则以真端 `max_chase_time` 等驱动字段重新定位，不要在代码里按伤害大小判断。

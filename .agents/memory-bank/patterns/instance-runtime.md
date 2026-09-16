@@ -178,7 +178,7 @@ symptom: 卵孵化出的召唤物只短暂出现就消失（真端数据写的�
 root_cause: despawn_self → NpcController#onDespawn → AIEventType.DESPAWNED → handleDespawned → resetPatternState 把所有 spawn_id 登记对象统一 despawnForLifecycle，忽略对象自带的 live_time，刚生成的召唤物在同一调用栈内被删除
 fix_or_guardrail: 自带 live_time 的对象在 resetPatternState 中只保留登记（显式 <despawn spawn_id> 仍可清理），由自己的到期任务删除；live_time=0 的标记物/门等继续随重置删除
 evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2257; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2299; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2311; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2875; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1105
-validation: focused-test（RetailPatternAI2Test 78 例 0 失败，2026-09-16；新增 patternResetKeepsSelfManagedLiveTimeSpawns 断言 live_time 对象不随重置删除、live_time=0 对象仍被删除）；runtime/client validation not implied（孵化物是否活满 18 秒需真端复核）
+validation: focused-test（RetailPatternAI2Test 78 例 0 失败，2026-09-16；新增 patternResetKeepsSelfManagedLiveTimeSpawns 断言 live_time 对象不随重置删除、live_time=0 对象仍被删除）；客户端实机验证通过（2026-09-16，用户报告：孵化物正常存活，不再过早消失）
 boundaries: 真端只用显式 <despawn spawn_id> 表达“随生成者清理”；本护栏不得让显式 despawn 失效。despawn_at_attack_state=FALSE 的“战斗中延迟删除”语义保持不变
 superseded_by: none
 first_check: resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放

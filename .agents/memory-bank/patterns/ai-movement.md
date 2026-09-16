@@ -108,7 +108,7 @@ symptom: 卵/固定怪每次被攻击都“脱离战斗”，客户端反复播�
 root_cause: AttackManager#targetTooFar 里对不可移动 NPC 存在“有伤害就放弃目标”分支，清空仇恨后又被下一次受击或视野事件立刻拉回战斗，形成 FIGHT→IDLE→FIGHT 抖动
 fix_or_guardrail: 不可移动 NPC 在此处不放弃目标；战斗只由目标离开已知列表（NpcController#notSee 移出仇恨）或真端 max_chase_time 规则结束
 evidence: src/main/java/com/aionemu/gameserver/ai2/manager/AttackManager.java:145; src/main/java/com/aionemu/gameserver/ai2/handler/TargetEventHandler.java:105; src/main/java/com/aionemu/gameserver/ai2/handler/ThinkEventHandler.java:95; src/test/java/com/aionemu/gameserver/ai2/manager/AttackManagerTest.java:37
-validation: focused-test（AttackManagerTest / AttackManagerLeashTest / TargetEventHandlerTest / RetailPatternAI2Test 等 95 例 0 失败，2026-09-16）；真端数据核对（58Server/Map/XML/npcs_std_monsters.xml 的 282006：0 移速、max_chase_time=0；NpcAIPatterns_IDElim_OSY.xml 的 Elim_NeutflyEgg：on_enter_attack_state=do_nothing）；runtime/client validation not implied
+validation: focused-test（AttackManagerTest / AttackManagerLeashTest / TargetEventHandlerTest / RetailPatternAI2Test 等 95 例 0 失败，2026-09-16）；真端数据核对（58Server/Map/XML/npcs_std_monsters.xml 的 282006：0 移速、max_chase_time=0；NpcAIPatterns_IDElim_OSY.xml 的 Elim_NeutflyEgg：on_enter_attack_state=do_nothing）；客户端实机验证通过（2026-09-16，用户报告：卵不再反复脱战）
 boundaries: 仅适用于不可移动 NPC；可移动 NPC 仍按 max_chase_time / react_to_pathfind_fail 处理。被删除的 shouldKeepTargetWhenImmobile / hasOffensiveSkill / isOffensiveSkill 若要恢复，必须先给出真端证据
 superseded_by: none
 first_check: AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARGET_GIVEUP
