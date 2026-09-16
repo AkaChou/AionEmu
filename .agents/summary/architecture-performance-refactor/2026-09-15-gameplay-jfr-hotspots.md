@@ -429,3 +429,36 @@ GC：296s 内 4 次暂停（88.0ms + 44.2ms + 8.80ms + 0.07ms），合计约 141
 2. `GameEventServices.eventService()` 3.56 MB：与 1a 完全同类的漏网门面缓存（全仓 `getIfAvailable(` 有 604 处，应按 JFR 热点逐个补，而不是全量重构）。
 3. `RetailPatternAI2` 条件评估（`usesNpcParty` 4.67 / `supports` / `hasCompleteMasterData` / `supportsMoveType` / `hasWorldSceneConsumer`）与 `CreatureGameStats.getStatsByStatEnum`（2.85 + 每 stat 一个 `TreeMap$Entry`）、`KnownList.knownObjectsSnapshot`（6.05，长列表拷贝）。
 4. 之后才是 quest 侧第 3 步（版本化缓存）：当前 quest 侧剩余成本已明显下降，需要重新测量后再决定是否值得引入高风险的失效点清单。
+
+### 12.6 勘误：`ThreadAllocationStatistics` 必须按 `javaThreadId` 聚合（play-11 复算）
+
+12.4/12.5 里「`static-data-loader` 415~450 MB」「`LongRunningPool` 456 MB」「进程合计 1.1 GB」的结论**作废**——那是聚合 bug，不是真实分配。
+
+根因：`jdk.ThreadAllocationStatistics` 的 `thread` 字段同时带名字和 `javaThreadId`。若按**线程名**做 key，同名池线程会被合并成一条时间序列（`static-data-loader` 有 `CPU+5`=15 个线程、`LongRunningPool-*` 有 10 个以上），`max-min` 于是变成「两个不同线程各自累计值之差」，凭空造出几百 MB。事件本身带 `javaThreadId`，必须用它做 key 再按线程名归组。
+
+修正后（300s 窗口，按 `javaThreadId` 聚合）：
+
+| 线程组 | `play-9` | `play-10` | `play-11` |
+|---|---|---|---|
+| **`pool-*-thread-*`（含 pool-4）** | 175.1 MB | 152.5 MB | **133.2 MB** |
+| `pathfinder`（A* 线程） | 97.0 MB | 39.8 MB | 138.5 MB |
+| `ForkJoinPool-*-worker-*` | 37.9 MB | 21.4 MB | 47.9 MB |
+| `PacketProcessor:*` | 25.7 MB | 32.0 MB | 12.5 MB |
+| `multiThreadIoEventLoopGroup-*-*` | 10.1 MB | 9.4 MB | 11.6 MB |
+| `RMI TCP Connection(*)` | 7.2 MB | 7.2 MB | 7.0 MB |
+| **合计（有增量的线程）** | **354.8 MB** | **263.9 MB** | **352.3 MB** |
+| `static-data-loader`（15 线程，空闲） | 0.0 MB | 0.0 MB | 0.0 MB |
+| `LongRunningPool-*`（10+ 线程） | 0.0 MB | 0.0 MB | 0.0 MB |
+
+结论修正：
+
+- **仍然成立**：`pool-4` 精确分配 174.1 → 151.5 → **132.3 MB（两轮 quest 优化 −24%）**；12.5 的站点级归零是采样口径，与本次聚合 bug 无关，继续有效。
+- **不成立**：进程总量「1.1 GB」「−1.2% / −7%」；「`static-data-loader` 是常驻加载负担」；`LongRunningPool` 456 MB。`static-data-loader` 与 `LongRunningPool` 在窗口内**没有可测量的分配**（线程空闲，管理线程名下的 0 MB）。
+- `play-11` 总量高于 `play-10` 的原因是 `pathfinder` 39.8 → 138.5 MB（本轮寻路量大增），不是回归。
+
+因此第 4 步的优先级修正为：
+
+1. **`pathfinder`**（97.0/39.8/138.5 MB，随寻路量线性变化）与 **`pool-4`**（133.2 MB）两条真实大头；`static-data-loader` 立项取消。
+2. 采样口径已定位、待处理：`RetailPatternAI2` 条件评估（`usesNpcParty`/`supports`/`hasCompleteMasterData`/`supportsMoveType`/`hasWorldSceneConsumer`）、`CreatureGameStats.getStatsByStatEnum`、`KnownList.knownObjectsSnapshot`、`GameEventServices.eventService()`（同类漏网门面缓存）。
+
+**口径纪律**：此后所有 per-thread 统计一律按 `javaThreadId` 聚合，再按名字分组展示。
