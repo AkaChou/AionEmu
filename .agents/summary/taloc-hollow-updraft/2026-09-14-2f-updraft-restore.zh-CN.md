@@ -43,6 +43,7 @@
 
 - **2026-09-16 实机验收通过（用户确认）**：打破破裂巨虫卵后，卵位置地面升起气流，可骑乘气流垂直上升。
 - 提交：修复代码由 `5830ece07` 落库（`TalocsHollowInstance.java:220-228`）；本证据文档随 `0823653a7` 落库。
+- **2026-09-16 全量 Maven 测试通过（用户授权执行）**：`rtk mvn -B test` → `Tests run: 3282, Failures: 0, Errors: 0, Skipped: 2`，`BUILD SUCCESS`，耗时 3 分 05 秒；运行对象为当时工作区（HEAD `d49e27015` + 并行任务未提交改动），因此该结果是"当前整体可编译且全量单测通过"的证据，不等同于本任务单点的隔离验证。
 - 未按 A/B 隔离取证：没有单独验证 `Elim_WindEventB` pattern 当时是否已被 `AI2Engine.selectNpcAi` 接管，因此“适配器是本次唯一生效路径”未经隔离证明；可复用的结论与边界已提炼为 `IR-010`（`.agents/memory-bank/patterns/instance-runtime.md`）。
 
 ## 验收边界（历史记录）

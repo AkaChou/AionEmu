@@ -202,7 +202,7 @@ symptom: 对齐真端数据后，实例里原本必然出现的特效或托起�
 root_cause: 实例脚本里原先把副作用写死的兜底（直接 spawn 特效 NPC、广播系统消息）被删除，改为完全依赖真端 pattern；该 NPC 的模板 AI 名不是真端 pattern 名，AI2Engine.selectNpcAi 在 RetailPatternAI2.supports 门禁不通过时会静默回落到模板 AI，副作用整块不执行且日志无报错
 fix_or_guardrail: 迁移时在实例生命周期事件里保留幂等适配器，直接驱动真端执行器（RetailConditionSpawnEngine.setVariable 设条件变量、RetailDynamicAreaEngine.setEnabled 开地面移动碰撞），坐标与实体 ID 仍取真端数据；条件已激活时不重复刷怪，因此 pattern 正常接管时不会产生第二份实体
 evidence: commit 5830ece07; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java:220; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:31056; src/main/resources/aion/definitions/compact/ai/dynamic-areas.xml:218; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:59884; .agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md
-validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；未按 A/B 隔离 pattern 是否接管，未执行 Maven/JUnit
+validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；全量 Maven 测试 3282 例、0 失败、2 跳过（2026-09-16 mvn -B test，含当时工作区并行改动）；未按 A/B 隔离 pattern 是否接管
 boundaries: 适配器只允许驱动真端执行器，禁止把真端刷怪坐标复制进实例脚本；同一条件变量/动态区域重复开启必须保持幂等；不改变真端 pattern 自身的动作顺序与清理语义
 superseded_by: none
 first_check: 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径
