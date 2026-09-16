@@ -123,7 +123,9 @@ public class Terrain {
 	 * @param results 碰撞结果收集器 / collision results collector
 	 */
 	public void collideAtOrigin(Ray ray, CollisionResults results) {
-		collideNearXY(ray.origin.x, ray.origin.y, ray, new Vector3f(), new Vector3f(), new Vector3f(), results);
+		CollisionScratch scratch = COLLISION_SCRATCH.get();
+		collideNearXY(ray.origin.x, ray.origin.y, ray, scratch.p1or4, scratch.p2, scratch.p3, scratch.contactPoint,
+				results);
 	}
 
 	/**
@@ -144,14 +146,19 @@ public class Terrain {
 			return false;
 		}
 		float checkDistanceLimit = distance2D + HEIGHTMAP_UNIT_SIZE;
-		Vector3f p1or4 = new Vector3f(), p2 = new Vector3f(), p3 = new Vector3f();
+		// 顶点缓冲与交点缓冲改为每线程复用：原实现每次检测、每个网格步都 new Vector3f()
+		// （play-12 该站点 11.7MB/300s）。这些缓冲不会写入 results，只有交点会被 CollisionResult 持有。
+		// Vertices and the hit-point buffer are now reused per thread: the old code allocated a Vector3f per
+		// probe and per grid step (11.7MB/300s in play-12). None of them escape into results except the hit point.
+		CollisionScratch scratch = COLLISION_SCRATCH.get();
+		Vector3f p1or4 = scratch.p1or4, p2 = scratch.p2, p3 = scratch.p3;
 		for (int checkDistance = 0; checkDistance < checkDistanceLimit; checkDistance += HEIGHTMAP_UNIT_SIZE) {
 			float distanceFactor = checkDistance / distance2D;
 			float x = ray.origin.x + distanceX * distanceFactor;
 			float y = ray.origin.y + distanceY * distanceFactor;
-			if (collideNearXY(x, y, ray, p1or4, p2, p3, results)
-				|| collideNearXY(x + HEIGHTMAP_UNIT_SIZE, y, ray, p1or4, p2, p3, results)
-				|| collideNearXY(x, y + HEIGHTMAP_UNIT_SIZE, ray, p1or4, p2, p3, results)) {
+			if (collideNearXY(x, y, ray, p1or4, p2, p3, scratch.contactPoint, results)
+				|| collideNearXY(x + HEIGHTMAP_UNIT_SIZE, y, ray, p1or4, p2, p3, scratch.contactPoint, results)
+				|| collideNearXY(x, y + HEIGHTMAP_UNIT_SIZE, ray, p1or4, p2, p3, scratch.contactPoint, results)) {
 				return true;
 			}
 		}
@@ -168,10 +175,12 @@ public class Terrain {
 	 * @param p1or4 复用顶点缓冲 / reusable vertex
 	 * @param p2 复用顶点缓冲 / reusable vertex
 	 * @param p3 复用顶点缓冲 / reusable vertex
+	 * @param contactPoint 复用交点缓冲（仅当 results 为 null 时使用） / reusable hit-point buffer (used only when results is null)
 	 * @param results 结果收集器（可为 null） / results (may be null)
 	 * @return 若 hit 则为 true / true if hit
 	 */
-	private boolean collideNearXY(float x, float y, Ray ray, Vector3f p1or4, Vector3f p2, Vector3f p3, CollisionResults results) {
+	private boolean collideNearXY(float x, float y, Ray ray, Vector3f p1or4, Vector3f p2, Vector3f p3,
+			Vector3f contactPoint, CollisionResults results) {
 		int xIndexNorth = (int) (x / HEIGHTMAP_UNIT_SIZE);
 		int yIndexWest = (int) (y / HEIGHTMAP_UNIT_SIZE);
 		int yIndexEast = yIndexWest + 1;
@@ -192,23 +201,40 @@ public class Terrain {
 		int xSouth = xNorth + HEIGHTMAP_UNIT_SIZE;
 		p2.set(xNorth, yEast, z2);
 		p3.set(xSouth, yWest, z3);
-		Vector3f contactPoint = new Vector3f();
-		if ((Float.isNaN(z1) || !ray.intersectWhere(p1or4.set(xNorth, yWest, z1), p2, p3, contactPoint))
-			&& (Float.isNaN(z4) || !ray.intersectWhere(p1or4.set(xSouth, yEast, z4), p2, p3, contactPoint))) {
+		// 收集结果时交点会被 CollisionResult 长期持有，必须每次新建；只做可见性判定的路径复用线程本地缓冲。
+		// When collecting results the hit point is retained by a CollisionResult, so it must stay a fresh
+		// instance; the visibility-only path reuses the thread-local buffer.
+		Vector3f contact = results == null ? contactPoint : new Vector3f();
+		if ((Float.isNaN(z1) || !ray.intersectWhere(p1or4.set(xNorth, yWest, z1), p2, p3, contact))
+			&& (Float.isNaN(z4) || !ray.intersectWhere(p1or4.set(xSouth, yEast, z4), p2, p3, contact))) {
 			return false;
 		}
-		float distance = contactPoint.distance(ray.origin);
+		float distance = contact.distance(ray.origin);
 		if (distance > ray.getLimit()) {
 			return false;
 		}
 		if (results != null) {
 			if (results.shouldInvalidateSlopingSurface() && getMaximumZDiff(p1or4, p2, p3) > HEIGHTMAP_UNIT_SIZE) {
-				contactPoint.setZ(Float.NaN);
+				contact.setZ(Float.NaN);
 			}
-			results.addCollision(new CollisionResult(contactPoint, distance));
+			results.addCollision(new CollisionResult(contact, distance));
 		}
 		return true;
 	}
+
+	/**
+	 * 地形碰撞的每线程临时缓冲（顶点与交点，均不逃逸到结果集）。
+	 * Per-thread temporaries for terrain collision (vertices and hit point; neither escapes into results).
+	 */
+	private static final class CollisionScratch {
+		private final Vector3f p1or4 = new Vector3f();
+		private final Vector3f p2 = new Vector3f();
+		private final Vector3f p3 = new Vector3f();
+		private final Vector3f contactPoint = new Vector3f();
+	}
+
+	/** 每线程地形碰撞 scratch。 / Per-thread terrain-collision scratch. */
+	private static final ThreadLocal<CollisionScratch> COLLISION_SCRATCH = ThreadLocal.withInitial(CollisionScratch::new);
 
 	/**
 	 * 按网格索引取高度；越界返回 NaN，边界返回 0。

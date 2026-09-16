@@ -344,9 +344,19 @@ public final class BIHNode {
 		inv.multNormal(r.getDirection(), r.getDirection());
 		// inv.multNormalAcross(r.getDirection(), r.getDirection());
 
-		float[] origins = { r.getOrigin().x, r.getOrigin().y, r.getOrigin().z };
+		// 轴原点与方向倒数改为复用每线程数组：原实现每次遍历分配两个 float[3]
+		// （play-12 该站点 9.8MB/300s 的 float[]）。
+		// Axis origins and inverse directions now reuse per-thread arrays: the old code allocated two float[3]
+		// per traversal (9.8MB/300s of float[] at this site in play-12).
+		float[] origins = scratch.origins;
+		origins[0] = r.getOrigin().x;
+		origins[1] = r.getOrigin().y;
+		origins[2] = r.getOrigin().z;
 
-		float[] invDirections = { 1f / r.getDirection().x, 1f / r.getDirection().y, 1f / r.getDirection().z };
+		float[] invDirections = scratch.invDirections;
+		invDirections[0] = 1f / r.getDirection().x;
+		invDirections[1] = 1f / r.getDirection().y;
+		invDirections[2] = 1f / r.getDirection().z;
 
 		r.getDirection().normalizeLocal();
 
@@ -471,6 +481,8 @@ public final class BIHNode {
 		private final Vector3f v1 = new Vector3f();
 		private final Vector3f v2 = new Vector3f();
 		private final Vector3f v3 = new Vector3f();
+		private final float[] origins = new float[3];
+		private final float[] invDirections = new float[3];
 	}
 
 	/** 每线程的射线查询 scratch。 / Per-thread ray-query scratch. */

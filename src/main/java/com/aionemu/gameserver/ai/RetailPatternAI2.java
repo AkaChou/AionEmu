@@ -1112,7 +1112,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (pattern == null || isAlreadyDead() && !TERMINAL_EVENTS.contains(event)) {
 			return;
 		}
-		for (Rule rule : pattern.event(event)) {
+		// 规则列表是 ImmutableCollections 的 ListN：for-each 会为每个事件新建一个 ListItr
+		// （play-12 该站点 6.4MB/300s），改按下标遍历以消除这次分配。
+		// The rule list is an ImmutableCollections ListN: for-each allocated a ListItr per event
+		// (6.4MB/300s at this site in play-12), so iterate by index instead.
+		List<Rule> rules = pattern.event(event);
+		for (int ruleIndex = 0, ruleCount = rules.size(); ruleIndex < ruleCount; ruleIndex++) {
+			Rule rule = rules.get(ruleIndex);
 			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
 				if (isLogging() && SPAWNER_END_EVENTS.contains(event)) {
 					AI2Logger.info(this, "Terminal event " + event + " rule priority=" + rule.priority()

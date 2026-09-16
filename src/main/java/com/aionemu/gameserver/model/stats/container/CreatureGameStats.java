@@ -38,6 +38,14 @@ import lombok.Getter;
 @Slf4j(access = AccessLevel.PROTECTED)
 public abstract class CreatureGameStats<T extends Creature> {
 	private static final int ATTACK_MAX_COUNTER = Integer.MAX_VALUE;
+	/**
+	 * 无额外计算类型的共享空数组：原实现在 {@link #getStat(StatEnum, int)} 里每次 new CalculationType[0]
+	 * （play-12 该站点 1.8MB/300s）。数组为空且只读，可安全共享。
+	 * Shared empty array for "no extra calculation types": the old code allocated a fresh
+	 * CalculationType[0] inside {@link #getStat(StatEnum, int)} (1.8MB/300s in play-12). The array is empty and
+	 * never written, so sharing it is safe.
+	 */
+	private static final CalculationType[] NO_CALCULATION_TYPES = new CalculationType[0];
 	private long lastGeoUpdate = 0;
 	private final Map<StatEnum, TreeSet<IStatFunction>> stats;
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -135,7 +143,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, int base) {
-		return getStat(statEnum, base, new CalculationType[0]);
+		return getStat(statEnum, base, NO_CALCULATION_TYPES);
 	}
 
 	/** 获取属性。 / Returns the stat. */

@@ -115,10 +115,15 @@ public final class Ray implements Cloneable, Collidable {
 		float dirDotEdge1xDiff;
 		float sign;
 		Vector3f edge2;
-		Vector3f tempVa = Vector3f.newInstance();
-		Vector3f tempVb = Vector3f.newInstance();
-		Vector3f tempVc = Vector3f.newInstance();
-		Vector3f tempVd = Vector3f.newInstance();
+		// 临时向量改用每线程固定实例：本方法只做纯数学运算、不递归调用自身，scratch 不会逃逸；
+		// 原实现走的“对象池”在池空时仍会 new，play-12 该站点 33.5MB/300s。
+		// Temporaries now live in fixed per-thread instances: this method is pure math and never recurses, so
+		// the scratch cannot escape. The old "pool" still allocated when empty (33.5MB/300s in play-12).
+		IntersectionScratch scratch = INTERSECTION_SCRATCH.get();
+		Vector3f tempVa = scratch.a;
+		Vector3f tempVb = scratch.b;
+		Vector3f tempVc = scratch.c;
+		Vector3f tempVd = scratch.d;
 		Vector3f diff = this.origin.subtract(v0, tempVa);
 		Vector3f edge1 = v1.subtract(v0, tempVb);
 		Vector3f norm = edge1.cross(edge2 = v2.subtract(v0, tempVc), tempVd);
@@ -135,10 +140,6 @@ public final class Ray implements Cloneable, Collidable {
 		if (dirDotDiffxEdge2 >= 0.0f && (dirDotEdge1xDiff = sign * this.direction.dot(edge1.crossLocal(diff))) >= 0.0f
 				&& (!quad ? dirDotDiffxEdge2 + dirDotEdge1xDiff <= dirDotNorm : dirDotEdge1xDiff <= dirDotNorm)
 				&& (diffDotNorm = -sign * diff.dot(norm)) >= 0.0f) {
-			Vector3f.recycle(tempVa);
-			Vector3f.recycle(tempVb);
-			Vector3f.recycle(tempVc);
-			Vector3f.recycle(tempVd);
 			if (store == null) {
 				return true;
 			}
@@ -153,10 +154,6 @@ public final class Ray implements Cloneable, Collidable {
 			}
 			return true;
 		}
-		Vector3f.recycle(tempVa);
-		Vector3f.recycle(tempVb);
-		Vector3f.recycle(tempVc);
-		Vector3f.recycle(tempVd);
 		return false;
 	}
 
@@ -282,8 +279,11 @@ public final class Ray implements Cloneable, Collidable {
 	 * @return 距离平方 / squared distance
 	 */
 	public float distanceSquared(Vector3f point) {
-		Vector3f tempVa = Vector3f.newInstance();
-		Vector3f tempVb = Vector3f.newInstance();
+		// 与 intersects 相同：改用每线程 scratch，避免每次调用分配两个向量。
+		// Same as intersects: use per-thread scratch instead of allocating two vectors per call.
+		IntersectionScratch scratch = INTERSECTION_SCRATCH.get();
+		Vector3f tempVa = scratch.a;
+		Vector3f tempVb = scratch.b;
 		point.subtract(this.origin, tempVa);
 		float rayParam = this.direction.dot(tempVa);
 		if (rayParam > 0.0f) {
@@ -293,10 +293,7 @@ public final class Ray implements Cloneable, Collidable {
 			rayParam = 0.0f;
 		}
 		tempVb.subtract(point, tempVa);
-		float len = tempVa.lengthSquared();
-		Vector3f.recycle(tempVa);
-		Vector3f.recycle(tempVb);
-		return len;
+		return tempVa.lengthSquared();
 	}
 
 	/**
@@ -366,4 +363,19 @@ public final class Ray implements Cloneable, Collidable {
 			throw new AssertionError();
 		}
 	}
+
+	/**
+	 * 求交运算的每线程临时向量（仅在本类内部使用，不逃逸）。
+	 * Per-thread temporaries for intersection math (internal use only; never escapes).
+	 */
+	private static final class IntersectionScratch {
+		private final Vector3f a = new Vector3f();
+		private final Vector3f b = new Vector3f();
+		private final Vector3f c = new Vector3f();
+		private final Vector3f d = new Vector3f();
+	}
+
+	/** 每线程求交 scratch。 / Per-thread intersection scratch. */
+	private static final ThreadLocal<IntersectionScratch> INTERSECTION_SCRATCH =
+			ThreadLocal.withInitial(IntersectionScratch::new);
 }

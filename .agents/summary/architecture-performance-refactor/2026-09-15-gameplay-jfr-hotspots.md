@@ -504,3 +504,97 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
 **测试**：`mvn -Dtest=CreatureGameStatsBytecodeTest,NpcGameStatsTest,StatFunctionsTest,AbsoluteStatEffectTest,PetrificationEffectTest,AbsoluteSnareEffectTest,WeaponDualEffectTest,KnownListTest,KnownListIterationSafetyTest,TargetRangePropertyTest test` → **46 例全绿**（含 `KnownListIterationSafetyTest` 5 例，确认还原干净）。
 
 **状态**：本轮改动尚未复测，`play-12` 数据出来后回填本节与 12.6 的对照表。
+
+### 12.8 第十/十一轮复测（`play-12`）与第十二轮改动（待授权测试）
+
+**采样**：`/tmp/play-12.jfr`，2026-09-16 21:46:58–21:51:58（300 s），进程 PID 9346 启动于 21:39:52，
+即包含 `5a15ee3ed`（AI 模式校验零分配化 + 事件门面缓存）与 `700b8e0ab`（`getStatsByStatEnum` 去整表复制）。
+解析：`/tmp/play-12-alloc.txt`（336 个 `ObjectAllocationSample`，总权重 135.7 MB）、`/tmp/play-12-cpu.txt`。
+
+#### 12.8.1 线程聚合（`ThreadAllocationStatistics`，按 `javaThreadId`，max−min，MB）
+
+| 线程组 | play-10 | play-11 | **play-12** |
+|---|---|---|---|
+| `pool-*-thread-*` | 152.7 | 133.5 | **75.0** |
+| `pathfinder` | 39.8 | 138.5 | **28.5** |
+| `ForkJoinPool-*-worker-*` | 21.4 | 48.0 | **20.2** |
+| `PacketProcessor:*` | 32.0 | 12.5 | **4.3** |
+| `multiThreadIoEventLoopGroup-*` | 9.4 | 11.6 | **7.2** |
+| `RMI TCP Connection(*)` | 7.2 | 7.0 | **7.1** |
+| **合计（有增量的线程）** | **264.0** | **352.6** | **143.8** |
+| 其中 `pool-4` 单组 | 151.7 | 132.6 | **74.0** |
+
+`pool-4` 轨迹：`play-9` 174.1 → `play-10` 151.5 → `play-11` 132.3 → **`play-12` 74.0 MB（相对 play-11 −44%）**，
+与 12.4/12.5 的 quest 快照改动方向一致。`pathfinder`/`pool-4` 的波动仍随现场寻路量变化，非受控 A/B，
+只作趋势参考。
+
+#### 12.8.2 站点级验证（`ObjectAllocationSample`，任意帧匹配，300 s）
+
+| 站点 | play-10 | play-11 | **play-12** |
+|---|---|---|---|
+| `RetailPatternAI2`（整类） | 30.86 MB (90) | 47.52 MB (186) | **9.31 MB (24)** |
+| ↳ `supports`/`usesNpcParty`/`hasCompleteMasterData`/`hasWorldSceneConsumer`/`supportsMoveType` | 21.97 MB | — | **0.000 MB（0 样本）** |
+| `GameEventServices`（整类） | 2.17 MB (5) | 4.55 MB (14) | **0.000 MB（0 样本）** |
+| `getStatsByStatEnum` | 3.27 MB (3) | 2.78 MB (4) | **0.000 MB（0 样本）** |
+| `java.util.TreeSet` | 3.27 MB (3) | 2.17 MB (3) | **0.000 MB（0 样本）** |
+
+三项 12.7 改动全部确认落地：校验子树、事件门面、stat 整表复制在 `play-12` 采不到任何分配。
+`RetailPatternAI2` 残余 9.31 MB 已不含校验路径，主要是 `runEvent` 的规则列表迭代（见 12.8.3）。
+
+#### 12.8.3 `play-12` 新的 top 分配站点（总采样 135.7 MB）
+
+| 排名 | 站点 | 权重 | 说明 |
+|---|---|---|---|
+| 1 | `Vector3f$1.create`（`Ray.intersects` 的 4 个临时向量） | 33.54 MB | 37 样本，全部来自 `SimpleAttackManager.isTargetInAttackRange → GeoService.canSee → GeoMap.canSee → Terrain.collide → Ray.intersectWhere` |
+| 2 | `Terrain.collideNearXY`（每次探测 `new Vector3f()` 交点） | 11.73 MB | 同一调用链，逐网格步 ×3 次探测 |
+| 3 | `BIHNode.intersectWhere`（`float[] origins`/`invDirections`） | 9.75 MB | 每次射线遍历两个 `float[3]` |
+| 4 | `PathData$MapData$SearchWorkspace.node` | 6.77 MB | 寻路 A\* 节点槽位 |
+| 5 | `AQS$ConditionObject.newConditionNode` | 6.65 MB | JDK `ScheduledThreadPoolExecutor` 等待队列，框架侧 |
+| 6 | `ImmutableCollections$AbstractImmutableList.iterator` | 6.39 MB | `ListN.iterator()` 的 `ListItr`，其中 6.39 MB 含 `RetailPatternAI2.runEvent:1115` 的规则列表 for-each |
+| 7 | `CreatureGameStats.getStat` | 5.73 MB | `AdditionStat` 3.93 MB（正常业务对象）+ `CalculationType[]` 1.80 MB（`getStat(StatEnum,int)` 的 `new CalculationType[0]`） |
+| 8 | `PathService.findGroundPath` / `waypoints` / `waypointSkipIndex` | 8.34 MB | 寻路结果数组（正常业务分配） |
+| 9 | `ForEach.compute` | 3.90 MB | 叶子分片后的 ForkJoin 任务对象（12.4 已从 3.4 MB/轮降到批量分片） |
+
+子站点归因：**`GeoService.canSee` 子树 55.77 MB（41%），其中 `SimpleAttackManager.isTargetInAttackRange` 54.19 MB**
+（`play-11` 同链路仅 10.10/9.30 MB）。也就是说，寻路分配降下来之后，**AI 攻击距离判定里的地形射线检测成为最大头**：
+每个 NPC 的移动任务轮询都会做最多 `距离/2 × 3` 次网格探测，每次都 `new Vector3f()`，再在 `Ray.intersects` 里
+`Vector3f.newInstance()` 出 4 个向量（该「对象池」池空即 `new`，等于没有池）。
+
+#### 12.8.4 第十二轮改动（本提交，待授权测试）
+
+1. **`Ray` 求交临时向量改用每线程 scratch**：`intersects(...)` 的 `tempVa..tempVd` 与 `distanceSquared(...)` 的
+   两个临时向量原先走 `Vector3f.newInstance()/recycle()`，而 `ObjectFactory.object()` 只是 `create()`，
+   池空时照常 `new`。改为 `IntersectionScratch` + `ThreadLocal`（私有、纯数学、无递归、不逃逸）。依据 33.54 MB。
+2. **`Terrain` 碰撞缓冲每线程复用**：`collide`/`collideAtOrigin` 的 `p1or4/p2/p3` 与 `collideNearXY` 的交点缓冲
+   移入 `CollisionScratch`；**仅当 `results == null`（可见性判定）时复用交点**，`results != null` 时仍每次
+   `new Vector3f()`——`CollisionResult` 会长期持有该引用，复用会写坏既有结果集。依据 11.73 MB。
+3. **`BIHNode.intersectWhere(Ray...)` 复用轴数组**：`origins`/`invDirections` 两个 `float[3]` 移入既有
+   `RayScratch`（赋值顺序与 `normalizeLocal()` 的相对次序保持不变）。依据 9.75 MB。
+4. **`RetailPatternAI2.runEvent` 规则列表改下标遍历**：`pattern.event(name)` 返回 `ImmutableCollections` 的
+   `ListN`，for-each 每次事件分配一个 `ListItr`。依据 6.39 MB。
+5. **`CreatureGameStats.getStat(StatEnum,int)` 共享空 varargs 数组**：`new CalculationType[0]` → 静态
+   `NO_CALCULATION_TYPES`（空数组只读，callee 不可能写入）。依据 1.80 MB。
+
+合计覆盖 `play-12` 采样总量中约 46% 的分配；`GeoService.canSee` 链路预计仅剩 `GeoMap.canSee` 自身的
+`pos/dir/Ray/CollisionResults`（约 4 MB）与 `BIHNode` 的命中对象。
+
+**测试**：`mvn -Dtest=TerrainTest,BIHTreeRayTraversalTest,BoundingBoxRayIntersectionTest,GeoMapWalkerCollisionTest,GeoWorldLoaderAionServerFormatTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,RealGeoDataConcurrencyTest,RealGeoDataLookupTest,RetailPatternAI2Test,CreatureGameStatsBytecodeTest,StatFunctionsTest test`
+→ **BUILD SUCCESS，12 个测试类 138 例全绿**：`RetailPatternAI2Test` 79 例（规则匹配与模式校验正反例）、
+`StatFunctionsTest` 18 例、`GeoWorldLoaderAionServerFormatTest` 18 例、`BIHTreeRayTraversalTest` 5 例
+（BIH 射线遍历的距离/仅首命中/limit/未命中，覆盖第 3 项）、`BoundingBoxRayIntersectionTest` 3 例、
+`GeoMapWalkerCollisionTest` 2 例、`GeoServiceGroundSearchTest` 2 例、`TerrainTest` / `GeoServiceSkillObstacleTest` /
+`CreatureGameStatsBytecodeTest` 各 1 例。注意：`RealGeoDataConcurrencyTest` 是**源码闸门**（校验 geo 装载走生命周期池、
+不在 worker 线程里改地图注册表），**不是**射线并发用例，不能当作线程本地 scratch 的并发证据。
+
+**测试盲区与补测**：`Terrain.collide` 此前**没有任何测试覆盖**（`TerrainTest` 只测 `pathHeight`，
+`GeoMapWalkerCollisionTest` 走的是 `collideWith` 而非 `terrain.collide`），而第 2 项正好改的就是它。因此新增
+`TerrainRayCollisionScratchTest`（4 例）：单线程交替 null/results 路径 1000 次结果一致；`results != null` 收集到的
+交点在地面探测 1000 次后仍未被改写（守住「收集结果时必须新建交点」这条语义）；未命中/超 limit 不写入结果集；
+8 线程 × 500 轮并发探测与单线程基线一致。
+
+**补测结果**：`mvn -Dtest=TerrainRayCollisionScratchTest,TerrainTest,BIHTreeRayTraversalTest,GeoMapWalkerCollisionTest,RealGeoDataLookupTest test`
+→ **BUILD SUCCESS，5 个测试类 16 例全绿**（新增守护测试 4 例）。该次运行的 `default-compile` 输出
+`Nothing to compile - all classes are up to date`，即 `target/classes` **未被写入**；服务器（PID 16290）的类路径首项正是
+`AionEmu-test/target/classes`，故本次测试对运行中的进程零干扰。
+
+**状态**：代码已改、静态检查与聚焦测试（138 + 16 例）均通过；`play-13` 复测待重启后进行。
