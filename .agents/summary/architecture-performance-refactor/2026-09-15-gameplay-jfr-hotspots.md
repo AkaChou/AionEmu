@@ -951,10 +951,15 @@ A 阶段新增的冻结结构（`PathData$MapLookup` ×2、`WaterVolumeStore$Wor
   `comparingDouble(score).thenComparing(comparingLong(sequence).reversed())` 的**平局分支**（该 `.reversed()` 来自 2026-07-17 的
   `41eccbeeb`，两轮二进制一致）；play-14 没采到只说明该窗口里"分数相等"的比较占比低。合计 `thenComparing` 帧 7.9% → 13.8% 属搜索
   规模差异，不是代码变化。
-- play-15 新出现 `MaxCountProperty.lambda$set$0` 3.9%、`ImmutableCollections$MapN.probe` 3.0%、`RetailPatternAI2.supports`
-  的分配样本 4 → 13（1.07 → 6.80 MB）、NPC 生成链（`Npc.<init>`/`KnownList.<init>`/`CreatureController.<init>`/`DropGroup.dropCalculator`）、
-  `ItemInfoBlob.addBlobEntry` 4.10 MB —— 同属"持续战斗 + 大量 NPC 移动"场面，但由**玩家具体操作**（技能/掉落/背包/刷怪）决定，
-  与本轮寻路改动无因果关系。
+- **帧名符号化勘误（2026-09-17 逐栈复核，纠正本节初版结论）**：`MaxCountProperty.lambda$set$0` 3.9% **不是技能热点** —— 13/13 样本都在
+  `pathfinder` 线程的 `searchLowLevel → PriorityQueue.poll → thenComparing → comparingDouble` 之下，是 **A\* 开放集比较器**的隐藏 lambda
+  被 JFR 解析成了别的类名；同理 `RetailPatternAI2.*` 那 25 个样本（7.5%）的真实链路是
+  `MoveTaskManager$1.apply → RetailPatternAI2.handleMoveArrived → … → NpcMoveController.chooseNextStep → resolveRouteStepZ → GeoService.getZ → GeoMap.getZ → Node.collideWith → BIHNode.intersectWhere`，
+  即 **walker 每推进一步都要做一次网格射线求地面高度**（`GEO_NPC_MOVE` 打开时）。同样地，25/25 的 `Buffer.checkIndex` 不在网络层，而是
+  `Sector.heightAt → HeapByteBuffer.getInt` 的地形高度解码。
+  ⇒ **结论修正**：play-15 的 CPU 里 geo/寻路占绝对多数 —— A\* 展开 ≈ 41%（其下含 7.5% 地形解码、≈14% 开放集比较器与
+  4.5% `LongObjectHashMap.clear`），**网格碰撞/射线合计 16.2% 但分散在约 10 个调用点**（见 12.14.1 的分布），
+  其余才是 AI/网络/任务/DB。分配侧的技能/背包/刷怪站点只是同一场面里的补充，不是 CPU 热点。
 
 #### 12.13.4b FJP worker 的 +43.2 MB：三个口径互相矛盾，**不可归因**
 
@@ -990,3 +995,78 @@ A 阶段新增的冻结结构（`PathData$MapLookup` ×2、`WaterVolumeStore$Wor
    `src/test/resources/aion/geo/path-golden.txt` 时间戳未变（2026-09-16 23:47）。
 4. **收口建议**：性能线到此为止。再往后只有两件事值得做，且都不是"修 bug"：①下一轮把 TLS 采样周期改成 10 s 以得到可信总量
    （见 12.13.4b 结尾）；②若确认 A2 的 `clear()` CPU 代价不划算，把 `VISITED_PREALLOC_ENTRIES` 8192 → 1024/2048 再对照一轮。
+
+### 12.14 第十八轮：架构侧两项"纯降本"改动（`bytes` 直读 + `clear()` 记账）
+
+用户要求把性能线从"已收敛的分配优化"转向**架构与其他性能优化**。本轮先做 CPU 侧，两项都不改变任何判定结果，只删开销。
+
+#### 12.14.1 先纠错：`collideWith` 16.2% 是**分散**的，不是单点 20%
+
+逐栈复核 `play-15`（333 个 `ExecutionSample`）后，修正 12.13.4 的两处过度推断：
+
+| 口径 | 样本 | 占比 | 说明 |
+|---|---|---|---|
+| `PathData$MapData.searchLowLevel` | 137 | 41.1% | A\* 展开（其下含 25 个 `heightAt` = 7.5%） |
+| `Scene.Node.collideWith`（网格碰撞/射线） | 54 | 16.2% | **分散在约 10 个业务调用点** |
+| ↳ `SimpleAttackManager.isTargetInAttackRange` | 10 | 3.0% | AI 攻击距离/视线 |
+| ↳ `WalkManager$2.run` | 7 | 2.1% | 漫游点有效性 |
+| ↳ `NpcMoveController.getTargetZ` | 6 | 1.8% | 目标 Z 查询 |
+| ↳ `WalkManager.isTargetPointValid` | 5 | 1.5% | 同上 |
+| ↳ 其余（`canReachWaypointCached`/`resolveRouteStepZ`/`skipWaypoints`/技能属性/玩家攻击） | 各 1–2 | <1% | — |
+| `GeoService.getZ` 全链路 | 10 | 3.0% | 其中 `resolveRouteStepZ` 只有 **1** 个样本 |
+| `java.nio.Buffer.checkIndex` | 25 | 7.5% | 100% 来自 `Sector.heightAt → HeapByteBuffer.getInt`，**不在网络层** |
+
+⇒ 不存在"一个 20% 的地面 raycast 可以摘"；网格碰撞是遍地开花的结构性成本，只能靠"减少探测次数/缩短探测距离"这类
+会影响判定的手段去动，属高风险，本轮不碰。
+
+#### 12.14.2 改动一：地图路径数据运行期读取改为 `byte[]` 直读（目标：`heightAt` 的 7.5%）
+
+`PathData$MapData` 原本把整张地图的压缩路径数据放在一个 `ByteBuffer` 里，运行期每个格子都走
+`ByteBuffer.getInt/get/getShort(绝对偏移)`，于是每次读取都要过 `HeapByteBuffer` 间接层与 `Buffer.checkIndex`。
+`A\*` 每展开一个邻居都要 `simpleNode → heightAt`，这正是那 25 个样本的来源。
+
+- 字段 `ByteBuffer data` → `byte[] bytes`；`load(...)` 仍在函数内部用 `ByteBuffer` 解压、校验 SHA-256 与头部，
+  最后 `new MapData(data.array(), ...)` 把**同一个堆数组**交出去（零拷贝，`ByteBuffer.allocate` 保证 `arrayOffset() == 0`）。
+- 新增 `intAt/uShortAt/shortAt/byteAt` 四个小端直读助手（放在 `MapData` 外层，`Sector` 也能调用）：
+  - `intAt` 等价 `getInt`（最高字节按有符号参与 `<< 24`）；
+  - `uShortAt` 等价 `Short.toUnsignedInt(getShort)`；`shortAt` 保留**有符号**语义（`readBlock` 的 `nodes < 0` 校验依赖它）；
+  - `byteAt` 等价 `get`（有符号，调用点继续自行 `& 0xff` / `>>>`）。
+- 全部运行期读点改写：`heightAt`、`readBlock`、`nodeOffsets/complexNode`、`portalNeighbor`、`portalReachable`、`hasLink`。
+  `data.limit()` → `bytes.length`（加载期已断言 `size == expectedSize`，两者恒等）。
+
+**收益**：地形高度解码不再有 `checkIndex` 调用与缓冲间接层。**风险**：纯解码等价，语义零变化。
+
+#### 12.14.3 改动二：`LongObjectHashMap.clear()` 代价从「容量」改为「条目数」（目标：4.5%）
+
+A\* 工作区的 `visited` 表按搜索预算预分配（`min(budget, 8192)` → 16384 槽），而 `clear()` 原本是
+`Arrays.fill(used, 0)` + `Arrays.fill(values, null)`，**填满整个容量**；每次搜索都要付这份开销，
+`play-14/15` 实测 `Arrays.fill + LongObjectHashMap.clear` 占 2.0% / 4.5% CPU（全部样本都在这条栈上）。
+本改动让 `clear()` 只回退真正占用的槽位：
+
+- 新增 `touched`（按需增长的 `int[]`）与 `touchedCount`；`insert()` 记录新槽位；
+- `resize()` 在 `init()` 之后重建记账（新表里每个槽位重新记录一次）；
+- `clear()` 遍历 `touched` 回退 `used/values`，代价 ∝ 条目数（典型一次搜索几百条，而不是 16384 槽）。
+
+**副作用**：每个 map 多一个按需增长的 `int[]`（空闲时 8 个 int = 32 B），换来 8–16 倍的清表降本。
+**语义**：完全等价（`used` 仍门控读取，`keys` 本来就不清）。顺带说明：A2 那次"用 CPU 换分配"的预分配策略
+（12.11.2）在本次改动后不再需要为 `clear()` 买单，因此 **`VISITED_PREALLOC_ENTRIES` 无需再调**。
+
+#### 12.14.4 验证
+
+`mvn -Dtest=LongObjectHashMapTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest test`
+→ **BUILD SUCCESS，8 个测试类 136 例全绿**。新增 2 例 `LongObjectHashMapTest` 覆盖新语义：
+`clearReleasesEverySlotAfterGrowth`（5000 条 → `clear()` → 逐个 `get` 必须 null → 同实例重建 1000 条仍全部可读）与
+`clearThenEnsureCapacityKeepsTheTableUsable`（`clear()` → `ensureCapacity(8192)` → 旧键不可见、新键可读写）。
+`PathGoldenDiffTest` 仍与 **23:47（A/C 之前）** 基线逐字一致，`path-golden.txt` 时间戳未变 → 136 例里包含那条
+13,081 节点绕墙路径的 256 个坐标点逐一比对，解码与清表改动都没有移动任何寻路结果。
+
+#### 12.14.5 剩余候选与「不做」的理由
+
+| 候选 | 预估 | 结论 |
+|---|---|---|
+| 开放集比较器手写化（`comparingDouble.thenComparing(comparingLong.reversed)` → 单个比较方法） | 总序完全不变 | **不做**：这些帧是 C2 内联后的*数学*本身（`Double.compare` + `Long.compare`），不是调用开销；改动只会让收益不确定 |
+| 开放集换桶队列（Dial） | 大（≈14%） | 待评估：会改变等代价路径的选择顺序，必须先扩 golden 用例集再动 |
+| `Sector.heightAt` 结果缓存 | 中 | 待评估：动态 geo（可消失物件/门）会让缓存失真，需要实例级失效证据 |
+| 网格碰撞探测次数（16.2%，10 个调用点） | 大 | 高风险：任何"少探测/短探测"都改变判定，与"不能干扰功能"冲突 |
+| `IntObjectHashMap` 系统性替换（87 文件） | 分散 | 架构债，宜单独任务；`World.getWorldMap` 这类热查表已在 12.11 换成 `int[]` |
+| 网络出站包零拷贝（`writeAndConsume`） | 中（分配侧） | 触碰 `AR-004` 的 Netty 缓冲不变量，宜单独任务 |

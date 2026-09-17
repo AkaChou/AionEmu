@@ -342,7 +342,14 @@ public final class PathData {
 		 * This cap bounds idle workspace instances only; the per-workspace node pool keeps growing to peak as before.
 		 */
 		private static final int MAX_POOLED_WORKSPACES = 16;
-		private final ByteBuffer data;
+		/**
+		 * 地图压缩路径数据的原始字节。加载期用 {@link ByteBuffer} 解压写入，运行期只按偏移直读，
+		 * 避免每次读取都经过 {@code ByteBuffer.checkIndex} 与堆缓冲间接层（play-15 里该检查约占 7.5% CPU 采样）。
+		 * Raw bytes of the compressed path data. The load path fills them through a {@link ByteBuffer}, but every
+		 * runtime read goes straight to the array, avoiding the per-read {@code ByteBuffer.checkIndex} and the
+		 * heap-buffer indirection (that check alone held ~7.5% of the play-15 CPU samples).
+		 */
+		private final byte[] bytes;
 		private final int width;
 		private final int height;
 		private final int blockColumns;
@@ -355,9 +362,9 @@ public final class PathData {
 		private final AtomicReferenceArray<Block> blocks;
 		private final Map<Integer, int[]> blockNeighbors = new ConcurrentHashMap<>();
 
-		private MapData(ByteBuffer data, int width, int height, int blockColumns, int blockRows,
+		private MapData(byte[] bytes, int width, int height, int blockColumns, int blockRows,
 				int nodeTableOffset, int nodeTableSize, int portalOffset, int portalCount, int[] blockOffsets) {
-			this.data = data;
+			this.bytes = bytes;
 			this.width = width;
 			this.height = height;
 			this.blockColumns = blockColumns;
@@ -368,6 +375,36 @@ public final class PathData {
 			this.portalCount = portalCount;
 			this.blockOffsets = blockOffsets;
 			this.blocks = new AtomicReferenceArray<>(blockOffsets.length);
+		}
+
+		/**
+		 * 小端 32 位读取，等价 {@code ByteBuffer.getInt(offset)}。
+		 * Little-endian 32-bit read, equivalent to {@code ByteBuffer.getInt(offset)}.
+		 */
+		private int intAt(int offset) {
+			return (bytes[offset] & 0xff) | (bytes[offset + 1] & 0xff) << 8 | (bytes[offset + 2] & 0xff) << 16
+					| bytes[offset + 3] << 24;
+		}
+
+		/**
+		 * 小端无符号 16 位读取，等价 {@code Short.toUnsignedInt(ByteBuffer.getShort(offset))}。
+		 * Little-endian unsigned 16-bit read; matches {@code Short.toUnsignedInt(buffer.getShort(offset))}.
+		 */
+		private int uShortAt(int offset) {
+			return (bytes[offset] & 0xff) | (bytes[offset + 1] & 0xff) << 8;
+		}
+
+		/**
+		 * 小端有符号 16 位读取，等价 {@code ByteBuffer.getShort(offset)}（`readBlock` 的负数校验依赖符号）。
+		 * Little-endian signed 16-bit read, equivalent to {@code ByteBuffer.getShort(offset)}.
+		 */
+		private int shortAt(int offset) {
+			return (short) uShortAt(offset);
+		}
+
+		/** 有符号 8 位读取，等价 {@code ByteBuffer.get(offset)}。 / Signed 8-bit read, like {@code buffer.get(offset)}. */
+		private int byteAt(int offset) {
+			return bytes[offset];
 		}
 
 		static MapData load(PathFiles source) throws IOException {
@@ -433,7 +470,7 @@ public final class PathData {
 				offsets[i] = offset;
 				previous = offset;
 			}
-			return new MapData(data, width, height, columns, rows, nodeOffset, nodeSize, portalOffset,
+			return new MapData(data.array(), width, height, columns, rows, nodeOffset, nodeSize, portalOffset,
 					portalCount, offsets);
 		}
 
@@ -1111,7 +1148,7 @@ public final class PathData {
 			if (portalIndex >= portalCount) {
 				return null;
 			}
-			int packed = data.getInt(portalOffset + (int) portalIndex * 4);
+			int packed = intAt(portalOffset + (int) portalIndex * 4);
 			return packed == 0 ? null : targetNode(targetX, targetY, packed & 0x7f, packed >>> 7, source.z(), terrain);
 		}
 
@@ -1162,15 +1199,15 @@ public final class PathData {
 
 		private Block readBlock(int id) {
 			int cursor = blockOffsets[id];
-			int count = data.get(cursor++) & 0xff;
+			int count = byteAt(cursor++) & 0xff;
 			Sector[] sectors = new Sector[count];
 			Block block = new Block(id, sectors);
 			for (int fileOrder = 0; fileOrder < count; fileOrder++) {
-				int type = data.get(cursor++) & 0xff;
+				int type = byteAt(cursor++) & 0xff;
 				int layer = count - fileOrder - 1;
 				if (type == 16) {
-					int base = data.getInt(cursor);
-					int nodes = data.getShort(cursor + 4);
+					int base = intAt(cursor);
+					int nodes = shortAt(cursor + 4);
 					cursor += 6;
 					if (base < 0 || nodes < 0) {
 						throw new IllegalArgumentException("Invalid complex sector at block " + id);
@@ -1178,13 +1215,13 @@ public final class PathData {
 					sectors[layer] = new Sector(block, layer, type, 0, new int[4], -1, -1, base, nodes);
 					continue;
 				}
-				if (type > 15 || cursor + 17 > data.limit()) {
+				if (type > 15 || cursor + 17 > bytes.length) {
 					throw new IllegalArgumentException("Invalid sector type " + type + " at block " + id);
 				}
-				int boundaryMask = data.get(cursor++) & 0xff;
+				int boundaryMask = byteAt(cursor++) & 0xff;
 				int[] boundaries = new int[4];
 				for (int i = 0; i < 4; i++, cursor += 4) {
-					boundaries[i] = data.getInt(cursor);
+					boundaries[i] = intAt(cursor);
 				}
 				int payload = cursor;
 				cursor += payloadSize(type);
@@ -1192,7 +1229,7 @@ public final class PathData {
 				if (links >= 0) {
 					cursor += 512;
 				}
-				if (cursor > data.limit()) {
+				if (cursor > bytes.length) {
 					throw new IllegalArgumentException("Truncated sector at block " + id);
 				}
 				sectors[layer] = new Sector(block, layer, type, boundaryMask, boundaries, payload, links, -1, 0);
@@ -1305,9 +1342,9 @@ public final class PathData {
 					return null;
 				}
 				int position = nodeTableOffset + offset;
-				int x = Short.toUnsignedInt(data.getShort(position + 4));
-				int y = Short.toUnsignedInt(data.getShort(position + 6));
-				float z = data.getInt(position) / 100f;
+				int x = uShortAt(position + 4);
+				int y = uShortAt(position + 6);
+				float z = intAt(position) / 100f;
 				long key = Long.MIN_VALUE | Integer.toUnsignedLong(offset);
 				return workspace().node(this, x, y, offset, key, z);
 			}
@@ -1326,7 +1363,7 @@ public final class PathData {
 							if (cursor < 0 || cursor + 9 > nodeTableSize) {
 								throw new IllegalArgumentException("Complex node outside node table");
 							}
-							int descriptor = data.get(nodeTableOffset + cursor + 8) & 0xff;
+							int descriptor = byteAt(nodeTableOffset + cursor + 8) & 0xff;
 							cursor += 9;
 							for (int direction = 0; direction < 4; direction++) {
 								int mode = descriptor >>> (direction * 2) & 3;
@@ -1344,14 +1381,14 @@ public final class PathData {
 					return 0;
 				}
 				int position = nodeTableOffset + offset;
-				int descriptor = data.get(position + 8) & 0xff;
+				int descriptor = byteAt(position + 8) & 0xff;
 				int cursor = position + 9;
 				for (int direction = 0; direction < 4; direction++) {
 					int mode = descriptor >>> (direction * 2) & 3;
 					if (direction == wantedDirection) {
 						return switch (mode) {
-							case 1 -> (complexBase + Short.toUnsignedInt(data.getShort(cursor))) << 7 | layer;
-							case 2 -> data.getInt(cursor);
+							case 1 -> (complexBase + uShortAt(cursor)) << 7 | layer;
+							case 2 -> intAt(cursor);
 							default -> 0;
 						};
 					}
@@ -1384,7 +1421,7 @@ public final class PathData {
 				}
 				long portalIndex = Integer.toUnsignedLong(boundaries[direction]);
 				for (int coordinate = 0; coordinate < 32 && portalIndex + coordinate < portalCount; coordinate++) {
-					if (data.getInt(portalOffset + (int) (portalIndex + coordinate) * 4) != 0) {
+					if (intAt(portalOffset + (int) (portalIndex + coordinate) * 4) != 0) {
 						return true;
 					}
 				}
@@ -1396,7 +1433,7 @@ public final class PathData {
 					return true;
 				}
 				int localX = x & 31;
-				int value = data.get(links + (y & 31) * 16 + localX / 2) & 0xff;
+				int value = byteAt(links + (y & 31) * 16 + localX / 2) & 0xff;
 				int mask = (localX & 1) == 0 ? value & 0xf : value >>> 4;
 				return (mask & 1 << direction) != 0;
 			}
@@ -1407,30 +1444,30 @@ public final class PathData {
 				int cell = localY * 32 + localX;
 				float terrainHeight = Float.NaN;
 				return switch (type & ~1) {
-					case 0 -> data.getInt(payload) / 100f;
+					case 0 -> intAt(payload) / 100f;
 					case 2 -> terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f);
-					case 4 -> decodedHeight(data.getInt(payload + cell * 4));
-					case 6 -> ((data.get(payload + localY * 4 + localX / 8) >>> (localX & 7)) & 1) != 0
+					case 4 -> decodedHeight(intAt(payload + cell * 4));
+					case 6 -> ((byteAt(payload + localY * 4 + localX / 8) >>> (localX & 7)) & 1) != 0
 							? Float.NaN : terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f);
 					case 8 -> {
-						int code = data.get(payload + 8 + localY * 8 + localX / 4) >>> ((localX & 3) * 2) & 3;
-						yield code < 2 ? data.getInt(payload + code * 4) / 100f
+						int code = byteAt(payload + 8 + localY * 8 + localX / 4) >>> ((localX & 3) * 2) & 3;
+						yield code < 2 ? intAt(payload + code * 4) / 100f
 								: code == 2 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
 					case 10 -> {
-						int value = data.get(payload + 56 + localY * 16 + localX / 2) & 0xff;
+						int value = byteAt(payload + 56 + localY * 16 + localX / 2) & 0xff;
 						int code = (localX & 1) == 0 ? value & 0xf : value >>> 4;
-						yield code < 14 ? data.getInt(payload + code * 4) / 100f
+						yield code < 14 ? intAt(payload + code * 4) / 100f
 								: code == 14 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
 					case 12 -> {
-						int value = data.get(payload + 4 + cell) & 0xff;
-						yield value < 0xfe ? (data.getInt(payload) + value) / 100f
+						int value = byteAt(payload + 4 + cell) & 0xff;
+						yield value < 0xfe ? (intAt(payload) + value) / 100f
 								: value == 0xfe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
 					case 14 -> {
-						int value = Short.toUnsignedInt(data.getShort(payload + 4 + cell * 2));
-						yield value < 0xfffe ? (data.getInt(payload) + value) / 100f
+						int value = uShortAt(payload + 4 + cell * 2);
+						yield value < 0xfffe ? (intAt(payload) + value) / 100f
 								: value == 0xfffe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
 					default -> terrainHeight;

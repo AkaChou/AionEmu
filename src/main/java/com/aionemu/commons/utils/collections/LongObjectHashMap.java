@@ -26,6 +26,14 @@ public final class LongObjectHashMap<V> {
     /** 最小容量（2 的幂）。 / Minimum capacity (power of two). */
     private static final int MIN_CAPACITY = 8;
 
+    /**
+     * 当前占用的槽位下标（按需增长），让 {@link #clear()} 的代价与条目数成正比而不是与容量成正比。
+     * Indices of the currently used slots (grown on demand) so {@link #clear()} costs the entry count
+     * rather than the whole table capacity — the A* workspace keeps a 16k-slot table alive and clears
+     * it once per search.
+     */
+    private int[] touched;
+    private int touchedCount;
     private long[] keys;
     private Object[] values;
     private byte[] used;
@@ -124,8 +132,15 @@ public final class LongObjectHashMap<V> {
         if (size == 0) {
             return;
         }
-        Arrays.fill(used, (byte) 0);
-        Arrays.fill(values, null);
+        // 只回退真正被占用的槽位：容量可能是按搜索预算预分配的（例如 16384 槽只放了 300 条）。
+        // Only the slots that were actually taken are reset: the capacity may be pre-sized from a search
+        // budget (e.g. 16384 slots holding 300 entries).
+        for (int i = 0; i < touchedCount; i++) {
+            int slot = touched[i];
+            used[slot] = 0;
+            values[slot] = null;
+        }
+        touchedCount = 0;
         size = 0;
     }
 
@@ -168,9 +183,23 @@ public final class LongObjectHashMap<V> {
         keys[index] = key;
         values[index] = value;
         used[index] = 1;
+        recordSlot(index);
         if (++size >= resizeThreshold) {
             resize();
         }
+    }
+
+    /**
+     * 记录一个新占用的槽位下标（超出当前数组时按需扩容）。
+     * Records a newly taken slot index, growing the bookkeeping array on demand.
+     *
+     * @param index 槽位下标 / slot index
+     */
+    private void recordSlot(int index) {
+        if (touchedCount == touched.length) {
+            touched = Arrays.copyOf(touched, Math.max(MIN_CAPACITY, touched.length << 1));
+        }
+        touched[touchedCount++] = index;
     }
 
     private void resize() {
@@ -184,12 +213,15 @@ public final class LongObjectHashMap<V> {
                 keys[index] = oldKeys[i];
                 values[index] = oldValues[i];
                 used[index] = 1;
+                recordSlot(index);
                 size++;
             }
         }
     }
 
     private void init(int capacity) {
+        touched = new int[MIN_CAPACITY];
+        touchedCount = 0;
         keys = new long[capacity];
         values = new Object[capacity];
         used = new byte[capacity];

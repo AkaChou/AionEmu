@@ -97,6 +97,47 @@ class LongObjectHashMapTest {
     }
 
     @Test
+    void clearReleasesEverySlotAfterGrowth() {
+        LongObjectHashMap<String> map = new LongObjectHashMap<>(4);
+        for (long key = 0; key < 5_000; key++) {
+            map.put(key, "v" + key);
+        }
+
+        map.clear();
+
+        assertEquals(0, map.size());
+        for (long key = 0; key < 5_000; key++) {
+            assertNull(map.get(key));
+        }
+        // 复用同一实例重建：扩容后的槽位记账必须完整重置。
+        // Reusing the same instance after growth: the slot bookkeeping must reset completely.
+        for (long key = 0; key < 1_000; key++) {
+            map.put(key, "w" + key);
+        }
+        assertEquals(1_000, map.size());
+        for (long key = 0; key < 1_000; key++) {
+            assertEquals("w" + key, map.get(key));
+        }
+        assertNull(map.get(1_000L));
+    }
+
+    @Test
+    void clearThenEnsureCapacityKeepsTheTableUsable() {
+        LongObjectHashMap<String> map = new LongObjectHashMap<>(4);
+        map.put(1L, "a");
+
+        map.clear();
+        map.ensureCapacity(8_192);
+
+        assertNull(map.get(1L));
+        map.put(2L, "b");
+        assertEquals("b", map.get(2L));
+        map.clear();
+        assertNull(map.get(2L));
+        assertEquals(0, map.size());
+    }
+
+    @Test
     void collidingKeysRemainDistinct() {
         LongObjectHashMap<String> map = new LongObjectHashMap<>(8);
         // 这些键在掩码后会命中同一初始槽位，用来覆盖线性探测路径。
