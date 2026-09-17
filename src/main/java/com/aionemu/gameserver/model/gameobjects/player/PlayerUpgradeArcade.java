@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 玩家升级街机游戏对象。
@@ -9,8 +8,7 @@ import lombok.Setter;
  *
  * @author Ranastic
  */
-@Getter
-@Setter
+@Data
 public class PlayerUpgradeArcade {
 	/** 返回 frenzy points / Returns the frenzy points */
 	private int frenzyPoints = 0;

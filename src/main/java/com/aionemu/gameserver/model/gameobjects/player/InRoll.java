@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * InRoll 游戏对象。
@@ -9,8 +8,7 @@ import lombok.Setter;
  *
  * @author xTz
  */
-@Getter
-@Setter
+@Data
 public class InRoll {
 
 	/** 返回 NPC ID / Returns the npc id */

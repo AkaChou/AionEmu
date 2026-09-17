@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.account;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 账号时间模型。
@@ -9,8 +8,7 @@ import lombok.Setter;
  *
  * @author EvilSpirit
  */
-@Getter
-@Setter
+@Data
 public class AccountTime {
 
 	/**

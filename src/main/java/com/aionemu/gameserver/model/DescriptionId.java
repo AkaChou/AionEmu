@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.AllArgsConstructor;
 
 /**
@@ -10,8 +9,7 @@ import lombok.AllArgsConstructor;
  *
  * @author MrPoke
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public final class DescriptionId {
 

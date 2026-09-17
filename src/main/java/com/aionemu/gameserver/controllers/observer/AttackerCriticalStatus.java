@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.controllers.observer;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 攻击方暴击状态数据：结果、剩余次数、数值与是否百分比。
@@ -9,8 +8,7 @@ import lombok.Setter;
  *
  * @author kecimis
  */
-@Getter
-@Setter
+@Data
 public class AttackerCriticalStatus {
 	/** 是否判定成功 / Whether the check succeeded */
 	private boolean result = false;

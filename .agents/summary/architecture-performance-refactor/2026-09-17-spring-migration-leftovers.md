@@ -292,3 +292,38 @@
   + `CreatureTest`(1) + `LadderServiceTest`(3) + `BattlegroundCollectionsTest`(1) + `GameLegacyServiceBridgeConfigurationTest`(57)
   + `ModelCollectionImplementationTest`(18) + `ServiceInternalCollectionImplementationTest`(6) + `ServiceMapImplementationTest`(6)
   = **101 例全绿**。
+
+## 十五、全仓库注解收拢 + 纯数据 DTO 改用 @Data（2026-09-17）
+
+### 1. 字段级 → 类级（`Lombok 优先加在类上`）
+
+- 第一批（Top 300 高频文件）：**1671 个字段级 `@Getter` + 727 个字段级 `@Setter` → 类级**，30 个文件先编译验证，其余 296+4 个枚举文件随后统一处理。
+- 提交 `8a1371be6`：**658 个 Java 文件，净减 2237 行**（`825 insertions / 3062 deletions`）。
+- 剩余 45 个文件仍保留字段级注解（81 个），全部属于以下两类，**故意不动**：
+  1. 只给 1 个字段加 `@Getter` 的小类（加类级会一次性放开整类访问器，属于扩大 API 而非收拢）；
+  2. 含 `@Setter` 的 43 个类（Setter 的暴露面需要单独判断，不做机械提升）。
+- 枚举类单独处理：`RiftEnum`/`StorageType`/`AutoGroupType`/`XPLossEnum` 提到类级 `@Getter`（枚举天然不可变，不生成 Setter）。
+
+### 2. 纯数据 DTO 改用 `@Data`（8 个）
+
+筛选手续：无继承 + 字段全为标量/时间类型 + 无手写 `equals/hashCode/toString` + 无敏感字段 + **不作为泛型容器元素**。
+
+| 类 | 字段数 |
+|---|---|
+| `ThievesStatusList` | 8 |
+| `PlayerUpgradeArcade` | 7 |
+| `InRoll` | 4 |
+| `AttackerCriticalStatus` | 4 |
+| `PortalCooldownItem` | 3 |
+| `InGameShop` | 2 |
+| `AccountTime` | 2 |
+| `DescriptionId` | 1 |
+
+- **未对实体类套用 `@Data`**：`Player`/`Creature`/`Item`/`Effect`/`Battleground` 等 159 个候选被排除，原因是
+  `@Data` 会生成**按字段比较的 equals/hashCode**，会破坏实体身份语义（这些对象大量进入 `HashMap`/`Set` 并按引用查找）；
+  同时会生成递归 `toString()`，而 `Player`/`Creature` 这类对象持有双向引用，存在栈溢出与日志爆炸风险。
+  这与用户"不影响功能"的前提冲突，因此只对纯数据 DTO 使用 `@Data`。
+- 另有 7 个候选（`PortalLoc`/`SpringTemplate`/`CuringTemplate`/`ChainSkill`/`ItemReq`/`QuestReq`/`SubMaterialItem`）
+  因会进入泛型容器而暂缓，待逐个确认容器语义后处理。
+- 验证：`mvn test-compile` 通过；本轮 143 例测试全绿（含 `AionBootApplicationTest`(12)、
+  `GameLegacyServiceBridgeConfigurationTest`(57)、`ModelCollectionImplementationTest`(18) 等）。

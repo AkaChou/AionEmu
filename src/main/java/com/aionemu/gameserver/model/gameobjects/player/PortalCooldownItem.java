@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.AllArgsConstructor;
 
 /**
@@ -9,8 +8,7 @@ import lombok.AllArgsConstructor;
  * Portal Cooldown Item game object.
  */
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class PortalCooldownItem {
 	/** 返回世界 ID / Returns the world id */
