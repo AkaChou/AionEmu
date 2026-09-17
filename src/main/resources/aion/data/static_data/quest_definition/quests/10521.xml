@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10521" version="1">
-  <metadata name="Memories of Eternity" display-name-id="1802009" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" title-id="306">
+  <metadata name="Memories of Eternity" display-name-id="1802009" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

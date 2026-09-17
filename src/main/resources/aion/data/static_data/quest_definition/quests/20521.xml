@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="20521" version="1">
-  <metadata name="Recovered Destiny" display-name-id="1802011" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" title-id="306">
+  <metadata name="Recovered Destiny" display-name-id="1802011" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

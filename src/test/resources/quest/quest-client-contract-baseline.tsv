@@ -2,29 +2,7 @@
 # Refreshed from the current production catalog and Aion 5.8 client mapping on 2026-09-11
 # (PAGE_NOT_IN_TASK_HTML=0 BUTTON_WITHOUT_ROUTE=0 at that time).
 # 2026-09-16 follow-up: the four quest-trace-log gate regressions were repaired (3329 SETPRO1 fallback,
-# 28301 SETPRO2 fallback on 799530/730373/730374). The rows below retain the 23 BUTTON_WITHOUT_ROUTE
-# gaps introduced by later quest batches (106a69bda, de7c36d9d, 10a2e7e57, 0823653a7, 2f0752248) until
-# those quests are repaired; new fingerprints still fail the gate immediately.
+# 28301 SETPRO2 fallback on 799530/730373/730374).
+# 2026-09-17 follow-up: all 22 BUTTON_WITHOUT_ROUTE gaps (1197, 1198, 80008, 80009, 2289, 2367,
+# 2411, 2443, 2448, 2922, 3088, 3936, 3937, 4940, 4941) have been repaired, bringing the baseline to 0 defects.
 # failure_type	quest_id	source_state	npc_id	trigger_action	shown_page	visible_action	actual_path
-BUTTON_WITHOUT_ROUTE	1197	unaccepted		0	4	1008	unaccepted + ITEM 182200558 + 0 -> unaccepted + page 4
-BUTTON_WITHOUT_ROUTE	1198	unaccepted		0	4	1008	unaccepted + ITEM 182200559 + 0 -> unaccepted + page 4
-BUTTON_WITHOUT_ROUTE	80008	unaccepted		0	4	1008	unaccepted + ITEM 182214006 + 0 -> unaccepted + page 4
-BUTTON_WITHOUT_ROUTE	80009	unaccepted		0	4	1008	unaccepted + ITEM 182214007 + 0 -> unaccepted + page 4
-BUTTON_WITHOUT_ROUTE	2289	unaccepted	203616	1002	1003	10000	unaccepted + NPC 203616 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2367	unaccepted	204339	1002	1003	1012	unaccepted + NPC 204339 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2367	unaccepted	204339	1002	1003	1097	unaccepted + NPC 204339 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2411	unaccepted	204369	1002	1003	1012	unaccepted + NPC 204369 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2411	unaccepted	204369	1002	1003	1097	unaccepted + NPC 204369 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2443	unaccepted	204403	1002	1003	10000	unaccepted + NPC 204403 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2443	unaccepted	204403	1002	1003	1013	unaccepted + NPC 204403 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2448	unaccepted	798115	1002	1003	1012	unaccepted + NPC 798115 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2448	unaccepted	798115	1002	1003	1097	unaccepted + NPC 798115 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2922	unaccepted	204261	1002	1003	1012	unaccepted + NPC 204261 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	2922	unaccepted	204261	1002	1003	1097	unaccepted + NPC 204261 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3088	unaccepted	798202	1002	1003	1012	unaccepted + NPC 798202 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3088	unaccepted	798202	1002	1003	1097	unaccepted + NPC 798202 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3088	unaccepted	798202	1002	1003	1182	unaccepted + NPC 798202 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3936	unaccepted	203710	1002	1003	1011	unaccepted + NPC 203710 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3937	unaccepted	203708	1002	1003	1011	unaccepted + NPC 203708 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	4940	unaccepted	204050	1002	1003	1011	unaccepted + NPC 204050 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	4941	unaccepted	204060	1002	1003	1011	unaccepted + NPC 204060 + 1002 -> started + page 1003

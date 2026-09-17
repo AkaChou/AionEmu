@@ -13,6 +13,7 @@ class QuestRewardTitlePrerequisiteAuditTest {
 		Map.entry(19075, 38),
 		Map.entry(11033, 107),
 		Map.entry(2434, 66),
+		Map.entry(2511, 75),
 		Map.entry(29074, 88),
 		Map.entry(3922, 38),
 		Map.entry(3923, 38),
@@ -25,7 +26,25 @@ class QuestRewardTitlePrerequisiteAuditTest {
 		Map.entry(4923, 88),
 		Map.entry(4924, 88),
 		Map.entry(4925, 88),
-		Map.entry(4928, 88));
+		Map.entry(4928, 88),
+		Map.entry(10521, 306),
+		Map.entry(20521, 306));
+
+	@Test
+	void noQuestRequiresItsOwnRewardTitle() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		for (QuestDefinition definition : catalog.all()) {
+			int titlePrereq = definition.metadata().titleId();
+			if (titlePrereq > 0) {
+				for (QuestReward reward : definition.metadata().rewards()) {
+					if ("TITLE".equalsIgnoreCase(reward.kind())) {
+						org.junit.jupiter.api.Assertions.assertNotEquals(titlePrereq, reward.id(),
+							() -> "quest " + definition.id() + " requires its own reward title " + titlePrereq);
+					}
+				}
+			}
+		}
+	}
 
 	@Test
 	void rewardTitlesDoNotBecomeStartPrerequisites() throws Exception {
@@ -38,11 +57,6 @@ class QuestRewardTitlePrerequisiteAuditTest {
 			assertTrue(metadata.rewards().contains(new QuestReward("TITLE", titleId, 1)),
 				"quest " + questId + " must keep title " + titleId + " as a reward");
 		}
-	}
-
-	@Test
-	void realTitlePrerequisiteRemainsDistinctFromRewardTitle() throws Exception {
-		assertEquals(75, load(2511).definition().metadata().titleId());
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {

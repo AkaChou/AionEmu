@@ -56,7 +56,7 @@
     <dialog type="NPC_START" npc-id="203710" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203710" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203710" actions="QUEST_SELECT SELECT1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
