@@ -1244,3 +1244,115 @@ GeoServiceSkillObstacleTest,LongObjectHashMapTest test
 后续（D 未完）：`KnownList` 自身的 `ReentrantLock`（127k 把 ≈6 MB）+ `EffectController` 的（127k ≈6 MB）
 可同样合并/换 `synchronized`；剩下约 59 万张未钉死属主的 CHM 仍需逐一归因；`CreatureGameStats` 的
 `ReentrantReadWriteLock`（127k 套 ≈15 MB）与 `ObserveController` 的 2 个 COW 列表（254k ≈6 MB）在队列中。
+
+### 12.18 第二十二轮：`ObserveController` 两个 COW 列表写时物化（D 切片四）
+
+`play-15` 的 class histogram：`CopyOnWriteArrayList` **509,628 个 / 12.2 MB**，按属主精确对上
+（`ObserveController` ×2 + `AggroList` ×1 + `AbstractAI` ×1，各 ≈127k 生物）。本轮处理 `ObserveController`：
+
+```java
+protected Collection<ActionObserver>     observers           = new CopyOnWriteArrayList<ActionObserver>();
+protected Collection<AttackCalcObserver> attackCalcObservers = new CopyOnWriteArrayList<AttackCalcObserver>();
+```
+
+绝大多数生物终生没有任何观察者，这两张列表却总是被预制（≈254k 个对象 ≈6 MB）。
+
+#### 12.18.1 做法与并发论证
+
+- 两个字段初始指向**共享不可变空表**（`Collections.emptyList()`），字段改 `volatile`；
+- 只有**写入**才物化真实 `CopyOnWriteArrayList`：新增 `writableObservers()`/`writableAttackCalcObservers()`，
+  双检 + `synchronized (this)`，保证并发首次写入收敛到同一个列表（否则先加入的观察者会落进被丢弃的列表而消失）；
+- 读路径**零改动**：`size() > 0`、`stream()`、`for` 遍历在空占位符上天然成立，且不需要锁（沿用本类的 COW 语义）；
+- 6 个写点全部改道或加守卫：`addObserver`/`addAttackCalcObserver` → 物化后 `add`；
+  `removeObserver`/`removeAttackCalcObserver` → **哨兵上不可能存在目标，直接跳过**（不可变空表上调用
+  `remove`/`clear` 会抛 `UnsupportedOperationException`，这正是 12.15.3 在 `EffectController` 上踩过的坑）；
+  `clear()` → 逐表判哨兵再清，且**不把字段退回哨兵**（其他线程可能正持有旧引用，退回会丢更新）。
+- 已核实无子类、无外部 getter 调用、无 `synchronized (list)`，因此不存在"共享监视器"或外部直接写入面。
+
+#### 12.18.2 并发护栏（`ObserveControllerTest` 2 → 5 例）
+
+- `observerCollectionsAreMaterialisedOnlyOnFirstWrite`：初始两表是同一空占位符；`addObserver` 后只有 `observers` 被物化，
+  `attackCalcObservers` 仍是占位符；
+- `concurrentFirstWritesConvergeOnOneCollection`：8 线程 × 64 次并发首次写入，断言最终 size 精确等于 512；
+- `removeAndClearOnAnUntouchedControllerAreNoOps`：对**从未写入**的控制器调用 `removeObserver`/`removeAttackCalcObserver`/
+  `clear`/`notifyMoveObservers`/`getBasePhysicalDamageMultiplier` 全部不得抛异常（专测此轮引入的哨兵语义）。
+
+#### 12.18.3 验证
+
+```
+mvn -Dtest=ObserveControllerTest,ObserveControllerAttackContextTest,ObserveControllerLifeChangedTest,AbstractCollisionObserverTest,
+NpcLifeStatsTest,NpcGameStatsTest,CreatureGameStatsBytecodeTest,KnownListTest,KnownListIterationSafetyTest,WorldTest,WorldMapTest,
+WorldMapInstanceTest,NpcShoutDataTest,ShoutEventHandlerTest,MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,
+EffectControllerTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,
+NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，26 个测试类 223 例全绿**。
+
+#### 12.18.4 下一块已钉死：`RetailPatternAI2`（≈46 MB，剩余最大单项）
+
+`RetailPatternAI2` 有 **97,764 个实例**，每个预制 **6 个并发容器**（4 个 `ConcurrentHashMap.newKeySet()` 各自再带一个
+`KeySetView`）：
+
+| 容器 | 类型 | 使用点 |
+|---|---|---|
+| `actionTasks` | `newKeySet()` | 12 |
+| `despawnAtAttackState` | `ConcurrentHashMap` | 9 |
+| `gaugeObservers` | `ConcurrentHashMap` | 6 |
+| `terminalActionTasks` | `newKeySet()` | 5 |
+| `pendingCutsceneTeleports` | `ConcurrentHashMap` | 5 |
+| `usersInSensoryArea` | `newKeySet()` | 4 |
+
+≈58.6 万个对象 ≈37 MB（+ 视图 ≈9 MB），正好解释 12.16 里"剩下约 59 万张 CHM"的归属。
+下一轮按本轮同一范式处理，**注意两张 map 的 `remove`（4 处）必须在守卫下跳过哨兵**，并为 AI 容器的多线程访问补并发用例。
+
+### 12.19 第二十三轮：`RetailPatternAI2` 的三个并发集合改写时物化（D 切片五，剩余最大单项）
+
+12.18.4 已钉死：`RetailPatternAI2` 有 **97,764 个实例**，每个预制 **11 个容器**（3 个 `newKeySet()` + 3 个
+`ConcurrentHashMap` + 3 个 `HashMap` + 2 个 `HashSet`）≈**65 MB**。本轮先做其中收益最集中的 **3 个并发集合**：
+
+```java
+private final Set<Future<?>> actionTasks         = ConcurrentHashMap.newKeySet();
+private final Set<Future<?>> terminalActionTasks = ConcurrentHashMap.newKeySet();
+private final Set<Integer>   usersInSensoryArea  = ConcurrentHashMap.newKeySet();
+```
+
+`newKeySet()` 每次实际创建 **两个**对象（CHM + `KeySetView`），3 × 97,764 × 2 ≈ **58.6 万个对象 ≈ 26 MB**。
+
+#### 12.19.1 做法与并发论证
+
+- 三个字段初始指向共享空集合（`Collections.emptySet()`），字段改 `volatile`；
+- **只有 `add` 需要物化**：新增 `writableActionTasks()`/`writableTerminalActionTasks()`/`writableUsersInSensoryArea()`，
+  双检 + `synchronized (this)`，保证并发首次写入收敛到同一个集合——否则先加入的任务会落进被丢弃的集合，之后
+  `cancelQueuedActions` 再也取消不到它们（这是本切片最危险的失效模式）；
+- 读与"空操作"路径**零改动**：`Set.copyOf(...)`、`forEach`、`remove`、`removeIf`、`removeAll`、`clear` 全部继续直接作用在字段上。
+  这一点的前提是 **`Collections.emptySet()` 的上列空操作是安全空操作**（与 `Collections.EmptyMap.remove(key,value)`
+  会抛 `UnsupportedOperationException` **不同**），因此本轮把它固化成契约测试而不是当作口头假设；
+- 7 个 `add` 站点改道：`actionTasks` ×4（flee_stop / flee_move ×2 / 随机移动调度 / 延迟动作链）、
+  `terminalActionTasks` ×1、`usersInSensoryArea` ×1（另一处 `actionTasks.add` 在延迟动作链里同批改完）。
+
+#### 12.19.2 契约测试（`RetailPatternAI2Test` 80 → 81 例）
+
+`emptySetPlaceholderToleratesTheNoOpMutations`：`remove`/`removeIf`/`removeAll`/`retainAll` 返回 `false`、
+`clear` 不抛且集合仍为空——把这个 JDK 行为与"本类依赖它"的原因写进断言，未来 JDK 或实现变更会立刻红灯。
+
+#### 12.19.3 验证
+
+```
+mvn -Dtest=RetailPatternAI2Test,ObserveControllerTest,ObserveControllerAttackContextTest,ObserveControllerLifeChangedTest,
+AbstractCollisionObserverTest,NpcLifeStatsTest,NpcGameStatsTest,CreatureGameStatsBytecodeTest,KnownListTest,
+KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,NpcShoutDataTest,ShoutEventHandlerTest,
+MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,EffectControllerTest,PathGoldenDiffTest,PathDataTest,
+PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,
+GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，27 个测试类 303 例全绿**。
+
+#### 12.19.4 本类剩余（同一文件，下一轮）
+
+| 容器 | 类型 | 使用点 | 备注 |
+|---|---|---|---|
+| `despawnAtAttackState` | `ConcurrentHashMap` | 9 | 4 处 `remove` 必须在守卫下跳过哨兵（`EmptyMap.remove` 会抛） |
+| `gaugeObservers` | `ConcurrentHashMap` | 6 | 2 处 `remove(k,v)` 同上 |
+| `pendingCutsceneTeleports` | `ConcurrentHashMap` | 5 | `remove(k,v)` + `clear` 同上 |
+| `timers`/`spawned`/`intVars` | `HashMap` | — | 普通容器，≈14 MB；需先确认是否 AI 单线程独占 |
+| `selfManagedSpawns`/`flags` | `HashSet` | — | 同上，≈7 MB |

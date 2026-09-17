@@ -40,12 +40,24 @@ public class ObserveController {
 
 	/** 保护一次性观察者列表的锁。 / Lock protecting the one-shot observer list. */
 	private final ReentrantLock lock = new ReentrantLock();
-	/** 常驻行为观察者集合。 / Persistent action observers. */
-	protected Collection<ActionObserver> observers = new CopyOnWriteArrayList<ActionObserver>();
+	/**
+	 * 共享空集合占位符：绝大多数生物没有任何观察者，但每个实例原本都预制两个 CopyOnWriteArrayList
+	 * （play-15 实测全服 509,628 个 / 12.2 MB，本类占其中 ≈25 万）。
+	 * 读路径照常读字段（占位符即空集合），只有写入时才物化真实列表。
+	 * Shared empty placeholders: most creatures carry no observer, yet every instance used to pre-allocate
+	 * two CopyOnWriteArrayLists (the server held 509,628 of them / 12.2 MB in play-15, about 250k from here).
+	 * Reads keep reading the field — the placeholder simply means empty — and the real list is materialised
+	 * on the first write.
+	 */
+	private static final Collection<ActionObserver> EMPTY_ACTION_OBSERVERS = Collections.emptyList();
+	private static final Collection<AttackCalcObserver> EMPTY_ATTACK_CALC_OBSERVERS = Collections.emptyList();
+
+	/** 常驻行为观察者集合（首次写入才物化）。 / Persistent action observers, materialised on first write. */
+	protected volatile Collection<ActionObserver> observers = EMPTY_ACTION_OBSERVERS;
 	/** 一次性行为观察者列表。 / One-shot action observers. */
 	protected List<ActionObserver> onceUsedObservers = new ArrayList<ActionObserver>(0);
-	/** 攻击计算观察者集合。 / Attack calculation observers. */
-	protected Collection<AttackCalcObserver> attackCalcObservers = new CopyOnWriteArrayList<AttackCalcObserver>();
+	/** 攻击计算观察者集合（首次写入才物化）。 / Attack calculation observers, materialised on first write. */
+	protected volatile Collection<AttackCalcObserver> attackCalcObservers = EMPTY_ATTACK_CALC_OBSERVERS;
 
 	/**
 	 * 附加一次性观察者，通知后移除。
@@ -70,7 +82,47 @@ public class ObserveController {
 	 * observer
 	 */
 	public void addObserver(ActionObserver observer) {
-		observers.add(observer);
+		writableObservers().add(observer);
+	}
+
+	/**
+	 * 物化常驻行为观察者集合：双检 + {@code synchronized (this)}，保证并发首次写入收敛到同一个列表
+	 * （否则先加入的观察者会落进被丢弃的列表而永久丢失）。读路径不调用本方法。
+	 * Materialises the persistent observer collection with a double-checked {@code synchronized (this)} so
+	 * concurrent first writes converge on one list; a reader never needs to materialise.
+	 *
+	 * @return 可写集合 / writable collection
+	 */
+	private Collection<ActionObserver> writableObservers() {
+		Collection<ActionObserver> current = observers;
+		if (current != EMPTY_ACTION_OBSERVERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (observers == EMPTY_ACTION_OBSERVERS) {
+				observers = new CopyOnWriteArrayList<ActionObserver>();
+			}
+			return observers;
+		}
+	}
+
+	/**
+	 * 物化攻击计算观察者集合（范式同 {@link #writableObservers()}）。
+	 * Materialises the attack-calculation observer collection like {@link #writableObservers()}.
+	 *
+	 * @return 可写集合 / writable collection
+	 */
+	private Collection<AttackCalcObserver> writableAttackCalcObservers() {
+		Collection<AttackCalcObserver> current = attackCalcObservers;
+		if (current != EMPTY_ATTACK_CALC_OBSERVERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (attackCalcObservers == EMPTY_ATTACK_CALC_OBSERVERS) {
+				attackCalcObservers = new CopyOnWriteArrayList<AttackCalcObserver>();
+			}
+			return attackCalcObservers;
+		}
 	}
 
 	/**
@@ -80,7 +132,7 @@ public class ObserveController {
 	 * observer
 	 */
 	public void addAttackCalcObserver(AttackCalcObserver observer) {
-		attackCalcObservers.add(observer);
+		writableAttackCalcObservers().add(observer);
 	}
 
 	/**
@@ -93,7 +145,9 @@ public class ObserveController {
 		if (observer == null) {
 			return;
 		}
-		boolean removed = observers.remove(observer);
+		// 占位符里不可能有该观察者：跳过而不是对其调用变更方法（不可变空集合会抛异常）。
+		// The placeholder cannot hold the observer: skip it instead of mutating an immutable empty list.
+		boolean removed = observers != EMPTY_ACTION_OBSERVERS && observers.remove(observer);
 		lock.lock();
 		try {
 			removed |= onceUsedObservers.remove(observer);
@@ -112,7 +166,10 @@ public class ObserveController {
 	 * observer
 	 */
 	public void removeAttackCalcObserver(AttackCalcObserver observer) {
-		attackCalcObservers.remove(observer);
+		Collection<AttackCalcObserver> current = attackCalcObservers;
+		if (current != EMPTY_ATTACK_CALC_OBSERVERS) {
+			current.remove(observer);
+		}
 	}
 
 	/**
@@ -538,7 +595,13 @@ public class ObserveController {
 		} finally {
 			lock.unlock();
 		}
-		observers.clear();
-		attackCalcObservers.clear();
+		Collection<ActionObserver> actionObservers = observers;
+		if (actionObservers != EMPTY_ACTION_OBSERVERS) {
+			actionObservers.clear();
+		}
+		Collection<AttackCalcObserver> calcObservers = attackCalcObservers;
+		if (calcObservers != EMPTY_ATTACK_CALC_OBSERVERS) {
+			calcObservers.clear();
+		}
 	}
 }

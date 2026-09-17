@@ -59,8 +59,26 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import java.util.Collections;
 
 class RetailPatternAI2Test {
+	@Test
+	void emptySetPlaceholderToleratesTheNoOpMutations() {
+		// RetailPatternAI2 的 actionTasks/terminalActionTasks/usersInSensoryArea 默认指向共享空集合，
+		// 而 remove/removeIf/removeAll/clear 仍直接作用在该字段上：这里把"空集合上这些调用是安全空操作"
+		// 固化为契约（Collections.EmptyMap 的 remove(key,value) 会抛异常，二者行为并不一致）。
+		// RetailPatternAI2 keeps those sets on a shared empty placeholder while remove/removeIf/removeAll/clear
+		// still target the field, so pin the contract here.
+		Set<String> placeholder = Collections.emptySet();
+		assertFalse(placeholder.remove("x"));
+		assertFalse(placeholder.removeIf("x"::equals));
+		assertFalse(placeholder.removeAll(List.of("x")));
+		assertFalse(placeholder.retainAll(Set.of("x")));
+		assertDoesNotThrow(placeholder::clear);
+		assertTrue(placeholder.isEmpty());
+	}
+
 	@Test
 	void executesSpawnedRagnarokPhaseSkillsThroughRetailEventChain() throws ReflectiveOperationException {
 		String previousDefinitions = System.getProperty("aion.game.definitions.dir");

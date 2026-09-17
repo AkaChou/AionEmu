@@ -201,9 +201,21 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 */
 	private static final Set<Integer> WORLD_SCENE_WORLDS = Set.of(300300000, 300320000);
 	private final Map<String, Future<?>> timers = new HashMap<>();
-	private final Set<Future<?>> actionTasks = ConcurrentHashMap.newKeySet();
+	/**
+	 * 共享空集合占位符：绝大多数 AI 实例从不使用这些运行时集合，但每个实例（97,764 个）原本都预制
+	 * 三个 {@code ConcurrentHashMap.newKeySet()} —— 每个实际是 CHM + KeySetView 两个对象
+	 * （play-15 实测这三个集合占全服容器对象里的 ≈26 MB）。读路径照常读字段（占位符即空集），
+	 * 只有写入才物化真实集合；空集合上的 remove/removeIf/removeAll/clear 都是安全空操作。
+	 * Shared empty placeholder: most AI instances never use these runtime sets, yet each of the 97,764
+	 * instances pre-created three {@code newKeySet()} collections — each is a CHM plus a KeySetView
+	 * (≈26 MB across the server in play-15). Reads keep reading the field, only writes materialise the real
+	 * set, and the no-op mutations (remove/removeIf/removeAll/clear) are safe on the placeholder.
+	 */
+	private static final Set<Future<?>> EMPTY_ACTION_TASKS = Collections.emptySet();
+	private static final Set<Integer> EMPTY_SENSORY_USERS = Collections.emptySet();
+	private volatile Set<Future<?>> actionTasks = EMPTY_ACTION_TASKS;
 	// 含 despawn_self 的延迟动作链在回位时保留。 / Delayed action chains containing despawn_self survive return-home.
-	private final Set<Future<?>> terminalActionTasks = ConcurrentHashMap.newKeySet();
+	private volatile Set<Future<?>> terminalActionTasks = EMPTY_ACTION_TASKS;
 	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
 	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
 	// 生命周期独立于生成者状态重置的子对象：自带 live_time 的由到期任务管理；生成者死亡/消失事件链里生成的
@@ -213,9 +225,68 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private final Set<VisibleObject> selfManagedSpawns = new HashSet<>();
 	private final Set<String> flags = new HashSet<>();
 	private final Map<String, Integer> intVars = new HashMap<>();
-	private final Set<Integer> usersInSensoryArea = ConcurrentHashMap.newKeySet();
+	private volatile Set<Integer> usersInSensoryArea = EMPTY_SENSORY_USERS;
 	private final Map<Player, ItemUseObserver> gaugeObservers = new ConcurrentHashMap<>();
 	private final Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = new ConcurrentHashMap<>();
+	/**
+	 * 物化延迟动作集合：双检 + {@code synchronized (this)}，保证并发首次写入收敛到同一个集合
+	 * （否则先加入的任务会落进被丢弃的集合，之后无法取消）。
+	 * Materialises the queued-action set with a double-checked {@code synchronized (this)} so concurrent first
+	 * writes converge on one set; otherwise the first tasks would land in a discarded set and never cancel.
+	 *
+	 * @return 可写集合 / writable set
+	 */
+	private Set<Future<?>> writableActionTasks() {
+		Set<Future<?>> current = actionTasks;
+		if (current != EMPTY_ACTION_TASKS) {
+			return current;
+		}
+		synchronized (this) {
+			if (actionTasks == EMPTY_ACTION_TASKS) {
+				actionTasks = ConcurrentHashMap.newKeySet();
+			}
+			return actionTasks;
+		}
+	}
+
+	/**
+	 * 物化终态动作集合（范式同 {@link #writableActionTasks()}；与前者共用占位符但各自独立实例）。
+	 * Materialises the terminal-action set like {@link #writableActionTasks()}.
+	 *
+	 * @return 可写集合 / writable set
+	 */
+	private Set<Future<?>> writableTerminalActionTasks() {
+		Set<Future<?>> current = terminalActionTasks;
+		if (current != EMPTY_ACTION_TASKS) {
+			return current;
+		}
+		synchronized (this) {
+			if (terminalActionTasks == EMPTY_ACTION_TASKS) {
+				terminalActionTasks = ConcurrentHashMap.newKeySet();
+			}
+			return terminalActionTasks;
+		}
+	}
+
+	/**
+	 * 物化感知区玩家集合（范式同 {@link #writableActionTasks()}）。
+	 * Materialises the sensory-area player set like {@link #writableActionTasks()}.
+	 *
+	 * @return 可写集合 / writable set
+	 */
+	private Set<Integer> writableUsersInSensoryArea() {
+		Set<Integer> current = usersInSensoryArea;
+		if (current != EMPTY_SENSORY_USERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (usersInSensoryArea == EMPTY_SENSORY_USERS) {
+				usersInSensoryArea = ConcurrentHashMap.newKeySet();
+			}
+			return usersInSensoryArea;
+		}
+	}
+
 	private Pattern pattern;
 	// 是否正在执行生成者生命周期结束事件链 / whether a spawner-ending event chain is executing
 	private boolean spawnerEndEventInProgress;
@@ -1069,7 +1140,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		boolean inside = sensoryArea != null && getOwner().isSpawned() && !isAlreadyDead()
 			&& player.getWorldId() == getOwner().getWorldId() && player.getInstanceId() == getOwner().getInstanceId()
 			&& sensoryArea.isInside3D(player.getX(), player.getY(), player.getZ());
-		if (inside && usersInSensoryArea.add(player.getObjectId())) {
+		if (inside && writableUsersInSensoryArea().add(player.getObjectId())) {
 			runEvent("on_user_enter_sensory_area", null, player);
 		} else if (!inside) {
 			leaveSensoryArea(player);
@@ -1161,9 +1232,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					});
 					Future<?> task = GameThreadPoolServices.threadPoolManager()
 						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false), delay);
-					actionTasks.add(task);
+					writableActionTasks().add(task);
 					if (containsDespawnSelf(actions, next)) {
-						terminalActionTasks.add(task);
+						writableTerminalActionTasks().add(task);
 					}
 					return;
 				}
@@ -1518,12 +1589,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		scheduleNextFlee(source, 0);
 		fleeStopTask = GameThreadPoolServices.threadPoolManager().schedule(
 			() -> stopFlee(source, pushState), Math.max(1L, integer(action, "seconds")) * 1000);
-		actionTasks.add(fleeStopTask);
+		writableActionTasks().add(fleeStopTask);
 	}
 
 	private void scheduleNextFlee(Creature source, long delayMs) {
 		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source), delayMs);
-		actionTasks.add(fleeMoveTask);
+		writableActionTasks().add(fleeMoveTask);
 	}
 
 	private void moveAwayFrom(Creature source) {
@@ -1545,7 +1616,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		// Fallback: if the destination is not reached in time (stuck or pathfinding failure), reselect after the timeout.
 		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source),
 			FLEE_RESELECT_TIMEOUT_MS);
-		actionTasks.add(fleeMoveTask);
+		writableActionTasks().add(fleeMoveTask);
 	}
 
 	private synchronized void stopFlee(Creature source, boolean pushState) {
@@ -1650,7 +1721,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return;
 		}
 		actionTasks.removeIf(Future::isDone);
-		actionTasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		writableActionTasks().add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			if (!isAlreadyDead() && getSubState() == AISubState.WALK_RANDOM) {
 				WalkManager.stopWalking(this);
 				runEvent("on_stop_to_random_move", null, null);
