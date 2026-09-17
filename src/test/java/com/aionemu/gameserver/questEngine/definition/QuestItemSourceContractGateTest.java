@@ -1,6 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
 import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,6 +18,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -45,6 +53,91 @@ class QuestItemSourceContractGateTest {
 		}
 		assertTrue(violations.isEmpty(),
 			() -> "collect-item events must watch an item owned by the same quest: " + violations);
+	}
+
+	@Test
+	void everyRewardEntryBranchVerifiesTheQuestsOwnCollectedItems() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		Set<String> knownGaps = loadKnownHandInGaps();
+		List<String> violations = new ArrayList<>();
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			Set<Integer> collectItems = droppedCollectItems(definition.metadata());
+			if (collectItems.isEmpty()) {
+				continue;
+			}
+			Set<String> rewardNodes = new LinkedHashSet<>();
+			for (QuestNode node : definition.nodes()) {
+				if (node.projection().status() == QuestStatus.REWARD) {
+					rewardNodes.add(node.label());
+				}
+			}
+			// 同一 (源节点, NPC) 的多条 SELECT_QUEST_REWARD 路由构成一个交付分支：gated 主路由 + 未集齐回落路由。
+			// Routes sharing (source node, npc) form one hand-in branch: a gated primary route plus a fallback.
+			Map<String, Set<Integer>> gatedItems = new LinkedHashMap<>();
+			for (QuestTransition transition : definition.transitions()) {
+				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk) || talk.dialogId() == null
+						|| talk.dialogId() != QuestDialogAction.SELECT_QUEST_REWARD.id()
+						|| rewardNodes.contains(transition.sourceNode())) {
+					continue;
+				}
+				Set<Integer> gated = gatedItems.computeIfAbsent(
+					transition.sourceNode() + "@" + talk.npcId(), ignored -> new LinkedHashSet<>());
+				for (QuestCondition condition : transition.conditions()) {
+					if (condition instanceof QuestCondition.HasItem hasItem && hasItem.expected()) {
+						gated.add(hasItem.itemId());
+					}
+				}
+			}
+			for (Map.Entry<String, Set<Integer>> branch : gatedItems.entrySet()) {
+				if (!branch.getValue().containsAll(collectItems)
+						&& !knownGaps.contains(definition.id() + "\t" + branch.getKey())) {
+					violations.add("quest " + definition.id() + " branch " + branch.getKey()
+						+ " reaches the reward node without verifying " + collectItems);
+				}
+			}
+		}
+		assertTrue(violations.isEmpty(),
+			() -> "every reward-entry branch must verify the quest's own collected items: " + violations);
+	}
+
+	/**
+	 * 既在 <items> 声明、又由本任务掉落的收集道具（这类道具若不在交付时校验，玩家即可零进度领奖）。
+	 * Items that the quest both declares and drops itself.
+	 */
+
+	/**
+	 * 既有无条件交付分支清单（逐条评审前不做全库豁免）。
+	 * Recorded pre-existing ungated hand-in branches; reviewed one by one, never a quest-wide wildcard.
+	 */
+	private static Set<String> loadKnownHandInGaps() throws Exception {
+		Set<String> known = new LinkedHashSet<>();
+		try (InputStream input = QuestItemSourceContractGateTest.class
+				.getResourceAsStream("/quest/quest-item-handin-baseline.tsv")) {
+			assertNotNull(input, "missing /quest/quest-item-handin-baseline.tsv");
+			try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(input, StandardCharsets.UTF_8))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (!line.isBlank() && !line.startsWith("#")) {
+						known.add(line);
+					}
+				}
+			}
+		}
+		return known;
+	}
+
+	private static Set<Integer> droppedCollectItems(QuestMetadata metadata) {
+		Set<Integer> collectItems = new LinkedHashSet<>();
+		for (QuestItemRequirement requirement : metadata.itemRequirements()) {
+			boolean dropped = metadata.drops().stream()
+				.anyMatch(drop -> drop.itemId() == requirement.itemId() && drop.chance() > 0);
+			if (dropped) {
+				collectItems.add(requirement.itemId());
+			}
+		}
+		return collectItems;
 	}
 
 	@Test

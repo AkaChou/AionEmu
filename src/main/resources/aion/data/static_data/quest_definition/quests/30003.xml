@@ -119,6 +119,38 @@
     </transition>
     <!-- 步骤 1:Honeus (799029) 对话并交任务。 -->
     <dialog type="NPC_REPORT" npc-id="799029" source="step1" target="reward" page="SELECT5"/>
+    <transition source="step1" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799029" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209161" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182209161" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799029" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799029" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <!-- 奖励:Honeus (799029) 领取,移除任务物品 182209161。 -->
     <transition source="reward" target="reward">
       <event>

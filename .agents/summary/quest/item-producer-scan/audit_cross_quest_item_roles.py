@@ -89,6 +89,46 @@ def _verdict(quest_id: int, item_id: int, dev_name: str, tracked: set[int], path
     return "OWN_COLLECT_NO_DROP"
 
 
+SHORTHAND = re.compile(
+    r'<(?:dialog type="NPC_REPORT"|npc-report)\s[^>]*?npc-id="(\d+)"[^>]*?source="([^"]+)"[^>]*?/?>')
+
+
+def reward_hand_in_gaps() -> list[tuple[int, list[tuple[str, int]]]]:
+    """NPC_REPORT 简写展开出的 SELECT_QUEST_REWARD 路由是否仍无条件（QE-032）。
+
+    The shorthand expansion emits an unconditional SELECT_QUEST_REWARD route unless an explicit
+    route with the same (source, npc, action) replaces it; a quest that declares and drops its own
+    collect items must gate every such branch.
+    """
+    import xml.etree.ElementTree as ET
+
+    gaps: list[tuple[int, list[tuple[str, int]]]] = []
+    for path in sorted(QUESTS.glob("*.xml")):
+        text = path.read_text()
+        if "<dialog type=\"NPC_REPORT\"" not in text and "<npc-report" not in text:
+            continue
+        root = ET.parse(path).getroot()
+        items = {int(e.get("id")) for e in (root.find("metadata/items") or []) if e.get("id")}
+        drops = {int(e.get("item-id")) for e in root.iter("drop") if int(e.get("chance", "100")) > 0}
+        if not (items & drops):
+            continue
+        gated = set()
+        for t in root.iter("transition"):
+            ev = t.find("event")
+            child = list(ev)[0] if ev is not None and len(ev) else None
+            if child is None or child.tag != "dialog" or child.get("npc-id") is None:
+                continue
+            conditions = t.find("conditions")
+            if conditions is not None and any(
+                    e.tag == "has-item" and e.get("expected", "true") != "false" for e in conditions):
+                gated.add((t.get("source"), int(child.get("npc-id")), child.get("action") or ""))
+        bad = sorted({(src, int(npc)) for npc, src in SHORTHAND.findall(text)
+                      if src != "reward" and (src, int(npc), "SELECT_QUEST_REWARD") not in gated})
+        if bad:
+            gaps.append((int(path.stem), bad))
+    return gaps
+
+
 def main() -> int:
     names = dev_names()
     baseline = []
@@ -135,6 +175,14 @@ def main() -> int:
     print(f"== 后续待评审轴：真端 collect/check 名称在我方交付集合中缺失 {len(gaps)} 行 -> {GAPS.name} ==")
     for verdict, count in sorted(tally.items(), key=lambda kv: -kv[1]):
         print(f"     {verdict}: {count}")
+
+    hand_in = reward_hand_in_gaps()
+    hand_in_out = ROOT / ".agents/summary/quest/item-producer-scan/item-handin-route-gaps.tsv"
+    hand_in_out.write_text("# questId\tungatedSource@npc\n"
+                           + "\n".join(f"{q}\t{','.join(f'{s}@{n}' for s, n in routes)}" for q, routes in hand_in) + "\n")
+    print(f"== QE-032 仍无道具校验的 SELECT_QUEST_REWARD 交付分支 = {len(hand_in)} -> {hand_in_out.name} ==")
+    for q, routes in hand_in:
+        print(f"     {q}: {routes}")
     return 0
 
 

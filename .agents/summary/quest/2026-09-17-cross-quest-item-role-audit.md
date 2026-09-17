@@ -77,3 +77,25 @@ python3 .agents/summary/quest/item-producer-scan/audit_cross_quest_item_roles.py
 修复后待评审轴由 89 行降为 **76 行**：48 外部来源 / 29 同类缺交付校验（剩余部分为无 reward 入边或已存在其它道具校验，需逐条确认）/ 22 本任务无掉落 / 11 名称待映射 / 4 他任务道具。
 
 **验证**：`mvn test` 同套门禁 33 项全绿（主工作树恢复可编译后复跑），PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0。
+
+## 8. 第四批：NPC_REPORT 简写展开的无条件交付路由（QE-032）
+
+**机制**：`<dialog type="NPC_REPORT">` 由 `QuestXmlBlockExpander.expandNpcReport` 展开为两条边——
+`QUEST_SELECT`（展示页，source→source）与 `SELECT_QUEST_REWARD`（source→target/reward，**conditions 与 actions 全空**）；
+只有显式声明同 `(source, npc, SELECT_QUEST_REWARD)` 路由时，简写那条才会被 `explicitDialogRoutes` 过滤掉。
+
+**范围与处置**：全库 66 个任务命中"声明并掉落收集道具、却存在无条件交付分支"：
+
+| 分类 | 数量 | 处置 |
+|---|---|---|
+| 真端 `collect_item` 名称与数量逐条相等的简写任务 | 51（79 条路由） | **已修**：每条路由补 `priority=0` gated 显式路由（has-item + remove-item）+ `priority=1` 未集齐回落页（CHECK_USER_ITEM_FAIL） |
+| 仅 `reward→reward` 简写 | 13（25013/25022/25050/25062/25073/25080/25081/25094/25306/25526/25532/25535/25538） | **保持无条件**：这是"重新打开奖励窗"，道具在首次交付时已扣除，加校验会锁死领奖 |
+| 真端道具名未映射 | 2（3217/4217） | 留待人工评审 → `item-handin-route-gaps.tsv` |
+
+**修复形态（每条简写分支三条路由）**：① `priority=0` gated 交付路由（has-item + remove-item + 奖励窗页）；② `priority=1` 未集齐回落路由（`CHECK_USER_ITEM_FAIL`＝页 10001）；③ `FINISH_DIALOG`(1008) 关闭路由——失败页上客户端渲染的关闭按钮必须有落点，否则 `QuestClientContractGateTest` 报 `BUTTON_WITHOUT_ROUTE`（首轮实测命中 16942/26942/26977/30210/30213 共 6 条，补 79 条关闭路由后全绿）。
+
+**已知同类缺口基线**：门禁按编译后模型还发现 **30 个任务 / 42 条**既有的无条件交付分支（多为**显式** `SELECT_QUEST_REWARD` 路由，非简写类），未在本批处理，已逐条写入 `src/test/resources/quest/quest-item-handin-baseline.tsv`（按 `quest-client-contract-baseline.tsv` 惯例，新增即失败、已修复项默认容忍），并在审计脚本中单列。
+
+**静态验证**：51 个文件 XSD 校验 51/51 通过；注入路由的 target 节点全部存在；重复路由检查确认相关"重复"均为 HEAD 中既有的 `has-item` / `expected=false` 成对结构与奖励阶段对话对，非本批引入。
+
+**新增门禁**：`QuestItemSourceContractGateTest#everyRewardEntryBranchVerifiesTheQuestsOwnCollectedItems`——只要任务同时声明并掉落某收集道具，其每个 `(源节点, NPC)` 交付分支都必须有一条覆盖**该任务全部收集道具**的 gated 路由（奖励阶段重开路由除外）。修复前 66 个任务命中，修复后仅剩 3217/4217。

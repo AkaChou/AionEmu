@@ -721,3 +721,25 @@ first_check: 任务交付条件里的道具是否等于本任务 items/drops 里
 
 - **判定规则**：任务的交付/消耗条件只能校验**本任务自己声明或发放**的道具；`collect-item` 事件是客户端进度刷新的触发点，监听对象必须是本任务自己的道具。道具归属以 item_template 的 `name_desc`（`quest_<questId>...`）为权威，跨任务引用必须能给出真端 collect/check 或交接链证据。
 - **代表案例**：`15012` 掉落 quest_15012a 却校验 quest_15013a（15013 的道具，同批 15010/15043/15070/51021 都是 +1 偏移复制）；`28836`/`28838` 的 collect-item 事件监听邻居任务道具并把 count 写成掉落行数（5/8），收集进度永不刷新；由 `QuestItemSourceContractGateTest` 守护。
+
+---
+
+## [QE-032] 三十、交付简写展开的无条件奖励路由 (NPC_REPORT_SHORTHAND_REWARD_ROUTE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: <dialog type="NPC_REPORT"> / <npc-report> 简写展开、SELECT_QUEST_REWARD 交付路由、<items> 收集道具
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 收集任务只要点交付按钮就直接进奖励窗，背包里一个任务道具都没有也能领奖；掉落出来的收集道具永远不被消耗、堆在背包里
+root_cause: QuestXmlBlockExpander.expandNpcReport 把简写展开成两条边——QUEST_SELECT（展示页，source→source）与 SELECT_QUEST_REWARD（source→target/reward，conditions 与 actions 全空）。只有显式声明同 (source, npc, SELECT_QUEST_REWARD) 路由时，简写那条才会被 explicitDialogRoutes 过滤掉。51 个任务（多为多 NPC/多职业变体，合计 79 条路由）只写了简写，于是每条交付路由都是无条件的
+fix_or_guardrail: 1. 51 个任务逐条补三条路由——priority=0 gated 交付路由（has-item + remove-item，数量取本任务 <items> 且与真端 collect_item 逐条相等）、priority=1 未集齐回落路由（CHECK_USER_ITEM_FAIL＝页 10001）、以及 FINISH_DIALOG(1008) 关闭路由（失败页上客户端渲染的关闭按钮必须有落点，缺则客户端契约门禁报 BUTTON_WITHOUT_ROUTE）；显式路由自动取代简写无条件边；2. 新增全库门禁 QuestItemSourceContractGateTest#everyRewardEntryBranchVerifiesTheQuestsOwnCollectedItems——只要任务同时声明并掉落某收集道具，其每个 (源节点, NPC) 交付分支都必须有一条覆盖该任务全部收集道具的 gated 路由
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/11003.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15000.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15072.xml; src/main/resources/aion/data/static_data/quest_definition/quests/2307.xml; src/main/resources/aion/data/static_data/quest_definition/quests/3096.xml; src/main/resources/aion/data/static_data/quest_definition/quests/4940.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestItemSourceContractGateTest.java; .agents/summary/quest/item-producer-scan/item-handin-route-gaps.tsv
+validation: 修复前 66 个任务命中该不变量；修复后简写类归零，剩余 30 个任务 / 42 条为既有无条件分支（含 3217/4217，真端 collect 名称未映射），全部留档为基线待评审；mvn test 任务门禁 34 项全绿
+boundaries: 门禁按编译后模型另发现 30 个任务 / 42 条既有无条件交付分支（多为显式 SELECT_QUEST_REWARD 路由），已逐条写入 /quest/quest-item-handin-baseline.tsv 待评审（新增失败、旧项容忍）；reward→reward 的简写（25013/25022/25050/25062/25073/25080/25081/25094/25306/25526/25532/25535/25538 共 13 个）是"重新打开奖励窗"，道具已在首次交付时扣除，**不得**加校验；3217/4217 待人工映射真端道具名
+superseded_by: none
+see_also: [QE-031]
+first_check: 检查任务是否只用 <dialog type="NPC_REPORT"> 简写交付；是则确认它是否声明并掉落 <items> 收集道具，并检查是否有同 (source, npc, SELECT_QUEST_REWARD) 的显式 has-item 路由
+-->
+
+- **判定规则**：简写交付边**天生无条件**——凡任务声明并在本地掉落收集道具，其每条非奖励阶段交付分支都必须显式声明带 `has-item` 的 `SELECT_QUEST_REWARD` 路由（引擎会用显式路由取代简写同路由）；未集齐的回落路由只允许显示失败页、不得进入奖励阶段。奖励阶段的 `reward→reward` 简写是重开奖励窗，必须保持无条件。
+- **代表案例**：`15000` / `15072` / `2307` / `3096` / `4940` 等 51 个任务共 79 条无条件交付路由（含 2~5 个 NPC 变体），修复前均可零进度领奖；由 `QuestItemSourceContractGateTest` 的全库分支不变量守护。
