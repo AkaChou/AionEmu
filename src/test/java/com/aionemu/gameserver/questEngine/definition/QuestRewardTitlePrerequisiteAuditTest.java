@@ -33,7 +33,8 @@ class QuestRewardTitlePrerequisiteAuditTest {
 	@Test
 	void noQuestRequiresItsOwnRewardTitle() throws Exception {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
-		for (QuestDefinition definition : catalog.all()) {
+		for (CompiledQuestDefinition compiled : catalog.all()) {
+			QuestDefinition definition = compiled.definition();
 			int titlePrereq = definition.metadata().titleId();
 			if (titlePrereq > 0) {
 				for (QuestReward reward : definition.metadata().rewards()) {
