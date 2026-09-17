@@ -211,6 +211,86 @@ class QuestMovieAndDialogLoopRegressionTest {
 		}
 	}
 
+	@Test
+	void multiTierQuestsNeverDeclareDeadRewardGroups() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		java.util.List<String> violations = new java.util.ArrayList<>();
+
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition def = compiled.definition();
+			List<QuestRewardGroup> groups = def.metadata().rewardGroups();
+			if (groups.size() <= 1) {
+				continue;
+			}
+			java.util.Set<Integer> covered = new java.util.TreeSet<>();
+			for (QuestTransition t : def.transitions()) {
+				boolean completes = t.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance);
+				if (!completes) {
+					continue;
+				}
+				for (QuestAction action : t.actions()) {
+					if (action instanceof QuestAction.CompleteQuest completion) {
+						covered.add(completion.rewardIndex());
+					}
+				}
+				List<String> inlineGrants = t.actions().stream()
+					.filter(QuestAction.GrantReward.class::isInstance)
+					.map(QuestAction.GrantReward.class::cast)
+					.map(grant -> grant.kind() + "|" + grant.id() + "|" + grant.amount())
+					.sorted()
+					.toList();
+				if (!inlineGrants.isEmpty()) {
+					for (int index = 0; index < groups.size(); index++) {
+						if (groupSignature(groups.get(index)).equals(inlineGrants)) {
+							covered.add(index);
+						}
+					}
+				}
+			}
+			for (int index = 0; index < groups.size(); index++) {
+				if (!covered.contains(index)) {
+					violations.add("Quest " + compiled.id() + " declares " + groups.size()
+						+ " reward groups but tier " + index + " is never granted (covered=" + covered + ")");
+				}
+			}
+		}
+
+		assertTrue(violations.isEmpty(), "Dead reward groups found: " + violations);
+	}
+
+	private static List<String> groupSignature(QuestRewardGroup group) {
+		return group.rewards().stream()
+			.map(reward -> reward.kind() + "|" + reward.id() + "|" + reward.amount())
+			.sorted()
+			.toList();
+	}
+
+	@Test
+	void quest50023TiersUseTheirOwnClientRewardWindow() throws Exception {
+		QuestDefinition def = definition(50023).definition();
+		assertEquals(2, def.metadata().rewardGroups().size(), "Quest 50023 must declare 2 reward groups");
+		assertEquals(188051780, def.metadata().rewardGroups().get(0).rewards().get(0).id());
+		assertEquals(188051782, def.metadata().rewardGroups().get(1).rewards().get(0).id());
+
+		// 档位 1（1 个线索）展示 select_quest_reward1；档位 2（3 个线索）展示 select_quest_reward2。
+		// Tier 1 (1 clue) opens select_quest_reward1; tier 2 (3 clues) opens select_quest_reward2.
+		assertRewardWindow(def, QuestDialogAction.SELECTED_QUEST_REWARD1, 1, QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1);
+		assertRewardWindow(def, QuestDialogAction.SELECTED_QUEST_REWARD2, 3, QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW2);
+	}
+
+	private static void assertRewardWindow(QuestDefinition definition, QuestDialogAction action, int clueCount,
+			QuestDialogPage expectedPage) {
+		QuestTransition tier = definition.transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& Integer.valueOf(action.id()).equals(talk.dialogId())
+				&& candidate.conditions().stream().anyMatch(condition ->
+					condition instanceof QuestCondition.HasItem hasItem && hasItem.count() == clueCount))
+			.findFirst().orElseThrow(() -> new AssertionError("missing tier route for action " + action));
+		assertTrue(tier.afterCommit().stream().anyMatch(after ->
+			after instanceof AfterCommitAction.ShowQuestDialog page && page.dialogId() == expectedPage.id()),
+			"tier route for " + action + " must open " + expectedPage);
+	}
+
 	private static void assertNode(QuestDefinition definition, String label, Map<String, Integer> variables) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))

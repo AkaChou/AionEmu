@@ -12,10 +12,14 @@
     <items>
       <item id="186000179" count="1"/>
     </items>
-    <rewards>
-      <reward kind="ITEM" id="188051780" amount="1"/>
-      <reward kind="ITEM" id="188051782" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188051780" amount="1"/>
+      </group>
+      <group>
+        <reward kind="ITEM" id="188051782" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -170,7 +174,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -194,7 +198,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="started" target="r1" priority="1">
@@ -273,7 +277,7 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <!-- 档位 2 奖励 r2：大盒 (188051782) / reward tier 2: big box -->
-    <npc-complete npc-id="831071" source="r2" target="complete" fixed-reward-indices="1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="831071" source="r2" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

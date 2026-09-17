@@ -589,3 +589,25 @@ first_check: 检查 drops 中 collecting-step 是否非 0 且该值在 nodes 的
 
 - **判定规则**：任务 `<drops>` 中的 `collecting-step` 如果非 0，必须存在于任务 `nodes` 所声明的有效 `var0` 取值集合中。严禁配置任务生命周期中永远无法达到的步数，避免运行时掉落判定恒为 false。
 - **代表案例**：魔族任务 `2372`（drops 误配 collecting-step="2" 但任务只有 var0=0）、间谍任务 `4907`（drops 误配 collecting-step="1" 但任务只有 var0=0）、布鲁斯特豪宁任务 `24202` 与 `24203`（drops 误配 collecting-step="2" 但任务只有 var0=0）。修复后由 `fatalImpossibleDropStepsAreEliminated` 门禁全局防护。
+
+---
+
+## [QE-026] 二十四、多档奖励组声明与档位奖励窗口一致性 (REWARD_GROUP_TIER_FIDELITY)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务多档阶梯奖励 (reward-groups)、npc-complete complete-reward-index 与档位奖励窗口页
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家交出更高档位的兑换材料后，客户端奖励窗口显示的仍是第 1 档文案（例：交出 3 个线索却显示“收到了 1 个线索”），或任务声明了多档奖励但某一档位永远无法被发放（死档）
+root_cause: 多档结算任务把各档奖励平铺在单个 <rewards> 容器里（物理上只有 1 个奖励组），引擎在 groups.size()==1 时按兼容契约不做组索引校验，于是档位只靠固定奖励索引区分，奖励窗口页也始终复用第 1 档页面；客户端文案与实际档位因此不一致。另一类风险是声明了多个 <reward-groups> 却没有任何完成路径发放其中某一档，形成永远拿不到的死档
+fix_or_guardrail: 1. 多档任务按档位声明 <reward-groups>，每档一个 <group>，并让第 N 档入口下发 SHOW_SELECT_QUEST_REWARD_WINDOWn（档位文案来自客户端 select_quest_rewardN 页）；2. npc-complete 的 complete-reward-index 与固定奖励索引按本档自身组解析；3. QuestMovieAndDialogLoopRegressionTest 新增 multiTierQuestsNeverDeclareDeadRewardGroups() 全库门禁，声明多组的任务必须每档都能被发放（组索引被 CompleteQuest 引用，或该完成路径的显式 grant-reward 与该组内容完全一致）
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/50023.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java
+validation: 全库 21 个多奖励组任务扫描 0 死档；QuestMovieAndDialogLoopRegressionTest 13 项用例全绿
+boundaries: 适用于所有多档奖励/兑换任务；单组任务若确为真端单一奖励仍保持 <rewards> 平铺
+superseded_by: none
+see_also: [QE-025]
+first_check: 检查多档任务是否声明了 <reward-groups>，第 N 档是否下发 SHOW_SELECT_QUEST_REWARD_WINDOWn，且每档都有可发放的完成路径
+-->
+
+- **判定规则**：多档结算任务必须按档位声明 `<reward-groups>`；第 N 档入口必须下发与该档客户端文案一致的 `SHOW_SELECT_QUEST_REWARD_WINDOWn`；每个声明的档位都必须存在可被发放的完成路径，严禁声明后无人发放的死档。
+- **代表案例**：天族事件兑换任务 `50023`（凭 1 个线索换小盒、凭 3 个线索换大盒）原先两档共用 `SHOW_SELECT_QUEST_REWARD_WINDOW1`，交 3 个线索时显示的是 1 个线索的文案；修复为两组 `<reward-groups>` + 档位 2 下发 `SHOW_SELECT_QUEST_REWARD_WINDOW2`（客户端 `select_quest_reward2` 文案“您有 3 个线索啊”），并由 `multiTierQuestsNeverDeclareDeadRewardGroups` 门禁守护死档。

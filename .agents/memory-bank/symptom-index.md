@@ -59,6 +59,7 @@
 | 玩家无论达到何种等级或进度均无法在 NPC 处看到或接取任务，任务永久断链 | `QE-023` | 检查 start-conditions 中 finished 条件的 quest-id 是否等于自身任务 ID，或是否存在 A->B->A 环路 |
 | 看完电影没有下一步，再次点击 NPC 无限重复看电影；或者玩家点击推进选项（SETPRO*）后对话直接关闭或停在原步数，再次点击 NPC 完全重复对话，任务目标无法推进 | `QE-024` | 检查 play-movie 或 SETPRO 所在 transition 的 source 与 target 是否相同且无 actions，检查非目标阶段是否存在冗余 kill-npc 触发电影 |
 | 玩家击杀任务指定怪物或采集目标物体成百上千次，永远无法掉落任何任务道具，任务彻底卡死无法进行 | `QE-025` | 检查 drops 中 collecting-step 是否非 0 且该值在 nodes 的 var0 中未定义 |
+| 玩家交出更高档位的兑换材料后，客户端奖励窗口显示的仍是第 1 档文案（例：交出 3 个线索却显示“收到了 1 个线索”），或任务声明了多档奖励但某一档位永远无法被发放（死档） | `QE-026` | 检查多档任务是否声明了 <reward-groups>，第 N 档是否下发 SHOW_SELECT_QUEST_REWARD_WINDOWn，且每档都有可发放的完成路径 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |
