@@ -4,8 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 子材料物品模板（静态数据/XML）。
@@ -14,8 +13,7 @@ import lombok.Setter;
  * @author Ranastic (Encom)
  */
 
-@Getter
-@Setter
+@Data
 @XmlRootElement(name = "SubMaterialItem")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SubMaterialItem {

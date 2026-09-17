@@ -4,16 +4,14 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 温泉模板（静态数据/XML）。
  * XML template.
  */
 
-@Getter
-@Setter
+@Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpringTemplate")
 public class SpringTemplate {

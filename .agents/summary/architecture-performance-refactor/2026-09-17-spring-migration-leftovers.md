@@ -327,3 +327,18 @@
   因会进入泛型容器而暂缓，待逐个确认容器语义后处理。
 - 验证：`mvn test-compile` 通过；本轮 143 例测试全绿（含 `AionBootApplicationTest`(12)、
   `GameLegacyServiceBridgeConfigurationTest`(57)、`ModelCollectionImplementationTest`(18) 等）。
+
+### 3. @Data 覆盖面排查结论（2026-09-17）
+
+| 筛选口径 | 命中数 | 结论 |
+|---|---|---|
+| 无继承 + 全标量字段 + 无手写 equals/hashCode/toString + 无敏感字段 + 不作为泛型容器元素 | 8 | 已全部改为 `@Data` |
+| 同上但会进入泛型容器（逐个核对 `contains/indexOf/remove` 后确认无身份依赖） | 7 | 已改为 `@Data` |
+| 放宽到"字段全为无泛型类型 + 访问器数=字段数 + 无业务方法" | 4 | **全部排除**：`GlobalRule`/`FullBonus` 是 JAXB 模板（`@XmlAccessorType(FIELD)`），`AssembledNpcPart` 是 final 字段值对象（当前拼写为 `@AllArgsConstructor`，本身是既有拼写问题），`GeomUtil` 是无字段工具类 |
+| 含类级 `@Getter/@Setter` 的全部类 | 182 | 其中 159 个是实体/服务类，**不使用 `@Data`**（按字段 equals/hashCode 会破坏实体身份语义，字段级 `toString` 会递归） |
+
+- 最终 `@Data` 类总数：**15**（8 + 7），全部是字段全为标量或简单值的纯数据载体。
+- 验证：`mvn test-compile` 0 错误；本轮 128 例测试全绿（含 `AbyssTeleporterQuestRequirementTest`、
+  `AionBootApplicationTest`(12)、`GameLegacyServiceBridgeConfigurationTest`(57)、`ModelCollectionImplementationTest`(18) 等）。
+- 注意：`AssembledNpcPart` 上现存的 `@AllArgsConstructor` 拼写疑似历史笔误（Lombok 注解应为 `@AllArgsConstructor` 之外的
+  `@AllArgsConstructor` 不存在——本项目其余位置使用 `@AllArgsConstructor`），本次未擅自改名。

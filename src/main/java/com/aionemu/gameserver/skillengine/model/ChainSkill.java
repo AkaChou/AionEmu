@@ -1,15 +1,13 @@
 package com.aionemu.gameserver.skillengine.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.AllArgsConstructor;
 
 /**
  * 单条连锁技能状态：类别、连击计数与最近使用时间。
  * Single chain-skill state: category, chain count and last use time.
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class ChainSkill {
 
