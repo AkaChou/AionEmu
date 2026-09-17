@@ -1729,3 +1729,75 @@ D 项最后一个候选（play-15：`TreeSet` 92,150 + `TreeMap` 92,150 + `Entry
    ⇒ 采样权重的"存在/消失"判断只在**样本量足够**时可信，该站点的结论应回退为"未验证"。
 4. 下一批（按证据，均为设计型改动、非纯降本）：① `SearchWorkspace` 的 node/open/searchNode 分配与 `PriorityQueue` 21.6% CPU
    一体优化（工作区容量与开放集结构）；② `WaterVolumeStore.find` 的每次调用分配；③ `KnownList.knownObjectsSnapshot` 快照。
+
+### 12.26 收口（2026-09-17）：D 项总账、决策与复开条件
+
+#### 12.26.1 D 项总账（12.15–12.23 八个切片）
+
+| 切片 | 内容 | 预估 |
+|---|---|---|
+| 12.15 | `EffectController` 三张效果表惰性化（并修 `clearEffect` 对空表抛异常的真实缺陷） | ≈36 MB |
+| 12.16 | `KnownList` 两张 eager CHM 懒初始化 | ≈19 MB |
+| 12.17 | `CreatureLifeStats` 三把锁合并为一把 | ≈12 MB |
+| 12.18 | `ObserveController` 两个 COW 列表 + `RetailPatternAI2` 三个 `newKeySet()` 写时物化 | ≈32 MB |
+| 12.20 | `RetailPatternAI2` 三张 CHM 写时物化 | ≈19 MB |
+| 12.21 | `RetailPatternAI2` 五个普通容器（HashMap/HashSet）写时物化 | ≈28 MB |
+| 12.22 | `AggroList.damageListeners` + `AbstractAI.aiDeathListeners` 写时物化 | ≈6 MB |
+| 12.23 | `CreatureGameStats` 属性表 + `ReentrantReadWriteLock` 懒物化 | ≈22 MB |
+
+**实测（12.25，play-15 → play-16）**：存活堆 **−133 MB / −387 万对象**（且 play-16 生物多 2.2%、寻路量更大）；
+单位 CPU 样本的分配量 **−34%**；`Buffer.checkIndex` 7.5% → 0%、`Arrays.fill` 4.5% → 0%；
+`CreatureGameStats`/`AggroList`/`ReentrantReadWriteLock` 相关帧 → 0.4/0.2/0.0%；该窗口日志 0 异常。
+可复用不变量已提炼为 `AR-010`（占位符语义 / 首写收敛 / 锁先于表 / 物化后类型不变）。
+
+#### 12.26.2 决策：寻路不动
+
+- **原则**：任何会改变搜索决策的改动不做 —— 启发式权重、tie-break、节点预算/半径、邻居展开顺序、
+  换堆结构、路径后处理，一律不碰。
+- **依据**：A\* 的 87.5 MB/300s 是**预热性常驻增长**（工作区池把新标高一次分配到顶后常驻复用，
+  `PathData$MapData$Node` 存活 64.9 万 → 105.8 万；`SearchWorkspace.*` CPU 帧仅 **0.4%**），缩池只会把常驻
+  换成"下次深搜重新分配"；`MapData.point` 的 `PathPoint` 是**结果对象**，本就必须分配。
+- **唯一零质量候选**（开放集手写比较器：`score` 升序 + `sequence` 降序的严格全序不变 ⇒ 展开顺序与路径逐字不变）
+  实测相关帧占 **17.6%**（play-16），但预计只能吃到 2–5% 总 CPU，且要动全服第一热点 + 再跑一轮复测
+  ⇒ 本轮**判定不做**，留作复开首选候选。
+- 明确不做的其他项：`collideWith`（16% 但分散在约 10 个调用点，单点 ≤3%）、任何"降质量换性能"的启发式/预算调整。
+
+#### 12.26.3 容量口径（16 GB 堆 / 16 GB 机器）
+
+- **固定开销**（与世界人数无关）：全 GC 存活集 **2.74 GB（空转）～2.82 GB（1 玩家 + 12.98 万 NPC + 大量寻路）**，
+  构成以 geo/静态数据为主（`byte[]` 631 MB、`float[]` 285 MB、`short[]` 175 MB、geo 碰撞树 ≈171 MB、
+  静态模板 ≈132 MB）+ 每生物对象 + A\* 工作区高水位 42 MB。
+- **16 GB 堆**：G1 建议 live ≤ 75% ⇒ 可用 ≈12 GB，**留给玩家的净余量 ≈9 GB**；按 1.5 / 3 / 5 MB 每人
+  分别约 **6000 / 3000 / 1800 人**（区间宽，**尚未实测**，需多做号差分实验收窄）。
+- **真正的天花板是 CPU**：play-16 在**只有 1 名玩家**时，寻路 + geo 已占 CPU 采样 **≈65%**
+  （开放集 21.6% + A\* 20.3% + 碰撞 15.2% + 地形高度 8.3%）。人数上限取决于"允许多人同时战斗/移动"，不是堆大小。
+- **配置建议**：部署到 16 GB 机器时**不要 `-Xmx16g`**，用 `-Xmx10g -Xms4g`（留 4–5 GB 给 metaspace/code cache/
+  线程栈/文件缓存/OS）；并**显式设 `-XX:MaxDirectMemorySize=2g`**（默认 = Xmx，Netty 直接内存不计入堆直方图）。
+- **收窄人数的实验**：开 10 个号「分散」2 min → 抓 `GC.class_histogram`；再「集中同屏」2 min → 再抓一次；
+  两次差分 = 每人分散成本 + 同屏放大系数，线性外推即可给出内存口径的安全人数。
+
+#### 12.26.4 复开触发条件（满足任一，再用同一套口径采样，而不是继续扫直方图）
+
+1. 目标在线人数下出现可感知卡顿，或 TPS/技能延迟低于基线；
+2. 单次 GC 停顿 > 200 ms，或 GC 频率明显上升（GC 日志 / `jcmd GC.heap_info`）；
+3. 进程 RSS 常驻 > 目标机器物理内存的 70%；
+4. 直方图出现新的"每实体预制容器"类回归（某类实例数 ≈ 生物数/玩家数且体积可观）。
+
+复开后按价值排序的候选：① 开放集手写比较器（零质量，需 golden 差分）；② `collideWith` 调用点逐个攻；
+③ `WaterVolumeStore.find`（实测仍 5.9→8.6 MB/300s，12.13 的"归零"结论已按 12.25.5 勘误）；④ `KnownList.knownObjectsSnapshot`。
+
+#### 12.26.5 复现步骤与坑（交接）
+
+```bash
+jcmd <pid> JFR.start name=play-N settings=/tmp/alloc-detail.jfc filename=/tmp/play-N.jfr duration=300s
+jfr print --events jdk.ThreadAllocationStatistics /tmp/play-N.jfr > /tmp/play-N-threads.txt
+jfr print --events jdk.ObjectAllocationInNewTLAB   /tmp/play-N.jfr > /tmp/play-N-tlab.txt
+jfr print --events jdk.ExecutionSample             /tmp/play-N.jfr > /tmp/play-N-cpu.txt
+jcmd <pid> GC.class_histogram > /tmp/play-N-histogram.txt        # 触发一次 Full GC
+```
+
+- `ThreadAllocationStatistics.allocated` 是**线程启动以来的累计值**，跨轮比较必须用 max−min；
+  仓库里的 `jfr_play15_analysis.py` 只取 max（TLAB 段对 `tlabSize` 也是空转）⇒ **分配口径一律用未采样的 TLAB `tlabSize`**（12.25 已改用）。
+- `ObjectAllocationSample` 权重样本量小（play-15 只有 148 事件），**不能跨轮比绝对值**，只能看"存在/消失"且样本量足够时。
+- 任何寻路改动必须过 `PathGoldenDiffTest`（记录结果 + "工作区复用后逐字一致"双闸门）。
+- `/tmp/play-*.jfr|txt` 是临时件，会被系统清理；需要长期留存要复制进 `.agents/summary/architecture-performance-refactor/`。
