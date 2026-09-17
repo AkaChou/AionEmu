@@ -19,14 +19,19 @@
 ### ① 双源静态兜底（本期在做）
 
 - 形态：`provider.getIfAvailable(() -> SingletonHolder.instance)`——Spring 优先、静态兜底。
-- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **130 处带 `SingletonHolder` 兜底**，分布在 130 个文件（退役前 131/131，`InGameShopEn` 已退役）。
+- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **114 处带 `SingletonHolder` 兜底**（退役前 131 处；
+  已完成 `InGameShopEn` 试点 + 第一批 16 类，其余 114 处待退役）。
 - 另有 15 个文件含 `SingletonHolder` 字样，属于 chat/login/commons 侧纯静态持有，不是双源兜底，不在本期范围。
 - 危害：兜底一旦被走到，就在容器之外静默创建第二套实例（两套状态），且不在启动期暴露。
-- 现状：130/130 都有 provider 注入点（129 个手写 `setInstanceProvider`，`PlayerEventService` 由 Lombok `@Setter` 生成），无孤儿；但每个类都至少被 1 个测试文件直接调用 `getInstance()`（`GameServiceProviderCompatibilityTest` 165 处调用、387 条断言），必须逐类迁移、同步改测试。
+- 现状：全部有 provider 注入点（手写 `setInstanceProvider` 或 Lombok `@Setter`），无孤儿；但每个类都至少被 1 个测试文件直接调用 `getInstance()`（`GameServiceProviderCompatibilityTest` 165 处调用、387 条断言），必须逐类迁移、同步改测试。
 - 治理：`LegacySingletonFallbackAuditTest` 冻结计数（当前 130），只能显式下调；新增兜底必须先在本文件登记。
-- 批量计划：按"除 `GameServiceProviderCompatibilityTest` 外还有多少测试文件直接调用 `getInstance()`"分批——
-  25 类仅有兼容性测试引用（最低风险批次）→ 77 类 2 个测试文件 → 23 类 3 个 → 5 类 4 个及以上；
-  每批统一执行：改 fail-fast、删兜底、同步改测试、下调审计常量、聚焦测试授权验证。
+- 批量计划：先按"除 `GameServiceProviderCompatibilityTest` 外还有多少测试文件直接调用 `getInstance()`"分批，
+  再用"是否经 `*Fallbacks` 静态持有者回落"细化：
+  - A 组（facade 直接 `getIfAvailable(provider, X::getInstance)`）：与试点同形，可机械退役；已完成 16 类。
+  - B 组（经 `*Fallbacks` 的 eager 静态持有者回落）：缺少 provider 时首个回落会抛
+    `ExceptionInInitializerError` 并污染该持有者类，需先决定 facade/fallback 层的收敛方式，暂缓（9 类）。
+  - 每批统一执行：改 fail-fast、删兜底、同步改测试、下调审计常量、聚焦测试授权验证。
+  - 工具：`.agents/summary/architecture-performance-refactor/retire_singleton_fallback.py`（dry-run 默认，`--apply` 落盘）。
 
 ### ② 配置层半迁
 
@@ -69,11 +74,25 @@
 - 已知行为差异（边界）：`GameRuntimeServices.destroy()` 会清空 provider，关机窗口内迟到的 `inGameShopEn()` 调用将抛异常（以前是静默 new 一个真空实例、写入即丢）。若关机日志出现该异常 = 存在迟到调用点，应修调用点（关机前完成或可跳过），而不是恢复兜底。
 - 验证边界：本轮改动尚未编译、未跑测试（AGENTS 规则：构建需用户授权）。
 
-## 五、后续顺序
+## 五、第一批执行记录（2026-09-17，A 组 16 类）
+
+- 退役清单：`AbyssLandingSpecialService`、`AnnouncementService`、`BGService`、`CuringZoneService`、`DebugService`、
+  `FindGroupService`、`FlyRingService`、`GameTimeService`、`LandingUpdateService`、`MailService`、`PeriodicSaveService`、
+  `SpringZoneService`、`TaskManagerFromDB`、`ThievesGuildService`、`VeteranRewardsService`、`WebshopService`。
+- 改动：`getInstance()` 统一 fail-fast + 删除 `SingletonHolder`；`MailService` 保留 Spring 实例缓存
+  （`setInstanceProvider` 已清缓存），缺失 provider 时同样 fail-fast。
+- 测试：`GameServiceProviderCompatibilityTest` 新增覆盖 16 类的反射 fail-fast 契约；
+  `GameLocationBootstrapServices.abyssLandingSpecialService()` 的 destroy 后断言由"回退仍是另一实例"改为 `assertThrows`。
+- 计数：131 → **114**（审计常量与 `RETIRED` 集合同步：17 类）。
+- 暂缓：B 组 9 类（`AionPacketHandlerFactory`、`ChatServer`、`DataManager`、`EventScheduler`、`IDFactory`、
+  `LoginServer`、`LsPacketHandlerFactory`、`PacketFloodFilter`、`World`）——回落经 `*Fallbacks` 的 eager 静态持有者，
+  直接退役会把 `IllegalStateException` 包成 `ExceptionInInitializerError` 并污染该类，需先设计回退层收敛。
+
+## 六、后续顺序
 
 ② 配置（`@ConfigurationProperties`）→ ③ DAO 归 Spring → ④⑤ 随链路收口；2265/823 静态门面调用点按 AR-001 结论不动。
 
-## 六、证据来源
+## 七、证据来源
 
 - `.agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md`（12.13/12.25/12.26 性能口径）
 - `.agents/summary/architecture-performance-refactor/2026-09-17-login-link-shutdown-robustness.md`（关机链路证据）

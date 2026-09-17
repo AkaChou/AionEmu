@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -181,6 +184,38 @@ class GameServiceProviderCompatibilityTest {
 
         IllegalStateException error = assertThrows(IllegalStateException.class, InGameShopEn::getInstance);
         assertTrue(error.getMessage().contains("InGameShopEn"), error.getMessage());
+    }
+
+    @Test
+    void retiredSingletonAccessorsFailFastWithoutSpringProvider() throws Exception {
+        // 已退役双源兜底的类：provider 被清空后必须 fail-fast，而不是静默创建第二套实例。
+        // Retired dual-source classes must fail fast once their provider is cleared.
+        List<Class<?>> retired = List.of(
+                AbyssLandingSpecialService.class,
+                AnnouncementService.class,
+                BGService.class,
+                CuringZoneService.class,
+                DebugService.class,
+                FindGroupService.class,
+                FlyRingService.class,
+                GameTimeService.class,
+                LandingUpdateService.class,
+                MailService.class,
+                PeriodicSaveService.class,
+                SpringZoneService.class,
+                TaskManagerFromDB.class,
+                ThievesGuildService.class,
+                VeteranRewardsService.class,
+                WebshopService.class);
+
+        for (Class<?> type : retired) {
+            Method setter = type.getMethod("setInstanceProvider", ObjectProvider.class);
+            setter.invoke(null, (Object) null);
+
+            InvocationTargetException failure = assertThrows(InvocationTargetException.class,
+                    () -> type.getMethod("getInstance").invoke(null), type.getName());
+            assertInstanceOf(IllegalStateException.class, failure.getCause(), type.getName());
+        }
     }
 
     @Test
@@ -1189,7 +1224,7 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
             assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
             assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
-            assertNotSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingSpecialService);
         }
     }
 

@@ -34,10 +34,27 @@ class LegacySingletonFallbackAuditTest {
 	 * 已退役双源兜底的类：不得再出现任何回落或静态兜底定义。
 	 * Classes whose dual-source fallback is retired.
 	 */
-	private static final Set<String> RETIRED = Set.of("InGameShopEn");
+	private static final Set<String> RETIRED = Set.of(
+		"InGameShopEn",
+		"AbyssLandingSpecialService",
+		"AnnouncementService",
+		"BGService",
+		"CuringZoneService",
+		"DebugService",
+		"FindGroupService",
+		"FlyRingService",
+		"GameTimeService",
+		"LandingUpdateService",
+		"MailService",
+		"PeriodicSaveService",
+		"SpringZoneService",
+		"TaskManagerFromDB",
+		"ThievesGuildService",
+		"VeteranRewardsService",
+		"WebshopService");
 
-	/** 冻结的遗留双源兜底点数量（当前 131 个点中，InGameShopEn 已退役）。 */
-	private static final int FROZEN_FALLBACK_SITES = 130;
+	/** 冻结的遗留双源兜底点数量（131 个点中 17 个类已退役）。 */
+	private static final int FROZEN_FALLBACK_SITES = 114;
 
 	@Test
 	void legacySingletonFallbacksStayFrozenAndWired() throws IOException {
