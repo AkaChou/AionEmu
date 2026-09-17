@@ -24,7 +24,243 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="241234" item-id="182216007" chance="100" each-member="true" collecting-step="8" scope="GROUP" />
+      <drop npc-id="241234" item-id="182216007" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+    <bit-field name="var1" offset="6" width="6" min="0" max="15" persistence="PERSISTENT" scope="LOCAL" />
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0" />
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0" />
+    </node>
+    <node label="step1" status="START">
+      <var name="var0" value="1" />
+    </node>
+    <node label="step2" status="START">
+      <var name="var0" value="2" />
+      <var name="var1" value="0" />
+    </node>
+    <node label="step3" status="START">
+      <var name="var0" value="3" />
+      <var name="var1" value="0" />
+    </node>
+    <node label="step4" status="START">
+      <var name="var0" value="4" />
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="5" />
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0" />
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="805964" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE" />
+
+    <!-- step 0: 806177 Mondhes -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806177" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806177" action="SELECT1_1" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806177" action="SETPRO1" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="1" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806177" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- step 1: 806197 Mumu beekeeper -->
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2" />
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="SETPRO2" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="2" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- step 2: kill 10 of 241235 -->
+    <transition source="step2" target="step2" priority="1">
+      <event>
+        <kill-npc npc-id="241235" />
+      </event>
+      <conditions>
+        <variable-below field="var1" value="9" />
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+      </after-commit>
+    </transition>
+    <transition source="step2" target="step3" priority="0">
+      <event>
+        <kill-npc npc-id="241235" />
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="9" />
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3" />
+        <set-variable field="var1" value="0" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+      </after-commit>
+    </transition>
+
+    <!-- step 3: 806197 Mumu beekeeper -->
+    <transition source="step3" target="step3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="step3" target="step4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="4" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="step3" target="step3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806197" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- step 4: turn in 182216007 to 805964 Bindeil -->
+    <transition source="step4" target="step4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7" />
+      </after-commit>
+    </transition>
+    <transition source="step4" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <conditions>
+        <has-item item-id="182216007" count="1" />
+      </conditions>
+      <actions>
+        <remove-item item-id="182216007" count="1" />
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK" />
+      </after-commit>
+    </transition>
+    <transition source="step4" target="step4" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL" />
+      </after-commit>
+    </transition>
+    <transition source="step4" target="step4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- reward at 805964 Bindeil -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS" />
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="805964" source="reward" target="complete" fixed-reward-indices="0 1 11" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2" />
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3" />
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4" />
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5" />
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6" />
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="7" />
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="8" />
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="9" />
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="10" />
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+    </npc-complete>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

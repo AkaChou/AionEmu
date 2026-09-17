@@ -26,4 +26,406 @@
       <drop npc-id="212443" item-id="182215325" chance="80" each-member="true" collecting-step="1" scope="GROUP" />
     </drops>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0" />
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0" />
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1" />
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2" />
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3" />
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4" />
+    </node>
+    <node label="s5" status="START">
+      <var name="var0" value="5" />
+    </node>
+    <node label="s6" status="START">
+      <var name="var0" value="6" />
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="7" />
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0" />
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取：百夫长乌拉康 204391 -->
+    <dialog type="NPC_START" npc-id="204391" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE" />
+
+    <!-- 步骤 0：找甘达尔彭 790020 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="SELECT1_1" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="SETPRO1" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="1" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 1：收集 3 个 182215325 交给甘达尔彭 790020 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2" />
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <conditions>
+        <has-item item-id="182215325" count="3" />
+      </conditions>
+      <actions>
+        <remove-item item-id="182215325" count="3" />
+        <set-variable field="var0" value="2" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK" />
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL" />
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 2：听甘达尔彭 790020 讲述，领取被诅咒的项链 182215326 -->
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3" />
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" actions="SETPRO3 SELECT3" />
+      </event>
+      <actions>
+        <give-item item-id="182215326" count="1" />
+        <set-variable field="var0" value="3" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 3：见金喜 204393 -->
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204393" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4" />
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204393" action="SELECT4_1" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1" />
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204393" action="SETPRO4" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="4" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204393" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 4：选择向导姆克尔 204394..204398 -->
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204394" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204394" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204394" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204395" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204395" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204395" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204396" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204396" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204396" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204397" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204397" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204397" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204398" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204398" action="SETPRO5" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="5" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204398" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 5：在熔岩区使用被诅咒的项链 182215326 销毁 -->
+    <transition source="s5" target="s6">
+      <event>
+        <use-item item-id="182215326" />
+      </event>
+      <conditions>
+        <has-item item-id="182215326" count="1" />
+      </conditions>
+      <actions>
+        <remove-item item-id="182215326" count="1" />
+        <set-variable field="var0" value="6" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 6：向甘达尔彭 790020 汇报完成 -->
+    <transition source="s6" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS" />
+      </after-commit>
+    </transition>
+    <transition source="s6" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="SELECT_QUEST_REWARD" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="7" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <!-- 奖励节点 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="790020" source="reward" target="complete" fixed-reward-indices="0 1 6" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2" />
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3" />
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4" />
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5" />
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+    </npc-complete>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  51023 事件任务：与 Asmodae 的 NPC(831072) 对话，凭 1 个秘密指令线索(186000179)领小盒(188051781)或凭 3 个领大盒(188051783)，可重复 255 次，仅魔族。
+  Event quest: talk to NPC (831072) in Asmodae; exchange 1 clue (186000179) for small box (188051781) or 3 clues for big box (188051783); repeatable 255 times, Asmodian only.
+-->
 <quest-definition id="51023" version="1">
   <metadata name="[Event] Mysterious Scrolls in Asmodae" display-name-id="1150061" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
@@ -6,18 +10,19 @@
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
-
-    
       <item id="186000179" count="1"/>
-      <item id="186000179" count="3"/>
-      </items>
-    <rewards>
-      <reward kind="ITEM" id="188051781" amount="1"/>
-      <reward kind="ITEM" id="188051783" amount="1"/>
-    </rewards>
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188051781" amount="1"/>
+      </group>
+      <group>
+        <reward kind="ITEM" id="188051783" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -26,14 +31,18 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="r1" status="REWARD">
       <var name="var0" value="1"/>
+    </node>
+    <node label="r2" status="REWARD">
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 接取：起始对话 / start dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831072" action="QUEST_SELECT"/>
@@ -119,6 +128,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 进行中：查看进度 / in-progress: view status -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831072" action="QUEST_SELECT"/>
@@ -127,22 +137,86 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <!-- 档位 1：拿出 1 个线索 (dialog 8 / SELECTED_QUEST_REWARD1)，has-item 1 → r1 -->
+    <transition source="started" target="r1" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM"/>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
-
+        <has-item item-id="186000179" count="1"/>
       </conditions>
       <actions>
-
+        <remove-item item-id="186000179" count="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <!-- 档位 2：拿出 3 个线索 (dialog 9 / SELECTED_QUEST_REWARD2)，has-item 3 → r2 -->
+    <transition source="started" target="r2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000179" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000179" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <!-- 对话 39/20002：按持有的线索数分档（priority 0 优先 3 档，1 档兜底） -->
+    <transition source="started" target="r2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000179" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000179" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="r1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000179" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000179" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -150,39 +224,50 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="r2" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <conditions>
-
+        <has-item item-id="186000179" count="3"/>
       </conditions>
       <actions>
-
+        <remove-item item-id="186000179" count="3"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="started" target="r1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000179" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000179" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="831072" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="831072" action="SET_SUCCEED"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="831072" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <!-- 档位 1 奖励 r1：小盒 (188051781) / reward tier 1: small box -->
+    <npc-complete npc-id="831072" source="r1" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- 档位 2 奖励 r2：大盒 (188051783) / reward tier 2: big box -->
+    <npc-complete npc-id="831072" source="r2" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

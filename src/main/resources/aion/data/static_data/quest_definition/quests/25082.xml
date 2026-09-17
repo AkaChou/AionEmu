@@ -13,7 +13,7 @@
         <reward kind="EXP" id="0" amount="9804928" />
         <reward kind="ITEM" id="186000231" amount="4" />
         <reward kind="ITEM" id="186000237" amount="30" />
-        <reward kind="ITEM" id="162000124" amount="14" />
+        <reward kind="ITEM" id="162000050" amount="14" />
       </group>
     </reward-groups>
     <drops>
@@ -21,4 +21,143 @@
       <drop npc-id="219759" item-id="182215728" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0" />
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0" />
+    </node>
+    <node label="step1" status="START">
+      <var name="var0" value="1" />
+    </node>
+    <node label="step2" status="START">
+      <var name="var0" value="2" />
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="3" />
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0" />
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="804923" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE" />
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="step1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <conditions>
+        <has-item item-id="182215728" count="1" />
+      </conditions>
+      <actions>
+        <remove-item item-id="182215728" count="1" />
+        <set-variable field="var0" value="1" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL" />
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2" />
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" actions="SETPRO2 SELECT2" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="2" />
+      </actions>
+      <after-commit>
+        <spawn-npc-at-player slot="shellizard-boss" template-id="230492" heading="0" />
+        <start-invisible-timer seconds="300" timer-id="25082-boss" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE" />
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731559" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+
+    <transition source="step2" target="step2">
+      <event>
+        <invisible-timer-end />
+      </event>
+      <after-commit>
+        <despawn-npc slot="shellizard-boss" />
+      </after-commit>
+    </transition>
+    <transition source="step2" target="reward">
+      <event>
+        <kill-npc npc-id="230492" />
+      </event>
+      <actions>
+        <set-variable field="var0" value="3" />
+      </actions>
+      <after-commit>
+        <despawn-npc slot="shellizard-boss" />
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+      </after-commit>
+    </transition>
+
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804924" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS" />
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="804924" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+    </npc-complete>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804924" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>
