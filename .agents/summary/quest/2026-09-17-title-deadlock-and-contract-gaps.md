@@ -49,3 +49,11 @@
   - 将 16900-16903 的 NPC_REPORT source 修正为 k1，24151 的 NPC_REPORT source 修正为 k5；
   - 为 1640 补齐 reward 下的安装部件与完成路由；为 2569 消除 s2 死胡同并支持提交领奖；
   - 在 QuestDefinitionDirectoryLoaderTest 中新增全量静态拓扑门禁 executableQuestsHaveNoReachableDeadEndNodes，每次测试对全服所有可执行任务进行状态图 BFS 遍历，确保不存在任何除 COMPLETE 以外的无出边死胡同节点。
+
+## 7. 前置依赖拓扑闭环与自指死锁环根治（18992 自依赖解除）
+- **排查发现**：
+  - 全库前置依赖图 DFS 环路扫描发现：任务 18992（天族 66 级重大副本任务“又一块碎片，又一场战斗”）的 start-conditions 中配置了 condition type="finished" quest-id="18992"，导致任务要求必须先完成自己才能接取自己，形成永久不可接取死锁环；
+  - 比对真端客户端 quest.xml 与魔族对称任务 28992，确认 18992 本无任何前置任务要求。
+- **修复与防御**：
+  - 移除 18992.xml 中误配的自指 start-conditions；
+  - 在 CompletedQuestPrerequisiteRegressionTest 中新增全库前置拓扑有向图 DFS 环路与自依赖门禁 noQuestRequiresItsOwnRewardTitle，彻底杜绝任何任务自指依赖或多任务相互前置死锁。
