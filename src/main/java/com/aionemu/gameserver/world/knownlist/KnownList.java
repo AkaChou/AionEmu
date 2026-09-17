@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.MapRegion;
 
 import java.util.LinkedHashMap;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -40,11 +39,20 @@ public class KnownList {
 	protected final VisibleObject owner;
 
 	/**
-	 * 所有者已知的对象映射（objectId → 对象）。
-	 * Objects known by the owner (objectId → object).
+	 * 所有者已知的对象映射（objectId → 对象，懒初始化）。
+	 * Objects known by the owner (objectId → object), lazily initialized.
+	 *
+	 * <p>与玩家映射同一范式：{@code volatile} 字段 + {@code synchronized (this)} 双检创建，
+	 * 读取路径先取局部引用、为 null 时直接返回而不加任何锁——这样既不会有"全服共用一个空表监视器"
+	 * 的争用，也不会出现两个线程各自持有一张映射而丢对象。创建后引用不再变化，因此
+	 * 对快照块的 {@code synchronized (map)} 仍然钉在同一个对象上。
+	 * Same idiom as the player maps: a volatile field created under a double-checked
+	 * {@code synchronized (this)}, while readers take a local reference and return early on null without
+	 * locking. That avoids both a shared empty-map monitor across every creature and two threads ending up
+	 * with different maps. The reference never changes once created, so the snapshot blocks keep
+	 * synchronizing on one stable object.</p>
 	 */
-	@Getter
-	protected final Map<Integer, VisibleObject> knownObjects = new ConcurrentHashMap<>();
+	protected volatile Map<Integer, VisibleObject> knownObjects;
 
 	/**
 	 * 所有者已知的玩家映射（懒初始化）。
@@ -53,10 +61,10 @@ public class KnownList {
 	protected volatile Map<Integer, Player> knownPlayers;
 
 	/**
-	 * 所有者当前可见的对象映射（objectId → 对象）。
-	 * Objects currently visual to the owner (objectId → object).
+	 * 所有者当前可见的对象映射（objectId → 对象，懒初始化，范式同 {@link #knownObjects}）。
+	 * Objects currently visual to the owner (objectId → object), lazily initialized like {@link #knownObjects}.
 	 */
-	protected final Map<Integer, VisibleObject> visualObjects = new ConcurrentHashMap<>();
+	protected volatile Map<Integer, VisibleObject> visualObjects;
 
 	/**
 	 * 所有者当前可见的玩家映射（懒初始化）。
@@ -96,11 +104,15 @@ public class KnownList {
 		for (VisibleObject object : knownObjectsSnapshot()) {
 			object.getKnownList().del(owner, isOutOfRange);
 		}
-		knownObjects.clear();
+		if (knownObjects != null) {
+			knownObjects.clear();
+		}
 		if (knownPlayers != null) {
 			knownPlayers.clear();
 		}
-		visualObjects.clear();
+		if (visualObjects != null) {
+			visualObjects.clear();
+		}
 		if (visualPlayers != null) {
 			visualPlayers.clear();
 		}
@@ -114,7 +126,8 @@ public class KnownList {
 	 * @return 已知则返回 {@code true} / {@code true} if known
 	 */
 	public boolean knowns(AionObject object) {
-		return knownObjects.containsKey(object.getObjectId());
+		Map<Integer, VisibleObject> objects = knownObjects;
+		return objects != null && objects.containsKey(object.getObjectId());
 	}
 
 	/**
@@ -128,6 +141,7 @@ public class KnownList {
 		if (!isAwareOf(object))
 			return false;
 
+		checkKnownObjectsInitialized();
 		if (knownObjects.put(object.getObjectId(), object) == null) {
 			if (object instanceof Player) {
 				checkKnownPlayersInitialized();
@@ -146,6 +160,7 @@ public class KnownList {
 	 * @param object 待添加的可见对象 / visual object to add
 	 */
 	public void addVisualObject(VisibleObject object) {
+		checkVisibleObjectsInitialized();
 		if (object instanceof Creature) {
 			if (SecurityConfig.INVIS && object instanceof Player) {
 				if (!owner.canSee((Player) object)) {
@@ -176,7 +191,8 @@ public class KnownList {
 		/**
 		 * 对象已知 / object was known
 		 */
-		if (knownObjects.remove(object.getObjectId()) != null) {
+		Map<Integer, VisibleObject> objects = knownObjects;
+		if (objects != null && objects.remove(object.getObjectId()) != null) {
 			if (knownPlayers != null) {
 				knownPlayers.remove(object.getObjectId());
 			}
@@ -192,7 +208,8 @@ public class KnownList {
 	 * @param isOutOfRange 是否因超出范围 / whether removal is due to range
 	 */
 	public void delVisualObject(VisibleObject object, boolean isOutOfRange) {
-		if (visualObjects.remove(object.getObjectId()) != null) {
+		Map<Integer, VisibleObject> objects = visualObjects;
+		if (objects != null && objects.remove(object.getObjectId()) != null) {
 			if (visualPlayers != null) {
 				visualPlayers.remove(object.getObjectId());
 			}
@@ -231,7 +248,8 @@ public class KnownList {
 				if (!isAwareOf(newObject)) {
 					continue;
 				}
-				if (knownObjects.containsKey(newObject.getObjectId())) {
+				Map<Integer, VisibleObject> objects = knownObjects;
+				if (objects != null && objects.containsKey(newObject.getObjectId())) {
 					continue;
 				}
 				if (!checkObjectInRange(newObject) && !newObject.getKnownList().checkReversedObjectInRange(owner)) {
@@ -410,8 +428,12 @@ public class KnownList {
 	 * @return 可见对象快照 / visual objects snapshot
 	 */
 	public List<VisibleObject> getVisibleObjectsSnapshot() {
-		synchronized (visualObjects) {
-			return new ArrayList<>(visualObjects.values());
+		Map<Integer, VisibleObject> objects = visualObjects;
+		if (objects == null) {
+			return new ArrayList<>();
+		}
+		synchronized (objects) {
+			return new ArrayList<>(objects.values());
 		}
 	}
 
@@ -430,8 +452,12 @@ public class KnownList {
 	 * @return 快照列表 / snapshot list
 	 */
 	private List<VisibleObject> knownObjectsSnapshot() {
-		synchronized (knownObjects) {
-			return new ArrayList<>(knownObjects.values());
+		Map<Integer, VisibleObject> objects = knownObjects;
+		if (objects == null) {
+			return new ArrayList<>();
+		}
+		synchronized (objects) {
+			return new ArrayList<>(objects.values());
 		}
 	}
 
@@ -457,6 +483,7 @@ public class KnownList {
 	 * @return 可见对象映射 / visual objects map
 	 */
 	public Map<Integer, VisibleObject> getVisibleObjects() {
+		checkVisibleObjectsInitialized();
 		return visualObjects;
 	}
 
@@ -519,6 +546,26 @@ public class KnownList {
 	 * 懒初始化已知玩家映射。
 	 * Lazily initializes the known-players map.
 	 */
+	final void checkKnownObjectsInitialized() {
+		if (knownObjects == null) {
+			synchronized (this) {
+				if (knownObjects == null) {
+					knownObjects = new ConcurrentHashMap<>();
+				}
+			}
+		}
+	}
+
+	final void checkVisibleObjectsInitialized() {
+		if (visualObjects == null) {
+			synchronized (this) {
+				if (visualObjects == null) {
+					visualObjects = new ConcurrentHashMap<>();
+				}
+			}
+		}
+	}
+
 	final void checkKnownPlayersInitialized() {
 		if (knownPlayers == null) {
 			synchronized (this) {
@@ -551,6 +598,18 @@ public class KnownList {
 	 * @return 已知对象，不存在则为 {@code null} / known object, or {@code null}
 	 */
 	public VisibleObject getObject(int targetObjectId) {
-		return this.knownObjects.get(targetObjectId);
+		Map<Integer, VisibleObject> objects = knownObjects;
+		return objects == null ? null : objects.get(targetObjectId);
+	}
+
+	/**
+	 * 返回已知对象映射（实时视图）；未初始化时按需创建，调用方拿到的永远是可写映射。
+	 * Returns the known-objects map (live view), creating it on demand so callers never see null.
+	 *
+	 * @return 已知对象映射 / known objects map
+	 */
+	public Map<Integer, VisibleObject> getKnownObjects() {
+		checkKnownObjectsInitialized();
+		return knownObjects;
 	}
 }

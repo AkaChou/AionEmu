@@ -39,9 +39,26 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	/** 返回所有者 / Returns the owner*/
 	@Getter
 	protected T owner;
-	private final Lock hpLock = new ReentrantLock();
-	private final Lock mpLock = new ReentrantLock();
-	protected final Lock restoreLock = new ReentrantLock();
+	/**
+	 * 单一生命状态互斥量。
+	 * Single life-state mutex.
+	 *
+	 * <p>HP/MP/恢复任务三段临界区都只做内存状态改写与一次任务调度（回调与观察者通知都在锁外执行），
+	 * 既不阻塞也不互相嵌套，因此没有理由让每个生物持有三把锁：一把 {@link ReentrantLock} 实际是
+	 * {@code ReentrantLock} + {@code NonfairSync} 两个对象，全服 ≈38 万把锁里这里占 ≈18 MB。
+	 * 合并成一把后 {@code hpLock}/{@code mpLock}/{@code restoreLock} 指向同一实例：调用点与子类用法不变，
+	 * 可重入保证嵌套安全，而且只剩一把锁后不再存在锁序问题。
+	 * The HP, MP and restore-task critical sections only mutate in-memory state and schedule one task
+	 * (callbacks and observer notifications already run outside the lock). They neither block nor nest, so
+	 * three locks per creature buy nothing: one {@link ReentrantLock} is really a lock plus its sync object,
+	 * and this class held ≈18 MB of the server's ≈380k locks. The three fields now alias one instance,
+	 * which keeps every call site and subclass usage unchanged, stays reentrancy-safe, and removes any
+	 * lock-ordering question by having a single lock.</p>
+	 */
+	private final ReentrantLock lifeLock = new ReentrantLock();
+	private final Lock hpLock = lifeLock;
+	private final Lock mpLock = lifeLock;
+	protected final Lock restoreLock = lifeLock;
 	protected volatile Future<?> lifeRestoreTask;
 
 	public CreatureLifeStats(T owner, int currentHp, int currentMp) {

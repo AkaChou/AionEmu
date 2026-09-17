@@ -1147,3 +1147,100 @@ if (mapForEffect.remove(effect.getStack(), effect)) { … }
 2. `KnownList`/`AggroList` 的每生物 `ConcurrentHashMap`（1,194,676 个 / 76.5 MB）：需要先确认这 119 万个 CHM 的完整归属
    （本轮只证实了外观面，未逐一钉死属主）。
 3. 装箱 `Integer` 189 万个 / 30.3 MB：多数是 `Map<Integer,…>` 键，与切片 2 同源，替换为原始键表可一并解决。
+
+### 12.16 第二十轮：`KnownList` 的两张 eager CHM 改为懒初始化（D 切片二）
+
+`play-15` 的 class histogram 显示 `ConcurrentHashMap` 有 **1,194,676 个实例 / 76.5 MB，而 `CHM$Node` 只有 310,948 个**
+——即约 88 万张空表纯属"预制开销"。`KnownList` 是其中已证实的一块：每个已知列表实例（`NpcKnownList` 125,034 +
+`PlayerAwareKnownList` 26,128 + … ≈ 151k）都持有两张 eager `ConcurrentHashMap`（`knownObjects`/`visualObjects`），
+合计 ≈302k 张 CHM（≈19 MB，含视图对象）。
+
+#### 12.16.1 并发设计（本轮的硬约束）
+
+用户明确要求"多用户并发不能出问题"，因此**没有**采用 12.15 里 `EffectController` 那种"共享不可变空表"的写法：
+那会让 12.7 万个生物的快照路径全部 `synchronized` 在同一个空表对象上，等于人为制造一把全局锁。
+本切片改用**本文件已有的懒初始化范式**（`knownPlayers`/`visualPlayers` 早就这么写）：
+
+| 关注点 | 落地方式 |
+|---|---|
+| 首次创建 | `protected volatile Map<…>` + `synchronized (this)` 双检（`checkKnownObjectsInitialized`/`checkVisibleObjectsInitialized`） |
+| 读路径 | 先取**局部引用**，为 null 直接返回/空列表，**不加锁**（`knowns`/`getObject`/两张快照） |
+| 快照块 | 仍 `synchronized (map)`，但锁在局部引用上；引用创建后不再变化 → 监视器唯一且稳定 |
+| 写路径 | `add()`/`addVisualObject()` 先初始化再 `put` |
+| 删路径 | `del()`/`delVisualObject()` null 早退（未初始化 ⇒ 无可删项） |
+| `clear()` | 两张表加 null 守卫 |
+| 外部 API | `getKnownObjects()`/`getVisibleObjects()` 改为**按需创建**，保证 `CM_BUY_ITEM`、`CM_CRAFT`、`PlayerInfo`（管理员命令里还直接 `put`/`remove`）三处语义不变；`getObject(int)` 走 null 安全读，不触发分配 |
+
+关键不变量：**并发首次写入必须收敛到同一张表**——否则先写入的对象会落进被丢弃的映射而永久丢失。这正是
+`volatile + synchronized(this)` 双检要保证的（引用一旦非 null 就再也不变）。
+
+#### 12.16.2 并发护栏（新增 2 例）
+
+- `concurrentFirstWritesShareOneMapAndLoseNoObjects`：8 线程同时首次写入 8×64 个对象，断言最终 `getKnownObjects().size() == 512`
+  ——直接检测"两线程各持一张表"的丢对象竞态；
+- `concurrentAddSnapshotAndRemoveStayConsistent`：8 线程 × 200 轮 add + 两张快照并发，断言无异常且最终集合完整（16 个对象全部在册）；
+- 另修测试助手 `removeKnown` 对懒字段的直接解引用（`knownObjects`/`knownPlayers` 可能为 null）。
+
+#### 12.16.3 验证
+
+```
+mvn -Dtest=KnownListTest,KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,
+NpcShoutDataTest,ShoutEventHandlerTest,MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,
+EffectControllerTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,
+NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，19 个测试类 210 例全绿**（`KnownListIterationSafetyTest` 5 例静态闸门仍通过：遍历必须走快照的约定未被破坏；
+`PathGoldenDiffTest` 仍与 23:47 基线逐字一致）。
+
+> 过程记录：首次跑测试时被并行会话 `5d8abe0e8`（改 `QuestCatalog.all()` 返回类型但未同步更新
+> `QuestRewardTitlePrerequisiteAuditTest`）导致的测试树编译失败挡住，对方以 `21c577a5d` 修复后本轮验证才得以完成。
+
+**收益**：`KnownList` 每实例少 2 张 eager CHM（全服 ≈302k 个对象 ≈19 MB 常驻），并免除每次构造时的 2 次 `ConcurrentHashMap` 分配。
+
+### 12.17 第二十一轮：`CreatureLifeStats` 三把锁合并为一把（D 切片三）
+
+`play-15` 的 class histogram：`ReentrantLock` 914,470 个（14.6 MB）+ `ReentrantLock$NonfairSync` 915,125 个（29.3 MB）
+= **≈44 MB 全是锁对象**，其中最大的一块是 `CreatureLifeStats`：每个生物 3 把（`hpLock`/`mpLock`/`restoreLock`）
+× 127,075 生物 = **381,225 把 ≈18 MB**。
+
+#### 12.17.1 安全性论证（并发优先）
+
+合并前逐条核查了三段临界区与锁序：
+
+| 检查项 | 结论 |
+|---|---|
+| 临界区内容 | HP/MP：只做 `currentHp/currentMp` 的读改写；restore：只做 `lifeRestoreTask == null` 判定 + 一次 `scheduleXxx` |
+| 是否阻塞 | 否（无 I/O、无 `Future.get()`、无 await） |
+| 是否嵌套 | 否；HP/MP 的回调（`onReduceHp`）与观察者通知（`notifyLifeChangedObservers`）**都在锁外** |
+| 重入 | `ReentrantLock` 可重入 → 即便将来出现"restore 中改 HP/MP"的嵌套也安全 |
+| 锁序 | 合并后只剩一把锁，**不可能**出现锁序死锁 |
+| 反向依赖 | `LifeStatsRestoreService` **无任何 synchronized/Lock**，外部也没有 `synchronized (lifeStats)` → 不存在"调度器锁 → 生命锁"的反向路径 |
+
+实现上让三个字段**别名同一实例**（`private final ReentrantLock lifeLock; private final Lock hpLock = lifeLock; …`），
+因此 `CreatureLifeStats` 内部 12 处调用点与 4 个子类（`PlayerLifeStats`/`NpcLifeStats`/`SummonLifeStats` 等共 8 处
+`restoreLock` 用法）**一行都不用改**，语义变化仅为"同一生物的 HP/MP/恢复三个临界区互斥"。
+
+**收益**：每生物少 2 把锁（`Lock` + `NonfairSync` 两个对象）≈ 254k 个对象 ≈ **12 MB 常驻**，并在每次生物生成时少 2 次分配。
+
+#### 12.17.2 并发护栏（新增 2 例，`NpcLifeStatsTest`）
+
+- `hpMpAndRestoreShareOneLockInstance`：反射断言 `lifeLock`/`hpLock`/`mpLock`/`restoreLock` **是同一个实例**
+  （结构护栏，防止以后又把锁拆回三把）；
+- `concurrentSubclassMutationsThroughTheSharedLockNeverLoseAnUpdate`：8 线程 × 2000 次经 `restoreLock` 的
+  临界区自增，断言总数精确等于 16000 —— 锁没生效或不再唯一就会丢更新；
+  测试用 `CreatureLifeStats<Creature>` 的最小测试子类（构造器 `super(null, 100, 100)` 不触碰 owner）。
+
+#### 12.17.3 验证
+
+```
+mvn -Dtest=NpcLifeStatsTest,NpcGameStatsTest,CreatureGameStatsBytecodeTest,KnownListTest,KnownListIterationSafetyTest,
+WorldTest,WorldMapTest,WorldMapInstanceTest,NpcShoutDataTest,ShoutEventHandlerTest,MoveTaskManagerTest,
+PlayerMoveTaskManagerTest,WaterVolumeStoreTest,EffectControllerTest,PathGoldenDiffTest,PathDataTest,
+PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,
+GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，22 个测试类 213 例全绿**；`NpcLifeStatsTest` 由 1 例扩到 3 例。
+
+后续（D 未完）：`KnownList` 自身的 `ReentrantLock`（127k 把 ≈6 MB）+ `EffectController` 的（127k ≈6 MB）
+可同样合并/换 `synchronized`；剩下约 59 万张未钉死属主的 CHM 仍需逐一归因；`CreatureGameStats` 的
+`ReentrantReadWriteLock`（127k 套 ≈15 MB）与 `ObserveController` 的 2 个 COW 列表（254k ≈6 MB）在队列中。

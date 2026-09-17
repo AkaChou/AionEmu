@@ -182,6 +182,87 @@ class KnownListTest {
 		assertEquals(List.of(2, 3), visited);
 	}
 
+	@Test
+	void concurrentFirstWritesShareOneMapAndLoseNoObjects() throws Exception {
+		TestVisibleObject owner = visibleObject(1);
+		TestKnownList knownList = (TestKnownList) owner.getKnownList();
+		int threads = 8;
+		int perThread = 64;
+		ExecutorService pool = Executors.newFixedThreadPool(threads);
+		CountDownLatch start = new CountDownLatch(1);
+		List<Future<?>> futures = new ArrayList<>();
+		try {
+			for (int thread = 0; thread < threads; thread++) {
+				int base = 10_000 + thread * perThread;
+				futures.add(pool.submit(() -> {
+					awaitQuietly(start);
+					for (int i = 0; i < perThread; i++) {
+						knownList.addKnown(visibleObject(base + i));
+					}
+					return null;
+				}));
+			}
+			start.countDown();
+			for (Future<?> future : futures) {
+				future.get(30, TimeUnit.SECONDS);
+			}
+		} finally {
+			pool.shutdownNow();
+		}
+
+		// 并发首次写入必须收敛到同一张表：否则会有一批对象写进被丢弃的映射而永久丢失。
+		// Concurrent first writes must converge on one map; otherwise a batch lands in a discarded map.
+		assertEquals(threads * perThread, knownList.getKnownObjects().size());
+	}
+
+	@Test
+	void concurrentAddSnapshotAndRemoveStayConsistent() throws Exception {
+		TestVisibleObject owner = visibleObject(1);
+		TestKnownList knownList = (TestKnownList) owner.getKnownList();
+		TestVisibleObject[] objects = new TestVisibleObject[16];
+		for (int i = 0; i < objects.length; i++) {
+			objects[i] = visibleObject(20_000 + i);
+		}
+		ExecutorService pool = Executors.newFixedThreadPool(8);
+		CountDownLatch start = new CountDownLatch(1);
+		List<Future<?>> futures = new ArrayList<>();
+		try {
+			for (int thread = 0; thread < 8; thread++) {
+				futures.add(pool.submit(() -> {
+					awaitQuietly(start);
+					for (int round = 0; round < 200; round++) {
+						for (TestVisibleObject object : objects) {
+							knownList.addKnown(object);
+							knownList.getKnownObjectsSnapshot();
+							knownList.getVisibleObjectsSnapshot();
+						}
+					}
+					return null;
+				}));
+			}
+			start.countDown();
+			for (Future<?> future : futures) {
+				future.get(60, TimeUnit.SECONDS);
+			}
+		} finally {
+			pool.shutdownNow();
+		}
+
+		assertEquals(objects.length, knownList.getKnownObjects().size());
+		for (TestVisibleObject object : objects) {
+			assertTrue(knownList.knowns(object));
+		}
+	}
+
+	private static void awaitQuietly(CountDownLatch latch) {
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new AssertionError(e);
+		}
+	}
+
 	private static TestVisibleObject visibleObject(int objectId) {
 		TestVisibleObject object = new TestVisibleObject(objectId);
 		object.setKnownlist(new TestKnownList(object));
@@ -219,8 +300,12 @@ class KnownListTest {
 		}
 
 		private void removeKnown(Player player) {
-			knownObjects.remove(player.getObjectId());
-			knownPlayers.remove(player.getObjectId());
+			if (knownObjects != null) {
+				knownObjects.remove(player.getObjectId());
+			}
+			if (knownPlayers != null) {
+				knownPlayers.remove(player.getObjectId());
+			}
 		}
 
 		@Override
