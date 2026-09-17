@@ -3,6 +3,8 @@ package com.aionemu.gameserver.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.lang.reflect.Field;
@@ -169,6 +171,17 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 class GameServiceProviderCompatibilityTest {
 
     private final ObjenesisStd objenesis = new ObjenesisStd();
+
+    @Test
+    void inGameShopEnFailsFastWithoutSpringProvider() {
+        // 遗留双源兜底退役后的新契约：没有 provider 时必须 fail-fast，
+        // 而不是静默 new 出第二套实例。
+        // Retired dual-source contract: without a provider it must fail fast instead of creating a second instance.
+        InGameShopEn.setInstanceProvider(null);
+
+        IllegalStateException error = assertThrows(IllegalStateException.class, InGameShopEn::getInstance);
+        assertTrue(error.getMessage().contains("InGameShopEn"), error.getMessage());
+    }
 
     @Test
     void singletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() {

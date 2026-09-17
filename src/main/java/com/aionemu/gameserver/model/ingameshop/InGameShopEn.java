@@ -54,13 +54,28 @@ public class InGameShopEn {
 	private final List<IGRequest> activeRequests = new ArrayList<>();
 	private static final Map<Integer, Long> lastUsage = new HashMap<>();
 
-	/** 获取副本。 / Returns the instance. */
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 *
+	 * <p>双源静态兜底已退役：旧实现在没有 provider 时回退到 {@code SingletonHolder.instance}，
+	 * 等于在容器之外静默创建第二个实例（两套状态）。现在改为 fail-fast，
+	 * 把"未注入"暴露在启动期，而不是潜伏成两套实例。
+	 * The legacy static fallback is retired: without a provider the old code silently created a second instance
+	 * through SingletonHolder, i.e. two live states. It now fails fast so a missing injection surfaces at startup.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
+	 */
 	public static InGameShopEn getInstance() {
 		ObjectProvider<InGameShopEn> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		InGameShopEn provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("InGameShopEn 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return SingletonHolder.instance;
+		return provided;
 	}
 
 	/** 设置实例提供者。 / Sets the instance provider. */
@@ -303,7 +318,4 @@ public class InGameShopEn {
 		}
 	}
 
-	private static final class SingletonHolder {
-		private static final InGameShopEn instance = new InGameShopEn();
-	}
 }
