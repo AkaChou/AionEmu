@@ -14,7 +14,7 @@
       <reward kind="EXP" id="0" amount="3363034"/>
     </rewards>
     <drops>
-      <drop npc-id="213360" item-id="182215466" chance="80" each-member="true" collecting-step="2"/>
+      <drop npc-id="213360" item-id="182215466" chance="80" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="24202"/>

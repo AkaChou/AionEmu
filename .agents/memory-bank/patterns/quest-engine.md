@@ -567,3 +567,25 @@ first_check: 检查 play-movie 或 SETPRO 所在 transition 的 source 与 targe
 
 - **判定规则**：任务影片播放或 SETPRO 推进动作必须实现明确的状态迁移或变量改变。严禁配置 `source == target` 且 `actions` 为空的纯消费自环（除非有后续 `movie-end` 推进或明确翻页），严禁在非目标阶段错配全节点击杀怪物播放电影。
 - **代表案例**：巴鲁纳研究所 `16942/26942`（SETPRO1 播放电影 899/900 留原地死循环）、阿祖图兰要塞 `14047`（错配 6 处击杀伊卡罗尼斯 214599 乱播电影 422）、消除污染 `14112`（SETPRO1 停在 started 无法推进到击杀）、结界塔修复 `24155`（SETPRO2 停在 started 无法破坏装置）、空中要塞 `28301`（SETPRO2 停在 started 无法拾取动力装置）、活动任务 `50010`（单身线 SETPRO2 停在 unaccepted 永远接不上任务）、圣灵装备 `15301/25301`（QUEST_ACCEPT_1 强制停留在 unaccepted）、飞行术 `1423`（SETPRO1 留原地无法交付）。修复后由 `QuestMovieAndDialogLoopRegressionTest` 全局防护。
+
+---
+
+## [QE-025] 二十三、任务掉落收集步数有效性与死锁防护 (QUEST_DROP_COLLECTING_STEP_VALIDITY)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务元数据掉落 (drops collecting-step) 与运行时掉落服务判定
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家击杀任务指定怪物或采集目标物体成百上千次，永远无法掉落任何任务道具，任务彻底卡死无法进行
+root_cause: 任务 XML 的 <drops> 中将 collecting-step 错误配置为非 0 且不存在于当前任务节点 var0 取值集合中的步数（例如任务只有 var0=0，drops 却配置了 collecting-step="2"）。QuestService 在判定掉落时若 collectingStep != 0 则严格校验 player.getQuestVarById(0) == drop.collectingStep()，导致条件永远不成立，掉落率直接变成 0%
+fix_or_guardrail: 将不可达的 collecting-step 修正为正确的当前阶段步数或 0（允许整个 START 进行期间掉落）；在 QuestMovieAndDialogLoopRegressionTest 中新增 fatalImpossibleDropStepsAreEliminated() 全库门禁，遍历所有可执行任务的所有 drops，强制断言非 0 的 collectingStep 必须存在于任务声明的 var0 取值集合中
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/2372.xml; src/main/resources/aion/data/static_data/quest_definition/quests/4907.xml; src/main/resources/aion/data/static_data/quest_definition/quests/24202.xml; src/main/resources/aion/data/static_data/quest_definition/quests/24203.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java
+validation: 全库 6,222 个任务全量扫描 0 不可达掉落步数，测试用例通过
+boundaries: 适用于所有带 drops 的任务定义
+superseded_by: none
+see_also: [QE-024]
+first_check: 检查 drops 中 collecting-step 是否非 0 且该值在 nodes 的 var0 中未定义
+-->
+
+- **判定规则**：任务 `<drops>` 中的 `collecting-step` 如果非 0，必须存在于任务 `nodes` 所声明的有效 `var0` 取值集合中。严禁配置任务生命周期中永远无法达到的步数，避免运行时掉落判定恒为 false。
+- **代表案例**：魔族任务 `2372`（drops 误配 collecting-step="2" 但任务只有 var0=0）、间谍任务 `4907`（drops 误配 collecting-step="1" 但任务只有 var0=0）、布鲁斯特豪宁任务 `24202` 与 `24203`（drops 误配 collecting-step="2" 但任务只有 var0=0）。修复后由 `fatalImpossibleDropStepsAreEliminated` 门禁全局防护。

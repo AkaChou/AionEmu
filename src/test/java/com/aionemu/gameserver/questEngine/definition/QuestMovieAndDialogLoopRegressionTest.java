@@ -176,6 +176,41 @@ class QuestMovieAndDialogLoopRegressionTest {
 		assertTrue(pureLoops.isEmpty(), "Pure movie loops found: " + pureLoops);
 	}
 
+	@Test
+	void fatalImpossibleDropStepsAreEliminated() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		java.util.List<String> violations = new java.util.ArrayList<>();
+
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition def = compiled.definition();
+			java.util.Set<Integer> validVars = new java.util.HashSet<>();
+			for (QuestNode node : def.nodes()) {
+				Integer val = node.projection().variables().get("var0");
+				if (val != null) {
+					validVars.add(val);
+				}
+			}
+
+			for (QuestDrop drop : def.metadata().drops()) {
+				int step = drop.collectingStep();
+				if (step != 0 && !validVars.contains(step)) {
+					violations.add("Quest " + compiled.id() + " drop npc=" + drop.npcId() + " step=" + step + " not in " + validVars);
+				}
+			}
+		}
+
+		assertTrue(violations.isEmpty(), "Impossible drop collecting-steps found: " + violations);
+	}
+
+	@Test
+	void quests2372And4907And24202And24203DropsStepCorrected() throws Exception {
+		for (int qid : List.of(2372, 4907, 24202, 24203)) {
+			QuestDefinition def = definition(qid).definition();
+			assertTrue(def.metadata().drops().stream().allMatch(d -> d.collectingStep() == 0),
+				"Quest " + qid + " drops must have collectingStep=0");
+		}
+	}
+
 	private static void assertNode(QuestDefinition definition, String label, Map<String, Integer> variables) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
