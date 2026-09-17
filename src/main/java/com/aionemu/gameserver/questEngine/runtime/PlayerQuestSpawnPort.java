@@ -15,7 +15,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * Real {@link QuestSpawnPort}: after commit, spawns/despawns quest NPCs through
  * {@link QuestService#spawnQuestNpc} and tracks the authoritative handle in the
  * {@link QuestSpawnRegistry}. instanceId 策略:目标世界等于玩家当前世界时复用玩家实例,
- * 否则用默认实例 1 (与传送端口一致,不猜测)。slot 幂等,不重复刷怪。
+ * 否则用默认实例 1 (与传送端口一致,不猜测)。slot 幂等以“权威 handle 仍可用”为准:
+ * 仍在世界中的任务 NPC 不会被重复刷出,已被击杀或已离开世界的登记则允许重建。
+ * {@link QuestSpawnRegistry}. instanceId policy: reuse the player's instance when the target
+ * world matches, otherwise fall back to instance 1 (consistent with the teleport port; no
+ * guessing). Slot idempotency follows "the authoritative handle is still usable": a quest NPC
+ * still in the world is never duplicated, while a killed or despawned registration may be rebuilt.
  */
 public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 	/** 固定签名的 spawn 委托（生产 = QuestService，测试 = 记录器）。 / Fixed-signature spawn delegate (production = QuestService, tests = recorder). */
@@ -66,7 +71,7 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		if (variants == null || variants.isEmpty()) {
 			throw new IllegalArgumentException("variants must not be empty");
 		}
-		if (!replaceExisting && registry.contains(snapshot, slot)) {
+		if (!replaceExisting && isUsableAuthoritativeHandle(registry.get(snapshot, slot))) {
 			return true;
 		}
 		Player player = players.find(snapshot.playerId());
@@ -94,7 +99,15 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 			}
 			return true;
 		}
-		if (!registry.register(snapshot, slot, npc)) {
+		// 陈旧的登记（已被击杀或已离开世界）必须让位给本次生成；并发下保留他人已换入的 handle。
+		// A stale registration (killed or out of world) must yield to this spawn; under
+		// concurrency a handle another thread already installed stays authoritative.
+		Npc tracked = registry.get(snapshot, slot);
+		if (tracked != null && !registry.replaceStale(snapshot, slot, tracked, npc)) {
+			deleteUnregistered(npc);
+			return registry.contains(snapshot, slot);
+		}
+		if (tracked == null && !registry.register(snapshot, slot, npc)) {
 			deleteUnregistered(npc);
 			// 本 NPC 创建期间另一个 after-commit 执行已赢得该 slot；只有那个句柄仍权威时，
 			// 期望的 slot 状态才被满足，不报告无条件的成功。
@@ -118,7 +131,13 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		if (templateId <= 0) {
 			throw new IllegalArgumentException("templateId must be positive");
 		}
-		if (registry.contains(snapshot, slot)) {
+		Npc tracked = registry.get(snapshot, slot);
+		// 幂等以“handle 仍可用”为准：已被击杀或已离开世界的登记不再满足期望状态，
+		// 否则任务 NPC 被注册表之外的路径销毁后再也无法为它的主人重建。
+		// Idempotency follows "the handle is still usable": a killed or despawned
+		// registration no longer satisfies the desired state, otherwise a quest NPC
+		// destroyed outside this registry could never be rebuilt for its owner.
+		if (isUsableAuthoritativeHandle(tracked)) {
 			return true;
 		}
 		Player player = players.find(snapshot.playerId());
@@ -135,7 +154,17 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		if (npc == null) {
 			return false;
 		}
-		if (!registry.register(snapshot, slot, npc)) {
+		if (tracked == null) {
+			if (!registry.register(snapshot, slot, npc)) {
+				deleteUnregistered(npc);
+				return registry.contains(snapshot, slot);
+			}
+			return true;
+		}
+		// 陈旧登记必须让位：已被击杀或已离开世界的 handle 不能阻止本次重建。
+		// A stale registration must yield: a killed or despawned handle cannot block
+		// this rebuild.
+		if (!registry.replaceStale(snapshot, slot, tracked, npc)) {
 			deleteUnregistered(npc);
 			return registry.contains(snapshot, slot);
 		}
@@ -157,6 +186,30 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 			npc.getController().onDelete();
 		}
 		return true;
+	}
+
+	/**
+	 * 既有权威 handle 是否仍代表世界中的任务 NPC。
+	 * Whether the authoritative handle still represents a quest NPC in the world.
+	 *
+	 * <p>真实 NPC 一旦被击杀或离开世界即视为陈旧，slot 必须允许重建；无法判定生命属性的
+	 * 替身或半初始化产物保持幂等，避免把正常的重复 after-commit 误判成重建请求。</p>
+	 * A real NPC counts as stale once it is dead or no longer in the world so the slot can be
+	 * rebuilt. Doubles or half-initialised objects without life stats stay idempotent so a
+	 * normal repeated after-commit is never misread as a rebuild request.
+	 */
+	static boolean isUsableAuthoritativeHandle(Npc npc) {
+		if (npc == null) {
+			return false;
+		}
+		var lifeStats = npc.getLifeStats();
+		if (lifeStats == null) {
+			return true;
+		}
+		if (lifeStats.isAlreadyDead()) {
+			return false;
+		}
+		return npc.isSpawned();
 	}
 
 	private static ResolvedLocation resolve(QuestSnapshot snapshot, QuestSpawnLocation location) {

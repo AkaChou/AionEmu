@@ -655,3 +655,25 @@ first_check: 检查每个 npc-complete 预览下发的页面是否等于 rewardW
 
 - **判定规则**：奖励窗口页面只能由档位查表得到（第 1~4 档 = 页面 5/6/7/8，第 5/6 档 = 页面 45/46）；`npc-complete` 预览必须下发本档自己的窗口；多档任务中 `REWARD` 节点的进入窗口档位必须等于它实际结算的档位。严禁写死第 1 档页面或按 `5 + index` 线性推算，也严禁窗口与 `complete-reward-index`/`grant-reward` 档位相互矛盾。
 - **代表案例**：魔族任务 `1367`（三档收集窗口分别对应脖子肉/里脊/火鸟大腿肉，预览写死第 1 档导致第 2/3 档重开错档）、`2430`（reward_b/reward_c 预览同样回到第 1 档）、天族事件任务 `50023`（r2 重开路径仍显示第 1 档文案）、天族任务 `1114`（Asteros 与 Namus 两条交付分支的档位与窗口相反）；修复后由 `rewardWindowTierMappingCoversEveryClientWindow`、`synthesisedAndDeclaredPreviewUseTheTableDrivenTierPage`、`npcCompletePreviewsOpenTheirOwnTierWindowAcrossTheCatalog`、`multiTierHandInWindowsMatchTheirGrantedTier` 四项门禁守护。
+
+---
+
+## [QE-029] 二十七、任务生成 NPC 的权威 handle 存活语义 (QUEST_SPAWN_HANDLE_LIVENESS)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: QuestSpawnRegistry / PlayerQuestSpawnPort / 任务 slot 生成与重建
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 任务 NPC 被世界级清理、其他玩家击杀或实例场景清理销毁后，玩家再回到同一阶段（含重登、重进副本、重新触发 self-loop 生成）时任务 NPC 不再出现，任务永久无法推进且没有任何报错
+root_cause: slot 幂等原先只判断“该 slot 是否登记过 handle”，不判断 handle 是否仍在世界中；被注册表之外路径销毁的登记仍被视为“期望状态已满足”，后续 spawn-npc 被静默跳过，玩家再也拿不到该任务 NPC
+fix_or_guardrail: 1. PlayerQuestSpawnPort.isUsableAuthoritativeHandle：真实 NPC 一旦已死亡或已离开世界即判定陈旧，无生命属性的替身保持幂等；2. QuestSpawnRegistry.replaceStale：按调用方判定的具体陈旧 handle 做 CAS 替换（slot 被清空时接管，并发下保留他人已换入的 handle 并取消旧跟随任务）；3. spawnNpc 与 spawnNpcRandom 的非替换路径统一改用该语义登记；4. 回归覆盖 PlayerQuestSpawnPortTest#questNpcDestroyedOutsideTheRegistryIsRebuiltForItsOwner、QuestSpawnRegistryTest#replaceStaleSwapsOnlyTheJudgedHandle、PlayerQuestSpawnPortRaceTest#aRegistrationRaceDoesNotLeaveAnUntrackedNpc 与既有幂等/清理用例
+evidence: src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestSpawnRegistry.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestSpawnPort.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestSpawnRegistryTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestSpawnPortTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestSpawnPortRaceTest.java
+validation: mvn test -Dtest=PlayerQuestSpawnPortTest,PlayerQuestSpawnPortRaceTest,QuestSpawnRegistryTest,QuestExecutionCoordinatorTest 共 34 项全绿；任务门禁套件 30 项全绿（PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0）
+boundaries: 只把“真实 NPC 已死亡或已离开世界”视为陈旧；替换只作用于调用方判定的那个 handle，绝不按 templateId 删同类；终态清理（完成/放弃/登出/副本销毁）仍是 slot 回收的主路径
+superseded_by: none
+see_also: [QE-024]
+first_check: 检查任务 slot 的幂等判定是否只看 contains，以及被击杀/离开世界后的 NPC 是否还能在同一 slot 重建
+-->
+
+- **判定规则**：任务 slot 的幂等语义是“权威 handle 仍可用”，不是“曾经登记过”。真实 NPC 一旦死亡或离开世界，该 slot 必须允许重建；重建只能替换调用方判定的陈旧 handle，并在并发下保留他人已换入的 handle，禁止制造无人登记的孤儿 NPC。
+- **代表案例**：`1922` 的 `<delete-world-npcs/>` 会清空世界地图实例内的全部 NPC，任何在该实例留有 slot 登记的任务此后都无法再生成自己的 NPC；`QuestSpawnRegistry.replaceStale` + `isUsableAuthoritativeHandle` 让被杀/被外部销毁的任务 NPC 能重建，并由 `replaceStaleSwapsOnlyTheJudgedHandle`、`questNpcDestroyedOutsideTheRegistryIsRebuiltForItsOwner` 守护。

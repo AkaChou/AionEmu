@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
@@ -67,6 +68,27 @@ class PlayerQuestSpawnPortTest {
 		// 重复事件再次触发:同 slot 已存在 → 跳过,不无限刷怪。
 		assertTrue(port.spawnNpc(snapshot(), plan(), "guardian", SPAWN_WORLD, TEMPLATE, 1f, 2f, 3f, (byte) 0));
 		assertEquals(1, spawnCalls[0]);
+	}
+
+	@Test
+	void questNpcDestroyedOutsideTheRegistryIsRebuiltForItsOwner() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Player player = player();
+		// 已离开世界的任务 NPC:注册表仍有登记,但它已不代表世界状态。
+		// A quest NPC that already left the world: still registered, yet no longer
+		// representing the world state.
+		Npc[] handles = {destroyedNpc(SPAWN_WORLD), destroyedNpc(SPAWN_WORLD)};
+		int[] next = {0};
+		PlayerQuestSpawnPort port = new PlayerQuestSpawnPort(playerId -> player, registry,
+			(worldId, instanceId, templateId, x, y, z, heading) -> handles[next[0]++]);
+
+		assertTrue(port.spawnNpc(snapshot(), plan(), "guardian", SPAWN_WORLD, TEMPLATE, 1f, 2f, 3f, (byte) 0));
+		// 世界级清理/他人击杀销毁了它:同 slot 必须能重建,而不是静默报告期望状态已满足。
+		// World-wide cleanup or another player's kill destroyed it: the same slot must be
+		// rebuildable instead of silently reporting the desired state as satisfied.
+		assertTrue(port.spawnNpc(snapshot(), plan(), "guardian", SPAWN_WORLD, TEMPLATE, 1f, 2f, 3f, (byte) 0));
+		assertEquals(2, next[0]);
+		assertSame(handles[1], registry.get(snapshot(), "guardian"));
 	}
 
 	@Test
@@ -176,6 +198,17 @@ class PlayerQuestSpawnPortTest {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		player.setPosition(new WorldPosition(PLAYER_WORLD));
 		return player;
+	}
+
+	/**
+	 * 构造“已离开世界”的任务 NPC 替身:生命属性存在且未死亡,但位置未生成。
+	 * Builds a quest-NPC double that already left the world: life stats exist and are alive,
+	 * yet the position is not spawned.
+	 */
+	private static Npc destroyedNpc(int worldId) {
+		Npc npc = npc(worldId);
+		npc.setLifeStats(new ObjenesisStd().newInstance(NpcLifeStats.class));
+		return npc;
 	}
 
 	private static Npc npc(int worldId) {

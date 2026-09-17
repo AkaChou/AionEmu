@@ -40,6 +40,30 @@ class QuestSpawnRegistryTest {
 	}
 
 	@Test
+	void replaceStaleSwapsOnlyTheJudgedHandle() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc stale = npc();
+		Npc rebuilt = npc();
+		Npc other = npc();
+		assertTrue(registry.register(snapshot(QUEST_ID), "guardian", stale));
+
+		// 调用方判定陈旧时,slot 原子换到新 handle,旧 handle 不再权威。
+		// When the caller judges the handle stale the slot swaps atomically to the rebuild.
+		assertTrue(registry.replaceStale(snapshot(QUEST_ID), "guardian", stale, rebuilt));
+		assertSame(rebuilt, registry.get(snapshot(QUEST_ID), "guardian"));
+		// 其他人已换入 handle 后再提交陈旧判定:保留现有权威,不制造无登记孤儿。
+		// A stale judgement submitted after another thread installed its handle keeps the
+		// installed authority instead of leaving an untracked orphan.
+		assertFalse(registry.replaceStale(snapshot(QUEST_ID), "guardian", stale, other));
+		assertSame(rebuilt, registry.get(snapshot(QUEST_ID), "guardian"));
+		// slot 在判定与替换之间被清空时,本次生成接管。
+		// When the slot was cleared in between, this spawn takes it over.
+		registry.remove(snapshot(QUEST_ID), "guardian");
+		assertTrue(registry.replaceStale(snapshot(QUEST_ID), "guardian", stale, other));
+		assertSame(other, registry.get(snapshot(QUEST_ID), "guardian"));
+	}
+
+	@Test
 	void despawnOnlyTouchesTheAuthoritativeSlot() {
 		QuestSpawnRegistry registry = new QuestSpawnRegistry();
 		Npc guardian = npc();

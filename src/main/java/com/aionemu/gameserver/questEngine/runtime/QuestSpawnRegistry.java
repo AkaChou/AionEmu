@@ -87,6 +87,45 @@ public final class QuestSpawnRegistry {
 		return spawns.put(key, npc);
 	}
 
+	/**
+	 * 用新 handle 取代调用方判定为陈旧的旧 handle；并发下保留其他线程已换入的 handle。
+	 * Replaces the handle the caller judged stale while keeping a handle another thread already
+	 * installed for the same slot.
+	 *
+	 * <p>任务 NPC 可能被注册表之外的路径销毁（世界级清理、其他玩家的击杀、实例场景清理）。
+	 * 此时 slot 上残留的 handle 已不能代表世界状态，必须允许后续生成重建；但如果并发执行已经
+	 * 换入了新 handle，则保留对方的权威，避免把刚生成的实体变成无人登记的孤儿。</p>
+	 * A quest NPC can be destroyed outside this registry (world-wide cleanup, another player's
+	 * kill, instance scene teardown). The leftover handle no longer represents the world, so a
+	 * later spawn must be able to rebuild it; if a concurrent execution already installed its own
+	 * handle, that handle stays authoritative so no freshly spawned entity is left untracked.
+	 *
+	 * @param stale 调用方判定为陈旧的既有 handle（必须非 null） / the existing handle the caller judged stale
+	 * @param replacement 本次新生成的 handle / the freshly spawned replacement handle
+	 * @return true 表示新 handle 已成为权威；false 表示已有其他权威 handle（调用方须删除新 handle） /
+	 *         true when the replacement became authoritative; false when another handle already
+	 *         owns the slot and the replacement must be deleted by the caller
+	 */
+	public boolean replaceStale(QuestSnapshot snapshot, String slot, Npc stale, Npc replacement) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(stale, "stale");
+		Objects.requireNonNull(replacement, "replacement");
+		if (slot == null || slot.isBlank()) {
+			throw new IllegalArgumentException("slot must not be blank");
+		}
+		Key key = key(snapshot, slot);
+		if (spawns.replace(key, stale, replacement)) {
+			// 跟随检查器绑定被替换的 handle，替换后必须取消，避免陈旧任务继续驱动已废弃实体。
+			// Follow checkers are bound to the replaced handle and must be cancelled so no stale
+			// task keeps driving a discarded entity.
+			cancelFollowTask(key);
+			return true;
+		}
+		// slot 在判定与替换之间被清空时，仍然由本次生成接管。
+		// When the slot was cleared between the judgement and the swap, this spawn takes it over.
+		return spawns.putIfAbsent(key, replacement) == null;
+	}
+
 	/** 替换与一个权威生成 slot 关联的跟随检查器。 / Replaces the follow checker associated with one authoritative spawn slot. */
 	public boolean registerFollowTask(QuestSnapshot snapshot, String slot, Future<?> task) {
 		Objects.requireNonNull(task, "task");
