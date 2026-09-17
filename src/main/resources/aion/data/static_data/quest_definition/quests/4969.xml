@@ -1,104 +1,136 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="4969" version="1">
   <metadata name="Ninis's Fourth Charm" display-name-id="1104290" min-level="50" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ASMODIANS"/>
+      <race id="ASMODIANS" />
     </races>
     <items>
-      <item id="186000093" count="1"/>
-      <item id="182400001" count="90000"/>
+      <item id="186000093" count="1" />
+      <item id="182400001" count="90000" />
     </items>
     <work-items>
-      <item id="182207139" count="1"/>
+      <item id="182207139" count="1" />
     </work-items>
     <rewards>
-      <reward kind="ITEM" id="169621008" amount="5"/>
+      <reward kind="ITEM" id="169621008" amount="5" />
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
-    <node label="stage1" status="START"><var name="var0" value="1"/></node>
+    <node label="payment" status="START">
+      <var name="var0" value="1" />
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2" />
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="798385" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤(zz_retail_simple_quests.xml):type="COLLECT_ITEM" ids="798385";对话链按客户端按钮图重建。 -->
-    <transition source="stage1" target="stage1">
+    <dialog type="NPC_START" npc-id="798385" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182207139" count="1" />
+      </accept-actions>
+    </dialog>
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798385" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798068" action="QUEST_SELECT" />
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2" />
       </after-commit>
     </transition>
-    <transition source="stage1" target="stage1">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798385" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798068" action="SELECT2_1" />
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1" />
       </after-commit>
     </transition>
-    <transition source="stage1" target="reward">
+    <transition source="started" target="payment">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798385" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798068" action="SETPRO1" />
       </event>
+      <conditions>
+        <has-item item-id="182207139" count="1" />
+      </conditions>
       <actions>
-        <!-- 无物品变更 -->
+        <remove-item item-id="182207139" count="1" />
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <sync-quest-state mode="PACKET_ONLY" />
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="payment" target="payment">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798385" action="QUEST_SELECT" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
+      </after-commit>
+    </transition>
+    <transition source="payment" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798385" actions="CHECK_USER_HAS_QUEST_ITEM CHECK_USER_HAS_QUEST_ITEM_SIMPLE" />
+      </event>
+      <conditions>
+        <has-item item-id="186000093" count="1" />
+        <has-item item-id="182400001" count="90000" />
+      </conditions>
+      <actions>
+        <remove-item item-id="186000093" count="1" />
+        <remove-item item-id="182400001" count="90000" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
+      </after-commit>
+    </transition>
+    <transition source="payment" target="payment" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798385" action="CHECK_USER_HAS_QUEST_ITEM" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6" />
+      </after-commit>
+    </transition>
+    <transition source="payment" target="payment" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798385" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE" />
+      </event>
+      <after-commit>
+        <close-dialog />
+      </after-commit>
+    </transition>
+    <transition source="payment" target="payment">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798385" action="FINISH_DIALOG" />
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST" />
       </after-commit>
     </transition>
     <npc-complete npc-id="798385" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>
-    <dialog type="NPC_START" npc-id="798068" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤(zz_retail_simple_quests.xml):type="TALK" ids="798068" remove_item_id="182207139" remove_item_count="1";对话链按客户端按钮图重建。 -->
-    <transition source="started" target="started">
+    <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798068" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798385" action="SELECT1_1" />
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1" />
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798068" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="stage1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798068" action="SETPRO1"/>
-      </event>
-      <actions>
-        <remove-item item-id="182207139" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="798068" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
   </transitions>
 </quest-definition>

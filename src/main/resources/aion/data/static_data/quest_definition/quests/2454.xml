@@ -115,16 +115,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="790020" source="started" target="reward" item-id="152000552" required="10"/>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790020" action="SET_SUCCEED"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-item-report npc-id="790020" source="started" target="reward" item-id="152000652" required="10"/>
     <npc-complete npc-id="790020" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -7,7 +7,8 @@
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
       <item id="186000432" count="3"/>
-      </items>
+      <item id="162001062" count="1"/>
+    </items>
     <rewards>
       <reward kind="EXP" id="0" amount="25000000"/>
     </rewards>
@@ -46,9 +47,11 @@
       </event>
       <conditions>
         <has-item item-id="186000432" count="3"/>
+        <has-item item-id="162001062" count="1"/>
       </conditions>
       <actions>
         <remove-item item-id="186000432" count="3"/>
+        <remove-item item-id="162001062" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -85,9 +88,11 @@
       </event>
       <conditions>
         <has-item item-id="186000432" count="3"/>
+        <has-item item-id="162001062" count="1"/>
       </conditions>
       <actions>
         <remove-item item-id="186000432" count="3"/>
+        <remove-item item-id="162001062" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

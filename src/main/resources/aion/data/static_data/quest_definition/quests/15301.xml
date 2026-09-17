@@ -89,26 +89,30 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_COMPLETE"/>
       </after-commit>
     </transition>
-    <!-- retail 步骤物品 182215859:CHECK_USER 双边(有物完成/无物失败页)。 -->
-    <transition source="started" target="reward">
+    <!-- 交付 3 枚履之证 (182215829, 182215830, 182215831)。 -->
+    <transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805327" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <has-item item-id="182215859" count="1"/>
+        <has-item item-id="182215829" count="1"/>
+        <has-item item-id="182215830" count="1"/>
+        <has-item item-id="182215831" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182215829" count="1"/>
+        <remove-item item-id="182215830" count="1"/>
+        <remove-item item-id="182215831" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805327" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
-      <conditions>
-        <has-item item-id="182215859" count="1" expected="false"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
@@ -137,25 +141,29 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1_1"/>
       </after-commit>
     </transition>
-<transition source="started" target="reward">
+<transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805328" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <has-item item-id="182215859" count="1"/>
+        <has-item item-id="182215829" count="1"/>
+        <has-item item-id="182215830" count="1"/>
+        <has-item item-id="182215831" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182215829" count="1"/>
+        <remove-item item-id="182215830" count="1"/>
+        <remove-item item-id="182215831" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-<transition source="started" target="started">
+<transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805328" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
-      <conditions>
-        <has-item item-id="182215859" count="1" expected="false"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>

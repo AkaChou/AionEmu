@@ -10,10 +10,6 @@
       <quest id="1200"/>
     </prerequisites>
 
-    <items>
-      <item id="182201714" count="5"/>
-    </items>
-
     <inventory-items>
       <item id="186000017" count="1"/>
     </inventory-items>

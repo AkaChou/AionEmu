@@ -185,6 +185,31 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItems(catalog, 15335, Map.of(182215924, 1));
 		assertTurnInItems(catalog, 25335, Map.of(182215926, 1));
 		assertTurnInItems(catalog, 19064, Map.of(182213237, 1, 186000081, 1));
+		assertTurnInItems(catalog, 29064, Map.of(182213239, 1, 186000085, 1));
+		assertTurnInItems(catalog, 80291, Map.of(186000040, 5));
+		assertTurnInItems(catalog, 80295, Map.of(186000040, 5));
+		assertTurnInItems(catalog, 80955, Map.of(186000484, 1));
+		assertTurnInItems(catalog, 80956, Map.of(186000484, 1));
+		assertTurnInItems(catalog, 50053, Map.of(186000432, 3, 162001062, 1));
+		assertTurnInItems(catalog, 50054, Map.of(186000432, 3, 162001062, 2));
+		assertTurnInItems(catalog, 1687, Map.of(186000035, 2, 186000036, 5));
+		assertTurnInItems(catalog, 19010, Map.of(169405399, 1));
+		assertTurnInItems(catalog, 19016, Map.of(169405400, 1));
+		assertTurnInItems(catalog, 19022, Map.of(169405401, 1));
+		assertTurnInItems(catalog, 19028, Map.of(169405403, 1));
+		assertTurnInItems(catalog, 19034, Map.of(169405402, 1));
+		assertTurnInItems(catalog, 4966, Map.of(182400001, 40000, 182207136, 1));
+		assertTurnInItems(catalog, 4967, Map.of(186000091, 1, 182400001, 50000, 182207137, 1));
+		assertTurnInItems(catalog, 4968, Map.of(186000092, 1, 182400001, 70000, 182207138, 1));
+		assertTurnInItems(catalog, 4969, Map.of(186000093, 1, 182400001, 90000, 182207139, 1));
+		assertTurnInItems(catalog, 15301, Map.of(182215829, 1, 182215830, 1, 182215831, 1));
+		assertTurnInItems(catalog, 25301, Map.of(182215844, 1, 182215845, 1, 182215846, 1));
+		assertTurnInItems(catalog, 15302, Map.of(182215832, 70));
+		assertTurnInItems(catalog, 25302, Map.of(182215847, 70));
+		assertTurnInItems(catalog, 15303, Map.of(152003017, 150, 182215833, 40, 182215883, 50, 182215884, 50));
+		assertTurnInItems(catalog, 25303, Map.of(152003018, 150, 182215848, 40, 182215890, 50, 182215891, 50));
+		assertTurnInItems(catalog, 15305, Map.of(152003019, 30, 182215887, 80));
+		assertTurnInItems(catalog, 25305, Map.of(152003019, 30, 182215894, 80));
 	}
 
 	/**

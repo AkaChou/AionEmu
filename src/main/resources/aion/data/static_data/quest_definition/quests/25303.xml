@@ -57,10 +57,14 @@
         <dialog type="TALK_TO_NPC" npc-id="805339" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
+        <has-item item-id="152003018" count="150"/>
+        <has-item item-id="182215848" count="40"/>
         <has-item item-id="182215890" count="50"/>
         <has-item item-id="182215891" count="50"/>
       </conditions>
       <actions>
+        <remove-item item-id="152003018" count="150"/>
+        <remove-item item-id="182215848" count="40"/>
         <remove-item item-id="182215890" count="50"/>
         <remove-item item-id="182215891" count="50"/>
       </actions>
@@ -99,26 +103,31 @@
 
 
 
-      <!-- retail 步骤物品 182215873:CHECK_USER 双边(有物完成/无物失败页)。 -->
-    <transition source="started" target="reward">
+    <transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805339" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <has-item item-id="182215873" count="1"/>
+        <has-item item-id="152003018" count="150"/>
+        <has-item item-id="182215848" count="40"/>
+        <has-item item-id="182215890" count="50"/>
+        <has-item item-id="182215891" count="50"/>
       </conditions>
+      <actions>
+        <remove-item item-id="152003018" count="150"/>
+        <remove-item item-id="182215848" count="40"/>
+        <remove-item item-id="182215890" count="50"/>
+        <remove-item item-id="182215891" count="50"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805339" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
-      <conditions>
-        <has-item item-id="182215873" count="1" expected="false"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
@@ -155,25 +164,31 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-<transition source="started" target="reward">
+<transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805340" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
-        <has-item item-id="182215873" count="1"/>
+        <has-item item-id="152003018" count="150"/>
+        <has-item item-id="182215848" count="40"/>
+        <has-item item-id="182215890" count="50"/>
+        <has-item item-id="182215891" count="50"/>
       </conditions>
+      <actions>
+        <remove-item item-id="152003018" count="150"/>
+        <remove-item item-id="182215848" count="40"/>
+        <remove-item item-id="182215890" count="50"/>
+        <remove-item item-id="182215891" count="50"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-<transition source="started" target="started">
+<transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805340" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
-      <conditions>
-        <has-item item-id="182215873" count="1" expected="false"/>
-      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>

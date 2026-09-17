@@ -155,13 +155,35 @@
       </event>
       <conditions>
         <has-item item-id="182201786" count="1"/>
+        <has-item item-id="152020034" count="1"/>
+        <has-item item-id="152020091" count="1"/>
+        <has-item item-id="169400060" count="1"/>
       </conditions>
       <actions>
         <remove-item item-id="182201786" count="1"/>
+        <remove-item item-id="152020034" count="1"/>
+        <remove-item item-id="152020091" count="1"/>
+        <remove-item item-id="169400060" count="1"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203792" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203792" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v2" target="v2">
