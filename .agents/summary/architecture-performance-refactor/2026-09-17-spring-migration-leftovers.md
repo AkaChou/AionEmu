@@ -341,3 +341,15 @@
 - 验证：`mvn test-compile` 0 错误；本轮 128 例测试全绿（含 `AbyssTeleporterQuestRequirementTest`、
   `AionBootApplicationTest`(12)、`GameLegacyServiceBridgeConfigurationTest`(57)、`ModelCollectionImplementationTest`(18) 等）。
 - 说明：`AssembledNpcPart` 为 final 字段值对象，若套 `@Data` 会生成无效的 setter，故保留 `@Getter` 与显式构造器。
+
+### 4. 实体类禁用 @Data 的固化测试（2026-09-17）
+
+- 新增 `src/test/java/com/aionemu/gameserver/model/EntityIdentitySemanticsTest.java`（3 例）：
+  1. **反例**：把 `@Data` 套到可变实体上，字段一改，`HashMap.get(key)` 立刻失效 → 复现
+     `TemporaryTradeTimeTask` 的 `HashMap<Item, ...>` 场景；
+  2. **正例**：保持身份相等的实体，字段改动后 `get`/`containsKey` 仍命中（当前仓库行为）；
+  3. **护栏**：`Player`/`Creature`/`Npc`/`Item`/`Effect` 的**源码**不得出现 `@Data` / `@EqualsAndHashCode` / `@ToString`。
+- 护栏为何读源码而不是反射：**Lombok 的 `@Data` 只有 CLASS retention**，不写入 `RuntimeVisibleAnnotations`，
+  `clazz.isAnnotationPresent(Data.class)` 恒为 false，反射护栏会静默失效（首版即踩此坑，已修正）。
+- 护栏有效性已验证：临时把 `Item` 的 `@Getter @Setter` 换成 `@Data`，测试立即红并给出业务解释
+  （`Item 的源码不应出现 @Data：字段可变且被当作 Map 键…`）；恢复后 3 例全绿。
