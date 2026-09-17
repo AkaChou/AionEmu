@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80946" version="1">
-  <metadata name="[Event/Daily] Misfortune Extermination" display-name-id="1803261" min-level="66" max-level="82" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] Misfortune Extermination" display-name-id="1803261" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

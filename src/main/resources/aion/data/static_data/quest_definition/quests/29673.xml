@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29673" version="1">
-  <metadata name="[Growth] Attack on Haramel's Instanced Dungeon" display-name-id="1803412" min-level="16" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Growth] Attack on Haramel's Instanced Dungeon" display-name-id="1803412" min-level="16" max-level="19" category="SIGNIFICANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

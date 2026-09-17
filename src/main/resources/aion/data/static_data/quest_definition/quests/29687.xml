@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29687" version="1">
-  <metadata name="[Premium] Daeva Growth Support 4" display-name-id="1803426" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Premium] Daeva Growth Support 4" display-name-id="1803426" min-level="40" max-level="49" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

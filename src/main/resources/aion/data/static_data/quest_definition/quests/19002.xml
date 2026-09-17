@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19002" version="1">
-  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124502" min-level="40" max-level="2147483647" category="SIGNIFICANT" combine-skill="30003" combine-skill-point="399" cannot-share="true">
+  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124502" min-level="50" max-level="2147483647" category="SIGNIFICANT" combine-skill="30003" combine-skill-point="399" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

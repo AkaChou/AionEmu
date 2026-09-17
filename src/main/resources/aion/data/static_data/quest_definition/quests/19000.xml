@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19000" version="1">
-  <metadata name="[Expert] Essencetapper's Test" display-name-id="1124500" min-level="40" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="30002" combine-skill-point="399">
+  <metadata name="[Expert] Essencetapper's Test" display-name-id="1124500" min-level="50" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="30002" combine-skill-point="399">
     <races>
       <race id="ELYOS"/>
     </races>

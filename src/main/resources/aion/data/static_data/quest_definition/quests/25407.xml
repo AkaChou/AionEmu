@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25407" version="1">
-  <metadata name="[Weekly] Thwart the Beritra Legion" display-name-id="1801790" min-level="70" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Weekly] Thwart the Beritra Legion" display-name-id="1801790" min-level="68" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

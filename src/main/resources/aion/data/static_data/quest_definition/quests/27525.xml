@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="27525" version="1">
-  <metadata name="[Instance Dungeon] Chilly Region" display-name-id="1803574" min-level="66" max-level="82" category="SIGNIFICANT">
+  <metadata name="[Instance Dungeon] Chilly Region" display-name-id="1803574" min-level="66" max-level="2147483647" category="SIGNIFICANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

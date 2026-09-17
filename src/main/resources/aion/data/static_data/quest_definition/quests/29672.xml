@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29672" version="1">
-  <metadata name="[Growth] First Steps for Daevas" display-name-id="1803411" min-level="10" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Growth] First Steps for Daevas" display-name-id="1803411" min-level="10" max-level="55" category="SIGNIFICANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

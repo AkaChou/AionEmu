@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80878" version="1">
-  <metadata name="[Luna/Daily] Gathering Samples" display-name-id="1802753" min-level="10" max-level="75" category="EVENT" cannot-share="true">
+  <metadata name="[Luna/Daily] Gathering Samples" display-name-id="1802753" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>
