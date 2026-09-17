@@ -94,17 +94,25 @@ public class LoginServer {
 	private volatile ScheduledFuture<?> connectionTask;
 
 	/**
-	 * 获取 LoginServer 单例（优先 Spring Provider）。
-	 * Returns the LoginServer singleton (prefers Spring provider).
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * LoginServer instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static final LoginServer getInstance() {
 		ObjectProvider<LoginServer> provider = instanceProvider;
-		if (provider == null) {
-			return SingletonHolder.instance;
+		LoginServer provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("LoginServer 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> SingletonHolder.instance);
+		return provided;
 	}
 
 	/**
@@ -605,19 +613,5 @@ public class LoginServer {
 	public boolean sendPacket(LsServerPacket pk) {
 		LoginMessageDispatcher current = dispatcher;
 		return current != null && current.sendPacket(pk);
-	}
-
-	/**
-	 * 静态单例持有者。
-	 * Static singleton holder.
-	 */
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-
-		/**
-		 * 默认 LoginServer 实例。
-		 * Default LoginServer instance.
-		 */
-		protected static final LoginServer instance = new LoginServer();
 	}
 }

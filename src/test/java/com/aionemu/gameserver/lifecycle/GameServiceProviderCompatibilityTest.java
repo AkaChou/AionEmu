@@ -119,6 +119,11 @@ import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.network.PacketFloodFilter;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
+import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
@@ -158,7 +163,9 @@ import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.audit.GMService;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
@@ -206,7 +213,16 @@ class GameServiceProviderCompatibilityTest {
                 TaskManagerFromDB.class,
                 ThievesGuildService.class,
                 VeteranRewardsService.class,
-                WebshopService.class);
+                WebshopService.class,
+                AionPacketHandlerFactory.class,
+                ChatServer.class,
+                DataManager.class,
+                EventScheduler.class,
+                IDFactory.class,
+                LoginServer.class,
+                LsPacketHandlerFactory.class,
+                PacketFloodFilter.class,
+                World.class);
 
         for (Class<?> type : retired) {
             Method setter = type.getMethod("setInstanceProvider", ObjectProvider.class);

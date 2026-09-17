@@ -8,8 +8,9 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 
 /**
- * 事件运行时服务的回退工厂：在 Spring 提供者不可用时返回各事件运行时单例。
- * Fallback factory for event-runtime services: returns each event-runtime singleton when Spring providers are unavailable.
+ * 事件运行时服务的回退工厂：Spring 提供者不可用时返回各事件运行时单例；已退役双源兜底的组件直接 fail-fast。
+ * Fallback factory for event-runtime services: returns each event-runtime singleton when Spring providers are
+ * unavailable; components whose dual-source fallback is retired fail fast instead.
  */
 final class GameEventRuntimeFallbacks {
 
@@ -71,13 +72,14 @@ final class GameEventRuntimeFallbacks {
     }
 
     /**
-     * 返回事件调度器回退实例。
-     * Return the event-scheduler fallback instance.
+     * 返回 EventScheduler：双源兜底已退役，交由 {@link EventScheduler#getInstance()} fail-fast。
+     * Returns EventScheduler: the dual-source fallback is retired;
+     * delegates to EventScheduler.getInstance() and fails fast.
      *
-     * @return 事件调度器 / Event scheduler
+     * @return EventScheduler 实例 / EventScheduler instance
      */
     static EventScheduler eventScheduler() {
-        return EventSchedulerFallback.INSTANCE;
+        return EventScheduler.getInstance();
     }
 
     /**
@@ -118,13 +120,5 @@ final class GameEventRuntimeFallbacks {
      */
     private static final class PacketBroadcasterFallback {
         private static final PacketBroadcaster INSTANCE = PacketBroadcaster.getInstance();
-    }
-
-    /**
-     * 事件调度器懒加载回退持有者。
-     * Lazy fallback holder for the event scheduler.
-     */
-    private static final class EventSchedulerFallback {
-        private static final EventScheduler INSTANCE = EventScheduler.getInstance();
     }
 }

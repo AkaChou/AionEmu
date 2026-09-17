@@ -178,26 +178,28 @@ public final class DataManager {
     private XmlDataLoader loader;
 
     /**
-     * 获取 DataManager 单例（优先 Spring 提供的实例，否则懒加载内部单例），
-     * 并保证返回前静态数据已加载完成。
-     * Returns the DataManager singleton (Spring-provided if available, otherwise the internal holder),
-     * guaranteeing static data is loaded before returning.
+     * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+     * Returns the instance, which must be supplied by Spring.
      *
-     * <p>构造已与加载分离：此处显式补齐加载（幂等）。加载已在进行中时阻塞等待，
-     * 与旧版"构造期间解析将等待单例锁"的语义保持一致。
-     * Construction and loading are decoupled: loading is ensured here (idempotent). While a load is
-     * in progress callers block, matching the legacy semantics where resolving during construction
-     * waited on the singleton lock.
+     * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+     * 静态数据加载由启动流程（{@code GameStaticDataGateway.load()}）在 Spring 单例锁之外显式触发，
+     * 本方法只负责解析实例，不再承担"补齐加载"的职责。
+     * The legacy static fallback is retired: a missing provider now fails fast instead of silently creating
+     * a second instance outside the container. Static-data loading is triggered explicitly by the startup
+     * flow ({@code GameStaticDataGateway.load()}) outside Spring's singleton lock; this method only
+     * resolves the instance.</p>
      *
-     * @return  DataManager 单例（已就绪）/ Returns the ready-to-use DataManager singleton.
+     * @return  由 Spring 提供的 DataManager 实例 / the Spring-provided DataManager instance.
+     * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+     *         when no provider or bean is available
      */
     public static DataManager getInstance() {
         ObjectProvider<DataManager> provider = instanceProvider;
-        DataManager manager = provider == null ? SingletonHolder.instance
-                : provider.getIfAvailable(() -> SingletonHolder.instance);
-        // 快路径：已加载时免锁直接返回 / Fast path: skip locking when already loaded.
-        if (manager == SingletonHolder.instance && !LOADED.get()) {
-            manager.load();
+        DataManager manager = provider == null ? null : provider.getIfAvailable();
+        if (manager == null) {
+            throw new IllegalStateException("DataManager 未由 Spring 提供："
+                    + (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+                    + "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
         }
         return manager;
     }
@@ -561,14 +563,5 @@ public final class DataManager {
      * Parallel-load result holding main static data and item data.
      */
     record LoadedStaticData(StaticData staticData, ItemData itemData) {
-    }
-
-    /**
-     * 内部懒加载单例持有者。
-     * Lazy-init holder for the internal singleton.
-     */
-    @SuppressWarnings("synthetic-access")
-    private static class SingletonHolder {
-        protected static final DataManager instance = new DataManager();
     }
 }

@@ -7,8 +7,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
 /**
- * 世界引导回退：在无 Spring 提供者时返回各组件 getInstance 单例。
- * World-bootstrap fallbacks: return each component's {@code getInstance} singleton when no Spring provider.
+ * 世界引导回退：在无 Spring 提供者时返回各组件 getInstance 单例；已退役双源兜底的组件直接 fail-fast。
+ * World-bootstrap fallbacks: return each component's getInstance singleton when no Spring provider;
+ * components whose dual-source fallback is retired fail fast instead.
  */
 final class GameWorldBootstrapFallbacks {
 
@@ -20,13 +21,13 @@ final class GameWorldBootstrapFallbacks {
     }
 
     /**
-     * 回退 IDFactory。
-     * Fallback IDFactory.
+     * 返回 IDFactory：双源兜底已退役，交由 {@link IDFactory#getInstance()} fail-fast。
+     * Returns IDFactory: the dual-source fallback is retired; delegates to IDFactory.getInstance() and fails fast.
      *
-     * @return IDFactory 单例 / IDFactory singleton
+     * @return IDFactory 实例 / IDFactory instance
      */
     static IDFactory idFactory() {
-        return IdFactoryFallback.INSTANCE;
+        return IDFactory.getInstance();
     }
 
     /**
@@ -60,25 +61,13 @@ final class GameWorldBootstrapFallbacks {
     }
 
     /**
-     * 回退 World。
-     * Fallback World.
+     * 返回 World：双源兜底已退役，交由 {@link World#getInstance()} fail-fast。
+     * Returns World: the dual-source fallback is retired; delegates to World.getInstance() and fails fast.
      *
-     * @return World 单例 / World singleton
+     * @return World 实例 / World instance
      */
     static World world() {
-        return WorldFallback.INSTANCE;
-    }
-
-    /**
-     * IDFactory 回退持有者。
-     * IDFactory fallback holder.
-     */
-    private static final class IdFactoryFallback {
-        /**
-         * IDFactory 单例。
-         * IDFactory singleton.
-         */
-        private static final IDFactory INSTANCE = IDFactory.getInstance();
+        return World.getInstance();
     }
 
     /**
@@ -115,17 +104,5 @@ final class GameWorldBootstrapFallbacks {
          * RoadService singleton.
          */
         private static final RoadService INSTANCE = RoadService.getInstance();
-    }
-
-    /**
-     * World 回退持有者。
-     * World fallback holder.
-     */
-    private static final class WorldFallback {
-        /**
-         * World 单例。
-         * World singleton.
-         */
-        private static final World INSTANCE = World.getInstance();
     }
 }

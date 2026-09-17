@@ -19,8 +19,8 @@
 ### ① 双源静态兜底（本期在做）
 
 - 形态：`provider.getIfAvailable(() -> SingletonHolder.instance)`——Spring 优先、静态兜底。
-- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **114 处带 `SingletonHolder` 兜底**（退役前 131 处；
-  已完成 `InGameShopEn` 试点 + 第一批 16 类，其余 114 处待退役）。
+- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **105 处带 `SingletonHolder` 兜底**（退役前 131 处；
+  已完成 `InGameShopEn` 试点 + 第一批 16 类 + 第二批 9 类，其余 105 处待退役）。
 - 另有 15 个文件含 `SingletonHolder` 字样，属于 chat/login/commons 侧纯静态持有，不是双源兜底，不在本期范围。
 - 危害：兜底一旦被走到，就在容器之外静默创建第二套实例（两套状态），且不在启动期暴露。
 - 现状：全部有 provider 注入点（手写 `setInstanceProvider` 或 Lombok `@Setter`），无孤儿；但每个类都至少被 1 个测试文件直接调用 `getInstance()`（`GameServiceProviderCompatibilityTest` 165 处调用、387 条断言），必须逐类迁移、同步改测试。
@@ -29,7 +29,7 @@
   再用"是否经 `*Fallbacks` 静态持有者回落"细化：
   - A 组（facade 直接 `getIfAvailable(provider, X::getInstance)`）：与试点同形，可机械退役；已完成 16 类。
   - B 组（经 `*Fallbacks` 的 eager 静态持有者回落）：缺少 provider 时首个回落会抛
-    `ExceptionInInitializerError` 并污染该持有者类，需先决定 facade/fallback 层的收敛方式，暂缓（9 类）。
+    `ExceptionInInitializerError` 并污染该持有者类；已按"fallback 条目直接 `X.getInstance()`"收敛（9 类，见下）。
   - 每批统一执行：改 fail-fast、删兜底、同步改测试、下调审计常量、聚焦测试授权验证。
   - 工具：`.agents/summary/architecture-performance-refactor/retire_singleton_fallback.py`（dry-run 默认，`--apply` 落盘）。
 
@@ -74,7 +74,9 @@
 - 已知行为差异（边界）：`GameRuntimeServices.destroy()` 会清空 provider，关机窗口内迟到的 `inGameShopEn()` 调用将抛异常（以前是静默 new 一个真空实例、写入即丢）。若关机日志出现该异常 = 存在迟到调用点，应修调用点（关机前完成或可跳过），而不是恢复兜底。
 - 验证边界：本轮改动尚未编译、未跑测试（AGENTS 规则：构建需用户授权）。
 
-## 五、第一批执行记录（2026-09-17，A 组 16 类）
+## 五、退役执行记录（2026-09-17）
+
+### 第一批（A 组 16 类）
 
 - 退役清单：`AbyssLandingSpecialService`、`AnnouncementService`、`BGService`、`CuringZoneService`、`DebugService`、
   `FindGroupService`、`FlyRingService`、`GameTimeService`、`LandingUpdateService`、`MailService`、`PeriodicSaveService`、
@@ -84,9 +86,19 @@
 - 测试：`GameServiceProviderCompatibilityTest` 新增覆盖 16 类的反射 fail-fast 契约；
   `GameLocationBootstrapServices.abyssLandingSpecialService()` 的 destroy 后断言由"回退仍是另一实例"改为 `assertThrows`。
 - 计数：131 → **114**（审计常量与 `RETIRED` 集合同步：17 类）。
-- 暂缓：B 组 9 类（`AionPacketHandlerFactory`、`ChatServer`、`DataManager`、`EventScheduler`、`IDFactory`、
-  `LoginServer`、`LsPacketHandlerFactory`、`PacketFloodFilter`、`World`）——回落经 `*Fallbacks` 的 eager 静态持有者，
-  直接退役会把 `IllegalStateException` 包成 `ExceptionInInitializerError` 并污染该类，需先设计回退层收敛。
+### 第二批（B 组 9 类）
+
+- 退役清单：`AionPacketHandlerFactory`、`ChatServer`、`DataManager`、`EventScheduler`、`IDFactory`、`LoginServer`、
+  `LsPacketHandlerFactory`、`PacketFloodFilter`、`World`。
+- 收敛方式：这 9 类的回落经 `*Fallbacks` 的 eager 静态持有者
+  （`private static final class XxxFallback { INSTANCE = X.getInstance(); }`），缺 provider 时首触会把
+  `IllegalStateException` 包成 `ExceptionInInitializerError` 并永久污染该持有者类。改为在 4 个 fallback 文件中
+  直接 `X.getInstance()`（删除 9 个持有者），facade 与桥接层调用点不变，异常以 `IllegalStateException` 原样抛出。
+- `DataManager` 特殊：移除 `getInstance()` 内的"补齐加载"副作用——静态数据加载由 `GameStaticDataGateway.load()`
+  在 Spring 单例锁之外显式触发，`getInstance()` 只解析实例。
+- 测试：`GameServiceProviderCompatibilityTest` 的反射 fail-fast 契约扩展到 9 类（共 25 类；`InGameShopEn` 保留单独用例）。
+- 计数：114 → **105**（累计 26 类退役）。
+- 工具：`.agents/summary/architecture-performance-refactor/thin_retired_fallbacks.py`（收敛 fallback 条目）。
 
 ## 六、后续顺序
 

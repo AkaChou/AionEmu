@@ -6,8 +6,9 @@ import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
- * 核心服务回退工厂：Spring Bean 不可用时提供懒加载单例。
- * Core service fallbacks: lazy singleton holders when Spring beans are unavailable.
+ * 核心服务回退工厂：Spring Bean 不可用时提供懒加载单例；已退役双源兜底的组件直接 fail-fast。
+ * Core service fallbacks: lazy singleton holders when Spring beans are unavailable;
+ * components whose dual-source fallback is retired fail fast instead.
  */
 final class GameCoreServiceFallbacks {
 
@@ -19,13 +20,13 @@ final class GameCoreServiceFallbacks {
     }
 
     /**
-     * 数据管理器回退实例。
-     * DataManager fallback instance.
+     * 返回 DataManager：双源兜底已退役，交由 {@link DataManager#getInstance()} fail-fast。
+     * Returns DataManager: the dual-source fallback is retired; delegates to DataManager.getInstance() and fails fast.
      *
-     * @return 数据管理器 / Data manager
+     * @return DataManager 实例 / DataManager instance
      */
     static DataManager dataManager() {
-        return DataManagerFallback.INSTANCE;
+        return DataManager.getInstance();
     }
 
     /**
@@ -56,14 +57,6 @@ final class GameCoreServiceFallbacks {
      */
     static XmlDataLoader xmlDataLoader() {
         return XmlDataLoaderFallback.INSTANCE;
-    }
-
-    /**
-     * {@link DataManager} 懒加载单例持有者。
-     * Lazy singleton holder for {@link DataManager}.
-     */
-    private static final class DataManagerFallback {
-        private static final DataManager INSTANCE = DataManager.getInstance();
     }
 
     /**

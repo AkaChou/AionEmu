@@ -16,17 +16,25 @@ public class AionPacketHandlerFactory {
 	private final AionPacketHandler handler;
 
 	/**
-	 * 获取工厂单例（优先 Spring Provider）。
-	 * Returns the factory singleton (prefers Spring provider).
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * @return 工厂实例 / factory instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static AionPacketHandlerFactory getInstance() {
 		ObjectProvider<AionPacketHandlerFactory> provider = instanceProvider;
-		if (provider == null) {
-			return SingletonHolder.instance;
+		AionPacketHandlerFactory provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("AionPacketHandlerFactory 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> SingletonHolder.instance);
+		return provided;
 	}
 
 	/**
@@ -275,10 +283,5 @@ public class AionPacketHandlerFactory {
 	 */
 	private void addPacket(AionClientPacket prototype) {
 		handler.addPacketPrototype(prototype);
-	}
-
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-		protected static final AionPacketHandlerFactory instance = new AionPacketHandlerFactory();
 	}
 }

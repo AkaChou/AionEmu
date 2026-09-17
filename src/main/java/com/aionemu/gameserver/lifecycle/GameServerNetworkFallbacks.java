@@ -10,8 +10,9 @@ import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 
 /**
- * 服务器网络组件回退工厂：在 Spring 未提供 bean 时返回各网络单例。
- * Fallback factory for server-network components: returns classic singletons when Spring beans are absent.
+ * 服务器网络组件回退工厂：在 Spring 未提供 bean 时返回各网络单例；已退役双源兜底的组件直接 fail-fast。
+ * Fallback factory for server-network components: returns classic singletons when Spring beans are absent;
+ * components whose dual-source fallback is retired fail fast instead.
  */
 final class GameServerNetworkFallbacks {
 
@@ -33,23 +34,23 @@ final class GameServerNetworkFallbacks {
     }
 
     /**
-     * 返回登录服连接回退实例。
-     * Return the login-server fallback.
+     * 返回 LoginServer：双源兜底已退役，交由 {@link LoginServer#getInstance()} fail-fast。
+     * Returns LoginServer: the dual-source fallback is retired; delegates to LoginServer.getInstance() and fails fast.
      *
-     * @return 登录服连接 / Login server
+     * @return LoginServer 实例 / LoginServer instance
      */
     static LoginServer loginServer() {
-        return LoginServerFallback.INSTANCE;
+        return LoginServer.getInstance();
     }
 
     /**
-     * 返回聊天服连接回退实例。
-     * Return the chat-server fallback.
+     * 返回 ChatServer：双源兜底已退役，交由 {@link ChatServer#getInstance()} fail-fast。
+     * Returns ChatServer: the dual-source fallback is retired; delegates to ChatServer.getInstance() and fails fast.
      *
-     * @return 聊天服连接 / Chat server
+     * @return ChatServer 实例 / ChatServer instance
      */
     static ChatServer chatServer() {
-        return ChatServerFallback.INSTANCE;
+        return ChatServer.getInstance();
     }
 
     /**
@@ -73,33 +74,36 @@ final class GameServerNetworkFallbacks {
     }
 
     /**
-     * 返回 Aion 数据包处理器工厂回退实例。
-     * Return the Aion packet-handler factory fallback.
+     * 返回 AionPacketHandlerFactory：双源兜底已退役，交由 {@link AionPacketHandlerFactory#getInstance()} fail-fast。
+     * Returns AionPacketHandlerFactory: the dual-source fallback is retired;
+     * delegates to AionPacketHandlerFactory.getInstance() and fails fast.
      *
-     * @return Aion 数据包处理器工厂 / Aion packet-handler factory
+     * @return AionPacketHandlerFactory 实例 / AionPacketHandlerFactory instance
      */
     static AionPacketHandlerFactory aionPacketHandlerFactory() {
-        return AionPacketHandlerFactoryFallback.INSTANCE;
+        return AionPacketHandlerFactory.getInstance();
     }
 
     /**
-     * 返回数据包洪水过滤器回退实例。
-     * Return the packet flood-filter fallback.
+     * 返回 PacketFloodFilter：双源兜底已退役，交由 {@link PacketFloodFilter#getInstance()} fail-fast。
+     * Returns PacketFloodFilter: the dual-source fallback is retired;
+     * delegates to PacketFloodFilter.getInstance() and fails fast.
      *
-     * @return 数据包洪水过滤器 / Packet flood filter
+     * @return PacketFloodFilter 实例 / PacketFloodFilter instance
      */
     static PacketFloodFilter packetFloodFilter() {
-        return PacketFloodFilterFallback.INSTANCE;
+        return PacketFloodFilter.getInstance();
     }
 
     /**
-     * 返回登录服数据包处理器工厂回退实例。
-     * Return the login-server packet-handler factory fallback.
+     * 返回 LsPacketHandlerFactory：双源兜底已退役，交由 {@link LsPacketHandlerFactory#getInstance()} fail-fast。
+     * Returns LsPacketHandlerFactory: the dual-source fallback is retired;
+     * delegates to LsPacketHandlerFactory.getInstance() and fails fast.
      *
-     * @return 登录服数据包处理器工厂 / LS packet-handler factory
+     * @return LsPacketHandlerFactory 实例 / LsPacketHandlerFactory instance
      */
     static LsPacketHandlerFactory lsPacketHandlerFactory() {
-        return LsPacketHandlerFactoryFallback.INSTANCE;
+        return LsPacketHandlerFactory.getInstance();
     }
 
     /**
@@ -112,30 +116,6 @@ final class GameServerNetworkFallbacks {
          * Fallback instance.
          */
         private static final BannedMacManager INSTANCE = BannedMacManager.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link LoginServer} 回退单例。
-     * Lazy holder for the {@link LoginServer} fallback singleton.
-     */
-    private static final class LoginServerFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final LoginServer INSTANCE = LoginServer.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link ChatServer} 回退单例。
-     * Lazy holder for the {@link ChatServer} fallback singleton.
-     */
-    private static final class ChatServerFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final ChatServer INSTANCE = ChatServer.getInstance();
     }
 
     /**
@@ -160,41 +140,5 @@ final class GameServerNetworkFallbacks {
          * Fallback instance.
          */
         private static final NetworkController INSTANCE = NetworkController.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link AionPacketHandlerFactory} 回退单例。
-     * Lazy holder for the {@link AionPacketHandlerFactory} fallback singleton.
-     */
-    private static final class AionPacketHandlerFactoryFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final AionPacketHandlerFactory INSTANCE = AionPacketHandlerFactory.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link PacketFloodFilter} 回退单例。
-     * Lazy holder for the {@link PacketFloodFilter} fallback singleton.
-     */
-    private static final class PacketFloodFilterFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final PacketFloodFilter INSTANCE = PacketFloodFilter.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link LsPacketHandlerFactory} 回退单例。
-     * Lazy holder for the {@link LsPacketHandlerFactory} fallback singleton.
-     */
-    private static final class LsPacketHandlerFactoryFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final LsPacketHandlerFactory INSTANCE = LsPacketHandlerFactory.getInstance();
     }
 }
