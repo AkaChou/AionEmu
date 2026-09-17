@@ -138,11 +138,26 @@
 
 ## 阶段 P5：下一类未根治维度
 
-- 状态：PENDING
-- 下一检查点（P4 第二批）：SELECTABLE 缺失型 19 条（1941/19009/2641 等，补 selectable
-  需同步 npc-complete choice 合同，逐任务走完整完成流程取证）；ITEM/SELECTABLE 平铺型
-  34 条（2677 等，逐任务判定分支表达 vs 真端子集）；ITEM_UNMAPPED 956 / TITLE 173 的
-  真端模板表取证（EVIDENCE_BLOCKED，需外部解包）
+- 状态：SCANNING（P4 全部子批已完成并提交，审计明细 TSV 已归档）
+- P5 方向与既有覆盖映射（2026-09-18 登记）：
+  1. 任务放弃/失败/重登后的状态与道具恢复：已有 QE-003（完成路径 work-item 清理）、
+     QE-011（work-item 迁移覆盖）、QE-016（实例回退区间）+ QuestWorkItemMigrationCoverageTest
+     守护；剩余盲区=非 work-item 任务道具的放弃恢复，待专项扫描
+  2. repeatable 重复接取/周期/冷却/奖励幂等：repeat 轴（max_repeat_count 全量）与
+     daily/weekly cycles 已由 QuestRetailStartMetadataGateTest 锁定 0 差异；
+     cooldown-seconds/daily/weekly 的真端比对待扩展进基线
+  3. 事件任务生成/回收：80xxx 活动任务生产自建（SERVER_ONLY 清单 7 条）已入
+     start-metadata 门禁例外；生成/回收运行时行为待运行时验证（PENDING 用户侧）
+  4. NPC 报告目标与客户端页面所有者一致性：已有 Playbook 多 NPC owner 模式
+     （MULTI_NPC_HANDOFF_REWARD_OWNER 等）+ QuestDialogOrderAudit；
+  5. 奖励领取路径唯一性/不可重复领取：结构性保证=QE-014 编译器 AMBIGUOUS_TRANSITION
+     拦截同 (source,npc,action) 重叠边 + npc-complete 完成合同编译校验
+     （CHOICE_REWARD_TYPE/INDEX_OUT_OF_RANGE）+ QE-022 BFS 死胡同门禁；
+     P4-2 的 fixed 索引合同修复进一步消除重复发放
+  6. 任务状态持久化与快照恢复：已有 QE-012（SECTION 位段）/QE-019（事实需求继承）
+     覆盖；快照恢复专项待扫描
+  7. 新症状类：维持「先全库归类再修」纪律
+- 下一检查点：方向 1（放弃恢复盲区）与方向 2（cooldown/daily/weekly 真端基线扩展）
 - Memory Bank：QE-034（RETAIL_START_METADATA_CONTRACT_ALIGNMENT）已沉淀，
   sync/check 通过，随本台账一起提交
 

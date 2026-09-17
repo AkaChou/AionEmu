@@ -1,0 +1,1156 @@
+quest_id	category	detail
+1002	TITLE_EVIDENCE_BLOCKED	retail=light_title04 prod=1
+1005	TITLE_EVIDENCE_BLOCKED	retail=light_title01 prod=1
+1044	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+1112	ITEM_UNMAPPED	names=BANDAGE_01
+1124	TITLE_EVIDENCE_BLOCKED	retail=light_title07 prod=1
+1143	TITLE_EVIDENCE_BLOCKED	retail=light_title06 prod=1
+1165	ITEM_UNMAPPED	names=SOULSTONE_RESURRECT_OTHER_10
+1169	TITLE_EVIDENCE_BLOCKED	retail=light_title03 prod=1
+1169	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+1180	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+1181	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+1193	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+1202	ITEM_UNMAPPED	names=%Quest_L_medicine_20a
+1230	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+1305	ITEM_UNMAPPED	names=%Quest_L_food_20a
+1306	ITEM_UNMAPPED	names=%Quest_L_medicine_20a
+1318	ITEM_UNMAPPED	names=%Quest_L_medicine_20a
+1319	TITLE_EVIDENCE_BLOCKED	retail=light_title09 prod=1
+1321	ITEM_UNMAPPED	names=SCROLL_speed_atk_50A
+1343	ITEM_UNMAPPED	names=SCROLL_speed_atk_50A
+1345	ITEM_UNMAPPED	names=SOULSTONE_RESURRECT_SELF_20
+1349	TITLE_EVIDENCE_BLOCKED	retail=light_title13 prod=1
+1354	TITLE_EVIDENCE_BLOCKED	retail=light_title14 prod=1
+1368	TITLE_EVIDENCE_BLOCKED	retail=light_title15 prod=1
+1368	ITEM_UNMAPPED	names=rec_L_co_food_2stats_30g
+1371	TITLE_EVIDENCE_BLOCKED	retail=light_title16 prod=1
+1387	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+1394	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+1397	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+1408	ITEM_UNMAPPED	names=%Quest_L_magical_30a
+1415	ITEM_UNMAPPED	names=FOOD_dpheal_50A
+1466	TITLE_EVIDENCE_BLOCKED	retail=light_title17 prod=1
+1470	TITLE_EVIDENCE_BLOCKED	retail=light_title18 prod=1
+1488	TITLE_EVIDENCE_BLOCKED	retail=light_title20 prod=1
+1494	TITLE_EVIDENCE_BLOCKED	retail=light_title42 prod=1
+1507	ITEM_UNMAPPED	names=%Quest_L_food_30a
+1510	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+1517	ITEM_UNMAPPED	names=%Quest_L_medicine_50a
+1518	ITEM_UNMAPPED	names=%Quest_L_food_50a
+1534	ITEM_UNMAPPED	names=%Quest_L_medicine_30a
+1554	TITLE_EVIDENCE_BLOCKED	retail=light_title28 prod=1
+1557	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+1558	ITEM_UNMAPPED	names=%Quest_L_medicine_40a
+1575	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+1582	ITEM_UNMAPPED	names=SOULSTONE_RESURRECT_SELF_20
+1590	ITEM_UNMAPPED	names=%Quest_L_medicine_40a
+1613	ITEM_UNMAPPED	names=%Quest_L_medicine_40a
+1619	TITLE_EVIDENCE_BLOCKED	retail=light_title44 prod=1
+1620	TITLE_EVIDENCE_BLOCKED	retail=light_title26 prod=1
+1622	ITEM_UNMAPPED	names=rec_L_co_food_phyattack_50a
+1647	TITLE_EVIDENCE_BLOCKED	retail=light_title27 prod=1
+1672	ITEM_UNMAPPED	names=rec_L_co_food_3stats_40g
+1686	TITLE_EVIDENCE_BLOCKED	retail=light_title29 prod=1
+1717	ITEM_UNMAPPED	names=%Quest_L_medal_01a
+1734	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+1742	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+1752	ITEM_UNMAPPED	names=%Quest_L_medicine_40a
+1848	ITEM_UNMAPPED	names=%Quest_L_3_island_01a
+1888	TITLE_EVIDENCE_BLOCKED	retail=light_title41 prod=1
+1901	TITLE_EVIDENCE_BLOCKED	retail=light_title08 prod=1
+1902	ITEM_UNMAPPED	names=rec_L_ws_dagger_n_c2_p_15a
+1903	ITEM_UNMAPPED	names=rec_L_as_ch_shoes_n_c2_p_13a
+1904	ITEM_UNMAPPED	names=rec_L_co_food_Maccuracy_20a
+1905	ITEM_UNMAPPED	names=rec_L_ha_bow_n_c2_p_15a
+1907	ITEM_UNMAPPED	names=rec_L_ta_lt_shoes_n_c2_p_13a
+1913	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+1914	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+1915	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+1916	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+1939	TITLE_EVIDENCE_BLOCKED	retail=light_title19 prod=1
+2007	TITLE_EVIDENCE_BLOCKED	retail=dark_title01 prod=1
+2042	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+2114	ITEM_UNMAPPED	names=BANDAGE_01
+2119	TITLE_EVIDENCE_BLOCKED	retail=dark_title02 prod=1
+2150	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2206	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+2208	TITLE_EVIDENCE_BLOCKED	retail=dark_title04 prod=1
+2230	TITLE_EVIDENCE_BLOCKED	retail=dark_title03 prod=1
+2232	ITEM_UNMAPPED	names=SCROLL_critical_phy_40A
+2254	ITEM_UNMAPPED	names=SOULSTONE_RESURRECT_OTHER_10
+2277	ITEM_UNMAPPED	names=SCROLL_speed_atk_50A
+2284	TITLE_EVIDENCE_BLOCKED	retail=dark_title05 prod=1
+2289	TITLE_EVIDENCE_BLOCKED	retail=dark_title06 prod=1
+2312	ITEM_UNMAPPED	names=%Quest_D_medicine_20a
+2334	TITLE_EVIDENCE_BLOCKED	retail=dark_title11 prod=1
+2334	ITEM_UNMAPPED	names=rec_D_co_food_d_2stats_30g
+2341	ITEM_UNMAPPED	names=%Quest_D_magical_30a
+2342	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+2343	TITLE_EVIDENCE_BLOCKED	retail=dark_title12 prod=1
+2345	ITEM_DIFF	prod=[(160000011, 15), (186000008, 1)] retail=[(162000048, 6), (186000008, 6)]
+2346	ITEM_UNMAPPED	names=%Quest_D_medicine_30a
+2351	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2364	ITEM_UNMAPPED	names=SCROLL_speed_atk_50A
+2368	ITEM_UNMAPPED	names=%Quest_D_magical_20a
+2377	TITLE_EVIDENCE_BLOCKED	retail=dark_title13 prod=1
+2380	ITEM_UNMAPPED	names=%Quest_D_medicine_40a
+2392	ITEM_DIFF	prod=[(162000048, 4), (162000048, 4), (162000048, 8), (186000008, 2), (186000008, 2), (186000008, 2)] retail=[(162000048, 8), (186000008, 2)]
+2394	TITLE_EVIDENCE_BLOCKED	retail=dark_title14 prod=1
+2403	ITEM_UNMAPPED	names=food_d_mresist_30a
+2404	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+2428	ITEM_UNMAPPED	names=rec_D_al_potion_hp_mp_20a
+2434	TITLE_EVIDENCE_BLOCKED	retail=dark_title16 prod=1
+2437	TITLE_EVIDENCE_BLOCKED	retail=dark_title15 prod=1
+2439	ITEM_UNMAPPED	names=FOOD_D_dpheal_50A
+2445	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+2478	TITLE_EVIDENCE_BLOCKED	retail=dark_title19 prod=1
+2480	TITLE_EVIDENCE_BLOCKED	retail=dark_title17 prod=1
+2484	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2485	TITLE_EVIDENCE_BLOCKED	retail=dark_title18 prod=1
+2491	TITLE_EVIDENCE_BLOCKED	retail=dark_title44 prod=1
+2493	TITLE_EVIDENCE_BLOCKED	retail=dark_title20 prod=1
+2509	ITEM_UNMAPPED	names=scroll_return_DF3
+2511	TITLE_EVIDENCE_BLOCKED	retail=dark_title25 prod=1
+2521	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+2522	ITEM_UNMAPPED	names=%Quest_D_medicine_30a
+2525	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2530	ITEM_UNMAPPED	names=%Quest_D_magical_30a
+2532	ITEM_UNMAPPED	names=rec_D_al_scroll_speed_run_40a
+2544	ITEM_UNMAPPED	names=%Quest_D_medicine_30a
+2545	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2571	TITLE_EVIDENCE_BLOCKED	retail=dark_title26 prod=1
+2596	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+2597	ITEM_UNMAPPED	names=%Quest_D_food_50a
+2647	ITEM_UNMAPPED	names=SOULSTONE_RESURRECT_SELF_20
+2656	TITLE_EVIDENCE_BLOCKED	retail=dark_title29 prod=1
+2658	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+2659	ITEM_UNMAPPED	names=%Quest_D_medicine_50a
+2660	ITEM_UNMAPPED	names=%Quest_D_food_50a
+2662	ITEM_UNMAPPED	names=SCROLL_speed_atk_50A
+2699	TITLE_EVIDENCE_BLOCKED	retail=dark_title28 prod=1
+2717	ITEM_UNMAPPED	names=%Quest_D_medal_01a
+2733	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+2742	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+2751	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+2849	ITEM_UNMAPPED	names=%Quest_D_3_island_01a
+2888	TITLE_EVIDENCE_BLOCKED	retail=dark_title41 prod=1
+2901	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+2902	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+2903	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+2904	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+2905	ITEM_UNMAPPED	names=rec_D_ws_dagger_d_n_c2_p_15a
+2906	ITEM_UNMAPPED	names=rec_D_as_ch_shoes_d_n_c2_p_13a
+2907	ITEM_UNMAPPED	names=rec_D_co_food_d_Maccuracy_20a
+2908	ITEM_UNMAPPED	names=rec_D_ha_bow_d_n_c2_p_15a
+2910	ITEM_UNMAPPED	names=rec_D_ta_lt_shoes_d_n_c2_p_13a
+2912	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+2923	ITEM_UNMAPPED	names=SCROLL_RETURN_DF2
+2924	ITEM_UNMAPPED	names=SCROLL_RETURN_DF2
+2928	TITLE_EVIDENCE_BLOCKED	retail=dark_title42 prod=1
+3007	ITEM_UNMAPPED	names=%Quest_L_food_20a
+3009	TITLE_EVIDENCE_BLOCKED	retail=light_title22 prod=1
+3010	ITEM_UNMAPPED	names=%Quest_L_medicine_20a
+3011	ITEM_UNMAPPED	names=SCROLL_regist_fire_40A
+3015	ITEM_UNMAPPED	names=%Quest_L_magical_20a
+3016	TITLE_EVIDENCE_BLOCKED	retail=light_title21 prod=1
+3017	ITEM_UNMAPPED	names=%Quest_L_Recipe_20a_LF2A
+3037	ITEM_UNMAPPED	names=SCROLL_RETURN_LF2B
+3045	ITEM_UNMAPPED	names=%Quest_L_food_50a
+3052	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+3057	TITLE_EVIDENCE_BLOCKED	retail=light_title48 prod=1
+3074	ITEM_UNMAPPED	names=%Quest_L_redeem_50a
+3089	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+3121	TITLE_EVIDENCE_BLOCKED	retail=light_title47 prod=1
+3202	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+3206	ITEM_UNMAPPED	names=%Quest_L_food_40a
+3211	TITLE_EVIDENCE_BLOCKED	retail=light_title35 prod=1
+3214	ITEM_UNMAPPED	names=%Quest_L_medicine_40a
+3311	ITEM_UNMAPPED	names=%Quest_L_magical_30a
+3340	TITLE_EVIDENCE_BLOCKED	retail=light_title11 prod=1
+3502	TITLE_EVIDENCE_BLOCKED	retail=light_title50 prod=1
+3502	ITEM_UNMAPPED	names=rec_L_cv_cv_metal_n_u_s_40a
+3506	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+3510	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+3547	TITLE_EVIDENCE_BLOCKED	retail=light_title23 prod=1
+3548	TITLE_EVIDENCE_BLOCKED	retail=light_title24 prod=1
+3735	TITLE_EVIDENCE_BLOCKED	retail=light_title31 prod=1
+3743	TITLE_EVIDENCE_BLOCKED	retail=light_title32 prod=1
+3744	TITLE_EVIDENCE_BLOCKED	retail=light_title33 prod=1
+3745	TITLE_EVIDENCE_BLOCKED	retail=light_title34 prod=1
+3912	TITLE_EVIDENCE_BLOCKED	retail=light_title39 prod=1
+3915	ITEM_UNMAPPED	names=%Quest_L_magical_40a
+3916	ITEM_UNMAPPED	names=%Quest_L_medicine_50a
+3918	ITEM_UNMAPPED	names=%Quest_L_matter_option_50b
+3919	ITEM_UNMAPPED	names=%Quest_L_matter_option_50a
+3922	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3923	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3924	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3925	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3926	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3927	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3928	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3929	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+3940	TITLE_EVIDENCE_BLOCKED	retail=light_title37 prod=1
+3943	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+3946	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+3949	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+3952	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+3955	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+3958	TITLE_EVIDENCE_BLOCKED	retail=light_title36 prod=1
+4006	ITEM_UNMAPPED	names=%Quest_D_food_20a
+4008	ITEM_UNMAPPED	names=%Quest_D_medicine_20a
+4009	ITEM_UNMAPPED	names=%Quest_D_material_20a
+4014	TITLE_EVIDENCE_BLOCKED	retail=dark_title21 prod=1
+4017	TITLE_EVIDENCE_BLOCKED	retail=dark_title22 prod=1
+4034	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+4056	TITLE_EVIDENCE_BLOCKED	retail=dark_title48 prod=1
+4074	ITEM_UNMAPPED	names=%Quest_D_redeem_50a
+4079	ITEM_UNMAPPED	names=%Quest_D_food_50a
+4081	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+4095	ITEM_UNMAPPED	names=%Quest_D_food_50a
+4120	TITLE_EVIDENCE_BLOCKED	retail=dark_title47 prod=1
+4202	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+4206	ITEM_UNMAPPED	names=%Quest_D_food_40a
+4211	TITLE_EVIDENCE_BLOCKED	retail=dark_title35 prod=1
+4214	ITEM_UNMAPPED	names=%Quest_D_medicine_40a
+4312	ITEM_UNMAPPED	names=%Quest_D_magical_30a
+4317	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+4318	ITEM_UNMAPPED	names=SCROLL_speed_run_50A
+4338	TITLE_EVIDENCE_BLOCKED	retail=dark_title09 prod=1
+4502	TITLE_EVIDENCE_BLOCKED	retail=dark_title50 prod=1
+4502	ITEM_UNMAPPED	names=rec_D_cv_cv_metal_n_u_s_40a
+4512	ITEM_UNMAPPED	names=SCROLL_shield_all_30A
+4515	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+4542	TITLE_EVIDENCE_BLOCKED	retail=dark_title23 prod=1
+4735	TITLE_EVIDENCE_BLOCKED	retail=dark_title31 prod=1
+4743	TITLE_EVIDENCE_BLOCKED	retail=dark_title32 prod=1
+4744	TITLE_EVIDENCE_BLOCKED	retail=dark_title33 prod=1
+4745	TITLE_EVIDENCE_BLOCKED	retail=dark_title34 prod=1
+4915	ITEM_UNMAPPED	names=%Quest_D_magical_40a
+4916	ITEM_UNMAPPED	names=%Quest_D_medicine_50a
+4918	ITEM_UNMAPPED	names=%Quest_D_matter_option_50b
+4919	ITEM_UNMAPPED	names=%Quest_D_matter_option_50a
+4922	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4923	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4924	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4925	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4926	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4927	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4928	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4929	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+4933	TITLE_EVIDENCE_BLOCKED	retail=dark_title39 prod=1
+4944	TITLE_EVIDENCE_BLOCKED	retail=dark_title37 prod=1
+4947	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+4950	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+4953	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+4956	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+4959	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+4962	TITLE_EVIDENCE_BLOCKED	retail=dark_title36 prod=1
+5000	ITEM_UNMAPPED	names=%Quest_L_task_ws_5000
+5001	ITEM_UNMAPPED	names=%Quest_L_task_ws_5001
+5002	ITEM_UNMAPPED	names=%Quest_L_task_ws_5002
+5003	ITEM_UNMAPPED	names=%Quest_L_task_ws_5003
+5004	ITEM_UNMAPPED	names=%Quest_L_task_ws_5004
+5005	ITEM_UNMAPPED	names=%Quest_L_task_ws_5005
+5006	ITEM_UNMAPPED	names=%Quest_L_task_ws_5006
+5007	ITEM_UNMAPPED	names=%Quest_L_task_ws_5007
+5008	ITEM_UNMAPPED	names=%Quest_L_task_ws_5008
+5009	ITEM_UNMAPPED	names=%Quest_L_task_ws_5009
+5010	ITEM_UNMAPPED	names=%Quest_L_task_ws_5010
+5011	ITEM_UNMAPPED	names=%Quest_L_task_ws_5011
+5012	ITEM_UNMAPPED	names=%Quest_L_task_ws_5012
+5013	ITEM_UNMAPPED	names=%Quest_L_task_ws_5013
+5014	ITEM_UNMAPPED	names=%Quest_L_task_ws_5014
+5015	ITEM_UNMAPPED	names=%Quest_L_task_ws_5015
+5016	ITEM_UNMAPPED	names=%Quest_L_task_ws_5016
+5017	ITEM_UNMAPPED	names=%Quest_L_task_ws_5017
+5018	ITEM_UNMAPPED	names=%Quest_L_task_ws_5018
+5019	ITEM_UNMAPPED	names=%Quest_L_task_ws_5019
+5020	ITEM_UNMAPPED	names=%Quest_L_task_ws_5020
+5021	ITEM_UNMAPPED	names=%Quest_L_task_ws_5021
+5022	ITEM_UNMAPPED	names=%Quest_L_task_ws_5022
+5023	ITEM_UNMAPPED	names=%Quest_L_task_ws_5023
+5024	ITEM_UNMAPPED	names=%Quest_L_task_ws_5024
+5025	ITEM_UNMAPPED	names=%Quest_L_task_ws_5025
+5026	ITEM_UNMAPPED	names=%Quest_L_task_ws_5026
+5027	ITEM_UNMAPPED	names=%Quest_L_task_ws_5027
+5028	ITEM_UNMAPPED	names=%Quest_L_task_ws_5028
+5029	ITEM_UNMAPPED	names=%Quest_L_task_ws_5029
+5030	ITEM_UNMAPPED	names=%Quest_L_task_ws_5030
+5031	ITEM_UNMAPPED	names=%Quest_L_task_ws_5031
+5032	ITEM_UNMAPPED	names=%Quest_L_task_ws_5032
+5033	ITEM_UNMAPPED	names=%Quest_L_task_ws_5033
+5034	ITEM_UNMAPPED	names=%Quest_L_task_ws_5034
+5035	ITEM_UNMAPPED	names=%Quest_L_task_ws_5035
+5036	ITEM_UNMAPPED	names=%Quest_L_task_ws_5036
+5037	ITEM_UNMAPPED	names=%Quest_L_task_ws_5037
+5038	ITEM_UNMAPPED	names=%Quest_L_task_ws_5038
+5039	ITEM_UNMAPPED	names=%Quest_L_task_ws_5039
+5040	ITEM_UNMAPPED	names=%Quest_L_task_ws_5040
+5100	ITEM_UNMAPPED	names=%Quest_L_task_as_5100
+5101	ITEM_UNMAPPED	names=%Quest_L_task_as_5101
+5102	ITEM_UNMAPPED	names=%Quest_L_task_as_5102
+5103	ITEM_UNMAPPED	names=%Quest_L_task_as_5103
+5104	ITEM_UNMAPPED	names=%Quest_L_task_as_5104
+5105	ITEM_UNMAPPED	names=%Quest_L_task_as_5105
+5106	ITEM_UNMAPPED	names=%Quest_L_task_as_5106
+5107	ITEM_UNMAPPED	names=%Quest_L_task_as_5107
+5108	ITEM_UNMAPPED	names=%Quest_L_task_as_5108
+5109	ITEM_UNMAPPED	names=%Quest_L_task_as_5109
+5110	ITEM_UNMAPPED	names=%Quest_L_task_as_5110
+5111	ITEM_UNMAPPED	names=%Quest_L_task_as_5111
+5112	ITEM_UNMAPPED	names=%Quest_L_task_as_5112
+5113	ITEM_UNMAPPED	names=%Quest_L_task_as_5113
+5114	ITEM_UNMAPPED	names=%Quest_L_task_as_5114
+5115	ITEM_UNMAPPED	names=%Quest_L_task_as_5115
+5116	ITEM_UNMAPPED	names=%Quest_L_task_as_5116
+5117	ITEM_UNMAPPED	names=%Quest_L_task_as_5117
+5118	ITEM_UNMAPPED	names=%Quest_L_task_as_5118
+5119	ITEM_UNMAPPED	names=%Quest_L_task_as_5119
+5120	ITEM_UNMAPPED	names=%Quest_L_task_as_5120
+5121	ITEM_UNMAPPED	names=%Quest_L_task_as_5121
+5122	ITEM_UNMAPPED	names=%Quest_L_task_as_5122
+5123	ITEM_UNMAPPED	names=%Quest_L_task_as_5123
+5124	ITEM_UNMAPPED	names=%Quest_L_task_as_5124
+5125	ITEM_UNMAPPED	names=%Quest_L_task_as_5125
+5126	ITEM_UNMAPPED	names=%Quest_L_task_as_5126
+5127	ITEM_UNMAPPED	names=%Quest_L_task_as_5127
+5128	ITEM_UNMAPPED	names=%Quest_L_task_as_5128
+5129	ITEM_UNMAPPED	names=%Quest_L_task_as_5129
+5130	ITEM_UNMAPPED	names=%Quest_L_task_as_5130
+5131	ITEM_UNMAPPED	names=%Quest_L_task_as_5131
+5132	ITEM_UNMAPPED	names=%Quest_L_task_as_5132
+5133	ITEM_UNMAPPED	names=%Quest_L_task_as_5133
+5134	ITEM_UNMAPPED	names=%Quest_L_task_as_5134
+5135	ITEM_UNMAPPED	names=%Quest_L_task_as_5135
+5136	ITEM_UNMAPPED	names=%Quest_L_task_as_5136
+5137	ITEM_UNMAPPED	names=%Quest_L_task_as_5137
+5138	ITEM_UNMAPPED	names=%Quest_L_task_as_5138
+5139	ITEM_UNMAPPED	names=%Quest_L_task_as_5139
+5140	ITEM_UNMAPPED	names=%Quest_L_task_as_5140
+5200	ITEM_UNMAPPED	names=%Quest_L_task_ta_5200
+5201	ITEM_UNMAPPED	names=%Quest_L_task_ta_5201
+5202	ITEM_UNMAPPED	names=%Quest_L_task_ta_5202
+5203	ITEM_UNMAPPED	names=%Quest_L_task_ta_5203
+5204	ITEM_UNMAPPED	names=%Quest_L_task_ta_5204
+5205	ITEM_UNMAPPED	names=%Quest_L_task_ta_5205
+5206	ITEM_UNMAPPED	names=%Quest_L_task_ta_5206
+5207	ITEM_UNMAPPED	names=%Quest_L_task_ta_5207
+5208	ITEM_UNMAPPED	names=%Quest_L_task_ta_5208
+5209	ITEM_UNMAPPED	names=%Quest_L_task_ta_5209
+5210	ITEM_UNMAPPED	names=%Quest_L_task_ta_5210
+5211	ITEM_UNMAPPED	names=%Quest_L_task_ta_5211
+5212	ITEM_UNMAPPED	names=%Quest_L_task_ta_5212
+5213	ITEM_UNMAPPED	names=%Quest_L_task_ta_5213
+5214	ITEM_UNMAPPED	names=%Quest_L_task_ta_5214
+5215	ITEM_UNMAPPED	names=%Quest_L_task_ta_5215
+5216	ITEM_UNMAPPED	names=%Quest_L_task_ta_5216
+5217	ITEM_UNMAPPED	names=%Quest_L_task_ta_5217
+5218	ITEM_UNMAPPED	names=%Quest_L_task_ta_5218
+5219	ITEM_UNMAPPED	names=%Quest_L_task_ta_5219
+5220	ITEM_UNMAPPED	names=%Quest_L_task_ta_5220
+5221	ITEM_UNMAPPED	names=%Quest_L_task_ta_5221
+5222	ITEM_UNMAPPED	names=%Quest_L_task_ta_5222
+5223	ITEM_UNMAPPED	names=%Quest_L_task_ta_5223
+5224	ITEM_UNMAPPED	names=%Quest_L_task_ta_5224
+5225	ITEM_UNMAPPED	names=%Quest_L_task_ta_5225
+5226	ITEM_UNMAPPED	names=%Quest_L_task_ta_5226
+5227	ITEM_UNMAPPED	names=%Quest_L_task_ta_5227
+5228	ITEM_UNMAPPED	names=%Quest_L_task_ta_5228
+5229	ITEM_UNMAPPED	names=%Quest_L_task_ta_5229
+5230	ITEM_UNMAPPED	names=%Quest_L_task_ta_5230
+5231	ITEM_UNMAPPED	names=%Quest_L_task_ta_5231
+5232	ITEM_UNMAPPED	names=%Quest_L_task_ta_5232
+5233	ITEM_UNMAPPED	names=%Quest_L_task_ta_5233
+5234	ITEM_UNMAPPED	names=%Quest_L_task_ta_5234
+5235	ITEM_UNMAPPED	names=%Quest_L_task_ta_5235
+5236	ITEM_UNMAPPED	names=%Quest_L_task_ta_5236
+5237	ITEM_UNMAPPED	names=%Quest_L_task_ta_5237
+5238	ITEM_UNMAPPED	names=%Quest_L_task_ta_5238
+5239	ITEM_UNMAPPED	names=%Quest_L_task_ta_5239
+5240	ITEM_UNMAPPED	names=%Quest_L_task_ta_5240
+5300	ITEM_UNMAPPED	names=%Quest_L_task_ha_5300
+5301	ITEM_UNMAPPED	names=%Quest_L_task_ha_5301
+5302	ITEM_UNMAPPED	names=%Quest_L_task_ha_5302
+5303	ITEM_UNMAPPED	names=%Quest_L_task_ha_5303
+5304	ITEM_UNMAPPED	names=%Quest_L_task_ha_5304
+5305	ITEM_UNMAPPED	names=%Quest_L_task_ha_5305
+5306	ITEM_UNMAPPED	names=%Quest_L_task_ha_5306
+5307	ITEM_UNMAPPED	names=%Quest_L_task_ha_5307
+5308	ITEM_UNMAPPED	names=%Quest_L_task_ha_5308
+5309	ITEM_UNMAPPED	names=%Quest_L_task_ha_5309
+5310	ITEM_UNMAPPED	names=%Quest_L_task_ha_5310
+5311	ITEM_UNMAPPED	names=%Quest_L_task_ha_5311
+5312	ITEM_UNMAPPED	names=%Quest_L_task_ha_5312
+5313	ITEM_UNMAPPED	names=%Quest_L_task_ha_5313
+5314	ITEM_UNMAPPED	names=%Quest_L_task_ha_5314
+5315	ITEM_UNMAPPED	names=%Quest_L_task_ha_5315
+5316	ITEM_UNMAPPED	names=%Quest_L_task_ha_5316
+5317	ITEM_UNMAPPED	names=%Quest_L_task_ha_5317
+5318	ITEM_UNMAPPED	names=%Quest_L_task_ha_5318
+5319	ITEM_UNMAPPED	names=%Quest_L_task_ha_5319
+5320	ITEM_UNMAPPED	names=%Quest_L_task_ha_5320
+5321	ITEM_UNMAPPED	names=%Quest_L_task_ha_5321
+5322	ITEM_UNMAPPED	names=%Quest_L_task_ha_5322
+5323	ITEM_UNMAPPED	names=%Quest_L_task_ha_5323
+5324	ITEM_UNMAPPED	names=%Quest_L_task_ha_5324
+5325	ITEM_UNMAPPED	names=%Quest_L_task_ha_5325
+5326	ITEM_UNMAPPED	names=%Quest_L_task_ha_5326
+5327	ITEM_UNMAPPED	names=%Quest_L_task_ha_5327
+5328	ITEM_UNMAPPED	names=%Quest_L_task_ha_5328
+5329	ITEM_UNMAPPED	names=%Quest_L_task_ha_5329
+5330	ITEM_UNMAPPED	names=%Quest_L_task_ha_5330
+5331	ITEM_UNMAPPED	names=%Quest_L_task_ha_5331
+5332	ITEM_UNMAPPED	names=%Quest_L_task_ha_5332
+5333	ITEM_UNMAPPED	names=%Quest_L_task_ha_5333
+5334	ITEM_UNMAPPED	names=%Quest_L_task_ha_5334
+5335	ITEM_UNMAPPED	names=%Quest_L_task_ha_5335
+5336	ITEM_UNMAPPED	names=%Quest_L_task_ha_5336
+5337	ITEM_UNMAPPED	names=%Quest_L_task_ha_5337
+5338	ITEM_UNMAPPED	names=%Quest_L_task_ha_5338
+5339	ITEM_UNMAPPED	names=%Quest_L_task_ha_5339
+5340	ITEM_UNMAPPED	names=%Quest_L_task_ha_5340
+5400	ITEM_UNMAPPED	names=%Quest_L_task_al_5400
+5401	ITEM_UNMAPPED	names=%Quest_L_task_al_5401
+5402	ITEM_UNMAPPED	names=%Quest_L_task_al_5402
+5403	ITEM_UNMAPPED	names=%Quest_L_task_al_5403
+5404	ITEM_UNMAPPED	names=%Quest_L_task_al_5404
+5405	ITEM_UNMAPPED	names=%Quest_L_task_al_5405
+5406	ITEM_UNMAPPED	names=%Quest_L_task_al_5406
+5407	ITEM_UNMAPPED	names=%Quest_L_task_al_5407
+5408	ITEM_UNMAPPED	names=%Quest_L_task_al_5408
+5409	ITEM_UNMAPPED	names=%Quest_L_task_al_5409
+5410	ITEM_UNMAPPED	names=%Quest_L_task_al_5410
+5411	ITEM_UNMAPPED	names=%Quest_L_task_al_5411
+5412	ITEM_UNMAPPED	names=%Quest_L_task_al_5412
+5413	ITEM_UNMAPPED	names=%Quest_L_task_al_5413
+5414	ITEM_UNMAPPED	names=%Quest_L_task_al_5414
+5415	ITEM_UNMAPPED	names=%Quest_L_task_al_5415
+5416	ITEM_UNMAPPED	names=%Quest_L_task_al_5416
+5417	ITEM_UNMAPPED	names=%Quest_L_task_al_5417
+5418	ITEM_UNMAPPED	names=%Quest_L_task_al_5418
+5419	ITEM_UNMAPPED	names=%Quest_L_task_al_5419
+5420	ITEM_UNMAPPED	names=%Quest_L_task_al_5420
+5421	ITEM_UNMAPPED	names=%Quest_L_task_al_5421
+5422	ITEM_UNMAPPED	names=%Quest_L_task_al_5422
+5423	ITEM_UNMAPPED	names=%Quest_L_task_al_5423
+5424	ITEM_UNMAPPED	names=%Quest_L_task_al_5424
+5425	ITEM_UNMAPPED	names=%Quest_L_task_al_5425
+5426	ITEM_UNMAPPED	names=%Quest_L_task_al_5426
+5427	ITEM_UNMAPPED	names=%Quest_L_task_al_5427
+5428	ITEM_UNMAPPED	names=%Quest_L_task_al_5428
+5429	ITEM_UNMAPPED	names=%Quest_L_task_al_5429
+5430	ITEM_UNMAPPED	names=%Quest_L_task_al_5430
+5431	ITEM_UNMAPPED	names=%Quest_L_task_al_5431
+5432	ITEM_UNMAPPED	names=%Quest_L_task_al_5432
+5433	ITEM_UNMAPPED	names=%Quest_L_task_al_5433
+5434	ITEM_UNMAPPED	names=%Quest_L_task_al_5434
+5435	ITEM_UNMAPPED	names=%Quest_L_task_al_5435
+5436	ITEM_UNMAPPED	names=%Quest_L_task_al_5436
+5437	ITEM_UNMAPPED	names=%Quest_L_task_al_5437
+5438	ITEM_UNMAPPED	names=%Quest_L_task_al_5438
+5439	ITEM_UNMAPPED	names=%Quest_L_task_al_5439
+5440	ITEM_UNMAPPED	names=%Quest_L_task_al_5440
+5500	ITEM_UNMAPPED	names=%Quest_L_task_co_5500
+5501	ITEM_UNMAPPED	names=%Quest_L_task_co_5501
+5502	ITEM_UNMAPPED	names=%Quest_L_task_co_5502
+5503	ITEM_UNMAPPED	names=%Quest_L_task_co_5503
+5504	ITEM_UNMAPPED	names=%Quest_L_task_co_5504
+5505	ITEM_UNMAPPED	names=%Quest_L_task_co_5505
+5506	ITEM_UNMAPPED	names=%Quest_L_task_co_5506
+5507	ITEM_UNMAPPED	names=%Quest_L_task_co_5507
+5508	ITEM_UNMAPPED	names=%Quest_L_task_co_5508
+5509	ITEM_UNMAPPED	names=%Quest_L_task_co_5509
+5510	ITEM_UNMAPPED	names=%Quest_L_task_co_5510
+5511	ITEM_UNMAPPED	names=%Quest_L_task_co_5511
+5512	ITEM_UNMAPPED	names=%Quest_L_task_co_5512
+5513	ITEM_UNMAPPED	names=%Quest_L_task_co_5513
+5514	ITEM_UNMAPPED	names=%Quest_L_task_co_5514
+5515	ITEM_UNMAPPED	names=%Quest_L_task_co_5515
+5516	ITEM_UNMAPPED	names=%Quest_L_task_co_5516
+5517	ITEM_UNMAPPED	names=%Quest_L_task_co_5517
+5518	ITEM_UNMAPPED	names=%Quest_L_task_co_5518
+5519	ITEM_UNMAPPED	names=%Quest_L_task_co_5519
+5520	ITEM_UNMAPPED	names=%Quest_L_task_co_5520
+5521	ITEM_UNMAPPED	names=%Quest_L_task_co_5521
+5522	ITEM_UNMAPPED	names=%Quest_L_task_co_5522
+5523	ITEM_UNMAPPED	names=%Quest_L_task_co_5523
+5524	ITEM_UNMAPPED	names=%Quest_L_task_co_5524
+5525	ITEM_UNMAPPED	names=%Quest_L_task_co_5525
+5526	ITEM_UNMAPPED	names=%Quest_L_task_co_5526
+5527	ITEM_UNMAPPED	names=%Quest_L_task_co_5527
+5528	ITEM_UNMAPPED	names=%Quest_L_task_co_5528
+5529	ITEM_UNMAPPED	names=%Quest_L_task_co_5529
+5530	ITEM_UNMAPPED	names=%Quest_L_task_co_5530
+5531	ITEM_UNMAPPED	names=%Quest_L_task_co_5531
+5532	ITEM_UNMAPPED	names=%Quest_L_task_co_5532
+5533	ITEM_UNMAPPED	names=%Quest_L_task_co_5533
+5534	ITEM_UNMAPPED	names=%Quest_L_task_co_5534
+5535	ITEM_UNMAPPED	names=%Quest_L_task_co_5535
+5536	ITEM_UNMAPPED	names=%Quest_L_task_co_5536
+5537	ITEM_UNMAPPED	names=%Quest_L_task_co_5537
+5538	ITEM_UNMAPPED	names=%Quest_L_task_co_5538
+5539	ITEM_UNMAPPED	names=%Quest_L_task_co_5539
+5540	ITEM_UNMAPPED	names=%Quest_L_task_co_5540
+5541	ITEM_UNMAPPED	names=%Quest_L_task_me_5541
+5542	ITEM_UNMAPPED	names=%Quest_L_task_me_5542
+5543	ITEM_UNMAPPED	names=%Quest_L_task_me_5543
+5544	ITEM_UNMAPPED	names=%Quest_L_task_me_5544
+5545	ITEM_UNMAPPED	names=%Quest_L_task_me_5545
+5546	ITEM_UNMAPPED	names=%Quest_L_task_me_5546
+5547	ITEM_UNMAPPED	names=%Quest_L_task_me_5547
+5548	ITEM_UNMAPPED	names=%Quest_L_task_me_5548
+5549	ITEM_UNMAPPED	names=%Quest_L_task_me_5549
+5550	ITEM_UNMAPPED	names=%Quest_L_task_me_5550
+5551	ITEM_UNMAPPED	names=%Quest_L_task_me_5551
+5552	ITEM_UNMAPPED	names=%Quest_L_task_me_5552
+5553	ITEM_UNMAPPED	names=%Quest_L_task_me_5553
+5554	ITEM_UNMAPPED	names=%Quest_L_task_me_5554
+5555	ITEM_UNMAPPED	names=%Quest_L_task_me_5555
+5556	ITEM_UNMAPPED	names=%Quest_L_task_me_5556
+5557	ITEM_UNMAPPED	names=%Quest_L_task_me_5557
+5558	ITEM_UNMAPPED	names=%Quest_L_task_me_5558
+5559	ITEM_UNMAPPED	names=%Quest_L_task_me_5559
+5560	ITEM_UNMAPPED	names=%Quest_L_task_me_5560
+5561	ITEM_UNMAPPED	names=%Quest_L_task_me_5561
+5562	ITEM_UNMAPPED	names=%Quest_L_task_me_5562
+5563	ITEM_UNMAPPED	names=%Quest_L_task_me_5563
+5564	ITEM_UNMAPPED	names=%Quest_L_task_me_5564
+5565	ITEM_UNMAPPED	names=%Quest_L_task_me_5565
+5566	ITEM_UNMAPPED	names=%Quest_L_task_me_5566
+5567	ITEM_UNMAPPED	names=%Quest_L_task_me_5567
+5568	ITEM_UNMAPPED	names=%Quest_L_task_me_5568
+5569	ITEM_UNMAPPED	names=%Quest_L_task_me_5569
+5570	ITEM_UNMAPPED	names=%Quest_L_task_me_5570
+5571	ITEM_UNMAPPED	names=%Quest_L_task_me_5571
+5572	ITEM_UNMAPPED	names=%Quest_L_task_me_5572
+5573	ITEM_UNMAPPED	names=%Quest_L_task_me_5573
+5574	ITEM_UNMAPPED	names=%Quest_L_task_me_5574
+5575	ITEM_UNMAPPED	names=%Quest_L_task_me_5575
+5576	ITEM_UNMAPPED	names=%Quest_L_task_me_5576
+5577	ITEM_UNMAPPED	names=%Quest_L_task_me_5577
+5578	ITEM_UNMAPPED	names=%Quest_L_task_me_5578
+5579	ITEM_UNMAPPED	names=%Quest_L_task_me_5579
+5580	ITEM_UNMAPPED	names=%Quest_L_task_me_5580
+5581	ITEM_UNMAPPED	names=%Quest_L_task_me_5581
+6000	ITEM_UNMAPPED	names=%Quest_D_task_ws_6000
+6001	ITEM_UNMAPPED	names=%Quest_D_task_ws_6001
+6002	ITEM_UNMAPPED	names=%Quest_D_task_ws_6002
+6003	ITEM_UNMAPPED	names=%Quest_D_task_ws_6003
+6004	ITEM_UNMAPPED	names=%Quest_D_task_ws_6004
+6005	ITEM_UNMAPPED	names=%Quest_D_task_ws_6005
+6006	ITEM_UNMAPPED	names=%Quest_D_task_ws_6006
+6007	ITEM_UNMAPPED	names=%Quest_D_task_ws_6007
+6008	ITEM_UNMAPPED	names=%Quest_D_task_ws_6008
+6009	ITEM_UNMAPPED	names=%Quest_D_task_ws_6009
+6010	ITEM_UNMAPPED	names=%Quest_D_task_ws_6010
+6011	ITEM_UNMAPPED	names=%Quest_D_task_ws_6011
+6012	ITEM_UNMAPPED	names=%Quest_D_task_ws_6012
+6013	ITEM_UNMAPPED	names=%Quest_D_task_ws_6013
+6014	ITEM_UNMAPPED	names=%Quest_D_task_ws_6014
+6015	ITEM_UNMAPPED	names=%Quest_D_task_ws_6015
+6016	ITEM_UNMAPPED	names=%Quest_D_task_ws_6016
+6017	ITEM_UNMAPPED	names=%Quest_D_task_ws_6017
+6018	ITEM_UNMAPPED	names=%Quest_D_task_ws_6018
+6019	ITEM_UNMAPPED	names=%Quest_D_task_ws_6019
+6020	ITEM_UNMAPPED	names=%Quest_D_task_ws_6020
+6021	ITEM_UNMAPPED	names=%Quest_D_task_ws_6021
+6022	ITEM_UNMAPPED	names=%Quest_D_task_ws_6022
+6023	ITEM_UNMAPPED	names=%Quest_D_task_ws_6023
+6024	ITEM_UNMAPPED	names=%Quest_D_task_ws_6024
+6025	ITEM_UNMAPPED	names=%Quest_D_task_ws_6025
+6026	ITEM_UNMAPPED	names=%Quest_D_task_ws_6026
+6027	ITEM_UNMAPPED	names=%Quest_D_task_ws_6027
+6028	ITEM_UNMAPPED	names=%Quest_D_task_ws_6028
+6029	ITEM_UNMAPPED	names=%Quest_D_task_ws_6029
+6030	ITEM_UNMAPPED	names=%Quest_D_task_ws_6030
+6031	ITEM_UNMAPPED	names=%Quest_D_task_ws_6031
+6032	ITEM_UNMAPPED	names=%Quest_D_task_ws_6032
+6033	ITEM_UNMAPPED	names=%Quest_D_task_ws_6033
+6034	ITEM_UNMAPPED	names=%Quest_D_task_ws_6034
+6035	ITEM_UNMAPPED	names=%Quest_D_task_ws_6035
+6036	ITEM_UNMAPPED	names=%Quest_D_task_ws_6036
+6037	ITEM_UNMAPPED	names=%Quest_D_task_ws_6037
+6038	ITEM_UNMAPPED	names=%Quest_D_task_ws_6038
+6039	ITEM_UNMAPPED	names=%Quest_D_task_ws_6039
+6040	ITEM_UNMAPPED	names=%Quest_D_task_ws_6040
+6100	ITEM_UNMAPPED	names=%Quest_D_task_as_6100
+6101	ITEM_UNMAPPED	names=%Quest_D_task_as_6101
+6102	ITEM_UNMAPPED	names=%Quest_D_task_as_6102
+6103	ITEM_UNMAPPED	names=%Quest_D_task_as_6103
+6104	ITEM_UNMAPPED	names=%Quest_D_task_as_6104
+6105	ITEM_UNMAPPED	names=%Quest_D_task_as_6105
+6106	ITEM_UNMAPPED	names=%Quest_D_task_as_6106
+6107	ITEM_UNMAPPED	names=%Quest_D_task_as_6107
+6108	ITEM_UNMAPPED	names=%Quest_D_task_as_6108
+6109	ITEM_UNMAPPED	names=%Quest_D_task_as_6109
+6110	ITEM_UNMAPPED	names=%Quest_D_task_as_6110
+6111	ITEM_UNMAPPED	names=%Quest_D_task_as_6111
+6112	ITEM_UNMAPPED	names=%Quest_D_task_as_6112
+6113	ITEM_UNMAPPED	names=%Quest_D_task_as_6113
+6114	ITEM_UNMAPPED	names=%Quest_D_task_as_6114
+6115	ITEM_UNMAPPED	names=%Quest_D_task_as_6115
+6116	ITEM_UNMAPPED	names=%Quest_D_task_as_6116
+6117	ITEM_UNMAPPED	names=%Quest_D_task_as_6117
+6118	ITEM_UNMAPPED	names=%Quest_D_task_as_6118
+6119	ITEM_UNMAPPED	names=%Quest_D_task_as_6119
+6120	ITEM_UNMAPPED	names=%Quest_D_task_as_6120
+6121	ITEM_UNMAPPED	names=%Quest_D_task_as_6121
+6122	ITEM_UNMAPPED	names=%Quest_D_task_as_6122
+6123	ITEM_UNMAPPED	names=%Quest_D_task_as_6123
+6124	ITEM_UNMAPPED	names=%Quest_D_task_as_6124
+6125	ITEM_UNMAPPED	names=%Quest_D_task_as_6125
+6126	ITEM_UNMAPPED	names=%Quest_D_task_as_6126
+6127	ITEM_UNMAPPED	names=%Quest_D_task_as_6127
+6128	ITEM_UNMAPPED	names=%Quest_D_task_as_6128
+6129	ITEM_UNMAPPED	names=%Quest_D_task_as_6129
+6130	ITEM_UNMAPPED	names=%Quest_D_task_as_6130
+6131	ITEM_UNMAPPED	names=%Quest_D_task_as_6131
+6132	ITEM_UNMAPPED	names=%Quest_D_task_as_6132
+6133	ITEM_UNMAPPED	names=%Quest_D_task_as_6133
+6134	ITEM_UNMAPPED	names=%Quest_D_task_as_6134
+6135	ITEM_UNMAPPED	names=%Quest_D_task_as_6135
+6136	ITEM_UNMAPPED	names=%Quest_D_task_as_6136
+6137	ITEM_UNMAPPED	names=%Quest_D_task_as_6137
+6138	ITEM_UNMAPPED	names=%Quest_D_task_as_6138
+6139	ITEM_UNMAPPED	names=%Quest_D_task_as_6139
+6140	ITEM_UNMAPPED	names=%Quest_D_task_as_6140
+6200	ITEM_UNMAPPED	names=%Quest_D_task_ta_6200
+6201	ITEM_UNMAPPED	names=%Quest_D_task_ta_6201
+6202	ITEM_UNMAPPED	names=%Quest_D_task_ta_6202
+6203	ITEM_UNMAPPED	names=%Quest_D_task_ta_6203
+6204	ITEM_UNMAPPED	names=%Quest_D_task_ta_6204
+6205	ITEM_UNMAPPED	names=%Quest_D_task_ta_6205
+6206	ITEM_UNMAPPED	names=%Quest_D_task_ta_6206
+6207	ITEM_UNMAPPED	names=%Quest_D_task_ta_6207
+6208	ITEM_UNMAPPED	names=%Quest_D_task_ta_6208
+6209	ITEM_UNMAPPED	names=%Quest_D_task_ta_6209
+6210	ITEM_UNMAPPED	names=%Quest_D_task_ta_6210
+6211	ITEM_UNMAPPED	names=%Quest_D_task_ta_6211
+6212	ITEM_UNMAPPED	names=%Quest_D_task_ta_6212
+6213	ITEM_UNMAPPED	names=%Quest_D_task_ta_6213
+6214	ITEM_UNMAPPED	names=%Quest_D_task_ta_6214
+6215	ITEM_UNMAPPED	names=%Quest_D_task_ta_6215
+6216	ITEM_UNMAPPED	names=%Quest_D_task_ta_6216
+6217	ITEM_UNMAPPED	names=%Quest_D_task_ta_6217
+6218	ITEM_UNMAPPED	names=%Quest_D_task_ta_6218
+6219	ITEM_UNMAPPED	names=%Quest_D_task_ta_6219
+6220	ITEM_UNMAPPED	names=%Quest_D_task_ta_6220
+6221	ITEM_UNMAPPED	names=%Quest_D_task_ta_6221
+6222	ITEM_UNMAPPED	names=%Quest_D_task_ta_6222
+6223	ITEM_UNMAPPED	names=%Quest_D_task_ta_6223
+6224	ITEM_UNMAPPED	names=%Quest_D_task_ta_6224
+6225	ITEM_UNMAPPED	names=%Quest_D_task_ta_6225
+6226	ITEM_UNMAPPED	names=%Quest_D_task_ta_6226
+6227	ITEM_UNMAPPED	names=%Quest_D_task_ta_6227
+6228	ITEM_UNMAPPED	names=%Quest_D_task_ta_6228
+6229	ITEM_UNMAPPED	names=%Quest_D_task_ta_6229
+6230	ITEM_UNMAPPED	names=%Quest_D_task_ta_6230
+6231	ITEM_UNMAPPED	names=%Quest_D_task_ta_6231
+6232	ITEM_UNMAPPED	names=%Quest_D_task_ta_6232
+6233	ITEM_UNMAPPED	names=%Quest_D_task_ta_6233
+6234	ITEM_UNMAPPED	names=%Quest_D_task_ta_6234
+6235	ITEM_UNMAPPED	names=%Quest_D_task_ta_6235
+6236	ITEM_UNMAPPED	names=%Quest_D_task_ta_6236
+6237	ITEM_UNMAPPED	names=%Quest_D_task_ta_6237
+6238	ITEM_UNMAPPED	names=%Quest_D_task_ta_6238
+6239	ITEM_UNMAPPED	names=%Quest_D_task_ta_6239
+6240	ITEM_UNMAPPED	names=%Quest_D_task_ta_6240
+6300	ITEM_UNMAPPED	names=%Quest_D_task_ha_6300
+6301	ITEM_UNMAPPED	names=%Quest_D_task_ha_6301
+6302	ITEM_UNMAPPED	names=%Quest_D_task_ha_6302
+6303	ITEM_UNMAPPED	names=%Quest_D_task_ha_6303
+6304	ITEM_UNMAPPED	names=%Quest_D_task_ha_6304
+6305	ITEM_UNMAPPED	names=%Quest_D_task_ha_6305
+6306	ITEM_UNMAPPED	names=%Quest_D_task_ha_6306
+6307	ITEM_UNMAPPED	names=%Quest_D_task_ha_6307
+6308	ITEM_UNMAPPED	names=%Quest_D_task_ha_6308
+6309	ITEM_UNMAPPED	names=%Quest_D_task_ha_6309
+6310	ITEM_UNMAPPED	names=%Quest_D_task_ha_6310
+6311	ITEM_UNMAPPED	names=%Quest_D_task_ha_6311
+6312	ITEM_UNMAPPED	names=%Quest_D_task_ha_6312
+6313	ITEM_UNMAPPED	names=%Quest_D_task_ha_6313
+6314	ITEM_UNMAPPED	names=%Quest_D_task_ha_6314
+6315	ITEM_UNMAPPED	names=%Quest_D_task_ha_6315
+6316	ITEM_UNMAPPED	names=%Quest_D_task_ha_6316
+6317	ITEM_UNMAPPED	names=%Quest_D_task_ha_6317
+6318	ITEM_UNMAPPED	names=%Quest_D_task_ha_6318
+6319	ITEM_UNMAPPED	names=%Quest_D_task_ha_6319
+6320	ITEM_UNMAPPED	names=%Quest_D_task_ha_6320
+6321	ITEM_UNMAPPED	names=%Quest_D_task_ha_6321
+6322	ITEM_UNMAPPED	names=%Quest_D_task_ha_6322
+6323	ITEM_UNMAPPED	names=%Quest_D_task_ha_6323
+6324	ITEM_UNMAPPED	names=%Quest_D_task_ha_6324
+6325	ITEM_UNMAPPED	names=%Quest_D_task_ha_6325
+6326	ITEM_UNMAPPED	names=%Quest_D_task_ha_6326
+6327	ITEM_UNMAPPED	names=%Quest_D_task_ha_6327
+6328	ITEM_UNMAPPED	names=%Quest_D_task_ha_6328
+6329	ITEM_UNMAPPED	names=%Quest_D_task_ha_6329
+6330	ITEM_UNMAPPED	names=%Quest_D_task_ha_6330
+6331	ITEM_UNMAPPED	names=%Quest_D_task_ha_6331
+6332	ITEM_UNMAPPED	names=%Quest_D_task_ha_6332
+6333	ITEM_UNMAPPED	names=%Quest_D_task_ha_6333
+6334	ITEM_UNMAPPED	names=%Quest_D_task_ha_6334
+6335	ITEM_UNMAPPED	names=%Quest_D_task_ha_6335
+6336	ITEM_UNMAPPED	names=%Quest_D_task_ha_6336
+6337	ITEM_UNMAPPED	names=%Quest_D_task_ha_6337
+6338	ITEM_UNMAPPED	names=%Quest_D_task_ha_6338
+6339	ITEM_UNMAPPED	names=%Quest_D_task_ha_6339
+6340	ITEM_UNMAPPED	names=%Quest_D_task_ha_6340
+6400	ITEM_UNMAPPED	names=%Quest_D_task_al_6400
+6401	ITEM_UNMAPPED	names=%Quest_D_task_al_6401
+6402	ITEM_UNMAPPED	names=%Quest_D_task_al_6402
+6403	ITEM_UNMAPPED	names=%Quest_D_task_al_6403
+6404	ITEM_UNMAPPED	names=%Quest_D_task_al_6404
+6405	ITEM_UNMAPPED	names=%Quest_D_task_al_6405
+6406	ITEM_UNMAPPED	names=%Quest_D_task_al_6406
+6407	ITEM_UNMAPPED	names=%Quest_D_task_al_6407
+6408	ITEM_UNMAPPED	names=%Quest_D_task_al_6408
+6409	ITEM_UNMAPPED	names=%Quest_D_task_al_6409
+6410	ITEM_UNMAPPED	names=%Quest_D_task_al_6410
+6411	ITEM_UNMAPPED	names=%Quest_D_task_al_6411
+6412	ITEM_UNMAPPED	names=%Quest_D_task_al_6412
+6413	ITEM_UNMAPPED	names=%Quest_D_task_al_6413
+6414	ITEM_UNMAPPED	names=%Quest_D_task_al_6414
+6415	ITEM_UNMAPPED	names=%Quest_D_task_al_6415
+6416	ITEM_UNMAPPED	names=%Quest_D_task_al_6416
+6417	ITEM_UNMAPPED	names=%Quest_D_task_al_6417
+6418	ITEM_UNMAPPED	names=%Quest_D_task_al_6418
+6419	ITEM_UNMAPPED	names=%Quest_D_task_al_6419
+6420	ITEM_UNMAPPED	names=%Quest_D_task_al_6420
+6421	ITEM_UNMAPPED	names=%Quest_D_task_al_6421
+6422	ITEM_UNMAPPED	names=%Quest_D_task_al_6422
+6423	ITEM_UNMAPPED	names=%Quest_D_task_al_6423
+6424	ITEM_UNMAPPED	names=%Quest_D_task_al_6424
+6425	ITEM_UNMAPPED	names=%Quest_D_task_al_6425
+6426	ITEM_UNMAPPED	names=%Quest_D_task_al_6426
+6427	ITEM_UNMAPPED	names=%Quest_D_task_al_6427
+6428	ITEM_UNMAPPED	names=%Quest_D_task_al_6428
+6429	ITEM_UNMAPPED	names=%Quest_D_task_al_6429
+6430	ITEM_UNMAPPED	names=%Quest_D_task_al_6430
+6431	ITEM_UNMAPPED	names=%Quest_D_task_al_6431
+6432	ITEM_UNMAPPED	names=%Quest_D_task_al_6432
+6433	ITEM_UNMAPPED	names=%Quest_D_task_al_6433
+6434	ITEM_UNMAPPED	names=%Quest_D_task_al_6434
+6435	ITEM_UNMAPPED	names=%Quest_D_task_al_6435
+6436	ITEM_UNMAPPED	names=%Quest_D_task_al_6436
+6437	ITEM_UNMAPPED	names=%Quest_D_task_al_6437
+6438	ITEM_UNMAPPED	names=%Quest_D_task_al_6438
+6439	ITEM_UNMAPPED	names=%Quest_D_task_al_6439
+6440	ITEM_UNMAPPED	names=%Quest_D_task_al_6440
+6500	ITEM_UNMAPPED	names=%Quest_D_task_co_6500
+6501	ITEM_UNMAPPED	names=%Quest_D_task_co_6501
+6502	ITEM_UNMAPPED	names=%Quest_D_task_co_6502
+6503	ITEM_UNMAPPED	names=%Quest_D_task_co_6503
+6504	ITEM_UNMAPPED	names=%Quest_D_task_co_6504
+6505	ITEM_UNMAPPED	names=%Quest_D_task_co_6505
+6506	ITEM_UNMAPPED	names=%Quest_D_task_co_6506
+6507	ITEM_UNMAPPED	names=%Quest_D_task_co_6507
+6508	ITEM_UNMAPPED	names=%Quest_D_task_co_6508
+6509	ITEM_UNMAPPED	names=%Quest_D_task_co_6509
+6510	ITEM_UNMAPPED	names=%Quest_D_task_co_6510
+6511	ITEM_UNMAPPED	names=%Quest_D_task_co_6511
+6512	ITEM_UNMAPPED	names=%Quest_D_task_co_6512
+6513	ITEM_UNMAPPED	names=%Quest_D_task_co_6513
+6514	ITEM_UNMAPPED	names=%Quest_D_task_co_6514
+6515	ITEM_UNMAPPED	names=%Quest_D_task_co_6515
+6516	ITEM_UNMAPPED	names=%Quest_D_task_co_6516
+6517	ITEM_UNMAPPED	names=%Quest_D_task_co_6517
+6518	ITEM_UNMAPPED	names=%Quest_D_task_co_6518
+6519	ITEM_UNMAPPED	names=%Quest_D_task_co_6519
+6520	ITEM_UNMAPPED	names=%Quest_D_task_co_6520
+6521	ITEM_UNMAPPED	names=%Quest_D_task_co_6521
+6522	ITEM_UNMAPPED	names=%Quest_D_task_co_6522
+6523	ITEM_UNMAPPED	names=%Quest_D_task_co_6523
+6524	ITEM_UNMAPPED	names=%Quest_D_task_co_6524
+6525	ITEM_UNMAPPED	names=%Quest_D_task_co_6525
+6526	ITEM_UNMAPPED	names=%Quest_D_task_co_6526
+6527	ITEM_UNMAPPED	names=%Quest_D_task_co_6527
+6528	ITEM_UNMAPPED	names=%Quest_D_task_co_6528
+6529	ITEM_UNMAPPED	names=%Quest_D_task_co_6529
+6530	ITEM_UNMAPPED	names=%Quest_D_task_co_6530
+6531	ITEM_UNMAPPED	names=%Quest_D_task_co_6531
+6532	ITEM_UNMAPPED	names=%Quest_D_task_co_6532
+6533	ITEM_UNMAPPED	names=%Quest_D_task_co_6533
+6534	ITEM_UNMAPPED	names=%Quest_D_task_co_6534
+6535	ITEM_UNMAPPED	names=%Quest_D_task_co_6535
+6536	ITEM_UNMAPPED	names=%Quest_D_task_co_6536
+6537	ITEM_UNMAPPED	names=%Quest_D_task_co_6537
+6538	ITEM_UNMAPPED	names=%Quest_D_task_co_6538
+6539	ITEM_UNMAPPED	names=%Quest_D_task_co_6539
+6540	ITEM_UNMAPPED	names=%Quest_D_task_co_6540
+6541	ITEM_UNMAPPED	names=%Quest_D_task_me_6541
+6542	ITEM_UNMAPPED	names=%Quest_D_task_me_6542
+6543	ITEM_UNMAPPED	names=%Quest_D_task_me_6543
+6544	ITEM_UNMAPPED	names=%Quest_D_task_me_6544
+6545	ITEM_UNMAPPED	names=%Quest_D_task_me_6545
+6546	ITEM_UNMAPPED	names=%Quest_D_task_me_6546
+6547	ITEM_UNMAPPED	names=%Quest_D_task_me_6547
+6548	ITEM_UNMAPPED	names=%Quest_D_task_me_6548
+6549	ITEM_UNMAPPED	names=%Quest_D_task_me_6549
+6550	ITEM_UNMAPPED	names=%Quest_D_task_me_6550
+6551	ITEM_UNMAPPED	names=%Quest_D_task_me_6551
+6552	ITEM_UNMAPPED	names=%Quest_D_task_me_6552
+6553	ITEM_UNMAPPED	names=%Quest_D_task_me_6553
+6554	ITEM_UNMAPPED	names=%Quest_D_task_me_6554
+6555	ITEM_UNMAPPED	names=%Quest_D_task_me_6555
+6556	ITEM_UNMAPPED	names=%Quest_D_task_me_6556
+6557	ITEM_UNMAPPED	names=%Quest_D_task_me_6557
+6558	ITEM_UNMAPPED	names=%Quest_D_task_me_6558
+6559	ITEM_UNMAPPED	names=%Quest_D_task_me_6559
+6560	ITEM_UNMAPPED	names=%Quest_D_task_me_6560
+6561	ITEM_UNMAPPED	names=%Quest_D_task_me_6561
+6562	ITEM_UNMAPPED	names=%Quest_D_task_me_6562
+6563	ITEM_UNMAPPED	names=%Quest_D_task_me_6563
+6564	ITEM_UNMAPPED	names=%Quest_D_task_me_6564
+6565	ITEM_UNMAPPED	names=%Quest_D_task_me_6565
+6566	ITEM_UNMAPPED	names=%Quest_D_task_me_6566
+6567	ITEM_UNMAPPED	names=%Quest_D_task_me_6567
+6568	ITEM_UNMAPPED	names=%Quest_D_task_me_6568
+6569	ITEM_UNMAPPED	names=%Quest_D_task_me_6569
+6570	ITEM_UNMAPPED	names=%Quest_D_task_me_6570
+6571	ITEM_UNMAPPED	names=%Quest_D_task_me_6571
+6572	ITEM_UNMAPPED	names=%Quest_D_task_me_6572
+6573	ITEM_UNMAPPED	names=%Quest_D_task_me_6573
+6574	ITEM_UNMAPPED	names=%Quest_D_task_me_6574
+6575	ITEM_UNMAPPED	names=%Quest_D_task_me_6575
+6576	ITEM_UNMAPPED	names=%Quest_D_task_me_6576
+6577	ITEM_UNMAPPED	names=%Quest_D_task_me_6577
+6578	ITEM_UNMAPPED	names=%Quest_D_task_me_6578
+6579	ITEM_UNMAPPED	names=%Quest_D_task_me_6579
+6580	ITEM_UNMAPPED	names=%Quest_D_task_me_6580
+6581	ITEM_UNMAPPED	names=%Quest_D_task_me_6581
+9548	ITEM_UNMAPPED	names=%Quest_L_Christmas_woman
+9549	ITEM_UNMAPPED	names=%Quest_L_Christmas_man
+9551	ITEM_UNMAPPED	names=%Quest_D_Christmas_woman
+9552	ITEM_UNMAPPED	names=%Quest_D_Christmas_man
+9558	ITEM_UNMAPPED	names=china_event_potion_hp_mp_35a
+9559	ITEM_UNMAPPED	names=china_event_potion_hp_mp_35a
+10521	TITLE_EVIDENCE_BLOCKED	retail=new_deva_title01 prod=1
+11033	TITLE_EVIDENCE_BLOCKED	retail=light_title51 prod=1
+11118	TITLE_EVIDENCE_BLOCKED	retail=light_title52 prod=1
+11122	ITEM_UNMAPPED	names=SCROLL_shield_all_50A
+11279	AP_DIFF	prod=1200 retail=300
+11280	AP_DIFF	prod=2400 retail=600
+11281	AP_DIFF	prod=3200 retail=800
+11282	AP_DIFF	prod=6400 retail=1600
+11283	AP_DIFF	prod=12000 retail=3000
+11284	AP_DIFF	prod=24000 retail=6000
+11285	AP_DIFF	prod=32000 retail=8000
+11286	AP_DIFF	prod=64000 retail=16000
+11304	TITLE_EVIDENCE_BLOCKED	retail=light_title71 prod=1
+11460	TITLE_EVIDENCE_BLOCKED	retail=light_title55 prod=1
+13708	ITEM_UNMAPPED	names=BATTERY_60
+13807	ITEM_UNMAPPED	names=BATTERY_60
+13968	ITEM_UNMAPPED	names=Wrap_ideternity_war_material_evolution_a01
+14015	TITLE_EVIDENCE_BLOCKED	retail=light_title05 prod=1
+14016	TITLE_EVIDENCE_BLOCKED	retail=light_title02 prod=1
+14024	TITLE_EVIDENCE_BLOCKED	retail=light_title10 prod=1
+14026	TITLE_EVIDENCE_BLOCKED	retail=light_title12 prod=1
+14026	ITEM_UNMAPPED	names=Minion_evolutionstone_01
+14030	TITLE_EVIDENCE_BLOCKED	retail=light_title49 prod=1
+14042	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+14043	TITLE_EVIDENCE_BLOCKED	retail=light_title30 prod=1
+14044	ITEM_UNMAPPED	names=MATTER_OPTION_R_FLYTIME_40,SOULSTONE_RESURRECT_SELF_20
+14047	TITLE_EVIDENCE_BLOCKED	retail=light_title46 prod=1
+14054	TITLE_EVIDENCE_BLOCKED	retail=light_title25 prod=1
+15205	ITEM_UNMAPPED	names=%Quest_L_medal_02a
+15307	TITLE_EVIDENCE_BLOCKED	retail=light_title295 prod=1
+15546	ITEM_UNMAPPED	names=Coin_08
+15562	ITEM_UNMAPPED	names=Material_evolution_80abyss_acc
+15564	ITEM_UNMAPPED	names=Material_evolution_80abyss_weapon
+15590	ITEM_UNMAPPED	names=Coin_08
+15667	ITEM_UNMAPPED	names=%Quest_medal_06a
+16921	SEL_MISSING	missing=[188052438] extra=[] via_meta=[] via_branch=[] via_choice=[]
+16960	ITEM_UNMAPPED	names=coin_PvP_01
+17540	TITLE_EVIDENCE_BLOCKED	retail=light_title80 prod=1
+18201	TITLE_EVIDENCE_BLOCKED	retail=light_title75 prod=1
+18202	TITLE_EVIDENCE_BLOCKED	retail=light_title76 prod=1
+18203	TITLE_EVIDENCE_BLOCKED	retail=light_title77 prod=1
+18204	TITLE_EVIDENCE_BLOCKED	retail=light_title78 prod=1
+18205	TITLE_EVIDENCE_BLOCKED	retail=light_title79 prod=1
+18206	TITLE_EVIDENCE_BLOCKED	retail=light_title81 prod=1
+18219	TITLE_EVIDENCE_BLOCKED	retail=vip_light_title01 prod=1
+18220	TITLE_EVIDENCE_BLOCKED	retail=vip_light_title02 prod=1
+18221	TITLE_EVIDENCE_BLOCKED	retail=vip_light_title03 prod=1
+18222	TITLE_EVIDENCE_BLOCKED	retail=vip_light_title04 prod=1
+18223	TITLE_EVIDENCE_BLOCKED	retail=vip_light_title05 prod=1
+18303	TITLE_EVIDENCE_BLOCKED	retail=light_title88 prod=1
+18802	TITLE_EVIDENCE_BLOCKED	retail=light_title87 prod=1
+18816	ITEM_UNMAPPED	names=Wing_n_l2_h_50a
+18840	ITEM_UNMAPPED	names=Wing_n_l2_h_20a
+18841	ITEM_UNMAPPED	names=Wing_n_l2_h_30a
+18842	ITEM_UNMAPPED	names=Wing_n_l2_h_40a
+18846	ITEM_UNMAPPED	names=Item_OwnerTree_Odstone_01
+18849	AP_DIFF	prod=48000 retail=12000
+18850	AP_DIFF	prod=96000 retail=24000
+18932	ITEM_UNMAPPED	names=Material_evolution_80abyss_armor
+18954	TITLE_EVIDENCE_BLOCKED	retail=light_title293 prod=1
+18991	ITEM_UNMAPPED	names=Coin_08
+18993	ITEM_UNMAPPED	names=Coin_08
+18995	ITEM_UNMAPPED	names=Coin_08
+18997	ITEM_UNMAPPED	names=Coin_08
+19044	ITEM_UNMAPPED	names=ITEM_ADD_SOCIAL_WASH_PET
+19045	ITEM_UNMAPPED	names=ITEM_ADD_SOCIAL_TRAIN_PET
+19070	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+19071	ITEM_UNMAPPED	names=FOOD_dpheal_40A
+19074	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+19075	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+19078	TITLE_EVIDENCE_BLOCKED	retail=light_title38 prod=1
+20521	TITLE_EVIDENCE_BLOCKED	retail=new_deva_title01 prod=1
+21005	ITEM_UNMAPPED	names=%Quest_D_Goods_50a
+21029	TITLE_EVIDENCE_BLOCKED	retail=dark_title51 prod=1
+21102	ITEM_UNMAPPED	names=%Quest_D_Goods_50a
+21109	TITLE_EVIDENCE_BLOCKED	retail=dark_title52 prod=1
+21126	ITEM_UNMAPPED	names=SCROLL_shield_all_50A
+21281	AP_DIFF	prod=1200 retail=300
+21282	AP_DIFF	prod=2400 retail=600
+21283	AP_DIFF	prod=3200 retail=800
+21284	AP_DIFF	prod=6400 retail=1600
+21285	AP_DIFF	prod=12000 retail=3000
+21286	AP_DIFF	prod=24000 retail=6000
+21287	AP_DIFF	prod=32000 retail=8000
+21288	AP_DIFF	prod=64000 retail=16000
+21305	TITLE_EVIDENCE_BLOCKED	retail=dark_title71 prod=1
+21460	TITLE_EVIDENCE_BLOCKED	retail=dark_title55 prod=1
+23708	ITEM_UNMAPPED	names=BATTERY_60
+23807	ITEM_UNMAPPED	names=BATTERY_60
+23968	ITEM_UNMAPPED	names=Wrap_ideternity_war_material_evolution_a01
+24016	TITLE_EVIDENCE_BLOCKED	retail=dark_title07 prod=1
+24022	TITLE_EVIDENCE_BLOCKED	retail=dark_title08 prod=1
+24026	TITLE_EVIDENCE_BLOCKED	retail=dark_title10 prod=1
+24026	ITEM_UNMAPPED	names=Minion_evolutionstone_01
+24030	TITLE_EVIDENCE_BLOCKED	retail=dark_title49 prod=1
+24042	ITEM_UNMAPPED	names=SCROLL_speed_fly_50A
+24043	TITLE_EVIDENCE_BLOCKED	retail=dark_title30 prod=1
+24044	ITEM_UNMAPPED	names=MATTER_OPTION_R_FLYTIME_40,SOULSTONE_RESURRECT_SELF_20
+24046	TITLE_EVIDENCE_BLOCKED	retail=dark_title46 prod=1
+24054	TITLE_EVIDENCE_BLOCKED	retail=dark_title24 prod=1
+25205	ITEM_UNMAPPED	names=%Quest_L_medal_02a
+25307	TITLE_EVIDENCE_BLOCKED	retail=dark_title295 prod=1
+25546	ITEM_UNMAPPED	names=Coin_08
+25562	ITEM_UNMAPPED	names=Material_evolution_80abyss_acc
+25564	ITEM_UNMAPPED	names=Material_evolution_80abyss_weapon
+25590	ITEM_UNMAPPED	names=Coin_08
+25667	ITEM_UNMAPPED	names=%Quest_medal_06a
+26921	SEL_MISSING	missing=[188052438] extra=[] via_meta=[] via_branch=[] via_choice=[]
+26960	ITEM_UNMAPPED	names=coin_PvP_01
+27540	TITLE_EVIDENCE_BLOCKED	retail=dark_title80 prod=1
+28201	TITLE_EVIDENCE_BLOCKED	retail=dark_title75 prod=1
+28202	TITLE_EVIDENCE_BLOCKED	retail=dark_title76 prod=1
+28203	TITLE_EVIDENCE_BLOCKED	retail=dark_title77 prod=1
+28204	TITLE_EVIDENCE_BLOCKED	retail=dark_title78 prod=1
+28205	TITLE_EVIDENCE_BLOCKED	retail=dark_title79 prod=1
+28206	TITLE_EVIDENCE_BLOCKED	retail=dark_title81 prod=1
+28219	TITLE_EVIDENCE_BLOCKED	retail=vip_dark_title01 prod=1
+28220	TITLE_EVIDENCE_BLOCKED	retail=vip_dark_title02 prod=1
+28221	TITLE_EVIDENCE_BLOCKED	retail=vip_dark_title03 prod=1
+28222	TITLE_EVIDENCE_BLOCKED	retail=vip_dark_title04 prod=1
+28223	TITLE_EVIDENCE_BLOCKED	retail=vip_dark_title05 prod=1
+28303	TITLE_EVIDENCE_BLOCKED	retail=dark_title88 prod=1
+28802	TITLE_EVIDENCE_BLOCKED	retail=dark_title87 prod=1
+28802	ITEM_UNMAPPED	names=doc_housing_menual_D
+28816	ITEM_UNMAPPED	names=Wing_d_n_l2_h_50a
+28840	ITEM_UNMAPPED	names=Wing_d_n_l2_h_20a
+28841	ITEM_UNMAPPED	names=Wing_d_n_l2_h_30a
+28842	ITEM_UNMAPPED	names=Wing_d_n_l2_h_40a
+28846	ITEM_UNMAPPED	names=Item_OwnerTree_D_Odstone_01
+28849	AP_DIFF	prod=48000 retail=12000
+28850	AP_DIFF	prod=96000 retail=24000
+28932	ITEM_UNMAPPED	names=Material_evolution_80abyss_armor
+28954	TITLE_EVIDENCE_BLOCKED	retail=dark_title294 prod=1
+28991	ITEM_UNMAPPED	names=Coin_08
+28993	ITEM_UNMAPPED	names=Coin_08
+28995	ITEM_UNMAPPED	names=Coin_08
+28997	ITEM_UNMAPPED	names=Coin_08
+29044	ITEM_UNMAPPED	names=ITEM_ADD_SOCIAL_WASH_PET
+29045	ITEM_UNMAPPED	names=ITEM_ADD_SOCIAL_TRAIN_PET
+29070	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+29071	ITEM_UNMAPPED	names=FOOD_D_dpheal_40A
+29074	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+29075	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+29078	TITLE_EVIDENCE_BLOCKED	retail=dark_title38 prod=1
+30005	ITEM_UNMAPPED	names=Insidium_01
+30009	TITLE_EVIDENCE_BLOCKED	retail=light_title56 prod=1
+30016	ITEM_UNMAPPED	names=SWORD_N_L1_Q_52A
+30018	ITEM_UNMAPPED	names=2HSWORD_N_L1_Q_52A
+30020	ITEM_UNMAPPED	names=POLEARM_N_L1_Q_52A
+30022	ITEM_UNMAPPED	names=STAFF_N_L1_Q_52A
+30024	ITEM_UNMAPPED	names=BOOK_N_L1_Q_52A
+30026	ITEM_UNMAPPED	names=ORB_N_L1_Q_52A
+30028	ITEM_UNMAPPED	names=BOW_N_L1_Q_52A
+30030	ITEM_UNMAPPED	names=DAGGER_N_L1_Q_52A
+30032	ITEM_UNMAPPED	names=MACE_N_L1_Q_52A
+30105	ITEM_UNMAPPED	names=Insidium_01
+30109	TITLE_EVIDENCE_BLOCKED	retail=dark_title56 prod=1
+30116	ITEM_UNMAPPED	names=SWORD_D_N_L1_Q_52A
+30118	ITEM_UNMAPPED	names=2HSWORD_D_N_L1_Q_52A
+30120	ITEM_UNMAPPED	names=POLEARM_D_N_L1_Q_52A
+30122	ITEM_UNMAPPED	names=STAFF_D_N_L1_Q_52A
+30124	ITEM_UNMAPPED	names=BOOK_D_N_L1_Q_52A
+30126	ITEM_UNMAPPED	names=ORB_D_N_L1_Q_52A
+30128	ITEM_UNMAPPED	names=BOW_D_N_L1_Q_52A
+30130	ITEM_UNMAPPED	names=DAGGER_D_N_L1_Q_52A
+30132	ITEM_UNMAPPED	names=MACE_D_N_L1_Q_52A
+30201	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30202	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30204	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30205	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30206	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30207	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30208	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30209	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30210	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30212	ITEM_UNMAPPED	names=IDCatacombs_Certification_01,SCROLL_shield_all_50A
+30213	TITLE_EVIDENCE_BLOCKED	retail=light_title57 prod=1
+30216	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30224	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30226	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30228	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30229	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30230	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30231	ITEM_UNMAPPED	names=IDCatacombs_Certification_01,Key_idcatacombs_fe_01
+30233	ITEM_UNMAPPED	names=%Quest_L_Goods_50a,Key_idcatacombs_fe_01
+30235	ITEM_UNMAPPED	names=SWORD_N_U2_Q_55A
+30236	ITEM_UNMAPPED	names=2HSWORD_N_U2_Q_55A
+30237	ITEM_UNMAPPED	names=POLEARM_N_U2_Q_55A
+30238	ITEM_UNMAPPED	names=STAFF_N_U2_Q_55A
+30239	ITEM_UNMAPPED	names=BOOK_N_U2_Q_55A
+30240	ITEM_UNMAPPED	names=ORB_N_U2_Q_55A
+30241	ITEM_UNMAPPED	names=BOW_N_U2_Q_55A
+30242	ITEM_UNMAPPED	names=DAGGER_N_U2_Q_55A
+30243	ITEM_UNMAPPED	names=MACE_N_U2_Q_55A
+30244	ITEM_UNMAPPED	names=%Quest_L_Goods_50a,IDCatacombs_Certification_01
+30246	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30301	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30302	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30304	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30305	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30306	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30307	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30308	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30309	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30310	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30312	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30313	TITLE_EVIDENCE_BLOCKED	retail=dark_title57 prod=1
+30316	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30324	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30326	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30328	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30329	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30330	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30331	ITEM_UNMAPPED	names=IDCatacombs_Certification_01,Key_idcatacombs_fe_01
+30333	ITEM_UNMAPPED	names=%Quest_D_Goods_50a,Key_idcatacombs_fe_01
+30335	ITEM_UNMAPPED	names=SWORD_D_N_U2_Q_55A
+30336	ITEM_UNMAPPED	names=2HSWORD_D_N_U2_Q_55A
+30337	ITEM_UNMAPPED	names=POLEARM_D_N_U2_Q_55A
+30338	ITEM_UNMAPPED	names=STAFF_D_N_U2_Q_55A
+30339	ITEM_UNMAPPED	names=BOOK_D_N_U2_Q_55A
+30340	ITEM_UNMAPPED	names=ORB_D_N_U2_Q_55A
+30341	ITEM_UNMAPPED	names=BOW_D_N_U2_Q_55A
+30342	ITEM_UNMAPPED	names=DAGGER_D_N_U2_Q_55A
+30343	ITEM_UNMAPPED	names=MACE_D_N_U2_Q_55A
+30344	ITEM_UNMAPPED	names=%Quest_D_Goods_50a,IDCatacombs_Certification_01
+30346	ITEM_UNMAPPED	names=IDCatacombs_Certification_01
+30514	TITLE_EVIDENCE_BLOCKED	retail=light_title92 prod=1
+30564	TITLE_EVIDENCE_BLOCKED	retail=dark_title92 prod=1
+30701	TITLE_EVIDENCE_BLOCKED	retail=light_title249 prod=1
+30751	TITLE_EVIDENCE_BLOCKED	retail=dark_title250 prod=1
+39006	ITEM_UNMAPPED	names=SCROLL_shield_all_50A
+49006	ITEM_UNMAPPED	names=SCROLL_shield_all_50A
+50035	ITEM_UNMAPPED	names=Wrap_event_goldchest
+50042	ITEM_UNMAPPED	names=%Quest_A_svs_event
+50043	ITEM_UNMAPPED	names=%Quest_A_svs_event
+50044	ITEM_UNMAPPED	names=Wrap_event_buchu_jeon
+50045	ITEM_UNMAPPED	names=Event_potion_hp_mp_delay25_70a
+50046	ITEM_UNMAPPED	names=Event_potion_hp_mp_delay25_60a
+50058	ITEM_UNMAPPED	names=%Quest_event_ppoba_live
+50059	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+50060	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+50061	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+50062	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+50063	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+50102	ITEM_UNMAPPED	names=Wrap_58ud_event_live_special
+51035	ITEM_UNMAPPED	names=Wrap_event_goldchest
+51042	ITEM_UNMAPPED	names=%Quest_A_svs_event
+51043	ITEM_UNMAPPED	names=%Quest_A_svs_event
+51044	ITEM_UNMAPPED	names=Wrap_event_buchu_jeon
+51045	ITEM_UNMAPPED	names=Event_potion_hp_mp_delay25_70a
+51046	ITEM_UNMAPPED	names=Event_potion_hp_mp_delay25_60a
+51059	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+51060	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+51061	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+51062	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+51063	ITEM_UNMAPPED	names=%Quest_event_ldice_card_01
+80034	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10a
+80035	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10b
+80036	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10c
+80037	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10a
+80038	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10b
+80039	ITEM_UNMAPPED	names=%Quest_A_BranchLunarEvent_10c
+80072	ITEM_UNMAPPED	names=%Quest_A_BranchWinterEvent_10a
+80074	ITEM_UNMAPPED	names=%Quest_A_BranchWinterEvent_10a
+80135	ITEM_UNMAPPED	names=%Quest_L_BranchRiftEvent_10a
+80137	ITEM_UNMAPPED	names=%Quest_L_BranchRiftEvent_10a
+80139	ITEM_UNMAPPED	names=%Quest_L_BranchRiftEvent_10a
+80141	ITEM_UNMAPPED	names=%Quest_L_BranchRiftEvent_10a
+80143	ITEM_UNMAPPED	names=%Quest_D_BranchRiftEvent_10a
+80145	ITEM_UNMAPPED	names=%Quest_D_BranchRiftEvent_10a
+80147	ITEM_UNMAPPED	names=%Quest_D_BranchRiftEvent_10a
+80149	ITEM_UNMAPPED	names=%Quest_D_BranchRiftEvent_10a
+80230	ITEM_UNMAPPED	names=%Quest_Branch_Lotto_Event_01
+80441	ITEM_UNMAPPED	names=Shopmaterial_co_06a
+80480	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80482	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80484	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80486	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80487	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80491	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80500	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80508	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80512	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80513	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80517	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80526	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80534	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80538	ITEM_UNMAPPED	names=event_SCROLL_speed_atk_50A,event_SCROLL_speed_casting_50A,event_SCROLL_speed_run_50A
+80555	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80556	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80559	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80560	ITEM_UNMAPPED	names=world_wrap_Guide_enchant_01
+80587	ITEM_UNMAPPED	names=event_scroll_init_coolt_idldf5_under_rune_02
+80588	ITEM_UNMAPPED	names=SCROLL_regist_fire_60A,SCROLL_regist_water_60A,SCROLL_shield_all_70A
+80592	ITEM_UNMAPPED	names=event_scroll_init_coolt_idldf5_under_rune_02
+80593	ITEM_UNMAPPED	names=SCROLL_regist_fire_60A,SCROLL_regist_water_60A,SCROLL_shield_all_70A
+80626	ITEM_UNMAPPED	names=%Quest_Branch_MiniTrump_Event_01
+80631	ITEM_UNMAPPED	names=%Quest_Branch_MiniTrump_Event_01
+80632	ITEM_UNMAPPED	names=%Quest_Branch_MiniTrump_Event_01
+80633	ITEM_UNMAPPED	names=%Quest_Branch_MiniTrump_Event_02
+80634	ITEM_UNMAPPED	names=%Quest_Branch_MiniTrump_Event_02
+80669	ITEM_UNMAPPED	names=%Quest_S4_world_medal_05_PVP_01
+80670	ITEM_UNMAPPED	names=%Quest_S4_world_medal_05_SAFE_01
+80671	ITEM_UNMAPPED	names=%Quest_S4_world_medal_05_PVP_01
+80672	ITEM_UNMAPPED	names=%Quest_S4_world_medal_05_SAFE_01
+80673	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_01
+80674	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_02
+80675	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_03
+80676	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_04
+80678	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_01
+80679	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_02
+80680	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_03
+80681	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_04
+80697	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_05
+80698	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_06
+80699	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_07
+80700	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_08
+80701	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_05
+80702	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_06
+80703	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_07
+80704	ITEM_UNMAPPED	names=%Quest_Branch_Cashquest_Event_08
+80707	ITEM_UNMAPPED	names=%Quest_Branch_Spring_Event_01
+80833	ITEM_UNMAPPED	names=%Quest_Branch_toy_Event_01
+80899	ITEM_UNMAPPED	names=%Quest_Branch_axesoup_Event_01
+80960	ITEM_UNMAPPED	names=world_shape_item_padet_01
+80989	EXP_ZERO_RETAIL	prod=1
+80990	EXP_ZERO_RETAIL	prod=1
