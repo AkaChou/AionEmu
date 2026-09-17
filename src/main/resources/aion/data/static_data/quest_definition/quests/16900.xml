@@ -27,7 +27,7 @@
       <var name="var0" value="1" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0" />
+      <var name="var0" value="1" />
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0" />
@@ -51,7 +51,7 @@
         <sync-quest-state mode="PACKET_ONLY" />
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="203965" source="started" target="reward" page="SELECT5" />
+    <dialog type="NPC_REPORT" npc-id="203965" source="k1" target="reward" page="SELECT5" />
     <npc-complete npc-id="203965" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2" />
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3" />

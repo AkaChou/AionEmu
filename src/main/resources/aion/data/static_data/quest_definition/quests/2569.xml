@@ -30,9 +30,7 @@
     <node label="s2" status="START">
       <var name="var0" value="2"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="reward" status="REWARD"/>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
@@ -83,6 +81,23 @@
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 完成:204754 REWARD→COMPLETE。 -->
