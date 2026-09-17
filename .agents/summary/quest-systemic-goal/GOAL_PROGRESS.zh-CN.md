@@ -161,7 +161,20 @@
   6. 任务状态持久化与快照恢复：已有 QE-012（SECTION 位段）/QE-019（事实需求继承）
      覆盖；快照恢复专项待扫描
   7. 新症状类：维持「先全库归类再修」纪律
-- 下一检查点：方向 1（放弃恢复盲区）与方向 2（cooldown/daily/weekly 真端基线扩展）
+- 扫描结果（2026-09-18）：
+  - 真端占位任务（minlevel_permitted=999）被生产激活的数量 = **0 条**
+    （生产 6,222 任务在真端全部可接，无需激活例外台账；start gate 的
+    RETAIL_PLACEHOLDER 跳过逻辑保留为防御性）
+  - challenge_task.xml 的 quest_repeat（159 条）属挑战任务系统，与通用任务的
+    cooldown/daily/weekly 无关；后者真端来源维持 EVIDENCE_BLOCKED
+  - 方向 1（放弃恢复）：生产放弃路径已在引擎层统一清理声明的 work-items
+    （QE-003/QE-011）；中途 remove-item 交付的道具离开背包后无恢复需求；
+    掉落/give-item 天然可重取——静态层面无新增缺陷，运行时行为验证
+    属用户侧 PENDING
+- 下一检查点：P5 静态可扫项已全部收敛或登记；剩余验证依赖
+  （a）Aion 5.8 客户端实机复测（用户侧 PENDING）、
+  （b）真端 item/title 模板表解包（ITEM_UNMAPPED 956 / TITLE 173 / 2345 双路线）、
+  （c）运行时日志与抓包（cooldown/daily/weekly、事件任务生成回收）
 - Memory Bank：QE-034（RETAIL_START_METADATA_CONTRACT_ALIGNMENT）已沉淀，
   sync/check 通过，随本台账一起提交
 
