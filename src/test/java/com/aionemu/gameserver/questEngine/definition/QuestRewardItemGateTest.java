@@ -87,7 +87,7 @@ class QuestRewardItemGateTest {
 					}
 				}
 				Set<Integer> selectable = new TreeSet<>();
-				if (!cols[2].isEmpty()) {
+				if (!cols[2].isEmpty() && !"-".equals(cols[2])) {
 					for (String id : cols[2].split(",")) {
 						selectable.add(Integer.parseInt(id));
 					}

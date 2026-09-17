@@ -116,7 +116,8 @@ def main():
             sel_out = ",".join(sorted(set(selectable))) if selectable else ""
             if not sel_out and not has_fixed_field:
                 continue
-            fh.write(f"{qid}\t{fixed_out}\t{sel_out}\n".rstrip() + "\n")
+            sel_out = sel_out or "-"
+            fh.write(f"{qid}\t{fixed_out}\t{sel_out}\n")
             rows += 1
     print(f"item/selectable contract rows ({rows}) -> {OUT}")
 
