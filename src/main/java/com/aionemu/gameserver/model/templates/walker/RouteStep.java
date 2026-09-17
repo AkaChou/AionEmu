@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
  *
  * @author KKnD, Rolandas
  */
+@Getter
+@Setter
 @XmlRootElement(name = "routestep")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
@@ -38,14 +40,10 @@ public class RouteStep {
 	private float locX;
 
 	/** 路线步序号 / Route step index */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "step", required = true)
 	private int routeStep;
 
 	/** 下一步 / Next step */
-	@Getter
-	@Setter
 	@XmlTransient
 	private RouteStep nextStep;
 

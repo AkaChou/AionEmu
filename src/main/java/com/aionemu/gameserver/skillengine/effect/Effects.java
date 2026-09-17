@@ -16,6 +16,7 @@ import lombok.Getter;
  * 技能效果集合：JAXB 绑定所有效果子类型，并缓存效果类型列表。
  * Skill effects container: JAXB binding for all effect subtypes; caches effect type list.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Effects")
 public class Effects {
@@ -206,7 +207,6 @@ public class Effects {
 	 *
 	 * @return 效果类型列表，可能为 null / effect types, may be null
 	 */
-	@Getter
 	@XmlTransient
 	protected List<EffectType> effectTypes;
 

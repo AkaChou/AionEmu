@@ -10,16 +10,13 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public class ExchangeItem {
 
-	@Getter
 	private final int itemObjId;
-	@Getter
 	private long itemCount;
-	@Getter
 	private final int itemDesc;
-	@Getter
-	@Setter
 	private Item item;
 
 	/**

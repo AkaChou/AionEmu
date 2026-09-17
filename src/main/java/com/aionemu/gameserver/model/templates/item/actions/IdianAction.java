@@ -28,11 +28,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianAction")
 public class IdianAction extends AbstractItemAction {
 	/** 返回 polish set id / Returns the polish set id */
-	@Getter
 	@XmlAttribute(name = "setId")
 	protected int polishSetId;
 

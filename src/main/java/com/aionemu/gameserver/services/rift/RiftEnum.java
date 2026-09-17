@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @author Rinzler (Encom)
  */
+@Getter
 public enum RiftEnum {
 	// 天族裂隙 ---。 / Elyos rifts ---.
 
@@ -196,7 +197,6 @@ public enum RiftEnum {
 	 *
 	 * @return 裂隙 ID / Rift id
 	 */
-	@Getter
 	private final int id;
 	/**
 	 * 返回主端（入口侧）锚点名。
@@ -204,7 +204,6 @@ public enum RiftEnum {
 	 *
 	 * @return 主端锚点名 / Master anchor
 	 */
-	@Getter
 	private final String master;
 	/**
 	 * 返回从端（出口侧）锚点名。
@@ -212,7 +211,6 @@ public enum RiftEnum {
 	 *
 	 * @return 从端锚点名 / Slave anchor
 	 */
-	@Getter
 	private final String slave;
 	/**
 	 * 返回允许进入次数。
@@ -220,7 +218,6 @@ public enum RiftEnum {
 	 *
 	 * @return 进入次数 / Entry count
 	 */
-	@Getter
 	private final int entries;
 	/**
 	 * 返回欧比斯点消耗。
@@ -228,7 +225,6 @@ public enum RiftEnum {
 	 *
 	 * @return 欧比斯点消耗 / Abyss points
 	 */
-	@Getter
 	private final int abyssPoint;
 	/**
 	 * 返回最低进入等级。
@@ -236,7 +232,6 @@ public enum RiftEnum {
 	 *
 	 * @return 最低等级 / Min level
 	 */
-	@Getter
 	private final int minLevel;
 	/**
 	 * 返回最高进入等级。
@@ -244,7 +239,6 @@ public enum RiftEnum {
 	 *
 	 * @return 最高等级 / Max level
 	 */
-	@Getter
 	private final int maxLevel;
 	/**
 	 * 返回目标侧种族。
@@ -252,7 +246,6 @@ public enum RiftEnum {
 	 *
 	 * @return 目标种族 / Destination race
 	 */
-	@Getter
 	private final Race destination;
 	/**
 	 * 是否为次元漩涡。
@@ -260,7 +253,6 @@ public enum RiftEnum {
 	 *
 	 * @return 是否为次元漩涡 / {@code true} if vortex
 	 */
-	@Getter
 	private final boolean vortex;
 
 	RiftEnum(int id, String master, String slave, int entries, int abyssPoint, int minLevel, int maxLevel,

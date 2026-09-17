@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <IL> 伊迪安深渊地点类型 / Idian Depths location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 
@@ -28,7 +29,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 *
 	 * @return 绑定地点 / bound location
 	 */
-	@Getter
 	private final IL idianDepthsLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 

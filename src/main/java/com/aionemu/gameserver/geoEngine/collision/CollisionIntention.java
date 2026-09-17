@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public enum CollisionIntention {
 
 	/** 无意图。 / No intention. */
@@ -50,7 +51,6 @@ public enum CollisionIntention {
 			| MOVEABLE.getId() | PHYSICAL_SEE_THROUGH.getId());
 
 	/** 意图位 id / Intention bit id. */
-	@Getter
 	private final byte id;
 
 	/**

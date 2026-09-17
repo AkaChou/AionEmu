@@ -15,16 +15,15 @@ import lombok.NoArgsConstructor;
  * Item enchant bonus template: attribute modifiers per level.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantBouns")
 @NoArgsConstructor
 public class ItemEnchantBonus {
 	/** 获取修正器。 / Returns the modifiers. */
-	@Getter
 	@XmlElement(name = "modifiers", required = false)
 	private ModifiersTemplate modifiers;
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 }

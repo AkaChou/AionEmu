@@ -14,6 +14,7 @@ import lombok.Getter;
  * Abstract bonus item group: bonus type, chance and reward entries.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BonusItemGroup")
 @XmlSeeAlso({ CraftItemGroup.class, CraftRecipeGroup.class, ManastoneGroup.class, FoodGroup.class, MedicineGroup.class,
@@ -21,7 +22,6 @@ import lombok.Getter;
 public abstract class BonusItemGroup {
 
 	/** 获取加成类型。 / Returns the bonus type. */
-	@Getter
 	@XmlAttribute(name = "bonusType", required = true)
 	protected BonusType bonusType;
 

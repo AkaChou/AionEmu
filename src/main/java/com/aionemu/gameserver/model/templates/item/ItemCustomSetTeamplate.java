@@ -11,16 +11,15 @@ import lombok.Getter;
  * Custom item set template: custom enchant value.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemCustomSetTeamplate")
 public class ItemCustomSetTeamplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	private String name;
 

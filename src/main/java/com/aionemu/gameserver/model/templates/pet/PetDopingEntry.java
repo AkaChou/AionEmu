@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
  *
  * @author Rolandas
  */
+@Getter
 @XmlType(name = "dope")
 @XmlAccessorType(XmlAccessType.NONE)
 @NoArgsConstructor
@@ -23,7 +24,6 @@ public class PetDopingEntry {
 	/**
 	 * @return 条目 ID / the id
 	 */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 

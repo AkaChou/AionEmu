@@ -31,6 +31,7 @@ import lombok.Getter;
  *
  * @author ATracer modified by Wakizashi
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skillTemplate", propOrder = { "properties", "startconditions", "useconditions",
 		"useequipmentconditions", "effects", "actions", "periodicActions", "motion", "retailFields" })
@@ -40,21 +41,18 @@ public class SkillTemplate {
 	 * Gets skill properties (range, target, etc.).
 	 *
 	 */
-	@Getter
 	protected Properties properties;
 	/**
 	 * 获取开始施法条件。
 	 * Gets start-cast conditions.
 	 *
 	 */
-	@Getter
 	protected Conditions startconditions;
 	/**
 	 * 获取使用条件。
 	 * Gets use conditions.
 	 *
 	 */
-	@Getter
 	protected Conditions useconditions;
 	protected Conditions useequipmentconditions;
 	/**
@@ -62,21 +60,18 @@ public class SkillTemplate {
 	 * Gets effect collection.
 	 *
 	 */
-	@Getter
 	protected Effects effects;
 	/**
 	 * 获取动作集合（消耗等）。
 	 * Gets action collection (costs, etc.).
 	 *
 	 */
-	@Getter
 	protected Actions actions;
 	/**
 	 * 获取周期动作。
 	 * Gets periodic actions.
 	 *
 	 */
-	@Getter
 	@XmlElement(name = "periodicactions")
 	protected PeriodicActions periodicActions;
 	/**
@@ -84,9 +79,7 @@ public class SkillTemplate {
 	 * Gets motion timing config.
 	 *
 	 */
-	@Getter
 	protected Motion motion;
-	@Getter
 	@XmlElement(name = "retail_fields")
 	protected RetailSkillFields retailFields;
 	/**
@@ -94,7 +87,6 @@ public class SkillTemplate {
 	 * Gets skill id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skill_id", required = true)
 	protected int skillId;
 	/**
@@ -102,7 +94,6 @@ public class SkillTemplate {
 	 * Gets name description key.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "name_desc")
 	protected String namedesc;
 	/**
@@ -110,7 +101,6 @@ public class SkillTemplate {
 	 * Gets skill name.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected String name;
 	/**
@@ -118,7 +108,6 @@ public class SkillTemplate {
 	 * Gets name string id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int nameId;
 	/**
@@ -126,7 +115,6 @@ public class SkillTemplate {
 	 * Gets effect stack key.
 	 *
 	 */
-	@Getter
 	@XmlAttribute
 	protected String stack = "NONE";
 	@XmlAttribute
@@ -140,7 +128,6 @@ public class SkillTemplate {
 	 * Gets skill level.
 	 *
 	 */
-	@Getter
 	@XmlAttribute
 	protected int lvl;
 	/**
@@ -148,7 +135,6 @@ public class SkillTemplate {
 	 * Gets skill type (physical/magical).
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skilltype", required = true)
 	protected SkillType type = SkillType.NONE;
 	@XmlAttribute(name = "type_message")
@@ -158,7 +144,6 @@ public class SkillTemplate {
 	 * Gets skill sub type.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skillsubtype", required = true)
 	protected SkillSubType subType;
 	/**
@@ -166,7 +151,6 @@ public class SkillTemplate {
 	 * Gets target slot.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "tslot")
 	protected SkillTargetSlot targetSlot;
 	/**
@@ -174,7 +158,6 @@ public class SkillTemplate {
 	 * Gets target slot level.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "tslot_level")
 	protected int targetSlotLevel;
 	/**
@@ -182,7 +165,6 @@ public class SkillTemplate {
 	 * Gets dispel category.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "dispel_category")
 	protected DispelCategoryType dispelCategory = DispelCategoryType.NONE;
 	/**
@@ -190,7 +172,6 @@ public class SkillTemplate {
 	 * Gets required dispel level.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "req_dispel_level")
 	protected int reqDispelLevel;
 	@XmlAttribute(name = "req_dispel_count")
@@ -200,7 +181,6 @@ public class SkillTemplate {
 	 * Gets activation attribute.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "activation", required = true)
 	protected ActivationAttribute activationAttribute;
 	/**
@@ -208,22 +188,16 @@ public class SkillTemplate {
 	 * Gets effect duration.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int duration;
-	@Getter
 	@XmlAttribute(name = "apply_casting_time_bonus")
 	protected boolean applyCastingTimeBonus = true;
-	@Getter
 	@XmlAttribute(name = "no_save_on_logout")
 	protected boolean noSaveOnLogout;
-	@Getter
 	@XmlAttribute(name = "spend_time_on_logout")
 	protected boolean spendTimeOnLogout;
-	@Getter
 	@XmlAttribute(name = "remain_cooltime_on_login")
 	protected boolean remainCooltimeOnLogin;
-	@Getter
 	@XmlAttribute(name = "no_jump_cancel")
 	protected boolean noJumpCancel;
 	/**
@@ -231,7 +205,6 @@ public class SkillTemplate {
 	 * Gets toggle timer.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "toggle_timer")
 	protected int toggleTimer;
 	/**
@@ -239,15 +212,12 @@ public class SkillTemplate {
 	 * Gets cooldown.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "cooldown")
 	protected int cooldown;
-	@Getter
 	@XmlAttribute(name = "cooldown_delta")
 	protected int cooldownDelta;
 	@XmlAttribute(name = "delay_type")
 	protected int delayType;
-	@Getter
 	@XmlAttribute(name = "nonchained_cooldown")
 	protected int nonchainedCooldown;
 	/**
@@ -255,10 +225,8 @@ public class SkillTemplate {
 	 * Gets penalty skill id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "penalty_skill_id")
 	protected int penaltySkillId;
-	@Getter
 	@XmlAttribute(name = "penalty_skill_message")
 	protected boolean penaltySkillMessage;
 	/**
@@ -266,7 +234,6 @@ public class SkillTemplate {
 	 * Gets PvP damage factor.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "pvp_damage")
 	protected int pvpDamage;
 	/**
@@ -274,7 +241,6 @@ public class SkillTemplate {
 	 * Gets PvP duration.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "pvp_duration")
 	protected int pvpDuration;
 	/**
@@ -282,7 +248,6 @@ public class SkillTemplate {
 	 * Gets chain skill probability.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "chain_skill_prob")
 	protected int chainSkillProb;
 	/**
@@ -290,14 +255,12 @@ public class SkillTemplate {
 	 * Gets cast cancel rate.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "cancel_rate")
 	protected int cancelRate;
 	@XmlAttribute(name = "stance")
 	protected boolean stance;
 	@XmlAttribute(name = "stance_type")
 	protected int stanceType;
-	@Getter
 	@XmlAttribute(name = "stance_usable")
 	protected boolean stanceUsable;
 	/**
@@ -305,7 +268,6 @@ public class SkillTemplate {
 	 * Gets skill-set exception id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skillset_exception")
 	protected int skillSetException;
 	/**
@@ -313,7 +275,6 @@ public class SkillTemplate {
 	 * Gets skill-set max occurrence.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skillset_maxoccur")
 	protected int skillSetMaxOccur;
 	/**
@@ -321,7 +282,6 @@ public class SkillTemplate {
 	 * Whether deity avatar skill.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "avatar")
 	protected boolean isDeityAvatar;
 	/**
@@ -329,7 +289,6 @@ public class SkillTemplate {
 	 * Whether ground skill.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "ground")
 	protected boolean isGroundSkill;
 	/**
@@ -337,10 +296,8 @@ public class SkillTemplate {
 	 * Gets ammo speed.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "ammospeed")
 	protected int ammoSpeed;
-	@Getter
 	@XmlAttribute
 	protected int obstacle;
 	/**
@@ -348,7 +305,6 @@ public class SkillTemplate {
 	 * Gets conflict id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "conflict_id")
 	protected int conflictId;
 	/**
@@ -356,7 +312,6 @@ public class SkillTemplate {
 	 * Gets counter-skill attack status.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "counter_skill")
 	protected AttackStatus counterSkill = null;
 	/**
@@ -365,10 +320,8 @@ public class SkillTemplate {
 	 *
 	 * @return 死亡不移除 / no remove at die
 	 */
-	@Getter
 	@XmlAttribute(name = "noremoveatdie")
 	protected boolean noRemoveAtDie = false;
-	@Getter
 	@XmlAttribute(name = "remove_flyend")
 	protected boolean removeFlyEnd;
 	@XmlAttribute(name = "applymboost")
@@ -379,34 +332,26 @@ public class SkillTemplate {
 	protected boolean applyMpHealBoost = true;
 	@XmlAttribute(name = "applymcrit")
 	protected boolean applyMcrit = true;
-	@Getter
 	@XmlAttribute(name = "hostile_type")
 	protected HostileType hostileType = HostileType.DIRECT;
 	@XmlAttribute(name = "charge_set_name")
 	protected String charge_set_name;
 	@XmlAttribute(name = "damage_attenuation")
 	protected String damageAttenuation;
-	@Getter
 	@XmlAttribute(name = "broadcast_use_message")
 	protected boolean broadcastUseMessage;
-	@Getter
 	@XmlAttribute(name = "hide_decrease_count")
 	protected int hideDecreaseCount;
-	@Getter
 	@XmlAttribute(name = "is_familiar_skill")
 	protected boolean familiarSkill;
-	@Getter
 	@XmlAttribute(name = "max_maintain_count")
 	protected int maxMaintainCount;
 	@XmlAttribute(name = "target_stop")
 	protected int targetStop;
-	@Getter
 	@XmlAttribute(name = "ultra_skill")
 	protected boolean ultraSkill;
-	@Getter
 	@XmlAttribute(name = "ultra_transfer")
 	protected boolean ultraTransfer;
-	@Getter
 	@XmlAttribute(name = "exclusive_attribute")
 	protected String exclusiveAttribute;
 	/**
@@ -414,7 +359,6 @@ public class SkillTemplate {
 	 * Gets stigma type.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "stigma")
 	protected StigmaType stigmaType = StigmaType.NONE;
 	/**
@@ -422,7 +366,6 @@ public class SkillTemplate {
 	 * Gets effect-id to basic-level map.
 	 *
 	 */
-	@Getter
 	@XmlTransient
 	protected HashMap<Integer, Integer> effectIds = null;
 	@XmlAttribute(name = "skill_group")

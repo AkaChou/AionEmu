@@ -22,6 +22,7 @@ import lombok.Getter;
  *
  * @author xavier
  */
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "title_templates")
 public class TitleTemplate implements StatOwner {
@@ -34,16 +35,13 @@ public class TitleTemplate implements StatOwner {
 	protected ModifiersTemplate modifiers;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
 
 	/** 返回标题 ID / Returns the title id */
-	@Getter
 	private int titleId;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute(name = "nameId")
 	private int nameId;
 

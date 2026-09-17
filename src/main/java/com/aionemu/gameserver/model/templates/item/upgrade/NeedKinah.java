@@ -13,11 +13,11 @@ import lombok.Getter;
  * @author Ranastic (Encom)
  */
 
+@Getter
 @XmlRootElement(name = "NeedKinah")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NeedKinah {
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	private int count;
 }

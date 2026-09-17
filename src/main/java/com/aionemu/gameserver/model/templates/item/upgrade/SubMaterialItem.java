@@ -14,18 +14,16 @@ import lombok.Setter;
  * @author Ranastic (Encom)
  */
 
+@Getter
+@Setter
 @XmlRootElement(name = "SubMaterialItem")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SubMaterialItem {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	@XmlAttribute
 	private int id;
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
-	@Setter
 	@XmlAttribute
 	private int count;
 }

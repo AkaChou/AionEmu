@@ -12,6 +12,8 @@ import lombok.Setter;
  * @author Rinzler (Encom)
  * @author -Nemesiss-
  */
+@Getter
+@Setter
 @Slf4j
 public class WorldPosition {
 
@@ -26,25 +28,18 @@ public class WorldPosition {
 	}
 
 	/** 地图 ID / map id */
-	@Setter
 	private int mapId;
 	/** 所在地图区域 / map region */
 	private MapRegion mapRegion;
 	/** 世界 X / world X */
-	@Getter
 	private float x;
 	/** 世界 Y / world Y */
-	@Getter
 	private float y;
 	/** 世界 Z / world Z */
-	@Getter
-	@Setter
 	private float z;
 	/** 朝向，0–120（120 等价于 0） / heading, 0–120 (120 equals 0) */
-	@Getter
 	private byte heading;
 	/** 是否已生成（可见） / whether spawned (visible) */
-	@Getter
 	private boolean isSpawned = false;
 
 	/**

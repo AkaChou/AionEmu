@@ -12,12 +12,12 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Bombs")
 public class Bombs {
 
 	/** 返回 bomb template / Returns the bomb template */
-	@Getter
 	@XmlElement(name = "bomb")
 	private BombTemplate bombTemplate;
 }

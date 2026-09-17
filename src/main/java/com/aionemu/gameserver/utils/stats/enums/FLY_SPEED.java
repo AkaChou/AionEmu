@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础飞行速度值枚举。
  * Baseline fly speed values by player class.
  */
+@Getter
 public enum FLY_SPEED {
 	WARRIOR(9), GLADIATOR(9), TEMPLAR(9), SCOUT(9), ASSASSIN(9), RANGER(9), MAGE(9), SORCERER(9), SPIRIT_MASTER(9),
 	PRIEST(9), CLERIC(9), CHANTER(9),
@@ -18,7 +19,6 @@ public enum FLY_SPEED {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	FLY_SPEED(int value) {

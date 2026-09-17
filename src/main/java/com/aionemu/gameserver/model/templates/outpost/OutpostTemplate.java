@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Outpost")
 public class OutpostTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
@@ -26,7 +26,6 @@ public class OutpostTemplate {
 	protected String nameId;
 
 	/** 返回 artifact id / Returns the artifact id */
-	@Getter
 	@XmlAttribute(name = "artifact_id")
 	protected int artifactId;
 

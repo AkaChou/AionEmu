@@ -11,10 +11,10 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "create")
 public class DisassembleItem {
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "itemId")
 	private int ItemId;
 	@XmlAttribute(name = "count")
@@ -25,7 +25,6 @@ public class DisassembleItem {
 	 *
 	 * @return 是否停用 / Whether disuse
 	 */
-	@Getter
 	@XmlAttribute(name = "disuse")
 	private boolean disuse;
 

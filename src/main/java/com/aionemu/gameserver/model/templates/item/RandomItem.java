@@ -16,26 +16,23 @@ import lombok.Getter;
  *
  * @author vlog
  */
+@Getter
 @XmlType(name = "RandomItem")
 @Slf4j
 public class RandomItem {
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(name = "type")
 	protected RandomType type;
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	protected int count;
 
 	/** 返回随机下限 / Returns the rnd min */
-	@Getter
 	@XmlAttribute(name = "rnd_min")
 	public int rndMin;
 
 	/** 返回随机上限 / Returns the rnd max */
-	@Getter
 	@XmlAttribute(name = "rnd_max")
 	public int rndMax;
 

@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author Sarynth
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RebirthEffect")
 public class RebirthEffect extends EffectTemplate {
@@ -22,7 +23,6 @@ public class RebirthEffect extends EffectTemplate {
 	 * 返回重生恢复生命百分比。
 	 * Returns the rebirth HP restore percent.
 	 */
-	@Getter
 	@XmlAttribute(name = "resurrect_percent", required = true)
 	protected int resurrectPercent;
 
@@ -30,7 +30,6 @@ public class RebirthEffect extends EffectTemplate {
 	 * 返回重生关联技能 ID。
 	 * Returns the rebirth-related skill id.
 	 */
-	@Getter
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 

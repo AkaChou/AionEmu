@@ -15,37 +15,32 @@ import lombok.NoArgsConstructor;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FlyRing")
 @NoArgsConstructor
 public class FlyRingTemplate {
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
 	/** 获取地图。 / Returns the map. */
-	@Getter
 	@XmlAttribute(name = "map")
 	protected int map;
 
 	/** 获取半径。 / Returns the radius. */
-	@Getter
 	@XmlAttribute(name = "radius")
 	protected float radius;
 
 	/** 返回中心点 / Returns the center*/
-	@Getter
 	@XmlElement(name = "center")
 	protected FlyRingPoint center;
 
 	/** 返回左点 / Returns the left */
-	@Getter
 	@XmlElement(name = "left")
 	protected FlyRingPoint left;
 
 	/** 返回右点 / Returns the right */
-	@Getter
 	@XmlElement(name = "right")
 	protected FlyRingPoint right;
 

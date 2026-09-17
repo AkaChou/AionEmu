@@ -13,27 +13,24 @@ import lombok.NoArgsConstructor;
  * Bound radius template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BoundRadius")
 @NoArgsConstructor
 public class BoundRadius {
 	/** 返回 front / Returns the front */
-	@Getter
 	@XmlAttribute
 	private float front;
 
 	/** 返回 side / Returns the side */
-	@Getter
 	@XmlAttribute
 	private float side;
 
 	/** 返回 upper / Returns the upper */
-	@Getter
 	@XmlAttribute
 	private float upper;
 
 	/** 返回碰撞 / Returns the collision */
-	@Getter
 	private float collision;
 
 	public static final BoundRadius DEFAULT = new BoundRadius(0f, 0f, 0f);

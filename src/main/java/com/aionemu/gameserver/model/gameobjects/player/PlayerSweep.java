@@ -14,24 +14,19 @@ import lombok.NoArgsConstructor;
  * Player Sweep game object.
  */
 
+@Getter
+@Setter
 @Slf4j
 @NoArgsConstructor
 public class PlayerSweep {
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	/** 返回 step / Returns the step */
-	@Getter
-	@Setter
 	private int step;
 	/** 返回 free dice / Returns the free dice */
-	@Getter
-	@Setter
 	private int freeDice;
 	/** 返回 board id / Returns the board id */
-	@Getter
-	@Setter
 	private int boardId;
 
 	public PlayerSweep(int step, int freeDice, int boardId) {

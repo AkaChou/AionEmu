@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @author SoulKeeper
  */
+@Getter
 @XmlEnum
 public enum Gender {
 	/**
@@ -29,7 +30,6 @@ public enum Gender {
 	/**
 	 * 性别 ID / id of gender
 	 */
-	@Getter
 	private final int genderId;
 
 	/**

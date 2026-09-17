@@ -12,44 +12,37 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "address")
 public class HouseAddress {
 	/** 返回 exit z / Returns the exit z */
-	@Getter
 	@XmlAttribute(name = "exit_z")
 	protected Float exitZ;
 	/** 返回 exit y / Returns the exit y */
-	@Getter
 	@XmlAttribute(name = "exit_y")
 	protected Float exitY;
 	/** 返回 exit x / Returns the exit x */
-	@Getter
 	@XmlAttribute(name = "exit_x")
 	protected Float exitX;
 	@XmlAttribute(name = "exit_map")
 	protected Integer exitMap;
 	/** 返回 z / Returns the z */
-	@Getter
 	@XmlAttribute(required = true)
 	protected float z;
 	/** 返回 y / Returns the y */
-	@Getter
 	@XmlAttribute(required = true)
 	protected float y;
 	/** 返回 x / Returns the x */
-	@Getter
 	@XmlAttribute(required = true)
 	protected float x;
 	/** 返回城镇 ID / Returns the town id */
-	@Getter
 	@XmlAttribute(name = "town", required = true)
 	private int townId;
 	@XmlAttribute(required = true)
 	protected int map;
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 

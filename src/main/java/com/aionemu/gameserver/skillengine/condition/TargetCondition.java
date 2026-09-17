@@ -20,6 +20,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TargetCondition")
 public class TargetCondition extends Condition {
@@ -30,7 +31,6 @@ public class TargetCondition extends Condition {
 	 *
 	 * @return 目标属性 / target attribute
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected TargetAttribute value;
 

@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author kecimis
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Motion")
 public class Motion {
@@ -21,7 +22,6 @@ public class Motion {
 	 * Gets motion name.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected String name;
 
@@ -30,7 +30,6 @@ public class Motion {
 	 * Gets playback speed (percent).
 	 *
 	 */
-	@Getter
 	@XmlAttribute
 	protected int speed = 100;
 

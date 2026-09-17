@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 @XmlRootElement(name = "skin_skill")
 @XmlAccessorType(XmlAccessType.NONE)
 public class SkinSkillTemplate {
@@ -21,7 +22,6 @@ public class SkinSkillTemplate {
 	 * Gets skill id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
@@ -30,7 +30,6 @@ public class SkinSkillTemplate {
 	 * Gets name.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "name")
 	private String name = "";
 
@@ -39,7 +38,6 @@ public class SkinSkillTemplate {
 	 * Gets description.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "desc")
 	private String desc = "";
 

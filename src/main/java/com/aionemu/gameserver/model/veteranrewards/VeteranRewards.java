@@ -9,33 +9,26 @@ import lombok.AllArgsConstructor;
  * Veteran Rewards for veteranrewards logic.
  */
 
+@Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class VeteranRewards {
 	private int id;
 	/** 获取玩家。 / Returns the player. */
-	@Getter
 	private final String Player;
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	private final int type;
 	/** 获取物品。 / Returns the item. */
-	@Getter
 	private final int item;
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	private final int count;
 	/** 获取基纳。 / Returns the kinah. */
-	@Getter
 	private final int kinah;
 	/** 返回 sender / Returns the sender */
-	@Getter
 	private final String Sender;
 	/** 获取称号。 / Returns the title. */
-	@Getter
 	private final String Title;
 	/** 获取消息。 / Returns the message. */
-	@Getter
 	private final String Message;
 
 	/** 返回 ID / Returns the id */

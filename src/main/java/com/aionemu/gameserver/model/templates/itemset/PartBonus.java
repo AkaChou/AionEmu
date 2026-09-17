@@ -18,6 +18,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlRootElement(name = "PartBonus")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PartBonus {
@@ -25,7 +26,6 @@ public class PartBonus {
 	/**
 	 * @return the count
 	 */
-	@Getter
 	@XmlAttribute
 	protected int count;
 	@XmlElement(name = "modifiers", required = false)

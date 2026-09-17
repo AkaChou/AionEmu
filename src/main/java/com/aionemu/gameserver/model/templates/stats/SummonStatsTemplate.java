@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "summon_stats_template")
 public class SummonStatsTemplate extends StatsTemplate {
@@ -22,7 +23,6 @@ public class SummonStatsTemplate extends StatsTemplate {
 	 *
 	 * @return 物理防御 / the physical defense
 	 */
-	@Getter
 	@XmlAttribute(name = "pdefense")
 	private int pdefense;
 	/**
@@ -31,7 +31,6 @@ public class SummonStatsTemplate extends StatsTemplate {
 	 *
 	 * @return 魔法抵抗 / the magic resistance
 	 */
-	@Getter
 	@XmlAttribute(name = "mresist")
 	private int mresist;
 	/**
@@ -40,7 +39,6 @@ public class SummonStatsTemplate extends StatsTemplate {
 	 *
 	 * @return 魔法暴击 / the magic critical
 	 */
-	@Getter
 	@XmlAttribute(name = "mcrit")
 	private int mcrit;
 }

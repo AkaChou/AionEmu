@@ -7,6 +7,7 @@ import lombok.Getter;
  * Siege Type enumeration.
  */
 
+@Getter
 public enum SiegeType {
 	/** 要塞。 / Fortress. */
 	FORTRESS(0),
@@ -24,7 +25,6 @@ public enum SiegeType {
 	TOWER(6);
 
 	/** 返回类型 ID / Returns the type id */
-	@Getter
 	private final int typeId;
 
 	SiegeType(int id) {

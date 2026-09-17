@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlType(name = "BuildingType")
 @XmlEnum
 public enum BuildingType {
@@ -19,7 +20,6 @@ public enum BuildingType {
 	PERSONAL_INS(1);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	BuildingType(int id) {

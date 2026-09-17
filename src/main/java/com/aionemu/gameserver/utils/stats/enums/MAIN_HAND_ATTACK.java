@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础主手攻击值枚举。
  * Baseline main-hand attack values by player class.
  */
+@Getter
 public enum MAIN_HAND_ATTACK {
 	WARRIOR(20), GLADIATOR(20), TEMPLAR(20), SCOUT(20), ASSASSIN(20), RANGER(18), MAGE(14), SORCERER(14),
 	SPIRIT_MASTER(14), PRIEST(18), CLERIC(18), CHANTER(20),
@@ -18,7 +19,6 @@ public enum MAIN_HAND_ATTACK {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	MAIN_HAND_ATTACK(int value) {

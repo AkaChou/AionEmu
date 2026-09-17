@@ -7,6 +7,7 @@ import lombok.Getter;
  * Player House Owner Flags enumeration.
  */
 
+@Getter
 public enum PlayerHouseOwnerFlags {
 	/** 所有者 / Is Owner*/
 	IS_OWNER(1 << 0), HAS_OWNER(1 << 0), BUY_STUDIO_ALLOWED(1 << 1), SINGLE_HOUSE(1 << 1), BIDDING_ALLOWED(1 << 2),
@@ -20,7 +21,6 @@ public enum PlayerHouseOwnerFlags {
 	SOLD_HOUSE(BIDDING_ALLOWED.getId() | BUY_STUDIO_ALLOWED.getId());
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final byte id;
 
 	PlayerHouseOwnerFlags(int id) {

@@ -13,11 +13,11 @@ import lombok.Getter;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dynamic_rift")
 public class DynamicRiftTemplate {
 	/** 返回 ID。 / Returns the id. */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 }

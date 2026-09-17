@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @RequiredArgsConstructor
 public class ActionObserver {
 
@@ -26,7 +27,6 @@ public class ActionObserver {
 	private AtomicBoolean used;
 
 	/** 观察者类型 / Observer type */
-	@Getter
 	private final ObserverType observerType;
 
 	/**

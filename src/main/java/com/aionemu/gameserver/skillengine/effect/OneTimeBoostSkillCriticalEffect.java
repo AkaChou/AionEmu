@@ -18,6 +18,7 @@ import lombok.Getter;
  *
  * @author Sippolo
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OneTimeBoostSkillCriticalEffect")
 public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
@@ -28,7 +29,6 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 	 * 是否为百分比暴击加成。
 	 * Whether the critical boost is percent-based.
 	 */
-	@Getter
 	@XmlAttribute
 	private boolean percent;
 

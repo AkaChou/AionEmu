@@ -12,19 +12,18 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SurveyTemplate")
 public class SurveyTemplate {
 	/**
 	 * @return the itemId
 	 */
-	@Getter
 	@XmlAttribute(name = "itemId")
 	private int itemId;
 	/**
 	 * @return the count
 	 */
-	@Getter
 	@XmlAttribute(name = "count")
 	private long count;
 }

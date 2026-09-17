@@ -9,6 +9,7 @@ import lombok.Getter;
  * Item Quality enumeration.
  */
 
+@Getter
 @XmlType(name = "quality")
 @XmlEnum
 public enum ItemQuality {
@@ -28,7 +29,6 @@ public enum ItemQuality {
 	MYTHIC(6); // Mythic - Purple
 
 	/** 返回品质 ID / Returns the quality id */
-	@Getter
 	private final int qualityId;
 
 	ItemQuality(int qualityId) {

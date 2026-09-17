@@ -19,33 +19,26 @@ import lombok.Setter;
  * @author MrPoke
  * @modified vlog, Rolandas
  */
+@Getter
+@Setter
 @Slf4j
 public class QuestState {
 
 	/** 任务 ID。 Quest id. */
-	@Getter
 	private final int questId;
 	/** 任务进度变量。 Quest progress variables. */
-	@Getter
 	private final QuestVars questVars;
 	/** 当前任务状态。 Current quest status. */
-	@Getter
 	private QuestStatus status;
 	/** 完成次数。 Completion count. */
-	@Getter
 	private int completeCount;
 	/** 最近完成时间。 Last completion time. */
-	@Getter
-	@Setter
 	private Timestamp completeTime;
 	/** 下次可重复时间。 Next allowed repeat time. */
-	@Getter
-	@Setter
 	private Timestamp nextRepeatTime;
 	/** 已选奖励索引。 Selected reward index. */
 	private Integer reward;
 	/** 数据库持久化状态。 Database persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 

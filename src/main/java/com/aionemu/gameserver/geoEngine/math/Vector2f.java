@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
  * 二维向量，提供几何运算（jME 风格流式 API）。
  * Two-dimensional vector with geometric operations (jME-style fluent API).
  */
+@Getter
 @Slf4j
 @AllArgsConstructor
 public final class Vector2f implements Cloneable {
@@ -25,11 +26,9 @@ public final class Vector2f implements Cloneable {
 	public static final Vector2f UNIT_XY = new Vector2f(1.0f, 1.0f);
 
 	/** X 分量 / X component */
-	@Getter
 	public float x;
 
 	/** Y 分量 / Y component */
-	@Getter
 	public float y;
 
 	/**

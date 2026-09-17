@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
  * Motion game object.
  */
 
+@Getter
+@Setter
 @AllArgsConstructor
 public class Motion implements IExpirable {
 	/** 动作 ID 到槽位类型的映射表。 / Motion ID to slot type mapping. */
@@ -76,12 +78,9 @@ public class Motion implements IExpirable {
 	}
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 	private int deletionTime = 0;
 	/** 是否激活。 / Whether Active. */
-	@Getter
-	@Setter
 	private boolean active = false;
 
 	/** 返回剩余时间 / Returns the remaining time */

@@ -12,27 +12,24 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UseItemAction")
 public class UseItemAction {
 
 	/** 返回 final reward id / Returns the final reward id */
-	@Getter
 	@XmlAttribute(name = "final_reward_id")
 	protected Integer finalRewardId;
 
 	/** 返回 reward id / Returns the reward id */
-	@Getter
 	@XmlAttribute(name = "reward_id")
 	protected Integer rewardId;
 
 	/** 返回移除数量 / Returns the remove count. */
-	@Getter
 	@XmlAttribute(name = "remove_count")
 	protected Integer removeCount;
 
 	/** 返回检查类型 / Returns the check type. */
-	@Getter
 	@XmlAttribute(name = "check_type")
 	protected Integer checkType;
 }

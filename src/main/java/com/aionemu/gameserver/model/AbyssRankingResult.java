@@ -8,34 +8,24 @@ import lombok.Getter;
  *
  * @author zdead
  */
+@Getter
 public class AbyssRankingResult {
 
-	@Getter
 	private String playerName;
-	@Getter
 	private int playerAbyssRank;
-	@Getter
 	private final int oldRankPos;
-	@Getter
 	private final int rankPos;
 	private int ap;
 	private int gp;
 	private int title;
-	@Getter
 	private PlayerClass playerClass;
-	@Getter
 	private int playerLevel;
-	@Getter
 	private int playerId;
 
-	@Getter
 	private final String legionName;
 	private long cp;
-	@Getter
 	private int legionId;
-	@Getter
 	private int legionLevel;
-	@Getter
 	private int legionMembers;
 
 	public AbyssRankingResult(String playerName, int playerAbyssRank, int playerId, int ap, int gp, int title, PlayerClass playerClass, int playerLevel, String legionName, int oldRankPos, int rankPos) {

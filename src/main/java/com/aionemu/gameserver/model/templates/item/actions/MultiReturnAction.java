@@ -25,13 +25,13 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MultiReturnAction")
 public class MultiReturnAction extends AbstractItemAction {
 	/**
 	 * 6 为天族，7 为魔族。 / 6 for ELYOS, 7 for ASMODIANS.
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 

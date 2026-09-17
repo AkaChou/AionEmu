@@ -13,12 +13,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StatsSet", propOrder = { "modifiers" })
 public class AbsoluteStatsTemplate {
 
 	/** 获取修正器。 / Returns the modifiers. */
-	@Getter
 	@XmlElement(required = true)
 	protected ModifiersTemplate modifiers;
 
@@ -26,7 +26,6 @@ public class AbsoluteStatsTemplate {
 	 * 获取 id 属性值。
 	 * Gets the value of the id property
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 }

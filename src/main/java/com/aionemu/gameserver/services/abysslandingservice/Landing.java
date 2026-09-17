@@ -17,20 +17,19 @@ import lombok.RequiredArgsConstructor;
  *
  * @param <RL> 着陆点位置类型 / Landing-location type
  */
+@Getter
+@Setter
 @RequiredArgsConstructor
 public abstract class Landing<RL extends LandingLocation> {
 	/**
 	 * 当前等级。
 	 * Current level.
 	 */
-	@Getter
-	@Setter
 	private int level;
 	private boolean started;
 	/**
 	 * @return 着陆点位置 / Landing location
 	 */
-	@Getter
 	private final RL landingLocation;
 
 	/**

@@ -9,20 +9,16 @@ import lombok.Setter;
  *
  * @author kecimis
  */
+@Getter
+@Setter
 public class AttackerCriticalStatus {
 	/** 是否判定成功 / Whether the check succeeded */
-	@Getter
-	@Setter
 	private boolean result = false;
 	/** 剩余次数 / Remaining count */
-	@Getter
-	@Setter
 	private int count;
 	/** 暴击数值 / Critical value */
-	@Getter
 	private int value;
 	/** 数值是否为百分比 / Whether value is percent-based */
-	@Getter
 	private boolean isPercent;
 
 	/**

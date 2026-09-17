@@ -45,6 +45,7 @@ import lombok.Getter;
  * 物品分组奖励数据容器，持有制作 / 魔石 / 食物 / 矿石 / 采集 / 宠物饲料等奖励组。
  * Item-group reward data holder for craft, manastone, food, ore, gather and pet-food bonus groups.
  */
+@Getter
 @XmlRootElement(name = "item_groups")
 @XmlType(name = "", propOrder = { "craftMaterials", "craftShop", "craftBundles", "craftRecipes", "manastonesCommon",
 		"manastonesRare", "manastonesLegend", "manastonesEpic", "medals", "foodCommon", "foodRare", "foodLegendary",
@@ -59,22 +60,18 @@ public class ItemGroupsData {
 	static int RECIPE_UPPER = 40;
 
 	/** 制作材料组 / craft 材料 group */
-	@Getter
 	@XmlElement(name = "craft_materials")
 	protected CraftItemGroup craftMaterials;
 
 	/** 制作商店组 / craft shop group */
-	@Getter
 	@XmlElement(name = "craft_shop")
 	protected CraftItemGroup craftShop;
 
 	/** 制作捆包组 / craft 捆包 group */
-	@Getter
 	@XmlElement(name = "craft_bundles")
 	protected CraftRecipeGroup craftBundles;
 
 	/** 制作配方组 / craft recipes group */
-	@Getter
 	@XmlElement(name = "craft_recipes")
 	protected CraftRecipeGroup craftRecipes;
 
@@ -208,31 +205,22 @@ public class ItemGroupsData {
 	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftRecipesBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
 
 	/** 全部制作加成组 / all craft bonus groups */
-	@Getter
 	BonusItemGroup[] craftGroups;
 	/** 全部魔石加成组 / all manastone bonus groups */
-	@Getter
 	BonusItemGroup[] manastoneGroups;
 	/** 勋章加成组 / medal bonus groups */
-	@Getter
 	BonusItemGroup[] medalGroups;
 	/** 全部食物加成组 / all food bonus groups */
-	@Getter
 	BonusItemGroup[] foodGroups;
 	/** 全部药品加成组 / all medicine bonus groups */
-	@Getter
 	BonusItemGroup[] medicineGroups;
 	/** 全部矿石加成组 / all ore bonus groups */
-	@Getter
 	BonusItemGroup[] oreGroups;
 	/** 全部采集加成组 / all gather bonus groups */
-	@Getter
 	BonusItemGroup[] gatherGroups;
 	/** 强化加成组 / enchant bonus groups */
-	@Getter
 	BonusItemGroup[] enchantGroups;
 	/** 首领加成组 / boss bonus groups */
-	@Getter
 	BonusItemGroup[] bossGroups;
 	Map<FoodType, Set<Integer>> petFood = new HashMap<FoodType, Set<Integer>>();
 

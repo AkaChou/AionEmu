@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Rift")
 public class RiftTemplate {
 	/** 裂隙 ID / Rift id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 

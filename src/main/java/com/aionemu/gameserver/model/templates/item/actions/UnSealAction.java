@@ -22,11 +22,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UnSealAction")
 public class UnSealAction extends AbstractItemAction {
 	/** 获取动作。 / Returns the action. */
-	@Getter
 	@XmlAttribute(name = "action")
 	private int action;
 

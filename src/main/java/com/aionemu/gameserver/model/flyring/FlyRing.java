@@ -17,13 +17,12 @@ import lombok.Getter;
  * Fly Ring model.
  */
 
+@Getter
 public class FlyRing extends VisibleObject {
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	private FlyRingTemplate template = null;
 	private String name = null;
 	/** 返回 plane / Returns the plane */
-	@Getter
 	private Plane3D plane = null;
 	private Point3D center = null;
 	private Point3D left = null;

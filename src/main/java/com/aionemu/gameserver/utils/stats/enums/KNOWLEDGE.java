@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础知识值枚举。
  * Baseline knowledge values by player class.
  */
+@Getter
 public enum KNOWLEDGE {
 	WARRIOR(90), GLADIATOR(90), TEMPLAR(90), SCOUT(90), ASSASSIN(90), RANGER(120), MAGE(115), SORCERER(120),
 	SPIRIT_MASTER(115), PRIEST(100), CLERIC(105), CHANTER(105),
@@ -18,7 +19,6 @@ public enum KNOWLEDGE {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	KNOWLEDGE(int value) {

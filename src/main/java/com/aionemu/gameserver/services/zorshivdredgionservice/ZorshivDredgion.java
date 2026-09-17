@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <ZL> 挖掘舰地点类型 / dredgion location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 
@@ -28,7 +29,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 *
 	 * @return 绑定地点 / bound location
 	 */
-	@Getter
 	private final ZL zorshivDredgionLocation;
 	private final AtomicBoolean peace = new AtomicBoolean();
 

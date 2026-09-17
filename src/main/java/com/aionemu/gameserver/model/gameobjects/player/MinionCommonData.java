@@ -14,62 +14,47 @@ import lombok.Setter;
  * Minion Common Data game object.
  */
 
+@Getter
+@Setter
 public class MinionCommonData extends VisibleObjectTemplate implements IExpirable {
 
 	/** 返回 minion id / Returns the minion id */
-	@Getter
 	private int minionId;
 	/** 设置 birthday / Sets the birthday */
-	@Setter
 	private Timestamp birthday;
 	private int minionObjId = 0;
 	/** 返回 master object id / Returns the master object id */
-	@Getter
 	private final int masterObjectId;
 	/** 返回 minion grade / Returns the minion grade */
-	@Getter
 	private final String minionGrade;
 	/** 设置名称。 / Sets the name. */
-	@Setter
 	private String name;
 	/** 获取守护灵等级。 / Returns the minion level. */
-	@Getter
 	private int minionLevel;
 	private int miniongrowthpoint = 0;
 	/**
 	 * @return 是否已锁定。 / Whether lock
 	 */
-	@Getter
-	@Setter
 	private boolean lock = false;
 	/** 设置 is buffing / Sets the is buffing */
-	@Setter
 	private boolean IsBuffing = false;
 	/**
 	 * @return 是否正在拾取 / Whether looting
 	 */
-	@Getter
 	private boolean isLooting = false;
 	/** 返回 doping bag / Returns the doping bag */
-	@Getter
 	MinionDopingBag dopingBag = null;
 	/**
 	 * @return the despawnTime
 	 */
-	@Getter
-	@Setter
 	private Timestamp despawnTime;
 	/**
 	 * @return the minionSkillPoints
 	 */
-	@Getter
-	@Setter
 	private int minionSkillPoints;
 	/**
 	 * @return the minionFunctionTime
 	 */
-	@Getter
-	@Setter
 	private Timestamp minionFunctionTime;
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {

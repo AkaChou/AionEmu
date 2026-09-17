@@ -13,12 +13,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HousingUseableItem", propOrder = { "action" })
 public class HousingUseableItem extends PlaceableHouseObject {
 
 	/** 获取动作。 / Returns the action. */
-	@Getter
 	@XmlElement(required = true)
 	protected UseItemAction action;
 
@@ -28,26 +28,22 @@ public class HousingUseableItem extends PlaceableHouseObject {
 	/**
 	 * @return 无冷却时为 null / null if no cooltime is used
 	 */
-	@Getter
 	@XmlAttribute
 	protected Integer cd;
 
 	/** 返回延迟 / Returns the delay. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int delay;
 
 	/**
 	 * @return 使用次数不受限时为 null / null if use is not restricted
 	 */
-	@Getter
 	@XmlAttribute(name = "use_count")
 	protected Integer useCount;
 
 	/**
 	 * @return 无需物品时为 null / null if no item is required
 	 */
-	@Getter
 	@XmlAttribute(name = "required_item")
 	protected Integer requiredItem;
 

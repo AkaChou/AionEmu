@@ -24,17 +24,17 @@ import lombok.Setter;
  *
  * @author ATracer, xTz
  */
+@Getter
+@Setter
 public class LootGroupRules {
 
 	/**
 	 * @return 拾取规则 / The loot rule
 	 */
-	@Getter
 	private final LootRuleType lootRule;
 	/**
 	 * @return 自动分配方式 / The autodistribution
 	 */
-	@Getter
 	private final LootDistribution autodistribution;
 	private final int common_item_above;
 	private final int superior_item_above;
@@ -42,22 +42,16 @@ public class LootGroupRules {
 	private final int fabled_item_above;
 	private final int ethernal_item_above;
 	/** 返回 misc / Returns the misc */
-	@Getter
 	private int misc;
 	/**
 	 * @return 杂项分配数量 / The nrMisc
 	 */
-	@Getter
-	@Setter
 	private int nrMisc;
 	/**
 	 * @return 轮转分配次数 / The nrRoundRobin
 	 */
-	@Getter
-	@Setter
 	private int nrRoundRobin;
 	/** 返回 items to be distributed / Returns the items to be distributed */
-	@Getter
 	private final List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
 
 	public LootGroupRules() {

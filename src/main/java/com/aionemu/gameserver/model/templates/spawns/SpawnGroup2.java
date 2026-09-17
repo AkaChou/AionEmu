@@ -63,37 +63,29 @@ import lombok.Setter;
  */
 @Slf4j
 
+@Getter
+@Setter
 public class SpawnGroup2 extends AbstractLockManager {
 
 	/** 返回世界 ID / Returns the world id */
-	@Getter
 	private final int worldId;
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	private int npcId;
 	/** 返回刷新池大小 / Returns the pool */
-	@Getter
 	private int pool;
 	/** 返回难度 ID / Returns the difficult id */
-	@Getter
 	private byte difficultId;
 	/** 返回出生页起点。 / Returns the first matching spawn page. */
-	@Getter
 	private int spawnPage;
 	/** 返回出生页终点（含）。 / Returns the last matching spawn page, inclusive. */
-	@Getter
 	private int spawnPageEnd;
 	private boolean spawnPageRestricted;
 	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
-	@Getter
 	private int initialDelay;
 	private TemporarySpawn temporarySpawn;
 	/** 返回重生时间 / Returns the respawn time */
-	@Getter
-	@Setter
 	private int respawnTime;
 	/** 获取处理器类型。 / Returns the handler type. */
-	@Getter
 	private SpawnHandlerType handlerType;
 	private final List<SpawnTemplate> spots = new ArrayList<SpawnTemplate>();
 	private HashMap<Integer, HashMap<SpawnTemplate, Boolean>> poolUsedTemplates;

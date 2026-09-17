@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @RequiredArgsConstructor
 public class PlayerTeamMember implements TeamMember<Player> {
 
 	final Player player;
 	/** 返回最后在线时间 / Returns the last online time */
-	@Getter
 	private long lastOnlineTime;
 
 	/** 返回对象 ID / Returns the object id */

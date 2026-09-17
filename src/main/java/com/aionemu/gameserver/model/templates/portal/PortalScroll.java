@@ -13,17 +13,16 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PortalScroll", propOrder = { "portalPath" })
 public class PortalScroll {
 
 	/** 获取传送门路径。 / Returns the portal path. */
-	@Getter
 	@XmlElement(name = "portal_path")
 	protected PortalPath portalPath;
 	/** 获取名称。 / Returns the name. */
-	@Getter
-	@Setter
 	@XmlAttribute
 	protected String name;
 }

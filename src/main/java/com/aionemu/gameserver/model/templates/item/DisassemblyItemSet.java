@@ -11,16 +11,15 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "disassemblyitemset")
 public class DisassemblyItemSet
 {
 	/** 返回被分解物品 ID / Returns the disassembly item id */
-	@Getter
 	@XmlAttribute(name = "disassemblyItem_Id")
 	private int DisassemblyItemId;
 
 	/** 返回分解产出列表 / Returns the disassemble set list */
-	@Getter
 	@XmlElement(name = "disassemble_set_list")
 	private DisassembleSetList DisassembleSetList;
 }

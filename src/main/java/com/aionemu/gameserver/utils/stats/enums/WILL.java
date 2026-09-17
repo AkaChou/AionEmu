@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础意志值枚举。
  * Baseline will values by player class.
  */
+@Getter
 public enum WILL {
 	WARRIOR(90), GLADIATOR(90), TEMPLAR(105), SCOUT(90), ASSASSIN(90), RANGER(110), MAGE(115), SORCERER(110),
 	SPIRIT_MASTER(115), PRIEST(110), CLERIC(110), CHANTER(110),
@@ -18,7 +19,6 @@ public enum WILL {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	WILL(int value) {

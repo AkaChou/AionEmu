@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OccupyRewardLight")
 public class OccupyRewardLight {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 }

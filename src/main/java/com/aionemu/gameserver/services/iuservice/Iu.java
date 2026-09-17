@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <IUL> IU 地点类型 / IU location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class Iu<IUL extends IuLocation> {
 
@@ -28,7 +29,6 @@ public abstract class Iu<IUL extends IuLocation> {
 	 *
 	 * location
 	 */
-	@Getter
 	private final IUL iuLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

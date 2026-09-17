@@ -11,10 +11,10 @@ import lombok.AllArgsConstructor;
  *
  * @author xTz
  */
+@Getter
 @AllArgsConstructor
 public class AssembledNpcPart {
 
-	@Getter
 	private final Integer object;
 	private final AssembledNpcPartTemplate template;
 

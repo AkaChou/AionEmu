@@ -11,6 +11,7 @@ import lombok.Getter;
  * Item improvement template: charge way, prices and burn bonuses.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Improvement")
 public class Improvement {
@@ -20,31 +21,26 @@ public class Improvement {
 	/**
 	 * @return 价格 2 / the price2
 	 */
-	@Getter
 	@XmlAttribute(name = "price2")
 	private int price2;
 
 	/**
 	 * @return 价格 1 / the price1
 	 */
-	@Getter
 	@XmlAttribute(name = "price1")
 	private int price1;
 
 	/** 返回 burn defend / Returns the burn defend */
-	@Getter
 	@XmlAttribute(name = "burn_defend")
 	private int burnDefend;
 
 	/** 返回 burn attack / Returns the burn attack */
-	@Getter
 	@XmlAttribute(name = "burn_attack")
 	private int burnAttack;
 
 	/**
 	 * @return 强化等级 / the level
 	 */
-	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 

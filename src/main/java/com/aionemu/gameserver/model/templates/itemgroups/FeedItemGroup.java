@@ -15,12 +15,12 @@ import lombok.Getter;
  * Pet feed item group: feed entries and group index.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FeedItemGroup")
 public abstract class FeedItemGroup {
 
 	/** 返回索引 / Returns the index*/
-	@Getter
 	@XmlAttribute(name = "group", required = true)
 	protected ItemGroupIndex index = ItemGroupIndex.NONE;
 

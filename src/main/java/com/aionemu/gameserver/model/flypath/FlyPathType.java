@@ -7,12 +7,12 @@ import lombok.Getter;
  * Fly Path Type enumeration.
  */
 
+@Getter
 public enum FlyPathType {
 	/** 喷泉。 / Geyser. */
 	GEYSER(0), ONE_WAY(1), TWO_WAY(2);
 
 	/** 返回 ID。 / Returns the id. */
-	@Getter
 	private final int id;
 
 	FlyPathType(int id) {

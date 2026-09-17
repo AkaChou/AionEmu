@@ -12,41 +12,37 @@ import lombok.Getter;
  * @author vlog
  * @modified Rolandas
  */
+@Getter
 public class ClusteredNpc {
 
 	/**
 	 * 关联 NPC。
 	 * Associated NPC.
 	 */
-	@Getter
 	private Npc npc;
 
 	/**
 	 * 实例 ID。
 	 * Instance id.
 	 */
-	@Getter
 	private final int instance;
 
 	/**
 	 * 巡逻路径模板。
 	 * Walker route template.
 	 */
-	@Getter
 	private final WalkerTemplate walkTemplate;
 
 	/**
 	 * 刷怪 X 坐标。
 	 * Spawn X coordinate.
 	 */
-	@Getter
 	private float x;
 
 	/**
 	 * 刷怪 Y 坐标。
 	 * Spawn Y coordinate.
 	 */
-	@Getter
 	private float y;
 
 	/**

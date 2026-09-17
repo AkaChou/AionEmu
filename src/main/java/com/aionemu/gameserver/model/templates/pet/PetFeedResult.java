@@ -12,12 +12,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetFeedResult")
 public class PetFeedResult {
 
 	/** 获取物品。 / Returns the item. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int item;
 

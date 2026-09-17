@@ -40,6 +40,8 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public abstract class AbstractAI implements AI2 {
 
 	/** AI 死亡监听器接口 / AI death listener interface */
@@ -100,7 +102,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @return 所有者 / owner
 	 */
-	@Getter
 	private Creature owner;
 	private AIState currentState;
 	private AISubState currentSubState;
@@ -111,7 +112,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @param logging 是否启用 / whether enable
 	 */
-	@Setter
 	private boolean logging = false;
 	/**
 	 * 获取当前技能 ID。
@@ -119,7 +119,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @return 技能 ID / skill id
 	 */
-	@Getter
 	protected int skillId;
 	/**
 	 * 获取当前技能等级。
@@ -127,7 +126,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @return 技能等级 / skill level
 	 */
-	@Getter
 	protected int skillLevel;
 	/**
 	 * 获取事件日志（调试用）。
@@ -135,7 +133,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @return 事件日志 / event log
 	 */
-	@Getter
 	private volatile AIEventLog eventLog;
 	/**
 	 * 获取当前 AI 场景。
@@ -143,8 +140,6 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * @return 场景 / scenario
 	 */
-	@Getter
-	@Setter
 	private AI2Scenario scenario;
 
 	/**

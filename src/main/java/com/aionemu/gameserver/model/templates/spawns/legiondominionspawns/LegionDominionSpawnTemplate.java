@@ -13,18 +13,14 @@ import lombok.Setter;
  * Legion dominion spawn template (static data/XML).
  */
 
+@Getter
+@Setter
 public class LegionDominionSpawnTemplate extends SpawnTemplate {
 	/** 返回军团领地 ID / Returns the legion dominion id */
-	@Getter
-	@Setter
 	private int legionDominionId;
 	/** 获取军团领地种族。 / Returns the legion dominion race. */
-	@Getter
-	@Setter
 	private LegionDominionRace legionDominionRace;
 	/** 返回 legion dominion mod type / Returns the legion dominion mod type */
-	@Getter
-	@Setter
 	private LegionDominionModType legionDominionModType;
 
 	public LegionDominionSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

@@ -20,9 +20,9 @@ import lombok.Getter;
  * Engulfed Ophidan Bridge Reward for instance logic.
  */
 
+@Getter
 public class EngulfedOphidanBridgeReward extends InstanceReward<EngulfedOphidanBridgePlayerReward> {
 	/** 返回 cap points / Returns the cap points */
-	@Getter
 	private final int capPoints;
 	private final MutableInt asmodiansPoints = new MutableInt(0);
 	private final MutableInt elyosPoins = new MutableInt(0);
@@ -35,7 +35,6 @@ public class EngulfedOphidanBridgeReward extends InstanceReward<EngulfedOphidanB
 	private long instanceTime;
 	private final int bonusTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 
 	public EngulfedOphidanBridgeReward(Integer mapId, int instanceId, WorldMapInstance instance) {

@@ -11,14 +11,12 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 public class AssembledNpc {
 
-	@Getter
 	private List<AssembledNpcPart> assembledParts = new ArrayList<>();
 	private final long spawnTime = System.currentTimeMillis();
-	@Getter
 	private final int routeId;
-	@Getter
 	private final int mapId;
 
 	public AssembledNpc(int routeId, int mapId, int liveTime, List<AssembledNpcPart> assembledParts) {

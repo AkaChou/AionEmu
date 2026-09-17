@@ -44,6 +44,7 @@ import lombok.Getter;
  *
  * @author -Nemesiss-
  */
+@Getter
 @Slf4j
 public class MapRegion {
 
@@ -51,25 +52,21 @@ public class MapRegion {
 	 * 区域 ID（非世界地图 ID）。
 	 * Region id (not the world map id).
 	 */
-	@Getter
 	private final int regionId;
 	/**
 	 * 所属地图实例。
 	 * Parent world-map instance.
 	 */
-	@Getter
 	private final WorldMapInstance parent;
 	/**
 	 * 邻接区域（含自身）。
 	 * Neighbour regions (includes self).
 	 */
-	@Getter
 	private volatile MapRegion[] neighbours = new MapRegion[0];
 	/**
 	 * 本区域内的可见对象。
 	 * Visible objects in this region.
 	 */
-	@Getter
 	private final Map<Integer, VisibleObject> objects = new ConcurrentHashMap<>();
 
 	/** 区域内玩家计数 / player count in this region */
@@ -79,7 +76,6 @@ public class MapRegion {
 	private final AtomicBoolean regionActive = new AtomicBoolean(false);
 
 	/** 区域统计 / zone count */
-	@Getter
 	private final int zoneCount;
 
 	/**

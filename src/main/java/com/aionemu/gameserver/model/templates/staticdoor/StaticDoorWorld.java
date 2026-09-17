@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "World")
 public class StaticDoorWorld {
@@ -25,7 +26,6 @@ public class StaticDoorWorld {
 	 *
 	 * @return 世界 ID / the world id
 	 */
-	@Getter
 	@XmlAttribute(name = "world")
 	protected int world;
 	@XmlElement(name = "staticdoor")

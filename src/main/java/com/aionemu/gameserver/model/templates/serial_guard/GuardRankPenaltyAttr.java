@@ -15,24 +15,20 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GuardRankPenaltyAttr")
 public class GuardRankPenaltyAttr {
 	/** 获取属性。 / Returns the stat. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected StatEnum stat;
 
 	/** 返回 func / Returns the func */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected Func func;
 
 	/** 获取值。 / Returns the value. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected int value;
 }

@@ -15,24 +15,20 @@ import lombok.Setter;
  * Assembly recipe template: parts list and assembly count.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AssemblyItem")
 public class AssemblyItem {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 返回 parts num / Returns the parts num */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "parts_num")
 	protected int partsNum;
 
 	/** 返回 proc assembly / Returns the proc assembly */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "proc_assembly")
 	protected int procAssembly;
 

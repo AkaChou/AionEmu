@@ -16,6 +16,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetRewards", propOrder = { "results" })
 public class PetRewards {
@@ -24,14 +25,12 @@ public class PetRewards {
 	protected List<PetFeedResult> results;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(name = "group", required = true)
 	protected FoodType type;
 
 	/**
 	 * @return 是否为喜爱食物 / Whether loved
 	 */
-	@Getter
 	@XmlAttribute
 	protected boolean loved = false;
 

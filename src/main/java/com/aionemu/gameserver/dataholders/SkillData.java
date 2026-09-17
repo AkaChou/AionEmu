@@ -26,6 +26,7 @@ import lombok.Getter;
  * 技能模板数据容器，按技能 ID 与技能组索引 SkillTemplate。
  * Skill template data holder indexed by skill id and skill group.
  */
+@Getter
 @XmlRootElement(name = "skill_data")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SkillData {
@@ -36,7 +37,6 @@ public class SkillData {
 	 *
 	 * @return 技能模板列表 / skill template list
 	 */
-	@Getter
 	@XmlElement(name = "skill_template")
 	private List<SkillTemplate> skillTemplates;
 
@@ -51,7 +51,6 @@ public class SkillData {
 	 *
 	 * @return 技能数据映射 / skill data map
 	 */
-	@Getter
 	@XmlTransient
 	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 

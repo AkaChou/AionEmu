@@ -32,6 +32,8 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public class Summon extends Creature {
 
 	private static final long NANOS_PER_SECOND = 1_000_000_000L;
@@ -42,7 +44,6 @@ public class Summon extends Creature {
 	 *
 	 * @param master 主人玩家 / the master to set
 	 */
-	@Setter
 	private Player master;
 	/**
 	 * 返回召唤模式。
@@ -50,17 +51,13 @@ public class Summon extends Creature {
 	 *
 	 * @return 模式 / the mode
 	 */
-	@Getter
-	@Setter
 	private SummonMode mode = SummonMode.GUARD;
 	private final byte level;
 	private int liveTime = 0;
 	private long expirationTimeNanos;
 	/** 设置释放任务 / Sets the release task. */
-	@Setter
 	private Future<?> releaseTask;
 	/** 返回常驻免疫属性 / Returns the always resist element */
-	@Getter
 	private final SkillElement alwaysResistElement;
 
 	/**

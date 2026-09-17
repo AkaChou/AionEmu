@@ -22,9 +22,9 @@ import lombok.Getter;
  */
 @Slf4j
 
+@Getter
 public class HouseRegistry {
 	/** 返回所有者 / Returns the owner*/
-	@Getter
 	private final House owner;
 	private final Map<Integer, HouseObject<?>> objects;
 	private final Map<Integer, HouseDecoration> customParts;

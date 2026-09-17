@@ -36,6 +36,7 @@ import lombok.Getter;
  * Base creature game stats: manages base values and modifier functions.
  */
 
+@Getter
 @Slf4j(access = AccessLevel.PROTECTED)
 public abstract class CreatureGameStats<T extends Creature> {
 	private static final int ATTACK_MAX_COUNTER = Integer.MAX_VALUE;
@@ -71,7 +72,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	/**
 	 * @return the atcount
 	 */
-	@Getter
 	private int attackCounter = 0;
 	protected T owner = null;
 	private Stat2 cachedHPStat;

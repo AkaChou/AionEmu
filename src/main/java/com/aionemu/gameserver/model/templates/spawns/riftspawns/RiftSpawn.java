@@ -18,18 +18,17 @@ import lombok.Getter;
  *
  * @author Source
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RiftSpawn")
 public class RiftSpawn {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 	@XmlAttribute(name = "world")
 	private int world;
 	/** 获取刷新。 / Returns the spawns. */
-	@Getter
 	@XmlElement(name = "spawn")
 	private List<Spawn> spawns = new ArrayList<Spawn>();
 

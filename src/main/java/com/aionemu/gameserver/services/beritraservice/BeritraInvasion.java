@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <BL> 入侵位置类型 / invasion location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class BeritraInvasion<BL extends BeritraLocation> {
 
@@ -28,7 +29,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 *
 	 * @return 绑定的入侵地点 / invasion location
 	 */
-	@Getter
 	private final BL beritraLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

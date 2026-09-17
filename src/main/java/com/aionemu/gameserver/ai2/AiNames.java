@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public enum AiNames {
 
 	/** 通用 NPC AI / General NPC AI */
@@ -23,7 +24,6 @@ public enum AiNames {
 	 *
 	 * @return 名称 / name
 	 */
-	@Getter
 	private final String name;
 
 	AiNames(String name) {

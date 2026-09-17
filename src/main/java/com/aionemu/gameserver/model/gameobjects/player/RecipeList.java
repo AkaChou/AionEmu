@@ -20,11 +20,11 @@ import lombok.NoArgsConstructor;
  *
  * @author MrPoke
  */
+@Getter
 @NoArgsConstructor
 public class RecipeList {
 
 	/** 获取配方列表。 / Returns the recipe list. */
-	@Getter
 	private Set<Integer> recipeList = new HashSet<Integer>();
 
 	public RecipeList(HashSet<Integer> recipeList) {

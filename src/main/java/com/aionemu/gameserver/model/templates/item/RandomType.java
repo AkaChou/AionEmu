@@ -8,6 +8,7 @@ import lombok.Getter;
  * Random Type enumeration.
  */
 
+@Getter
 @XmlEnum
 public enum RandomType {
 	/** 强化 / Enchantment */
@@ -28,7 +29,6 @@ public enum RandomType {
 	CHUNK_GEMSTONE, SCROLLS, POTION;
 
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	private int level;
 
 	RandomType() {

@@ -8,26 +8,20 @@ import lombok.Setter;
  * Crucible Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class CruciblePlayerReward extends InstancePlayerReward {
 	/** 设置 insignia / Sets the insignia */
-	@Getter
-	@Setter
 	private int insignia;
 	/** 设置刷新点坐标。 / Sets the spawn position. */
-	@Getter
-	@Setter
 	private int spawnPosition;
 	/**
 	 * @return 是否已奖励 / whether rewarded
 	 */
-	@Getter
 	private boolean isRewarded = false;
 	/** 是否玩家离开 / Whether player leave*/
-	@Getter
 	private boolean isPlayerLeave = false;
 	/** 设置 player defeated / Sets the player defeated */
-	@Getter
-	@Setter
 	private boolean isPlayerDefeated = false;
 
 	public CruciblePlayerReward(Integer object) {

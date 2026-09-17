@@ -10,13 +10,11 @@ import lombok.AllArgsConstructor;
  * @author Ranastic
  */
 
+@Getter
 @AllArgsConstructor
 public class ABEntry {
-	@Getter
 	private final int id;
-	@Getter
 	private final int killCount;
-	@Getter
 	private final int level;
 	private final int claimReward;
 

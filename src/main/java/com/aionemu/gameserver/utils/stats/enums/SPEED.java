@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础移动速度值枚举。
  * Baseline speed values by player class.
  */
+@Getter
 public enum SPEED {
 	WARRIOR(6), GLADIATOR(6), TEMPLAR(6), SCOUT(6), ASSASSIN(6), RANGER(6), MAGE(6), SORCERER(6), SPIRIT_MASTER(6),
 	PRIEST(6), CLERIC(6), CHANTER(6),
@@ -18,7 +19,6 @@ public enum SPEED {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	SPEED(int value) {

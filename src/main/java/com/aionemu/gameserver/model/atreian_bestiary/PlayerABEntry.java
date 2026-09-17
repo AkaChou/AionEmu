@@ -10,9 +10,9 @@ import lombok.Getter;
  * @author Ranastic
  */
 
+@Getter
 public class PlayerABEntry extends ABEntry {
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	public PlayerABEntry(int id, int killCount, int level, int claimReward, PersistentState persistentState) {

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <AL> 阿诺哈地点类型 / Anoha location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class BerserkAnoha<AL extends AnohaLocation> {
 
@@ -28,7 +29,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	 *
 	 * location
 	 */
-	@Getter
 	private final AL anohaLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

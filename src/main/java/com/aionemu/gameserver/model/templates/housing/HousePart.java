@@ -21,6 +21,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "house_part")
@@ -30,22 +31,18 @@ public class HousePart {
 	private List<String> buildingTags;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected PartType type;
 
 	/** 返回 quality / Returns the quality */
-	@Getter
 	@XmlAttribute(required = true)
 	protected ItemQuality quality;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute
 	protected String name;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 

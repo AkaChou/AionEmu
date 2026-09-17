@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
  * 攻城种族计数器，按种族累计伤害/AP 并比较排名。
  * Siege race counter accumulating damage/AP by race and ranking them.
  */
+@Getter
 @RequiredArgsConstructor
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();
@@ -36,7 +37,6 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 *
 	 * @return 阵营 / siege race
 	 */
-	@Getter
 	private final SiegeRace siegeRace;
 
 	/**

@@ -18,36 +18,30 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PortalReq")
 public class PortalReq {
 
 	/** 返回 quest req / Returns the quest req */
-	@Getter
 	@XmlElement(name = "quest_req")
 	protected List<QuestReq> questReq;
 	/** 返回 item req / Returns the item req */
-	@Getter
 	@XmlElement(name = "item_req")
 	protected List<ItemReq> itemReq;
 	/** 获取最小等级。 / Returns the min level. */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "min_level")
 	protected int minLevel;
 	@XmlAttribute(name = "max_level")
 	protected Integer maxLevel;
 	/** 返回 kinah req / Returns the kinah req */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "kinah_req")
 	protected int kinahReq;
 	/** 返回标题 ID / Returns the title id */
-	@Getter
 	@XmlAttribute(name = "title_id")
 	protected int titleId;
 	/** 返回 err level / Returns the err level */
-	@Getter
 	@XmlAttribute(name = "err_level")
 	protected int errLevel;
 

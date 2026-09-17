@@ -27,6 +27,8 @@ import lombok.Setter;
  *
  * @author Simple
  */
+@Getter
+@Setter
 public class Legion {
 
 	/** 军团信息。 / Legion information. */
@@ -34,98 +36,70 @@ public class Legion {
 	/**
 	 * @param legionId the legionId to set
 	 */
-	@Getter
-	@Setter
 	private int legionId = 0;
 	/**
 	 * @param legionName the legionName to set
 	 */
-	@Getter
-	@Setter
 	private String legionName = "";
 	/**
 	 * @return the legionLevel
 	 */
-	@Getter
-	@Setter
 	private int legionLevel = 1;
 	/**
 	 * @param legionRank the legionRank to set
 	 */
-	@Getter
-	@Setter
 	private int legionRank = 0;
 	/**
 	 * @param contributionPoints
 	 */
-	@Getter
-	@Setter
 	private long contributionPoints = 0;
 	/**
 	 * @return the legionMembers
 	 */
-	@Getter
 	private List<Integer> legionMembers = new ArrayList<Integer>();
 	/**
 	 * @return the deputyPermission
 	 */
-	@Getter
 	private short deputyPermission = 0x1E0C;
 	/**
 	 * @return the centurionPermission
 	 */
-	@Getter
 	private short centurionPermission = 0x1C08;
 	/**
 	 * @return the legionarPermission
 	 */
-	@Getter
 	private short legionaryPermission = 0x1800;
 	/**
 	 * @return the volunteerPermission
 	 */
-	@Getter
 	private short volunteerPermission = 0x800;
 	/**
 	 * @param disbandTime the disbandTime to set
 	 */
-	@Getter
-	@Setter
 	private int disbandTime;
 	/**
 	 * @return the announcementList
 	 */
-	@Getter
 	private TreeMap<Timestamp, String> announcementList = new TreeMap<Timestamp, String>();
 	/**
 	 * @param legionEmblem the legionEmblem to set
 	 */
-	@Getter
-	@Setter
 	private LegionEmblem legionEmblem = new LegionEmblem();
 	/**
 	 * @param legionWarehouse the legionWarehouse to set
 	 */
-	@Getter
-	@Setter
 	private LegionWarehouse legionWarehouse;
 	private final SortedSet<LegionHistory> legionHistory;
 	private final AtomicBoolean hasBonus = new AtomicBoolean(false);
 	/** 返回加入申请映射。 / Returns the join request map. */
-	@Getter
 	private final Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<Integer, LegionJoinRequest>();
 	/** 设置描述。 / Sets the description. */
-	@Setter
 	private String description = "";
 	/** 设置最小加入等级。 / Sets the min join level. */
-	@Setter
 	private int minJoinLevel = 0;
 	/** 设置加入类型。 / Sets the join type. */
-	@Setter
 	private int joinType = 0;
 	/** 返回领地。 / Returns the territory. */
-	@Getter
-	@Setter
 	private LegionTerritory territory;
 
 	/**

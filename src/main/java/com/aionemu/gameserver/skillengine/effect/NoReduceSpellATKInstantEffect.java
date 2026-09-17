@@ -15,11 +15,11 @@ import lombok.Getter;
  *
  * @author Sippolo
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NoReduceSpellATKInstantEffect")
 public class NoReduceSpellATKInstantEffect extends DamageEffect {
 
-	@Getter
 	@XmlAttribute
 	protected boolean percent;
 	@XmlAttribute

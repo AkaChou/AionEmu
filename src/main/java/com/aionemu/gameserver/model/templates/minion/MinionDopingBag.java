@@ -9,12 +9,12 @@ import lombok.Getter;
  *
  * @author jacjozs this copy Pet_Bag
  */
+@Getter
 public class MinionDopingBag {
 	private int[] itemBag = null;
 	/**
 	 * @return true if the bag needs saving
 	 */
-	@Getter
 	private boolean isDirty = false;
 
 	/** 设置食物物品 / Sets the food item*/

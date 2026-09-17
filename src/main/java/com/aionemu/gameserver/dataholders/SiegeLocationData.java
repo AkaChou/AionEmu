@@ -21,6 +21,7 @@ import lombok.Getter;
  * 攻城据点数据容器，按类型分索引要塞、神器与统一据点映射。
  * Siege location data holder, indexing fortresses, artifacts and the unified location map by type.
  */
+@Getter
 @XmlRootElement(name = "siege_locations")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SiegeLocationData {
@@ -37,7 +38,6 @@ public class SiegeLocationData {
 	 *
 	 * @return ID 到据点的映射 / map of id to location
 	 */
-	@Getter
 	@XmlTransient
 	private final Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
 

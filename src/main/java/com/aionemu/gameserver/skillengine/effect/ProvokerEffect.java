@@ -23,11 +23,11 @@ import lombok.Getter;
  * 挑衅/反制触发效果：在攻击或受击时按目标类型触发指定技能。
  * Provoker effect: on attack or being attacked, triggers a configured skill by target type.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProvokerEffect")
 public class ProvokerEffect extends ShieldEffect {
 
-	@Getter
 	@XmlAttribute(name = "provoke_target")
 	protected ProvokeTarget provokeTarget;
 	@XmlAttribute(name = "skill_id")

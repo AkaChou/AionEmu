@@ -9,6 +9,7 @@ import lombok.Getter;
  * Triangle used by the BIH tree, caching three vertices and centroid with
  * normal and per-axis extreme queries.
  */
+@Getter
 public final class BIHTriangle {
 
 	/** 顶点 A / Vertex A */
@@ -18,7 +19,6 @@ public final class BIHTriangle {
 	/** 顶点 C / Vertex C */
 	private final Vector3f pointc = new Vector3f();
 	/** 质心。 / Centroid. */
-	@Getter
 	private final Vector3f center = new Vector3f();
 
 	/**

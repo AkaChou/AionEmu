@@ -15,18 +15,17 @@ import lombok.NoArgsConstructor;
  *
  * @author Source
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class RiftLocation {
 
 	/**
 	 * @return Whether opened
 	 */
-	@Getter
-	@Setter
 	private boolean opened;
 	protected RiftTemplate template;
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public RiftLocation(RiftTemplate template) {

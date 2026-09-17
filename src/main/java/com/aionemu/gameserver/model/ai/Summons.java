@@ -14,12 +14,12 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Summons")
 public class Summons {
 
 	/** 返回 percentage / Returns the percentage */
-	@Getter
 	@XmlElement(name = "percentage")
 	private List<Percentage> percentage;
 }

@@ -15,6 +15,7 @@ import lombok.Getter;
  * @author ATracer
  * @param <T> 所有者可见对象类型 / Owner visible-object type
  */
+@Getter
 public abstract class CreatureMoveController<T extends VisibleObject> implements MoveController {
 
 	/** 所有者 / Owner */
@@ -22,7 +23,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/** 朝向 / Heading */
 	protected byte heading;
 	/** 上次移动更新时间戳 / Last move update timestamp */
-	@Getter
 	protected long lastMoveUpdate = System.currentTimeMillis();
 	/** 是否处于移动中 / Whether currently in move */
 	protected boolean isInMove = false;

@@ -7,6 +7,7 @@ import lombok.Getter;
  * Npc Object Type enumeration.
  */
 
+@Getter
 public enum NpcObjectType {
 	/** 普通 / Normal. */
 	NORMAL(1), SUMMON(2), HOMING(16), TRAP(32), SKILLAREA(64), TOTEM(128), GROUPGATE(256), SERVANT(1024), PET(2048);
@@ -16,6 +17,5 @@ public enum NpcObjectType {
 	}
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 }

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <PL> SVS 地点类型 / SVS location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class Panesterra<PL extends SvsLocation> {
 
@@ -28,7 +29,6 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 *
 	 * @return 绑定地点 / bound location
 	 */
-	@Getter
 	private final PL svsLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

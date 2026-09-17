@@ -19,6 +19,7 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 @XmlRootElement(name = "staticdoor_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StaticDoorData {
@@ -29,7 +30,6 @@ public class StaticDoorData {
 	 *
 	 * @return 静态门世界列表 / static-door world list
 	 */
-	@Getter
 	@XmlElement(name = "world")
 	private List<StaticDoorWorld> staticDorWorlds;
 

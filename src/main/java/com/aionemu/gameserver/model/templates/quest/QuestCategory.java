@@ -9,6 +9,7 @@ import lombok.Getter;
  * Quest Category enumeration.
  */
 
+@Getter
 @XmlType(name = "QuestCategory")
 @XmlEnum
 public enum QuestCategory {
@@ -18,7 +19,6 @@ public enum QuestCategory {
 	CHALLENGE_TASK(0), PUBLIC(0), LEGION(0), PRIMARY(0);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	QuestCategory(int id) {

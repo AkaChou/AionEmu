@@ -15,12 +15,12 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbyssGroupAttr")
 public class AbyssGroupAttr {
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
@@ -28,7 +28,6 @@ public class AbyssGroupAttr {
 	protected List<Integer> world;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 

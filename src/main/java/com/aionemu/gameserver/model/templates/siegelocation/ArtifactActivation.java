@@ -11,16 +11,15 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ArtifactActivation")
 public class ArtifactActivation {
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "itemid")
 	protected int itemId;
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	protected int count;
 

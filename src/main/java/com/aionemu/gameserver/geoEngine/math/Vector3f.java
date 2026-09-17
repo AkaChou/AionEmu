@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
  * 三维向量，提供几何运算（jME 风格流式 API，支持对象池复用）。
  * Three-dimensional vector with geometric operations (jME-style fluent API, object-pool reuse).
  */
+@Getter
 @Slf4j
 @AllArgsConstructor
 public final class Vector3f implements Cloneable, Reusable {
@@ -49,15 +50,12 @@ public final class Vector3f implements Cloneable, Reusable {
 			Float.NEGATIVE_INFINITY);
 
 	/** X 分量 / X component */
-	@Getter
 	public float x;
 
 	/** Y 分量 / Y component */
-	@Getter
 	public float y;
 
 	/** Z component / Z component */
-	@Getter
 	public float z;
 
 	/**

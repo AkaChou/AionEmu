@@ -12,43 +12,30 @@ import lombok.AccessLevel;
  * House Bid Entry model.
  */
 
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HouseBidEntry implements Cloneable {
 	/** 返回条目索引 / Returns the entry index*/
-	@Getter
-	@Setter
 	private int entryIndex;
 	/** 返回 land id / Returns the land id */
-	@Getter
 	private int landId;
 	/** 返回 address / Returns the address */
-	@Getter
 	private int address;
 	/** 返回 building id / Returns the building id */
-	@Getter
-	@Setter
 	private int buildingId;
 	/** 获取房屋类型。 / Returns the house type. */
-	@Getter
 	private HouseType houseType;
 	/** 返回 bid price / Returns the bid price */
-	@Getter
-	@Setter
 	private long bidPrice;
 	private final long unk2 = 100000;
 	/** 返回 bid count / Returns the bid count */
-	@Getter
 	private int bidCount;
 	/** 返回映射 ID / Returns the map id */
-	@Getter
 	private int mapId;
 	/** 返回 last bidding player / Returns the last bidding player */
-	@Getter
-	@Setter
 	private int lastBiddingPlayer;
 	/** 返回 last bid time / Returns the last bid time */
-	@Getter
-	@Setter
 	private long lastBidTime;
 
 	public HouseBidEntry(House house, int index, long initialBid) {

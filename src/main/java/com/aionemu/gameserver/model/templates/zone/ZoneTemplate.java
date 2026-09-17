@@ -18,6 +18,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Zone")
 public class ZoneTemplate {
@@ -26,34 +27,28 @@ public class ZoneTemplate {
 	 * 获取 points 属性值。
 	 * Gets the value of the points property.
 	 */
-	@Getter
 	@XmlElement
 	protected Points points;
 
 	/** 获取圆柱。 / Returns the cylinder. */
-	@Getter
 	@XmlElement
 	protected Cylinder cylinder;
 
 	/** 获取球体。 / Returns the sphere. */
-	@Getter
 	@XmlElement
 	protected Sphere sphere;
 
 	/** 获取半球。 / Returns the semisphere. */
-	@Getter
 	@XmlElement
 	protected Semisphere semisphere;
 
 	/** 返回 flags / Returns the flags */
-	@Getter
 	@XmlAttribute
 	protected int flags = -1;
 
 	/**
 	 * @return the priority
 	 */
-	@Getter
 	@XmlAttribute
 	protected int priority;
 
@@ -78,31 +73,26 @@ public class ZoneTemplate {
 	 * 获取 mapid 属性值。
 	 * Gets the value of the mapid property.
 	 */
-	@Getter
 	@XmlAttribute
 	protected int mapid;
 
 	/** 返回攻城 ID / Returns the siege id */
-	@Getter
 	@XmlAttribute(name = "siege_id")
 	protected List<Integer> siegeId;
 
 	/** 返回城镇 ID / Returns the town id */
-	@Getter
 	@XmlAttribute(name = "town_id")
 	private int townId;
 
 	/**
 	 * @return the type
 	 */
-	@Getter
 	@XmlAttribute(name = "area_type")
 	protected AreaType areaType = AreaType.POLYGON;
 
 	/**
 	 * @return the zoneType
 	 */
-	@Getter
 	@XmlAttribute(name = "zone_type")
 	protected ZoneClassName zoneType = ZoneClassName.SUB;
 

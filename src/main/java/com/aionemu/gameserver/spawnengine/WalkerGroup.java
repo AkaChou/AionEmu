@@ -25,6 +25,7 @@ import lombok.Getter;
  * @author vlog
  * @modified Rolandas
  */
+@Getter
 @Slf4j
 public class WalkerGroup {
 
@@ -62,7 +63,6 @@ public class WalkerGroup {
 	 * 编队整体当前步骤。
 	 * Current group-wide route step.
 	 */
-	@Getter
 	private volatile int groupStep;
 
 	/**

@@ -13,22 +13,20 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Ai")
 public class Ai {
 
 	/** 返回 summons / Returns the summons */
-	@Getter
 	@XmlElement(name = "summons")
 	private Summons summons;
 
 	/** 返回 bombs / Returns the bombs */
-	@Getter
 	@XmlElement(name = "bombs")
 	private Bombs bombs;
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npcId")
 	private int npcId;
 }

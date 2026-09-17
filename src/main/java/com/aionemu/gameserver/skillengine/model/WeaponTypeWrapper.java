@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author kecimis
  */
+@Getter
 public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 
 	/**
@@ -19,14 +20,12 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * Gets main-hand weapon type.
 	 *
 	 */
-	@Getter
 	private WeaponType mainHand = null;
 	/**
 	 * 获取副手武器类型。
 	 * Gets off-hand weapon type.
 	 *
 	 */
-	@Getter
 	private WeaponType offHand = null;
 
 	/**

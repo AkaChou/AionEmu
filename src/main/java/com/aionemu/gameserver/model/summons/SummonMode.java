@@ -7,6 +7,7 @@ import lombok.Getter;
  * Summon mode: attack/guard/rest/release.
  */
 
+@Getter
 public enum SummonMode {
 	/** 攻击 / Attack */
 	ATTACK(0),
@@ -20,7 +21,6 @@ public enum SummonMode {
 	UNK(5);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	SummonMode(int id) {

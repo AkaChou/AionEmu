@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestItems")
 public class QuestItems {
@@ -22,7 +23,6 @@ public class QuestItems {
 	 *
 	 * @return 物品 ID / possible object is {@link Integer}
 	 */
-	@Getter
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
 	/**
@@ -31,7 +31,6 @@ public class QuestItems {
 	 *
 	 * @return 数量 / possible object is {@link Integer}
 	 */
-	@Getter
 	@XmlAttribute
 	protected Integer count;
 

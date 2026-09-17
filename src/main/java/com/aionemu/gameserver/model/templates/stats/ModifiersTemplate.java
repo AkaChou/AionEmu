@@ -18,6 +18,7 @@ import lombok.Getter;
  *
  * @author xavier
  */
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "modifiers")
 public class ModifiersTemplate {
@@ -28,11 +29,9 @@ public class ModifiersTemplate {
 			@XmlElement(name = "rate", type = com.aionemu.gameserver.model.stats.calc.functions.StatRateFunction.class),
 			@XmlElement(name = "set", type = com.aionemu.gameserver.model.stats.calc.functions.StatSetFunction.class) })
 	/** 获取修正器。 / Returns the modifiers. */
-	@Getter
 	private List<StatFunction> modifiers;
 
 	/** 返回概率 / Returns the chance*/
-	@Getter
 	@XmlAttribute
 	private float chance = 100;
 

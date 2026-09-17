@@ -16,6 +16,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShoutGroup", propOrder = { "shoutNpcs" })
 public class ShoutGroup {
@@ -28,7 +29,6 @@ public class ShoutGroup {
 	 * Gets the value of the clientAi property
 	 * @return 可能的对象类型 / possible object is {@link String }
 	 */
-	@Getter
 	@XmlAttribute(name = "client_ai")
 	protected String clientAi;
 

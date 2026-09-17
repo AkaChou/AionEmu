@@ -20,9 +20,9 @@ import lombok.Getter;
  * Kamar Battlefield Reward for instance logic.
  */
 
+@Getter
 public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlayerReward> {
 	/** 返回 cap points / Returns the cap points */
-	@Getter
 	private final int capPoints;
 	private final MutableInt asmodiansPoints = new MutableInt(3800);
 	private final MutableInt elyosPoins = new MutableInt(3800);
@@ -35,7 +35,6 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	private long instanceTime;
 	private final int bonusTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 
 	public KamarBattlefieldReward(Integer mapId, int instanceId, WorldMapInstance instance) {

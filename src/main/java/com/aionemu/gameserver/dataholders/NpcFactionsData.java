@@ -19,6 +19,7 @@ import lombok.Getter;
  *
  * @author vlog
  */
+@Getter
 @XmlRootElement(name = "npc_factions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NpcFactionsData {
@@ -29,7 +30,6 @@ public class NpcFactionsData {
 	 *
 	 * @return 势力模板列表 / faction template list
 	 */
-	@Getter
 	@XmlElement(name = "npc_faction", required = true)
 	protected List<NpcFactionTemplate> npcFactionsData;
 	private final IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();

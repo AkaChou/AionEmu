@@ -138,6 +138,8 @@ import lombok.Setter;
  * Player game object.
  */
 
+@Getter
+@Setter
 public class Player extends Creature {
 
 	public RideInfo ride;
@@ -145,30 +147,19 @@ public class Player extends Creature {
 	public InGameShop inGameShop;
 	public WindstreamPath windstreamPath;
 	public WindstreamPath pendingWindstreamPath;
-	@Getter
-	@Setter
 	private PlayerAppearance playerAppearance;
 	/**
 	 * 仅用于 Size 管理员命令。
 	 * Only use for the Size admin command.
 	 */
-	@Getter
-	@Setter
 	private PlayerAppearance savedPlayerAppearance;
 	private final PlayerCommonData playerCommonData;
-	@Getter
 	private final Account playerAccount;
 	/**
 	 * @param legionMember the legionMember to set
 	 */
-	@Getter
-	@Setter
 	private LegionMember legionMember;
-	@Getter
-	@Setter
 	private MacroList macroList;
-	@Getter
-	@Setter
 	private PlayerSkillList skillList;
 	private PlayerEquippedStigmaList equipped_stigma;
 	/**
@@ -177,30 +168,19 @@ public class Player extends Creature {
 	 *
 	 * @return FriendList
 	 */
-	@Getter
-	@Setter
 	private FriendList friendList;
-	@Getter
-	@Setter
 	private BlockList blockList;
 	private PetList toyPetList;
 	private MinionList minionList;
-	@Getter
-	@Setter
 	private Mailbox mailbox;
 	/**
 	 * @return the player private store
 	 */
-	@Getter
-	@Setter
 	private PrivateStore store;
-	@Getter
 	private TitleList titleList;
 	/**
 	 * @return the questStatesList
 	 */
-	@Getter
-	@Setter
 	private QuestStateList questStateList;
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
@@ -209,21 +189,14 @@ public class Player extends Creature {
 	 * 是否为该玩家开启任务追踪日志；仅内存状态，不持久化。
 	 * Whether quest trace logging is enabled for this player; in-memory only, not persisted.
 	 */
-	@Getter
-	@Setter
 	private volatile boolean questTraceEnabled = false;
-	@Getter
-	@Setter
 	private RecipeList recipeList;
 	private List<House> houses;
 	private ResponseRequester requester;
 	/**
 	 * @return 该玩家是否正在寻找小队 / Is this player looking for a group, true or false
 	 */
-	@Getter
-	@Setter
 	private boolean lookingForGroup = false;
-	@Getter
 	private Storage inventory;
 	private final Storage[] petBag = new Storage[StorageType.PET_BAG_MAX - StorageType.PET_BAG_MIN + 1];
 	private final Storage[] cabinets = new Storage[StorageType.HOUSE_WH_MAX - StorageType.HOUSE_WH_MIN + 1];
@@ -232,68 +205,48 @@ public class Player extends Creature {
 	/**
 	 * @return the inventory
 	 */
-	@Getter
-	@Setter
 	private Equipment equipment;
 	private EquipmentSettingList equipmentSettingList;
-	@Getter
-	@Setter
 	private HouseRegistry houseRegistry;
 	/**
 	 * @return the playerStatsTemplate
 	 */
-	@Getter
-	@Setter
 	private PlayerStatsTemplate playerStatsTemplate;
 	private final AbsoluteStatOwner absStatsHolder;
 	/**
 	 * @return the playerSettings
 	 */
-	@Getter
-	@Setter
 	private PlayerSettings playerSettings;
 	private com.aionemu.gameserver.model.team2.group.PlayerGroup playerGroup2;
 	private PlayerAllianceGroup playerAllianceGroup;
 	/**
 	 * @return the abyssRank
 	 */
-	@Getter
-	@Setter
 	private AbyssRank abyssRank;
 	/**
 	 * @return the npcFactions
 	 */
-	@Getter
-	@Setter
 	private NpcFactions npcFactions;
 	/**
 	 * @param rates the rates to set
 	 */
-	@Setter
 	private Rates rates;
 	/**
 	 * @return 0：普通；1：飞行；2：滑翔。 / 0: regular, 1: fly, 2: glide
 	 */
-	@Getter
 	private int flyState = 0;
 	/**
 	 * @return the isTrading
 	 */
-	@Getter
-	@Setter
 	private boolean isTrading;
 	/**
 	 * @return the prisonTimer
 	 */
-	@Getter
 	private long prisonTimer = 0;
-	@Getter
 	private boolean isGathering;
 	/**
 	 * @return the time in ms of start prison
 	 */
-	@Getter
-	@Setter
 	private long startPrison;
 	/**
 	 * 检查玩家是否无敌。
@@ -301,157 +254,101 @@ public class Player extends Creature {
 	 *
 	 * @return 是否无敌 / whether invulnerable
 	 */
-	@Getter
-	@Setter
 	private boolean invul;
 	/**
 	 * @return the flyController
 	 */
-	@Getter
-	@Setter
 	private FlyController flyController;
 	/**
 	 * @param craftingTask
 	 */
-	@Getter
-	@Setter
 	private CraftingTask craftingTask;
 	/**
 	 * @param flightTeleportId
 	 */
-	@Getter
-	@Setter
 	private int flightTeleportId;
 	/**
 	 * @param flightDistance
 	 */
-	@Getter
-	@Setter
 	private int flightDistance;
 	/**
 	 * @return the summon
 	 */
-	@Getter
-	@Setter
 	private Summon summon;
-	@Getter
-	@Setter
 	private SummonedObject<?> summonedObj;
 	/**
 	 * @param toyPet the toyPet to set
 	 */
-	@Setter
 	private Pet toyPet;
 	/**
 	 * @return the minions
 	 */
-	@Getter
-	@Setter
 	private Minion minion;
 	/**
 	 * @return
 	 */
-	@Getter
-	@Setter
 	private Kisk kisk;
 	private boolean isResByPlayer = false;
-	@Getter
-	@Setter
 	private int resurrectionSkill = 0;
 	private boolean isFlyingBeforeDeath = false;
 	/**
 	 * @param isGagged the isGagged to set
 	 */
-	@Getter
-	@Setter
 	private boolean isGagged = false;
 	private boolean edit_mode = false;
-	@Getter
-	@Setter
 	private Npc questFollowingNpc = null;
-	@Getter
-	@Setter
 	private Npc postman = null;
 	private boolean isInResurrectPosState = false;
 	/**
 	 * @param value Resurrection Positional X value to set
 	 */
-	@Getter
-	@Setter
 	private float resPosX = 0;
 	/**
 	 * @param value Resurrection Positional Y value to set
 	 */
-	@Getter
-	@Setter
 	private float resPosY = 0;
 	/**
 	 * @param value Resurrection Positional Z value to set
 	 */
-	@Getter
-	@Setter
 	private float resPosZ = 0;
 	/**
 	 * @param value 禁消耗飞行值效果状态 / status of NoFpConsum Effect
 	 */
-	@Getter
-	@Setter
 	private boolean underNoFPConsum = false;
 	/**
 	 * @param isAdminTeleportation
 	 */
-	@Setter
 	private boolean isAdminTeleportation = false;
 	private boolean cooldownZero = false;
 	private boolean isUnderInvulnerableWing = false;
 	private boolean isFlying = false;
-	@Getter
 	private boolean isWispable = true;
-	@Setter
 	private boolean isCommandUsed = false;
 	private int abyssRankListUpdateMask = 0;
-	@Getter
-	@Setter
 	private BindPointPosition bindPoint;
 	/**
 	 * @return the itemCoolDowns
 	 */
-	@Getter
 	private Map<Integer, ItemCooldown> itemCoolDowns;
 	/**
 	 * @return 传送门冷却列表 / portal cooldown list
 	 */
-	@Getter
 	private PortalCooldownList portalCooldownList;
-	@Getter
 	private CraftCooldownList craftCooldownList;
-	@Getter
 	private HouseObjectCooldownList houseObjectCooldownList;
-	@Getter
-	@Setter
 	private long nextSkillUse;
-	@Getter
-	@Setter
 	private long nextSummonSkillUse;
 	private ChainSkills chainSkills;
 	private final Map<AttackStatus, Long> lastCounterSkill = new HashMap<AttackStatus, Long>();
 	/**
 	 * @return the dualEffectValue
 	 */
-	@Getter
-	@Setter
 	private int dualEffectValue = 0;
 	private int rawKillcount = 0;
-	@Getter
-	@Setter
 	private int spreeLevel = 0;
 	private boolean hasBonus;
-	@Getter
-	@Setter
 	private int bonusId = 0;
 	private boolean hasAbyssBonus;
-	@Getter
-	@Setter
 	private int abyssId = 0;
 	/**
 	 * 玩家的静态信息。
@@ -459,26 +356,13 @@ public class Player extends Creature {
 	 */
 	private static final int CUBE_SPACE = 9;
 	private static final int WAREHOUSE_SPACE = 8;
-	@Getter
-	@Setter
 	private boolean isAttackMode = false;
-	@Getter
 	private long gatherableTimer = 0;
-	@Getter
-	@Setter
 	private long stopGatherable;
-	@Getter
-	@Setter
 	private String captchaWord;
-	@Getter
-	@Setter
 	private byte[] captchaImage;
 	private float instanceStartPosX, instanceStartPosY, instanceStartPosZ;
-	@Getter
-	@Setter
 	private int rebirthResurrectPercent = 1;
-	@Getter
-	@Setter
 	private int rebirthSkill = 0;
 	/**
 	 * 设置 connection 玩家。
@@ -486,60 +370,38 @@ public class Player extends Creature {
 	 *
 	 * @param clientConnection
 	 */
-	@Getter
-	@Setter
 	private AionConnection clientConnection;
 	private FlyPathEntry flyLocationId;
-	@Getter
 	private long flyStartTime;
 	/**
 	 * @return Returns the emotions.
 	 */
-	@Getter
-	@Setter
 	private EmotionList emotions;
 	/**
 	 * @return the motions
 	 */
-	@Getter
-	@Setter
 	private MotionList motions;
 	/**
 	 * @return the flyReuseTime
 	 */
-	@Getter
-	@Setter
 	private long flyReuseTime;
 	private boolean isMentor;
 	private long lastMsgTime = 0;
 	private int floodMsgCount = 0;
 	private long onlineTime = 0;
-	@Getter
-	@Setter
 	private int lootingNpcOid;
-	@Setter
 	private boolean rebirthRevive;
 	private int subtractedSupplementsCount;
 	private int subtractedSupplementId;
-	@Getter
-	@Setter
 	private int portAnimation;
-	@Getter
 	private boolean isInSprintMode;
-	@Getter
-	@Setter
 	private ItemUseObserver craftObserver;
-	@Getter
 	private List<ActionObserver> rideObservers;
-	@Getter
 	private List<ActionObserver> hotTeleObservers;
 	private Protector protectorList;
 	private Conqueror conquerorList;
-	@Getter
 	byte buildingOwnerStates = PlayerHouseOwnerFlags.BUY_STUDIO_ALLOWED.getId();
-	@Getter
 	private int battleReturnMap;
-	@Getter
 	private float[] battleReturnCoords;
 	public int speedHackCounter;
 	public int abnormalHackCounter;
@@ -549,62 +411,32 @@ public class Player extends Creature {
 	private final PlayerVarsDAO daoVars = DAOManager.getDAO(PlayerVarsDAO.class);
 	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
-	@Getter
-	@Setter
 	private int robotId = 0;
 	public int A_STATION_TYPE = 0;
-	@Getter
-	@Setter
 	private boolean isOnAStation = false;
-	@Getter
-	@Setter
 	private int playersBonusId = 0;
 	private int transformModelId;
 	private int transformItemId;
 	private int transformPanelId;
-	@Getter
-	@Setter
 	private boolean isInWindstream = false;
-	@Getter
-	@Setter
 	private int silenceReportCount = 0;
-	@Getter
-	@Setter
 	private boolean isInCrazy;
 	private int rndPoint = 0;
 	private int crazyKillcount = 0;
-	@Getter
-	@Setter
 	private int crazyLevel = 0;
-	@Getter
-	@Setter
 	private F2p f2p;
 	private PlayerCPList cp;
 	private PlayerABList ab;
 	private PlayerEventWindowList ew;
-	@Getter
-	@Setter
 	private PlayerWardrobeList wardrobe;
 	private PlayerLunaShop lunaShop;
 	private PlayerSweep shugoSweep;
-	@Getter
-	@Setter
 	private int linkedSkill;
-	@Getter
-	@Setter
 	private int stigmaSet;
-	@Getter
-	@Setter
 	private int goldenStarOfLodi;
-	@Getter
-	@Setter
 	private int unkPoint1;
 	private int cp_slot1 = 0, cp_slot2 = 0, cp_slot3 = 0, cp_slot4 = 0, cp_slot5 = 0, cp_slot6 = 0;
-	@Getter
-	@Setter
 	private boolean enchantBoost;
-	@Getter
-	@Setter
 	private boolean authorizeBoost;
 	private boolean setMinionSpawned;
 	private Map<Integer, MaxCountOfDay> maxCountEvent;
@@ -612,126 +444,84 @@ public class Player extends Creature {
 	 * 月华骰子游戏。
 	 * Luna Dice Game
 	 */
-	@Getter
 	private int LunaDiceGame;
 	/** 返回 luna dice game try / Returns the luna dice game try */
-	@Getter
-	@Setter
 	private int LunaDiceGameTry = 0;
 	// PvP 系统： / Pvp System:
 	/**
 	 * @return 是否无规则状态 / Whether lawless
 	 */
-	@Getter
 	private boolean lawless = false;
 	/**
 	 * @return PVP 系统 / PVP System
 	 */
-	@Getter
 	private boolean bandit = false;
 	/** 设置 battleground / Sets the battleground */
-	@Getter
-	@Setter
 	private Battleground battleground = null;
 	/** 返回 last action / Returns the last action */
-	@Getter
 	private long lastAction = 0;
 	/** 设置 bg index / Sets the bg index */
-	@Getter
-	@Setter
 	private int bgIndex = 0;
 	/** 设置 spectating / Sets the spectating */
-	@Getter
-	@Setter
 	private boolean isSpectating = false;
 	/** 设置 total kills / Sets the total kills */
-	@Getter
-	@Setter
 	private int totalKills = 0;
 	private int arenaKillStreak = 0;
 	/** 返回 bandit kill streak / Returns the bandit kill streak */
-	@Getter
 	private int banditKillStreak = 0;
 	/**
 	 * @return 是否离开。 / Whether afk
 	 */
-	@Getter
-	@Setter
 	private boolean isAfk;
 	/** 是否处于自由混战 / Whether ffa */
-	@Getter
-	@Setter
 	private boolean isFFA = false;
 	private int hallOfTenacityCoupleId = 0;
 	private int hallOfTenacityVSId = 0;
 	private int hallOfTenacityOpponentId = 0;
 
 	/** 是否决斗 / Whether in duel */
-	@Getter
-	@Setter
 	private boolean isInDuel;
 	/**
 	 * 玩家技能动画列表。
 	 * Player Skill Animation List
 	 */
-	@Getter
 	private SkillSkinList skillSkinList;
 	/** 是否盗贼 / Whether thieves*/
-	@Getter
 	private boolean isThieves = false;
 	/** 是否处于盗贼复仇决斗。 / Whether in a thieves revenge duel. */
-	@Getter
-	@Setter
 	private boolean thievesDuel;
 	/** 设置 thieves / Sets the thieves */
-	@Getter
-	@Setter
 	private ThievesStatusList thieves;
 	/**
 	 * 活动调用与注册。
 	 * EventCaller + Event Reg
 	 */
-	@Getter
-	@Setter
 	private int checkpoints;
 	/** 返回数量玩家集合 / Returns the count players */
-	@Getter
-	@Setter
 	private int countPlayers;
 	/**
 	 * @return 是否已注册活动 / Whether reged event
 	 */
-	@Getter
-	@Setter
 	private boolean isRegedEvent = false;
 	/**
 	 * @return 活动是否已开始 / Whether event started
 	 */
-	@Getter
-	@Setter
 	private boolean isEventStarted = false;
 	/** 返回 queued players / Returns the queued players */
-	@Getter
 	public List<Player> QueuedPlayers;
 	/**
 	 * 自定义 PvE 与 PK 系统相关变量。
 	 * These variables are for the custom PvE and PK system
 	 */
-	@Getter
-	@Setter
 	private boolean isInPkMode;
 	/**
 	 * @return 是否处于 PvE 模式 / Whether in PvE mode
 	 */
-	@Getter
-	@Setter
 	private boolean isInPvEMode;
 	// 这些变量用于自定义 RP 与 GM 系统 / These variables are for the custom RP and GM system
 	/**
 	 * @return GM 模式 / GM Mode
 	 */
-	@Getter
-	@Setter
 	private boolean isGmMode = false;
 	private long creationDay;
 
@@ -2699,13 +2489,9 @@ public class Player extends Creature {
 	// 竞赛活动部分 / competiton event part
 	private GoldArenaRank arenaGoldrank;
 	/** 获取高塔军阶。 / Returns the tower rank. */
-	@Getter
-	@Setter
 	private TowerOfChallengeRank towerRank;
 	private Arena6V6Ranking arena6v6Rank;
 	/** 返回 tenacity rank / Returns the tenacity rank */
-	@Getter
-	@Setter
 	private ArenaOfTenacityRank tenacityRank;
 
 	/** 返回 arena gold rank / Returns the arena gold rank */
@@ -2775,7 +2561,5 @@ public class Player extends Creature {
 	}
 
 	/** 返回 disassembly item lists / Returns the disassembly item lists */
-	@Getter
-	@Setter
 	private List<DisassembleItem> disassemblyItemLists = new ArrayList<DisassembleItem>();
 }

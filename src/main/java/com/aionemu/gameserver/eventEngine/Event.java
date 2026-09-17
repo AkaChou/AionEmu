@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author wanke
  */
+@Getter
 public abstract class Event implements Runnable {
 
 	/** 最高优先级 / Maximum priority. */
@@ -28,14 +29,12 @@ public abstract class Event implements Runnable {
 	 * 当前优先级（越大越优先）。
 	 * Current priority (higher runs sooner).
 	 */
-	@Getter
 	private int priority = DEFAULT_PRIORITY;
 
 	/**
 	 * 事件是否已结束。
 	 * Whether the event has finished.
 	 */
-	@Getter
 	private boolean finished = false;
 
 	/**

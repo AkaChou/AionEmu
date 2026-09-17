@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KeyItem")
 public class KeyItem {
@@ -19,7 +20,6 @@ public class KeyItem {
 	/**
 	 * @return 钥匙 ID / the id
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 	@XmlAttribute(name = "itemid")
@@ -27,7 +27,6 @@ public class KeyItem {
 	/**
 	 * @return 数量 / the quantity
 	 */
-	@Getter
 	@XmlAttribute(name = "quantity")
 	protected int quantity;
 

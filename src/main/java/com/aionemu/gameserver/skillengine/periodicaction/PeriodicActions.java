@@ -16,6 +16,7 @@ import lombok.Getter;
  *
  * @author MATTY (ADev.Team)
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PeriodicActions", propOrder = "periodicActions")
 public class PeriodicActions {
@@ -33,14 +34,12 @@ public class PeriodicActions {
 	 *
 	 * @return 周期动作列表 / periodic actions
 	 */
-	@Getter
 	protected List<PeriodicAction> periodicActions;
 
 	/**
 	 * 检查间隔（毫秒）。
 	 * Check interval in milliseconds.
 	 */
-	@Getter
 	@XmlAttribute(name = "checktime")
 	protected int checktime;
 }

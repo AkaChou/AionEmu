@@ -30,12 +30,12 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EnchantItemAction")
 public class EnchantItemAction extends AbstractItemAction {
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	private int count;
 
@@ -49,7 +49,6 @@ public class EnchantItemAction extends AbstractItemAction {
 	private boolean manastone_only;
 
 	/** 返回概率 / Returns the chance*/
-	@Getter
 	@XmlAttribute(name = "chance")
 	private float chance;
 

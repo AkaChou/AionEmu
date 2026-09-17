@@ -12,24 +12,21 @@ import lombok.Setter;
  * Transform Model game object.
  */
 
+@Getter
+@Setter
 public class TransformModel {
 	private int modelId;
 	private final int originalModelId;
 	private final TransformType originalType;
 	/** 设置变身类型。 / Sets the transform type. */
-	@Setter
 	private TransformType transformType;
 	/** 设置面板 ID / Sets the panel id */
-	@Setter
 	private int panelId;
 	/** 是否激活。 / Whether active. */
-	@Getter
-	@Setter
 	private boolean isActive = false;
 	private TribeClass transformTribe;
 	private TribeClass overrideTribe;
 	/** 设置物品 ID / Sets the item id */
-	@Setter
 	private int ItemId;
 	private Effect activeTransformEffect;
 	private int transformLevel;

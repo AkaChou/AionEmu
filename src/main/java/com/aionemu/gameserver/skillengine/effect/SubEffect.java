@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SubEffect")
 public class SubEffect {
@@ -22,7 +23,6 @@ public class SubEffect {
 	 *
 	 * @return 技能 ID / skill id
 	 */
-	@Getter
 	@XmlAttribute(name = "skill_id", required = true)
 	private int skillId;
 	/**
@@ -31,7 +31,6 @@ public class SubEffect {
 	 *
 	 * @return 触发概率 / chance
 	 */
-	@Getter
 	@XmlAttribute
 	private int chance = 100;
 
@@ -41,7 +40,6 @@ public class SubEffect {
 	 *
 	 * @return true 表示使用印记层数 / true if using signet burst count
 	 */
-	@Getter
 	@XmlAttribute(name = "addeffect")
 	private boolean addEffect = false;
 }

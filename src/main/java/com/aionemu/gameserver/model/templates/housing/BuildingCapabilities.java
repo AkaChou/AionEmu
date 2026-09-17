@@ -13,6 +13,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "caps")
@@ -22,7 +23,6 @@ public class BuildingCapabilities {
 	protected boolean addon;
 
 	/** 返回徽章 ID / Returns the emblem id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int emblemId;
 

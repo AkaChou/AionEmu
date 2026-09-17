@@ -12,18 +12,17 @@ import lombok.AllArgsConstructor;
  *
  * @author Mr. Poke
  */
+@Getter
 @AllArgsConstructor
 public class Title implements IExpirable {
 
 	/**
 	 * @return 称号模板 / the template
 	 */
-	@Getter
 	private final TitleTemplate template;
 	/**
 	 * @return 称号 ID / the id
 	 */
-	@Getter
 	private final int id;
 	private final int dispearTime;
 

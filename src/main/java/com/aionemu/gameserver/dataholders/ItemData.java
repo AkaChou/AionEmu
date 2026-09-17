@@ -32,6 +32,7 @@ import lombok.Getter;
  *
  * @author Luno
  */
+@Getter
 @XmlRootElement(name = "item_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemData extends ReloadableData {
@@ -53,7 +54,6 @@ public class ItemData extends ReloadableData {
 	 *
 	 * @return 等级到魔石列表的映射 / map of level to manastone list
 	 */
-	@Getter
 	@XmlTransient
 	Map<Integer, List<ItemTemplate>> manastones = new HashMap<Integer, List<ItemTemplate>>();
 
@@ -63,7 +63,6 @@ public class ItemData extends ReloadableData {
 	 *
 	 * @return ID 到物品模板的映射 / map of id to item template
 	 */
-	@Getter
 	@XmlTransient
 	Map<Integer, ItemTemplate> allItems;
 

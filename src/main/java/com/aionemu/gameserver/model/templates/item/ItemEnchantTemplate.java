@@ -19,11 +19,11 @@ import lombok.Getter;
  * Item enchant template: organizes enchant bonuses by type and level.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantTemplate")
 public class ItemEnchantTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 

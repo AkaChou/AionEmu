@@ -17,33 +17,25 @@ import lombok.Setter;
  *
  * @author Simple
  */
+@Getter
+@Setter
 @Slf4j
 public class LegionMemberEx extends LegionMember {
 
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
-	@Setter
 	private String name;
 	/** 获取玩家职业。 / Returns the player class. */
-	@Getter
-	@Setter
 	private PlayerClass playerClass;
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	private int level;
 	/** 设置最后在线时间。 / Sets the last online time. */
-	@Setter
 	private Timestamp lastOnline;
 	/** 返回世界 ID。 / Returns the world id. */
-	@Getter
-	@Setter
 	private int worldId;
 	/**
 	 * @param online the online to set
 	 */
-	@Getter
-	@Setter
 	private boolean online = false;
 
 	/**

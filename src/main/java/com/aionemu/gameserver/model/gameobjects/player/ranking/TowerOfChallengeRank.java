@@ -9,33 +9,22 @@ import lombok.Setter;
  * Tower Of Challenge Rank game object.
  */
 
+@Getter
+@Setter
 public class TowerOfChallengeRank {
 	/** 获取军阶。 / Returns the rank. */
-	@Getter
-	@Setter
 	private int rank;
 	/** 返回 best rank / Returns the best rank */
-	@Getter
-	@Setter
 	private int bestRank;
 	/** 返回 low rank / Returns the low rank */
-	@Getter
-	@Setter
 	private int lowRank;
 	/** 返回当前时间 / Returns the current time */
-	@Getter
-	@Setter
 	private int currentTime;
 	/** 返回上次时间 / Returns the last time*/
-	@Getter
-	@Setter
 	private int lastTime;
 	/** 返回 best time / Returns the best time */
-	@Getter
-	@Setter
 	private int bestTime;
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	public TowerOfChallengeRank(int rank, int bestRank, int low_rank, int current_time, int last_time, int best_time) {

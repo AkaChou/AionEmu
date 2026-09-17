@@ -22,6 +22,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlRootElement(name = "skill_tree")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SkillTreeData {
@@ -35,7 +36,6 @@ public class SkillTreeData {
 	 *
 	 * @return 哈希到模板列表的映射 / map of hash to template list
 	 */
-	@Getter
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 

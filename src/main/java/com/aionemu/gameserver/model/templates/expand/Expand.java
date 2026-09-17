@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Simple
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Expand")
 public class Expand {
@@ -19,13 +20,11 @@ public class Expand {
 	/**
 	 * @return 扩展等级 / The level
 	 */
-	@Getter
 	@XmlAttribute(name = "level", required = true)
 	protected int level;
 	/**
 	 * @return 扩展价格（基纳） / The price
 	 */
-	@Getter
 	@XmlAttribute(name = "price", required = true)
 	protected int price;
 }

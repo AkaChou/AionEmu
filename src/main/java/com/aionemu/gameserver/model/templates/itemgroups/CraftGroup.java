@@ -20,12 +20,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public abstract class CraftGroup extends BonusItemGroup {
 
 	/**
 	 * @return the dataHolder
 	 */
-	@Getter
 	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 

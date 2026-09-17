@@ -15,23 +15,17 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 public class SiegeSpawnTemplate extends SpawnTemplate {
 
 	/** 返回攻城 ID / Returns the siege id */
-	@Getter
-	@Setter
 	private int siegeId;
 	/** 获取要塞种族。 / Returns the siege race. */
-	@Getter
-	@Setter
 	private SiegeRace siegeRace;
 	/** 获取要塞刷新点类型。 / Returns the siege spawn type. */
-	@Getter
-	@Setter
 	private SiegeSpawnType siegeSpawnType;
 	/** 获取要塞模式类型。 / Returns the siege mod type. */
-	@Getter
-	@Setter
 	private SiegeModType siegeModType;
 
 	public SiegeSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

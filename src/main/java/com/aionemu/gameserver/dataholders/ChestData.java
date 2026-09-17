@@ -22,6 +22,7 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 @XmlRootElement(name = "chest_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ChestData {
@@ -32,7 +33,6 @@ public class ChestData {
 	 *
 	 * @return 宝箱模板列表 / chest template list
 	 */
-	@Getter
 	@XmlElement(name = "chest")
 	private List<ChestTemplate> chests;
 

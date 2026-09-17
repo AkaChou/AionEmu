@@ -11,40 +11,35 @@ import lombok.NoArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class PlayerSettings {
 
 	/**
 	 * @return the persistentState
 	 */
-	@Getter
-	@Setter
 	private PersistentState persistentState;
 
 	/**
 	 * @return the uiSettings
 	 */
-	@Getter
 	private byte[] uiSettings;
 	/**
 	 * @return the shortcuts
 	 */
-	@Getter
 	private byte[] shortcuts;
 	/**
 	 * @return the houseBuddies
 	 */
-	@Getter
 	private byte[] houseBuddies;
 	/**
 	 * @return the deny
 	 */
-	@Getter
 	private int deny = 0;
 	/**
 	 * @return the display
 	 */
-	@Getter
 	private int display = 0;
 
 	public PlayerSettings(byte[] uiSettings, byte[] shortcuts, byte[] houseBuddies, int deny, int display) {

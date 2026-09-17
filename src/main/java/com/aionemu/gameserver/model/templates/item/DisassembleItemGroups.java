@@ -16,18 +16,16 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "itemGroup")
 public class DisassembleItemGroups
 {
-	@Getter
 	@XmlAttribute(name = "gProb")
 	private int GroupProb;
 	/** 获取最小等级。 / Returns the min level. */
-	@Getter
 	@XmlAttribute(name = "minLevel")
 	private int MinLevel;
 	/** 获取最大等级。 / Returns the max level. */
-	@Getter
 	@XmlAttribute(name = "maxLevel")
 	private int MaxLevel;
 	@XmlList
@@ -36,7 +34,6 @@ public class DisassembleItemGroups
 	@XmlAttribute(name = "race")
 	private Race PlayerRace = Race.PC_ALL;
 	/** 获取队伍物品。 / Returns the group items. */
-	@Getter
 	@XmlElement(name = "item")
 	private List<DisassembleItems> GroupItems;
 

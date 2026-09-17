@@ -18,14 +18,13 @@ import lombok.Getter;
  *
  * @author Falke_34
  */
+@Getter
 public class Minion extends VisibleObject {
 
 	/** 返回主人 / Returns the master. */
-	@Getter
 	private final Player master;
 	private final MoveController moveController;
 	private final MinionTemplate minionTemplate;
-	@Getter
 	private final Set<Integer> grantedSkills = new HashSet<>();
 
 	public Minion(MinionTemplate minionTemplate, MinionController controller, MinionCommonData commonData,

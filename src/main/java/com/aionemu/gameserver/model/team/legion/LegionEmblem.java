@@ -10,72 +10,59 @@ import lombok.Setter;
  *
  * @author Simple modified cura
  */
+@Getter
+@Setter
 public class LegionEmblem {
 
 	/**
 	 * @return the emblemId
 	 */
-	@Getter
 	private int emblemId = 0x00;
 	/**
 	 * @return the color_r
 	 */
-	@Getter
 	private int color_r = 0x00;
 	/**
 	 * @return the color_g
 	 */
-	@Getter
 	private int color_g = 0x00;
 	/**
 	 * @return the color_b
 	 */
-	@Getter
 	private int color_b = 0x00;
 	/**
 	 * @return the defaultEmblem
 	 */
-	@Getter
 	private boolean defaultEmblem = true;
 	/**
 	 * @param emblemType the emblemType to set
 	 */
-	@Getter
-	@Setter
 	private LegionEmblemType emblemType = LegionEmblemType.DEFAULT;
 	/**
 	 * @return the persistentState
 	 */
-	@Getter
 	private PersistentState persistentState;
 
 	/**
 	 * @param isUploading the isUploading to set
 	 */
-	@Getter
-	@Setter
 	private boolean isUploading = false;
 	/**
 	 * @param emblemSize the emblemSize to set
 	 */
-	@Getter
-	@Setter
 	private int uploadSize = 0;
 	/**
 	 * @return the uploadedSize
 	 */
-	@Getter
 	private int uploadedSize = 0;
 	/**
 	 * @return the uploadData
 	 */
-	@Getter
 	private byte[] uploadData;
 
 	/**
 	 * @return the customEmblemData
 	 */
-	@Getter
 	private byte[] customEmblemData;
 
 	/**

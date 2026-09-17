@@ -17,23 +17,19 @@ import lombok.NoArgsConstructor;
  * Tower Of Eternity Location for towerofeternity logic.
  */
 
+@Getter
 @NoArgsConstructor
 public class TowerOfEternityLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected TowerOfEternityTemplate template;
 	/** 返回当前永恒之塔 / Returns the active tower of eternity */
-	@Getter
 	protected TowerOfEternity<TowerOfEternityLocation> activeTowerOfEternity;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public TowerOfEternityLocation(TowerOfEternityTemplate template) {

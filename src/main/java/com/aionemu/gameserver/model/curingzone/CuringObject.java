@@ -15,13 +15,12 @@ import lombok.Getter;
  * Curing Object for curingzone logic.
  */
 
+@Getter
 public class CuringObject extends VisibleObject {
 
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	private final CuringTemplate template;
 	/** 返回范围 / Returns the range*/
-	@Getter
 	private final float range;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

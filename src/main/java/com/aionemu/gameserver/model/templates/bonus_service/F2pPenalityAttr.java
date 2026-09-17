@@ -15,25 +15,21 @@ import lombok.Setter;
  * F2P penalty attribute template (static data/XML).
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "F2pPenalityAttr")
 public class F2pPenalityAttr {
 
 	/** 获取属性。 / Returns the stat. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected StatEnum stat;
 
 	/** 返回 func / Returns the func */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected Func func;
 
 	/** 获取值。 / Returns the value. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected int value;
 }

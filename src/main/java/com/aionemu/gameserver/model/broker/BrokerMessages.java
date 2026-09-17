@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author kosyachok
  */
+@Getter
 public enum BrokerMessages {
 	/** 无法登记物品 / Cant Register Item */
 	CANT_REGISTER_ITEM(2),
@@ -17,7 +18,6 @@ public enum BrokerMessages {
 	NO_ENOUGHT_KINAH(5);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	BrokerMessages(int id) {

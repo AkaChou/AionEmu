@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PlayerMovedCondition")
 public class PlayerMovedCondition extends Condition {
@@ -24,7 +25,6 @@ public class PlayerMovedCondition extends Condition {
 	 *
 	 * @return 允许标记 / allow flag
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected boolean allow;
 

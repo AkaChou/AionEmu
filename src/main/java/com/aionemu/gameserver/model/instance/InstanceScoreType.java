@@ -7,6 +7,7 @@ import lombok.Getter;
  * Instance Score Type enumeration.
  */
 
+@Getter
 public enum InstanceScoreType {
 	/** 准备中 / Preparing. */
 	PREPARING(1024 * 1024),
@@ -16,7 +17,6 @@ public enum InstanceScoreType {
 	END_PROGRESS(3 * 1024 * 1024);
 
 	/** 返回 ID。 / Returns the id. */
-	@Getter
 	private final int id;
 
 	InstanceScoreType(int id) {

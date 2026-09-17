@@ -9,6 +9,7 @@ import lombok.Getter;
  * Item acquisition type: AP/abyss/reward/coupon.
  */
 
+@Getter
 @XmlType(name = "acquisitionType")
 @XmlEnum
 public enum AcquisitionType {
@@ -22,7 +23,6 @@ public enum AcquisitionType {
 	COUPON(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	AcquisitionType(int id) {

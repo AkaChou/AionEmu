@@ -10,49 +10,35 @@ import lombok.Setter;
  *
  * @author ATracer, Sippolo, kecimis
  */
+@Getter
+@Setter
 public class AttackResult {
 
 	/** 伤害值（可保留小数） / Damage value (may keep fractions) */
 	private float damage;
 
 	/** 攻击状态 / Attack status */
-	@Getter
 	private final AttackStatus attackStatus;
 
 	/** 命中类型 / Hit type */
 	private HitType hitType = HitType.EVERYHIT;
 
 	/** 护盾类型位掩码 / Shield type bitmask */
-	@Getter
 	private int shieldType;
 	/** 反射伤害 / Reflected damage */
-	@Getter
-	@Setter
 	private int reflectedDamage = 0;
 	/** 反射技能 ID / Reflected skill id */
-	@Getter
-	@Setter
 	private int reflectedSkillId = 0;
 	/** 保护技能 ID / Protected skill id */
-	@Getter
-	@Setter
 	private int protectedSkillId = 0;
 	/** 被保护减免的伤害 / Damage absorbed by protector */
-	@Getter
-	@Setter
 	private int protectedDamage = 0;
 	/** 保护者对象 ID / Protector object id */
-	@Getter
-	@Setter
 	private int protectorId = 0;
 	/** 护盾消耗的 MP / MP consumed by shield */
-	@Getter
-	@Setter
 	private int shieldMp = 0;
 
 	/** 是否触发子效果 / Whether to launch a sub-effect */
-	@Getter
-	@Setter
 	private boolean launchSubEffect = true;
 
 	/**

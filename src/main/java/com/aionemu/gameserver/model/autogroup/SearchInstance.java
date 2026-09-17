@@ -12,14 +12,13 @@ import lombok.Getter;
  * Search Instance for autogroup logic.
  */
 
+@Getter
 public class SearchInstance {
 	private final long registrationTime = System.currentTimeMillis();
 	/** 返回副本掩码 ID / Returns the instance mask id */
-	@Getter
 	private final int instanceMaskId;
 	private final EntryRequestType ert;
 	/** 返回成员数 / Returns the members */
-	@Getter
 	private List<Integer> members;
 
 	public SearchInstance(int instanceMaskId, EntryRequestType ert, Collection<Player> members) {

@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
  * Legion Dominion Location for legiondominion logic.
  */
 
+@Getter
 @NoArgsConstructor
 public class LegionDominionLocation {
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	protected LegionDominionTemplate template;
 	protected LegionDominionRace legionDominionRace = LegionDominionRace.BALAUR;
 

@@ -14,30 +14,25 @@ import lombok.NoArgsConstructor;
  * Player Luna Shop game object.
  */
 
+@Getter
+@Setter
 @Slf4j
 @NoArgsConstructor
 public class PlayerLunaShop {
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	/**
 	 * @return 是否免费开启地下通道 / Whether free underpath
 	 */
-	@Getter
-	@Setter
 	private boolean FreeUnderpath;
 	/**
 	 * @return 是否免费开启工坊 / Whether free factory
 	 */
-	@Getter
-	@Setter
 	private boolean FreeFactory;
 	/**
 	 * @return 是否免费开启宝箱 / Whether free chest
 	 */
-	@Getter
-	@Setter
 	private boolean FreeChest;
 
 	public PlayerLunaShop(boolean freeUnderpath, boolean freeFactory, boolean freeChest) {

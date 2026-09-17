@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 public enum ZoneType {
 
 	/**
@@ -19,7 +20,6 @@ public enum ZoneType {
 	/**
 	 * @return the value
 	 */
-	@Getter
 	private final byte value;
 
 	/**

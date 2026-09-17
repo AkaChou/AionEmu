@@ -19,7 +19,6 @@ import com.aionemu.gameserver.services.toypet.PetAdoptionService;
 import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,64 +27,48 @@ import lombok.Setter;
  * Pet Common Data game object.
  */
 
+@Getter
+@Setter
 public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	private int decoration;
 	private String name;
 	private final int petId;
 	/** 设置 birthday / Sets the birthday */
-	@Setter
 	private Timestamp birthday;
 	/** 返回 feed progress / Returns the feed progress */
-	@Getter
 	PetFeedProgress feedProgress = null;
 	/** 返回 doping bag / Returns the doping bag */
-	@Getter
 	PetDopingBag dopingBag = null;
 	/** 设置 cancel feed / Sets the cancel feed */
-	@Setter
 	private volatile boolean cancelFeed = false;
 	/**
 	 * @return 是否处于喂食时间 / Whether feeding time
 	 */
-	@Getter
-	@Setter
 	private boolean feedingTime = true;
 	/** 返回 curent time / Returns the curent time */
-	@Getter
-	@Setter
 	private long curentTime;
 	private final int petObjectId;
 	/** 返回 master object id / Returns the master object id */
-	@Getter
 	private final int masterObjectId;
 	private long startMoodTime;
 	private int shuggleCounter;
 	private int lastSentPoints;
 	/** 返回 mood cd started / Returns the mood cd started */
-	@Getter
-	@Setter
 	private long moodCdStarted;
 	/** 返回 gift cd started / Returns the gift cd started */
-	@Getter
-	@Setter
 	private long giftCdStarted;
 	private final int expireTime;
 	/** 返回消失时间 / Returns the despawn time*/
-	@Getter
-	@Setter
 	private Timestamp despawnTime;
 	/**
 	 * @return 是否正在拾取 / Whether looting
 	 */
-	@Getter
 	private boolean isLooting = false;
 	/**
 	 * @return 是否正在施放增益 / Whether buffing
 	 */
-	@Getter
 	private boolean isBuffing = false;
 	/** 是否出售 / Whether selling */
-	@Getter
 	private boolean isSelling = false;
 
 	public PetCommonData(int petId, int masterObjectId, int expireTime) {

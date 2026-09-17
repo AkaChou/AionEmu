@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class IdianDepthsLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected IdianDepthsTemplate template;
 	/** 返回当前伊迪安深渊 / Returns the active idian depths */
-	@Getter
 	protected IdianDepths<IdianDepthsLocation> activeIdianDepths;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public IdianDepthsLocation(IdianDepthsTemplate template) {

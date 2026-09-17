@@ -7,6 +7,7 @@ import lombok.Getter;
  * 守护者（Serial Guard）运行时状态，绑定玩家及其守护等级与类型。
  * Protector (serial guard) runtime state bound to a player with rank and type.
  */
+@Getter
 public class Protector {
 	public int victims;
 	/**
@@ -15,7 +16,6 @@ public class Protector {
 	 *
 	 * owner
 	 */
-	@Getter
 	private Player owner;
 	private int guardType;
 	private int guardRank;

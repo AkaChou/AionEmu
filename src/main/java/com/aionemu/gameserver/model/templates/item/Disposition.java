@@ -11,16 +11,15 @@ import lombok.Getter;
  * Disposition template: item disposal count.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Disposition")
 public class Disposition {
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute
 	protected int count;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute
 	protected int id;
 }

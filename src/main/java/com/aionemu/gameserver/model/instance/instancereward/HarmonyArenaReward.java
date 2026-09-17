@@ -19,9 +19,9 @@ import lombok.Getter;
  * Harmony Arena Reward for instance logic.
  */
 
+@Getter
 public class HarmonyArenaReward extends PvPArenaReward {
 	/** 返回组 / Returns the groups*/
-	@Getter
 	private final List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
 
 	public HarmonyArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {

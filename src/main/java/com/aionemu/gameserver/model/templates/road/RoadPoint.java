@@ -15,23 +15,21 @@ import lombok.NoArgsConstructor;
  *
  * @author SheppeR
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RoadPoint")
 @NoArgsConstructor
 public class RoadPoint {
 
 	/** 返回 x / Returns the x */
-	@Getter
 	@XmlAttribute(name = "x")
 	private float x;
 
 	/** 返回 y / Returns the y */
-	@Getter
 	@XmlAttribute(name = "y")
 	private float y;
 
 	/** 返回 z / Returns the z */
-	@Getter
 	@XmlAttribute(name = "z")
 	private float z;
 

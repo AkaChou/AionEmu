@@ -13,15 +13,15 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestDrop")
 public class QuestDrop {
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npc_id")
 	protected Integer npcId;
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
 	@XmlAttribute
@@ -32,8 +32,6 @@ public class QuestDrop {
 	protected int collecting_step = 0;
 
 	/** 返回任务 ID / Returns the quest id */
-	@Getter
-	@Setter
 	@XmlTransient
 	protected Integer questId;
 

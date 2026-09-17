@@ -13,22 +13,19 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemReq")
 public class ItemReq {
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "item_id")
 	protected int itemId;
 	/** 获取物品计数。 / Returns the item count. */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "item_count")
 	protected int itemCount;
 	/** 返回 err item / Returns the err item */
-	@Getter
 	@XmlAttribute(name = "err_item")
 	protected int errItem;
 }

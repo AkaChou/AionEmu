@@ -52,19 +52,16 @@ import lombok.Setter;
  *
  * @author Luno
  */
+@Getter
+@Setter
 public class Npc extends Creature {
 
 	/** 设置巡逻队伍。 / Sets the walker group. */
-	@Getter
-	@Setter
 	private WalkerGroup walkerGroup;
 	private boolean isQuestBusy = false;
 	/** 获取技能列表。 / Returns the skill list. */
-	@Getter
 	private final NpcSkillList skillList;
 	/** 设置巡逻队伍偏移 / Sets the walker group shift */
-	@Getter
-	@Setter
 	private WalkerGroupShift walkerGroupShift;
 	private long lastShoutedSeconds;
 	/**
@@ -73,8 +70,6 @@ public class Npc extends Creature {
 	 *
 	 * @return 主人名称 / name of the master
 	 */
-	@Getter
-	@Setter
 	private String masterName = StringUtils.EMPTY;
 	/**
 	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
@@ -82,23 +77,14 @@ public class Npc extends Creature {
 	 *
 	 * @return 创建者唯一 ID / unique id of the creator
 	 */
-	@Getter
-	@Setter
 	private int creatorId = 0;
 	private final Creature master;
-	@Getter
 	private final String npcPartyId;
 	/** 返回城镇 ID / Returns the town id */
-	@Getter
-	@Setter
 	private int townId;
 	/** 返回欧比斯 ID / Returns the abyss id */
-	@Getter
-	@Setter
 	private int abyssId;
 	/** 返回 NPC 类型 / Returns the npc type */
-	@Getter
-	@Setter
 	private NpcType npcType;
 	private final ItemAttackType attacktype = ItemAttackType.PHYSICAL;
 	private final int sensoryRange = getObjectTemplate().getAggroRange();

@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class IuLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected IuTemplate template;
 	/** 返回激活的 iu / Returns the active iu */
-	@Getter
 	protected Iu<IuLocation> activeIu;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成对象列表 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public IuLocation(IuTemplate template) {

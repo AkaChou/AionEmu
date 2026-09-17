@@ -10,16 +10,15 @@ import lombok.AllArgsConstructor;
  *
  * @author MrPoke
  */
+@Getter
 @AllArgsConstructor
 public class ZoneInfo {
 	/**
 	 * @return the area
 	 */
-	@Getter
 	private final Area area;
 	/**
 	 * @return the zoneTemplate
 	 */
-	@Getter
 	private final ZoneTemplate zoneTemplate;
 }

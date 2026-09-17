@@ -21,17 +21,15 @@ import lombok.RequiredArgsConstructor;
  *
  * @author Simple
  */
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class DropNpc {
 
 	private final int objectId;
 	/** 设置允许拾取者集合 / Sets the allowed looters */
-	@Getter
-	@Setter
 	private Set<Integer> allowedLooters = new HashSet<>();
 	/** 设置范围内的玩家 / Sets the in-range players */
-	@Getter
-	@Setter
 	private Collection<Player> inRangePlayers = new ArrayList<Player>();
 	/**
 	 * 返回玩家状态集合。
@@ -39,7 +37,6 @@ public class DropNpc {
 	 *
 	 * @return 玩家状态 / player status
 	 */
-	@Getter
 	private final Collection<Player> playerStatus = new ArrayList<Player>();
 	/**
 	 * 设置正在拾取的玩家。
@@ -47,8 +44,6 @@ public class DropNpc {
 	 *
 	 * @param player 正在拾取的玩家 / the lootingPlayer to set
 	 */
-	@Getter
-	@Setter
 	private Player lootingPlayer = null;
 	/**
 	 * 设置分配 ID。
@@ -56,8 +51,6 @@ public class DropNpc {
 	 *
 	 * @param distributionId 分配 ID / distribution id
 	 */
-	@Getter
-	@Setter
 	private int distributionId = 0;
 	/**
 	 * 设置分配类型。
@@ -65,7 +58,6 @@ public class DropNpc {
 	 *
 	 * @param distributionType 分配类型 / distribution type
 	 */
-	@Setter
 	private boolean distributionType;
 	/**
 	 * 设置当前索引。
@@ -73,15 +65,11 @@ public class DropNpc {
 	 *
 	 * @param currentIndex 当前索引 / current index
 	 */
-	@Getter
-	@Setter
 	private int currentIndex = 0;
 	private WeakReference<TemporaryPlayerTeam<? extends TeamMember<Player>>> lootingTeam;
 	/** 返回拾取队伍 ID / Returns the looting team id */
-	@Getter
 	private int lootingTeamId;
 	/** 返回最大点数 / Returns the max roll */
-	@Getter
 	private int maxRoll;
 	private LootGroupRules lastLootGroupRules;
 	/**
@@ -90,11 +78,8 @@ public class DropNpc {
 	 *
 	 * @return 是否自由拾取 / whether free for all
 	 */
-	@Getter
 	private boolean isFreeForAll = false;
 	/** 返回剩余消失时间 / Returns the remaining decay time */
-	@Getter
-	@Setter
 	private long remainingDecayTime;
 
 	/** 添加允许拾取者 / Adds an allowed looter */

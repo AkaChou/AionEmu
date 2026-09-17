@@ -12,10 +12,10 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlType(name = "LunaDiceTable")
 public class LunaDiceTable {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 

@@ -21,6 +21,8 @@ import lombok.Setter;
  *
  * @author -Nemesiss-
  */
+@Getter
+@Setter
 public abstract class VisibleObject extends AionObject {
 
 	/**
@@ -29,8 +31,6 @@ public abstract class VisibleObject extends AionObject {
 	 *
 	 * @return 对象模板 / the objectTemplate
 	 */
-	@Getter
-	@Setter
 	protected VisibleObjectTemplate objectTemplate;
 
 	// 玩家可见物体的距离 / how far player will see visible object
@@ -58,36 +58,29 @@ public abstract class VisibleObject extends AionObject {
 	  * 对象在世界中的位置。
 	  * Position of object in the world
 	  */
-	@Getter
-	@Setter
 	protected WorldPosition position;
 
 	 /**
 	  * 此 VisibleObject 的 KnownList。
 	  * KnownList of this VisibleObject
 	  */
-	@Setter
 	private KnownList knownlist;
 
 	 /**
 	  * 此 VisibleObject 的控制器。
 	  * Controller of this VisibleObject
 	  */
-	@Getter
 	private final VisibleObjectController<? extends VisibleObject> controller;
 
 	 /**
 	  * 可见对象的目标。
 	  * Visible object's target
 	  */
-	@Setter
 	private VisibleObject target;
 
 	/**
 	 * Spawn template of this visibleObject.
 	 */
-	@Getter
-	@Setter
 	private SpawnTemplate spawn;
 
 	/**

@@ -7,9 +7,9 @@ import lombok.Getter;
  * Npc Skill Entry for skill logic.
  */
 
+@Getter
 public abstract class NpcSkillEntry extends SkillEntry {
 	/** 返回上次使用时间 / Returns the last time used */
-	@Getter
 	protected long lastTimeUsed = 0;
 	protected int useCount;
 

@@ -20,12 +20,13 @@ import lombok.Setter;
  *
  * @author Ghostfur (Aion-Unique)
  */
+@Getter
+@Setter
 @XmlRootElement(name = "atreian_passport")
 @XmlAccessorType(value = XmlAccessType.NONE)
 public class EventsWindow {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
@@ -33,7 +34,6 @@ public class EventsWindow {
 	private int item;
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count", required = true)
 	private long count;
 
@@ -58,8 +58,6 @@ public class EventsWindow {
 	private int dailyMaxCount;
 
 	/** 返回上次盖章时间 / Returns the last stamp */
-	@Getter
-	@Setter
 	private Timestamp lastStamp;
 
 	/** 返回物品 ID / Returns the item id */

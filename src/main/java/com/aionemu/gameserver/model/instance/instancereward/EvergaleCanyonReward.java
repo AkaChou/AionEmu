@@ -20,9 +20,9 @@ import lombok.Getter;
  * Evergale Canyon Reward for instance logic.
  */
 
+@Getter
 public class EvergaleCanyonReward extends InstanceReward<EvergaleCanyonPlayerReward> {
 	/** 返回 cap points / Returns the cap points */
-	@Getter
 	private final int capPoints;
 	private final MutableInt asmodiansPoints = new MutableInt(0);
 	private final MutableInt elyosPoins = new MutableInt(0);
@@ -35,7 +35,6 @@ public class EvergaleCanyonReward extends InstanceReward<EvergaleCanyonPlayerRew
 	private long instanceTime;
 	private final int bonusTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 
 	public EvergaleCanyonReward(Integer mapId, int instanceId, WorldMapInstance instance) {

@@ -9,12 +9,11 @@ import lombok.AllArgsConstructor;
  *
  * @author Ranastic
  */
+@Getter
 @AllArgsConstructor
 public class WardrobeEntry {
 
-	@Getter
 	private final int itemId;
-	@Getter
 	private final int slot;
 	private final int reskin_count;
 

@@ -31,6 +31,8 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "npc_template")
 public class NpcTemplate extends VisibleObjectTemplate {
@@ -40,37 +42,28 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	private int npcId;
 	private int abnormalImmunity;
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	@XmlAttribute(name = "level", required = true)
 	private byte level;
 	@XmlAttribute(name = "name_id", required = true)
 	private int nameId;
 	/** 返回标题 ID / Returns the title id */
-	@Getter
 	@XmlAttribute(name = "title_id")
 	private int titleId;
 	@XmlAttribute(name = "name")
 	private String name;
 	/** 返回 height / Returns the height */
-	@Getter
 	@XmlAttribute(name = "height")
 	private float height = 1;
 	/** 返回 npc type / Returns the npc type */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "npc_type", required = true)
 	private NpcType npcType;
 	/** 获取属性模板。 / Returns the stats template. */
-	@Getter
-	@Setter
 	@XmlElement(name = "stats")
 	private NpcStatsTemplate statsTemplate;
 	/** 获取装备。 / Returns the equipment. */
-	@Getter
 	@XmlElement(name = "equipment")
 	private NpcEquippedGear equipment;
 	/** 获取归还之石属性模板。 / Returns the kisk stats template. */
-	@Getter
 	@XmlElement(name = "kisk_stats")
 	private KiskStatsTemplate kiskStatsTemplate;
 	@SuppressWarnings("unused")
@@ -83,29 +76,23 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "sensory_range")
 	private int aggrorange;
 	/** 返回攻击范围 / Returns the attack range*/
-	@Getter
 	@XmlAttribute(name = "attack_range")
 	private int attackRange;
 	/** 返回 attack rate / Returns the attack rate */
-	@Getter
 	@XmlAttribute(name = "attack_rate")
 	private int attackRate;
 	/** 返回攻击延迟 / Returns the attack delay*/
-	@Getter
 	@XmlAttribute(name = "attack_delay")
 	private int attackDelay;
 	/** 返回 hp gauge level / Returns the hp gauge level */
-	@Getter
 	@XmlAttribute(name = "hpgauge_level")
 	private int hpGaugeLevel;
 	/** 获取部落。 / Returns the tribe. */
-	@Getter
 	@XmlAttribute(name = "tribe")
 	private TribeClass tribe;
 	@XmlAttribute(name = "ai")
 	private String ai = AiNames.DUMMY_NPC.getName();
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute
 	private Race race = Race.NONE;
 	@XmlAttribute
@@ -123,16 +110,13 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	@XmlElement(name = "talk_info")
 	private TalkInfo talkInfo;
 	/** 返回 namedesc / Returns the namedesc */
-	@Getter
 	@XmlAttribute(name = "name_desc")
 	private String namedesc;
 	/** 设置 npc drop / Sets the npc drop */
-	@Setter
 	@XmlTransient
 	private NpcDrop npcDrop;
 	// 大量拾取 4.7 / Massive Looting 4.7
 	/** 返回 massive looting / Returns the massive looting */
-	@Getter
 	@XmlElement(name = "massive_looting")
 	private MassiveLooting massiveLooting;
 

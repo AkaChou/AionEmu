@@ -16,36 +16,26 @@ import lombok.Setter;
  * Broker Item game object.
  */
 
+@Getter
+@Setter
 public class BrokerItem implements Comparable<BrokerItem> {
 	/** 获取物品。 / Returns the item. */
-	@Getter
 	private final Item item;
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	private final int itemId;
 	/** 返回物品唯一 ID / Returns the item unique id */
-	@Getter
-	@Setter
 	private int itemUniqueId;
 	/** 获取物品计数。 / Returns the item count. */
-	@Getter
-	@Setter
 	private long itemCount;
 	/** 设置物品制作者 / Sets the item creator */
-	@Setter
 	private String itemCreator;
 	/** 获取价格。 / Returns the price. */
-	@Getter
-	@Setter
 	private long price;
 	/** 返回卖家 / Returns the seller */
-	@Getter
 	private final String seller;
 	/** 返回卖家 ID / Returns the seller id */
-	@Getter
 	private final int sellerId;
 	/** 获取物品经纪行种族。 / Returns the item broker race. */
-	@Getter
 	private final BrokerRace itemBrokerRace;
 	private boolean isSold, isCanceled;
 	/**
@@ -54,13 +44,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	 *
 	 * @return 是否已结算 / whether settled
 	 */
-	@Getter
 	private boolean isSettled;
 	/** 获取过期时间。 / Returns the expire time. */
-	@Getter
 	private final Timestamp expireTime;
 	/** 返回结算时间 / Returns the settle time */
-	@Getter
 	private Timestamp settleTime;
 	/**
 	 * 是否拆分出售。
@@ -68,7 +55,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	 *
 	 * @return 是否拆分出售 / whether split sell
 	 */
-	@Getter
 	private final boolean isSplitSell;
 	PersistentState state;
 	private final int ExpireTimeinMillis = BrokerConfig.ITEMS_EXPIRE_TIME * 24 * 3600 * 1000;

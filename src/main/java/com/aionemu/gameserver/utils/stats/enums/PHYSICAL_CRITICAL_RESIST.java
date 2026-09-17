@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础物理暴击抵抗值枚举。
  * Baseline physical crit resist values by player class.
  */
+@Getter
 public enum PHYSICAL_CRITICAL_RESIST {
 	WARRIOR(0), GLADIATOR(0), TEMPLAR(0), SCOUT(0), ASSASSIN(0), RANGER(0), MAGE(0), SORCERER(0), SPIRIT_MASTER(0),
 	PRIEST(0), CLERIC(0), CHANTER(0),
@@ -18,7 +19,6 @@ public enum PHYSICAL_CRITICAL_RESIST {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	PHYSICAL_CRITICAL_RESIST(int value) {

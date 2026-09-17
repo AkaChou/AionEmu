@@ -11,16 +11,15 @@ import lombok.Getter;
  * Stone CP template (static data / XML).
  */
 
+@Getter
 @XmlType(name = "stone_cp")
 @XmlAccessorType(XmlAccessType.NONE)
 public class StoneCP {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute
 	protected int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute
 	protected String name;
 

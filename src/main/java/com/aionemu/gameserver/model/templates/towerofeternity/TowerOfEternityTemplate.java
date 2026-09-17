@@ -13,11 +13,11 @@ import lombok.Getter;
  * Tower of Eternity template (static data/XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Tower")
 public class TowerOfEternityTemplate extends TowerOfEternityLocation {
 	/** 返回 ID。 / Returns the id. */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 

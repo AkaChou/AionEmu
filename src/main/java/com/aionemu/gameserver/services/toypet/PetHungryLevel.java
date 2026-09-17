@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public enum PetHungryLevel {
 	/** 饥饿 / Hungry */
 	HUNGRY(0),
@@ -24,7 +25,6 @@ public enum PetHungryLevel {
 	 *
 	 * Level value
 	 */
-	@Getter
 	private final byte value;
 
 	PetHungryLevel(int value) {

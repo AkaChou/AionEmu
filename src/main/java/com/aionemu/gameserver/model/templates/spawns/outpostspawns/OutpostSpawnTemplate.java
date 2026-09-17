@@ -12,14 +12,12 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 public class OutpostSpawnTemplate extends SpawnTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	private int id;
 	/** 获取前哨种族。 / Returns the outpost race. */
-	@Getter
-	@Setter
 	private Race outpostRace;
 
 	public OutpostSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

@@ -13,6 +13,7 @@ import lombok.Getter;
  * 技能学习模板：职业、种族、等级与是否自动/烙印学习。
  * Skill learn template: class, race, level and auto/stigma learn flags.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skill")
 public class SkillLearnTemplate {
@@ -22,7 +23,6 @@ public class SkillLearnTemplate {
 	 * Gets player class.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "classId", required = true)
 	private PlayerClass classId = PlayerClass.ALL;
 
@@ -31,7 +31,6 @@ public class SkillLearnTemplate {
 	 * Gets skill id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skillId", required = true)
 	private int skillId;
 
@@ -40,7 +39,6 @@ public class SkillLearnTemplate {
 	 * Gets skill level.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "skillLevel", required = true)
 	private int skillLevel;
 
@@ -49,7 +47,6 @@ public class SkillLearnTemplate {
 	 * Gets skill name.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
@@ -59,7 +56,6 @@ public class SkillLearnTemplate {
 	 *
 	 * @return 阵营 / race
 	 */
-	@Getter
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
 
@@ -68,7 +64,6 @@ public class SkillLearnTemplate {
 	 * Gets minimum learn level.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "minLevel", required = true)
 	private int minLevel;
 
@@ -80,7 +75,6 @@ public class SkillLearnTemplate {
 	 * Whether auto-learned.
 	 *
 	 */
-	@Getter
 	@XmlAttribute
 	private boolean autoLearn;
 
@@ -89,7 +83,6 @@ public class SkillLearnTemplate {
 	 * Whether this is a stigma skill.
 	 *
 	 */
-	@Getter
 	@XmlAttribute
 	private boolean stigma = false;
 

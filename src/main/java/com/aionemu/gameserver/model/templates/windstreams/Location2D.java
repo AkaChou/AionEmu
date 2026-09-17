@@ -17,6 +17,8 @@ import lombok.AllArgsConstructor;
  *
  * @author LokiReborn
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Location2D")
 @NoArgsConstructor
@@ -28,7 +30,6 @@ public class Location2D {
 	 *
 	 * @return 地点 ID / location id
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
@@ -38,8 +39,6 @@ public class Location2D {
 	 *
 	 * @return 状态 / state
 	 */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "state")
 	protected int state;
 

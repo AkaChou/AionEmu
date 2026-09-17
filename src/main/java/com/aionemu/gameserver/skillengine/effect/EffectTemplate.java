@@ -47,6 +47,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Effect")
 @Slf4j
@@ -79,7 +80,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 修正器集合 / modifiers
 	 */
-	@Getter
 	protected ActionModifiers modifiers;
 	/**
 	 * 获取属性变更列表。
@@ -87,7 +87,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 属性变更列表 / changes
 	 */
-	@Getter
 	protected List<Change> change;
 	/**
 	 * 获取效果 ID。
@@ -95,7 +94,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 效果 ID / effect id
 	 */
-	@Getter
 	@XmlAttribute
 	protected int effectid;
 	/**
@@ -104,7 +102,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 第二时长参数 / duration2
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int duration2;
 	/**
@@ -113,7 +110,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 第一时长参数 / duration1
 	 */
-	@Getter
 	@XmlAttribute
 	protected int duration1;
 	/**
@@ -122,7 +118,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 随机时间偏移 / random time
 	 */
-	@Getter
 	@XmlAttribute(name = "randomtime")
 	protected int randomTime;
 	/**
@@ -131,7 +126,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 位置序号 / position
 	 */
-	@Getter
 	@XmlAttribute(name = "e")
 	protected int position;
 	/**
@@ -140,7 +134,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 基础等级要求 / basic level
 	 */
-	@Getter
 	@XmlAttribute(name = "basiclvl")
 	protected int basicLvl;
 	@XmlAttribute(name = "hittype", required = false)
@@ -155,7 +148,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 元素属性 / element
 	 */
-	@Getter
 	@XmlAttribute(name = "element")
 	protected SkillElement element = SkillElement.NONE;
 	/**
@@ -164,7 +156,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 子效果配置 / sub-effect
 	 */
-	@Getter
 	@XmlElement(name = "subeffect")
 	protected SubEffect subEffect;
 	/**
@@ -173,7 +164,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 条件集合 / conditions
 	 */
-	@Getter
 	@XmlElement(name = "conditions")
 	protected Conditions effectConditions;
 	/**
@@ -182,7 +172,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 子效果条件 / sub-effect conditions
 	 */
-	@Getter
 	@XmlElement(name = "subconditions")
 	protected Conditions effectSubConditions;
 	@XmlAttribute(name = "hoptype")
@@ -197,7 +186,6 @@ public abstract class EffectTemplate {
 	protected int accMod1;// accdelta
 	@XmlAttribute(name = "accmod2")
 	protected int accMod2;// accvalue
-	@Getter
 	@XmlAttribute(name = "mrresist")
 	protected boolean mrResist = true;
 	/**
@@ -206,7 +194,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 前置效果串 / pre-effect string
 	 */
-	@Getter
 	@XmlAttribute(name = "preeffect")
 	protected String preEffect;
 	/**
@@ -215,7 +202,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 触发概率 / probability
 	 */
-	@Getter
 	@XmlAttribute(name = "preeffect_prob")
 	protected int preEffectProb = 100;
 	@XmlAttribute(name = "preeffect_prob_delta")
@@ -226,10 +212,8 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 暴击概率修正 / crit probability mod
 	 */
-	@Getter
 	@XmlAttribute(name = "critprobmod2")
 	protected int critProbMod2 = 100;
-	@Getter
 	@XmlAttribute(name = "critprobmod1")
 	protected int critProbMod1;
 	/**
@@ -238,7 +222,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 暴击附加伤害 / bonus damage
 	 */
-	@Getter
 	@XmlAttribute(name = "critadddmg1")
 	protected int critAddDmg1 = 0;
 	/**
@@ -247,7 +230,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 暴击附加伤害 / bonus damage
 	 */
-	@Getter
 	@XmlAttribute(name = "critadddmg2")
 	protected int critAddDmg2 = 0;
 	@XmlAttribute
@@ -258,10 +240,8 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 每级增量 / level delta
 	 */
-	@Getter
 	@XmlAttribute
 	protected int delta;
-	@Getter
 	@XmlAttribute
 	protected boolean consume = true;
 	/**
@@ -270,7 +250,6 @@ public abstract class EffectTemplate {
 	 *
 	 * @return 效果类型 / effect type
 	 */
-	@Getter
 	@XmlTransient
 	protected EffectType effectType = null;
 	@XmlTransient

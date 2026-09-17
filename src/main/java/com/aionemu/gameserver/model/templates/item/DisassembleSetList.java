@@ -11,11 +11,11 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "disassemble_set_list")
 public class DisassembleSetList
 {
 	/** 返回物品组 / Returns the item groups*/
-	@Getter
 	@XmlElement(name = "itemGroup")
 	private List<DisassembleItemGroups> ItemGroups;
 }

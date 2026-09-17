@@ -11,29 +11,21 @@ import lombok.Setter;
  *
  * @author Ranastic
  */
+@Getter
+@Setter
 public class HallOfTenacityPlayerReward extends InstancePlayerReward {
 
 	/** 获取坐标。 / Returns the position. */
-	@Getter
-	@Setter
 	private int position;
 	/** 获取区域。 / Returns the zone. */
-	@Getter
-	@Setter
 	private int zone;
 	private final int timeBonus;
 	private final InstanceBuff boostMorale;
 	/** 获取奖励欧比斯点数。 / Returns the reward ap. */
-	@Getter
-	@Setter
 	private int rewardAp;
 	/** 获取奖励经验。 / Returns the reward exp. */
-	@Getter
-	@Setter
 	private int rewardExp;
 	/** 返回 competition point / Returns the competition point */
-	@Getter
-	@Setter
 	private int competitionPoint;
 
 	public HallOfTenacityPlayerReward(Integer object, int timeBonus, byte buffId) {

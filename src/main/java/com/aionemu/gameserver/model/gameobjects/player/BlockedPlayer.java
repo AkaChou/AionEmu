@@ -9,12 +9,12 @@ import lombok.AllArgsConstructor;
  *
  * @author Ben
  */
+@Getter
 @AllArgsConstructor
 public class BlockedPlayer {
 
 	PlayerCommonData pcd;
 	/** 返回 reason / Returns the reason */
-	@Getter
 	String reason;
 
 	public BlockedPlayer(PlayerCommonData pcd) {

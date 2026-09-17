@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * Player Class enumeration.
  */
 
+@Getter
 @XmlEnum
 public enum PlayerClass {
 	/** 战士（起始职业） / Warrior (starting class). */
@@ -52,10 +53,8 @@ public enum PlayerClass {
 	/** 全部 / All */
 	ALL(17);
 
-	@Getter
 	private final byte classId;
 	private final int idMask;
-	@Getter
 	private final boolean startingClass;
 
 	PlayerClass(int classId) {

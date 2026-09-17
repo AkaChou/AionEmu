@@ -9,18 +9,15 @@ import lombok.NoArgsConstructor;
  * Legion Territory for team logic.
  */
 
+@Getter
+@Setter
 @NoArgsConstructor
 public class LegionTerritory {
 	/** 设置领地 ID。 / Sets the territory id. */
-	@Setter
 	int territoryId = 0;
 	/** 返回军团 ID。 / Returns the legion id. */
-	@Getter
-	@Setter
 	int legionId = 0;
 	/** 获取军团名称。 / Returns the legion name. */
-	@Getter
-	@Setter
 	String legionName = "";
 
 	public LegionTerritory(int id) {

@@ -14,13 +14,12 @@ import lombok.Getter;
  *
  * @author ViAl
  */
+@Getter
 public class SiegeNpc extends Npc {
 
 	/** 返回攻城 ID / Returns the siege id */
-	@Getter
 	private final int siegeId;
 	/** 获取要塞种族。 / Returns the siege race. */
-	@Getter
 	private final SiegeRace siegeRace;
 
 	/**

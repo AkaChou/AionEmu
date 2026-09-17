@@ -12,32 +12,28 @@ import lombok.Getter;
  *
  * @author M@xx
  */
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "petstats")
 public class PetStatsTemplate {
 
 	/** 返回反应动作 / Returns the reaction */
-	@Getter
 	@XmlAttribute(name = "reaction", required = true)
 	private String reaction;
 
 	/** 返回奔跑速度 / Returns the run speed */
-	@Getter
 	@XmlAttribute(name = "run_speed", required = true)
 	private float runSpeed;
 
 	/** 返回行走速度 / Returns the walk speed */
-	@Getter
 	@XmlAttribute(name = "walk_speed", required = true)
 	private float walkSpeed;
 
 	/** 返回高度 / Returns the height */
-	@Getter
 	@XmlAttribute(name = "height", required = true)
 	private float height;
 
 	/** 返回飞行高度 / Returns the altitude */
-	@Getter
 	@XmlAttribute(name = "altitude", required = true)
 	private float altitude;
 }

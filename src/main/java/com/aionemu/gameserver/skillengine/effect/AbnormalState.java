@@ -6,6 +6,7 @@ import lombok.Getter;
  * 异常状态位掩码枚举：定义控制/持续负面状态及其组合位。
  * Abnormal state bit-mask enum: control/DoT states and composite masks.
  */
+@Getter
 public enum AbnormalState {
 
 	BUFF(0), POISON(1), BLEED(2), PARALYZE(4), SLEEP(8), ROOT(16), BLIND(32), UNKNOWN(64), DISEASE(128), SILENCE(256),
@@ -30,7 +31,6 @@ public enum AbnormalState {
 	 *
 	 * @return 状态 ID / state id
 	 */
-	@Getter
 	private final int id;
 
 	AbnormalState(int id) {

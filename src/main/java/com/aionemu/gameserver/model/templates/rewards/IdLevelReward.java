@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdLevelReward")
 public class IdLevelReward extends ItemRaceEntry {
@@ -22,7 +23,6 @@ public class IdLevelReward extends ItemRaceEntry {
 	 * 获取 level 属性值。
 	 * Gets the value of the level property
 	 */
-	@Getter
 	@XmlAttribute(name = "level", required = true)
 	protected int level;
 }

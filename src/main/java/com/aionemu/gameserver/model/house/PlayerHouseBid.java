@@ -9,14 +9,12 @@ import lombok.AllArgsConstructor;
  * Player House Bid for house logic.
  */
 
+@Getter
 @AllArgsConstructor
 public class PlayerHouseBid implements Comparable<PlayerHouseBid> {
-	@Getter
 	private final int playerId;
-	@Getter
 	private final int houseId;
 	private final long offer;
-	@Getter
 	private final Timestamp time;
 
 	/** 返回 bid offer / Returns the bid offer */

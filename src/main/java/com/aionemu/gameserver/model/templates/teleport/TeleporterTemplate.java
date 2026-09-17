@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author orz
  */
+@Getter
 @XmlRootElement(name = "teleporter_template")
 @XmlAccessorType(XmlAccessType.NONE)
 public class TeleporterTemplate {
@@ -25,7 +26,6 @@ public class TeleporterTemplate {
 	 *
 	 * @return NPC ID 列表 / npc ids
 	 */
-	@Getter
 	@XmlAttribute(name = "npc_ids")
 	private List<Integer> npcIds;
 
@@ -35,7 +35,6 @@ public class TeleporterTemplate {
 	 *
 	 * @return 传送 ID / teleport id
 	 */
-	@Getter
 	@XmlAttribute(name = "teleportId", required = true)
 	private int teleportId = 0;
 
@@ -45,7 +44,6 @@ public class TeleporterTemplate {
 	 *
 	 * @return 传送地点数据 / tele-location data
 	 */
-	@Getter
 	@XmlElement(name = "locations")
 	private TeleLocIdData teleLocIdData;
 

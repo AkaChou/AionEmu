@@ -15,6 +15,7 @@ import lombok.Getter;
  * Item use-limits template: delay, gender, rank and use area.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UseLimits")
 public class ItemUseLimits {
@@ -32,7 +33,6 @@ public class ItemUseLimits {
 	private String usearea;
 
 	/** 返回允许性别 / Returns the gender permitted */
-	@Getter
 	@XmlAttribute(name = "gender")
 	private Gender genderPermitted;
 
@@ -40,12 +40,10 @@ public class ItemUseLimits {
 	private Boolean rideUsable;
 
 	/** 返回最小军阶 / Returns the min rank */
-	@Getter
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
 
 	/** 返回最大军阶 / Returns the max rank */
-	@Getter
 	@XmlAttribute(name = "rank_max")
 	private int maxRank = AbyssRankEnum.SUPREME_COMMANDER.getId();
 

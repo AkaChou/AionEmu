@@ -15,42 +15,31 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InstanceExit")
 public class InstanceExit {
 
 	/** 设置 instance id / Sets the instance id */
-	@Setter
 	@XmlAttribute(name = "instance_id")
 	protected int instanceId;
 	/** 返回 exit world / Returns the exit world */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "exit_world")
 	protected int exitWorld;
 	/** 获取种族。 / Returns the race. */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "race")
 	protected Race race = Race.PC_ALL;
 	/** 返回 x / Returns the x */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "x")
 	protected float x;
 	/** 返回 y / Returns the y */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "y")
 	protected float y;
 	/** 返回 z / Returns the z */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "z")
 	protected float z;
 	/** 返回 h / Returns the h */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "h")
 	protected byte h;
 

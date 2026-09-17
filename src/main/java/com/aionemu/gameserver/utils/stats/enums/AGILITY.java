@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础敏捷值枚举。
  * Baseline agility values by player class.
  */
+@Getter
 public enum AGILITY {
 	WARRIOR(100), GLADIATOR(100), TEMPLAR(110), SCOUT(100), ASSASSIN(100), RANGER(100), MAGE(95), SORCERER(100),
 	SPIRIT_MASTER(100), PRIEST(100), CLERIC(90), CHANTER(90),
@@ -18,7 +19,6 @@ public enum AGILITY {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	AGILITY(int value) {

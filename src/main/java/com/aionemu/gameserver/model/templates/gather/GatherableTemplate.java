@@ -16,6 +16,7 @@ import lombok.Getter;
  * @author ATracer, KID
  */
 
+@Getter
 @XmlRootElement(name = "gatherable_template")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GatherableTemplate extends VisibleObjectTemplate {
@@ -24,7 +25,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the materials property
 	 * @return 可能的返回对象 / possible object is {@link Materials }
 	 */
-	@Getter
 	@XmlElement(required = true)
 	protected Materials materials;
 	@XmlElement(required = true)
@@ -40,7 +40,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the sourceType property
 	 * @return 可能的返回对象 / possible object is {@link String }
 	 */
-	@Getter
 	@XmlAttribute
 	protected String sourceType;
 	/**
@@ -48,7 +47,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the harvestCount property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int harvestCount;
 	/**
@@ -56,7 +54,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the skillLevel property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int skillLevel;
 	/**
@@ -64,7 +61,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the harvestSkill property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int harvestSkill;
 	/**
@@ -72,7 +68,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the successAdj property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int successAdj;
 	/**
@@ -80,7 +75,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the failureAdj property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int failureAdj;
 	/**
@@ -88,7 +82,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 * Gets the value of the aerialAdj property
 	 * @return 可能的返回对象 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute
 	protected int aerialAdj;
 	@XmlAttribute
@@ -100,11 +93,9 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	@XmlAttribute
 	protected int reqItemNameId;
 	/** 返回检查类型 / Returns the check type */
-	@Getter
 	@XmlAttribute
 	protected int checkType;
 	/** 返回消除值 / Returns the erase value */
-	@Getter
 	@XmlAttribute
 	protected int eraseValue;
 

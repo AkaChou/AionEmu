@@ -8,10 +8,10 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public class StartMovingListener extends ActionObserver {
 
 	/** 施法者是否已移动 / Whether the effector has moved */
-	@Getter
 	private boolean effectorMoved = false;
 
 	/**

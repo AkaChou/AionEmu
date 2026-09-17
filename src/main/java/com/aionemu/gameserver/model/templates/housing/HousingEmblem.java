@@ -12,12 +12,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HousingEmblem")
 public class HousingEmblem extends PlaceableHouseObject {
 
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	@XmlAttribute(name = "level", required = true)
 	private int level;
 

@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class AgentLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected AgentTemplate template;
 	/** 返回当前战斗 / Returns the active fight */
-	@Getter
 	protected AgentFight<AgentLocation> activeAgent;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已刷新的对象列表 / Returns the spawned objects */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public AgentLocation(AgentTemplate template) {

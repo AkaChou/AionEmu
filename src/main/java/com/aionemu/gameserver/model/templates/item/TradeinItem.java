@@ -12,16 +12,15 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TradeinItem")
 public class TradeinItem {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute
 	protected int id;
 	/** 获取价格。 / Returns the price. */
-	@Getter
 	@XmlAttribute
 	protected int price;
 }

@@ -12,12 +12,12 @@ import lombok.Getter;
  *
  * @author antness
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FinishedQuest", propOrder = { "questId", "reward" })
 public class FinishedQuestCond {
 
 	/** 返回任务 ID / Returns the quest id */
-	@Getter
 	@XmlAttribute(name = "quest_id", required = true)
 	protected int questId;
 	@XmlAttribute(name = "reward")

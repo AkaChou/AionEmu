@@ -22,6 +22,8 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GuideTemplate")
 public class GuideTemplate {
@@ -29,7 +31,6 @@ public class GuideTemplate {
 	/**
 	 * @return the level
 	 */
-	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 	@XmlAttribute(name = "classType")
@@ -37,48 +38,39 @@ public class GuideTemplate {
 	/**
 	 * @return the title
 	 */
-	@Getter
 	@XmlAttribute(name = "title")
 	private String title;
 	/**
 	 * @return the race
 	 */
-	@Getter
 	@XmlAttribute(name = "race")
 	private Race race;
 	/**
 	 * @return the select
 	 */
-	@Getter
 	@XmlElement(name = "reward_info")
 	private String rewardInfo = StringUtils.EMPTY;
 	/**
 	 * @return the message
 	 */
-	@Getter
 	@XmlElement(name = "message")
 	private String message = StringUtils.EMPTY;
 	/**
 	 * @return the select
 	 */
-	@Getter
 	@XmlElement(name = "select")
 	private String select = StringUtils.EMPTY;
 	/**
 	 * @return the surveys
 	 */
-	@Getter
 	@XmlElement(name = "survey")
 	private List<SurveyTemplate> surveys;
 	/** 获取奖励计数。 / Returns the reward count. */
-	@Getter
 	@XmlAttribute(name = "rewardCount")
 	private int rewardCount;
 	/**
 	 * @return the isActivated
 	 */
-	@Getter
-	@Setter
 	@XmlTransient
 	private boolean isActivated = true;
 

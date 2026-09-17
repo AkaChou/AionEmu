@@ -75,6 +75,7 @@ import lombok.Getter;
  * 刷怪数据容器：按地图与活动类型索引 {@link SpawnGroup2}，并支持管理员运行时保存。
  * Spawn data holder that indexes {@link SpawnGroup2} by map and event type, with admin runtime save support.
  */
+@Getter
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -87,7 +88,6 @@ public class SpawnsData2 {
 	 *
 	 * @return 刷怪地图列表 / spawn map list
 	 */
-	@Getter
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 

@@ -9,6 +9,8 @@ import lombok.Setter;
  *
  * @author Rolandas
  */
+@Getter
+@Setter
 public final class PetFeedProgress {
 
 	/**
@@ -17,7 +19,6 @@ public final class PetFeedProgress {
 	 *
 	 * Total points
 	 */
-	@Getter
 	private int totalPoints = 0;
 	private short regularConsumed = 0;
 	private short lovedConsumed = 0;
@@ -27,8 +28,6 @@ public final class PetFeedProgress {
 	 *
 	 * Hungry level
 	 */
-	@Getter
-	@Setter
 	private PetHungryLevel hungryLevel = PetHungryLevel.HUNGRY;
 	private short lovedFoodMax = 0;
 	/**
@@ -37,7 +36,6 @@ public final class PetFeedProgress {
 	 *
 	 * @return 是否喜爱喂养 / Loved feeded flag
 	 */
-	@Getter
 	private boolean lovedFeeded = false;
 
 	/**

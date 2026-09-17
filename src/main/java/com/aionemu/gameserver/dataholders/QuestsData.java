@@ -27,6 +27,7 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "quests")
 public class QuestsData {
@@ -37,7 +38,6 @@ public class QuestsData {
 	 *
 	 * @return 任务模板列表 / quest template list
 	 */
-	@Getter
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
 	@XmlTransient

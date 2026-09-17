@@ -13,32 +13,18 @@ import lombok.AllArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThievesStatusList {
 
-	@Getter
-	@Setter
 	private int playerId;
-	@Getter
-	@Setter
 	private int rankId;
-	@Getter
-	@Setter
 	private int thievesCount;
-	@Getter
-	@Setter
 	private Long lastThievesKinah;
-	@Getter
-	@Setter
 	private int prisonCount;
-	@Getter
-	@Setter
 	private String revengeName;
-	@Getter
-	@Setter
 	private int revengeCount;
-	@Getter
-	@Setter
 	private Timestamp revengeDate;
 }

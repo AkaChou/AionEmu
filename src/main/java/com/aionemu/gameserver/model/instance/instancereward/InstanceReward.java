@@ -15,19 +15,16 @@ import lombok.Setter;
  */
 @Slf4j
 
+@Getter
+@Setter
 public class InstanceReward<T extends InstancePlayerReward> {
 	/** 获取副本奖励。 / Returns the instance rewards. */
-	@Getter
 	protected List<T> instanceRewards = new ArrayList<T>();
 	/** 设置 instance score type / Sets the instance score type */
-	@Getter
-	@Setter
 	private InstanceScoreType instanceScoreType = InstanceScoreType.START_PROGRESS;
 	/** 返回映射 ID / Returns the map id */
-	@Getter
 	protected Integer mapId;
 	/** 返回副本 ID / Returns the instance id */
-	@Getter
 	protected int instanceId;
 	public InstanceReward(Integer mapId, int instanceId) {
 		this.mapId = mapId;

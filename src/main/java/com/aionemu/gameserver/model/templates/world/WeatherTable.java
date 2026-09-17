@@ -17,26 +17,23 @@ import lombok.Getter;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherTable", propOrder = { "zoneData" })
 public class WeatherTable {
 	/** 获取区域数据。 / Returns the zone data. */
-	@Getter
 	@XmlElement(name = "table", required = true)
 	protected List<WeatherEntry> zoneData;
 
 	/** 返回天气数量 / Returns the weather count */
-	@Getter
 	@XmlAttribute(name = "weather_count", required = true)
 	protected int weatherCount;
 
 	/** 获取区域计数。 / Returns the zone count. */
-	@Getter
 	@XmlAttribute(name = "zone_count", required = true)
 	protected int zoneCount;
 
 	/** 返回映射 ID / Returns the map id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int mapId;
 

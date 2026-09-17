@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Points")
 @NoArgsConstructor
@@ -27,13 +28,11 @@ public class Points {
 	/**
 	 * @return the top
 	 */
-	@Getter
 	@XmlAttribute(name = "top")
 	protected float top;
 	/**
 	 * @return the bottom
 	 */
-	@Getter
 	@XmlAttribute(name = "bottom")
 	protected float bottom;
 

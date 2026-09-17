@@ -20,17 +20,16 @@ import lombok.Getter;
  * @author Falke_34
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "MinionTemplate")
 public class MinionTemplate {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	private String name;
 
@@ -38,12 +37,10 @@ public class MinionTemplate {
 	private int name_id;
 
 	/** 返回 grade / Returns the grade */
-	@Getter
 	@XmlAttribute(name = "grade")
 	private String grade;
 
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 
@@ -54,7 +51,6 @@ public class MinionTemplate {
 	private int growthMax;
 
 	/** 返回 growth cost / Returns the growth cost */
-	@Getter
 	@XmlAttribute(name = "growthCost")
 	private int growthCost;
 
@@ -65,7 +61,6 @@ public class MinionTemplate {
 	private MinionActions actions;
 
 	/** 获取属性模板。 / Returns the stats template. */
-	@Getter
 	@XmlElement(name = "minionstats")
 	private MinionStatsTemplate statsTemplate;
 
@@ -73,7 +68,6 @@ public class MinionTemplate {
 	private BoundRadius bound;
 
 	/** 返回 evolved / Returns the evolved */
-	@Getter
 	@XmlElement(name = "evolved")
 	private MinionEvolved evolved;
 

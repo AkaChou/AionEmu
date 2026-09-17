@@ -9,21 +9,17 @@ import lombok.Setter;
  * Drop Modifiers model.
  */
 
+@Getter
+@Setter
 public class DropModifiers {
 
 	/** 是否掉落 NPC 宝箱 / Whether to drop the NPC chest */
-	@Getter
-	@Setter
 	private boolean dropNpcChest;
 	/** 获取掉落种族。 / Returns the drop race. */
-	@Getter
-	@Setter
 	private Race dropRace;
 	/** 设置掉落倍率加成 / Sets the boost drop rate */
-	@Setter
 	private float boostDropRate;
 	/** 设置掉率衰减倍率 / Sets the reduction drop rate */
-	@Setter
 	private Float reductionDropRate;
 
 	/** 返回不小于零的完整普通掉落倍率。 / Returns the complete non-negative ordinary drop multiplier. */

@@ -32,21 +32,17 @@ import lombok.Setter;
  *
  * @author xavier
  */
+@Getter
+@Setter
 public class PlayerGameStats extends CreatureGameStats<Player> {
 
 	private int cachedSpeed;
 	private int cachedAttackSpeed;
 	/** 返回最大伤害概率 / Returns the max damage chance*/
-	@Getter
-	@Setter
 	private int maxDamageChance;
 	/** 返回 min damage ratio / Returns the min damage ratio */
-	@Getter
-	@Setter
 	private float minDamageRatio;
 	/** 返回 skill efficiency / Returns the skill efficiency */
-	@Getter
-	@Setter
 	private float skillEfficiency;
 
 	/**

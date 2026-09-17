@@ -14,14 +14,13 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SignetEffect")
 public class SignetEffect extends EffectTemplate {
-	@Getter
 	@XmlAttribute(name = "signet_type", required = true)
 	private int signetType;
 
-	@Getter
 	@XmlAttribute(name = "signet_level", required = true)
 	private int signetLevel;
 

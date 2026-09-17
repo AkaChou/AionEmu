@@ -8,11 +8,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import lombok.Getter;
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillGroupCondition")
 public class SkillGroupCondition extends Condition {
 
-	@Getter
 	@XmlAttribute(required = true)
 	private String value;
 

@@ -50,6 +50,8 @@ import lombok.Setter;
  *
  * @author -Nemesiss-
  */
+@Getter
+@Setter
 @Slf4j
 public abstract class WorldMapInstance {
 
@@ -62,7 +64,6 @@ public abstract class WorldMapInstance {
 	 * 父级世界地图。
 	 * Parent world map.
 	 */
-	@Getter
 	private final WorldMap parent;
 	/**
 	 * 活跃区域表。
@@ -98,19 +99,15 @@ public abstract class WorldMapInstance {
 	private final Set<Integer> registeredObjects = ConcurrentHashMap.newKeySet();
 
 	/** 注册的队伍 / registered player group */
-	@Getter
 	private PlayerGroup registeredGroup = null;
 
 	/** 空实例销毁任务 / empty-instance destroy task */
-	@Getter
-	@Setter
 	private Future<?> emptyInstanceTask = null;
 
 	/**
 	 * 实例 ID（频道）。
 	 * Instance id (channel).
 	 */
-	@Getter
 	private final int instanceId;
 
 	/** 本实例相关任务 ID / quest ids related to this instance */
@@ -126,10 +123,8 @@ public abstract class WorldMapInstance {
 	private Integer soloPlayer;
 
 	/** 注册的联盟 / registered alliance */
-	@Getter
 	private PlayerAlliance registredAlliance;
 	/** 注册的军团联盟 / registered league */
-	@Getter
 	private League registredLeague;
 
 	/**

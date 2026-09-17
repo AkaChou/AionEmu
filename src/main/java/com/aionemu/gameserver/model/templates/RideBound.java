@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
  * Ride bound template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RideBound")
 @NoArgsConstructor
 public class RideBound extends BoundRadius {
 	/** 返回 altitude / Returns the altitude */
-	@Getter
 	@XmlAttribute
 	private Float altitude;
 

@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Sarynth
  */
+@Getter
 public enum PlayerAllianceEvent {
 	/** 离开 / Leave. */
 	LEAVE(0), LEAVE_TIMEOUT(0), BANNED(0), MOVEMENT(1), DISCONNECTED(3), JOIN(5), ENTER_OFFLINE(7), UNK(9),
@@ -17,7 +18,6 @@ public enum PlayerAllianceEvent {
 	APPOINT_CAPTAIN(13);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	PlayerAllianceEvent(int id) {

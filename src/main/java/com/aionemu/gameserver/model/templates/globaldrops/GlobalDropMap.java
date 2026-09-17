@@ -12,11 +12,11 @@ import lombok.Getter;
  *
  * @author Wnkrz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropMap")
 public class GlobalDropMap {
 	/** 返回地图 ID。 / Returns the map id. */
-	@Getter
 	@XmlAttribute(name = "map_id", required = true)
 	protected int mapId;
 }

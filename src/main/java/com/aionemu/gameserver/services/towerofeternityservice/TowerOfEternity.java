@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Wnkrz
  * @param <TE> 永恒之塔地点类型 / tower location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 
@@ -28,7 +29,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 *
 	 * @return 绑定地点 / location
 	 */
-	@Getter
 	private final TE towerOfEternityLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 

@@ -13,6 +13,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PlaceableHouseObject")
 @XmlSeeAlso({ HousingJukeBox.class, HousingPicture.class, HousingPostbox.class, HousingChair.class,
@@ -30,14 +31,12 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	 * 对象允许如何放置（堆叠、地面、墙面）。
 	 * How the object is allowed to be placed (stacks, ground, wall).
 	 */
-	@Getter
 	@XmlAttribute
 	protected PlaceLocation location;
 
 	/**
 	 * 对象允许放置的环境（室内、室外）。 / Environment where the object is allowed to be placed (interior, exterior).
 	 */
-	@Getter
 	@XmlAttribute
 	protected PlaceArea area;
 

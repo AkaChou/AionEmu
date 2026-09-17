@@ -9,13 +9,13 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public class PetDopingBag {
 
 	private int[] itemBag = null;
 	/**
 	 * @return 是否需要保存 / true if the bag needs saving
 	 */
-	@Getter
 	private boolean isDirty = false;
 
 	/** 设置食物物品 / Sets the food item*/

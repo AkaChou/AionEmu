@@ -15,25 +15,21 @@ import lombok.Setter;
  * Pet penalty attribute template (static data / XML).
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetPenaltyAttr")
 public class PetPenaltyAttr {
 
 	/** 获取属性。 / Returns the stat. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected StatEnum stat;
 
 	/** 返回加成函数 / Returns the func */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected Func func;
 
 	/** 获取值。 / Returns the value. */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected int value;
 }

@@ -9,13 +9,13 @@ import lombok.AllArgsConstructor;
  *
  * @author xTz
  */
+@Getter
 @AllArgsConstructor
 public class Guide {
 
 	private final int guide_id;
 	private final int player_id;
 	/** 获取称号。 / Returns the title. */
-	@Getter
 	private final String title;
 
 	/** 返回引导 ID / Returns the guide id */

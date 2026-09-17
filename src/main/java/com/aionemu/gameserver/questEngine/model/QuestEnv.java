@@ -17,23 +17,19 @@ import lombok.Setter;
  *
  * @author MrPoke
  */
+@Getter
+@Setter
 public class QuestEnv {
 
 	/** 事件关联的可见目标（NPC/采集物/静态物等）。 Visible target related to the event (NPC/gatherable/static object, etc.). */
-	@Getter
-	@Setter
 	private VisibleObject visibleObject;
 	/** 触发事件的玩家。 Player who triggered the event. */
-	@Getter
-	@Setter
 	private Player player;
 	/** 任务 ID。 Quest id. */
 	private int questId;
 	/** 交互 ID / interaction id */
 	private int dialogId;
 	/** 扩展奖励索引。 Extended reward index. */
-	@Getter
-	@Setter
 	private int extendedRewardIndex;
 
 	/**

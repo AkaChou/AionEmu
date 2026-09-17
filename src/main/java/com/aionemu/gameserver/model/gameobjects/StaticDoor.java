@@ -19,10 +19,10 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 public class StaticDoor extends StaticObject {
 
 	/** 返回状态集合 / Returns the states */
-	@Getter
 	private final EnumSet<StaticDoorState> states;
 
 	/**

@@ -10,6 +10,8 @@ import lombok.Setter;
  * 碰撞结果集合，按距离排序收集命中，并携带意图掩码、实例 id 与忽略属性。
  * Ordered collection of collision hits carrying intention mask, instance id and ignore properties.
  */
+@Getter
+@Setter
 public class CollisionResults implements Iterable<CollisionResult> {
 
 	/** 命中结果列表。 / Hit result list. */
@@ -17,20 +19,14 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/** 列表是否已按距离排序。 / Whether the list is sorted by distance. */
 	private boolean sorted = true;
 	/** 是否只取第一个命中。 / Whether only the first hit is required. */
-	@Getter
 	private final boolean onlyFirst;
 	/** 碰撞意图位掩码。 / Collision intention bitmask. */
-	@Getter
 	private final byte intentions;
 	/** 映射副本 ID / Map instance id */
-	@Getter
-	@Setter
 	private int instanceId;
 	/** 忽略属性；可为 {@code null} / Ignore properties; may be {@code null} */
-	@Getter
 	private final IgnoreProperties ignoreProperties;
 	/** 是否使斜坡表面无效（不计入有效命中）。 / Whether sloping surfaces should be invalidated. */
-	@Setter
 	private boolean invalidateSlopingSurface;
 
 	/**

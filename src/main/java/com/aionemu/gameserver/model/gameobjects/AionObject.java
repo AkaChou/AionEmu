@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
  *
  * @author -Nemesiss-, SoulKeeper
  */
+@Getter
 @AllArgsConstructor
 public abstract class AionObject {
 
@@ -26,7 +27,6 @@ public abstract class AionObject {
 	 * 所有游戏对象的唯一 ID：物品、玩家、怪物等。
 	 * Unique id, for all game objects such as: items, players, monsters.
 	 */
-	@Getter
 	private final Integer objectId;
 
 	/**

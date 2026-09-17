@@ -14,10 +14,10 @@ import lombok.Getter;
  */
 @Slf4j
 
+@Getter
 public class Friend {
 	private PlayerCommonData pcd;
 	/** 返回 friend note / Returns the friend note */
-	@Getter
 	private String friendNote = "";
 
 	public Friend(PlayerCommonData pcd) {

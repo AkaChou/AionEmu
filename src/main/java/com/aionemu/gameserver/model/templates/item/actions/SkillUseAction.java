@@ -35,6 +35,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillUseAction")
 public class SkillUseAction extends AbstractItemAction {
@@ -43,14 +44,12 @@ public class SkillUseAction extends AbstractItemAction {
 	 * 获取 skillid 属性值。
 	 * Gets the value of the skillid property
 	 */
-	@Getter
 	@XmlAttribute
 	protected int skillid;
 	/**
 	 * 获取 level 属性值。
 	 * Gets the value of the level property
 	 */
-	@Getter
 	@XmlAttribute
 	protected int level;
 	@XmlAttribute(required = false)

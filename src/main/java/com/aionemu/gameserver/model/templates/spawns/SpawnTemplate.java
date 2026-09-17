@@ -17,55 +17,37 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 public class SpawnTemplate {
 	/** 返回 x 坐标 / Returns the x */
-	@Getter
 	private float x;
 	/** 返回 y 坐标 / Returns the y */
-	@Getter
 	private float y;
 	/** 返回 z 坐标 / Returns the z */
-	@Getter
 	private float z;
 	private final byte h;
 	/** 返回实体 ID / Returns the entity id */
-	@Getter
-	@Setter
 	private int entityId;
-	@Getter
 	private boolean resolveZ;
-	@Getter
-	@Setter
 	private volatile float resolvedZ = Float.NaN;
 	/** 返回随机行走 / Returns the random walk */
-	@Getter
-	@Setter
 	private int randomWalk;
 	/** 返回巡游者 ID / Returns the walker id */
-	@Getter
-	@Setter
 	private String walkerId;
 	private int walkerIdx;
 	/** 获取飞行。 / Returns the fly. */
-	@Getter
-	@Setter
 	private int fly;
 	/** 返回锚点 / Returns the anchor */
-	@Getter
 	private String anchor;
 	/** 是否已用 / Whether used*/
-	@Getter
 	private boolean isUsed;
 	private final SpawnGroup2 spawnGroup;
 	/** 获取活动模板。 / Returns the event template. */
-	@Getter
-	@Setter
 	private EventTemplate eventTemplate;
 	/** 返回模型 / Returns the model */
-	@Getter
 	private SpawnModel model;
 	/** 获取状态。 / Returns the state. */
-	@Getter
 	private int state;
 	private int astate;
 	private int bstate;
@@ -83,28 +65,17 @@ public class SpawnTemplate {
 	private int iustate;
 	private int opstate;
 	/** 返回 creator id / Returns the creator id */
-	@Getter
-	@Setter
 	private int creatorId;
 	private String alternateIdValues;
 	private String selectprobValues;
 	/** 返回大师名称 / Returns the master name */
-	@Getter
-	@Setter
 	private String masterName = StringUtils.EMPTY;
-	@Getter
-	@Setter
 	private String npcPartyId;
-	@Getter
-	@Setter
 	private Creature master;
 	private TemporarySpawn temporarySpawn;
 	/** 返回可见对象。 / Returns the visible object. */
-	@Getter
-	@Setter
 	private VisibleObject visibleObject;
 	/** 返回 visible objects / Returns the visible objects */
-	@Getter
 	private List<VisibleObject> visibleObjects;
 
 	public SpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

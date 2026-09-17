@@ -9,17 +9,14 @@ import lombok.AllArgsConstructor;
  * Portal Cooldown Item game object.
  */
 
+@Getter
+@Setter
 @AllArgsConstructor
 public class PortalCooldownItem {
 	/** 返回世界 ID / Returns the world id */
-	@Getter
 	private final int worldId;
 	/** 获取条目计数。 / Returns the entry count. */
-	@Getter
-	@Setter
 	private int entryCount;
 	/** 获取冷却。 / Returns the cooldown. */
-	@Getter
-	@Setter
 	private long cooldown;
 }

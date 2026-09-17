@@ -63,52 +63,37 @@ import lombok.Setter;
  */
 @Slf4j
 
+@Getter
+@Setter
 public class House extends VisibleObject {
 	private HousingLand land;
 	/** 返回 address / Returns the address */
-	@Getter
 	private final HouseAddress address;
 	/** 返回建筑 / Returns the building*/
-	@Getter
-	@Setter
 	private Building building;
 	private final String name;
 	private int playerObjectId;
 	/** 返回 acquired time / Returns the acquired time */
-	@Getter
-	@Setter
 	private Timestamp acquiredTime;
 	/** 设置 permissions / Sets the permissions */
-	@Setter
 	private int permissions;
 	/** 获取状态。 / Returns the status. */
-	@Getter
 	private HouseStatus status;
 	/**
 	 * @return 是否已缴纳维护费 / whether fee paid
 	 */
-	@Getter
-	@Setter
 	private boolean feePaid = true;
 	/** 返回 next pay / Returns the next pay */
-	@Getter
-	@Setter
 	private Timestamp nextPay;
 	/** 返回 sell started / Returns the sell started */
-	@Getter
-	@Setter
 	private Timestamp sellStarted;
 	private final Map<SpawnType, Npc> spawns = new HashMap<SpawnType, Npc>(3);
 	private HouseRegistry houseRegistry;
 	/** 返回 house owner info flags / Returns the house owner info flags */
-	@Getter
 	private byte houseOwnerInfoFlags = PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
 	/** 返回 player scripts / Returns the player scripts */
-	@Getter
 	private PlayerScripts playerScripts;
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
-	@Setter
 	private PersistentState persistentState;
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();

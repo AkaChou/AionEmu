@@ -17,27 +17,24 @@ import lombok.Getter;
  * Boost Events Template (static data/XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BoostEvents")
 public class BoostEvents {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
 	/** 返回增益值 / Returns the buff value */
-	@Getter
 	@XmlAttribute(name = "buff_value", required = true)
 	protected int buffValue;
 

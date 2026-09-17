@@ -12,15 +12,14 @@ import lombok.AccessLevel;
  *
  * @author ATracer
  */
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class PlayerGroupStats implements Predicate<Player> {
 
 	private final PlayerGroup group;
 	/** 返回最小经验玩家等级 / Returns the min exp player level*/
-	@Getter
 	private int minExpPlayerLevel;
 	/** 返回最大经验玩家等级 / Returns the max exp player level*/
-	@Getter
 	private int maxExpPlayerLevel;
 	Player minLevelPlayer;
 	Player maxLevelPlayer;

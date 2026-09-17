@@ -19,24 +19,20 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class MoltenusLocation {
 	/** 位置 ID / Location id */
-	@Getter
 	protected int id;
 	/** 是否激活 / Whether active */
-	@Getter
 	protected boolean isActive;
 	/** 位置模板 / Location template */
 	protected MoltenusTemplate template;
 	/** 当前进行的熔岩魔战斗 / Active moltenus fight */
-	@Getter
 	protected MoltenusFight<MoltenusLocation> activeMoltenus;
 	/** 位置内的玩家映射 / Players in this location */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 已刷出的实体列表 / Spawned entities */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	/**

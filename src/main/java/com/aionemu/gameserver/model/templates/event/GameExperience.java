@@ -13,21 +13,19 @@ import lombok.Getter;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @XmlRootElement(name = "game_experience_item")
 @XmlAccessorType(XmlAccessType.NONE)
 public class GameExperience {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	/** 获取账号类型。 / Returns the account type. */
-	@Getter
 	@XmlAttribute(name = "account_type", required = true)
 	private AccountType accountType;
 
 	/** 获取奖励物品。 / Returns the reward item. */
-	@Getter
 	@XmlAttribute(name = "reward_item", required = true)
 	private int rewardItem;
 }

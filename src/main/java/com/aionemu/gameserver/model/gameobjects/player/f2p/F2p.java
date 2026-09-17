@@ -14,11 +14,11 @@ import lombok.RequiredArgsConstructor;
  * F2p game object.
  */
 
+@Getter
 @RequiredArgsConstructor
 public class F2p {
 	private final Player owner;
 	/** 返回 F2p 账号 / Returns the F2p account */
-	@Getter
 	private F2pAccount f2pAccount;
 
 	/** 添加。 / Add. */

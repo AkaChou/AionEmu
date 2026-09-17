@@ -20,30 +20,25 @@ import lombok.Setter;
  *
  * @author xavier
  */
+@Getter
+@Setter
 public class NpcGameStats extends CreatureGameStats<Npc> {
 
 	int currentRunSpeed = 0;
-	@Getter
 	private long lastAttackTime = 0;
-	@Getter
 	private long lastAttackedTime = 0;
 	/** 设置 next attack time / Sets the next attack time */
-	@Setter
 	private long nextAttackTime = 0;
 	private long lastSkillTime = 0;
 	private long nextSkillTime = 0;
 	/** 返回 fight starting time / Returns the fight starting time */
-	@Getter
 	private long fightStartingTime = 0;
-	@Getter
-	@Setter
 	private long lastSpawnPointChaseCheck;
 	private int cachedState;
 	private Stat2 cachedSpeedStat;
 	/**
 	 * @param lastGeoZUpdate the lastGeoZUpdate to set
 	 */
-	@Setter
 	private long lastGeoZUpdate;
 	private long lastChangeTarget = 0;
 	private int pAccuracy = 0;

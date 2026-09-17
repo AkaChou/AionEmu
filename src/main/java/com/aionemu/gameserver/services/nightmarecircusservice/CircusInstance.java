@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <CL> 马戏团地点类型 / circus location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 
@@ -28,7 +29,6 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 *
 	 * @return 绑定地点 / Bound location
 	 */
-	@Getter
 	private final CL nightmareCircusLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 

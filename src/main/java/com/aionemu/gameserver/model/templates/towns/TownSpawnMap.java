@@ -17,13 +17,13 @@ import lombok.Getter;
  *
  * @author ViAl
  */
+@Getter
 @XmlType(name = "town_spawn_map")
 public class TownSpawnMap {
 
 	/**
 	 * @return the mapId
 	 */
-	@Getter
 	@XmlAttribute(name = "map_id")
 	private int mapId;
 	@XmlElement(name = "town_spawn")

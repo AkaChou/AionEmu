@@ -16,17 +16,16 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChallengeTask", propOrder = { "quest", "contrib", "reward" })
 public class ChallengeTaskTemplate {
 	@XmlElement(required = true)
 	protected List<ChallengeQuestTemplate> quest;
 	/** 返回贡献奖励列表 / Returns the contrib */
-	@Getter
 	protected List<ContributionReward> contrib;
 
 	/** 获取奖励。 / Returns the reward. */
-	@Getter
 	@XmlElement(required = true)
 	protected ChallengeReward reward;
 
@@ -37,37 +36,30 @@ public class ChallengeTaskTemplate {
 	protected Boolean townResidence;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute(name = "name_id")
 	protected Integer nameId;
 
 	/** 获取最大等级。 / Returns the max level. */
-	@Getter
 	@XmlAttribute(name = "max_level", required = true)
 	protected int maxLevel;
 
 	/** 获取最小等级。 / Returns the min level. */
-	@Getter
 	@XmlAttribute(name = "min_level", required = true)
 	protected int minLevel;
 
 	/** 返回前置任务 / Returns the prev task */
-	@Getter
 	@XmlAttribute(name = "prev_task")
 	protected Integer prevTask;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected Race race;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected ChallengeType type;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 

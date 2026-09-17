@@ -11,6 +11,7 @@ import lombok.Getter;
  * Npc Rating enumeration.
  */
 
+@Getter
 @XmlType(name = "rating")
 @XmlEnum
 public enum NpcRating {
@@ -26,7 +27,6 @@ public enum NpcRating {
 	LEGENDARY(CreatureSeeState.SEARCH2);
 
 	/** 返回 congenital see state / Returns the congenital see state */
-	@Getter
 	private final CreatureSeeState congenitalSeeState;
 
 	NpcRating(CreatureSeeState congenitalSeeState) {

@@ -15,18 +15,17 @@ import lombok.AllArgsConstructor;
  * @author Rinzler
  */
 
+@Getter
 @XmlType(name = "merch")
 @XmlAccessorType(XmlAccessType.NONE)
 @NoArgsConstructor
 @AllArgsConstructor
 public class PetMerchandEntry {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	/** 获取比率价格。 / Returns the rate price. */
-	@Getter
 	@XmlAttribute(name = "rate_price")
 	private int ratePrice;
 }

@@ -13,16 +13,15 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnModel")
 public class SpawnModel {
 	/** 获取部落。 / Returns the tribe. */
-	@Getter
 	@XmlAttribute(name = "tribe")
 	private TribeClass tribe;
 
 	/** 返回 AI / Returns the ai */
-	@Getter
 	@XmlAttribute(name = "ai")
 	private String ai;
 }

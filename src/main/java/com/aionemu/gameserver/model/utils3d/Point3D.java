@@ -9,17 +9,15 @@ import lombok.AllArgsConstructor;
  *
  * @author M@xx modified by Wakizashi
  */
+@Getter
 @AllArgsConstructor
 public class Point3D {
 
 	/** 返回 X 坐标 / Returns the x */
-	@Getter
 	public double x;
 	/** 返回 Y 坐标 / Returns the y */
-	@Getter
 	public double y;
 	/** 返回 Z 坐标 / Returns the z */
-	@Getter
 	public double z;
 
 	public Point3D() {

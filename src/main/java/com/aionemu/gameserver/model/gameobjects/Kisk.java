@@ -25,10 +25,10 @@ import lombok.Getter;
  * Kisk game object.
  */
 
+@Getter
 public class Kisk extends SummonedObject<Player> {
 	private final Legion ownerLegion;
 	/** 返回所有者种族 / Returns the owner race. */
-	@Getter
 	private final Race ownerRace;
 	private KiskStatsTemplate kiskStatsTemplate;
 	private int remainingResurrections;

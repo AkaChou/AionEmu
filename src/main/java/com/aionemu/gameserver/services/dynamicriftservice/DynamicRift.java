@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <DL> 动态裂隙地点类型 / Dynamic Rift location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 
@@ -28,7 +29,6 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 *
 	 * @return 动态裂隙地点 / dynamic rift location
 	 */
-	@Getter
 	private final DL dynamicRiftLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 

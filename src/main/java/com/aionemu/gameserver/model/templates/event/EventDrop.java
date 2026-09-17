@@ -15,43 +15,35 @@ import lombok.Getter;
  * Event Drop Template (static data/XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventDrop")
 public class EventDrop {
 	/** 返回地区 ID / Returns the loc id */
-	@Getter
 	@XmlAttribute(name = "loc_id")
 	protected int locId;
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npc_id")
 	protected int npcId;
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count", required = true)
 	protected long count;
 	/** 返回概率 / Returns the chance */
-	@Getter
 	@XmlAttribute(name = "chance", required = true)
 	protected float chance;
 	/** 返回最小等级差 / Returns the min diff */
-	@Getter
 	@XmlAttribute(name = "minDiff")
 	protected int minDiff;
 	/** 返回最大等级差 / Returns the max diff */
-	@Getter
 	@XmlAttribute(name = "maxDiff")
 	protected int maxDiff;
 	/** 返回最低等级 / Returns the min lvl */
-	@Getter
 	@XmlAttribute(name = "minLvl")
 	protected int minLvl;
 	/** 返回最高等级 / Returns the max lvl */
-	@Getter
 	@XmlAttribute(name = "maxLvl")
 	protected int maxLvl;
 

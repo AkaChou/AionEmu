@@ -14,6 +14,8 @@ import lombok.Setter;
  * 动作时间表：按种族/性别分组的武器动作时间（am/af/em/ef）。
  * Motion time table: per race/gender weapon motion times (am/af/em/ef).
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "motion_time", propOrder = { "am", "af", "em", "ef" })
 public class MotionTime {
@@ -23,32 +25,24 @@ public class MotionTime {
 	 * Gets Asmodian male times.
 	 *
 	 */
-	@Getter
-	@Setter
 	protected Times am;
 	/**
 	 * 获取阿斯摩女性时间表。
 	 * Gets Asmodian female times.
 	 *
 	 */
-	@Getter
-	@Setter
 	protected Times af;
 	/**
 	 * 获取天族男性时间表。
 	 * Gets Elyos male times.
 	 *
 	 */
-	@Getter
-	@Setter
 	protected Times em;
 	/**
 	 * 获取天族女性时间表。
 	 * Gets Elyos female times.
 	 *
 	 */
-	@Getter
-	@Setter
 	protected Times ef;
 
 	/**
@@ -56,8 +50,6 @@ public class MotionTime {
 	 * Gets motion name.
 	 *
 	 */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected String name;
 

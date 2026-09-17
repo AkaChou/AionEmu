@@ -19,6 +19,7 @@ import lombok.Getter;
  */
 
 
+@Getter
 public class BattlefieldUnionService {
 	private static final BattlefieldUnionService instance = new BattlefieldUnionService();
 	private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
@@ -29,7 +30,6 @@ public class BattlefieldUnionService {
 	 *
 	 * @return 已注册人数 / registered size
 	 */
-	@Getter
 	public int size = 0;
 	/**
 	 * 返回联盟人数上限。
@@ -37,7 +37,6 @@ public class BattlefieldUnionService {
 	 *
 	 * @return 人数上限 / max size
 	 */
-	@Getter
 	public int maxSize = 24;
 	public int requestId = 0;
 	public int activeSiegeId;

@@ -23,6 +23,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MailTemplate")
 public class MailTemplate {
@@ -33,12 +34,10 @@ public class MailTemplate {
 	private List<MailPart> mailParts;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race", required = true)
 	protected Race race;
 

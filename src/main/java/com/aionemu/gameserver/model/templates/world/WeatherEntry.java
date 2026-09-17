@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherEntry")
 @NoArgsConstructor
@@ -24,7 +25,6 @@ public class WeatherEntry {
 	}
 
 	/** 返回区域 ID / Returns the zone id */
-	@Getter
 	@XmlAttribute(name = "zone_id", required = true)
 	private int zoneId;
 
@@ -32,12 +32,10 @@ public class WeatherEntry {
 	private int weatherCode;
 
 	/** 返回占领排名 / Returns the att ranking */
-	@Getter
 	@XmlAttribute(name = "att_ranking", required = true)
 	private int attRanking;
 
 	/** 返回 weather name / Returns the weather name */
-	@Getter
 	@XmlAttribute(name = "name")
 	private String weatherName;
 

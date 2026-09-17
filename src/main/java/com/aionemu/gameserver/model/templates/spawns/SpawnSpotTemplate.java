@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnSpotTemplate")
 @NoArgsConstructor
@@ -71,7 +73,6 @@ public class SpawnSpotTemplate {
 	private Integer opstate = 0;
 
 	/** 返回锚点 / Returns the anchor */
-	@Getter
 	@XmlAttribute(name = "anchor")
 	private String anchor;
 
@@ -82,8 +83,6 @@ public class SpawnSpotTemplate {
 	private Integer walkerIdx;
 
 	/** 返回巡游者 ID / Returns the walker id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "walker_id")
 	private String walkerId;
 
@@ -106,17 +105,14 @@ public class SpawnSpotTemplate {
 	private byte h;
 
 	/** 返回 z 坐标 / Returns the z */
-	@Getter
 	@XmlAttribute(name = "z", required = true)
 	private float z;
 
 	/** 返回 y 坐标 / Returns the y */
-	@Getter
 	@XmlAttribute(name = "y", required = true)
 	private float y;
 
 	/** 返回 x 坐标 / Returns the x */
-	@Getter
 	@XmlAttribute(name = "x", required = true)
 	private float x;
 
@@ -124,7 +120,6 @@ public class SpawnSpotTemplate {
 	private TemporarySpawn temporaySpawn;
 
 	/** 返回模型 / Returns the model */
-	@Getter
 	@XmlElement(name = "model")
 	private SpawnModel model;
 	private static final Integer ZERO = Integer.valueOf(0);

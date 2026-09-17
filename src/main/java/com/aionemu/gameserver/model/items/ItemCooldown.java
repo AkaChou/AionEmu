@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @AllArgsConstructor
 public class ItemCooldown {
 
@@ -21,7 +22,6 @@ public class ItemCooldown {
 	 * 使用延迟（毫秒）。
 	 * Use delay in ms.
 	 */
-	@Getter
 	private final int useDelay;
 
 	/**

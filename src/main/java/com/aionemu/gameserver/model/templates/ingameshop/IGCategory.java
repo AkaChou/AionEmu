@@ -15,6 +15,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IGCategory")
 public class IGCategory {
@@ -23,12 +24,10 @@ public class IGCategory {
 	protected List<IGSubCategory> subCategories;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected String name;
 

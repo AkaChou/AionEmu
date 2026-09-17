@@ -14,11 +14,11 @@ import lombok.Getter;
  *
  * @author Wnkrz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropTribe")
 public class GlobalDropTribe {
 	/** 获取部落。 / Returns the tribe. */
-	@Getter
 	@XmlAttribute(name = "tribe", required = true)
 	protected TribeClass tribe;
 }

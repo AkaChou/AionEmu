@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础力量值枚举。
  * Baseline power values by player class.
  */
+@Getter
 public enum POWER {
 	WARRIOR(110), GLADIATOR(110), TEMPLAR(110), SCOUT(100), ASSASSIN(110), RANGER(90), MAGE(90), SORCERER(90),
 	SPIRIT_MASTER(90), PRIEST(95), CLERIC(105), CHANTER(110),
@@ -21,7 +22,6 @@ public enum POWER {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	POWER(int value) {

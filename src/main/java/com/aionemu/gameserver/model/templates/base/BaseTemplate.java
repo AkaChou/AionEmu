@@ -13,11 +13,11 @@ import lombok.Getter;
  * @author Rinzler
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Base")
 public class BaseTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 

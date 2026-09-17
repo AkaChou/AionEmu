@@ -7,6 +7,7 @@ import lombok.Getter;
  * Entry Request Type enumeration.
  */
 
+@Getter
 public enum EntryRequestType {
 	/**
 	 * 入场类型：新小队 / 快速小队 / 队伍 / 特殊用途。
@@ -15,7 +16,6 @@ public enum EntryRequestType {
 	NEW_GROUP_ENTRY((byte) 0), FAST_GROUP_ENTRY((byte) 1), GROUP_ENTRY((byte) 2), SPECIAL_PURPOSE((byte) 3);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final byte id;
 
 	EntryRequestType(byte id) {

@@ -21,32 +21,28 @@ import lombok.Getter;
  *
  * @author Ghostfur (Aion-Unique)
  */
+@Getter
 @XmlRootElement(name = "atreian_passport")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AtreianPassport {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	private String name = "";
 
 	/** 返回激活标志 / Returns the active flag */
-	@Getter
 	@XmlAttribute(name = "active", required = true)
 	private int active;
 
 	/** 获取签到类型。 / Returns the attend type. */
-	@Getter
 	@XmlAttribute(name = "attend_type", required = true)
 	private AttendType attendType;
 
 	/** 返回签到次数 / Returns the attend num */
-	@Getter
 	@XmlAttribute(name = "attend_num")
 	private int attendNum;
 

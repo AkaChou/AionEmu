@@ -9,22 +9,20 @@ import lombok.Setter;
  *
  * @author EvilSpirit
  */
+@Getter
+@Setter
 public class AccountTime {
 
 	/**
 	 * 累计在线时间（毫秒）。
 	 * Accumulated online time in millis
 	 */
-	@Getter
-	@Setter
 	private long accumulatedOnlineTime;
 
 	/**
 	 * 累计休息（离线）时间（毫秒）。
 	 * Accumulated rest(offline) time in millis
 	 */
-	@Getter
-	@Setter
 	private long accumulatedRestTime;
 
 	/**

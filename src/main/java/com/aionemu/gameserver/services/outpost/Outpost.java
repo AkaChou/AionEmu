@@ -34,6 +34,7 @@ import lombok.Getter;
  * @author Wnkrz
  * @param <OL> 前哨位置类型 / Outpost location type
  */
+@Getter
 public class Outpost<OL extends OutpostLocation> {
 	private Npc boss, flag;
 	private boolean started;
@@ -43,7 +44,6 @@ public class Outpost<OL extends OutpostLocation> {
 	 *
 	 * @return 位置模板 / location template
 	 */
-	@Getter
 	private final OL outpostLocation;
 	private Future<?> startAssault, stopAssault;
 	private final List<Race> list = new ArrayList<Race>();
@@ -53,7 +53,6 @@ public class Outpost<OL extends OutpostLocation> {
 	 *
 	 * @return 已生成单位 / Spawned units
 	 */
-	@Getter
 	private final List<Npc> spawned = new ArrayList<Npc>();
 	/**
 	 * 获取袭击单位列表。
@@ -61,7 +60,6 @@ public class Outpost<OL extends OutpostLocation> {
 	 *
 	 * @return 袭击单位列表 / attackers
 	 */
-	@Getter
 	private final List<Npc> attackers = new ArrayList<Npc>();
 	private final AtomicBoolean finished = new AtomicBoolean();
 	private final OutpostBossDeathListener baseBossDeathListener = new OutpostBossDeathListener(this);

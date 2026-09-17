@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Cheatkiller
  */
+@Getter
 public enum EffectResult {
 
 	/** 普通 / Normal */
@@ -22,7 +23,6 @@ public enum EffectResult {
 	 * Gets protocol id.
 	 *
 	 */
-	@Getter
 	private final int id;
 
 	EffectResult(int id) {

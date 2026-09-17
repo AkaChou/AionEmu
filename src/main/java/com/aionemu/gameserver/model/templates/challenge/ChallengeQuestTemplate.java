@@ -11,21 +11,19 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChallengeQuest")
 public class ChallengeQuestTemplate {
 	/** 返回分数 / Returns the score */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int score;
 
 	/** 返回重复次数 / Returns the repeat count */
-	@Getter
 	@XmlAttribute(name = "repeat_count", required = true)
 	protected int repeatCount;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 }

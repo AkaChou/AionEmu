@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author kosyachok
  */
+@Getter
 public enum MailMessage {
 	/** Mail Send Seccess / Mail Send Seccess */
 	MAIL_SEND_SECCESS(0), NO_SUCH_CHARACTER_NAME(1), RECIPIENT_MAILBOX_FULL(2), MAIL_IS_ONE_RACE_ONLY(3),
@@ -17,7 +18,6 @@ public enum MailMessage {
 	MAILSPAM_WAIT_FOR_SOME_TIME(6);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	MailMessage(int id) {

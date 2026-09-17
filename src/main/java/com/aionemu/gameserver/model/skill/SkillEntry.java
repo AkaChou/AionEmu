@@ -15,21 +15,20 @@ import lombok.AccessLevel;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class SkillEntry {
 
 	protected final int skillId;
 	protected int skillLevel;
 	/** 设置 skin id / Sets the skin id */
-	@Setter
 	protected int skinId;
 	protected Timestamp activeSkinTime;
 	protected int expireTime;
 	/**
 	 * @return 是否激活 / Whether activated
 	 */
-	@Getter
-	@Setter
 	protected boolean isActivated;
 
 	/** 返回技能 ID / Returns the skill id */

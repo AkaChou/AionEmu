@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <RL> 裂隙地点类型 / rift location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 
@@ -28,7 +29,6 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 *
 	 * @return 绑定地点 / bound location
 	 */
-	@Getter
 	private final RL instanceRiftLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
 

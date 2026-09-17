@@ -16,10 +16,10 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianChargeCondition")
 public class IdianChargeCondition extends ChargeCondition {
-	@Getter
 	@XmlAttribute
 	private int value = 500;
 

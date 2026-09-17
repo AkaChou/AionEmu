@@ -75,6 +75,7 @@ import lombok.Getter;
  */
 @Slf4j(topic = "SIEGE_LOG")
 
+@Getter
 public class SiegeService {
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
@@ -89,7 +90,6 @@ public class SiegeService {
 	 *
 	 * artifacts map
 	 */
-	@Getter
 	private Map<Integer, ArtifactLocation> artifacts;
 	/**
 	 * 获取全部要塞地点。
@@ -97,7 +97,6 @@ public class SiegeService {
 	 *
 	 * fortresses map
 	 */
-	@Getter
 	private Map<Integer, FortressLocation> fortresses;
 	private Map<Integer, SiegeLocation> locations;
 

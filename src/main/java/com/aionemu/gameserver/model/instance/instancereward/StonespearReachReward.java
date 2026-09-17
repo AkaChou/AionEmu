@@ -9,16 +9,14 @@ import lombok.Setter;
  * Stonespear Reach Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class StonespearReachReward extends InstanceReward<StonespearReachPlayerReward> {
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	/** 返回 npc kills / Returns the npc kills */
-	@Getter
 	private int npcKills;
 	/** 设置军阶。 / Sets the rank. */
-	@Getter
-	@Setter
 	private int rank = 7;
 
 	public StonespearReachReward(Integer mapId, int instanceId) {

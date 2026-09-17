@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CraftReward")
 @XmlSeeAlso({ CraftRecipe.class, CraftItem.class })
@@ -25,7 +26,6 @@ public abstract class CraftReward extends ItemRaceEntry {
 	 * Gets the value of the skill property
 	 * @return 可能的对象类型 / possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute(name = "skill")
 	protected Integer skill;
 }

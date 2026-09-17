@@ -12,22 +12,20 @@ import lombok.Getter;
  *
  * @author avol
  */
+@Getter
 @XmlRootElement(name = "bind_point")
 @XmlAccessorType(XmlAccessType.NONE)
 public class BindPointTemplate {
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npcid")
 	private int npcId;
 
 	/** 获取价格。 / Returns the price. */
-	@Getter
 	@XmlAttribute(name = "price")
 	private int price = 0;
 }

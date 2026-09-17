@@ -13,12 +13,12 @@ import lombok.AllArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @AllArgsConstructor
 public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunction> {
 
 	private final StatOwner owner;
 	/** 返回 proxied function / Returns the proxied function */
-	@Getter
 	private final IStatFunction proxiedFunction;
 	private final StatEnum stat;
 

@@ -13,9 +13,9 @@ import lombok.Getter;
  * Harmony Group Reward for instance logic.
  */
 
+@Getter
 public class HarmonyGroupReward extends PvPArenaPlayerReward {
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 	private final List<AGPlayer> players;
 

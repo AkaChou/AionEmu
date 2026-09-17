@@ -12,19 +12,15 @@ import lombok.NoArgsConstructor;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class LimitedItem {
 
-	@Getter
 	private int itemId;
-	@Getter
-	@Setter
 	private int sellLimit;
-	@Getter
 	private int buyLimit;
-	@Getter
 	private int defaultSellLimit;
-	@Getter
 	private String salesTime;
 
 	private final Map<Integer, Integer> buyCounts = new HashMap<>(); // 玩家对象 ID → 购买数量 / player object id → buy count

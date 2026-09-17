@@ -27,62 +27,47 @@ import lombok.NoArgsConstructor;
 
 @Slf4j
 
+@Getter
+@Setter
 @NoArgsConstructor
 public class SiegeLocation implements ZoneHandler {
 	public static final int STATE_INVULNERABLE = 0;
 	public static final int STATE_VULNERABLE = 1;
 
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	protected SiegeLocationTemplate template;
 	/** 返回地点 ID / Returns the location id */
-	@Getter
 	protected int locationId;
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	protected SiegeType type;
 	/** 返回世界 ID / Returns the world id */
-	@Getter
 	protected int worldId;
 	protected SiegeRace siegeRace = SiegeRace.BALAUR;
 	/** 返回军团 ID / Returns the legion id */
-	@Getter
-	@Setter
 	protected int legionId;
 	protected long lastArtifactActivation;
 	/**
 	 * @return 是否可攻击 / Whether vulnerable
 	 */
-	@Getter
-	@Setter
 	private boolean vulnerable;
 	/** 返回下一个状态 / Returns the next state */
-	@Getter
-	@Setter
 	private int nextState;
 	/** 获取区域。 / Returns the zone. */
-	@Getter
 	protected List<SiegeZoneInstance> zone;
 	private List<SiegeShield> shields;
 	/**
 	 * @return 是否处于护盾下 / Whether under shield
 	 */
-	@Getter
 	private boolean isUnderShield;
 	/** 设置传送权限 / Sets the can teleport */
-	@Setter
 	private boolean canTeleport;
 	/** 返回攻城时长 / Returns the siege duration*/
-	@Getter
 	protected int siegeDuration;
 	/** 返回影响力值 / Returns the influence value*/
-	@Getter
 	protected int influenceValue;
 	/** 返回生物集合 / Returns the creatures */
-	@Getter
 	private final Map<Integer, Creature> creatures = Collections.synchronizedMap(new LinkedHashMap<Integer, Creature>());
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 	protected int buffId;
 	protected int buffIdA;

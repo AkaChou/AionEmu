@@ -9,10 +9,10 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMember> {
 
 	/** 获取联盟。 / Returns the alliance. */
-	@Getter
 	private final PlayerAlliance alliance;
 
 	public PlayerAllianceGroup(PlayerAlliance alliance, Integer objId) {

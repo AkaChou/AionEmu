@@ -12,23 +12,21 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Material")
 public class Material implements Comparable<Material> {
 
 	/** 材料名称。 / Material name. */
-	@Getter
 	@XmlAttribute
 	protected String name;
 	/** 物品 ID。 / Item id. */
-	@Getter
 	@XmlAttribute
 	protected int itemid;
 	/** 名称 ID。 / Name id. */
 	@XmlAttribute
 	protected int nameid;
 	/** 掉落率。 / Drop rate. */
-	@Getter
 	@XmlAttribute
 	protected int rate;
 

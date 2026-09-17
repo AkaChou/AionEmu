@@ -13,24 +13,18 @@ import lombok.NoArgsConstructor;
  *
  * @author Kirill
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class CollisionResult implements Comparable<CollisionResult> {
 
 	/** 命中的空间几何体。 / Hit spatial geometry. */
-	@Getter
-	@Setter
 	private Spatial geometry;
 	/** 接触点（世界坐标）。 / Contact point in world space. */
-	@Getter
-	@Setter
 	private Vector3f contactPoint;
 	/** 接触法线。 / Contact normal. */
-	@Getter
-	@Setter
 	private Vector3f contactNormal;
 	/** 从射线原点到接触点的距离。 / Distance from ray origin to contact point. */
-	@Getter
-	@Setter
 	private float distance;
 
 	/**

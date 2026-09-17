@@ -16,6 +16,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemGroup")
 @XmlSeeAlso({ CraftItemGroup.class, CraftRecipeGroup.class, ManastoneGroup.class, FoodGroup.class, MedicineGroup.class,
@@ -27,7 +28,6 @@ public abstract class ItemGroup {
 	 * Gets the value of the bonusType property
 	 * @return possible object is {@link BonusType }
 	 */
-	@Getter
 	@XmlAttribute(name = "bonusType", required = true)
 	protected BonusType bonusType;
 

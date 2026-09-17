@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
  */
 @Slf4j
 
+@Getter
+@Setter
 @RequiredArgsConstructor
 public abstract class Siege<SL extends SiegeLocation> {
 	/**
@@ -41,7 +43,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 死亡监听器 / death listener
 	 */
-	@Getter
 	private final SiegeBossDeathListener siegeBossDeathListener = new SiegeBossDeathListener(this);
 	/**
 	 * 返回首领伤害监听器。
@@ -49,7 +50,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 伤害监听器 / damage listener
 	 */
-	@Getter
 	private final SiegeBossDoAddDamageListener siegeBossDoAddDamageListener = new SiegeBossDoAddDamageListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
 	/**
@@ -58,7 +58,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 攻城计数器 / siege counter
 	 */
-	@Getter
 	private final SiegeCounter siegeCounter = new SiegeCounter();
 	/**
 	 * 返回攻城据点。
@@ -66,7 +65,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 攻城据点 / siege location
 	 */
-	@Getter
 	private final SL siegeLocation;
 	/**
 	 * 返回攻城首领是否已被击杀。
@@ -74,8 +72,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 是否已击杀首领 / whether boss was killed
 	 */
-	@Getter
-	@Setter
 	private boolean bossKilled;
 	private SiegeNpc boss, flag;
 	/**
@@ -84,7 +80,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 开始时间 / start time
 	 */
-	@Getter
 	private Date startTime;
 	/**
 	 * 返回攻城是否已开始。
@@ -92,7 +87,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 *
 	 * @return 是否已开始 / whether started
 	 */
-	@Getter
 	private boolean started;
 
 	/**

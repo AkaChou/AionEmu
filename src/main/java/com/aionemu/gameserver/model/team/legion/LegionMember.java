@@ -10,43 +10,33 @@ import lombok.NoArgsConstructor;
  *
  * @author Simple
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class LegionMember {
 	/**
 	 * @param objectId the objectId to set
 	 */
-	@Getter
-	@Setter
 	private int objectId = 0;
 	/**
 	 * @param legion the legion to set
 	 */
-	@Getter
-	@Setter
 	protected Legion legion = null;
 	/**
 	 * @param nickname the nickname to set
 	 */
-	@Getter
-	@Setter
 	protected String nickname = "";
 	/**
 	 * @param selfIntro the selfIntro to set
 	 */
-	@Getter
-	@Setter
 	protected String selfIntro = "";
 	/**
 	 * @return the challengeScore
 	 */
-	@Getter
-	@Setter
 	protected int challengeScore;
 	/**
 	 * @param rank the rank to set
 	 */
-	@Getter
-	@Setter
 	protected LegionRank rank = LegionRank.VOLUNTEER;
 
 	/**

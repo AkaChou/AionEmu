@@ -11,6 +11,7 @@ import lombok.Getter;
  *
  * @author Xav Modified by Simple
  */
+@Getter
 public class PrivateStore {
 
 	/**
@@ -19,7 +20,6 @@ public class PrivateStore {
 	 *
 	 * @return Player
 	 */
-	@Getter
 	private final Player owner;
 	private final LinkedHashMap<Integer, TradePSItem> items;
 	private String storeMessage;

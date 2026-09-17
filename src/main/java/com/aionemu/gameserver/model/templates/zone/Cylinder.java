@@ -13,29 +13,25 @@ import lombok.NoArgsConstructor;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Cylinder")
 @NoArgsConstructor
 public class Cylinder {
 
 	/** 返回 top / Returns the top */
-	@Getter
 	@XmlAttribute
 	protected Float top;
 	/** 返回 bottom / Returns the bottom */
-	@Getter
 	@XmlAttribute
 	protected Float bottom;
 	/** 返回 x / Returns the x */
-	@Getter
 	@XmlAttribute
 	protected Float x;
 	/** 返回 y / Returns the y */
-	@Getter
 	@XmlAttribute
 	protected Float y;
 	/** 返回 r / Returns the r */
-	@Getter
 	@XmlAttribute
 	protected Float r;
 

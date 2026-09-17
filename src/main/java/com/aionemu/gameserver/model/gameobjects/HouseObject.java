@@ -25,6 +25,8 @@ import lombok.Setter;
  *
  * @author Rolandas
  */
+@Getter
+@Setter
 public abstract class HouseObject<T extends PlaceableHouseObject> extends VisibleObject implements IExpirable {
 
 	private int expireEnd;
@@ -33,25 +35,18 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	private float z;
 	private byte heading;
 	/** 返回所有者已使用数量 / Returns the owner used count. */
-	@Getter
 	private int ownerUsedCount = 0;
 	/** 返回访客使用次数 / Returns the visitor used count */
-	@Getter
 	private int visitorUsedCount = 0;
 	/** 返回颜色 / Returns the color */
-	@Getter
 	private Integer color = null;
 	/** 返回颜色过期时间 / Returns the color expire end */
-	@Getter
-	@Setter
 	private int colorExpireEnd;
 
 	/** 返回所属房屋 / Returns the owner house */
-	@Getter
 	private final House ownerHouse;
 	// 切勿直接设置！！！请改用 setPersistentState()。 / don't set it directly, ever!!! Use setPersistentState() method instead
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState = PersistentState.NEW;
 
 	public HouseObject(House owner, int objId, int templateId) {

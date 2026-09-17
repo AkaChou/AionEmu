@@ -14,36 +14,31 @@ import lombok.Getter;
  * Auto Group for autogroup logic.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AutoGroup")
 public class AutoGroup {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 返回副本 ID / Returns the instance id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int instanceId;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute(name = "name_id")
 	protected int nameId;
 
 	/** 返回标题 ID / Returns the title id */
-	@Getter
 	@XmlAttribute(name = "title_id")
 	protected int titleId;
 
 	/** 返回 min lvl / Returns the min lvl */
-	@Getter
 	@XmlAttribute(name = "min_lvl")
 	protected int minLvl;
 
 	/** 返回 max lvl / Returns the max lvl */
-	@Getter
 	@XmlAttribute(name = "max_lvl")
 	protected int maxLvl;
 

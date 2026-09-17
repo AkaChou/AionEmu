@@ -17,6 +17,7 @@ import lombok.Getter;
  * Tribe template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Tribe")
 public class Tribe {
@@ -39,12 +40,10 @@ public class Tribe {
 	protected List<TribeClass> support;
 
 	/** 获取基础。 / Returns the base. */
-	@Getter
 	@XmlAttribute
 	protected TribeClass base = TribeClass.NONE;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected TribeClass name;
 

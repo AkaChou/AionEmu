@@ -11,16 +11,15 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SiegeReward")
 public class SiegeReward {
 	/** 返回 top / Returns the top */
-	@Getter
 	@XmlAttribute(name = "top")
 	protected int top;
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "itemid")
 	protected int itemId;
 

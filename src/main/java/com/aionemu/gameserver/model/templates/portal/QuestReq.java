@@ -13,22 +13,19 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestReq")
 public class QuestReq {
 
 	/** 返回任务 ID / Returns the quest id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "quest_id")
 	protected int questId;
 	/** 返回 quest step / Returns the quest step */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "quest_step")
 	protected int questStep;
 	/** 返回 err quest / Returns the err quest */
-	@Getter
 	@XmlAttribute(name = "err_quest")
 	protected int errQuest;
 }

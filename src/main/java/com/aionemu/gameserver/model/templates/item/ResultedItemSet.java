@@ -16,26 +16,23 @@ import lombok.Getter;
  * 合成产物物品组模板：数量与随机范围。
  * Resulted item set template: count and random range.
  */
+@Getter
 @XmlType(name = "ResultedItemSet")
 @Slf4j(topic = "com.aionemu.gameserver.model.templates.item.ResultedItem")
 public class ResultedItemSet {
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "id")
 	public int itemId;
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	public int count;
 
 	/** 返回随机下限 / Returns the rnd min */
-	@Getter
 	@XmlAttribute(name = "rnd_min")
 	public int rndMin;
 
 	/** 返回随机上限 / Returns the rnd max */
-	@Getter
 	@XmlAttribute(name = "rnd_max")
 	public int rndMax;
 
@@ -43,7 +40,6 @@ public class ResultedItemSet {
 	public Race race = Race.PC_ALL;
 
 	/** 获取玩家职业。 / Returns the player class. */
-	@Getter
 	@XmlAttribute(name = "player_class")
 	public PlayerClass playerClass = PlayerClass.ALL;
 

@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @author Alcapwnd
  */
+@Getter
 @XmlEnum
 public enum AttendType {
 
@@ -20,7 +21,6 @@ public enum AttendType {
 	ANNIVERSARY(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	AttendType(int id) {

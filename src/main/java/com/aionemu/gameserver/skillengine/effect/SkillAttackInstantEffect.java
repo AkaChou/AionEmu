@@ -16,6 +16,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillAttackInstantEffect")
 public class SkillAttackInstantEffect extends DamageEffect {
@@ -24,14 +25,12 @@ public class SkillAttackInstantEffect extends DamageEffect {
 	 * 返回随机伤害配置值。
 	 * Returns the random-damage configuration value.
 	 */
-	@Getter
 	@XmlAttribute
 	protected int rnddmg;
 	/**
 	 * 是否必定命中。
 	 * Whether the attack cannot miss.
 	 */
-	@Getter
 	@XmlAttribute
 	protected boolean cannotmiss;
 

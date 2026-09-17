@@ -15,10 +15,10 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public class Pet extends VisibleObject {
 
 	/** 返回主人 / Returns the master. */
-	@Getter
 	private final Player master;
 	private final MoveController moveController;
 	private final PetTemplate petTemplate;

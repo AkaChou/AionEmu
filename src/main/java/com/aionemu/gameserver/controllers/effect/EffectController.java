@@ -39,6 +39,8 @@ import lombok.RequiredArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class EffectController {
 	/**
@@ -47,7 +49,6 @@ public class EffectController {
 	 *
 	 * @return 所有者生物 / owner creature
 	 */
-	@Getter
 	private final Creature owner;
 
 	/**
@@ -73,12 +74,9 @@ public class EffectController {
 	private final Lock lock = new ReentrantLock();
 
 	/** 当前异常状态位掩码。 / Current abnormal-state bit mask. */
-	@Getter
 	protected volatile int abnormals;
 
 	/** 是否处于护盾保护。 / Whether currently under a shield. */
-	@Getter
-	@Setter
 	private boolean isUnderShield = false;
 
 	/**

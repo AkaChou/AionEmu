@@ -10,10 +10,10 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 public class LimitedTradeNpc {
 
 	/** 获取限定物品。 / Returns the limited items. */
-	@Getter
 	private final List<LimitedItem> limitedItems;
 
 	public LimitedTradeNpc(List<LimitedItem> limitedItems) {

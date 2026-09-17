@@ -14,11 +14,11 @@ import lombok.Getter;
  *
  * @author Wnkrz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropRace")
 public class GlobalDropRace {
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race", required = true)
 	protected Race race;
 }

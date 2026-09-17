@@ -18,27 +18,24 @@ import lombok.NoArgsConstructor;
  * Drop model.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "drop")
 @NoArgsConstructor
 public class Drop {
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
 
 	/** 返回最小数量 / Returns the min amount */
-	@Getter
 	@XmlAttribute(name = "min_amount")
 	protected int minAmount = 1;
 
 	/** 返回最大数量 / Returns the max amount */
-	@Getter
 	@XmlAttribute(name = "max_amount")
 	protected int maxAmount;
 
 	/** 返回概率 / Returns the chance */
-	@Getter
 	@XmlAttribute
 	protected float chance = 100;
 

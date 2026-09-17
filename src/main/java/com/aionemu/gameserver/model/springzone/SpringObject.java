@@ -15,12 +15,11 @@ import lombok.Getter;
  * Spring Object for springzone logic.
  */
 
+@Getter
 public class SpringObject extends VisibleObject {
 	/** 返回范围 / Returns the range*/
-	@Getter
 	private final float range;
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	private final SpringTemplate template;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

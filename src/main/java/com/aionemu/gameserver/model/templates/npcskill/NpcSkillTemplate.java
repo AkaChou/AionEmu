@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
  *
  * @author AionChs Master, nrg
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "npcskill")
 @NoArgsConstructor
@@ -23,13 +25,11 @@ public class NpcSkillTemplate {
 	/**
 	 * @return the id
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 	/**
 	 * @return the skillid
 	 */
-	@Getter
 	@XmlAttribute(name = "skillid")
 	protected int skillid;
 	@XmlAttribute(name = "skilllevel")
@@ -37,19 +37,16 @@ public class NpcSkillTemplate {
 	/**
 	 * @return the probability
 	 */
-	@Getter
 	@XmlAttribute(name = "probability")
 	protected int probability;
 	/**
 	 * @return the minhp
 	 */
-	@Getter
 	@XmlAttribute(name = "minhp")
 	protected int minhp = 0;
 	/**
 	 * @return the maxhp
 	 */
-	@Getter
 	@XmlAttribute(name = "maxhp")
 	protected int maxhp = 0;
 	@XmlAttribute(name = "maxtime")
@@ -61,22 +58,16 @@ public class NpcSkillTemplate {
 	/**
 	 * @return the cooldown
 	 */
-	@Getter
 	@XmlAttribute(name = "cooldown")
 	protected int cooldown = 0;
 	@XmlAttribute(name = "useinspawned")
 	protected boolean useinspawned = false;
-	@Getter
 	@XmlAttribute(name = "raw_rate")
 	protected int rawRate;
-	@Getter
-	@Setter
 	@XmlAttribute(name = "count")
 	protected int count;
-	@Getter
 	@XmlAttribute(name = "ultra_skill")
 	protected boolean ultraSkill;
-	@Getter
 	@XmlTransient
 	private int sourceIndex = -1;
 

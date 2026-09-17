@@ -19,6 +19,7 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "disassemblyitemsets")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DisassemblyItemSetsData
@@ -29,7 +30,6 @@ public class DisassemblyItemSetsData
 	 *
 	 * @return 原始分解物品套装列表 / Returns the raw disassembly item-set list.
 	 */
-	@Getter
 	@XmlElement(name = "disassemblyitemset")
 	private List<DisassemblyItemSet> DisassemblyItemSet;
 

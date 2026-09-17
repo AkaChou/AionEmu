@@ -15,16 +15,15 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Percentage")
 public class Percentage {
 
 	/** 返回 percent / Returns the percent */
-	@Getter
 	@XmlAttribute(name = "percent")
 	protected int percent;
 	/** 返回技能 ID / Returns the skill id */
-	@Getter
 	@XmlAttribute(name = "skillId")
 	protected int skillId = 0;
 	/**
@@ -33,11 +32,9 @@ public class Percentage {
 	 *
 	 * @return 是否独立召唤 / Whether individual
 	 */
-	@Getter
 	@XmlAttribute(name = "isIndividual")
 	protected boolean isIndividual = false;
 	/** 返回 summons / Returns the summons */
-	@Getter
 	@XmlElement(name = "summonGroup")
 	protected List<SummonGroup> summons;
 }

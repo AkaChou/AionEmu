@@ -13,6 +13,7 @@ import lombok.Getter;
  * @author AionChs Master
  * @author Schattenlilie
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PortalItem")
 public class PortalItem {
@@ -20,19 +21,16 @@ public class PortalItem {
 	/**
 	 * @return 物品 ID / the id
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 	/**
 	 * @return 物品编号 / the itemid
 	 */
-	@Getter
 	@XmlAttribute(name = "itemid")
 	protected int itemid;
 	/**
 	 * @return 数量 / the quantity
 	 */
-	@Getter
 	@XmlAttribute(name = "quantity")
 	protected int quantity;
 }

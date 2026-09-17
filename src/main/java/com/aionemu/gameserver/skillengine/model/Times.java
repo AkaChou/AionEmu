@@ -17,6 +17,8 @@ import lombok.Setter;
  * 武器相关动作时间表：按武器类型解析逗号分隔的时间序列。
  * Weapon-related motion times: parses comma-separated times per weapon type.
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Times")
 public class Times {
@@ -27,8 +29,6 @@ public class Times {
 	 *
 	 * @return 逗号分隔时间 / comma-separated times
 	 */
-	@Getter
-	@Setter
 	@XmlAttribute(required = true)
 	protected String times;
 

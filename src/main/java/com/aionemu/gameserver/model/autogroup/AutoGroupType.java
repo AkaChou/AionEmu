@@ -12,6 +12,7 @@ import lombok.Getter;
  * @author Rinzler (Encom)
  */
 
+@Getter
 public enum AutoGroupType {
 	// 战舰。 / DREDGION.
 	/** Baranath Dredgion / Baranath Dredgion */
@@ -766,13 +767,9 @@ public enum AutoGroupType {
 		}
 	};
 
-	@Getter
 	private final int instanceMaskId;
-	@Getter
 	private final int time;
-	@Getter
 	private final byte playerSize;
-	@Getter
 	private byte spawnPage;
 	private final AutoGroup template;
 

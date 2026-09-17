@@ -9,6 +9,7 @@ import lombok.Getter;
  * Legion Dominion Race enumeration.
  */
 
+@Getter
 public enum LegionDominionRace {
 	/** 天族 / Elyos. */
 	ELYOS(0, 1800481),
@@ -18,10 +19,8 @@ public enum LegionDominionRace {
 	BALAUR(2, 1800485);
 
 	/** 返回种族 ID / Returns the race id */
-	@Getter
 	private final int raceId;
 	/** 返回描述 ID / Returns the description id */
-	@Getter
 	private final DescriptionId descriptionId;
 
 	LegionDominionRace(int id, int descriptionId) {

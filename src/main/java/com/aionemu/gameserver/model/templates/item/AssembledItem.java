@@ -11,12 +11,12 @@ import lombok.Getter;
  * Assembled item template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AssembledItem")
 public class AssembledItem {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 }

@@ -12,17 +12,16 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Idian")
 public class Idian {
 
 	/** 返回 burn defend / Returns the burn defend */
-	@Getter
 	@XmlAttribute(name = "defend")
 	private int burnDefend;
 
 	/** 返回 burn attack / Returns the burn attack */
-	@Getter
 	@XmlAttribute(name = "attack")
 	private int burnAttack;
 }

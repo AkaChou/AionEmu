@@ -23,17 +23,15 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 public class IdianStone extends ItemStone {
 
 	private ActionObserver actionListener;
 	/** 返回 polish charge / Returns the polish charge */
-	@Getter
 	private int polishCharge;
 	/** 返回 polish set id / Returns the polish set id */
-	@Getter
 	private final int polishSetId;
 	/** 返回 polish number / Returns the polish number */
-	@Getter
 	private final int polishNumber;
 	private final Item item;
 	private final ItemTemplate template;

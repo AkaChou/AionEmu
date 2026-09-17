@@ -18,6 +18,7 @@ import lombok.Getter;
  *
  * @author ATracer, modified by Antivirus
  */
+@Getter
 @XmlRootElement(name = "itemset")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemSetTemplate implements StatOwner {
@@ -25,30 +26,25 @@ public class ItemSetTemplate implements StatOwner {
 	/**
 	 * @return the itempart
 	 */
-	@Getter
 	@XmlElement(required = true)
 	protected List<ItemPart> itempart;
 	/**
 	 * @return the partbonus
 	 */
-	@Getter
 	@XmlElement(required = true)
 	protected List<PartBonus> partbonus;
 	/**
 	 * @return the fullbonus
 	 */
-	@Getter
 	protected FullBonus fullbonus;
 	/**
 	 * @return the name
 	 */
-	@Getter
 	@XmlAttribute
 	protected String name;
 	/**
 	 * @return the id
 	 */
-	@Getter
 	@XmlAttribute
 	protected int id;
 

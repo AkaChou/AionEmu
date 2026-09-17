@@ -21,6 +21,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetFlavour", propOrder = { "food" })
 public class PetFlavour {
@@ -29,17 +30,14 @@ public class PetFlavour {
 	protected List<PetRewards> food;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 返回饱食次数 / Returns the full count */
-	@Getter
 	@XmlAttribute(name = "full_count")
 	protected int fullCount = 1;
 
 	/** 返回喜爱的食物上限 / Returns the loved food limit */
-	@Getter
 	@XmlAttribute(name = "loved_limit")
 	protected int lovedFoodLimit = 0;
 

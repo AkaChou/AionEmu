@@ -21,6 +21,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DyeAction")
 public class DyeAction extends AbstractItemAction implements HouseDyeAction {
@@ -31,7 +32,6 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	private Integer minutes;
 
 	/** 是否为自定义。 / Whether custom. */
-	@Getter
 	@XmlAttribute
 	private boolean custom;
 

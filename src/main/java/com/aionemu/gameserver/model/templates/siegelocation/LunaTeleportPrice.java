@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaTeleportPrice")
 public class LunaTeleportPrice {
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "itemid")
 	protected int itemId;
 }

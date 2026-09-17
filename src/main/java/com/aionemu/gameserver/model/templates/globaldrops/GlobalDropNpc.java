@@ -12,11 +12,11 @@ import lombok.Getter;
  *
  * @author Wnkrz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropNpc")
 public class GlobalDropNpc {
 	/** 返回 NPC ID。 / Returns the npc id. */
-	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 }

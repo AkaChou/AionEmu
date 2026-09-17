@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public enum StaticDoorState {
 	/** 无 / None. */
 	NONE(0),
@@ -26,7 +27,6 @@ public enum StaticDoorState {
 	}
 
 	/** 返回标志 / Returns the flag*/
-	@Getter
 	private final int flag;
 
 	/** 按标志位设置状态 / Sets the states */

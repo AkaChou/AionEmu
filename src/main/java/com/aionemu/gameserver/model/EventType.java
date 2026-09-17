@@ -7,6 +7,7 @@ import lombok.Getter;
  * Event Type enumeration.
  */
 
+@Getter
 public enum EventType {
 	/** 无 / None. */
 	NONE(0, ""),
@@ -28,10 +29,8 @@ public enum EventType {
 	TEST_BASIC_4(1 << 7, "test_basic_4");
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 	/** 返回主题 / Returns the theme */
-	@Getter
 	private final String theme;
 
 	EventType(int id, String theme) {

@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author Ghostfur (Aion-Unique)
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TalkInfo")
 public class TalkInfo {
@@ -25,11 +26,9 @@ public class TalkInfo {
 	@XmlAttribute(name = "is_dialog")
 	private boolean hasDialog;
 	/** 返回 func dialog ids / Returns the func dialog ids */
-	@Getter
 	@XmlAttribute(name = "func_dialogs")
 	private List<Integer> funcDialogIds;
 	/** 返回 sub dialog type / Returns the sub dialog type */
-	@Getter
 	@XmlAttribute(name = "subdialog_type")
 	private String subDialogType;
 

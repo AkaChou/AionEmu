@@ -15,6 +15,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Rewards", propOrder = { "selectableRewardItem", "rewardItem" })
 public class Rewards {
@@ -25,37 +26,30 @@ public class Rewards {
 	protected List<QuestItems> rewardItem;
 
 	/** 返回基纳 / Returns the gold */
-	@Getter
 	@XmlAttribute
 	protected Integer gold;
 
 	/** 获取经验。 / Returns the exp. */
-	@Getter
 	@XmlAttribute
 	protected Integer exp;
 
 	/** 返回经验加成 / Returns the exp boost. */
-	@Getter
 	@XmlAttribute
 	protected Integer expBoost;
 
 	/** 获取神圣能量。 / Returns the dp. */
-	@Getter
 	@XmlAttribute
 	protected Integer dp;
 
 	/** 获取欧比斯点数。 / Returns the ap. */
-	@Getter
 	@XmlAttribute
 	protected Integer ap;
 
 	/** 返回荣耀点数 / Returns the gp */
-	@Getter
 	@XmlAttribute
 	protected Integer gp;
 
 	/** 返回 Abyss Op / Returns the abyss op */
-	@Getter
 	@XmlAttribute
 	protected Integer abyssOp;
 
@@ -63,17 +57,14 @@ public class Rewards {
 	protected Integer cp;
 
 	/** 获取称号。 / Returns the title. */
-	@Getter
 	@XmlAttribute
 	protected Integer title;
 
 	/** 返回扩展背包数量 / Returns the extend inventory */
-	@Getter
 	@XmlAttribute(name = "extend_inventory")
 	protected Integer extendInventory;
 
 	/** 返回扩展烙印之石槽数量 / Returns the extend stigma */
-	@Getter
 	@XmlAttribute(name = "extend_stigma")
 	protected Integer extendStigma;
 

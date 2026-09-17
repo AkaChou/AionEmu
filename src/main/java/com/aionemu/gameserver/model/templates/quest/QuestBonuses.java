@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestBonuses")
 public class QuestBonuses {
@@ -24,7 +25,6 @@ public class QuestBonuses {
 	 *
 	 * @return 加成类型 / possible object is {@link BonusType}
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected BonusType type;
 	/**
@@ -33,7 +33,6 @@ public class QuestBonuses {
 	 *
 	 * @return 等级 / possible object is {@link Integer}
 	 */
-	@Getter
 	@XmlAttribute
 	protected Integer level;
 	/**
@@ -42,7 +41,6 @@ public class QuestBonuses {
 	 *
 	 * @return 技能 ID / possible object is {@link Integer}
 	 */
-	@Getter
 	@XmlAttribute
 	protected Integer skill;
 }

@@ -19,13 +19,12 @@ import lombok.Getter;
  * 触发即时攻击效果：按魔法伤害结算，并向施法者发送触发提示。
  * Proc instant attack effect: resolves magical damage and notifies the effector of the proc.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcAtkInstantEffect")
 public class ProcAtkInstantEffect extends DamageEffect {
-	@Getter
 	@XmlAttribute(name = "checkprotector")
 	private boolean checkProtector = true;
-	@Getter
 	@XmlAttribute(name = "weaponboost")
 	private int weaponBoost;
 

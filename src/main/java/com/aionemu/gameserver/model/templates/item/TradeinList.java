@@ -14,12 +14,12 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TradeinList", propOrder = { "tradeinItem" })
 public class TradeinList {
 
 	/** 返回兑换物品列表 / Returns the tradein item */
-	@Getter
 	@XmlElement(name = "tradein_item")
 	protected List<TradeinItem> tradeinItem;
 }

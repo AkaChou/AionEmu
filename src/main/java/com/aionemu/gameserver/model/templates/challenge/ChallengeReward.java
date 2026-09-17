@@ -11,21 +11,19 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChallengeReward")
 public class ChallengeReward {
 	/** 返回消息 ID / Returns the msg id */
-	@Getter
 	@XmlAttribute(name = "msg_id")
 	protected Integer msgId;
 
 	/** 获取值。 / Returns the value. */
-	@Getter
 	@XmlAttribute
 	protected Integer value;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected RewardType type;
 }

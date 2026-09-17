@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OpenRift")
 public class OpenRift {
 	/** 裂隙时间表 / Rift schedule */
-	@Getter
 	@XmlAttribute(name = "schedule")
 	protected String schedule;
 

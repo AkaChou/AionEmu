@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public enum HouseType {
 	/** 地产 / Estate. */
 	ESTATE(0, 3, "a"),
@@ -28,10 +29,8 @@ public enum HouseType {
 
 	private final String abbrev;
 	/** 返回 limit type index / Returns the limit type index */
-	@Getter
 	private final int limitTypeIndex;
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	/** 返回 abbreviation / Returns the abbreviation */

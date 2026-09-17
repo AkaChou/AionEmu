@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Dr.Nism
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "charge")
 public class ChargeTemplate {
@@ -24,7 +25,6 @@ public class ChargeTemplate {
 	 * Gets charge time.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "time")
 	private int time;
 

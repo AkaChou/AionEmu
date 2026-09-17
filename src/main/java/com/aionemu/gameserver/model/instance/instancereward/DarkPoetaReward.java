@@ -8,20 +8,17 @@ import lombok.Setter;
  * Dark Poeta Reward for instance logic.
  */
 
+@Getter
+@Setter
 @SuppressWarnings("rawtypes")
 public class DarkPoetaReward extends InstanceReward {
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	/** 设置军阶。 / Sets the rank. */
-	@Getter
-	@Setter
 	private int rank = 7;
 	/** 返回 npc kills / Returns the npc kills */
-	@Getter
 	private int npcKills;
 	/** 返回 gather collections / Returns the gather collections */
-	@Getter
 	private int gatherCollections;
 
 	public DarkPoetaReward(Integer mapId, int instanceId) {

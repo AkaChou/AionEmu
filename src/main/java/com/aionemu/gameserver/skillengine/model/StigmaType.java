@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author Cheatkiller
  */
+@Getter
 @XmlType(name = "StigmaType")
 @XmlEnum
 public enum StigmaType {
@@ -26,7 +27,6 @@ public enum StigmaType {
 	 * Gets protocol id.
 	 *
 	 */
-	@Getter
 	private final int id;
 
 	StigmaType(int id) {

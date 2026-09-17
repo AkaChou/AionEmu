@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <AL> 代理地点类型 / agent location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class AgentFight<AL extends AgentLocation> {
 
@@ -28,7 +29,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 *
 	 * @return 位置 / location
 	 */
-	@Getter
 	private final AL agentLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

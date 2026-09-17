@@ -17,20 +17,15 @@ import lombok.Setter;
  * Homing game object.
  */
 
+@Getter
+@Setter
 public class Homing extends SummonedObject<Creature> {
 	/** 设置攻击数量 / Sets the attack count. */
-	@Getter
-	@Setter
 	private int attackCount;
 	/** 返回技能 ID / Returns the skill id */
-	@Getter
 	private final int skillId;
 	/** 返回当前技能 ID / Returns the active skill id */
-	@Getter
-	@Setter
 	private int activeSkillId;
-	@Getter
-	@Setter
 	private int homingId;
 
 	public Homing(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate,

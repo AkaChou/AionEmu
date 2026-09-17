@@ -11,6 +11,7 @@ import lombok.Getter;
  * Item acquisition template: defines acquisition by type (AP/reward/coupon) and quantity.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Acquisition")
 public class Acquisition {
@@ -19,17 +20,14 @@ public class Acquisition {
 	private int ap = 0;
 
 	/** 获取物品计数。 / Returns the item count. */
-	@Getter
 	@XmlAttribute(name = "count", required = false)
 	private int itemCount;
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item", required = false)
 	private int itemId;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute(name = "type", required = true)
 	private AcquisitionType type;
 

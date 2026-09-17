@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Chest")
 public class ChestTemplate {
@@ -22,19 +23,16 @@ public class ChestTemplate {
 	/**
 	 * @return NPC ID / the npcId
 	 */
-	@Getter
 	@XmlAttribute(name = "npcid")
 	protected int npcId;
 	/**
 	 * @return 名称 / the name
 	 */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 	/**
 	 * @return 钥匙物品列表 / the keyItem
 	 */
-	@Getter
 	@XmlElement(name = "keyitem")
 	protected List<KeyItem> keyItem;
 }

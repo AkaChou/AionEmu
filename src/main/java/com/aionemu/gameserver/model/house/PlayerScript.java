@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * Player Script for house logic.
  */
 
+@Getter
 @NoArgsConstructor
 public final class PlayerScript extends AbstractLockManager {
 	public PlayerScript(byte[] compressedBytes, int uncompressedSize) {
@@ -17,10 +18,8 @@ public final class PlayerScript extends AbstractLockManager {
 	}
 
 	/** 返回 uncompressed size / Returns the uncompressed size */
-	@Getter
 	private int uncompressedSize = -1;
 	/** 返回 compressed bytes / Returns the compressed bytes */
-	@Getter
 	private byte[] compressedBytes = null;
 
 	/** 设置数据。 / Sets the data. */

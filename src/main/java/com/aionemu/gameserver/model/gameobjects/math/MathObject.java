@@ -19,34 +19,24 @@ import lombok.Setter;
  * Math Object game object.
  */
 
+@Getter
+@Setter
 public class MathObject extends VisibleObject {
 	/** 返回最小范围。 / Returns the min range. */
-	@Getter
 	private final double minRange;
 	/** 返回最大范围。 / Returns the max range. */
-	@Getter
 	private final double maxRange;
 	/** 设置 skill id / Sets the skill id */
-	@Getter
-	@Setter
 	private int skillId;
 	/** 设置 npc id / Sets the npc id */
-	@Getter
-	@Setter
 	private int npcId;
 	/** 返回主人。 / Returns the master. */
-	@Getter
-	@Setter
 	private Npc master;
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	private final MathObjectType type;
 	/** 返回反应类型。 / Returns the reaction. */
-	@Getter
 	private MathObjectReaction reaction = MathObjectReaction.PC;
 	/** 返回时长。 / Returns the duration. */
-	@Getter
-	@Setter
 	private int duration;
 
 	public MathObject(SpawnTemplate spawnTemplate, MathObjectType type, MathObjectReaction reaction, double minRange,

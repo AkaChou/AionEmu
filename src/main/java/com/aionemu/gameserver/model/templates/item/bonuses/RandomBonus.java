@@ -17,6 +17,7 @@ import lombok.Getter;
  * Random bonus template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RandomBonus", propOrder = { "modifiers" })
 public class RandomBonus {
@@ -29,12 +30,10 @@ public class RandomBonus {
 	 *
 	 * @return 加成 ID / Bonus id
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 获取加成类型。 / Returns the bonus type. */
-	@Getter
 	@XmlAttribute(name = "type", required = true)
 	private StatBonusType bonusType;
 

@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Rinzler (Encom)
  */
+@Getter
 public enum WorldMapType {
 	// 阿斯摩德 / Asmodea
 	PANDAEMONIUM(120010000), MARCHUTAN(120020000), MARCHUTAN_PRIORY(120080000), FATEBOUND_ABBEY(140010000),
@@ -129,7 +130,6 @@ public enum WorldMapType {
 	/** 世界地图 ID / world map id */
 	private final int worldId;
 	/** 是否个人住房地图 / whether this is a personal housing map */
-	@Getter
 	private final boolean isPersonal;
 
 	/**

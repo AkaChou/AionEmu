@@ -11,6 +11,7 @@ import lombok.Getter;
  * 攻城突击基类，定义突击开始/结束流程。
  * Siege assault base class defining assault start/finish flow.
  */
+@Getter
 public abstract class Assault<siege extends Siege<?>> {
 
 	protected final SiegeLocation siegeLocation;
@@ -22,7 +23,6 @@ public abstract class Assault<siege extends Siege<?>> {
 	 *
 	 * @return 世界 ID / world id
 	 */
-	@Getter
 	protected final int worldId;
 	protected Future<?> dredgionTask;
 	protected Future<?> spawnTask;

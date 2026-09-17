@@ -12,10 +12,10 @@ import lombok.Setter;
  * Tower of Eternity spawn template (static data/XML).
  */
 
+@Getter
+@Setter
 public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
 	/** 返回 ID。 / Returns the id. */
-	@Getter
-	@Setter
 	private int id;
 	private TowerOfEternityStateType towerOfEternityType;
 

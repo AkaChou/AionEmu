@@ -14,20 +14,18 @@ import lombok.Getter;
  *
  * @author Falke_34
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "MinionStatsTemplate")
 public class MinionStatsTemplate extends StatsTemplate {
 
 	/** 返回 run speed / Returns the run speed */
-	@Getter
 	@XmlAttribute(name = "run_speed")
 	private float runSpeed;
 	/** 返回 walk speed / Returns the walk speed */
-	@Getter
 	@XmlAttribute(name = "walk_speed")
 	private float walkSpeed;
 	/** 返回 altitude / Returns the altitude */
-	@Getter
 	@XmlAttribute(name = "altitude")
 	private float altitude;
 }

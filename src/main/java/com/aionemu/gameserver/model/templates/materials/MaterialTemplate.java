@@ -16,22 +16,20 @@ import lombok.Getter;
  * @author Rolandas
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MaterialTemplate", propOrder = { "skills" })
 public class MaterialTemplate {
 
 	/** 技能列表。 / Skill list. */
-	@Getter
 	@XmlElement(name = "skill", required = true)
 	protected List<MaterialSkill> skills;
 
 	/** 技能障碍。 / Skill obstacle. */
-	@Getter
 	@XmlAttribute(name = "skill_obstacle")
 	protected Integer skillObstacle;
 
 	/** 模板 ID。 / Template id. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 }

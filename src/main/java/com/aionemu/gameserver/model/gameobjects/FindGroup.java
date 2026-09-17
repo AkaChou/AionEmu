@@ -12,20 +12,17 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 public class FindGroup {
 
 	private final AionObject object;
 	/** 获取消息。 / Returns the message. */
-	@Getter
 	private String message;
 	/** 获取队伍类型。 / Returns the group type. */
-	@Getter
 	private final int groupType;
 	/** 返回最少成员数 / Returns the min members */
-	@Getter
 	private int minMembers;
 	/** 返回副本 ID / Returns the instance id */
-	@Getter
 	private int instanceId;
 	/**
 	 * 返回最后更新时间。
@@ -33,7 +30,6 @@ public class FindGroup {
 	 *
 	 * @return 最后更新时间 / the lastUpdate
 	 */
-	@Getter
 	private int lastUpdate = (int) (System.currentTimeMillis() / 1000);
 
 	public FindGroup(AionObject object, String message, int groupType) {

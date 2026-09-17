@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <RL> RVR 地点类型 / RVR location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class Rvrlf3df3<RL extends RvrLocation> {
 
@@ -28,7 +29,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 *
 	 * @return 绑定地点 / the bound location
 	 */
-	@Getter
 	private final RL rvrLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

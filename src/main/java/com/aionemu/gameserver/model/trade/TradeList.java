@@ -22,37 +22,33 @@ import lombok.NoArgsConstructor;
  *
  * @author ATracer modified by Wakizashi
  */
+@Getter
 @NoArgsConstructor
 public class TradeList {
 
 	/**
 	 * @return the npcId
 	 */
-	@Getter
 	private int sellerObjId;
 
 	/**
 	 * @return the tradeItems
 	 */
-	@Getter
 	private final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
 
 	/**
 	 * @return the requiredKinah
 	 */
-	@Getter
 	private long requiredKinah;
 
 	/**
 	 * @return the requiredAp
 	 */
-	@Getter
 	private int requiredAp;
 
 	/**
 	 * @return the requiredItems
 	 */
-	@Getter
 	private final Map<Integer, Long> requiredItems = new HashMap<Integer, Long>();
 
 	public TradeList(int sellerObjId) {

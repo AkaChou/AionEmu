@@ -14,14 +14,12 @@ import lombok.Setter;
  * @author Rinzler
  */
 
+@Getter
+@Setter
 public class BaseSpawnTemplate extends SpawnTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	private int id;
 	/** 获取基础种族。 / Returns the base race. */
-	@Getter
-	@Setter
 	private Race baseRace;
 
 	public BaseSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

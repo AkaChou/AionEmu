@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
  *
  * @param <RL> 特殊着陆点位置类型 / Special landing-location type
  */
+@Getter
+@Setter
 @RequiredArgsConstructor
 public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	private boolean started;
@@ -24,8 +26,6 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	/**
 	 * @return 当前状态类型 / Current state type
 	 */
-	@Getter
-	@Setter
 	private LandingSpecialStateType type;
 
 	/**

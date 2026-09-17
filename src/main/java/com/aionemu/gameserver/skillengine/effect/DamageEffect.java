@@ -17,6 +17,7 @@ import lombok.Getter;
  * 伤害效果基类：按物理/魔法类型结算并应用伤害。
  * Damage effect base: resolves and applies damage for physical/magical types.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DamageEffect")
 public abstract class DamageEffect extends EffectTemplate {
@@ -26,7 +27,6 @@ public abstract class DamageEffect extends EffectTemplate {
 	 *
 	 * @return 结算模式 / resolution mode
 	 */
-	@Getter
 	@XmlAttribute
 	protected Func mode = Func.ADD;
 	@XmlAttribute

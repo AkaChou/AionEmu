@@ -18,19 +18,16 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HostileUpEffect")
 public class HostileUpEffect extends EffectTemplate {
-	@Getter
 	@XmlAttribute(name = "timed_delta")
 	private int timedDelta;
-	@Getter
 	@XmlAttribute(name = "timed_value")
 	private int timedValue;
-	@Getter
 	@XmlAttribute(name = "timed_duration")
 	private int timedDuration;
-	@Getter
 	@XmlAttribute(name = "split_totem_hate")
 	private boolean splitTotemHate;
 

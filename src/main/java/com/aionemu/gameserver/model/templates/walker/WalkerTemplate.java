@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
  *
  * @author KKnD
  */
+@Getter
+@Setter
 @XmlRootElement(name = "walker_template")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
@@ -33,13 +35,10 @@ public class WalkerTemplate {
 	private Boolean isReversed = false;
 
 	/** 巡逻池人数 / Walker pool size */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "pool", required = true)
 	private int pool = 1;
 
 	/** 路线 ID / Route id */
-	@Getter
 	@XmlAttribute(name = "route_id", required = true)
 	private String routeId;
 
@@ -64,7 +63,6 @@ public class WalkerTemplate {
 	private List<RouteStep> routeStepList;
 
 	/** 解析后的行配置 / Parsed row values */
-	@Getter
 	@XmlTransient
 	private int[] rows;
 

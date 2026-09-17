@@ -13,18 +13,17 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "sale")
 public class Sale {
 
 	/** 获取点价格。 / Returns the point price. */
-	@Getter
 	@XmlAttribute(name = "point_price", required = true)
 	protected int pointPrice;
 
 	/** 返回 gold price / Returns the gold price */
-	@Getter
 	@XmlAttribute(name = "gold_price", required = true)
 	protected long goldPrice;
 

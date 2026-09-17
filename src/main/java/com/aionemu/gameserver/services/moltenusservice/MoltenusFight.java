@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <ML> 熔岩领主地点类型 / Moltenus location type
  */
+@Getter
 @RequiredArgsConstructor
 public abstract class MoltenusFight<ML extends MoltenusLocation> {
 
@@ -28,7 +29,6 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 *
 	 * @return 绑定地点 / bound location
 	 */
-	@Getter
 	private final ML moltenusLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
 

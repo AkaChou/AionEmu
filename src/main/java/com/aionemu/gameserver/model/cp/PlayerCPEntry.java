@@ -7,10 +7,10 @@ import lombok.Getter;
  * 玩家创造点条目，用于创造点相关逻辑。
  * Player CP Entry for cp logic.
  */
+@Getter
 public class PlayerCPEntry extends CPEntry {
 
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	public PlayerCPEntry(int slot, int point, PersistentState persistentState) {

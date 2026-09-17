@@ -7,12 +7,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 public final class SpawnSearchResult {
 	/** 返回刷新点 / Returns the spot */
-	@Getter
 	private final SpawnSpotTemplate spot;
 	/** 返回世界 ID / Returns the world id */
-	@Getter
 	private final int worldId;
 
 	public SpawnSearchResult(int worldId, SpawnSpotTemplate spot) {

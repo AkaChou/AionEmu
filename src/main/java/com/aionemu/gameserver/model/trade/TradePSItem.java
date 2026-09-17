@@ -9,13 +9,11 @@ import lombok.Setter;
  *
  * @author Simple
  */
+@Getter
+@Setter
 public class TradePSItem extends TradeItem {
 
-	@Getter
-	@Setter
 	private int itemObjId;
-	@Getter
-	@Setter
 	private long price;
 
 	/**

@@ -16,33 +16,29 @@ import lombok.NoArgsConstructor;
  *
  * @author M@xx, Wakizashi
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Shield")
 @NoArgsConstructor
 public class ShieldTemplate {
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
 	/** 获取地图。 / Returns the map. */
-	@Getter
 	@XmlAttribute(name = "map")
 	protected int map;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
 	/** 获取半径。 / Returns the radius. */
-	@Getter
 	@XmlAttribute(name = "radius")
 	protected float radius;
 
 	/** 返回中心点 / Returns the center */
-	@Getter
 	@XmlElement(name = "center")
 	protected ShieldPoint center;
 

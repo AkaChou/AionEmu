@@ -19,19 +19,15 @@ import lombok.Setter;
  * Player Group for team 2 logic.
  */
 
+@Getter
+@Setter
 public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private final TeamType type;
 	/** 设置 bg index / Sets the bg index */
-	@Getter
-	@Setter
 	private int bgIndex = -1;
 	/** 设置 kill count / Sets the kill count */
-	@Getter
-	@Setter
 	private int killCount = 0;
 	/** 设置 buff id / Sets the buff id */
-	@Getter
-	@Setter
 	private int buffId = 0;
 	private final PlayerGroupStats playerGroupStats;
 	private final Map<Integer, Player> groupMembers = new LinkedHashMap<Integer, Player>();

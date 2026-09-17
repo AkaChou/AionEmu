@@ -8,20 +8,19 @@ import lombok.Getter;
  * 抽象区域，用于几何相关逻辑。
  * Abstract Area for geometry logic.
  */
+@Getter
 public abstract class AbstractArea implements Area {
 
 	/**
 	 * 区域的最小 Z 值。
 	 * Minimal z of area.
 	 */
-	@Getter
 	private final float minZ;
 
 	/**
 	 * 区域的最大 Z 值。
 	 * Maximal Z of area.
 	 */
-	@Getter
 	private final float maxZ;
 
 	private final ZoneName zoneName;

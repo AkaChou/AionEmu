@@ -24,20 +24,17 @@ import lombok.Getter;
  */
 @Slf4j
 
+@Getter
 public abstract class CreatureLifeStats<T extends Creature> {
 	/** 返回当前生命 / Returns the current hp */
-	@Getter
 	protected int currentHp;
 	/** 返回当前魔法 / Returns the current mp */
-	@Getter
 	protected int currentMp;
 	/**
 	 * @return 是否已死亡。 / Whether already dead
 	 */
-	@Getter
 	protected boolean alreadyDead = false;
 	/** 返回所有者 / Returns the owner*/
-	@Getter
 	protected T owner;
 	/**
 	 * 单一生命状态互斥量。

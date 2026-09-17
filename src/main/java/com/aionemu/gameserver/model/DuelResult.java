@@ -7,6 +7,7 @@ import lombok.Getter;
  * Duel Result enumeration.
  */
 
+@Getter
 public enum DuelResult {
 	/** 决斗你胜利 / Duel You Win*/
 	DUEL_YOU_WIN(1300098, (byte) 2),
@@ -16,10 +17,8 @@ public enum DuelResult {
 	DUEL_TIMEOUT(1300100, (byte) 1);
 
 	/** 返回消息 ID / Returns the msg id */
-	@Getter
 	private final int msgId;
 	/** 返回结果 ID / Returns the result id */
-	@Getter
 	private final byte resultId;
 
 	DuelResult(int msgId, byte resultId) {

@@ -17,30 +17,25 @@ import lombok.Setter;
  *
  * @author Luno
  */
+@Getter
+@Setter
 public class PlayerAccountData {
 
 	private final CharacterBanInfo cbi;
 	/**
 	 * @return 角色公共数据 / the playerCommonData
 	 */
-	@Getter
-	@Setter
 	private PlayerCommonData playerCommonData;
 	/**
 	 * 返回外观。
 	 * Returns the appearance
 	 */
-	@Getter
 	private final PlayerAppearance appereance;
 	/**
 	 * @return 装备列表 / the equipment
 	 */
-	@Getter
-	@Setter
 	private List<Item> equipment;
 	/** 返回 creation date / Returns the creation date */
-	@Getter
-	@Setter
 	private Timestamp creationDate;
 	/**
 	 * 设置 deletiondate。
@@ -48,8 +43,6 @@ public class PlayerAccountData {
 	 *
 	 * @param deletionDate
 	 */
-	@Getter
-	@Setter
 	private Timestamp deletionDate;
 	private final LegionMember legionMember;
 

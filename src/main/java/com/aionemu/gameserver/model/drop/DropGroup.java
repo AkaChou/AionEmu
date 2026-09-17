@@ -23,6 +23,8 @@ import lombok.Setter;
  * Drop Group model.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dropGroup", propOrder = { "drop" })
 @Slf4j
@@ -30,10 +32,8 @@ public class DropGroup implements DropCalculator {
 
 
 	/** 获取掉落。 / Returns the drop. */
-	@Getter
 	protected List<Drop> drop;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute
 	protected Race race = Race.PC_ALL;
 	@XmlAttribute(name = "name")
@@ -43,14 +43,11 @@ public class DropGroup implements DropCalculator {
 	@XmlAttribute(name = "level_based_chance_reduction")
 	private Boolean useLevelBasedChanceReduction;
 	/** 返回最大掉落数量 / Returns the max items */
-	@Getter
 	@XmlAttribute(name = "max_items")
 	private int maxItems = 1;
 	@XmlAttribute(name = "drop_group_adjustment")
 	private int dropGroupAdjustment = 100;
 	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 / Sets the NPC-specific drop multiplier, 1 means 1x. */
-	@Getter
-	@Setter
 	@XmlTransient
 	private float chanceMultiplier = 1f;
 

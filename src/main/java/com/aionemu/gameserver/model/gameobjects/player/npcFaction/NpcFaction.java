@@ -10,42 +10,36 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 public class NpcFaction {
 
 	/**
 	 * @return 势力 ID / Faction ID
 	 */
-	@Getter
 	private final int id;
 	/**
 	 * @return 剩余计时（秒） / Remaining time in seconds
 	 */
-	@Getter
 	private int time;
 	/**
 	 * @return 是否激活 / Whether active
 	 */
-	@Getter
 	private boolean active;
 	/**
 	 * @return 是否导师 NPC / Whether mentor
 	 */
-	@Getter
 	private final boolean mentor;
 	/**
 	 * @return 关联任务状态 / Quest state
 	 */
-	@Getter
 	private ENpcFactionQuestState state;
 	/**
 	 * @return 关联任务 ID / Associated quest ID
 	 */
-	@Getter
 	private int questId;
 	/**
 	 * @return 持久化状态 / Persistent state
 	 */
-	@Getter
 	private PersistentState persistentState;
 
 	/**

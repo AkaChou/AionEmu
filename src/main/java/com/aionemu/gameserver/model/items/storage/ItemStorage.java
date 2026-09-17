@@ -14,12 +14,12 @@ import lombok.Getter;
  * Item Storage model.
  */
 
+@Getter
 public class ItemStorage {
 	public static final long FIRST_AVAILABLE_SLOT = 65535L;
 
 	private final Map<Integer, Item> items;
 	/** 获取限制。 / Returns the limit. */
-	@Getter
 	private int limit;
 	private final int specialLimit;
 	public ItemStorage(StorageType storageType) {

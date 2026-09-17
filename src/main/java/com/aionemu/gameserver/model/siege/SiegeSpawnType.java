@@ -7,6 +7,7 @@ import lombok.Getter;
  * Siege Spawn Type enumeration.
  */
 
+@Getter
 public enum SiegeSpawnType {
 	/** 和平。 / Peace. */
 	PEACE(0),
@@ -30,7 +31,6 @@ public enum SiegeSpawnType {
 	/**
 	 * @return 枚举 ID / the id
 	 */
-	@Getter
 	private final int id;
 
 	SiegeSpawnType(int id) {

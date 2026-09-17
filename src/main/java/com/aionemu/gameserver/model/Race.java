@@ -10,6 +10,7 @@ import lombok.Getter;
  * Race enumeration.
  */
 
+@Getter
 @XmlEnum
 public enum Race {
 	/** 天族 / Elyos. */
@@ -135,7 +136,6 @@ public enum Race {
 	EVENT_HALLOWEEN(58);
 
 	/** 返回种族 ID / Returns the race id */
-	@Getter
 	private final int raceId;
 	private final DescriptionId descriptionId;
 

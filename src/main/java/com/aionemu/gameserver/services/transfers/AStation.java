@@ -8,10 +8,9 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 public class AStation {
-	@Getter
 	private final int serverId;
-	@Getter
 	private final int iconSet;
 	private final int minlevel;
 	private final int maxlevel;

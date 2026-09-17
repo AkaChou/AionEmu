@@ -13,26 +13,23 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcFaction")
 public class NpcFactionTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute(name = "nameId")
 	protected int nameId;
 
 	/** 获取分类。 / Returns the category. */
-	@Getter
 	@XmlAttribute(name = "category")
 	protected FactionCategory category;
 
@@ -46,22 +43,18 @@ public class NpcFactionTemplate {
 	protected Integer autoJoin;
 
 	/** 返回 auto quit / Returns the auto quit */
-	@Getter
 	@XmlAttribute(name = "auto_quit")
 	protected int autoQuit = 40;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race;
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npcid")
 	protected int npcId;
 
 	/** 获取技能点。 / Returns the skill points. */
-	@Getter
 	@XmlAttribute(name = "skill_points")
 	protected int skillPoints;
 

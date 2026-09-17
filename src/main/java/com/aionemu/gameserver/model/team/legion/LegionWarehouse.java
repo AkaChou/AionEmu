@@ -14,10 +14,10 @@ import lombok.Getter;
  *
  * @author Simple
  */
+@Getter
 public class LegionWarehouse extends Storage {
 
 	/** 获取军团。 / Returns the legion. */
-	@Getter
 	private Legion legion;
 	private int curentWhUser;
 

@@ -12,22 +12,20 @@ import lombok.Getter;
  *
  * @author Falke_34
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MinionEvolved")
 public class MinionEvolved {
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "itemId")
 	private int itemId;
 
 	/** 返回 evolved num / Returns the evolved num */
-	@Getter
 	@XmlAttribute(name = "evolvedNum")
 	private int evolvedNum;
 
 	/** 返回 evolved cost / Returns the evolved cost */
-	@Getter
 	@XmlAttribute(name = "evolvedCost")
 	private int evolvedCost;
 }

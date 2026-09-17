@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Point2D")
 public class Point2D {
@@ -19,13 +20,11 @@ public class Point2D {
 	/**
 	 * @return the y
 	 */
-	@Getter
 	@XmlAttribute(name = "y")
 	protected float y;
 	/**
 	 * @return the x
 	 */
-	@Getter
 	@XmlAttribute(name = "x")
 	protected float x;
 

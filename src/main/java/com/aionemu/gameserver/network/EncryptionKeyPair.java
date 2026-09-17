@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @author cura
  */
+@Getter
 public class EncryptionKeyPair {
 
 	/**
@@ -40,7 +41,6 @@ public class EncryptionKeyPair {
 	 * 用于生成客户端/服务端密钥的基础密钥。
 	 * Base key used to generate client/server keys.
 	 */
-	@Getter
 	private int baseKey = 0;
 
 	/**

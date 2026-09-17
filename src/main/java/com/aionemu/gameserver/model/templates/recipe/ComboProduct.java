@@ -11,11 +11,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ComboProduct")
 public class ComboProduct {
 	/** 返回物品 ID / Returns the itemid */
-	@Getter
 	@XmlAttribute
 	protected int itemid;
 }

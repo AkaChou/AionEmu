@@ -28,27 +28,21 @@ import lombok.Getter;
  * Town model.
  */
 
+@Getter
 public class Town {
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	private int nameId;
 	/** 获取等级。 / Returns the level. */
-	@Getter
 	private int level;
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	/** 返回等级日期 / Returns the level up date */
-	@Getter
 	private final Timestamp levelUpDate;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	private final Race race;
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 	private final List<Npc> spawnedNpcs;
 

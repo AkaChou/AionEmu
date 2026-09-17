@@ -18,31 +18,27 @@ import lombok.Getter;
  *
  * @author antness
  */
+@Getter
 @XmlType(name = "ResultedItem")
 @Slf4j
 public class ResultedItem {
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "id")
 	public int itemId;
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	public int count;
 	/** 返回随机下限 / Returns the rnd min */
-	@Getter
 	@XmlAttribute(name = "rnd_min")
 	public int rndMin;
 	/** 返回随机上限 / Returns the rnd max */
-	@Getter
 	@XmlAttribute(name = "rnd_max")
 	public int rndMax;
 	@XmlAttribute(name = "race")
 	public Race race = Race.PC_ALL;
 
 	/** 获取玩家职业。 / Returns the player class. */
-	@Getter
 	@XmlAttribute(name = "player_class")
 	public PlayerClass playerClass = PlayerClass.ALL;
 

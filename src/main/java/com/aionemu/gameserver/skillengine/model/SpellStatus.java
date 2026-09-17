@@ -13,6 +13,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public enum SpellStatus {
 
 	/** 无 / None */
@@ -41,7 +42,6 @@ public enum SpellStatus {
 	 * Gets protocol id.
 	 *
 	 */
-	@Getter
 	private final int id;
 
 	SpellStatus(int id) {

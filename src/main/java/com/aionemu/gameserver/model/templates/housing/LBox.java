@@ -12,32 +12,28 @@ import lombok.Setter;
  *
  * @author Rolandas
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 public class LBox implements Cloneable {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlElement(required = true)
 	protected int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlElement(required = true)
 	protected String name;
 
 	/** 返回 desc / Returns the desc */
-	@Getter
 	@XmlElement(required = true)
 	protected String desc;
 
 	/** 返回脚本 / Returns the script */
-	@Getter
 	@XmlElement(required = true)
 	protected String script;
 
 	/** 返回 icon / Returns the icon */
-	@Getter
-	@Setter
 	@XmlElement(required = true)
 	protected int icon;
 

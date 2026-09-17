@@ -8,12 +8,12 @@ import lombok.Getter;
  *
  * @author Lyahim
  */
+@Getter
 public enum LootRuleType {
 	/** 自由拾取 / Freeforall. */
 	FREEFORALL(0), ROUNDROBIN(1), LEADER(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	LootRuleType(int id) {

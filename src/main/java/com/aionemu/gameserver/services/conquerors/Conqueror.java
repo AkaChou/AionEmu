@@ -7,6 +7,7 @@ import lombok.Getter;
  * 征服者（Serial Killer）运行时状态，绑定玩家及其击杀等级。
  * Conqueror (serial killer) runtime state bound to a player with killer rank.
  */
+@Getter
 public class Conqueror {
 	/**
 	 * 获取所属玩家。
@@ -14,7 +15,6 @@ public class Conqueror {
 	 *
 	 * owner
 	 */
-	@Getter
 	private Player owner;
 	private int killerRank;
 	public int victims;

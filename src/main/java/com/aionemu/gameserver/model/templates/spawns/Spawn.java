@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Spawn")
 @NoArgsConstructor
@@ -39,12 +41,10 @@ public class Spawn {
 	private Integer respawnTime = 0;
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	private int npcId;
 
 	/** 返回难度 ID / Returns the difficult id */
-	@Getter
 	@XmlAttribute(name = "difficult_id")
 	private byte difficultId;
 
@@ -55,7 +55,6 @@ public class Spawn {
 	private Integer spawnPageEnd;
 
 	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
-	@Getter
 	@XmlAttribute(name = "initial_delay")
 	private int initialDelay;
 
@@ -66,8 +65,6 @@ public class Spawn {
 	private List<SpawnSpotTemplate> spawnTemplates;
 
 	/** 获取活动模板。 / Returns the event template. */
-	@Getter
-	@Setter
 	@XmlTransient
 	private EventTemplate eventTemplate;
 

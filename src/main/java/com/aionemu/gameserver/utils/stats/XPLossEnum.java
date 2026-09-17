@@ -6,6 +6,7 @@ import lombok.Getter;
  * 按等级定义死亡经验损失系数
  * XP loss coefficients by player level on death
  */
+@Getter
 public enum XPLossEnum {
 	/** 6 级，损失系数 1.0 / Level 6, loss param 1.0 */
 	LEVEL_6(6, 1.0),
@@ -32,10 +33,8 @@ public enum XPLossEnum {
 	LEVEL_83(83, 0.25);
 
 	/** 等级阈值 / Level threshold */
-	@Getter
 	private final int level;
 	/** 经验损失系数 / XP loss parameter */
-	@Getter
 	private final double param;
 
 	/**

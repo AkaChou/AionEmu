@@ -7,6 +7,7 @@ import lombok.Getter;
  * Stage Type enumeration.
  */
 
+@Getter
 public enum StageType {
 	/** 默认 / Default. */
 	DEFAULT(0, 0), START_STAGE_1_ELEVATOR(35464, 1), START_STAGE_1_ROUND_1(35465, 1),
@@ -70,10 +71,8 @@ public enum StageType {
 	PVP_STAGE_3(3, 0), PVP_STAGE_4(4, 0), PVP_STAGE_5(5, 0), PVP_STAGE_6(6, 0), PVP_STAGE_OVER(0, 0);
 
 	/** 返回 ID。 / Returns the id. */
-	@Getter
 	private final int id;
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	private final int type;
 
 	StageType(int id, int type) {

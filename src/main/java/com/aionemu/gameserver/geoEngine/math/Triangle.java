@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
  * 三角形：三个顶点，支持懒计算中心/法线，并实现对象池复用。
  * Triangle with three vertices, lazy center/normal, and object-pool reuse.
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class Triangle extends AbstractTriangle implements Reusable {
 
@@ -25,18 +27,12 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/** 顶点 C / Vertex C */
 	private Vector3f pointc = new Vector3f();
 	/** 懒计算的中心（质心）。 / Lazily computed center (centroid). */
-	@Setter
 	private transient Vector3f center;
 	/** 懒计算的单位法线。 / Lazily computed unit normal. */
-	@Setter
 	private transient Vector3f normal;
 	/** 投影值（外部用途）。 / Projection value (external use). */
-	@Getter
-	@Setter
 	private float projection;
 	/** 索引（外部用途）。 / Index (external use). */
-	@Getter
-	@Setter
 	private int index;
 
 	/**

@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class InstanceRiftLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected InstanceRiftTemplate template;
 	/** 返回 active instance rift / Returns the active instance rift */
-	@Getter
 	protected RiftInstance<InstanceRiftLocation> activeInstanceRift;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成的对象列表 / Returns the spawned objects */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public InstanceRiftLocation(InstanceRiftTemplate template) {

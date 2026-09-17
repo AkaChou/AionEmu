@@ -25,6 +25,7 @@ import lombok.Getter;
  *
  * @author Luno
  */
+@Getter
 @XmlRootElement(name = "npc_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NpcData {
@@ -33,7 +34,6 @@ public class NpcData {
 	private List<NpcTemplate> npcs;
 
 	/** 全部 NPC 模板映射 / map containing all npc templates */
-	@Getter
 	private final IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
 
 	/**

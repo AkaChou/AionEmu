@@ -31,6 +31,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ToyPetSpawnAction")
 public class ToyPetSpawnAction extends AbstractItemAction {
@@ -38,7 +39,6 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 	protected int npcid;
 
 	/** 返回时间 / Returns the time*/
-	@Getter
 	@XmlAttribute
 	protected int time;
 

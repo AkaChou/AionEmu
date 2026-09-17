@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "pet_skill")
 public class PetSkillTemplate {
@@ -19,19 +20,16 @@ public class PetSkillTemplate {
 	/**
 	 * @return 技能 ID / the skill id
 	 */
-	@Getter
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 	/**
 	 * @return 宠物 ID / the pet id
 	 */
-	@Getter
 	@XmlAttribute(name = "pet_id")
 	protected int petId;
 	/**
 	 * @return 施放顺序 / the cast order
 	 */
-	@Getter
 	@XmlAttribute(name = "order_skill")
 	protected int orderSkill;
 }

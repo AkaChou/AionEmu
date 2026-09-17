@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public enum PetAction {
 	/** 收养 / Adopt. */
 	ADOPT(1), SURRENDER(2), SPAWN(3), DISMISS(4), TALK_WITH_MERCHANT(6), TALK_WITH_MINDER(7), FOOD(9), RENAME(10),
@@ -26,7 +27,6 @@ public enum PetAction {
 	}
 
 	/** 返回动作 ID / Returns the action id */
-	@Getter
 	private final int actionId;
 
 	PetAction(int actionId) {

@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <VL> 漩涡地点类型 / vortex location type
  */
+@Getter
+@Setter
 @RequiredArgsConstructor
 public abstract class DimensionalVortex<VL extends VortexLocation> {
 
@@ -34,7 +36,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 *
 	 * @return 绑定的漩涡地点 / location
 	 */
-	@Getter
 	private final VL vortexLocation;
 	/**
 	 * 获取生成器摧毁监听器。
@@ -42,7 +43,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 *
 	 * @return 生成器摧毁监听器 / listener
 	 */
-	@Getter
 	private final GeneratorDestroyListener generatorDestroyListener = new GeneratorDestroyListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
 	/**
@@ -51,8 +51,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 *
 	 * @return 已摧毁则为 true / true if destroyed
 	 */
-	@Getter
-	@Setter
 	private boolean generatorDestroyed;
 	/**
 	 * 获取裂隙生成器 NPC。
@@ -60,8 +58,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 *
 	 * @return 生成器 NPC / generator
 	 */
-	@Getter
-	@Setter
 	private Npc generator;
 	private boolean started;
 

@@ -11,12 +11,12 @@ import lombok.Getter;
  * Inventory item template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InventoryItem")
 public class InventoryItem {
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
 }

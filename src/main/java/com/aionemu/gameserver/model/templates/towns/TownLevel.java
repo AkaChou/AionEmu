@@ -15,19 +15,18 @@ import lombok.Getter;
  *
  * @author ViAl
  */
+@Getter
 @XmlType(name = "town_level")
 public class TownLevel {
 
 	/**
 	 * @return the level
 	 */
-	@Getter
 	@XmlAttribute(name = "level")
 	protected int level;
 	/**
 	 * @return the spawn
 	 */
-	@Getter
 	@XmlElement(name = "spawn")
 	protected List<Spawn> spawns;
 }

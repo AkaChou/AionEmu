@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CraftItem")
 public class CraftItem extends CraftReward {
@@ -20,7 +21,6 @@ public class CraftItem extends CraftReward {
 	 * 获取 minLevel 属性值。
 	 * Gets the value of the minLevel property
 	 */
-	@Getter
 	@XmlAttribute(name = "minLevel", required = true)
 	protected int minLevel;
 
@@ -28,7 +28,6 @@ public class CraftItem extends CraftReward {
 	 * 获取 maxLevel 属性值。
 	 * Gets the value of the maxLevel property
 	 */
-	@Getter
 	@XmlAttribute(name = "maxLevel", required = true)
 	protected int maxLevel;
 }

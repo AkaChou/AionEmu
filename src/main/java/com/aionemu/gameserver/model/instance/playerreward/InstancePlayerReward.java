@@ -7,9 +7,9 @@ import lombok.Getter;
  * Instance Player Reward model.
  */
 
+@Getter
 public class InstancePlayerReward {
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	private int playerPvPKills;
 	private int playerMonsterKills;

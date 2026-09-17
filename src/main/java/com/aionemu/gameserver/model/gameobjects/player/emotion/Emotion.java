@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
  *
  * @author MrPoke
  */
+@Getter
 @AllArgsConstructor
 public class Emotion implements IExpirable {
 	/**
@@ -19,7 +20,6 @@ public class Emotion implements IExpirable {
 	 *
 	 * @return 表情 ID / emotion id
 	 */
-	@Getter
 	private final int id;
 	private final int dispearTime;
 

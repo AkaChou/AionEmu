@@ -13,11 +13,11 @@ import lombok.Getter;
  * @author Ranastic (Encom)
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Purchable")
 public class ItemPurchableLimits {
 	/** 返回最小军阶 / Returns the min rank */
-	@Getter
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
 

@@ -11,11 +11,11 @@ import lombok.Getter;
  * Extra inventory template: extended cube id.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ExtraInventory")
 public class ExtraInventory {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 }

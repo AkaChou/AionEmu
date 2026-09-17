@@ -8,15 +8,14 @@ import lombok.Setter;
  * Smoldering Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class SmolderingPlayerReward extends InstancePlayerReward {
 	/** 返回 smoldering key / Returns the smoldering key */
-	@Getter
-	@Setter
 	private int smolderingKey;
 	/**
 	 * @return 是否已奖励 / whether rewarded
 	 */
-	@Getter
 	private boolean isRewarded = false;
 
 	public SmolderingPlayerReward(Integer object) {

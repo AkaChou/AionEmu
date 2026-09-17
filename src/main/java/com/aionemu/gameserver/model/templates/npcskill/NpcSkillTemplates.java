@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
  *
  * @author AionChs Master
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "npcskills")
 @NoArgsConstructor
@@ -24,11 +25,9 @@ import lombok.AllArgsConstructor;
 public class NpcSkillTemplates {
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	@XmlAttribute(name = "npcid")
 	protected int npcId;
 	/** 返回 npc skills / Returns the npc skills */
-	@Getter
 	@XmlElement(name = "npcskill")
 	protected List<NpcSkillTemplate> npcSkills;
 }

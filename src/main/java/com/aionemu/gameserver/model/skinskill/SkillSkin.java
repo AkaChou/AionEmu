@@ -13,15 +13,13 @@ import lombok.AllArgsConstructor;
  *
  * @author Rinzler (Encom)
  */
+@Getter
 @AllArgsConstructor
 public class SkillSkin implements IExpirable {
 
-	@Getter
 	private final SkillSkinTemplate template;
-	@Getter
 	private final int id;
 	private int dispearTime = 0;
-	@Getter
 	private final int isActive;
 
 	/** 返回剩余时间 / Returns the remaining time */

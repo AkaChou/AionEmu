@@ -21,6 +21,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SysMail", propOrder = { "templates" })
 public class SysMail {
@@ -29,7 +30,6 @@ public class SysMail {
 	private List<MailTemplate> templates;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 

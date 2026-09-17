@@ -26,21 +26,19 @@ import lombok.Setter;
  * PvP Arena Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	private final Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
 	private final List<Integer> zones = new ArrayList<Integer>();
 	/** 返回 round / Returns the round */
-	@Getter
-	@Setter
 	private int round = 1;
 	private Integer zone;
 	private final int bonusTime;
 	/** 返回 cap points / Returns the cap points */
-	@Getter
 	private final int capPoints;
 	private long instanceTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 	protected WorldMapInstance instance;
 	private final GenerealInstancePosition instancePosition;

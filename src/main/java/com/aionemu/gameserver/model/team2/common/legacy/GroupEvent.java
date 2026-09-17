@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Lyahim
  */
+@Getter
 public enum GroupEvent {
 
 	/** 离开 / Leave. */
@@ -16,7 +17,6 @@ public enum GroupEvent {
 	UNK_53(65);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	GroupEvent(int id) {

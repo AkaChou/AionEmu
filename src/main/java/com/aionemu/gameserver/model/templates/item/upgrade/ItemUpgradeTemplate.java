@@ -18,15 +18,14 @@ import lombok.Getter;
  * @author Ranastic (Encom)
  */
 
+@Getter
 @XmlRootElement(name = "ItemUpgrade")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemUpgradeTemplate implements StatOwner {
 	/** 获取升级结果物品。 / Returns the upgrade result item. */
-	@Getter
 	protected List<UpgradeResultItem> upgrade_result_item;
 
 	/** 返回升级基础物品 ID / Returns the upgrade base item id */
-	@Getter
 	@XmlAttribute(name = "upgrade_base_item")
 	private int upgrade_base_item_id;
 

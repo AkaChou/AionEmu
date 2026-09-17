@@ -8,13 +8,13 @@ import lombok.Getter;
  *
  * @author KKnD
  */
+@Getter
 public enum LootDistribution {
 
 	/** 普通 / Normal. */
 	NORMAL(0), ROLL_DICE(2), BID(3);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	LootDistribution(int id) {

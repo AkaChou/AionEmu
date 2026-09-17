@@ -14,15 +14,14 @@ import lombok.Getter;
  * 技能消耗动作：按装备的武器/护甲耐久度扣减充能值。
  * Skill action that burns charge from equipped weapons/armor by durability cost.
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChargeUseAction")
 public class ChargeUseAction extends Action {
 
-	@Getter
 	@XmlAttribute(required = true)
 	protected int weapon;
 
-	@Getter
 	@XmlAttribute(required = true)
 	protected int armor;
 

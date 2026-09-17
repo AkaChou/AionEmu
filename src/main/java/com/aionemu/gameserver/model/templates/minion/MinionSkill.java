@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Falke_34
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MinionSkill")
 public class MinionSkill {
@@ -20,7 +21,6 @@ public class MinionSkill {
 	public int skill_id;
 
 	/** 返回 energy cost / Returns the energy cost */
-	@Getter
 	@XmlAttribute(name = "energyCost")
 	public int energyCost;
 

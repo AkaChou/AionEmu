@@ -21,11 +21,11 @@ import lombok.Getter;
  *
  * @author ATracer modified by Wakizashi, kecimis
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbstractHealEffect")
 public abstract class AbstractHealEffect extends EffectTemplate {
 
-	@Getter
 	@XmlAttribute
 	protected boolean percent;
 

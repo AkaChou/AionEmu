@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Sweetkr
  */
+@Getter
 public enum DeniedStatus {
 	/** 查看详情 / View Details */
 	VIEW_DETAILS(1), TRADE(2), GROUP(4), GUILD(8), FRIEND(16), DUEL(32);
@@ -15,7 +16,6 @@ public enum DeniedStatus {
 	/**
 	 * @return the id
 	 */
-	@Getter
 	private final int id;
 
 	DeniedStatus(int id) {

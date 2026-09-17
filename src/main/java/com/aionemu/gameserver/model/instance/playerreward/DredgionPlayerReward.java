@@ -7,9 +7,9 @@ import lombok.Getter;
  * Dredgion Player Reward for instance logic.
  */
 
+@Getter
 public class DredgionPlayerReward extends InstancePlayerReward {
 	/** 返回 zone captured / Returns the zone captured */
-	@Getter
 	private int zoneCaptured;
 
 	public DredgionPlayerReward(Integer object) {

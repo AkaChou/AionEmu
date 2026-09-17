@@ -14,13 +14,13 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MailPart")
 @XmlSeeAlso({ Sender.class, Header.class, Body.class, Tail.class, Title.class })
 public abstract class MailPart extends StringParamList implements IMailFormatter {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected Integer id;
 

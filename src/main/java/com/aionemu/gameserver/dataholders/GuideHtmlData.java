@@ -22,6 +22,7 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlRootElement(name = "guides")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GuideHtmlData {
@@ -34,7 +35,6 @@ public class GuideHtmlData {
 	 *
 	 * @return 哈希键到引导模板列表的映射 / map of hash key to guide template list
 	 */
-	@Getter
 	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<ArrayList<GuideTemplate>>();
 	private final int CLASS_ALL = 255;
 

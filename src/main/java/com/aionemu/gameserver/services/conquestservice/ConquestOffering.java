@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
  * @author Rinzler (Encom)
  * @param <CL> 征服地点类型 / conquest location type
  */
+@Getter
+@Setter
 @Slf4j(topic = "com.aionemu.gameserver.services.conquestservice.ConquestOffering")
 @RequiredArgsConstructor
 public abstract class ConquestOffering<CL extends ConquestLocation> {
@@ -40,8 +42,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * Returns the offering boss NPC.
 	 * boss
 	 */
-	@Getter
-	@Setter
 	private Npc conquestBoss;
 	/**
 	 * -- GETTER --
@@ -49,7 +49,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * Returns the bound location.
 	 * location
 	 */
-	@Getter
 	private final CL conquestLocation;
 	/**
 	 * -- SETTER --
@@ -62,8 +61,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 *
 	 * @return 已摧毁则为 true / true if destroyed
 	 */
-	@Getter
-	@Setter
 	private boolean conquestBossDestroyed;
 	private final AtomicBoolean finished = new AtomicBoolean();
     /**
@@ -72,7 +69,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 *  Returns the boss destroy listener.
 	 *  listener
 	 */
-	@Getter
 	private final ConquestBossDestroyListener conquestBossDestroyListener = new ConquestBossDestroyListener(this);
 
 	/**

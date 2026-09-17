@@ -9,18 +9,13 @@ import lombok.Setter;
  *
  * @author cura
  */
+@Getter
+@Setter
 public class CharacterPasskey {
 
-	@Getter
-	@Setter
 	private int objectId;
-	@Getter
-	@Setter
 	private int wrongCount = 0;
-	@Getter
 	private boolean isPass = false;
-	@Getter
-	@Setter
 	private ConnectType connectType;
 
 	/**

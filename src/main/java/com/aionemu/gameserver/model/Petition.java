@@ -8,20 +8,15 @@ import lombok.Getter;
  *
  * @author zdead
  */
+@Getter
 public class Petition {
 
-	@Getter
 	private final int petitionId;
-	@Getter
 	private final int playerObjId;
 	private final PetitionType type;
-	@Getter
 	private final String title;
-	@Getter
 	private final String contentText;
-	@Getter
 	private final String additionalData;
-	@Getter
 	private final PetitionStatus status;
 
 	/**

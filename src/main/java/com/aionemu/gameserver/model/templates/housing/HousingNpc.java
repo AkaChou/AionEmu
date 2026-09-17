@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HousingNpc")
 public class HousingNpc extends PlaceableHouseObject {
@@ -20,7 +21,6 @@ public class HousingNpc extends PlaceableHouseObject {
 	 * 获取 npcId 属性值。
 	 * Gets the value of the npcId property
 	 */
-	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 

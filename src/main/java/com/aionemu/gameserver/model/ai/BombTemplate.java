@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BombTemplate")
 public class BombTemplate {
@@ -24,11 +25,9 @@ public class BombTemplate {
 	 * warn about (and will eventually block) final field mutation.
 	 * </p>
 	 */
-	@Getter
 	@XmlAttribute(name = "skillId")
 	private int SkillId = 0;
 	/** 返回 cd / Returns the cd */
-	@Getter
 	@XmlAttribute(name = "cd")
 	private int cd = 0;
 }

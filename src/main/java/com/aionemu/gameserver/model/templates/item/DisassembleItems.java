@@ -11,11 +11,11 @@ import lombok.Getter;
  *
  * @author BeckUp.Media
  */
+@Getter
 @XmlRootElement(name = "item")
 public class DisassembleItems
 {
 	/** 返回 item prob / Returns the item prob */
-	@Getter
 	@XmlAttribute(name = "iProb")
 	private int ItemProb;
 	@XmlAttribute(name = "custom")

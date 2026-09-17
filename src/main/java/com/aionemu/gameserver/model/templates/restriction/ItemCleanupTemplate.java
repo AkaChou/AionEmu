@@ -12,12 +12,12 @@ import lombok.Getter;
  *
  * @author KID
  */
+@Getter
 @XmlRootElement(name = "cleanup")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ItemCleanupTemplate {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 	@XmlAttribute

@@ -11,11 +11,11 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public class WorldMap2DInstance extends WorldMapInstance {
 
 	/** 个人实例所有者 ID，0 表示公共 / personal-instance owner id, 0 if public */
-	@Getter
-	@Setter
 	private int ownerId;
 
 	/**

@@ -19,6 +19,7 @@ import lombok.Getter;
  *
  * @author -Nemesiss-
  */
+@Getter
 public class WorldMap {
 
 	/** 地图模板 / map template */
@@ -33,7 +34,6 @@ public class WorldMap {
 	private final Map<Integer, WorldMapInstance> instances = Collections.synchronizedMap(new LinkedHashMap<Integer, WorldMapInstance>());
 
 	/** 所属世界 / owning world */
-	@Getter
 	private final World world;
 	/** 运行时世界选项位掩码 / runtime world-option bitmask */
 	private int worldOptions;

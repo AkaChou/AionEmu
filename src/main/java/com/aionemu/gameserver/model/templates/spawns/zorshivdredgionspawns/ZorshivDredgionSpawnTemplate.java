@@ -14,10 +14,10 @@ import lombok.Setter;
  * @author Rinzler (Encom)
  */
 
+@Getter
+@Setter
 public class ZorshivDredgionSpawnTemplate extends SpawnTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	private int id;
 	private ZorshivDredgionStateType zorshivDredgionType;
 

@@ -19,6 +19,7 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StaticDoor")
 public class StaticDoorTemplate extends VisibleObjectTemplate {
@@ -26,15 +27,12 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	@XmlAttribute
 	protected DoorType type = DoorType.DOOR;
 	/** 返回 X 坐标 / Returns the x */
-	@Getter
 	@XmlAttribute
 	protected Float x;
 	/** 返回 Y 坐标 / Returns the y */
-	@Getter
 	@XmlAttribute
 	protected Float y;
 	/** 返回 Z 坐标 / Returns the z */
-	@Getter
 	@XmlAttribute
 	protected Float z;
 	/**
@@ -43,7 +41,6 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	 *
 	 * @return 门 ID / the door id
 	 */
-	@Getter
 	@XmlAttribute(name = "doorid")
 	protected int doorId;
 	/**
@@ -52,13 +49,11 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	 *
 	 * @return 钥匙物品 ID / the key item id
 	 */
-	@Getter
 	@XmlAttribute(name = "keyid")
 	protected int keyId;
 	@XmlAttribute(name = "state")
 	protected String statesHex;
 	/** 返回网格文件 / Returns the mesh file */
-	@Getter
 	@XmlAttribute(name = "mesh")
 	private String meshFile;
 	@XmlElement(name = "box")

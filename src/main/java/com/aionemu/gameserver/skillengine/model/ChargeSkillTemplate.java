@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author Dr.Nism
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "charge_skill")
 public class ChargeSkillTemplate {
@@ -24,7 +25,6 @@ public class ChargeSkillTemplate {
 	 * Gets charge skill id.
 	 *
 	 */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
@@ -48,7 +48,6 @@ public class ChargeSkillTemplate {
 	 * Gets charge stage list.
 	 *
 	 */
-	@Getter
 	@XmlElement(name = "charge")
 	private List<ChargeTemplate> charges;
 

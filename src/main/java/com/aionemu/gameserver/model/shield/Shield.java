@@ -17,14 +17,13 @@ import lombok.Getter;
  *
  * @author Wakizashi
  */
+@Getter
 public class Shield extends VisibleObject {
 
 	/** 获取模板。 / Returns the template. */
-	@Getter
 	private ShieldTemplate template = null;
 	private String name = null;
 	/** 返回 ID / Returns the id */
-	@Getter
 	private int id = 0;
 
 	public Shield(ShieldTemplate template) {

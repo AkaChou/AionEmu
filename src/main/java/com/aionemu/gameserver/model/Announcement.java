@@ -8,15 +8,13 @@ import lombok.Getter;
  *
  * @author Divinity
  */
+@Getter
 public class Announcement {
 
 	private int id;
-	@Getter
 	private final String faction;
-	@Getter
 	private final String announce;
 	private final String chatType;
-	@Getter
 	private final int delay;
 
 	/**

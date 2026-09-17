@@ -14,11 +14,11 @@ import lombok.Getter;
  *
  * @author Wnkrz
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalDropRating")
 public class GlobalDropRating {
 	/** 返回 NPC 等级。 / Returns the rating. */
-	@Getter
 	@XmlAttribute(name = "rating", required = true)
 	protected NpcRating rating;
 }

@@ -39,6 +39,7 @@ import lombok.Getter;
  *
  * @author Rinzler
  */
+@Getter
 public class Base<BL extends BaseLocation> {
 	private Npc boss, flag;
 	private boolean started;
@@ -48,7 +49,6 @@ public class Base<BL extends BaseLocation> {
 	 *
 	 * base location
 	 */
-	@Getter
 	private final BL baseLocation;
 	private Future<?> startAssault, stopAssault;
 	private final List<Race> list = new ArrayList<Race>();
@@ -58,7 +58,6 @@ public class Base<BL extends BaseLocation> {
 	 *
 	 * @return 已刷新单位 / spawned units
 	 */
-	@Getter
 	private final List<Npc> spawned = new ArrayList<Npc>();
 	/**
 	 * 获取当前袭击单位列表。
@@ -66,7 +65,6 @@ public class Base<BL extends BaseLocation> {
 	 *
 	 * attackers
 	 */
-	@Getter
 	private final List<Npc> attackers = new ArrayList<Npc>();
 	private final AtomicBoolean finished = new AtomicBoolean();
 	/**
@@ -75,7 +73,6 @@ public class Base<BL extends BaseLocation> {
 	 *
 	 * @return 死亡监听器 / death listener
 	 */
-	@Getter
 	private final BaseBossDeathListener baseBossDeathListener = new BaseBossDeathListener(this);
 
 	/**

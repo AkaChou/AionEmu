@@ -41,6 +41,7 @@ import lombok.Getter;
  * Event Template (static data/XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventTemplate")
 @Slf4j
@@ -64,7 +65,6 @@ public class EventTemplate {
 	protected List<String> surveys;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	protected String name;
 
@@ -132,7 +132,6 @@ public class EventTemplate {
 	/**
 	 * @return 是否已启动 / whether started
 	 */
-	@Getter
 	@XmlTransient
 	volatile boolean isStarted = false;
 

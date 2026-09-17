@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
  * 单条连锁技能状态：类别、连击计数与最近使用时间。
  * Single chain-skill state: category, chain count and last use time.
  */
+@Getter
+@Setter
 @AllArgsConstructor
 public class ChainSkill {
 
@@ -17,8 +19,6 @@ public class ChainSkill {
 	 *
 	 * @return 类别 / category
 	 */
-	@Getter
-	@Setter
 	private String category;
 	/**
 	 * 获取连击计数。
@@ -26,8 +26,6 @@ public class ChainSkill {
 	 *
 	 * @return 连击计数 / chain count
 	 */
-	@Getter
-	@Setter
 	private int chainCount = 0;
 	/**
 	 * 获取最近使用时间。
@@ -35,8 +33,6 @@ public class ChainSkill {
 	 *
 	 * @return 毫秒时间戳 / epoch millis
 	 */
-	@Getter
-	@Setter
 	private long useTime;
 
 	/**

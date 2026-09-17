@@ -20,6 +20,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "parts" })
 @XmlRootElement(name = "building")
@@ -27,7 +28,6 @@ public class Building {
 	private Parts parts;
 
 	/** 是否默认 / Whether default. */
-	@Getter
 	@XmlAttribute(name = "default")
 	protected boolean isDefault;
 
@@ -41,7 +41,6 @@ public class Building {
 	protected BuildingType type;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 

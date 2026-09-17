@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Sweetkr
  */
+@Getter
 public enum CreatureSeeState {
 	NORMAL(0), // 正常 / Normal
 	SEARCH1(1), // 透视：隐藏 I / See-Through: Hide I
@@ -18,7 +19,6 @@ public enum CreatureSeeState {
 	/**
 	 * @return the id
 	 */
-	@Getter
 	private final int id;
 
 	CreatureSeeState(int id) {

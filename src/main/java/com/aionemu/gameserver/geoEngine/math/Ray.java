@@ -12,17 +12,15 @@ import lombok.Setter;
  * 射线：原点加方向，支持与三角形/平面/包围体求交，并实现 {@link Collidable}。
  * Ray defined by origin and direction; supports triangle/plane/BV intersection and {@link Collidable}.
  */
+@Getter
+@Setter
 public final class Ray implements Cloneable, Collidable {
 
 	/** 射线原点。 / Ray origin. */
-	@Getter
 	public Vector3f origin;
 	/** 射线方向（通常为单位向量）。 / Ray direction (typically unit length). */
-	@Getter
 	public Vector3f direction;
 	/** 射线最大长度限制，默认正无穷。 / Maximum ray length limit; default positive infinity. */
-	@Getter
-	@Setter
 	public float limit = Float.POSITIVE_INFINITY;
 
 	/**

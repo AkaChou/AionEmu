@@ -13,26 +13,22 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public class BrokerPlayerCache {
 
 	/**
 	 * @return the brokerListCache
 	 */
-	@Getter
-	@Setter
 	private BrokerItem[] brokerListCache = new BrokerItem[0];
 	/**
 	 * @return the brokerMaskCache
 	 */
-	@Getter
-	@Setter
 	private int brokerMaskCache;
 	private int brokerSoftTypeCache;
 	/**
 	 * @return the brokerStartPageCache
 	 */
-	@Getter
-	@Setter
 	private int brokerStartPageCache;
 	private List<Integer> itemList = new ArrayList<Integer>();
 

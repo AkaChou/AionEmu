@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SimpleModifier")
 @NoArgsConstructor
@@ -35,7 +36,6 @@ public class StatFunction implements IStatFunction {
 	@XmlAttribute
 	protected int value;
 	/** 获取职业类型。 / Returns the class type. */
-	@Getter
 	@XmlAttribute(name = "class_type")
 	protected String classType;
 	@XmlElement(name = "conditions")

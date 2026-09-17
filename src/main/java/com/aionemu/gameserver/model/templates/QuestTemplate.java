@@ -36,17 +36,16 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Quest")
 
+@Getter
 public class QuestTemplate {
 	/**
 	 * 获取 collectItems 属性值。
 	 * Gets the value of the collectItems property
 	 * @return 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
 	 */
-	@Getter
 	@XmlElement(name = "collect_items")
 	protected CollectItems collectItems;
 	/** 获取背包物品。 / Returns the inventory items. */
-	@Getter
 	@XmlElement(name = "inventory_items")
 	protected InventoryItems inventoryItems;
 	@XmlElement(name = "rewards")
@@ -69,7 +68,6 @@ public class QuestTemplate {
 	 * Gets the value of the genderPermitted property
 	 * @return 可能的对象是 {@link Gender } / Possible object is {@link Gender }
 	 */
-	@Getter
 	@XmlElement(name = "gender_permitted")
 	protected Gender genderPermitted;
 	/**
@@ -77,7 +75,6 @@ public class QuestTemplate {
 	 * Gets the value of the questWorkItems property
 	 * @return 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
 	 */
-	@Getter
 	@XmlElement(name = "quest_work_items")
 	protected QuestWorkItems questWorkItems;
 	@XmlElement(name = "fighter_selectable_reward")
@@ -106,7 +103,6 @@ public class QuestTemplate {
 	 * 获取 id 属性值。
 	 * Gets the value of the id property
 	 */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 	/**
@@ -115,7 +111,6 @@ public class QuestTemplate {
 	 *
 	 * @return 任务名称 / Quest name
 	 */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 	/**
@@ -123,7 +118,6 @@ public class QuestTemplate {
 	 * Gets the value of the nameId property
 	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute(name = "nameId")
 	protected Integer nameId;
 	/**
@@ -131,11 +125,9 @@ public class QuestTemplate {
 	 * Gets the value of the minlevelPermitted property
 	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	 */
-	@Getter
 	@XmlAttribute(name = "minlevel_permitted")
 	protected Integer minlevelPermitted;
 	/** 返回 maxlevel permitted / Returns the maxlevel permitted */
-	@Getter
 	@XmlAttribute(name = "maxlevel_permitted")
 	protected int maxlevelPermitted;
 	@XmlAttribute(name = "max_repeat_count")
@@ -170,25 +162,20 @@ public class QuestTemplate {
 	@XmlAttribute(name = "category")
 	protected QuestCategory category;
 	/** 返回 repeat cycle / Returns the repeat cycle */
-	@Getter
 	@XmlAttribute(name = "repeat_cycle")
 	protected List<QuestRepeatCycle> repeatCycle;
 	/** 返回 npc faction id / Returns the npc faction id */
-	@Getter
 	@XmlAttribute(name = "npcfaction_id")
 	protected int npcFactionId;
 	/**
 	 * @return 导师类型 / The mentor type
 	 */
-	@Getter
 	@XmlAttribute(name = "mentor_type")
 	protected QuestMentorType mentorType = QuestMentorType.NONE;
 	/** 返回目标类型 / Returns the target type*/
-	@Getter
 	@XmlAttribute(name = "target_type")
 	private QuestTargetType targetType = QuestTargetType.NONE;
 	/** 返回标题 ID / Returns the title id */
-	@Getter
 	@XmlAttribute(name = "titleId")
 	protected int titleId;
 

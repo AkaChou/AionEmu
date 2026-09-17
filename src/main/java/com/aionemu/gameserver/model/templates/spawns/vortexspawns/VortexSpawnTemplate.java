@@ -12,14 +12,12 @@ import lombok.Setter;
  * Vortex spawn template (static data / XML).
  */
 
+@Getter
+@Setter
 public class VortexSpawnTemplate extends SpawnTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	private int id;
 	/** 获取状态类型。 / Returns the state type. */
-	@Getter
-	@Setter
 	private VortexStateType stateType;
 
 	public VortexSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

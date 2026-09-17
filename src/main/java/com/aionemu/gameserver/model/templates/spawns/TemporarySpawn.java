@@ -14,16 +14,15 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "TemporarySpawn")
 public class TemporarySpawn {
 	/** 返回刷新时间 / Returns the spawn time*/
-	@Getter
 	@XmlAttribute(name = "spawn_time")
 	private String spawnTime;
 
 	/** 返回消失时间 / Returns the despawn time*/
-	@Getter
 	@XmlAttribute(name = "despawn_time")
 	private String despawnTime;
 

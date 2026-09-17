@@ -10,104 +10,61 @@ import lombok.Setter;
  * Pv P Arena Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class PvPArenaPlayerReward extends InstancePlayerReward {
 	/** 获取坐标。 / Returns the position. */
-	@Getter
-	@Setter
 	private int position;
 	private int timeBonus;
 	private final float timeBonusModifier;
 	// <欧比斯点数> / <Abyss Points>
 	/** 返回基础欧比斯点 / Returns the basic ap */
-	@Getter
-	@Setter
 	private int basicAP;
 	/** 获取排行欧比斯点数。 / Returns the ranking ap. */
-	@Getter
-	@Setter
 	private int rankingAP;
 	/** 返回 score ap / Returns the score ap */
-	@Getter
-	@Setter
 	private int scoreAP;
 	// <荣耀点数> / <Glory Points>
 	/** 返回基础荣耀点 / Returns the basic gp */
-	@Getter
-	@Setter
 	private int basicGP;
 	/** 获取排行荣耀点数。 / Returns the ranking gp. */
-	@Getter
-	@Setter
 	private int rankingGP;
 	/** 返回 score gp / Returns the score gp */
-	@Getter
-	@Setter
 	private int scoreGP;
 	/** 返回 basic crucible / Returns the basic crucible */
-	@Getter
-	@Setter
 	private int basicCrucible;
 	/** 返回 ranking crucible / Returns the ranking crucible */
-	@Getter
-	@Setter
 	private int rankingCrucible;
 	/** 返回 score crucible / Returns the score crucible */
-	@Getter
-	@Setter
 	private int scoreCrucible;
 	/** 设置 basic courage / Sets the basic courage */
-	@Getter
-	@Setter
 	private int basicCourage;
 	/** 设置 ranking courage / Sets the ranking courage */
-	@Getter
-	@Setter
 	private int rankingCourage;
 	/** 设置 score courage / Sets the score courage */
-	@Getter
-	@Setter
 	private int scoreCourage;
 	/** 返回 opportunity / Returns the opportunity */
-	@Getter
-	@Setter
 	private int opportunity;
 	/** 返回 glory ticket / Returns the glory ticket */
-	@Getter
-	@Setter
 	private int gloryTicket;
 	/** 返回 mithril medal / Returns the mithril medal */
-	@Getter
-	@Setter
 	private int mithrilMedal;
 	/** 返回 platinum medal / Returns the platinum medal */
-	@Getter
-	@Setter
 	private int platinumMedal;
 	/** 返回 glorious insignia / Returns the glorious insignia */
-	@Getter
-	@Setter
 	private int gloriousInsignia;
 	/** 设置 basic infinity / Sets the basic infinity */
-	@Getter
-	@Setter
 	private int basicInfinity;
 	/** 设置 ranking infinity / Sets the ranking infinity */
-	@Getter
-	@Setter
 	private int rankingInfinity;
 	/** 设置 score infinity / Sets the score infinity */
-	@Getter
-	@Setter
 	private int scoreInfinity;
 	/** 返回 life serum / Returns the life serum */
-	@Getter
-	@Setter
 	private int lifeSerum;
 	private long logoutTime;
 	/**
 	 * @return 是否已奖励 / whether rewarded
 	 */
-	@Getter
 	private boolean isRewarded = false;
 	private final InstanceBuff boostMorale;
 

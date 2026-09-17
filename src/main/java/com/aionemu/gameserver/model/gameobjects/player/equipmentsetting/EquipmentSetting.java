@@ -9,75 +9,55 @@ import lombok.Setter;
  * Equipment Setting game object.
  */
 
+@Getter
+@Setter
 public class EquipmentSetting {
 
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
-	@Setter
 	private PersistentState persistentState;
 	/** 获取槽位。 / Returns the slot. */
-	@Getter
 	private final int slot;
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	private final String name;
 	/** 获取显示设置。 / Returns the display. */
-	@Getter
 	private final int display;
 	private final int mHand;
 	private final int sHand;
 	/** 返回头盔。 / Returns the helmet. */
-	@Getter
 	private final int helmet;
 	/** 返回胸甲。 / Returns the torso. */
-	@Getter
 	private final int torso;
 	/** 返回手套。 / Returns the glove. */
-	@Getter
 	private final int glove;
 	/** 返回靴子。 / Returns the boots. */
-	@Getter
 	private final int boots;
 	/** 返回左耳环。 / Returns the earrings left. */
-	@Getter
 	private final int earringsLeft;
 	/** 返回右耳环。 / Returns the earrings right. */
-	@Getter
 	private final int earringsRight;
 	/** 返回左戒指。 / Returns the ring left. */
-	@Getter
 	private final int ringLeft;
 	/** 返回右戒指。 / Returns the ring right. */
-	@Getter
 	private final int ringRight;
 	/** 返回项链。 / Returns the necklace. */
-	@Getter
 	private final int necklace;
 	/** 返回肩甲。 / Returns the shoulder. */
-	@Getter
 	private final int shoulder;
 	/** 返回下衣。 / Returns the pants. */
-	@Getter
 	private final int pants;
 	/** 返回左侧魔力之石。 / Returns the powershard left. */
-	@Getter
 	private final int powershardLeft;
 	/** 返回右侧魔力之石。 / Returns the powershard right. */
-	@Getter
 	private final int powershardRight;
 	/** 返回翅膀。 / Returns the wings. */
-	@Getter
 	private final int wings;
 	/** 返回腰带。 / Returns the waist. */
-	@Getter
 	private final int waist;
 	private final int mOffHand;
 	private final int sOffHand;
 	/** 返回羽饰。 / Returns the plume. */
-	@Getter
 	private final int plume;
 	/** 返回手镯。 / Returns the bracelet. */
-	@Getter
 	private final int bracelet;
 
 	public EquipmentSetting(int slot, int display, int mHand, int sHand, int helmet, int torso, int glove, int boots,

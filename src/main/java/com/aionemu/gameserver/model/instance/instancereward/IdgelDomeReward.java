@@ -20,9 +20,9 @@ import lombok.Getter;
  * Idgel Dome Reward for instance logic.
  */
 
+@Getter
 public class IdgelDomeReward extends InstanceReward<IdgelDomePlayerReward> {
 	/** 返回 cap points / Returns the cap points */
-	@Getter
 	private final int capPoints;
 	private final MutableInt asmodiansPoints = new MutableInt(1000);
 	private final MutableInt elyosPoins = new MutableInt(1000);
@@ -35,7 +35,6 @@ public class IdgelDomeReward extends InstanceReward<IdgelDomePlayerReward> {
 	private long instanceTime;
 	private final int bonusTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 
 	public IdgelDomeReward(Integer mapId, int instanceId, WorldMapInstance instance) {

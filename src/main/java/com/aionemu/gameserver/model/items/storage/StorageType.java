@@ -7,6 +7,7 @@ import lombok.Getter;
  * Storage Type enumeration.
  */
 
+@Getter
 public enum StorageType {
 	// 背包与仓库。 / Cube & Warehouse.
 	/** 魔立方。 / Cube. */
@@ -51,16 +52,12 @@ public enum StorageType {
 	public static final int HOUSE_WH_MAX = 79;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 	/** 获取限制。 / Returns the limit. */
-	@Getter
 	private int limit;
 	/** 返回 length / Returns the length */
-	@Getter
 	private int length;
 	/** 返回 special limit / Returns the special limit */
-	@Getter
 	private int specialLimit;
 
 	StorageType(int id, int limit, int length, int specialLimit) {

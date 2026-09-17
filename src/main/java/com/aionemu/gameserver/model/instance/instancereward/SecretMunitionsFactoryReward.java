@@ -9,16 +9,14 @@ import lombok.Setter;
  * Secret Munitions Factory Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class SecretMunitionsFactoryReward extends InstanceReward<SecretMunitionsFactoryPlayerReward> {
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	/** 返回 npc kills / Returns the npc kills */
-	@Getter
 	private int npcKills;
 	/** 设置军阶。 / Sets the rank. */
-	@Getter
-	@Setter
 	private int rank = 7;
 
 	public SecretMunitionsFactoryReward(Integer mapId, int instanceId) {

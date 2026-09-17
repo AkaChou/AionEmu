@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HousingStorage")
 public class HousingStorage extends PlaceableHouseObject {
@@ -20,7 +21,6 @@ public class HousingStorage extends PlaceableHouseObject {
 	 * 获取 warehouseId 属性值。
 	 * Gets the value of the warehouseId property
 	 */
-	@Getter
 	@XmlAttribute(name = "warehouse_id", required = true)
 	protected int warehouseId;
 

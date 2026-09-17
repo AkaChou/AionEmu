@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author SoulKeeper, Imaginary
  */
+@Getter
 public enum ChatType {
 	/** 普通（白） / Normal (white) */
 	NORMAL(0x00),
@@ -66,7 +67,6 @@ public enum ChatType {
 	 *
 	 * @return 是系统消息则为 true / true if system message
 	 */
-	@Getter
 	private final boolean sysMsg;
 
 	/**

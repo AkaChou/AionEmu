@@ -6,6 +6,7 @@ import lombok.Getter;
  * 冲刺/位移状态：标识技能位移的网络与表现类型。
  * Dash/move status: identifies skill displacement for network and presentation.
  */
+@Getter
 public enum DashStatus {
 
 	/** 无位移 / No dash */
@@ -26,7 +27,6 @@ public enum DashStatus {
 	 * Gets protocol id.
 	 *
 	 */
-	@Getter
 	private final int id;
 
 	DashStatus(int id) {

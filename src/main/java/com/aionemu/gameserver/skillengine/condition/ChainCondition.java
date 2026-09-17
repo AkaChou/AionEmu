@@ -15,6 +15,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChainCondition")
 public class ChainCondition extends Condition {
@@ -25,7 +26,6 @@ public class ChainCondition extends Condition {
 	 *
 	 * @return 自身连锁次数 / self chain count
 	 */
-	@Getter
 	@XmlAttribute(name = "selfcount")
 	private int selfCount;
 	@XmlAttribute(name = "precount")
@@ -36,7 +36,6 @@ public class ChainCondition extends Condition {
 	 *
 	 * @return 连锁类别 / chain category
 	 */
-	@Getter
 	@XmlAttribute(name = "category")
 	private String category;
 	@XmlAttribute(name = "precategory")
@@ -47,7 +46,6 @@ public class ChainCondition extends Condition {
 	 *
 	 * time window
 	 */
-	@Getter
 	@XmlAttribute(name = "time")
 	private int time;
 

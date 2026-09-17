@@ -24,6 +24,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public class ZoneInstance implements Comparable<ZoneInstance> {
 
 	/** 区域模板信息 / zone template info */
@@ -31,7 +32,6 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	/** 所属地图 ID / owning map id */
 	private final int mapId;
 	/** 区内生物集合 / creatures inside the zone */
-	@Getter
 	private final Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
 	/** 区域事件处理器列表 / zone event handlers */
 	protected List<ZoneHandler> handlers = new ArrayList<ZoneHandler>();

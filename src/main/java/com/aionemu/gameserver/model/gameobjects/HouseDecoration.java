@@ -10,17 +10,15 @@ import lombok.Setter;
  * House Decoration game object.
  */
 
+@Getter
+@Setter
 public class HouseDecoration extends AionObject {
 	private final int templateId;
 	/** 返回楼层 / Returns the floor */
-	@Getter
 	private byte floor;
 	/** 是否已用 / Whether used. */
-	@Getter
 	private boolean isUsed;
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
-	@Setter
 	private PersistentState persistentState;
 
 	public HouseDecoration(int objectId, int templateId) {

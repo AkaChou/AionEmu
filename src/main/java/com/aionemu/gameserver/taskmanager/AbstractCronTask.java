@@ -21,13 +21,13 @@ import lombok.Getter;
  * <p>从服务器变量加载上次运行时间，按 Cron 调度下次执行，并在运行后回写下次时间。
  * Loads last run time from server variables, schedules the next run by Cron, and stores the next run time after execution.</p>
  */
+@Getter
 public abstract class AbstractCronTask implements Runnable {
 
 	/**
 	 * Cron 表达式字符串。
 	 * Cron expression string.
 	 */
-	@Getter
 	private final String cronExpressionString;
 
 	/**
@@ -40,14 +40,12 @@ public abstract class AbstractCronTask implements Runnable {
 	 * 下次运行时间（Unix 秒）。
 	 * Next run time (Unix seconds).
 	 */
-	@Getter
 	private int runTime;
 
 	/**
 	 * 两次触发之间的周期（毫秒）。
 	 * Period between two triggers in milliseconds.
 	 */
-	@Getter
 	private final long period;
 
 	/**

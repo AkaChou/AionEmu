@@ -9,9 +9,9 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 public class PlayerWardrobeEntry extends WardrobeEntry {
 
-	@Getter
 	private PersistentState persistentState;
 
 	public PlayerWardrobeEntry(int itemId, int slot, int reskin_count, PersistentState persistentState) {

@@ -11,31 +11,26 @@ import lombok.Getter;
  * Godstone info template: trigger skill and probability, break probability.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "Godstone")
 public class GodstoneInfo {
 	/** 返回 skillid / Returns the skillid */
-	@Getter
 	@XmlAttribute
 	private int skillid;
 	/** 返回 skilllvl / Returns the skilllvl */
-	@Getter
 	@XmlAttribute
 	private int skilllvl;
 	/** 返回 probability / Returns the probability */
-	@Getter
 	@XmlAttribute
 	private int probability;
 	/** 返回 probabilityleft / Returns the probabilityleft */
-	@Getter
 	@XmlAttribute
 	private int probabilityleft;
 	/** 返回 breakprob / Returns the breakprob */
-	@Getter
 	@XmlAttribute
 	private int breakprob;
 	/** 返回 breakcount / Returns the breakcount */
-	@Getter
 	@XmlAttribute
 	private int breakcount;
 	@XmlAttribute

@@ -9,16 +9,14 @@ import lombok.Setter;
  * Eternal Bastion Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class EternalBastionReward extends InstanceReward<EternalBastionPlayerReward> {
 	/** 获取点。 / Returns the points. */
-	@Getter
 	private int points;
 	/** 返回 npc kills / Returns the npc kills */
-	@Getter
 	private int npcKills;
 	/** 设置军阶。 / Sets the rank. */
-	@Getter
-	@Setter
 	private int rank = 7;
 
 	public EternalBastionReward(Integer mapId, int instanceId) {

@@ -12,11 +12,11 @@ import lombok.Setter;
  *
  * @author Source
  */
+@Getter
+@Setter
 public class RiftSpawnTemplate extends SpawnTemplate {
 
 	/** 返回 ID / Returns the id */
-	@Getter
-	@Setter
 	private int id;
 
 	public RiftSpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {

@@ -12,15 +12,14 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 @XmlType(name = "luna_consume_reward")
 @XmlAccessorType(XmlAccessType.NONE)
 public class LunaConsumeRewardsTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute
 	protected int id;
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute
 	protected String name;
 	@XmlAttribute

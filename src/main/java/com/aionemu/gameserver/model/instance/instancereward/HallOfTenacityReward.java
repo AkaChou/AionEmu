@@ -29,13 +29,13 @@ import lombok.Getter;
  *
  * @author Ranastic
  */
+@Getter
 @Slf4j
 public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerReward> {
 
 	protected WorldMapInstance instance;
 	private long instanceTime;
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
 	private final byte buffId;
 	private Point3D myBattlePosition;
 	private Point3D opponentBattlePosition;

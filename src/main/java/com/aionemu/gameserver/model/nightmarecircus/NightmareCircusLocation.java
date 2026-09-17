@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class NightmareCircusLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected NightmareCircusTemplate template;
 	/** 返回激活的梦魇马戏团实例。 / Returns the active nightmare circus. */
-	@Getter
 	protected CircusInstance<NightmareCircusLocation> activeNightmareCircus;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public NightmareCircusLocation(NightmareCircusTemplate template) {

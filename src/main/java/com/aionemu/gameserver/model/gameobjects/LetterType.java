@@ -7,12 +7,12 @@ import lombok.Getter;
  * Letter Type enumeration.
  */
 
+@Getter
 public enum LetterType {
 	/** 普通 / Normal. */
 	NORMAL(0), EXPRESS(1), BLACKCLOUD(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	LetterType(int id) {

@@ -12,36 +12,29 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CuringTemplate")
 public class CuringTemplate {
 
 	/** 返回映射 ID / Returns the map id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "map_id")
 	protected int mapId;
 
 	/** 返回 x / Returns the x */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "x")
 	protected float x;
 
 	/** 返回 y / Returns the y */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "y")
 	protected float y;
 
 	/** 返回 z / Returns the z */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "z")
 	protected float z;
 
 	/** 返回范围 / Returns the range*/
-	@Getter
 	@XmlAttribute(name = "range")
 	protected float range;
 }

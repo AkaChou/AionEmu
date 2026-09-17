@@ -10,10 +10,10 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public class HouseObjectCooldownList {
 
 	/** 返回 house object cooldowns / Returns the house object cooldowns */
-	@Getter
 	private Map<Integer, Long> houseObjectCooldowns;
 
 	HouseObjectCooldownList(Player owner) {

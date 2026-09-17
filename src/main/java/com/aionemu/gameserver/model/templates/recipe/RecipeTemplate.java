@@ -16,24 +16,21 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RecipeTemplate")
 public class RecipeTemplate {
 	protected List<ComboProduct> comboproduct;
 	/** 返回最大制作数量 / Returns the max production count */
-	@Getter
 	@XmlAttribute(name = "max_production_count")
 	protected Integer maxProductionCount;
 	/** 返回制作延迟时间 / Returns the craft delay time*/
-	@Getter
 	@XmlAttribute(name = "craft_delay_time")
 	protected Integer craftDelayTime;
 	/** 返回制作延迟 ID / Returns the craft delay id */
-	@Getter
 	@XmlAttribute(name = "craft_delay_id")
 	protected Integer craftDelayId;
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 	@XmlAttribute(name = "archdaeva")
@@ -49,7 +46,6 @@ public class RecipeTemplate {
 	@XmlAttribute
 	protected int skillpoint;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute
 	protected Race race;
 	@XmlAttribute
@@ -57,7 +53,6 @@ public class RecipeTemplate {
 	@XmlAttribute
 	protected int itemid;
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute
 	protected int nameid;
 	@XmlAttribute

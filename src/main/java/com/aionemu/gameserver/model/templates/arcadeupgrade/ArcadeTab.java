@@ -11,10 +11,10 @@ import lombok.Getter;
  * 街机 Tab 模板（静态数据/XML）。
  * XML template.
  */
+@Getter
 @XmlType(name = "ArcadeTab")
 public class ArcadeTab {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 

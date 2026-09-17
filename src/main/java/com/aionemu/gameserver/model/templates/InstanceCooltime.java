@@ -16,21 +16,19 @@ import lombok.Getter;
  * Instance cooldown template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InstanceCooltime")
 public class InstanceCooltime {
 	/** 返回 cool time type / Returns the cool time type */
-	@Getter
 	@XmlElement(name = "type")
 	protected InstanceCoolTimeType coolTimeType;
 
 	/** 获取类型值。 / Returns the type value. */
-	@Getter
 	@XmlElement(name = "type_value")
 	protected String typeValue;
 
 	/** 返回 ent cool time / Returns the ent cool time */
-	@Getter
 	@XmlElement(name = "ent_cool_time")
 	protected Integer entCoolTime;
 
@@ -38,37 +36,30 @@ public class InstanceCooltime {
 	protected InstanceType indunType;
 
 	/** 返回 max member light / Returns the max member light */
-	@Getter
 	@XmlElement(name = "max_member_light")
 	protected Integer maxMemberLight;
 
 	/** 返回 max member dark / Returns the max member dark */
-	@Getter
 	@XmlElement(name = "max_member_dark")
 	protected Integer maxMemberDark;
 
 	/** 返回进入最小等级光 / Returns the enter min level light*/
-	@Getter
 	@XmlElement(name = "enter_min_level_light")
 	protected Integer enterMinLevelLight;
 
 	/** 返回进入最大等级光 / Returns the enter max level light*/
-	@Getter
 	@XmlElement(name = "enter_max_level_light")
 	protected Integer enterMaxLevelLight;
 
 	/** 返回进入最小等级暗 / Returns the enter min level dark*/
-	@Getter
 	@XmlElement(name = "enter_min_level_dark")
 	protected Integer enterMinLevelDark;
 
 	/** 返回进入最大等级暗 / Returns the enter max level dark*/
-	@Getter
 	@XmlElement(name = "enter_max_level_dark")
 	protected Integer enterMaxLevelDark;
 
 	/** 返回 alarm unit score / Returns the alarm unit score */
-	@Getter
 	@XmlElement(name = "alarm_unit_score")
 	protected Integer alarmUnitScore;
 
@@ -83,12 +74,10 @@ public class InstanceCooltime {
 
 	// 4.9 版本新增 / Added in 4.9
 	/** 返回数量 buildup / Returns the count build up */
-	@Getter
 	@XmlElement(name = "count_build_up")
 	protected Integer countBuildUp;
 
 	/** 返回 count build up level / Returns the count build up level */
-	@Getter
 	@XmlElement(name = "count_build_up_level")
 	protected Integer countBuildUpLevel;
 
@@ -96,17 +85,14 @@ public class InstanceCooltime {
 	 * 副本 ID。
 	 * Instance ID.
 	 */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
 	/** 返回世界 ID / Returns the world id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int worldId;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected Race race;
 

@@ -18,27 +18,22 @@ import lombok.NoArgsConstructor;
  * Landing Special Location for landing special logic.
  */
 
+@Getter
+@Setter
 @NoArgsConstructor
 public class LandingSpecialLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	/** 设置类型。 / Sets the type. */
-	@Getter
-	@Setter
 	protected LandingSpecialStateType type;
 	protected LandingSpecialTemplate template;
 	/** 返回 active landing special / Returns the active landing special */
-	@Getter
 	protected SpecialLanding<LandingSpecialLocation> activeLandingSpecial;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public LandingSpecialLocation(LandingSpecialTemplate template) {

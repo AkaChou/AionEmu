@@ -11,26 +11,23 @@ import lombok.Getter;
  * Skill skin template (static data / XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skill_skin")
 public class SkillSkinTemplate {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 	@XmlAttribute(name = "skill_group", required = true)
 	private String skillgroup;
 	/** 返回动作名称 / Returns the motion name */
-	@Getter
 	@XmlAttribute(name = "motion_name", required = true)
 	private String motionName;
 	/** 返回 ammo speed / Returns the ammo speed */
-	@Getter
 	@XmlAttribute(name = "ammo_speed", required = true)
 	private int ammoSpeed;
 

@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MeshMaterial")
 public class MeshMaterial {
@@ -25,7 +26,6 @@ public class MeshMaterial {
 	protected String path;
 
 	/** 区域名称。 / Zone name. */
-	@Getter
 	@XmlAttribute(name = "zone")
 	private String zoneName;
 }

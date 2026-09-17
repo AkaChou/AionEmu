@@ -16,6 +16,8 @@ import lombok.Setter;
  * Pet bonus attribute template (static data / XML).
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetBonusAttr", propOrder = { "penaltyAttr" })
 public class PetBonusAttr {
@@ -24,13 +26,10 @@ public class PetBonusAttr {
 	protected List<PetPenaltyAttr> penaltyAttr;
 
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
 	/** 返回食物数量 / Returns the food count */
-	@Getter
 	@XmlAttribute(name = "food_count", required = true)
 	protected int foodCount;
 

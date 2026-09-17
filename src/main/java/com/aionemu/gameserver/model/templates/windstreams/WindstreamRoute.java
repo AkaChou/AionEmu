@@ -10,12 +10,10 @@ import lombok.Getter;
  * 风道路线：按经过毫秒数在航点间线性插值计算飞行位置。
  * Windstream route: computes flight positions by linear interpolation between waypoints over elapsed time.
  */
+@Getter
 public final class WindstreamRoute {
-	@Getter
 	private final int mapId;
-	@Getter
 	private final int id;
-	@Getter
 	private final int durationMillis;
 	private final List<Point3D> points;
 

@@ -21,16 +21,15 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlRootElement(name = "map")
 @XmlAccessorType(XmlAccessType.NONE)
 public class WorldMapTemplate {
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name = "";
 
 	/** 返回映射 ID / Returns the map id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected Integer mapId;
 
@@ -41,7 +40,6 @@ public class WorldMapTemplate {
 	protected int beginnerTwinCount;
 
 	/** 返回最大玩家数 / Returns the max user */
-	@Getter
 	@XmlAttribute(name = "max_user")
 	protected int maxUser;
 
@@ -51,12 +49,10 @@ public class WorldMapTemplate {
 	 *
 	 * @return 是否监狱 / whether prison
 	 */
-	@Getter
 	@XmlAttribute(name = "prison")
 	protected boolean prison = false;
 
 	/** 是否副本。 / Whether instance. */
-	@Getter
 	@XmlAttribute(name = "instance")
 	protected boolean instance = false;
 
@@ -67,22 +63,18 @@ public class WorldMapTemplate {
 	protected int waterlevel = 16;
 
 	/** 获取世界类型。 / Returns the world type. */
-	@Getter
 	@XmlAttribute(name = "world_type")
 	protected WorldType worldType = WorldType.NONE;
 
 	/** 返回世界大小 / Returns the world size. */
-	@Getter
 	@XmlAttribute(name = "world_size")
 	protected int worldSize;
 
 	/** 返回 AI 信息 / Returns the ai info */
-	@Getter
 	@XmlElement(name = "ai_info")
 	protected AiInfo aiInfo = AiInfo.DEFAULT;
 
 	/** 是否排除增益 / Whether except buff */
-	@Getter
 	@XmlAttribute(name = "except_buff")
 	protected boolean exceptBuff = false;
 

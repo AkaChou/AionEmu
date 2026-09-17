@@ -35,33 +35,27 @@ import lombok.NoArgsConstructor;
  * Vortex Location model.
  */
 
+@Getter
+@Setter
 @NoArgsConstructor
 public class VortexLocation implements ZoneHandler {
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	/** 返回 active vortex / Returns the active vortex */
-	@Getter
 	protected DimensionalVortex<VortexLocation> activeVortex;
 	/** 设置 vortex controller / Sets the vortex controller */
-	@Getter
-	@Setter
 	protected RVController vortexController;
 	protected VortexTemplate template;
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	protected Race offenceRace;
 	protected Race defendsRace;
 	/** 返回 zones / Returns the zones */
-	@Getter
 	protected List<InvasionZoneInstance> zones;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	protected Map<Integer, Kisk> kisks = new LinkedHashMap<Integer, Kisk>();
 	/** 返回已生成的对象列表 / Returns the spawned objects */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	protected HomePoint home;
 	protected ResurrectionPoint resurrection;

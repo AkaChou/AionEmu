@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author Sweetkr
  */
+@Getter
 public enum CreatureVisualState {
 	/** 可见。 / Visible. */
 	VISIBLE(0), // 正常 / Normal
@@ -31,7 +32,6 @@ public enum CreatureVisualState {
 	/**
 	 * @return the id
 	 */
-	@Getter
 	private final int id;
 
 	CreatureVisualState(int id) {

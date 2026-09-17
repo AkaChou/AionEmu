@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 @XmlRootElement(name = "ItemPart")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemPart {
@@ -19,7 +20,6 @@ public class ItemPart {
 	/**
 	 * @return the itemid
 	 */
-	@Getter
 	@XmlAttribute
 	protected int itemid;
 }

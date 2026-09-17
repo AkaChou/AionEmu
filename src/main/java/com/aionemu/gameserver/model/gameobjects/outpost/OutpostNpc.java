@@ -12,9 +12,9 @@ import lombok.Getter;
  * Outpost Npc game object.
  */
 
+@Getter
 public class OutpostNpc extends Npc {
 	/** 返回 outpost id / Returns the outpost id */
-	@Getter
 	private final int outpostId;
 
 	public OutpostNpc(int objId, NpcController controller, OutpostSpawnTemplate spawnTemplate,

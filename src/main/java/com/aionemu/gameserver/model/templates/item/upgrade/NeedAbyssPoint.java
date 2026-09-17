@@ -13,11 +13,11 @@ import lombok.Getter;
  * @author Ranastic (Encom)
  */
 
+@Getter
 @XmlRootElement(name = "NeedAbyssPoint")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NeedAbyssPoint {
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	private int count;
 }

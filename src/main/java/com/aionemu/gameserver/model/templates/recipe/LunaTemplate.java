@@ -16,6 +16,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaTemplate")
 public class LunaTemplate {
@@ -26,12 +27,10 @@ public class LunaTemplate {
 	protected List<LunaComponent> luna_component_panel_5;
 
 	/** 返回最大制作数量 / Returns the max production count */
-	@Getter
 	@XmlAttribute(name = "max_production_count")
 	protected Integer maxProductionCount;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name")
 	protected String name;
 
@@ -48,7 +47,6 @@ public class LunaTemplate {
 	protected int productid;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute
 	protected Race race;
 
@@ -56,7 +54,6 @@ public class LunaTemplate {
 	protected int itemid;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute
 	protected int nameid;
 

@@ -9,37 +9,32 @@ import lombok.Getter;
  *
  * @author evilset
  */
+@Getter
 public class BindPointPosition {
 
 	/**
 	 * @return 地图 ID / the mapId
 	 */
-	@Getter
 	private final int mapId;
 	/**
 	 * @return X 坐标 / the x
 	 */
-	@Getter
 	private final float x;
 	/**
 	 * @return Y 坐标 / the y
 	 */
-	@Getter
 	private final float y;
 	/**
 	 * @return Z 坐标 / the z
 	 */
-	@Getter
 	private final float z;
 	/**
 	 * @return 朝向 / the heading
 	 */
-	@Getter
 	private final byte heading;
 	/**
 	 * @return the persistentState
 	 */
-	@Getter
 	private PersistentState persistentState;
 
 	/**

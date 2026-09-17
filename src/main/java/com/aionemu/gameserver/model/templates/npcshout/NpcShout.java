@@ -14,6 +14,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcShout")
 public class NpcShout {
@@ -22,7 +23,6 @@ public class NpcShout {
 	 * 获取 stringId 属性值。
 	 * Gets the value of the stringId property
 	 */
-	@Getter
 	@XmlAttribute(name = "string_id", required = true)
 	protected int stringId;
 
@@ -31,7 +31,6 @@ public class NpcShout {
 	 * Gets the value of the when property
 	 * @return 可能的对象类型 / possible object is {@link ShoutEventType }
 	 */
-	@Getter
 	@XmlAttribute(name = "when", required = true)
 	protected ShoutEventType when;
 
@@ -40,7 +39,6 @@ public class NpcShout {
 	 * Gets the value of the pattern property
 	 * @return 可能的对象类型 / possible object is {@link String }
 	 */
-	@Getter
 	@XmlAttribute(name = "pattern")
 	protected String pattern;
 
@@ -49,7 +47,6 @@ public class NpcShout {
 	 * Gets the value of the param property
 	 * @return 可能的对象类型 / possible object is {@link String }
 	 */
-	@Getter
 	@XmlAttribute(name = "param")
 	protected String param;
 

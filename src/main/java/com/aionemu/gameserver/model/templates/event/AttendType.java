@@ -10,13 +10,13 @@ import lombok.Getter;
  * @author Ranastic
  */
 
+@Getter
 @XmlEnum
 public enum AttendType {
 	/** PC 基础 / PC Basic */
 	PC_BASIC(0), BASIC(1), ANNIVERSARY(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	AttendType(int id) {

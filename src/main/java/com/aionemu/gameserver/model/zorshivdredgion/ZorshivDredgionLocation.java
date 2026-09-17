@@ -19,23 +19,19 @@ import lombok.NoArgsConstructor;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @NoArgsConstructor
 public class ZorshivDredgionLocation {
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	protected ZorshivDredgionTemplate template;
 	/** 返回当前佐希夫无畏舰 / Returns the active zorshiv dredgion */
-	@Getter
 	protected ZorshivDredgion<ZorshivDredgionLocation> activeZorshivDredgion;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成对象列表 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public ZorshivDredgionLocation(ZorshivDredgionTemplate template) {

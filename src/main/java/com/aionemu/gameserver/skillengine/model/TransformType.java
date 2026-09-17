@@ -8,6 +8,7 @@ import lombok.Getter;
  * 变身类型：玩家、化身及多种形态。
  * Transform type: PC, avatar and form variants.
  */
+@Getter
 @XmlType(name = "TransformType")
 @XmlEnum
 public enum TransformType {
@@ -34,7 +35,6 @@ public enum TransformType {
 	 * Gets protocol id.
 	 *
 	 */
-	@Getter
 	private final int id;
 
 	TransformType(int id) {

@@ -13,25 +13,22 @@ import lombok.NoArgsConstructor;
  *
  * @author MrPoke
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Sphere")
 @NoArgsConstructor
 public class Sphere {
 
 	/** 返回 x / Returns the x */
-	@Getter
 	@XmlAttribute
 	protected Float x;
 	/** 返回 y / Returns the y */
-	@Getter
 	@XmlAttribute
 	protected Float y;
 	/** 返回 z / Returns the z */
-	@Getter
 	@XmlAttribute
 	protected Float z;
 	/** 返回 r / Returns the r */
-	@Getter
 	@XmlAttribute
 	protected Float r;
 

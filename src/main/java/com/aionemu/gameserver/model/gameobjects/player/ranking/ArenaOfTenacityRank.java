@@ -8,44 +8,31 @@ import lombok.Setter;
  * ArenaOfTenacity 军阶游戏对象。
  * Arena Of Tenacity Rank game object.
  */
+@Getter
+@Setter
 public class ArenaOfTenacityRank {
 	// rank
 	/** 获取军阶。 / Returns the rank. */
-	@Getter
-	@Setter
 	private int rank;
 	/** 返回 best rank / Returns the best rank */
-	@Getter
-	@Setter
 	private int bestRank;
 
 	// 竞赛点数 / Competition points
 	/** 获取点。 / Returns the points. */
-	@Getter
-	@Setter
 	private int points;
 	/** 返回 last points / Returns the last points */
-	@Getter
-	@Setter
 	private int lastPoints;
 	/** 返回 high points / Returns the high points */
-	@Getter
-	@Setter
 	private int highPoints;
 	/** 返回 low points / Returns the low points */
-	@Getter
-	@Setter
 	private int lowPoints;
 
 	/** 返回 possition match / Returns the possition match */
-	@Getter
-	@Setter
 	private int possitionMatch;
 
 	/**
 	 * @return the persistentState
 	 */
-	@Getter
 	private PersistentState persistentState;
 
 	public ArenaOfTenacityRank(int rank, int bestRank, int points, int lastPoints, int highPoints, int lowPoints,

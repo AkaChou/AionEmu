@@ -12,16 +12,15 @@ import lombok.Getter;
  * Multi Return template (static data/XML).
  */
 
+@Getter
 @XmlType(name = "MultiReturn")
 public class MultiReturn {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
 	/** 返回多个返回列表 / Returns the multi return list */
-	@Getter
 	@XmlElement(name = "loc")
 	private List<MultiReturnLocationList> MultiReturnList;
 

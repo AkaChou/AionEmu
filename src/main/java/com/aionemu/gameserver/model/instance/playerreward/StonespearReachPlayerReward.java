@@ -8,22 +8,18 @@ import lombok.Setter;
  * Stonespear Reach Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class StonespearReachPlayerReward extends InstancePlayerReward {
 	/** 返回 score ap / Returns the score ap */
-	@Getter
-	@Setter
 	private int scoreAP;
 	/** 返回 ceramium / Returns the ceramium */
-	@Getter
-	@Setter
 	private int ceramium;
 	/**
 	 * @return 是否已奖励 / whether rewarded
 	 */
-	@Getter
 	private boolean isRewarded = false;
 	/** 是否玩家离开 / Whether player leave*/
-	@Getter
 	private boolean isPlayerLeave = false;
 
 	public StonespearReachPlayerReward(Integer object) {

@@ -18,6 +18,8 @@ import lombok.Setter;
  *
  * @author xTz
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PortalUse")
 public class PortalUse {
@@ -25,13 +27,9 @@ public class PortalUse {
 	@XmlElement(name = "portal_path")
 	protected List<PortalPath> portalPath;
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "npc_id")
 	protected int npcId;
 	/** 返回攻城 ID / Returns the siege id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "siege_id")
 	protected int siegeId;
 

@@ -36,6 +36,7 @@ import lombok.Getter;
  *
  * @author Mr. Poke
  */
+@Getter
 @Slf4j
 public class GeoMap extends Node {
 
@@ -47,7 +48,6 @@ public class GeoMap extends Node {
 	private static final int NODE_CHUNK_SIZE = 256;
 
 	/** 映射 ID / Map id */
-	@Getter
 	private final int mapId;
 	/** 地形高度/材质数据。 / Terrain height and material data. */
 	private Terrain terrain;

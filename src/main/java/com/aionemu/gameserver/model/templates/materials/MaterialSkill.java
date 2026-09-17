@@ -12,17 +12,16 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MaterialSkill")
 public class MaterialSkill {
 
 	/** 返回时间 / Returns the time */
-	@Getter
 	@XmlAttribute
 	protected MaterialActTime time;
 
 	/** 返回频率 / Returns the frequency */
-	@Getter
 	@XmlAttribute(required = true)
 	protected float frequency;
 
@@ -33,7 +32,6 @@ public class MaterialSkill {
 	protected int level;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 

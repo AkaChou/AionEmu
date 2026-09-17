@@ -19,33 +19,26 @@ import lombok.Getter;
  *
  * @author MrPoke
  */
+@Getter
 @Slf4j
 public class QuestNpc {
 
 	/** 返回任务开始事件列表 / Returns the on-quest-start events. */
-	@Getter
 	private final List<Integer> onQuestStart;
 	/** 返回击杀事件列表 / Returns the on-kill events */
-	@Getter
 	private final List<Integer> onKillEvent;
 	/** 返回对话事件列表 / Returns the on-talk events */
-	@Getter
 	private final List<Integer> onTalkEvent;
 	/** 返回攻击事件列表 / Returns the on-attack events. */
-	@Getter
 	private final List<Integer> onAttackEvent;
 	/** 返回丢失目标事件列表 / Returns the on-lost-target events */
-	@Getter
 	private final List<Integer> onLostTargetEvent;
 	/** 返回到达目标事件列表 / Returns the on-reach-target events */
-	@Getter
 	private final List<Integer> onReachTargetEvent;
 	/** 返回入仇恨列表事件列表 / Returns the on-add-aggro-list events */
-	@Getter
 	private final List<Integer> onAddAggroListEvent;
 	private final List<Integer> onAtDistanceEvent;
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	private final int npcId;
 
 	public QuestNpc(int npcId) {

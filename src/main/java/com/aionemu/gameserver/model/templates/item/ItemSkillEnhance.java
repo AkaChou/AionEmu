@@ -16,11 +16,11 @@ import lombok.Getter;
  * Item skill enhance template: binds skills by player class.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemSkillEnhance")
 public class ItemSkillEnhance {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
@@ -28,7 +28,6 @@ public class ItemSkillEnhance {
 	protected List<Integer> skillId;
 
 	/** 返回职业 ID / Returns the class id */
-	@Getter
 	@XmlAttribute(name = "player_class")
 	private PlayerClass classId = PlayerClass.ALL;
 

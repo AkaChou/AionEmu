@@ -6,6 +6,7 @@ import lombok.Getter;
  * 各职业基础体质值枚举。
  * Baseline health values by player class.
  */
+@Getter
 public enum HEALTH {
 	WARRIOR(110), GLADIATOR(115), TEMPLAR(100), SCOUT(100), ASSASSIN(100), RANGER(90), MAGE(90), SORCERER(90),
 	SPIRIT_MASTER(90), PRIEST(95), CLERIC(110), CHANTER(105),
@@ -19,7 +20,6 @@ public enum HEALTH {
 	 * 该职业的基础属性值。
 	 * Baseline attribute value for this class.
 	 */
-	@Getter
 	private final int value;
 
 	HEALTH(int value) {

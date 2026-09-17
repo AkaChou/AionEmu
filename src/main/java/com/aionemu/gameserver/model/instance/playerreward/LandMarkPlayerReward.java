@@ -11,62 +11,39 @@ import lombok.Setter;
  * Land Mark Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class LandMarkPlayerReward extends InstancePlayerReward {
 	private int timeBonus;
 	private long logoutTime;
 	private final float timeBonusModifier;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	private final Race race;
 	/** 获取奖励欧比斯点数。 / Returns the reward ap. */
-	@Getter
-	@Setter
 	private int rewardAp;
 	/** 返回 reward gp / Returns the reward gp */
-	@Getter
-	@Setter
 	private int rewardGp;
 	/** 获取奖励经验。 / Returns the reward exp. */
-	@Getter
-	@Setter
 	private int rewardExp;
 	/** 获取加成欧比斯点数。 / Returns the bonus ap. */
-	@Getter
-	@Setter
 	private int bonusAp;
 	/** 返回加成荣耀点 / Returns the bonus gp */
-	@Getter
-	@Setter
 	private int bonusGp;
 	/** 获取加成经验。 / Returns the bonus exp. */
-	@Getter
-	@Setter
 	private int bonusExp;
 	/** 返回 land mark box / Returns the land mark box */
-	@Getter
-	@Setter
 	private int landMarkBox;
 	/** 返回 broken spinel / Returns the broken spinel */
-	@Getter
-	@Setter
 	private int brokenSpinel;
 	/** 获取加成奖励。 / Returns the bonus reward. */
-	@Getter
-	@Setter
 	private int bonusReward;
 	/** 返回加成奖励2 / Returns the bonus reward 2 */
-	@Getter
-	@Setter
 	private int bonusReward2;
 	/** 设置奖励计数。 / Sets the reward count. */
-	@Setter
 	private float rewardCount;
 	/** 返回 additional reward / Returns the additional reward */
-	@Getter
-	@Setter
 	private int AdditionalReward;
 	/** 设置附加奖励数量 / Sets the additional reward count*/
-	@Setter
 	private float AdditionalRewardCount;
 	private final InstanceBuff boostMorale;
 

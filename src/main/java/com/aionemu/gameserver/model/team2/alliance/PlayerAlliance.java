@@ -22,22 +22,18 @@ import lombok.Setter;
  * Player Alliance for team 2 logic.
  */
 
+@Getter
+@Setter
 public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	private final Map<Integer, PlayerAllianceGroup> groups = new HashMap<Integer, PlayerAllianceGroup>();
 	private final List<Integer> viceCaptainIds = new CopyOnWriteArrayList<Integer>();
 	/** 返回联盟就绪状态 / Returns the alliance ready status */
-	@Getter
-	@Setter
 	private int allianceReadyStatus;
 	private final TeamType type;
 	private League league;
 	/** 设置击杀数 / Sets the kill count */
-	@Getter
-	@Setter
 	private int killCount = 0;
 	/** 设置战场索引 / Sets the bg index */
-	@Getter
-	@Setter
 	private int bgIndex = -1;
 
 	public PlayerAlliance(PlayerAllianceMember leader, TeamType type) {

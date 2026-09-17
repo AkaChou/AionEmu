@@ -19,6 +19,7 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MeshList", propOrder = { "meshMaterials" })
 public class MeshList {
@@ -28,7 +29,6 @@ public class MeshList {
 	protected List<MeshMaterial> meshMaterials;
 
 	/** 世界 ID。 / World id. */
-	@Getter
 	@XmlAttribute(name = "world_id", required = true)
 	protected int worldId;
 

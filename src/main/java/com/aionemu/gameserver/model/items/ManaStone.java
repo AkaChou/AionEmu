@@ -13,8 +13,8 @@ import lombok.Getter;
  * Mana Stone for items logic.
  */
 
+@Getter
 public class ManaStone extends ItemStone {
-	@Getter
 	private List<StatFunction> modifiers;
 
 	public ManaStone(int itemObjId, int itemId, int slot, PersistentState persistentState) {

@@ -13,11 +13,11 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "landing")
 public class LandingTemplate {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	protected int id;
 
@@ -25,7 +25,6 @@ public class LandingTemplate {
 	protected String nameId;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race;
 

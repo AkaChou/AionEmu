@@ -39,6 +39,7 @@ import lombok.NoArgsConstructor;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "SpawnMap")
 @NoArgsConstructor
@@ -113,7 +114,6 @@ public class SpawnMap {
 	private List<TowerOfEternitySpawn> towerOfEternitySpawns;
 
 	/** 返回映射 ID / Returns the map id */
-	@Getter
 	@XmlAttribute(name = "map_id")
 	private int mapId;
 

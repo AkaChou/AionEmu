@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author Sarynth
  */
+@Getter
 public enum SiegeRace {
 	/** 天族。 / Elyos. */
 	ELYOS(0, 1800481),
@@ -19,12 +20,10 @@ public enum SiegeRace {
 	BALAUR(2, 1800485);
 
 	/** 返回种族 ID / Returns the race id */
-	@Getter
 	private final int raceId;
 	/**
 	 * @return 描述 ID / the descriptionId
 	 */
-	@Getter
 	private final DescriptionId descriptionId;
 
 	SiegeRace(int id, int descriptionId) {

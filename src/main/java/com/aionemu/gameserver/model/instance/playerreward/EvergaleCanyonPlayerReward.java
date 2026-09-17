@@ -11,52 +11,34 @@ import lombok.Setter;
  * Evergale Canyon Player Reward for instance logic.
  */
 
+@Getter
+@Setter
 public class EvergaleCanyonPlayerReward extends InstancePlayerReward {
 	private int timeBonus;
 	private long logoutTime;
 	private final float timeBonusModifier;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	private final Race race;
 	/** 获取奖励欧比斯点数。 / Returns the reward ap. */
-	@Getter
-	@Setter
 	private int rewardAp;
 	/** 返回 reward gp / Returns the reward gp */
-	@Getter
-	@Setter
 	private int rewardGp;
 	/** 获取奖励经验。 / Returns the reward exp. */
-	@Getter
-	@Setter
 	private int rewardExp;
 	/** 获取加成欧比斯点数。 / Returns the bonus ap. */
-	@Getter
-	@Setter
 	private int bonusAp;
 	/** 返回加成荣耀点 / Returns the bonus gp */
-	@Getter
-	@Setter
 	private int bonusGp;
 	/** 获取加成经验。 / Returns the bonus exp. */
-	@Getter
-	@Setter
 	private int bonusExp;
 	/** 返回 broken spinel / Returns the broken spinel */
-	@Getter
-	@Setter
 	private int brokenSpinel;
 	/** 设置奖励计数。 / Sets the reward count. */
-	@Setter
 	private float rewardCount;
 	private int idEternityWarStigma;
 	/** 返回 coin id eternity war 01 / Returns the coin id eternity war 01 */
-	@Getter
-	@Setter
 	private int coinIdEternityWar01;
 	/** 返回 cash minion contract 01 / Returns the cash minion contract 01 */
-	@Getter
-	@Setter
 	private int cashMinionContract01;
 	private final InstanceBuff boostMorale;
 

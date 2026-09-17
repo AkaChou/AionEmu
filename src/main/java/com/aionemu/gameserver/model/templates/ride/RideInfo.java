@@ -13,38 +13,33 @@ import lombok.Getter;
  * Ride info template (static data/XML).
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RideInfo", propOrder = { "ridebound" })
 public class RideInfo {
 	protected RideBound ridebound;
 
 	/** 返回 cost fp / Returns the cost fp */
-	@Getter
 	@XmlAttribute(name = "cost_fp")
 	protected Integer costFp;
 
 	/** 返回开始飞行点 / Returns the start fp*/
-	@Getter
 	@XmlAttribute(name = "start_fp")
 	protected int startFp;
 
 	/** 返回 sprint speed / Returns the sprint speed */
-	@Getter
 	@XmlAttribute(name = "sprint_speed")
 	protected float sprintSpeed;
 
 	/** 返回 fly speed / Returns the fly speed */
-	@Getter
 	@XmlAttribute(name = "fly_speed")
 	protected float flySpeed;
 
 	/** 返回 move speed / Returns the move speed */
-	@Getter
 	@XmlAttribute(name = "move_speed")
 	protected float moveSpeed;
 
 	/** 获取类型。 / Returns the type. */
-	@Getter
 	@XmlAttribute
 	protected Integer type;
 

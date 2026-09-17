@@ -19,22 +19,20 @@ import lombok.Getter;
  *
  * @author IlBuono
  */
+@Getter
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "pet")
 public class PetTemplate {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
 	/** 返回名称 ID / Returns the name id */
-	@Getter
 	@XmlAttribute(name = "nameid", required = true)
 	private int nameId;
 
@@ -45,7 +43,6 @@ public class PetTemplate {
 	private List<PetFunction> petFunctions;
 
 	/** 获取宠物属性。 / Returns the pet stats. */
-	@Getter
 	@XmlElement(name = "petstats")
 	private PetStatsTemplate petStats;
 

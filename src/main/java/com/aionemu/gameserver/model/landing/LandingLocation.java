@@ -21,6 +21,8 @@ import lombok.NoArgsConstructor;
  * Landing Location model.
  */
 
+@Getter
+@Setter
 @NoArgsConstructor
 public class LandingLocation {
 	protected int siege;
@@ -31,36 +33,25 @@ public class LandingLocation {
 	protected int quest;
 	protected int facility;
 	/** 返回等级日期 / Returns the level up date */
-	@Getter
 	protected Timestamp levelUpDate;
 	/** 返回 ID / Returns the id */
-	@Getter
 	protected int id;
 	/** 设置等级。 / Sets the level. */
-	@Setter
 	protected int level;
 	/** 获取点。 / Returns the points. */
-	@Getter
-	@Setter
 	protected int points;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	protected boolean isActive;
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	protected Race race;
 	protected LandingTemplate template;
 	/** 返回当前登陆点 / Returns the active landing */
-	@Getter
 	protected Landing<LandingLocation> activeLanding;
 	/** 返回玩家集合 / Returns the players */
-	@Getter
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	@Getter
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	public LandingLocation(LandingTemplate template) {

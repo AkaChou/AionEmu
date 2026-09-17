@@ -17,18 +17,17 @@ import lombok.Getter;
  * Item race entry: item id and allowed race, validated against the template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemRaceEntry")
 @XmlSeeAlso({ IdLevelReward.class })
 public class ItemRaceEntry {
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race")
 	protected Race race;
 

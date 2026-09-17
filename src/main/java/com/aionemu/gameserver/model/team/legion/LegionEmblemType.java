@@ -8,6 +8,7 @@ import lombok.Getter;
  *
  * @author cura
  */
+@Getter
 public enum LegionEmblemType {
 	/** 默认 / Default. */
 	DEFAULT(0x00),
@@ -15,7 +16,6 @@ public enum LegionEmblemType {
 	CUSTOM(0x80);
 
 	/** 获取值。 / Returns the value. */
-	@Getter
 	private final byte value;
 
 	LegionEmblemType(int value) {

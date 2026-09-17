@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CraftRecipe")
 public class CraftRecipe extends CraftReward {
@@ -20,7 +21,6 @@ public class CraftRecipe extends CraftReward {
 	 * 获取 level 属性值。
 	 * Gets the value of the level property
 	 */
-	@Getter
 	@XmlAttribute(name = "level", required = true)
 	protected int level;
 }

@@ -13,6 +13,7 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlType(name = "ZoneAttributes")
 @XmlEnum(String.class)
 public enum ZoneAttributes {
@@ -40,7 +41,6 @@ public enum ZoneAttributes {
 	DUEL_OTHER_RACE_ENABLED(1 << 8); // Only for Duel type zones
 
 	/** 位标志值 / bit-flag value */
-	@Getter
 	private final int id;
 
 	/**

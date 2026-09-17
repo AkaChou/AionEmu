@@ -12,17 +12,15 @@ import lombok.NoArgsConstructor;
  *
  * @author xTz
  */
+@Getter
 @NoArgsConstructor
 public class AITemplate {
 
 	/** 返回 NPC ID / Returns the npc id */
-	@Getter
 	private int npcId;
 	/** 返回召唤物 / Returns the summons */
-	@Getter
 	private Summons summons;
 	/** 返回炸弹 / Returns the bombs */
-	@Getter
 	private Bombs bombs;
 
 	public AITemplate(Ai template) {

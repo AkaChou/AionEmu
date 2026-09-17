@@ -11,12 +11,12 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 public class AbsoluteStatOwner implements StatOwner {
 
 	Player target;
 	ModifiersTemplate template;
 	/** 是否激活。 / Whether Active. */
-	@Getter
 	boolean isActive = false;
 
 	public AbsoluteStatOwner(Player player, int templateId) {

@@ -8,26 +8,21 @@ import lombok.Getter;
  * Letter game object.
  */
 
+@Getter
 public class Letter extends AionObject {
 	/** 返回收件人 ID / Returns the recipient id */
-	@Getter
 	private final int recipientId;
 	/** 返回附带的物品 / Returns the attached item */
-	@Getter
 	private Item attachedItem;
 	private long attachedKinahCount;
 	private long attachedAPCount;
 	/** 返回发件人名称 / Returns the sender name */
-	@Getter
 	private final String senderName;
 	/** 获取称号。 / Returns the title. */
-	@Getter
 	private final String title;
 	/** 获取消息。 / Returns the message. */
-	@Getter
 	private final String message;
 	/** 是否未读 / Whether unread */
-	@Getter
 	private boolean unread;
 	/**
 	 * 是否急件。
@@ -35,14 +30,11 @@ public class Letter extends AionObject {
 	 *
 	 * @return 是否急件 / whether express
 	 */
-	@Getter
 	private boolean express;
 	/** 返回时间戳 / Returns the time stamp. */
-	@Getter
 	private final Timestamp timeStamp;
 	private PersistentState persistentState;
 	/** 获取信件类型。 / Returns the letter type. */
-	@Getter
 	private LetterType letterType;
 
 	public Letter(int objId, int recipientId, Item attachedItem, long attachedKinahCount, long attachedAPCount,

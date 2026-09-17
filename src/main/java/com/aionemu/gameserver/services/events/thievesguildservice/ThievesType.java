@@ -9,6 +9,7 @@ import lombok.Getter;
  * @author Rinzler (Encom)
  */
 
+@Getter
 public enum ThievesType {
 
 	NONE(0), // 无 / None
@@ -25,7 +26,6 @@ public enum ThievesType {
 	 *
 	 * @return 类型 ID / type id
 	 */
-	@Getter
 	private final int id;
 
 	ThievesType(int id) {

@@ -21,6 +21,7 @@ import lombok.Getter;
  *
  * @author xTz
  */
+@Getter
 @XmlRootElement(name = "ai_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AIData {
@@ -33,7 +34,6 @@ public class AIData {
 	 *
 	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
 	 */
-	@Getter
 	private final Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
 
 	/**

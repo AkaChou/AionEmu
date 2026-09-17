@@ -16,23 +16,21 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbstractHouseObject")
 @XmlSeeAlso({ PlaceableHouseObject.class })
 public abstract class AbstractHouseObject extends VisibleObjectTemplate {
 
 	/** 返回 talking distance / Returns the talking distance */
-	@Getter
 	@XmlAttribute(name = "talking_distance", required = true)
 	protected float talkingDistance;
 
 	/** 返回 quality / Returns the quality */
-	@Getter
 	@XmlAttribute(required = true)
 	protected ItemQuality quality;
 
 	/** 获取分类。 / Returns the category. */
-	@Getter
 	@XmlAttribute(required = true)
 	protected HousingCategory category;
 

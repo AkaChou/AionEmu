@@ -28,13 +28,13 @@ import lombok.RequiredArgsConstructor;
  * @author kosyachok
  * @modified Atracer
  */
+@Getter
 @RequiredArgsConstructor
 public class Mailbox {
 
 	private final Map<Integer, Letter> mails = new LinkedHashMap<Integer, Letter>();
 	private final Map<Integer, Letter> reserveMail = new LinkedHashMap<Integer, Letter>();
 	/** 返回所有者 / Returns the owner*/
-	@Getter
 	private final Player owner;
 	public boolean isMailListUpdateRequired;
 

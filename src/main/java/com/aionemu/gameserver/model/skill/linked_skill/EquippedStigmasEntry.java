@@ -9,10 +9,10 @@ import lombok.Getter;
  *
  * @author DrNism
  */
+@Getter
 public class EquippedStigmasEntry extends StigmaEntry {
 
 	/** 获取持久化状态。 / Returns the persistent state. */
-	@Getter
 	private PersistentState persistentState;
 
 	public EquippedStigmasEntry(int itemId, String itemName, PersistentState persistentState) {

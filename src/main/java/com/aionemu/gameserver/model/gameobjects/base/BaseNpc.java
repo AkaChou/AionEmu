@@ -14,9 +14,9 @@ import lombok.Getter;
  * @author Ranastic
  */
 
+@Getter
 public class BaseNpc extends Npc {
 	/** 返回 base id / Returns the base id */
-	@Getter
 	private final int baseId;
 
 	public BaseNpc(int objId, NpcController controller, BaseSpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {

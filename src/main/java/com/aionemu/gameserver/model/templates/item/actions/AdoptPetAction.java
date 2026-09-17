@@ -11,14 +11,13 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 public class AdoptPetAction extends AbstractItemAction {
 	/** 返回 pet id / Returns the pet id */
-	@Getter
 	@XmlAttribute(name = "petId")
 	private int petId;
 
 	/** 返回 expire minutes / Returns the expire minutes */
-	@Getter
 	@XmlAttribute(name = "minutes")
 	private int expireMinutes;
 

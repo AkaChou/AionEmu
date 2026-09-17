@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author ATracer
  */
+@Getter
 public enum PetEmote {
 
 	/** 停止移动 / Move Stop. */
@@ -27,7 +28,6 @@ public enum PetEmote {
 	}
 
 	/** 返回表情 ID / Returns the emote id */
-	@Getter
 	private final int emoteId;
 
 	PetEmote(int emoteId) {

@@ -12,38 +12,32 @@ import lombok.Getter;
  *
  * @author KID
  */
+@Getter
 @XmlRootElement(name = "flypath_location")
 @XmlAccessorType(XmlAccessType.NONE)
 public class FlyPathEntry {
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 	/** 返回开始 X / Returns the start x */
-	@Getter
 	@XmlAttribute(name = "sx", required = true)
 	private float startX;
 	/** 返回开始 Y / Returns the start y */
-	@Getter
 	@XmlAttribute(name = "sy", required = true)
 	private float startY;
 	/** 返回开始 Z / Returns the start z */
-	@Getter
 	@XmlAttribute(name = "sz", required = true)
 	private float startZ;
 	@XmlAttribute(name = "sworld", required = true)
 	private int sworld;
 
 	/** 返回结束 X / Returns the end x */
-	@Getter
 	@XmlAttribute(name = "ex", required = true)
 	private float endX;
 	/** 返回结束 Y / Returns the end y */
-	@Getter
 	@XmlAttribute(name = "ey", required = true)
 	private float endY;
 	/** 返回结束 Z / Returns the end z */
-	@Getter
 	@XmlAttribute(name = "ez", required = true)
 	private float endZ;
 	@XmlAttribute(name = "eworld", required = true)

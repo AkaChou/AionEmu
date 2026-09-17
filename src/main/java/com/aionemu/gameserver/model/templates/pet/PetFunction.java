@@ -12,6 +12,7 @@ import lombok.Getter;
  *
  * @author IlBuono
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "petfunction")
 public class PetFunction {
@@ -19,11 +20,9 @@ public class PetFunction {
 	@XmlAttribute(name = "type")
 	private PetFunctionType type;
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 	/** 返回槽位 / Returns the slots*/
-	@Getter
 	@XmlAttribute(name = "slots")
 	private int slots;
 

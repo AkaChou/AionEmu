@@ -29,43 +29,34 @@ import lombok.Getter;
  * 裂隙 / 旋涡（Rift/Vortex）控制器，处理入口确认、传送与通行人数同步。
  * Rift/Vortex controller handling entry confirmation, teleport and used-entry sync.
  */
+@Getter
 public class RVController extends NpcController {
 
 	/** 是否为裂隙主端（可接受通行）。 / Whether this is the master side of the rift. */
-	@Getter
 	private boolean isMaster = false;
 	/** 是否为入侵旋涡。 / Whether this is an invasion vortex. */
-	@Getter
 	private boolean isVortex = false;
 	/** 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex. */
-	@Getter
 	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<Integer, Player>();
 	/** 从端（出口）生成模板。 / Slave (exit) spawn template. */
 	private SpawnTemplate slaveSpawnTemplate;
 	/** 从属 NPC / Slave NPC */
-	@Getter
 	private Npc slave;
 	/** 最低可进入等级。 / Minimum entry level. */
-	@Getter
 	private final Integer minLevel;
 	/** 最高可进入等级。 / Maximum entry level. */
-	@Getter
 	private final Integer maxLevel;
 	/** 预计消失时间（秒级时间戳）。 / Expected despawn time as epoch seconds. */
 	private final int deSpawnedTime;
 	/** 最大可通行人数。 / Maximum number of entries. */
-	@Getter
 	private final Integer maxEntries;
 	/** 消耗的欧比斯点数。 / Abyss points cost. */
-	@Getter
 	private final Integer abyssPoint;
 	/** 当前是否接受通行。 / Whether entries are currently accepted. */
 	private boolean isAccepting;
 	/** 已使用的通行次数。 / Number of used entries. */
-	@Getter
 	private int usedEntries = 0;
 	/** 裂隙模板枚举。 / Rift template enum. */
-	@Getter
 	private final RiftEnum riftTemplate;
 
 	/**

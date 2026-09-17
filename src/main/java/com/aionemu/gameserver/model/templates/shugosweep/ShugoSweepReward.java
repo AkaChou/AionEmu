@@ -11,26 +11,23 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShugoSweepReward")
 public class ShugoSweepReward {
 	/** 返回 board id / Returns the board id */
-	@Getter
 	@XmlAttribute(name = "board_id")
 	protected int boardId;
 
 	/** 返回 reward num / Returns the reward num */
-	@Getter
 	@XmlAttribute(name = "reward_num")
 	protected int rewardNum;
 
 	/** 返回物品 ID / Returns the item id */
-	@Getter
 	@XmlAttribute(name = "item_id")
 	protected int itemId;
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	protected int count;
 }

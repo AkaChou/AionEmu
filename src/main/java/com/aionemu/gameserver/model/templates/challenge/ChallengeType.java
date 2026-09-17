@@ -9,6 +9,7 @@ import lombok.Getter;
  * Challenge Type enumeration.
  */
 
+@Getter
 @XmlType(name = "ChallengeType")
 @XmlEnum
 public enum ChallengeType {
@@ -18,7 +19,6 @@ public enum ChallengeType {
 	TOWN(2);
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	private final int id;
 
 	ChallengeType(int id) {

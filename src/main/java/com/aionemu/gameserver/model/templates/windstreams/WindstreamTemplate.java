@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
  *
  * @author LokiReborn
  */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WindFlight")
 @NoArgsConstructor
@@ -24,14 +25,12 @@ public class WindstreamTemplate {
 	 * 获取 locations 属性值。
 	 * Gets the value of the locations property
 	 */
-	@Getter
 	@XmlElement(required = true)
 	protected StreamLocations locations;
 	/**
 	 * 获取 mapid 属性值。
 	 * Gets the value of the mapid property
 	 */
-	@Getter
 	@XmlAttribute
 	protected int mapid;
 

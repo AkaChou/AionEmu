@@ -76,6 +76,8 @@ import lombok.Setter;
  * @author -Nemesiss-, ATracer, xavier, Sarynth, RotO, xTz, KID
  * @modified Sippolo, yayaya
  */
+@Getter
+@Setter
 @Slf4j
 public class PlayerController extends CreatureController<Player> {
 
@@ -85,13 +87,10 @@ public class PlayerController extends CreatureController<Player> {
 	 *
 	 * @return 关闭中则为 true / true if shutting down
 	 */
-	@Getter
-	@Setter
 	private boolean isInShutdownProgress;
 	private long lastAttackMilis = 0;
 	private long lastAttackedMilis = 0;
 	private int stance = 0;
-	@Getter
 	private int stanceType = 0;
 	private final Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
 

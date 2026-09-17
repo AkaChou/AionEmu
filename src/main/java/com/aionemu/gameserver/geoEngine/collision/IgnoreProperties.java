@@ -10,6 +10,7 @@ import lombok.AccessLevel;
  * Collision ignore properties keyed by race and static object id for targets
  * that should be skipped during collision tests.
  */
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IgnoreProperties {
 
@@ -23,10 +24,8 @@ public class IgnoreProperties {
 	public static final IgnoreProperties ANY_RACE = new IgnoreProperties(null, 0);
 
 	/** 忽略的种族；{@code null} 表示无种族过滤 / Race to ignore; {@code null} means no race filter */
-	@Getter
 	private final Race race;
 	/** 忽略的静态物体 id；0 表示不按 id 过滤。 / Static object id to ignore; 0 means no id filter. */
-	@Getter
 	private final int staticId;
 
 	/**

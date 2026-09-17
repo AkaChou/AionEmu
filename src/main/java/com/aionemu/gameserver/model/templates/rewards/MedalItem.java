@@ -11,17 +11,16 @@ import lombok.Getter;
  * XML template.
  */
 
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MedalReward")
 public class MedalItem extends IdLevelReward {
 
 	/** 获取计数。 / Returns the count. */
-	@Getter
 	@XmlAttribute(name = "count")
 	protected int count;
 
 	/** 返回概率 / Returns the chance*/
-	@Getter
 	@XmlAttribute(name = "chance")
 	protected float chance;
 }

@@ -14,34 +14,31 @@ import lombok.Getter;
  *
  * @author SoulKeeper
  */
+@Getter
 public class RectangleArea extends AbstractArea {
 
 	/**
 	 * 最小 X 坐标。
 	 * Min x point.
 	 */
-	@Getter
 	private final float minX;
 
 	/**
 	 * 最大 X 坐标。
 	 * Max x point.
 	 */
-	@Getter
 	private final float maxX;
 
 	/**
 	 * 最小 Y 坐标。
 	 * Min y point.
 	 */
-	@Getter
 	private final float minY;
 
 	/**
 	 * 最大 Y 坐标。
 	 * Max y point.
 	 */
-	@Getter
 	private final float maxY;
 
 	/**

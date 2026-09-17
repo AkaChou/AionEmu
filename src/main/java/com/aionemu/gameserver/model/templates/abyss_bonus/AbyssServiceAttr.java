@@ -18,6 +18,8 @@ import lombok.Setter;
  * XML template.
  */
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbyssServiceAttr", propOrder = { "bonusAttr" })
 public class AbyssServiceAttr {
@@ -25,18 +27,14 @@ public class AbyssServiceAttr {
 	protected List<AbyssPenaltyAttr> bonusAttr;
 
 	/** 返回增益 ID / Returns the buff id */
-	@Getter
-	@Setter
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
 	/** 获取名称。 / Returns the name. */
-	@Getter
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
 

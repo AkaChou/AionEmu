@@ -17,18 +17,18 @@ import lombok.Setter;
  *
  * @author Rolandas
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Land", propOrder = { "addresses", "buildings", "sale", "fee", "caps" })
 public class HousingLand {
 
 	/** 返回 addresses / Returns the addresses */
-	@Getter
 	@XmlElementWrapper(name = "addresses", required = true)
 	@XmlElement(name = "address")
 	protected List<HouseAddress> addresses;
 
 	/** 返回 buildings / Returns the buildings */
-	@Getter
 	@XmlElementWrapper(name = "buildings", required = true)
 	@XmlElement(name = "building")
 	protected List<Building> buildings;
@@ -46,7 +46,6 @@ public class HousingLand {
 	protected int signNosale;
 
 	/** 设置 sign sale / Sets the sign sale */
-	@Setter
 	@XmlAttribute(name = "sign_sale", required = true)
 	protected int signSale;
 
@@ -63,7 +62,6 @@ public class HousingLand {
 	protected int teleportNpc;
 
 	/** 返回 ID / Returns the id */
-	@Getter
 	@XmlAttribute(required = true)
 	protected int id;
 
