@@ -31,6 +31,7 @@
 ## 阶段 P0：Goal 进度台账
 
 - 状态：DONE（本文件）
+- 修复+例外清单+门禁 commit：fbfbaba1c
 - 产物：本台账 + 全库 start-metadata 审计脚本与差异清单
 
 ## 阶段 P1：min-level 真端精确对齐
@@ -62,7 +63,29 @@
 
 ## 阶段 P3：职业权限语义收敛
 
-- 状态：PENDING（raw class tokens 已在 start-metadata-diff.tsv 的 class-tokens-retail 行留档）
+- audit count：135（真端 class_permitted 为非空真子集的生产任务；另 6065 条真端全集+生产通配等价）
+- token 映射：warrior->WARRIOR、fighter->GLADIATOR、knight->TEMPLAR、scout->SCOUT、
+  assassin->ASSASSIN、ranger->RANGER、mage->MAGE、wizard->SORCERER、
+  elementallist->SPIRIT_MASTER、cleric->PRIEST、priest->CLERIC、chanter->CHANTER、
+  engineer->TECHNIST、gunner->GUNSLINGER、rider->AETHERTECH、artist->MUSE、bard->SONGWEAVER
+- 死条目规则：min>=10（转职后）时 6 个 base 职业（WARRIOR/SCOUT/MAGE/PRIEST/TECHNIST/MUSE）
+  不可达，真端 token 与生产遗留声明在比对前删除；只比较"实际可接受职业集合"。
+- real defects 58（已修复）：
+  - FIX_ADD 42：导师任务族 3928/3929/4922/4926/4927/4928/4929（生产漏声明 classes，
+    其中 4928 只剩死条目 PRIEST 已是无职业可接的死任务）、Kaliga 武器收集族 18618~18627/28618~28627、
+    18643~18648/28643~28648、Dark Poeta/守护者英雄分组 80219/80220/80228/80229/
+    80316/80317/80322/80323 -> 按真端写入实际职业集合
+  - FIX_REPLACE 9：18614/18630/18634/28614/28630/28634 删多余 TEMPLAR（同族 18613 等互证）、
+    19074 枪星导师任务删 AETHERTECH（镜像 29074 正确互证）、14031/24031 机甲星使命
+    收窄为 [AETHERTECH]（真端两份一致 [engineer rider]+任务名/枪械奖励多源互证）
+  - FIX_APPEND 7：1466/1496/1497/1498/2696 补 AETHERTECH（真端全集，生产缺机甲星）、
+    11076 补 AETHERTECH（MUSE 条目为死条目表达）
+- intentional variant 3：3121/30350（密码之刃=技匠系武器适配）、30237（新枪矛=战士系武器适配）
+- EVIDENCE_BLOCKED 7：24050~24054（真端缺 MUSE 疑似笔误 vs 生产通配）、3910、4931
+  （真端与生产互有缺失，17 级使命链语义缺仓库内证据；取证方向：客户端任务文本职业说明、
+  真端服务器抓包接取行为）
+- 门禁：`QuestRetailClassGateTest`（3 例）+ 基线 `quest-class-retail-contract.tsv`（135 行快照）
+- 状态：DONE
 
 ## 阶段 P4：奖励结算精确对齐
 

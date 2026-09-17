@@ -5,6 +5,10 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <classes>
+      <class id="CLERIC"/>
+      <class id="CHANTER"/>
+    </classes>
 
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
   

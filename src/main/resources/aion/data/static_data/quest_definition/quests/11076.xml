@@ -11,9 +11,11 @@
       <class id="RANGER"/>
       <class id="SORCERER"/>
       <class id="SPIRIT_MASTER"/>
-      <class id="CHANTER"/>
       <class id="CLERIC"/>
+      <class id="CHANTER"/>
       <class id="GUNSLINGER"/>
+      <class id="AETHERTECH"/>
+      <class id="MUSE"/>
       <class id="SONGWEAVER"/>
     </classes>
     <rewards>

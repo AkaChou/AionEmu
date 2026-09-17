@@ -5,17 +5,6 @@
       <race id="ELYOS"/>
     </races>
     <classes>
-      <class id="GLADIATOR"/>
-      <class id="TEMPLAR"/>
-      <class id="ASSASSIN"/>
-      <class id="RANGER"/>
-      <class id="SORCERER"/>
-      <class id="SPIRIT_MASTER"/>
-      <class id="CHANTER"/>
-      <class id="CLERIC"/>
-      <class id="GUNSLINGER"/>
-      <class id="SONGWEAVER"/>
-      <class id="TECHNIST"/>
       <class id="AETHERTECH"/>
     </classes>
     <work-items>

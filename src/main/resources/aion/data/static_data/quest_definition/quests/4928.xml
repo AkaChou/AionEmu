@@ -5,7 +5,7 @@
       <race id="ASMODIANS"/>
     </races>
     <classes>
-      <class id="PRIEST"/>
+      <class id="CLERIC"/>
     </classes>
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>

@@ -4,6 +4,13 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <classes>
+      <class id="GLADIATOR"/>
+      <class id="TEMPLAR"/>
+      <class id="ASSASSIN"/>
+      <class id="RANGER"/>
+      <class id="CHANTER"/>
+    </classes>
     <items>
       <item id="122000910" count="1"/>
     </items>

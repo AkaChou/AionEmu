@@ -1,0 +1,140 @@
+# Aion 5.8 retail quest class contract snapshot
+# source: Quest_unpacked/quest.xml (regenerate: .agents/summary/quest-systemic-goal/build_class_contract_tsv.py)
+# rows: production quests whose retail class_permitted is a non-empty proper subset of the 17 base/advanced tokens.
+# comparison: token->PlayerClass direct mapping; base classes are dead entries when min level >= 10.
+quest_id	retail_min_level	retail_class_tokens
+1572	34	elementallist
+1913	10	fighter knight
+1914	10	assassin ranger
+1915	10	wizard elementallist
+1916	10	chanter priest
+2901	10	fighter knight
+2902	10	assassin ranger
+2903	10	wizard elementallist
+2904	10	chanter priest
+3340	33	rider
+3910	17	warrior scout mage fighter knight assassin ranger wizard elementallist gunner bard rider
+3912	17	cleric chanter priest
+3922	31	warrior fighter
+3923	31	warrior knight
+3924	31	scout ranger
+3925	31	scout assassin
+3926	31	mage wizard
+3927	31	mage elementallist
+3928	31	cleric priest
+3929	31	cleric chanter
+4922	31	warrior fighter
+4923	31	warrior knight
+4924	31	scout ranger
+4925	31	scout assassin
+4926	31	mage wizard
+4927	31	mage elementallist
+4928	31	cleric priest
+4929	31	cleric chanter
+4931	17	warrior scout mage fighter knight assassin ranger wizard elementallist gunner bard rider
+4933	17	cleric chanter priest
+14031	50	engineer rider
+18608	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+18609	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+18610	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18611	37	warrior scout mage cleric engineer artist wizard elementallist
+18612	37	warrior scout mage cleric engineer artist wizard elementallist
+18613	37	warrior scout mage cleric engineer artist fighter knight
+18614	37	warrior scout mage cleric engineer artist fighter
+18615	37	warrior scout mage cleric engineer artist chanter priest
+18616	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18618	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+18619	37	warrior scout mage cleric engineer artist fighter knight
+18620	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18621	37	warrior scout mage cleric engineer artist fighter
+18622	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18623	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+18624	37	warrior scout mage cleric engineer artist chanter priest
+18625	37	warrior scout mage cleric engineer artist wizard elementallist
+18626	37	warrior scout mage cleric engineer artist wizard elementallist
+18627	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+18628	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+18629	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+18630	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18631	37	warrior scout mage cleric engineer artist wizard elementallist
+18632	37	warrior scout mage cleric engineer artist wizard elementallist
+18633	37	warrior scout mage cleric engineer artist fighter knight
+18634	37	warrior scout mage cleric engineer artist fighter
+18635	37	warrior scout mage cleric engineer artist chanter priest
+18636	37	warrior scout mage cleric engineer artist fighter assassin ranger
+18637	37	warrior scout mage cleric engineer artist gunner
+18638	37	warrior scout mage cleric engineer artist gunner
+18639	37	warrior scout mage cleric engineer artist bard
+18640	37	warrior scout mage cleric engineer artist gunner
+18641	37	warrior scout mage cleric engineer artist gunner
+18642	37	warrior scout mage cleric engineer artist bard
+18643	37	warrior scout mage cleric engineer artist gunner
+18644	37	warrior scout mage cleric engineer artist gunner
+18645	37	warrior scout mage cleric engineer artist bard
+18646	37	warrior scout mage cleric engineer artist rider
+18647	37	warrior scout mage cleric engineer artist rider
+18648	37	warrior scout mage cleric engineer artist rider
+19070	10	gunner rider
+19071	10	bard
+19074	31	engineer gunner
+19075	31	artist bard
+19078	31	engineer rider
+24031	50	engineer rider
+24050	36	engineer artist fighter knight assassin ranger wizard elementallist chanter priest gunner bard rider
+24051	36	engineer artist fighter knight assassin ranger wizard elementallist chanter priest gunner bard rider
+24052	41	engineer artist fighter knight assassin ranger wizard elementallist chanter priest gunner bard rider
+24053	42	engineer artist fighter knight assassin ranger wizard elementallist chanter priest gunner bard rider
+24054	44	engineer artist fighter knight assassin ranger wizard elementallist chanter priest gunner bard rider
+28608	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+28609	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+28610	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28611	37	warrior scout mage cleric engineer artist wizard elementallist
+28612	37	warrior scout mage cleric engineer artist wizard elementallist
+28613	37	warrior scout mage cleric engineer artist fighter knight
+28614	37	warrior scout mage cleric engineer artist fighter
+28615	37	warrior scout mage cleric engineer artist chanter priest
+28616	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28618	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+28619	37	warrior scout mage cleric engineer artist fighter knight
+28620	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28621	37	warrior scout mage cleric engineer artist fighter
+28622	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28623	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+28624	37	warrior scout mage cleric engineer artist chanter priest
+28625	37	warrior scout mage cleric engineer artist wizard elementallist
+28626	37	warrior scout mage cleric engineer artist wizard elementallist
+28627	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+28628	37	warrior scout mage cleric engineer artist fighter knight assassin ranger
+28629	37	warrior scout mage cleric engineer artist fighter knight chanter priest
+28630	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28631	37	warrior scout mage cleric engineer artist wizard elementallist
+28632	37	warrior scout mage cleric engineer artist wizard elementallist
+28633	37	warrior scout mage cleric engineer artist fighter knight
+28634	37	warrior scout mage cleric engineer artist fighter
+28635	37	warrior scout mage cleric engineer artist chanter priest
+28636	37	warrior scout mage cleric engineer artist fighter assassin ranger
+28637	37	warrior scout mage cleric engineer artist gunner
+28638	37	warrior scout mage cleric engineer artist gunner
+28639	37	warrior scout mage cleric engineer artist bard
+28640	37	warrior scout mage cleric engineer artist gunner
+28641	37	warrior scout mage cleric engineer artist gunner
+28642	37	warrior scout mage cleric engineer artist bard
+28643	37	warrior scout mage cleric engineer artist gunner
+28644	37	warrior scout mage cleric engineer artist gunner
+28645	37	warrior scout mage cleric engineer artist bard
+28646	37	warrior scout mage cleric engineer artist rider
+28647	37	warrior scout mage cleric engineer artist rider
+28648	37	warrior scout mage cleric engineer artist rider
+29070	10	gunner rider
+29071	10	bard
+29074	31	engineer gunner
+29075	31	artist bard
+29078	31	engineer rider
+80219	48	warrior scout mage cleric engineer artist fighter knight assassin ranger gunner
+80220	48	warrior scout mage cleric engineer artist wizard elementallist chanter priest bard rider
+80228	48	warrior scout mage cleric engineer artist fighter knight assassin ranger gunner
+80229	48	warrior scout mage cleric engineer artist wizard elementallist chanter priest bard rider
+80316	25	warrior scout mage cleric engineer artist fighter knight assassin ranger chanter
+80317	25	warrior scout mage cleric engineer artist wizard elementallist priest
+80322	25	warrior scout mage cleric engineer artist fighter knight assassin ranger chanter
+80323	25	warrior scout mage cleric engineer artist wizard elementallist priest
