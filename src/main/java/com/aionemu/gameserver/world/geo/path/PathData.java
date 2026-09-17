@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1027,17 +1028,21 @@ public final class PathData {
 		}
 
 		private static List<PathPoint> reconstruct(SearchNode end) {
-			List<PathPoint> reverse = new ArrayList<>();
+			// 先数链长再装配：原实现先往一个从 10 起扩容的 reverse 列表里填，再复制进第二个列表，
+			// 每条深路径都要多付一次 ArrayList 扩容搬移与一个列表对象（play-14 的 ArrayList.grow 7.3MB）。
+			// Count first, then assemble: the old code filled a growing reverse list and copied it into a second
+			// list, so every deep path paid ArrayList growth plus an extra list (ArrayList.grow 7.3MB in play-14).
+			int depth = 0;
 			for (SearchNode node = end; node != null; node = node.parent) {
-				if (reverse.size() == MAX_PATH_POINTS) {
+				if (++depth > MAX_PATH_POINTS) {
 					return null;
 				}
-				reverse.add(new PathPoint(node.node.x(), node.node.y(), node.node.z()));
 			}
-			List<PathPoint> result = new ArrayList<>(reverse.size());
-			for (int i = reverse.size() - 1; i >= 0; i--) {
-				result.add(reverse.get(i));
+			List<PathPoint> result = new ArrayList<>(depth);
+			for (SearchNode node = end; node != null; node = node.parent) {
+				result.add(point(node.node));
 			}
+			Collections.reverse(result);
 			return result;
 		}
 

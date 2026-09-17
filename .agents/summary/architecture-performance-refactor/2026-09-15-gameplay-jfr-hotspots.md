@@ -840,3 +840,22 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
 → **BUILD SUCCESS，6 个测试类 125 例全绿**；更早一轮 `NpcShoutDataTest`(新 4)+`ShoutEventHandlerTest`+`WaterVolumeStoreTest`+`PathDataTest`+
 `PathServiceConcurrencyTest`+`PathServiceCompressionTest`+`NpcMoveControllerPathTest`+`MoveTaskManagerTest`+`PlayerMoveTaskManagerTest`+
 `WorldTest`+`WorldMapTest`+`WorldMapInstanceTest` → **153 例全绿**。
+
+### 12.12 第十六轮：寻路结果装配的去中间列表（C 阶段的安全切片）
+
+`reconstruct`/`waypoints`/`point` 在 play-14 合计 ≈18.5 MB/300 s。其中 `PathPoint` 对象与 `waypoints()` 的每点 `float[]` 是
+**交给 `NpcMoveController` 跨 tick 消费、且可能被 `canReachWaypointCached` 缓存的结果数据**，复用它们需要改 API 与所有权
+（新增"填充调用方缓冲"的入口），风险等级最高，本轮不碰。本轮只做两处"去中间列表/去扩容"：
+
+1. **`PathData.reconstruct` 只建一个精确容量列表**：原实现先往容量 10 起的 `reverse` 列表填链（`ArrayList.grow → Arrays.copyOf`），
+   再复制进第二个 `ArrayList`；现在先数链长（`> MAX_PATH_POINTS` 仍返回 null），一次 `new ArrayList<>(depth)` 填链后
+   `Collections.reverse`。语义不变：返回可变 `ArrayList`、顺序不变、`MAX_PATH_POINTS` 边界一致。
+2. **`PathService.simplifyGroundPath` 按输入上界预分配**：`new ArrayList<>()` → `new ArrayList<>(points.size())`（结果点数必然 ≤ 输入点数）。
+   同文件的 `simplifyPath` 早已预分配，这次把地面平滑那条补齐。
+
+按采样归因，这两处消掉的是"中间列表 + 扩容搬移"那部分（`ArrayList.grow → Arrays.copyOf` 共 7.27 MB/300 s 中的一部分），
+**不是**结果数据本身；要真正消掉 18.5 MB 需要独立的"结果缓冲池 + 消费生命周期"设计。
+
+**测试**：`mvn -Dtest=PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest test`
+→ **BUILD SUCCESS，7 个测试类 126 例全绿**；其中 `PathGoldenDiffTest` 仍与 **23:47 录制（A/C 改动之前）** 的基线逐字一致
+（`path-golden.txt` 未被重写，时间戳不变）→ 13,081 节点绕墙路径的 256 个坐标点没有变化。

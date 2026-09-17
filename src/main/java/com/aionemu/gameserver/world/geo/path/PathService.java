@@ -943,7 +943,9 @@ public final class PathService implements DisposableBean {
 
 	static float[][] simplifyGroundPath(float[] start, List<float[]> points, SegmentAllowed pathAllowed,
 			SegmentAllowed geoAllowed) {
-		List<float[]> result = new ArrayList<>();
+		// 结果最多不超过输入点数：按上界一次分配，省掉 ArrayList 从 10 开始的扩容搬移。
+		// The result never exceeds the input size: allocate to that upper bound and skip ArrayList growth.
+		List<float[]> result = new ArrayList<>(points.size());
 		float[] from = start;
 		int current = -1;
 		while (current + 1 < points.size()) {
