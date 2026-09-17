@@ -5,7 +5,6 @@
       <race id="ELYOS"/>
     </races>
     <prerequisites>
-      <quest id="1036"/>
       <quest id="14024"/>
     </prerequisites>
     <rewards>

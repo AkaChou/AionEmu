@@ -203,6 +203,17 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT5_1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
     <transition source="s4" target="s5">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO5"/>

@@ -233,9 +233,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="USE_OBJECT"/>
       </event>
-      <actions>
-        <remove-item item-id="182205502" count="1"/>
-      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
@@ -244,9 +241,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT_QUEST_REWARD"/>
       </event>
-      <actions>
-        <remove-item item-id="182205502" count="1"/>
-      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
@@ -256,7 +250,6 @@
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <actions>
-        <remove-item item-id="182205502" count="1"/>
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="AP" id="0" amount="2500" amount-mode="QUEST_BASE"/>
         <grant-reward kind="TITLE" id="96" amount="1"/>

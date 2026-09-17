@@ -22,7 +22,8 @@ class DisabledClientQuestPlaceholderCatalogTest {
 		"src/main/resources/aion/data/static_data/quest_definition");
 	private static final Path QUEST_DIRECTORY = DEFINITION_DIRECTORY.resolve("quests");
 	private static final List<Integer> DISABLED_PLACEHOLDERS = List.of(
-		10036, 18316, 18395, 20036, 20038, 28316, 28395);
+		2285, 3959, 4963, 10036, 18316, 18395, 19055, 19056, 20036, 20038,
+		28316, 28395, 29055, 29056, 80313, 80314);
 	private static final Map<Integer, List<QuestStartCondition>> SUPPORT_ORDER_CONDITIONS = Map.of(
 		10031, List.of(
 			new QuestStartCondition("unfinished", 10025, 0),

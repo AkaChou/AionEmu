@@ -10,25 +10,83 @@
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="1942"/>
-      <condition type="finished" quest-id="1943"/>
-      <condition type="finished" quest-id="1944"/>
-      <condition type="finished" quest-id="1945"/>
-      <condition type="finished" quest-id="1946"/>
-      <condition type="unfinished" quest-id="3944"/>
-      <condition type="unfinished" quest-id="3947"/>
-      <condition type="unfinished" quest-id="3950"/>
-      <condition type="unfinished" quest-id="3953"/>
-      <condition type="unfinished" quest-id="3956"/>
-      <condition type="unfinished" quest-id="1972"/>
-      <condition type="noacquired" quest-id="3944"/>
-      <condition type="noacquired" quest-id="3947"/>
-      <condition type="noacquired" quest-id="3950"/>
-      <condition type="noacquired" quest-id="3953"/>
-      <condition type="noacquired" quest-id="3956"/>
-      <condition type="noacquired" quest-id="1972"/>
-    </start-conditions>
+        <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="1942"/>
+        <condition type="unfinished" quest-id="3944"/>
+        <condition type="unfinished" quest-id="3947"/>
+        <condition type="unfinished" quest-id="3950"/>
+        <condition type="unfinished" quest-id="3953"/>
+        <condition type="unfinished" quest-id="3956"/>
+        <condition type="unfinished" quest-id="1972"/>
+        <condition type="noacquired" quest-id="3944"/>
+        <condition type="noacquired" quest-id="3947"/>
+        <condition type="noacquired" quest-id="3950"/>
+        <condition type="noacquired" quest-id="3953"/>
+        <condition type="noacquired" quest-id="3956"/>
+        <condition type="noacquired" quest-id="1972"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="1943"/>
+        <condition type="unfinished" quest-id="3944"/>
+        <condition type="unfinished" quest-id="3947"/>
+        <condition type="unfinished" quest-id="3950"/>
+        <condition type="unfinished" quest-id="3953"/>
+        <condition type="unfinished" quest-id="3956"/>
+        <condition type="unfinished" quest-id="1972"/>
+        <condition type="noacquired" quest-id="3944"/>
+        <condition type="noacquired" quest-id="3947"/>
+        <condition type="noacquired" quest-id="3950"/>
+        <condition type="noacquired" quest-id="3953"/>
+        <condition type="noacquired" quest-id="3956"/>
+        <condition type="noacquired" quest-id="1972"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="1944"/>
+        <condition type="unfinished" quest-id="3944"/>
+        <condition type="unfinished" quest-id="3947"/>
+        <condition type="unfinished" quest-id="3950"/>
+        <condition type="unfinished" quest-id="3953"/>
+        <condition type="unfinished" quest-id="3956"/>
+        <condition type="unfinished" quest-id="1972"/>
+        <condition type="noacquired" quest-id="3944"/>
+        <condition type="noacquired" quest-id="3947"/>
+        <condition type="noacquired" quest-id="3950"/>
+        <condition type="noacquired" quest-id="3953"/>
+        <condition type="noacquired" quest-id="3956"/>
+        <condition type="noacquired" quest-id="1972"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="1945"/>
+        <condition type="unfinished" quest-id="3944"/>
+        <condition type="unfinished" quest-id="3947"/>
+        <condition type="unfinished" quest-id="3950"/>
+        <condition type="unfinished" quest-id="3953"/>
+        <condition type="unfinished" quest-id="3956"/>
+        <condition type="unfinished" quest-id="1972"/>
+        <condition type="noacquired" quest-id="3944"/>
+        <condition type="noacquired" quest-id="3947"/>
+        <condition type="noacquired" quest-id="3950"/>
+        <condition type="noacquired" quest-id="3953"/>
+        <condition type="noacquired" quest-id="3956"/>
+        <condition type="noacquired" quest-id="1972"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="1946"/>
+        <condition type="unfinished" quest-id="3944"/>
+        <condition type="unfinished" quest-id="3947"/>
+        <condition type="unfinished" quest-id="3950"/>
+        <condition type="unfinished" quest-id="3953"/>
+        <condition type="unfinished" quest-id="3956"/>
+        <condition type="unfinished" quest-id="1972"/>
+        <condition type="noacquired" quest-id="3944"/>
+        <condition type="noacquired" quest-id="3947"/>
+        <condition type="noacquired" quest-id="3950"/>
+        <condition type="noacquired" quest-id="3953"/>
+        <condition type="noacquired" quest-id="3956"/>
+        <condition type="noacquired" quest-id="1972"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

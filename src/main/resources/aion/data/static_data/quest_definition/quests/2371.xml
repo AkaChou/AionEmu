@@ -22,7 +22,7 @@
       <drop npc-id="212792" item-id="182204149" chance="80" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
-      <condition type="finished" quest-id="2035"/>
+      <condition type="finished" quest-id="24023"/>
     </start-conditions>
   </metadata>
   <progress>

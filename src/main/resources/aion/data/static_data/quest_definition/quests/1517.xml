@@ -6,7 +6,6 @@
     </races>
     <prerequisites>
       <quest id="14054"/>
-      <quest id="1062"/>
     </prerequisites>
     <rewards>
       <reward kind="GOLD" id="0" amount="38500"/>

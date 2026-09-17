@@ -14,9 +14,8 @@
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
-    <start-conditions>
+        <start-conditions>
       <condition type="finished" quest-id="29050"/>
-      <condition type="finished" quest-id="29056"/>
     </start-conditions>
   </metadata>
   <progress>

@@ -10,11 +10,17 @@
       <reward kind="ITEM" id="162000048" amount="24"/>
       <reward kind="ITEM" id="162000048" amount="24"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="2304"/>
-      <condition type="finished" quest-id="2305"/>
-      <condition type="finished" quest-id="2499"/>
-    </start-conditions>
+        <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="2304"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="2305"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="2499"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

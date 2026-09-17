@@ -24,8 +24,7 @@
     </reward-groups>
     <start-conditions>
       <condition type="finished" quest-id="14024"/>
-      <condition type="finished" quest-id="1036"/>
-    </start-conditions>
+          </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

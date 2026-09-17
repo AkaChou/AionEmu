@@ -8,6 +8,8 @@
 # failure_type	quest_id	source_state	npc_id	trigger_action	shown_page	visible_action	actual_path
 BUTTON_WITHOUT_ROUTE	1197	unaccepted		0	4	1008	unaccepted + ITEM 182200558 + 0 -> unaccepted + page 4
 BUTTON_WITHOUT_ROUTE	1198	unaccepted		0	4	1008	unaccepted + ITEM 182200559 + 0 -> unaccepted + page 4
+BUTTON_WITHOUT_ROUTE	80008	unaccepted		0	4	1008	unaccepted + ITEM 182214006 + 0 -> unaccepted + page 4
+BUTTON_WITHOUT_ROUTE	80009	unaccepted		0	4	1008	unaccepted + ITEM 182214007 + 0 -> unaccepted + page 4
 BUTTON_WITHOUT_ROUTE	2289	unaccepted	203616	1002	1003	10000	unaccepted + NPC 203616 + 1002 -> started + page 1003
 BUTTON_WITHOUT_ROUTE	2367	unaccepted	204339	1002	1003	1012	unaccepted + NPC 204339 + 1002 -> started + page 1003
 BUTTON_WITHOUT_ROUTE	2367	unaccepted	204339	1002	1003	1097	unaccepted + NPC 204339 + 1002 -> started + page 1003
@@ -24,8 +26,5 @@ BUTTON_WITHOUT_ROUTE	3088	unaccepted	798202	1002	1003	1097	unaccepted + NPC 7982
 BUTTON_WITHOUT_ROUTE	3088	unaccepted	798202	1002	1003	1182	unaccepted + NPC 798202 + 1002 -> started + page 1003
 BUTTON_WITHOUT_ROUTE	3936	unaccepted	203710	1002	1003	1011	unaccepted + NPC 203710 + 1002 -> started + page 1003
 BUTTON_WITHOUT_ROUTE	3937	unaccepted	203708	1002	1003	1011	unaccepted + NPC 203708 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	3940	s4	203701	31	2375	2376	s4 + NPC 203701 + 31 -> s4 + page 2375
 BUTTON_WITHOUT_ROUTE	4940	unaccepted	204050	1002	1003	1011	unaccepted + NPC 204050 + 1002 -> started + page 1003
 BUTTON_WITHOUT_ROUTE	4941	unaccepted	204060	1002	1003	1011	unaccepted + NPC 204060 + 1002 -> started + page 1003
-BUTTON_WITHOUT_ROUTE	80008	unaccepted		0	4	1008	unaccepted + ITEM 182214006 + 0 -> unaccepted + page 4
-BUTTON_WITHOUT_ROUTE	80009	unaccepted		0	4	1008	unaccepted + ITEM 182214007 + 0 -> unaccepted + page 4

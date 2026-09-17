@@ -11,12 +11,20 @@
     <rewards>
       <reward kind="EXP" id="0" amount="1000000"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="80166"/>
-      <condition type="finished" quest-id="80167"/>
-      <condition type="finished" quest-id="80168"/>
-      <condition type="finished" quest-id="80169"/>
-    </start-conditions>
+        <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80166"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="80167"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="80168"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="80169"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

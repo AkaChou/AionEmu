@@ -28,10 +28,14 @@
       <drop npc-id="216423" item-id="182209181" chance="10" each-member="true" collecting-step="0"/>
       <drop npc-id="216424" item-id="182209181" chance="10" each-member="true" collecting-step="0"/>
     </drops>
-    <start-conditions>
-      <condition type="finished" quest-id="30142"/>
-      <condition type="finished" quest-id="30101"/>
-    </start-conditions>
+        <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="30142"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="30101"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

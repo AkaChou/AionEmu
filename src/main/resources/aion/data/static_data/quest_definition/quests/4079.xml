@@ -5,7 +5,6 @@
       <race id="ASMODIANS"/>
     </races>
     <prerequisites>
-      <quest id="2092"/>
       <quest id="24201"/>
     </prerequisites>
     <rewards>

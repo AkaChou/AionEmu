@@ -459,3 +459,46 @@ first_check: 任务元数据是否声明 prerequisites 或 start-conditions；�
 
 - **判定规则**：任务执行协调器在采集快照前，推导事实需求不能仅看 transition 本身声明的条件。若该转换是从 `NONE` 状态进入非 `NONE` 状态（接取任务），由于 `QuestMutationPlanner` 会隐式执行 `metadataPrerequisitesSatisfied`，推导器必须同步解析任务元数据，将前置任务 ID 集合及装备事实纳入需求，防止读取方按 fail-closed 策略误判为前置未满足。
 - **代表案例**：天族特别任务 2（19638），配置 `<condition type="finished" quest-id="19637"/>`；修复提交 `af2304f67`；由 `QuestFactRequirementsTest#acquiringTransitionInheritsMetadataPrerequisites` 锁定契约，2026-09-16 客户端实机验收通过。
+
+---
+
+## [QE-020] 十八、领奖阶段严禁重复扣除前序步骤已消耗的道具 (NO_DUPLICATE_ITEM_REMOVAL_AT_REWARD)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务领奖转换（reward -> complete/reward）道具条件与扣除动作
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 任务已顺利推进到 REWARD 阶段，与终点 NPC 对话无法打开奖励页面，或点击领奖后提示失败/无反应，任务无法完结
+root_cause: 中途步骤已通过 remove-item 扣除了任务道具，但在领奖阶段机械复用了初始/中间状态的模板，再次声明了 has-item 条件或 remove-item count="1"；由于玩家背包已无此道具，领奖事务校验失败导致永久卡死
+fix_or_guardrail: 凡是在进入 REWARD 前已从背包扣除的道具，领奖与完成阶段严禁重复声明 has-item 或严格 remove-item；只有在领奖时才初次交付的物品才保留扣除；可选分支道具若必须清理统一使用 count="ALL"
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/25400.xml; src/main/resources/aion/data/static_data/quest_definition/quests/24046.xml; .agents/summary/quest-systemic-audit/2026-09-17-systemic-quest-family-audit.zh-CN.md
+validation: 静态 XML 校验与全量断言通过；阿斯特拉核心使命 25400 与 24046 领奖重复扣除完全清除
+boundaries: 适用于中途已消耗道具或可选分支交付物；正常由最终 NPC 初次回收的收集物不受影响
+superseded_by: none
+see_also: [QE-006]
+first_check: 检查背包道具是否在前面的 transition 中已经被 remove-item；reward -> complete 中是否有针对同一 item-id 的 has-item 或严格 remove-item
+-->
+
+- **判定规则**：凡是在中途步骤（例如调查石碑、制作钥匙、提交半成品）已被扣除的任务物品，在最终与奖励 NPC 交互（`reward -> complete`）时严禁再次声明 `has-item` 校验或 `remove-item count="1"` 扣除动作。否则玩家在终点 NPC 面前必然因缺少物品而无法交付任务。
+- **代表案例**：阿斯特拉 66 级核心主线使命 `25400`（庞特卡内的悲剧），调查物品在 step 4 推进到 step 5 时已被扣除，但完成转换又声明了 3 件道具的 `has-item` 与 `remove-item`，导致全服魔族玩家在最终领奖时 100% 卡死；修复后彻底清除多余校验。
+
+---
+
+## [QE-021] 十九、真端多前置分支必须使用 start-condition-groups 保持析取语义 (DISJUNCTIVE_PREREQUISITE_GROUPS)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务元数据前置条件（start-conditions 与 start-condition-groups）
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家已完成对应前置剧情，但后续任务在 NPC 处不可见或无法接取；只有把所有互斥分支/新老使命全部做完的非正常账号才能接取
+root_cause: Aion 5.8 客户端 quest.xml 中的 finished_quest_cond1 与 finished_quest_cond2 属于可选完成其一（OR 关系）；服务端 XML 机械平铺在单个 start-conditions 中被解释为全量必须满足（AND），导致单分支玩家前置被死锁
+fix_or_guardrail: 具有分支可选前置的任务必须升级为 start-condition-groups，每个 group 声明一个分支 finished 条件并携带公共互斥条件，引擎使用 DNF 析取逻辑（anyMatch）判定
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/2303.xml; src/main/resources/aion/data/static_data/quest_definition/quests/19008.xml; .agents/summary/quest-systemic-audit/2026-09-17-systemic-quest-family-audit.zh-CN.md
+validation: 43 个真端分支前置任务全量升级为 start-condition-groups，静态解析与断言全部通过
+boundaries: 适用于真端明确声明多个 finished_quest_condN 的分支任务；属于纯 AND 线性前置的任务保持单一 start-conditions
+superseded_by: none
+first_check: 比对 Quest_unpacked/quest.xml 中的 finished_quest_cond1/cond2，确认是否为分支剧情、互斥制作专精或新老版本使命替换
+-->
+
+- **判定规则**：真端客户端数据中凡声明了 `finished_quest_cond1`、`finished_quest_cond2` 等多个前置字段的任务，其业务语义是“完成路线 A **或** 路线 B 均可接取”。服务端严禁写在同一个 `<start-conditions>`（AND）中，必须使用 `<start-condition-groups>`，以 `<group>` 包裹各分支条件，保证走任一剧情分支的玩家都能顺利接取后续任务。
+- **代表案例**：任务 `2303`（真端完成 2304 或 2305 或 2499 任一即可）、守护者系列 `19008` 等 43 个任务全量重构为 `<start-condition-groups>`。

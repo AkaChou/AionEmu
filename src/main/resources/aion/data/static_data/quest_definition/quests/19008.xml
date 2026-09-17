@@ -15,20 +15,34 @@
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="1941"/>
-      <condition type="unfinished" quest-id="19014"/>
-      <condition type="noacquired" quest-id="19014"/>
-      <condition type="finished" quest-id="3943"/>
-      <condition type="unfinished" quest-id="19020"/>
-      <condition type="noacquired" quest-id="19020"/>
-      <condition type="unfinished" quest-id="19026"/>
-      <condition type="noacquired" quest-id="19026"/>
-      <condition type="unfinished" quest-id="19032"/>
-      <condition type="noacquired" quest-id="19032"/>
-      <condition type="unfinished" quest-id="19038"/>
-      <condition type="noacquired" quest-id="19038"/>
-    </start-conditions>
+        <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="1941"/>
+        <condition type="unfinished" quest-id="19014"/>
+        <condition type="noacquired" quest-id="19014"/>
+        <condition type="unfinished" quest-id="19020"/>
+        <condition type="noacquired" quest-id="19020"/>
+        <condition type="unfinished" quest-id="19026"/>
+        <condition type="noacquired" quest-id="19026"/>
+        <condition type="unfinished" quest-id="19032"/>
+        <condition type="noacquired" quest-id="19032"/>
+        <condition type="unfinished" quest-id="19038"/>
+        <condition type="noacquired" quest-id="19038"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="3943"/>
+        <condition type="unfinished" quest-id="19014"/>
+        <condition type="noacquired" quest-id="19014"/>
+        <condition type="unfinished" quest-id="19020"/>
+        <condition type="noacquired" quest-id="19020"/>
+        <condition type="unfinished" quest-id="19026"/>
+        <condition type="noacquired" quest-id="19026"/>
+        <condition type="unfinished" quest-id="19032"/>
+        <condition type="noacquired" quest-id="19032"/>
+        <condition type="unfinished" quest-id="19038"/>
+        <condition type="noacquired" quest-id="19038"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

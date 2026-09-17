@@ -13,8 +13,7 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="4939"/>
-      <condition type="finished" quest-id="25352"/>
-    </start-conditions>
+          </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
