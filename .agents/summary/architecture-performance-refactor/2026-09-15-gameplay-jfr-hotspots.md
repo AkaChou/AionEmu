@@ -1330,7 +1330,7 @@ private final Set<Integer>   usersInSensoryArea  = ConcurrentHashMap.newKeySet()
 - 7 个 `add` 站点改道：`actionTasks` ×4（flee_stop / flee_move ×2 / 随机移动调度 / 延迟动作链）、
   `terminalActionTasks` ×1、`usersInSensoryArea` ×1（另一处 `actionTasks.add` 在延迟动作链里同批改完）。
 
-#### 12.19.2 契约测试（`RetailPatternAI2Test` 80 → 81 例）
+#### 12.19.2 契约测试（`RetailPatternAI2Test` 79 → 80 例）
 
 `emptySetPlaceholderToleratesTheNoOpMutations`：`remove`/`removeIf`/`removeAll`/`retainAll` 返回 `false`、
 `clear` 不抛且集合仍为空——把这个 JDK 行为与"本类依赖它"的原因写进断言，未来 JDK 或实现变更会立刻红灯。
@@ -1356,3 +1356,176 @@ GeoServiceSkillObstacleTest,LongObjectHashMapTest test
 | `pendingCutsceneTeleports` | `ConcurrentHashMap` | 5 | `remove(k,v)` + `clear` 同上 |
 | `timers`/`spawned`/`intVars` | `HashMap` | — | 普通容器，≈14 MB；需先确认是否 AI 单线程独占 |
 | `selfManagedSpawns`/`flags` | `HashSet` | — | 同上，≈7 MB |
+
+### 12.20 第二十四轮：`RetailPatternAI2` 的三张 CHM 改写时物化（D 切片六）
+
+承 12.19.4，本类剩下的三张并发表：
+
+```java
+private final Map<VisibleObject, Boolean> despawnAtAttackState   = new ConcurrentHashMap<>();
+private final Map<Player, ItemUseObserver> gaugeObservers        = new ConcurrentHashMap<>();
+private final Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = new ConcurrentHashMap<>();
+```
+
+每实例 3 张 CHM × 97,764 ≈ **29 万对象 ≈ 19 MB**，而多数 AI 实例从不写入其中任何一张。
+
+#### 12.20.1 做法（与 set 不同的关键点）
+
+- 三张表初始指向共享空表（`Collections.emptyMap()`），字段改 `volatile`；
+- **只有 `put` 物化**（3 处）：`writableDespawnStates()`/`writableGaugeObservers()`/`writablePendingCutsceneTeleports()`，
+  双检 + `synchronized (this)`；
+- **变更类操作一律先判占位符**：`Collections.EmptyMap.remove(key,value)` 在 JDK 上直接抛
+  `UnsupportedOperationException`（不是返回 false），所以：
+  - `gaugeObservers.remove(player, observer)`（2 处，`stopGauge`/`finishGauge`）→ 先取局部引用，占位符即视为"未注册"直接 return；
+  - `pendingCutsceneTeleports.remove(id, pending)`（`consumePendingCutsceneTeleport`）→ 重写为显式的三段判定 +
+    占位符守卫，语义与原来的 `&&` 链等价；
+  - `pendingCutsceneTeleports.clear()` → 判占位符后再清；
+  - `despawnAtAttackState.remove(object)` 4 处 → 统一收进 `forgetDelayedDespawn(VisibleObject)` 守卫助手
+    （占位符代表"该对象不在表里"，本来就无需移除）；
+- 只读路径零改动：`get`/`getOrDefault`/`forEach` 在空表上天然成立。
+
+#### 12.20.2 测试侧连带修正（fail-fast 抓到的）
+
+`RetailPatternAI2Test` 的辅助方法 `pendingCutsceneTeleports(ai)` 原本直接对字段 `put` 来铺数据，
+现在字段默认是不可变空表 → 抛 `UnsupportedOperationException`。已改为先用反射替换成新的
+`ConcurrentHashMap` 再铺数据（与生产代码"写入即物化"一致）。这正是把 fail-fast 留给测试的好处：
+任何绕过生产写入路径的直写都会立刻暴露。
+
+#### 12.20.3 验证
+
+```
+mvn -Dtest=RetailPatternAI2Test,ObserveControllerTest,ObserveControllerAttackContextTest,ObserveControllerLifeChangedTest,
+AbstractCollisionObserverTest,NpcLifeStatsTest,NpcGameStatsTest,CreatureGameStatsBytecodeTest,KnownListTest,
+KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,NpcShoutDataTest,ShoutEventHandlerTest,
+MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,EffectControllerTest,PathGoldenDiffTest,PathDataTest,
+PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,
+GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，27 个测试类 303 例全绿**。
+
+#### 12.20.4 本类最后一批（下一轮）
+
+> 订正（见 12.21.3）：本节初稿把 `remove(key)` 也写成会抛异常。实测（本机 JDK 26.0.2.1）空表上的
+> `remove(key)`/`clear()` 都是**安全空操作**，只有两参数 `remove(key,value)`、`put`、`computeIfAbsent` 抛。
+> 守卫继续保留（占位符上跳过与执行等价，且不在共享实例上做变更），但理由不是"会抛"。
+
+
+`timers`/`spawned`（`HashMap`）、`intVars`（`HashMap`）、`selfManagedSpawns`/`flags`（`HashSet`）共 5 个普通容器
+≈ **21 MB**。与前面不同，这些可能被 AI 线程以外的生命周期回调访问，需先确认访问线程模型再决定用
+"volatile + 双检物化"（多线程）还是"仅 AI 线程、无需同步"（单线程）——越省同步越不能猜。
+
+### 12.21 第二十五轮：`RetailPatternAI2` 的五个普通容器改写时物化（D 切片七，本类收尾）
+
+承 12.20.4，本类剩下的五个普通容器（每实例 3 个 `HashMap` + 2 个 `HashSet`，而 `HashSet` 内部还各包一个
+`HashMap`）：
+
+```java
+private final Map<String, Future<?>> timers        = new HashMap<>();
+private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
+private final Map<String, Integer> intVars         = new HashMap<>();
+private final Set<VisibleObject> selfManagedSpawns = new HashSet<>();
+private final Set<String> flags                    = new HashSet<>();
+```
+
+97,764 个实例 × 7 个对象（5 个容器 + 2 个内嵌 HashMap）≈ **68 万个对象 ≈ 28 MB**（只计五个容器本身也有
+≈19 MB），而绝大多数实例从不写入。
+
+#### 12.21.1 先确认访问线程模型（不猜）
+
+结论：**不是 AI 单线程独占**，所以必须用 `volatile` + 双检物化，不能省同步：
+
+| 证据 | 说明 |
+|---|---|
+| `spawnAt` 尾部 `threadPoolManager().schedule(() -> despawnForLifecycle(spawned), liveTime * 1000)` | 到期任务在线程池执行，回调里 `selfManagedSpawns.remove(object)` / `forgetDelayedDespawn(object)` |
+| `despawnForLifecycle` 的 1s 重试分支 `schedule(() -> despawnForLifecycle(object), 1000)` | 同上，且可能在 AI 重置（`releaseTrackedSpawns`）正在进行时执行 |
+| `startWakeUpState` / `schedule(String timer, …)` | 两处 `timers.put` 均为"事件线程登记 + 池线程到期回调"模式 |
+| `threadPoolManager().schedule(...)` 包裹的延迟动作链（`queueDelayedActions` 等） | 动作链本身可能在线程池线程上继续执行 `spawn`/`despawn` 等写路径 |
+
+因此五个字段全部改为 `volatile` + `writableXxx()` 双检（`synchronized (this)`），保证**并发首次写入收敛到
+同一实例**——否则先登记的定时器/刷怪/标记位会落进被丢弃的容器而永久丢失（与 12.19 的三个 set 同因）。
+
+#### 12.21.2 为什么物化后仍用 `HashMap`/`HashSet`（不在这一轮顺手升级容器类型）
+
+- 本轮定义是**零判定变化的降本**：物化后容器类型与改动前完全一致 → 单线程语义逐字相同、并发语义与改动前
+  等价，唯一新增的要求就是上面的"首写收敛"。
+- 这些容器的**跨线程竞争是改动前就存在的**（`selfManagedSpawns` 的池线程 `remove` vs 事件线程 `add`），本轮
+  不引入、不放大；顺手升级成 `ConcurrentHashMap`/`newKeySet()` 属于另一个变更面（语义加固），应由独立证据
+  驱动，不混进"降本"提交。
+- 一个具体的语义红线：`SpawnEngine.spawnObject` 可能返回 `null`（代码里就按 `spawned == null` 打日志），而
+  `spawned == null && !trackedBySpawnId && liveTime == 0 && 生命周期结束事件链` 这种组合下只会走
+  `selfManagedSpawns.add(spawned)`：`HashSet` 允许存 `null`，`ConcurrentHashMap.newKeySet()` 会抛 NPE。换成
+  CHM 集合会把一个当前"能容忍"的边界变成事件链里的异常，违反"不能干扰正常功能"。
+
+#### 12.21.3 占位符变更语义实测（并订正 12.20）
+
+在本机 JDK（Zulu 26.0.2.1，与 JFR 采样同一套）上对 `Collections.emptyMap()`/`emptySet()` 逐项实测：
+
+| 调用 | 结果 |
+|---|---|
+| `emptyMap.clear()` | 安全空操作（`AbstractMap.clear` → 空 `entrySet` 迭代） |
+| `emptySet.clear()` | 安全空操作 |
+| `emptyMap.remove(key)` | **返回 `null`，不抛**（`AbstractMap.remove` 空迭代路径） |
+| `emptyMap.remove(key,value)` | 抛 `UnsupportedOperationException` |
+| `emptyMap.put(k,v)` / `computeIfAbsent` | 抛 `UnsupportedOperationException` |
+| `emptySet.remove(x)` / `removeIf` / `removeAll` / `retainAll` | 安全空操作（返回 `false`） |
+| `emptySet.add(x)` | 抛 `UnsupportedOperationException` |
+
+所以本轮只把**真实写入点**改走物化访问器；读与空操作（`remove`/`clear`/`values()` 遍历）保持原样，一行不动。
+12.20 节里"`remove(key)` 也会抛"的表述已在上方标注订正，代码注释同步改为实测结论。
+
+#### 12.21.4 改动清单
+
+| 容器 | 使用点 | 改动 |
+|---|---|---|
+| `timers` | `get`(1) / `values()`+`clear`(1) / `put`(2) | 2 处 `put` → `writableTimers()` |
+| `spawned` | `values()`+`removeIf`(1) / `remove(key)`(1) / `computeIfAbsent`(1) | 1 处 `computeIfAbsent` → `writableSpawned()` |
+| `selfManagedSpawns` | `contains`(1) / `remove`(4) / `add`(1) | 1 处 `add` → `writableSelfManagedSpawns()` |
+| `flags` | `remove`(1) / `clear`(1) / `add`(1) | 1 处 `add` → `writableFlags()` |
+| `intVars` | `clear`(1) / 六个 `*IntVar(map,…)` 求值点 | 6 处调用点传 `writableIntVars()` |
+
+读路径零改动：占位符即空容器，`get`/`contains`/`values()` 天然成立；`resetPatternState` 里的
+`timers.clear()`/`flags.clear()`/`intVars.clear()` 在占位符上是安全空操作，且**不把字段写回占位符**（其他线程
+可能仍持有已物化的引用）。
+
+#### 12.21.5 测试
+
+`RetailPatternAI2Test` 新增 4 例、修正 2 个助手：
+
+1. `emptyMapPlaceholderToleratesTheNoOpMutations`：把上表固化成契约（含三种必须物化的写入会抛异常）；
+2. `lazilyMaterialisedContainersAreSharedUntilTheFirstWrite`：未写入的两个实例必须**共享同一占位符**（即真的
+   没预制），首写后物化且反复取用返回同一实例；
+3. `concurrentFirstWritesConvergeOnOneContainer`：8 线程同时首写，五个访问器各自必须收敛到同一实例；
+4. `evaluatesIntegerVariablesOnTheLazilyMaterialisedMap`：端到端跑 `increase_intvar` +
+   `set_intvar_if_larger_than` 规则，断言变量表 `{INTVARI_PHASE=3}`——若漏改调用点，空表上 `put` 会立刻抛
+   `UnsupportedOperationException`。
+5. 测试助手 `spawned(ai)`/`selfManagedSpawns(ai)`/`pendingCutsceneTeleports(ai)` 原来直接反射拿字段（或替换字段）
+   铺数据，现在统一改为走生产的物化访问器（与 12.20.2 的 fail-fast 思路一致；`ConcurrentHashMap` 的测试侧重复
+   也随之消失）。
+
+#### 12.21.6 验证（待授权执行）
+
+```
+mvn -Dtest=RetailPatternAI2Test,ObserveControllerTest,ObserveControllerAttackContextTest,ObserveControllerLifeChangedTest,
+AbstractCollisionObserverTest,NpcLifeStatsTest,NpcGameStatsTest,CreatureGameStatsBytecodeTest,KnownListTest,
+KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,NpcShoutDataTest,ShoutEventHandlerTest,
+MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,EffectControllerTest,PathGoldenDiffTest,PathDataTest,
+PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,
+GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+
+→ **BUILD SUCCESS，27 个测试类 307 例全绿**（`RetailPatternAI2Test` 84 例）。
+
+注：首轮曾失败 1 例——我新写的 `evaluatesIntegerVariablesOnTheLazilyMaterialisedMap` 把两条 intvar 条件拆成了两条规则，
+而 `runEvent` 命中**首个**匹配规则后即 `return`，第二条永远不会被求值。这是测试写法问题（不是生产缺陷），把两条条件
+合并进同一条规则按序求值后复跑全绿；该结论已写进用例注释。
+
+#### 12.21.7 D 项剩余与收尾
+
+本类五个普通容器完成后，`RetailPatternAI2` 的每实例容器预估已从 12.19 之前的 ≈130 MB 级降到"仅实际使用才
+分配"。D 项剩下的候选（按 play-15 class histogram）：
+
+- `AggroList`/`AbstractAI` 各自的 COW 列表 ≈ 6 MB（12.18 已处理 `ObserveController` 的两个同源列表）；
+- `CreatureGameStats` 的 `ReentrantReadWriteLock`（127k 套 ≈ 15 MB）+ 其内部 map ≈ 8 MB；
+- `CreatureGameStats` 的 `TreeSet<IStatFunction>`（92k 个 ≈ 22 MB，`TreeMap` + Entry 560k）。
+
+收尾建议：重启后用 `jcmd <pid> GC.class_histogram` 复核统一口径，再决定是否继续 D。

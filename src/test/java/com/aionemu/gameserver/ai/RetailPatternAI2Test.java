@@ -58,9 +58,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 class RetailPatternAI2Test {
 	@Test
@@ -77,6 +84,101 @@ class RetailPatternAI2Test {
 		assertFalse(placeholder.retainAll(Set.of("x")));
 		assertDoesNotThrow(placeholder::clear);
 		assertTrue(placeholder.isEmpty());
+	}
+
+	@Test
+	void emptyMapPlaceholderToleratesTheNoOpMutations() {
+		// timers/spawned/intVars 默认指向共享空表，而 clear()/remove(key)/values().removeIf 仍直接作用在该字段上：
+		// 这里把「空表上这些调用是安全空操作」固化为契约，同时钉住必须改走物化访问器的三种写入
+		// （put/computeIfAbsent 与两参数 remove(key,value) 会抛 UnsupportedOperationException）。
+		// RetailPatternAI2 keeps those maps on a shared empty placeholder while clear()/remove(key)/values().removeIf
+		// still target the field; pin that contract, and pin the three write shapes that must materialise instead.
+		Map<String, String> placeholder = Collections.emptyMap();
+		assertDoesNotThrow(placeholder::clear);
+		assertNull(placeholder.remove("x"));
+		assertFalse(placeholder.values().removeIf("x"::equals));
+		assertTrue(placeholder.isEmpty());
+		assertThrows(UnsupportedOperationException.class, () -> placeholder.put("x", "y"));
+		assertThrows(UnsupportedOperationException.class, () -> placeholder.computeIfAbsent("x", key -> "y"));
+		assertThrows(UnsupportedOperationException.class, () -> placeholder.remove("x", "y"));
+	}
+
+	@Test
+	void lazilyMaterialisedContainersAreSharedUntilTheFirstWrite() throws ReflectiveOperationException {
+		// 五个容器在首次写入前必须保持共享占位符（否则又回到每个实例预制容器），写入后才各自独立、且反复取用同一实例。
+		// The five containers must stay on the shared placeholder until the first write, then become per-instance and
+		// keep returning that one instance.
+		RetailPatternAI2 untouched = new RetailPatternAI2();
+		RetailPatternAI2 other = new RetailPatternAI2();
+		String[][] accessors = { { "timers", "writableTimers" }, { "spawned", "writableSpawned" },
+			{ "selfManagedSpawns", "writableSelfManagedSpawns" }, { "flags", "writableFlags" },
+			{ "intVars", "writableIntVars" } };
+		for (String[] pair : accessors) {
+			assertSame(fieldValue(untouched, pair[0]), fieldValue(other, pair[0]), pair[0] + " 未写入前应共享同一占位符");
+			assertNotSame(fieldValue(untouched, pair[0]), writable(untouched, pair[1]), pair[0] + " 首次写入应物化");
+			assertSame(writable(untouched, pair[1]), writable(untouched, pair[1]),
+				pair[0] + " 物化后必须始终返回同一实例");
+		}
+	}
+
+	@Test
+	void concurrentFirstWritesConvergeOnOneContainer() throws Exception {
+		// 这五个容器会被线程池任务（例如 despawnForLifecycle 的到期任务）与 AI 事件线程并发触达：首次物化必须收敛到
+		// 同一实例，否则先写入的登记（定时器、刷怪、标记位、整型变量）会落进被丢弃的容器而永久丢失。
+		// Those five containers are reached concurrently by pool tasks and AI event threads, so the first
+		// materialisation must converge on one instance or the first entries land in a discarded container.
+		String[] accessors = { "writableTimers", "writableSpawned", "writableSelfManagedSpawns", "writableFlags",
+			"writableIntVars" };
+		for (String accessor : accessors) {
+			RetailPatternAI2 ai = new RetailPatternAI2();
+			int threads = 8;
+			ExecutorService pool = Executors.newFixedThreadPool(threads);
+			CountDownLatch start = new CountDownLatch(1);
+			List<Future<Object>> results = new ArrayList<>();
+			try {
+				for (int thread = 0; thread < threads; thread++) {
+					results.add(pool.submit(() -> {
+						start.await();
+						return writable(ai, accessor);
+					}));
+				}
+				start.countDown();
+				Object first = results.get(0).get(30, TimeUnit.SECONDS);
+				for (Future<Object> result : results) {
+					assertSame(first, result.get(30, TimeUnit.SECONDS), accessor + " 的并发首次物化必须收敛到同一实例");
+				}
+			} finally {
+				pool.shutdownNow();
+			}
+		}
+	}
+
+	@Test
+	void evaluatesIntegerVariablesOnTheLazilyMaterialisedMap() throws ReflectiveOperationException {
+		// 整型变量表也懒物化：条件求值必须经物化访问器传入，否则在共享空表上 put 会抛 UnsupportedOperationException。
+		// The integer-variable map is lazy too: condition evaluation must pass the materialising accessor, otherwise the
+		// put on the shared empty map throws UnsupportedOperationException.
+		// runEvent 命中首个匹配规则后就返回，所以两条条件必须放在同一条规则里按序求值（否则第二条不会被求值）。
+		// runEvent returns after the first matching rule, so both conditions live in one rule, evaluated in order.
+		Rule rule = new Rule(1, "INSTANT",
+			List.of(
+				new Operation("increase_intvar", Map.of("intvar_indicator", "INTVARI_PHASE", "lower_bound", "0",
+					"upper_bound", "3", "be_true_only_when_hit_the_bound", "FALSE")),
+				new Operation("set_intvar_if_larger_than", Map.of("intvar_indicator", "INTVARI_PHASE",
+					"intvar_to_set", "3", "comparand", "0"))),
+			List.of(new Operation("do_nothing", Map.of())));
+		Pattern pattern = new Pattern("intvar", Map.of("on_quit_cutscene", List.of(rule)));
+		ObjenesisStd objenesis = new ObjenesisStd();
+		MasterNpc owner = objenesis.newInstance(MasterNpc.class);
+		owner.setLifeStats(objenesis.newInstance(NpcLifeStats.class));
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+		setField(RetailPatternAI2.class, ai, "pattern", pattern);
+
+		assertTrue(RetailPatternAI2.supports(pattern));
+		ai.onQuitCutscene(objenesis.newInstance(Player.class), 914);
+
+		assertEquals(Map.of("INTVARI_PHASE", 3), intVars(ai));
 	}
 
 	@Test
@@ -2023,23 +2125,38 @@ class RetailPatternAI2Test {
 
 	@SuppressWarnings("unchecked")
 	private static Map<Integer, Object> pendingCutsceneTeleports(RetailPatternAI2 ai) throws ReflectiveOperationException {
-		Field field = RetailPatternAI2.class.getDeclaredField("pendingCutsceneTeleports");
-		field.setAccessible(true);
-		return (Map<Integer, Object>) field.get(ai);
+		// 生产代码懒物化这张表（默认是共享空表，不可写），铺数据同样经生产的物化访问器。
+		// The production map is materialised lazily, so seeding goes through the production accessor as well.
+		return (Map<Integer, Object>) writable(ai, "writablePendingCutsceneTeleports");
 	}
 
 	@SuppressWarnings("unchecked")
 	private static Map<String, List<VisibleObject>> spawned(RetailPatternAI2 ai) throws ReflectiveOperationException {
-		Field field = RetailPatternAI2.class.getDeclaredField("spawned");
-		field.setAccessible(true);
-		return (Map<String, List<VisibleObject>>) field.get(ai);
+		// 生产代码懒物化这张表（默认是共享空表，不可写），铺数据时经生产的物化访问器取可写表。
+		// The production map is materialised lazily, so seeding it goes through the production accessor.
+		return (Map<String, List<VisibleObject>>) writable(ai, "writableSpawned");
 	}
 
 	@SuppressWarnings("unchecked")
 	private static Set<VisibleObject> selfManagedSpawns(RetailPatternAI2 ai) throws ReflectiveOperationException {
-		Field field = RetailPatternAI2.class.getDeclaredField("selfManagedSpawns");
+		return (Set<VisibleObject>) writable(ai, "writableSelfManagedSpawns");
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Map<String, Integer> intVars(RetailPatternAI2 ai) throws ReflectiveOperationException {
+		return (Map<String, Integer>) fieldValue(ai, "intVars");
+	}
+
+	private static Object writable(RetailPatternAI2 ai, String accessor) throws ReflectiveOperationException {
+		Method method = RetailPatternAI2.class.getDeclaredMethod(accessor);
+		method.setAccessible(true);
+		return method.invoke(ai);
+	}
+
+	private static Object fieldValue(Object target, String name) throws ReflectiveOperationException {
+		Field field = RetailPatternAI2.class.getDeclaredField(name);
 		field.setAccessible(true);
-		return (Set<VisibleObject>) field.get(ai);
+		return field.get(target);
 	}
 
 	@SuppressWarnings("unchecked")

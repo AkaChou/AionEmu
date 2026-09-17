@@ -200,7 +200,34 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * Worlds that require a world-scene consumer.
 	 */
 	private static final Set<Integer> WORLD_SCENE_WORLDS = Set.of(300300000, 300320000);
-	private final Map<String, Future<?>> timers = new HashMap<>();
+	/**
+	 * 共享空容器占位符（范式同上面的三个集合）：本服 97,764 个 AI 实例原本各自预制五个容器——{@code timers}、
+	 * {@code spawned}、{@code intVars} 三个 {@code HashMap}，{@code selfManagedSpawns}、{@code flags} 两个
+	 * {@code HashSet}（每个 {@code HashSet} 内部还包一个 {@code HashMap}），而绝大多数实例从不写入：合计
+	 * ≈68 万个对象 / ≈28 MB（只计五个容器本身也有 ≈19 MB）。它们改为首次写入时才物化，读路径照常读字段
+	 * （读到占位符即空容器），物化后的容器类型与改动前完全一致，因此并发语义与改动前等价，唯一新增的要求是
+	 * 「并发首次写入收敛到同一实例」。
+	 * <p>占位符的变更语义与 {@code Collections.emptySet()} 不同，而且三种变更并不一致：空表上的
+	 * {@code remove(key)} 与 {@code clear()} 是安全空操作（走 {@code AbstractMap}/{@code AbstractCollection}
+	 * 的空迭代路径），而 {@code put}、{@code computeIfAbsent} 与两参数 {@code remove(key,value)} 抛
+	 * {@code UnsupportedOperationException}。因此只把真实写入点（{@code add}/{@code put}/{@code computeIfAbsent}）
+	 * 改走物化访问器，读与空操作保持原样。
+	 * Shared empty placeholders for the five per-instance containers most AI instances never write (≈0.68M objects /
+	 * ≈28 MB over 97,764 instances in play-15). They are materialised on the first write; reads keep reading the
+	 * field, where the placeholder means "empty". The materialised containers keep their original types, so the
+	 * concurrent behaviour is the same as before — the only new requirement is that concurrent first writes converge
+	 * on one instance. On the placeholder only put/computeIfAbsent/remove(key,value) throw while remove(key)/clear()
+	 * are safe no-ops, so only the genuine write sites go through the materialising accessors.
+	 */
+	private static final Map<String, Future<?>> EMPTY_TIMERS = Collections.emptyMap();
+	private static final Map<String, List<VisibleObject>> EMPTY_SPAWNED = Collections.emptyMap();
+	private static final Set<VisibleObject> EMPTY_SELF_MANAGED_SPAWNS = Collections.emptySet();
+	private static final Set<String> EMPTY_FLAGS = Collections.emptySet();
+	private static final Map<String, Integer> EMPTY_INT_VARS = Collections.emptyMap();
+
+	// 每实例定时器登记表（懒物化；定时器到期任务由线程池执行，因此与事件线程并发触达）。
+	// Per-instance timer registry, materialised lazily (expiry tasks run on the thread pool, so they race event threads).
+	private volatile Map<String, Future<?>> timers = EMPTY_TIMERS;
 	/**
 	 * 共享空集合占位符：绝大多数 AI 实例从不使用这些运行时集合，但每个实例（97,764 个）原本都预制
 	 * 三个 {@code ConcurrentHashMap.newKeySet()} —— 每个实际是 CHM + KeySetView 两个对象
@@ -216,18 +243,36 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private volatile Set<Future<?>> actionTasks = EMPTY_ACTION_TASKS;
 	// 含 despawn_self 的延迟动作链在回位时保留。 / Delayed action chains containing despawn_self survive return-home.
 	private volatile Set<Future<?>> terminalActionTasks = EMPTY_ACTION_TASKS;
-	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
-	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
+	// 按 spawn_id 登记的临时刷怪（懒物化）。 / Temporary spawns keyed by spawn_id, materialised lazily.
+	private volatile Map<String, List<VisibleObject>> spawned = EMPTY_SPAWNED;
+	/**
+	 * 共享空表占位符（与上面的三个集合同理）：97,764 个 AI 实例原本都预制
+	 * `despawnAtAttackState`/`gaugeObservers`/`pendingCutsceneTeleports` 三张 CHM，而多数实例从不使用。
+	 * 只读路径（get/getOrDefault/forEach）照常读字段；只有真实写入（put/computeIfAbsent）才物化。
+	 * 占位符上的 remove(key)/clear() 是安全空操作，但两参数 remove(key,value) 抛
+	 * UnsupportedOperationException（JDK 实测），因此延迟消失表与待传送表只在非占位符时才真正移除。
+	 * Shared empty placeholders for the three maps below: most AI instances never use them, so they start on a
+	 * shared empty map. Reads keep reading the field and only real writes materialise. remove(key)/clear() are safe
+	 * no-ops on the placeholder while the two-argument remove(key,value) throws, so the delayed-despawn and
+	 * pending-teleport removals only touch an already materialised map.
+	 */
+	private static final Map<VisibleObject, Boolean> EMPTY_DESPAWN_STATES = Collections.emptyMap();
+	private static final Map<Player, ItemUseObserver> EMPTY_GAUGE_OBSERVERS = Collections.emptyMap();
+	private static final Map<Integer, PendingCutsceneTeleport> EMPTY_PENDING_TELEPORTS = Collections.emptyMap();
+
+	private volatile Map<VisibleObject, Boolean> despawnAtAttackState = EMPTY_DESPAWN_STATES;
 	// 生命周期独立于生成者状态重置的子对象：自带 live_time 的由到期任务管理；生成者死亡/消失事件链里生成的
 	// 子对象（例如死亡后才现身的对话 NPC）没有到期任务，但同样不能在生成者重置时被删除。
 	// Spawns whose lifetime is independent of the spawner's state reset: own live_time tasks, plus children spawned by
 	// the spawner's death/despawn event chains (they have no expiry task but must not die with the spawner).
-	private final Set<VisibleObject> selfManagedSpawns = new HashSet<>();
-	private final Set<String> flags = new HashSet<>();
-	private final Map<String, Integer> intVars = new HashMap<>();
+	private volatile Set<VisibleObject> selfManagedSpawns = EMPTY_SELF_MANAGED_SPAWNS;
+	// pattern 标记位（懒物化）。 / Pattern flags, materialised lazily.
+	private volatile Set<String> flags = EMPTY_FLAGS;
+	// 整型变量（懒物化）。 / Integer variables, materialised lazily.
+	private volatile Map<String, Integer> intVars = EMPTY_INT_VARS;
 	private volatile Set<Integer> usersInSensoryArea = EMPTY_SENSORY_USERS;
-	private final Map<Player, ItemUseObserver> gaugeObservers = new ConcurrentHashMap<>();
-	private final Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = new ConcurrentHashMap<>();
+	private volatile Map<Player, ItemUseObserver> gaugeObservers = EMPTY_GAUGE_OBSERVERS;
+	private volatile Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = EMPTY_PENDING_TELEPORTS;
 	/**
 	 * 物化延迟动作集合：双检 + {@code synchronized (this)}，保证并发首次写入收敛到同一个集合
 	 * （否则先加入的任务会落进被丢弃的集合，之后无法取消）。
@@ -284,6 +329,174 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				usersInSensoryArea = ConcurrentHashMap.newKeySet();
 			}
 			return usersInSensoryArea;
+		}
+	}
+
+	/**
+	 * 物化延迟消失表：双检 + {@code synchronized (this)}，并发首次写入收敛到同一张表。
+	 * Materialises the delayed-despawn map with a double-checked {@code synchronized (this)}.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<VisibleObject, Boolean> writableDespawnStates() {
+		Map<VisibleObject, Boolean> current = despawnAtAttackState;
+		if (current != EMPTY_DESPAWN_STATES) {
+			return current;
+		}
+		synchronized (this) {
+			if (despawnAtAttackState == EMPTY_DESPAWN_STATES) {
+				despawnAtAttackState = new ConcurrentHashMap<>();
+			}
+			return despawnAtAttackState;
+		}
+	}
+
+	/**
+	 * 物化道具使用观察者表（范式同 {@link #writableDespawnStates()}）。
+	 * Materialises the item-use observer map like {@link #writableDespawnStates()}.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<Player, ItemUseObserver> writableGaugeObservers() {
+		Map<Player, ItemUseObserver> current = gaugeObservers;
+		if (current != EMPTY_GAUGE_OBSERVERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (gaugeObservers == EMPTY_GAUGE_OBSERVERS) {
+				gaugeObservers = new ConcurrentHashMap<>();
+			}
+			return gaugeObservers;
+		}
+	}
+
+	/**
+	 * 物化待传送表（范式同 {@link #writableDespawnStates()}）。
+	 * Materialises the pending-cutscene-teleport map like {@link #writableDespawnStates()}.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<Integer, PendingCutsceneTeleport> writablePendingCutsceneTeleports() {
+		Map<Integer, PendingCutsceneTeleport> current = pendingCutsceneTeleports;
+		if (current != EMPTY_PENDING_TELEPORTS) {
+			return current;
+		}
+		synchronized (this) {
+			if (pendingCutsceneTeleports == EMPTY_PENDING_TELEPORTS) {
+				pendingCutsceneTeleports = new ConcurrentHashMap<>();
+			}
+			return pendingCutsceneTeleports;
+		}
+	}
+
+	/**
+	 * 物化定时器登记表：双检 + {@code synchronized (this)}，并发首次写入收敛到同一张表
+	 * （否则先登记的定时器会落进被丢弃的表，之后无法取消）。
+	 * Materialises the timer registry with a double-checked {@code synchronized (this)} so concurrent first writes
+	 * converge on one map; otherwise the first timers would land in a discarded map and never cancel.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<String, Future<?>> writableTimers() {
+		Map<String, Future<?>> current = timers;
+		if (current != EMPTY_TIMERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (timers == EMPTY_TIMERS) {
+				timers = new HashMap<>();
+			}
+			return timers;
+		}
+	}
+
+	/**
+	 * 物化临时刷怪登记表（范式同 {@link #writableTimers()}）。
+	 * Materialises the tracked-spawn map like {@link #writableTimers()}.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<String, List<VisibleObject>> writableSpawned() {
+		Map<String, List<VisibleObject>> current = spawned;
+		if (current != EMPTY_SPAWNED) {
+			return current;
+		}
+		synchronized (this) {
+			if (spawned == EMPTY_SPAWNED) {
+				spawned = new HashMap<>();
+			}
+			return spawned;
+		}
+	}
+
+	/**
+	 * 物化自管理子对象登记表（范式同 {@link #writableTimers()}）。
+	 * Materialises the self-managed spawn set like {@link #writableTimers()}.
+	 *
+	 * @return 可写集合 / writable set
+	 */
+	private Set<VisibleObject> writableSelfManagedSpawns() {
+		Set<VisibleObject> current = selfManagedSpawns;
+		if (current != EMPTY_SELF_MANAGED_SPAWNS) {
+			return current;
+		}
+		synchronized (this) {
+			if (selfManagedSpawns == EMPTY_SELF_MANAGED_SPAWNS) {
+				selfManagedSpawns = new HashSet<>();
+			}
+			return selfManagedSpawns;
+		}
+	}
+
+	/**
+	 * 物化 pattern 标记位集合（范式同 {@link #writableTimers()}）。
+	 * Materialises the pattern-flag set like {@link #writableTimers()}.
+	 *
+	 * @return 可写集合 / writable set
+	 */
+	private Set<String> writableFlags() {
+		Set<String> current = flags;
+		if (current != EMPTY_FLAGS) {
+			return current;
+		}
+		synchronized (this) {
+			if (flags == EMPTY_FLAGS) {
+				flags = new HashSet<>();
+			}
+			return flags;
+		}
+	}
+
+	/**
+	 * 物化整型变量表（范式同 {@link #writableTimers()}）。
+	 * Materialises the integer-variable map like {@link #writableTimers()}.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<String, Integer> writableIntVars() {
+		Map<String, Integer> current = intVars;
+		if (current != EMPTY_INT_VARS) {
+			return current;
+		}
+		synchronized (this) {
+			if (intVars == EMPTY_INT_VARS) {
+				intVars = new HashMap<>();
+			}
+			return intVars;
+		}
+	}
+
+	/**
+	 * 从延迟消失表移除：仍是空占位符时直接跳过（该对象本来就不在表里，跳过等价于移除，也不在共享实例上做变更）。
+	 * Removes from the delayed-despawn map, skipping the placeholder (the object cannot be in it, so skipping is
+	 * equivalent and the shared instance stays untouched).
+	 *
+	 * @param object 目标对象 / target object
+	 */
+	private void forgetDelayedDespawn(VisibleObject object) {
+		Map<VisibleObject, Boolean> delayed = despawnAtAttackState;
+		if (delayed != EMPTY_DESPAWN_STATES) {
+			delayed.remove(object);
 		}
 	}
 
@@ -674,7 +887,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private void startWakeUpState() {
 		long until = System.nanoTime() + 5_000_000_000L;
 		wakeUpUntil = until;
-		Future<?> previous = timers.put(WAKE_UP_TIMER,
+		Future<?> previous = writableTimers().put(WAKE_UP_TIMER,
 			GameThreadPoolServices.threadPoolManager().schedule(() -> leaveWakeUpState(until), 5000));
 		if (previous != null) {
 			previous.cancel(false);
@@ -778,7 +991,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				abort();
 			}
 		};
-		gaugeObservers.put(player, observer);
+		writableGaugeObservers().put(player, observer);
 		player.getObserveController().addObserver(observer);
 		PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), delay, 1));
 		PacketSendUtility.broadcastPacket(player,
@@ -789,7 +1002,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void stopGauge(Player player, ItemUseObserver observer) {
-		if (!gaugeObservers.remove(player, observer)) {
+		Map<Player, ItemUseObserver> registered = gaugeObservers;
+		if (registered == EMPTY_GAUGE_OBSERVERS || !registered.remove(player, observer)) {
 			return;
 		}
 		player.getController().cancelTask(TaskId.ACTION_ITEM_NPC);
@@ -801,7 +1015,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void finishGauge(Player player, ItemUseObserver observer, int delay) {
-		if (!gaugeObservers.remove(player, observer)) {
+		Map<Player, ItemUseObserver> registered = gaugeObservers;
+		if (registered == EMPTY_GAUGE_OBSERVERS || !registered.remove(player, observer)) {
 			return;
 		}
 		player.getController().cancelTask(TaskId.ACTION_ITEM_NPC);
@@ -970,9 +1185,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private String consumePendingCutsceneTeleport(int playerObjectId, int cutsceneId) {
-		PendingCutsceneTeleport pending = pendingCutsceneTeleports.get(playerObjectId);
-		return pending != null && pending.cutsceneId() == cutsceneId
-			&& pendingCutsceneTeleports.remove(playerObjectId, pending) ? pending.alias() : null;
+		Map<Integer, PendingCutsceneTeleport> teleports = pendingCutsceneTeleports;
+		PendingCutsceneTeleport pending = teleports.get(playerObjectId);
+		if (pending == null || pending.cutsceneId() != cutsceneId || teleports == EMPTY_PENDING_TELEPORTS) {
+			return null;
+		}
+		return teleports.remove(playerObjectId, pending) ? pending.alias() : null;
 	}
 
 	@Override
@@ -1277,7 +1495,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				}
 				case "is_battle_timer_indicator" -> value(condition, "btimer_indicator").equals(timer);
 				case "test_probability" -> Rnd.chance(integer(condition, "percent"));
-				case "set_flag_var" -> flags.add(value(condition, "flagvar_indicator"));
+				case "set_flag_var" -> writableFlags().add(value(condition, "flagvar_indicator"));
 				case "unset_flag_var" -> flags.remove(value(condition, "flagvar_indicator"));
 				case "is_skill_count_left" -> {
 					NpcSkillEntry skill = skill(condition);
@@ -1311,12 +1529,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					yield object != null && matchesDistance(object, decimal(condition, "distance"),
 						condition.type().equals("is_distance_shorter_than"));
 				}
-				case "increase_intvar" -> increaseIntVar(intVars, value(condition, "intvar_indicator"),
+				case "increase_intvar" -> increaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "lower_bound"), integer(condition, "upper_bound"),
 					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				case "set_intvar_if_larger_than" -> setIntVar(intVars, value(condition, "intvar_indicator"),
+				case "set_intvar_if_larger_than" -> setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "intvar_to_set"), integer(condition, "comparand"), true);
-				case "set_intvar_if_less_than" -> setIntVar(intVars, value(condition, "intvar_indicator"),
+				case "set_intvar_if_less_than" -> setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "intvar_to_set"), integer(condition, "comparand"), false);
 				case "is_npc_state" -> value(condition, "who").equals("NPCI_SELF")
 					&& matchesNpcState(getState(), getSubState(), value(condition, "state"),
@@ -1335,10 +1553,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				case "is_tribe" -> matchesTribe(resolveObject(value(condition, "target"), eventTarget, message),
 					value(condition, "tribe_name"));
 				case "is_abnormal_state" -> matchesRetailAbnormal(eventAbnormalState, value(condition, "abnormal_state"));
-				case "add_intvar" -> addIntVar(intVars, value(condition, "intvar_indicator"),
+				case "add_intvar" -> addIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "var_to_add"), integer(condition, "lower_bound"), integer(condition, "upper_bound"),
 					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				case "decrease_intvar" -> decreaseIntVar(intVars, value(condition, "intvar_indicator"),
+				case "decrease_intvar" -> decreaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "lower_bound"), integer(condition, "upper_bound"),
 					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
 				case "is_user_level" -> resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
@@ -1351,7 +1569,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				}
 				case "is_world_flag_var" -> RetailConditionSpawnEngine.testFlag(getPosition().getWorldMapInstance(),
 					value(condition, "flagvar_indicator"), Boolean.parseBoolean(value(condition, "flag_expected")));
-				case "sub_intvar" -> subIntVar(intVars, value(condition, "intvar_indicator"),
+				case "sub_intvar" -> subIntVar(writableIntVars(), value(condition, "intvar_indicator"),
 					integer(condition, "var_to_sub"), integer(condition, "lower_bound"),
 					integer(condition, "upper_bound"),
 					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
@@ -1754,7 +1972,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		int cutsceneId = integer(action, "cutscene_id");
 		String teleportAlias = value(action, "teleport_alias");
 		if (!teleportAlias.isBlank()) {
-			pendingCutsceneTeleports.put(player.getObjectId(), new PendingCutsceneTeleport(cutsceneId, teleportAlias));
+			writablePendingCutsceneTeleports().put(player.getObjectId(), new PendingCutsceneTeleport(cutsceneId, teleportAlias));
 		}
 		SM_PLAY_MOVIE movie = new SM_PLAY_MOVIE(0, 0, cutsceneId, 0, getObjectId());
 		switch (value(action, "play_target_type")) {
@@ -2308,7 +2526,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			previous.cancel(false);
 		}
 		if (delay > 0 || !zeroCancels) {
-			timers.put(timer, GameThreadPoolServices.threadPoolManager()
+			writableTimers().put(timer, GameThreadPoolServices.threadPoolManager()
 				.schedule(() -> runEvent(event, timer, eventTarget, message), delay));
 		}
 	}
@@ -2490,13 +2708,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			boolean trackedBySpawnId = !value(action, "spawn_id").equals("SPAWN_ID_NONE");
 			int liveTime = integer(action, "live_time");
 			if (trackedBySpawnId || liveTime > 0) {
-				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
+				writableDespawnStates().put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
 			}
 			if (hasIndependentLifetime(liveTime, spawnerEndEventInProgress)) {
-				selfManagedSpawns.add(spawned);
+				writableSelfManagedSpawns().add(spawned);
 			}
 			if (trackedBySpawnId) {
-				this.spawned.computeIfAbsent(value(action, "spawn_id"), _ -> new ArrayList<>()).add(spawned);
+				writableSpawned().computeIfAbsent(value(action, "spawn_id"), _ -> new ArrayList<>()).add(spawned);
 			}
 			if (attackTarget != null && spawned instanceof Npc npc && value(action, "attack_target_after_spawn").equals("TRUE")) {
 				npc.getAggroList().addHate(attackTarget, integer(action, "hatepoints_to_add"));
@@ -2509,7 +2727,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private void despawnForLifecycle(VisibleObject object) {
 		if (!object.isSpawned()) {
-			despawnAtAttackState.remove(object);
+			forgetDelayedDespawn(object);
 			selfManagedSpawns.remove(object);
 			return;
 		}
@@ -2519,7 +2737,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(object), 1000);
 			return;
 		}
-		despawnAtAttackState.remove(object);
+		forgetDelayedDespawn(object);
 		selfManagedSpawns.remove(object);
 		object.getController().onDelete();
 	}
@@ -2590,7 +2808,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		List<VisibleObject> objects = spawned.remove(value(action, "spawn_id"));
 		if (objects != null) {
 			objects.forEach(object -> {
-				despawnAtAttackState.remove(object);
+				forgetDelayedDespawn(object);
 				selfManagedSpawns.remove(object);
 				if (object.isSpawned()) {
 					object.getController().onDelete();
@@ -2611,7 +2829,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			float dx = npc.getX() - getOwner().getX();
 			float dy = npc.getY() - getOwner().getY();
 			if (npc.isSpawned() && dx * dx + dy * dy < radius * radius) {
-				despawnAtAttackState.remove(npc);
+				forgetDelayedDespawn(npc);
 				selfManagedSpawns.remove(npc);
 				npc.getController().onDelete();
 				if (++count == maxCount) {
@@ -3128,7 +3346,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		fleeMoveTask = null;
 		fleeStopTask = null;
 		releaseTrackedSpawns();
-		pendingCutsceneTeleports.clear();
+		Map<Integer, PendingCutsceneTeleport> teleports = pendingCutsceneTeleports;
+		if (teleports != EMPTY_PENDING_TELEPORTS) {
+			teleports.clear();
+		}
 		flags.clear();
 		intVars.clear();
 		fighting = false;
