@@ -6,12 +6,6 @@
       <race id="ELYOS"/>
     </races>
 
-    <items>
-      <item id="152000601" count="15"/>
-      <item id="182206040" count="10"/>
-      <item id="182206041" count="10"/>
-    </items>
-
     <work-items>
       <item id="182215758" count="1"/>
     </work-items>

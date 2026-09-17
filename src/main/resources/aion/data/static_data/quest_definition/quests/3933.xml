@@ -4,9 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <items>
-      <item id="182206087" count="1"/>
-    </items>
     <work-items>
       <item id="182206086" count="1"/>
       <item id="182206087" count="1"/>

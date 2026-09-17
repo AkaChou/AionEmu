@@ -180,6 +180,11 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItems(catalog, 4217, Map.of(182209110, 3));
 		assertTurnInItems(catalog, 28739, Map.of(182215695, 5));
 		assertTurnInItems(catalog, 28740, Map.of(182215696, 8));
+		// 30756/15335/25335/19064：消除收集/制作道具与交付边的错配与漏洞，严格校验本任务真端道具
+		assertTurnInItems(catalog, 30756, Map.of(182213266, 3));
+		assertTurnInItems(catalog, 15335, Map.of(182215924, 1));
+		assertTurnInItems(catalog, 25335, Map.of(182215926, 1));
+		assertTurnInItems(catalog, 19064, Map.of(182213237, 1, 186000081, 1));
 	}
 
 	/**

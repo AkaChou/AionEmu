@@ -5,20 +5,18 @@
       <race id="ASMODIANS"/>
     </races>
     <items>
-      <item id="182213260" count="3"/>
-    
       <item id="182213266" count="3"/>
-      </items>
+    </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="331020"/>
       <reward kind="EXP" id="0" amount="7086913"/>
       <reward kind="ITEM" id="169000010" amount="761"/>
     </rewards>
     <drops>
-      <drop npc-id="219374" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="219375" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="219376" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="219377" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219374" item-id="182213266" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219375" item-id="182213266" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219376" item-id="182213266" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219377" item-id="182213266" chance="100" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -115,16 +113,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="804871" source="started" target="reward" item-id="182213260" required="3" failure-page="CLOSE"/>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804871" action="SET_SUCCEED"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-item-report npc-id="804871" source="started" target="reward" item-id="182213266" required="3" failure-page="CLOSE"/>
     <npc-complete npc-id="804871" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
@@ -136,6 +125,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-  <npc-item-report npc-id="800368" source="started" target="reward" item-id="182213260" required="3" failure-page="CLOSE"/>
+  <npc-item-report npc-id="800368" source="started" target="reward" item-id="182213266" required="3" failure-page="CLOSE"/>
   </transitions>
 </quest-definition>

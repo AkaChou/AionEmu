@@ -39,13 +39,36 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
-    <!-- 客户端 select_success 按钮 1009 触发 check_item 检查：集齐进 REWARD+奖励窗，不足显示 check_user_item_fail，FINISH_DIALOG 关闭。 -->
+    <!-- 客户端 select1 按钮 39 (CHECK_USER_HAS_QUEST_ITEM) 校验幸运箱子(182215924)：集齐进 REWARD+页 10000，不足页 10001。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805738" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805738" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215924" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215924" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805738" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
@@ -53,10 +76,10 @@
         <dialog type="TALK_TO_NPC" npc-id="805738" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <has-item item-id="186000080" count="1"/>
+        <has-item item-id="182215924" count="1"/>
       </conditions>
       <actions>
-        <remove-item item-id="186000080" count="1"/>
+        <remove-item item-id="182215924" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -77,6 +100,14 @@
       </event>
       <after-commit>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805738" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition></transitions>
 </quest-definition>

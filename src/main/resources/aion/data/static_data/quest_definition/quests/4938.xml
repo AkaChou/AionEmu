@@ -4,9 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <items>
-      <item id="182207115" count="1"/>
-    </items>
     <work-items>
       <item id="182207114" count="1"/>
       <item id="182207115" count="1"/>

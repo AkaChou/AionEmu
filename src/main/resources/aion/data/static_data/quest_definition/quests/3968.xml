@@ -5,12 +5,6 @@
       <race id="ELYOS"/>
     </races>
     <gender id="MALE"/>
-    <items>
-      <item id="182206123" count="1"/>
-    
-      <item id="182206124" count="1"/>
-      <item id="182206125" count="1"/>
-      </items>
     <work-items>
       <item id="182206123" count="1"/>
       <item id="182206124" count="1"/>
