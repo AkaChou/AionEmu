@@ -216,6 +216,12 @@ class QuestRetailStartMetadataGateTest {
 			Integer.parseInt(metadata.getAttribute("max-level")), races, gender, maxRepeat);
 	}
 
+	/** 供同类门禁复用：解析任务 XML 文档根。 */
+	static org.w3c.dom.Document parseQuestXml(int questId) throws Exception {
+		return parseXml(
+			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
+	}
+
 	private static org.w3c.dom.Document parseXml(String resource) throws Exception {
 		try (InputStream input = QuestRetailStartMetadataGateTest.class
 				.getResourceAsStream(resource)) {

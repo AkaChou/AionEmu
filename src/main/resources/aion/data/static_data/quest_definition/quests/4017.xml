@@ -15,7 +15,6 @@
       <reward kind="SELECTABLE_ITEM" id="101500500" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100500502" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="101800508" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="102000900" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102100491" amount="1"/>
     </rewards>
   </metadata>
@@ -51,8 +50,7 @@
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
-      <choice action="SELECTED_QUEST_REWARD6" reward-index="7"/>
-      <choice action="SELECTED_QUEST_REWARD7" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="7"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

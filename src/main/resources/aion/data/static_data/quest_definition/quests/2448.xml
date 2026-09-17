@@ -10,7 +10,6 @@
     <rewards>
       <reward kind="EXP" id="0" amount="1301093"/>
       <reward kind="ITEM" id="186000009" amount="3"/>
-      <reward kind="ITEM" id="186000009" amount="3"/>
     </rewards>
   </metadata>
   <progress>
@@ -73,17 +72,17 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="798115" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798115" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798115" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="798080" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <dialog type="NPC_REPORT" npc-id="798080" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798080" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798080" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="798079" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <dialog type="NPC_REPORT" npc-id="798079" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798079" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798079" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">

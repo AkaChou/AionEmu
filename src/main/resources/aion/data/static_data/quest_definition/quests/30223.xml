@@ -13,7 +13,6 @@
       <reward kind="SELECTABLE_ITEM" id="110301106" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110501075" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110601057" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="186000098" amount="10"/>
     </rewards>
     <drops>
       <drop npc-id="216244" item-id="182209620" chance="100" each-member="true" collecting-step="0"/>
@@ -140,7 +139,6 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="unaccepted" target="unaccepted">

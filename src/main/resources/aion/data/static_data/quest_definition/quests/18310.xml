@@ -13,7 +13,6 @@
       <reward kind="GOLD" id="0" amount="139608"/>
       <reward kind="EXP" id="0" amount="2762837"/>
       <reward kind="ITEM" id="169300007" amount="460"/>
-      <reward kind="ITEM" id="170170038" amount="1"/>
     </rewards>
     <extended-rewards>
       <reward kind="ITEM" id="170170038" amount="1"/>

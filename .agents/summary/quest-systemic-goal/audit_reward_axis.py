@@ -103,9 +103,10 @@ def parse_prod_rewards():
             continue
         qid = fn[:-4]
         try:
-            meta = ET.parse(os.path.join(PROD_DIR, fn)).getroot().find("metadata")
+            root = ET.parse(os.path.join(PROD_DIR, fn)).getroot()
         except ET.ParseError:
             continue
+        meta = root.find("metadata")
         rewards = {}
         items = []
         selectable = []
@@ -122,7 +123,39 @@ def parse_prod_rewards():
                 selectable.append((int(r.get("id")), int(r.get("amount"))))
             else:
                 rewards[kind] = int(r.get("amount"))
-        out[qid] = (rewards, items, selectable)
+
+        # 可选奖励的第二/第三发放形态（与 metadata SELECTABLE 声明等价）：
+        # A) 显式 SELECTED_QUEST_REWARD 分支：分支间不同的 grant-reward ITEM = 可选项
+        branch_items = {}
+        branch_count = 0
+        for tr in root.findall("./transitions/transition"):
+            dialog = tr.find("./event/dialog")
+            if dialog is None:
+                continue
+            actions_text = (dialog.get("action") or "") + " " + (dialog.get("actions") or "")
+            if "SELECTED_QUEST_REWARD" not in actions_text:
+                continue
+            granted = [int(g.get("id")) for g in tr.findall("./actions/grant-reward")
+                       if g.get("kind") == "ITEM"]
+            if not granted:
+                continue
+            branch_count += 1
+            for iid in set(granted):
+                branch_items[iid] = branch_items.get(iid, 0) + 1
+        explicit_selectable = sorted(
+            iid for iid, cnt in branch_items.items()
+            if branch_count >= 2 and cnt < branch_count)
+        # B) npc-complete choice：reward-index 指向平铺奖励列表中的 SELECTABLE_ITEM
+        choice_selectable = []
+        flat = list(meta.findall("./rewards/reward"))
+        for group in meta.findall("./reward-groups/group"):
+            flat.extend(group.findall("reward"))
+        for nc in root.iter("npc-complete"):
+            for choice in nc.findall("choice"):
+                idx = int(choice.get("reward-index"))
+                if 0 <= idx < len(flat) and flat[idx].get("kind") == "SELECTABLE_ITEM":
+                    choice_selectable.append(int(flat[idx].get("id")))
+        out[qid] = (rewards, items, selectable, explicit_selectable, choice_selectable)
     return out
 
 
@@ -147,7 +180,7 @@ def main():
         r = retail.get(qid)
         if r is None:
             continue
-        prewards, pitems, pselect = prod[qid]
+        prewards, pitems, pselect, pexplicit, pchoice = prod[qid]
         def retail_number(key):
             # 字段缺失 = 真端未配置（生产自建奖励属服务端设计，不比对）；字段存在才具权威
             if key not in r:
@@ -187,6 +220,10 @@ def main():
         # fixed items
         ritems = []
         unmapped = []
+        has_item_field = any(re.match(r"^reward_item1_\d+$", k) for k in r)
+        if not has_item_field:
+            # 真端无固定道具字段 = 未配置，生产固定道具属服务端设计，跳过比对
+            ritems = None
         for key, val in r.items():
             m = re.match(r"^reward_item1_(\d+)$", key)
             if not m or not val:
@@ -199,12 +236,13 @@ def main():
                 unmapped.append(name)
             else:
                 ritems.append((iid, cnt))
-        ritems.sort()
-        if unmapped:
-            note("ITEM_UNMAPPED", qid, "names=" + ",".join(sorted(set(unmapped))))
-        elif sorted(pitems) != ritems:
-            note("ITEM_DIFF", qid,
-                 f"prod={sorted(pitems)} retail={sorted(ritems)}")
+        if ritems is not None:
+            ritems.sort()
+            if unmapped:
+                note("ITEM_UNMAPPED", qid, "names=" + ",".join(sorted(set(unmapped))))
+            elif sorted(pitems) != ritems:
+                note("ITEM_DIFF", qid,
+                     f"prod={sorted(pitems)} retail={sorted(ritems)}")
         # selectable count comparison (per-slot count of items)
         rsel = []
         for key, val in r.items():
@@ -218,9 +256,17 @@ def main():
             if iid is not None:
                 rsel.append((iid, cnt))
         rsel.sort()
-        if rsel and sorted(pselect) != rsel:
-            note("SELECTABLE_DIFF", qid,
-                 f"prod_n={len(pselect)} retail_n={len(rsel)}")
+        rsel_ids = {iid for iid, _ in rsel}
+        prod_ids = {iid for iid, _ in pselect} | set(pexplicit) | set(pchoice)
+        if rsel_ids and prod_ids != rsel_ids:
+            missing = sorted(rsel_ids - prod_ids)
+            extra = sorted(prod_ids - rsel_ids)
+            tag = "SEL_MISSING" if missing and not extra else (
+                "SEL_EXTRA" if extra and not missing else "SEL_MIXED")
+            note(tag, qid,
+                 f"missing={missing} extra={extra} "
+                 f"via_meta={sorted({i for i,_ in pselect})} "
+                 f"via_branch={pexplicit} via_choice={pchoice}")
 
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("quest_id\tcategory\tdetail\n")

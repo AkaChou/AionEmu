@@ -8,6 +8,7 @@
       <reward kind="EXP" id="0" amount="1974220"/>
       <reward kind="SELECTABLE_ITEM" id="162000027" amount="6"/>
       <reward kind="SELECTABLE_ITEM" id="162000027" amount="6"/>
+      <reward kind="ITEM" id="162000027" amount="6"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="2961"/>

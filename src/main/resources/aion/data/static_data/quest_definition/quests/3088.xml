@@ -14,8 +14,6 @@
       <reward kind="GOLD" id="0" amount="6080"/>
       <reward kind="EXP" id="0" amount="4451099"/>
       <reward kind="ITEM" id="186000005" amount="4"/>
-      <reward kind="ITEM" id="186000005" amount="4"/>
-      <reward kind="ITEM" id="186000005" amount="4"/>
     </rewards>
     <drops>
       <drop npc-id="214228" item-id="182208064" chance="20" each-member="true" collecting-step="0"/>
@@ -113,7 +111,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="798202" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798202" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
@@ -150,7 +148,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="798201" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798201" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
@@ -187,7 +185,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="798204" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798204" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
@@ -224,7 +222,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="798132" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798132" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
@@ -261,7 +259,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="798166" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798166" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">

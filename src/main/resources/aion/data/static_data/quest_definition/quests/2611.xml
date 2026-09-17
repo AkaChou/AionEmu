@@ -6,7 +6,7 @@
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="5220034"/>
-      <reward kind="ITEM" id="186000010" amount="1"/>
+      <reward kind="ITEM" id="186000010" amount="20"/>
     </rewards>
   </metadata>
   <progress>

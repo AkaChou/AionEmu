@@ -6,7 +6,7 @@
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="643724"/>
-      <reward kind="ITEM" id="186000004" amount="3"/>
+      <reward kind="ITEM" id="186000005" amount="4"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="1636"/>

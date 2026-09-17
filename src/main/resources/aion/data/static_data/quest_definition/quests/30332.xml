@@ -11,7 +11,6 @@
       <reward kind="SELECTABLE_ITEM" id="111301062" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111501046" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111601035" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="186000098" amount="5"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="30331"/>
@@ -53,7 +52,6 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

@@ -11,7 +11,6 @@
       <reward kind="EXP" id="0" amount="633457"/>
       <reward kind="ITEM" id="186000003" amount="2"/>
       <reward kind="SELECTABLE_ITEM" id="110100990" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="110300939" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110500907" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110600887" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110551044" amount="1"/>
@@ -53,10 +52,9 @@
 
     <npc-complete npc-id="204588" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="730189" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
@@ -91,10 +89,9 @@
     </transition>
     <npc-complete npc-id="730189" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="730190" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
@@ -129,10 +126,9 @@
     </transition>
     <npc-complete npc-id="730190" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="730191" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
@@ -167,10 +163,9 @@
     </transition>
     <npc-complete npc-id="730191" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

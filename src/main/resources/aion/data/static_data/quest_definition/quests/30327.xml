@@ -10,7 +10,6 @@
       <reward kind="SELECTABLE_ITEM" id="112301007" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112500995" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112601008" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="186000098" amount="5"/>
       <reward kind="ITEM" id="188050590" amount="1"/>
     </rewards>
     <start-conditions>
@@ -283,22 +282,6 @@
       </after-commit>
     </transition>
     <!-- 选择奖励 5：装备魔石 ×5。 Select reward 5: manastones x5. -->
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799244" action="SELECTED_QUEST_REWARD5"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188050590" amount="1"/>
-        <grant-reward kind="ITEM" id="186000098" amount="5"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799244" action="SELECT1_1"/>

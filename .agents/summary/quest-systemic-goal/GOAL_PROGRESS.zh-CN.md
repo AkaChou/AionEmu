@@ -108,8 +108,29 @@
     item 表（etc 部分）或以 strings/tooltip 反查
   - TITLE 173：真端 reward_title1 为名称字符串（light_title04），本机无 title 模板表
     可映射数字 id。取证方向：解包真端 title 表
-- 留待第二批：ITEM_DIFF 38 / SELECTABLE_DIFF 34（生产多分支平铺 vs 真端单件的逐任务
-  分支取证；真端 selectable 缺失型 1941/1942/1944 为真实缺陷候选）
+- 第二批（item/selectable 轴）——DONE（2026-09-18 同日）：
+  - 审计口径升级：可选奖励的等价发放来源=metadata SELECTABLE 声明 ∪ 显式
+    SELECTED_QUEST_REWARD 分支的可变 grant-reward ∪ npc-complete choice 指向项。
+    原始 34 条 SELECTABLE_DIFF 中 16 条被证明为等价形态（1941 类 8 分支与真端
+    8 件映射逐 id 一致互证）
+  - SEL_EXTRA 17 条缩池修复：1687/2677 缩 8 件第二套防具、4017 缩 102000900、
+    3946 缩 152200370、30222 族 10 条缩 186000098、1540 缩 110300939、
+    1942/19015 删不可达防御分支、2677/30327 删发放 extra 的显式分支
+  - SEL_MISSING：2641 补真端 5 件上衣声明（npc-complete 通配自动覆盖）；
+    16921/26921 记等价例外（真端唯一 1 项可选=固定发放）
+  - ITEM_DIFF 23 条：5 条容器内完全重复声明去重（2303/2367/2411/2448/3088，
+    其中 2303 fixed 索引把重复项全列为发放项=完成发 48 瓶 vs 真端 24，重复即
+    重复发放型真缺陷）；16 条零散错配修复（1648 coin_05x4、2332/25082 药水
+    替换、2585/2611 数量、2962/15230/15231/15232/25230/28915/80333 补真端
+    固定道具、18310/18606/50029/51029 删生产多发项）
+  - 逐条例外：2392 分支档位形态（8/4/4+2 币三分支与真端单组最大档一致，已验收）、
+    2345 双路线组归属 EVIDENCE_BLOCKED（取证方向：旧 handler 2345 路线发放代码）、
+    16921/26921 单项可选=固定发放
+  - 门禁：`QuestRewardItemGateTest`（2 例，固定道具多重集合 + 可选三来源并集，
+    覆盖 3,992 行可映射基线）+ 基线 `quest-item-selectable-retail-contract.tsv`
+  - 验证：11 门禁 46 例全绿；PRODUCTION_COMPILE_OK=6189、0 失败、0 白名单违规
+  - EVIDENCE_BLOCKED 不变：ITEM_UNMAPPED 956（道具旧名无映射）、TITLE 173（无
+    title 模板表）、2345（双路线组归属）
 - 门禁：`QuestRewardValueGateTest`（1 例，覆盖全部 6,222 任务含 METADATA_ONLY）+
   基线 `quest-reward-value-retail-contract.tsv`（6,215 行）
 - 状态：DONE（数值轴全库 0 未解释差异；门禁测试 46 例全绿、
