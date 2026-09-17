@@ -16,6 +16,14 @@
 | `98b429327` | Enchant 规则表 | `EnchantService`（1541→1266 行）静态物品规则查表（isEnhancedAncientFallusha、isGrayWolfAccessories、isArchdaeva×3、GloryShieldSkill，约 320 行）→ package-private `EnchantItemRules`；public static 门面保留，内部调用点直走规则类。测试 `EnchantServiceTest` 通过。 |
 | `117c51ad3` | Teleport 变身面板 | `TeleportService2`（1640→1228 行）传送后变身面板同步（playerTransformation/archdaevaTransformation/instanceTransformation，约 450 行）→ package-private `TransformPanelSync`；public static 门面保留（CM_LEVEL_READY、PlayerController 调用方无感）。 |
 | `11605b779` | 审计汇总 | 本文档初版。 |
+| `dbb2725d7` | Ladder 身份外观域 | `LadderService`（1474→1235 行）战场身份/外观展示域（getBgCloak 披风查表、getName 名称脱敏、getNameByIndex 队伍名、getCapeEmblemByIndex 徽章查表，约 280 行）→ package-private `BattlegroundIdentity` 静态类；门面签名不变。测试 `Ladder*` 通过。 |
+| `152b99522` | Attack 控制效果域 | `AttackUtil`（1459→1156 行）暴击控制效果域（isSkillEffect 控制系技能查表约 260 行 + applyEffectOnCritical 武器暴击踉跄/摔倒规则）→ package-private `AttackControlEffects`；门面保留（当前全库零外部调用方，API 兼容优先）。测试 `AttackUtilTest` 通过。 |
+| `69ac7b2ba` | 审计汇总扩充 | rounds 2–4 + Spring Bean 边界扫描结论。 |
+
+## 追加审计结论（round 5）
+
+- **Equipment（1377 行）**：装备容器 + 校验规则深度耦合私有 `equipment` TreeMap 与 `owner` 字段（validateEquippedWeapon/validateEquippedArmor 直读私有容器）；同包拆出需扩字段可见性，风险大于收益。soulBindItem（75 行）独立过小。**保留**。
+- **EffectController（1366 行）/ MinionService（1317 行）/ BrokerService（1255 行）/ PlayerController（1453 行）/ StatFunctions（1223 行）**：控制器/容器/公式集合，方法间共享内部状态密集；本轮未逐域展开，列入 backlog 待按同一标准审计。
 
 ## Spring Bean 边界整理（扫描结论：已达标）
 
@@ -45,6 +53,6 @@
 
 1. `QuestService` 计时器域（约 250 行，QuestTimerKey 已有私有类型基础）——待 quest 并行任务收尾后实施。
 2. `Skill`（1950 行）：施法阶段/效果链/冷却审计。
-3. `PlayerController`（1453 行）、`LadderService`（1473 行）、`AttackUtil`（1458 行）、`EffectController`（1366 行）、`Equipment`（1376 行）、`MinionService`（1317 行）、`BrokerService`（1255 行）：按"依赖聚类/变化原因聚类"同一标准逐个审计。
+3. `EffectController`（1366 行）、`MinionService`（1317 行）、`BrokerService`（1255 行）、`PlayerController`（1453 行）、`StatFunctions`（1223 行）：按"依赖聚类/变化原因聚类"同一标准逐个审计。
 4. `LegionRestrictions`（809 行）：它本身是已拆出的伴生类，如继续膨胀可再分"申请流"与"权限校验"两域。
 5. 全量 `mvn test`（需单独授权）作为最终回归。
