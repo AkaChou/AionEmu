@@ -118,6 +118,12 @@
 ## 阶段 P5：下一类未根治维度
 
 - 状态：PENDING
+- 下一检查点（P4 第二批）：SELECTABLE 缺失型 19 条（1941/19009/2641 等，补 selectable
+  需同步 npc-complete choice 合同，逐任务走完整完成流程取证）；ITEM/SELECTABLE 平铺型
+  34 条（2677 等，逐任务判定分支表达 vs 真端子集）；ITEM_UNMAPPED 956 / TITLE 173 的
+  真端模板表取证（EVIDENCE_BLOCKED，需外部解包）
+- Memory Bank：QE-034（RETAIL_START_METADATA_CONTRACT_ALIGNMENT）已沉淀，
+  sync/check 通过，随本台账一起提交
 
 ## 验证记录
 

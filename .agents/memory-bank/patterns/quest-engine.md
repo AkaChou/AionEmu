@@ -765,3 +765,25 @@ first_check: 遇到启动校验失败时，先查 drop npc 的 AI；若为 quest
 
 - **判定规则**：`quest_use_item` 的掉落是“交互物可使用”与“掉落目录”两半合同的组合；只补 `<drop>` 不补资格路由会在启动时 fail-closed。资格自环只表达可使用性，不能承担状态推进。
 - **代表案例**：`51022` 商团货物箱子 `701470` 恢复 `182215183` 掉落后缺少 `started` 资格自环，导致 `QuestEngine` 启动失败；修复后由 `QuestInteractionObjectValidator.validateDefinition` 与 `ProductionCatalogWhitelistVerificationTest` 双重守护。
+
+---
+
+## [QE-034] 三十二、接取元数据与奖励数值的真端合同对齐 (RETAIL_START_METADATA_CONTRACT_ALIGNMENT)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务 metadata 接取元数据（min-level/max-level/races/classes/gender/repeat）与档位 1 数值奖励（EXP/GOLD/AP/GP）；真端解包数据 sentinel 语义；生产目录级门禁
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: 等级/职业/阵营资格与真端不一致（过宽被低等级或非目标职业接取、过窄漏接）；多档任务误把档位 N 值当档位 1；npc-complete 索引越界启动失败
+root_cause: 迁移与批量编辑漂移：min/max 等级抄写错误、base 职业死条目与进阶职业混淆、阵营拆分/武器适配/版本倍率等有意差异无例外台账、奖励插入位移 npc-complete 的 fixed/choice reward-index
+fix_or_guardrail: 1. 真端 sentinel 语义：minlevel_permitted=999=占位任务（不可接，跳过比对）；maxlevel 0/998/999 与生产 2147483647/999/998 均为无上限；pc_light pc_dark=PC_ALL 等价；2. class token 直接映射，min>=10（转职）后 6 个 base 职业（WARRIOR/SCOUT/MAGE/PRIEST/TECHNIST/MUSE）为死条目，比对"实际可接受职业集合"；3. 整族一致的差异（如 329 条 max=82 封顶、AP 精确 ×4 倍率族 20 条）按 intentional 记例外清单，零散值按真端修复；4. 有意武器适配（奖励武器类型限定职业）与阵营拆分配对（15205/25205）逐条留证；5. 奖励行插入只允许容器尾部追加、删除前核对 npc-complete 索引合同；6. 三个目录级门禁 QuestRetailStartMetadataGateTest/QuestRetailClassGateTest/QuestRewardValueGateTest + 基线 TSV（quest-start-metadata-retail-contract.tsv、quest-class-retail-contract.tsv、quest-reward-value-retail-contract.tsv）从真端数据可复算
+evidence: commit fbfbaba1c (P1/P2 min/max 9+28 条), 1a9a80f72 (P3 class 58 条), b93db336b (P4-1 数值 78 处); src/test/java/com/aionemu/gameserver/questEngine/definition/QuestRetailStartMetadataGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestRetailClassGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestRewardValueGateTest.java; .agents/summary/quest-systemic-goal/GOAL_PROGRESS.zh-CN.md
+validation: 三个门禁测试全绿（6+3+1 例）；PRODUCTION_COMPILE_OK=6189、0 失败、0 白名单违规；基线 TSV 6222/135/6215 行
+boundaries: 真端字段缺失=未配置（生产自建奖励属服务端设计）不等于字段为 0（真端明确无奖励）；整族一致差异必须先排除系统性设定再判缺陷；METADATA_ONLY 任务对玩家同样生效接取元数据，门禁必须覆盖
+superseded_by: none
+see_also: [QE-008], [QE-021]
+first_check: 先用 audit 脚本做全库只读扫描归类（real defect / intentional variant / EVIDENCE_BLOCKED），确认 sentinel 与死条目归一后再逐条修复；有 npc-complete 索引合同的任务禁止头部插入与盲目删除奖励行
+-->
+
+- **判定规则**：接取元数据与档位 1 数值奖励的对齐必须以真端解包数据为唯一权威，但机械逐值替换是错的——先归一 sentinel（0/998/999/2147483647 均为无上限；999 同时用作占位任务）、等价表达（PC_ALL=双阵营；base 死条目）与系统性设定（整族一致封顶 82、AP ×4 倍率族），剩余零散差异才是缺陷。
+- **代表案例**：min-level 9 条（1648=42、2641=41、19000~19003=50、25407/25408=68，镜像互证但 2641 与镜像 1641 真端本就不同）；max-level 28 条（19 条补真端上限、80621 族 82→65、27525/50074/80945/80946/80878 族内不对称残留 cap）；class 58 条（导师任务族漏声明、Kaliga 武器收集族/Dark Poeta 分组按真端写入、19074 镜像互证删 AETHERTECH、14031/24031 机甲星使命收窄）；奖励数值 78 处（2641/2724 多档任务档位 1 对齐、80993/80996 补 AP 50000）。道具旧名（956 条）与 title 名称映射（173 条）因缺真端模板表记 EVIDENCE_BLOCKED。
