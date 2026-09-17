@@ -171,6 +171,9 @@
     （QE-003/QE-011）；中途 remove-item 交付的道具离开背包后无恢复需求；
     掉落/give-item 天然可重取——静态层面无新增缺陷，运行时行为验证
     属用户侧 PENDING
+- 追加修复（2026-09-18）：QuestWorkItemMigrationCoverageTest 首次纳入本轮门禁
+  即暴露 25304 声明缺口（legacy quest_work_items=182215874 未声明，完成后残留
+  背包，QE-011 同根因）→ 已补声明，3/3 全绿（commit 32b59d6d6）
 - 下一检查点：P5 静态可扫项已全部收敛或登记；剩余验证依赖
   （a）Aion 5.8 客户端实机复测（用户侧 PENDING）、
   （b）真端 item/title 模板表解包（ITEM_UNMAPPED 956 / TITLE 173 / 2345 双路线）、
