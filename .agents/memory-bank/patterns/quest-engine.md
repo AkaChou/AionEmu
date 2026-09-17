@@ -743,3 +743,25 @@ first_check: 检查任务是否只用 <dialog type="NPC_REPORT"> 简写交付；
 
 - **判定规则**：简写交付边**天生无条件**——凡任务声明并在本地掉落收集道具，其每条非奖励阶段交付分支都必须显式声明带 `has-item` 的 `SELECT_QUEST_REWARD` 路由（引擎会用显式路由取代简写同路由）；未集齐的回落路由只允许显示失败页、不得进入奖励阶段。奖励阶段的 `reward→reward` 简写是重开奖励窗，必须保持无条件。
 - **代表案例**：`15000` / `15072` / `2307` / `3096` / `4940` 等 51 个任务共 79 条无条件交付路由（含 2~5 个 NPC 变体），修复前均可零进度领奖；由 `QuestItemSourceContractGateTest` 的全库分支不变量守护。
+
+---
+
+## [QE-033] 三十一、quest_use_item 掉落必须有 ACTION_ITEM_USE 资格路由 (QUEST_USE_ITEM_DROP_REQUIRES_ACTION_ELIGIBILITY)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务 metadata <drops> 中 AI 为 quest_use_item 的交互物；START 节点的 can-act ACTION_ITEM_USE 资格路由；启动校验与生产目录门禁
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: 服务端启动报 Can't initialize typed quest engine，原因是 quest <id> quest_use_item catalog drop npc <npc> item <item> collecting step <step> has no matching START ACTION_ITEM_USE eligibility route；或交互物在任务中无法使用、掉落永不触发
+root_cause: 任务声明了 chance>0 且 NPC AI 为 quest_use_item 的目录掉落，但没有提供同 template-id、同源 START 节点的 ACTION_ITEM_USE 资格路由。缺掉落时校验不会遍历该 NPC；恢复或新增掉落行会把潜伏的不完整合同激活。51022 恢复 Event_Cargobox 701470 掉落后暴露该问题
+fix_or_guardrail: 1. 每个 quest_use_item 掉落必须声明无副作用的 <can-act template-id="..." action-type="ACTION_ITEM_USE"/>，source 为 START；collecting-step=0 可用任意 START 节点，非 0 时 source 节点的 var0 必须等于 collecting-step；2. QuestInteractionObjectValidator.validateDefinition 作为启动与测试共享的校验入口；3. ProductionCatalogWhitelistVerificationTest 逐个 EXECUTABLE 定义调用该入口，使生产目录编译/白名单门禁在启动前捕获缺失资格；4. QuestInteractionObjectCatalogTest 继续覆盖交互物 Talk/drop 合同
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/51022.xml; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestInteractionObjectValidator.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestInteractionObjectTestData.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestInteractionObjectCatalogTest.java; src/test/java/com/aionemu/gameserver/questEngine/ProductionCatalogWhitelistVerificationTest.java; .agents/summary/quest/2026-09-18-quest-51022-cargobox-action-eligibility.md
+validation: mvn test -Dtest=QuestInteractionObjectCatalogTest,ProductionCatalogWhitelistVerificationTest 共 8 项全绿；PRODUCTION_COMPILE_OK=6189、PRODUCTION_INTERACTION_OBJECT_FAILURES=0、PRODUCTION_WHITELIST_VIOLATIONS=0；全库同口径静态扫描由 1 条缺口降为 0
+boundaries: 只适用于实际 NPC AI 为 quest_use_item 的掉落；普通怪物掉落不需要 can-act。资格路由必须保持无 state/actions/after-commit 副作用；若交互物同时需要对话推进，必须另加显式 TALK 路由。测试 AI 查询必须保持与启动时 DataManager.NPC_DATA 的 quest_use_item 判定一致
+superseded_by: none
+see_also: [QE-030]
+first_check: 遇到启动校验失败时，先查 drop npc 的 AI；若为 quest_use_item，检查是否存在同 template-id 的 START ACTION_ITEM_USE，且 source var0 与 collecting-step 匹配
+-->
+
+- **判定规则**：`quest_use_item` 的掉落是“交互物可使用”与“掉落目录”两半合同的组合；只补 `<drop>` 不补资格路由会在启动时 fail-closed。资格自环只表达可使用性，不能承担状态推进。
+- **代表案例**：`51022` 商团货物箱子 `701470` 恢复 `182215183` 掉落后缺少 `started` 资格自环，导致 `QuestEngine` 启动失败；修复后由 `QuestInteractionObjectValidator.validateDefinition` 与 `ProductionCatalogWhitelistVerificationTest` 双重守护。

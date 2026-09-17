@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,7 +50,8 @@ class QuestInteractionObjectCatalogTest {
 				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
-		Set<Integer> questUseItemNpcs = questUseItemNpcIds();
+		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
+			getClass().getClassLoader());
 		List<String> missing = new ArrayList<>();
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			List<QuestTransition> transitions = definition.definition().transitions();
@@ -87,7 +87,8 @@ class QuestInteractionObjectCatalogTest {
 				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
-		Set<Integer> questUseItemNpcs = questUseItemNpcIds();
+		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
+			getClass().getClassLoader());
 		List<String> missing = new ArrayList<>();
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			List<QuestTransition> transitions = definition.definition().transitions();
@@ -257,24 +258,6 @@ class QuestInteractionObjectCatalogTest {
 			}
 		}
 		throw new IllegalStateException("missing NPC template " + npcId);
-	}
-
-	private static Set<Integer> questUseItemNpcIds() throws Exception {
-		Set<Integer> result = new HashSet<>();
-		XMLInputFactory factory = XMLInputFactory.newFactory();
-		for (String shard : NPC_SHARDS) {
-			try (InputStream input = resource("aion/data/static_data/npcs/" + shard)) {
-				var reader = factory.createXMLStreamReader(input);
-				while (reader.hasNext()) {
-					if (reader.next() == XMLStreamConstants.START_ELEMENT
-							&& "npc_template".equals(reader.getLocalName())
-							&& "quest_use_item".equals(reader.getAttributeValue(null, "ai"))) {
-						result.add(Integer.parseInt(reader.getAttributeValue(null, "npc_id")));
-					}
-				}
-			}
-		}
-		return Set.copyOf(result);
 	}
 
 	private static InputStream resource(String path) {

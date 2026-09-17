@@ -44,6 +44,13 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 商团货物箱子(701470)：进行中允许使用并触发 quest_use_item 掉落，不改变任务状态。 -->
+    <!-- Event Cargobox (701470): allow item use during the quest so quest_use_item drops fire without changing state. -->
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="701470" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>

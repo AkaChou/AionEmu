@@ -19,38 +19,49 @@ public final class QuestInteractionObjectValidator {
 		Objects.requireNonNull(dispatcher, "dispatcher");
 		Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
 		for (CompiledQuestDefinition definition : dispatcher.catalogRegistry().executables()) {
-			for (QuestTransition transition : definition.definition().transitions()) {
-				if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
-						|| !"ACTION_ITEM_USE".equals(actionType)) {
-					continue;
-				}
-				String aiName = aiNameByTemplate.apply(templateId);
-				if (aiName == null || aiName.isBlank()) {
-					throw new IllegalStateException("quest " + definition.id() + " ACTION_ITEM_USE template "
-						+ templateId + " has no NPC template/AI");
-				}
-				if (!"quest_use_item".equals(aiName)) {
-					continue;
-				}
-				boolean explicitTalk = definition.definition().transitions().stream()
-					.map(QuestTransition::event)
-					.filter(QuestEvent.TalkToNpc.class::isInstance)
-					.map(QuestEvent.TalkToNpc.class::cast)
-					.anyMatch(talk -> talk.npcId() == templateId);
-				boolean hasDrop = dispatcher.questDrops(templateId).stream()
-					.anyMatch(drop -> drop.questId() == definition.id());
-				if (!explicitTalk && !hasDrop) {
-					throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
-						+ templateId + " has neither TALK route nor catalog drop metadata");
-				}
-				if (!explicitTalk && (!Objects.equals(transition.sourceNode(), transition.targetNode())
-						|| !transition.actions().isEmpty() || !transition.afterCommit().isEmpty())) {
-					throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
-						+ templateId + " requires an explicit TALK route for side effects");
-				}
-			}
-			validateCatalogDrops(definition, aiNameByTemplate);
+			validateDefinition(definition, aiNameByTemplate);
 		}
+	}
+
+	/**
+	 * 校验单个生产任务定义的 ACTION_ITEM_USE 合同。
+	 * Validates the ACTION_ITEM_USE contract of one production quest definition.
+	 */
+	public static void validateDefinition(CompiledQuestDefinition definition,
+			IntFunction<String> aiNameByTemplate) {
+		Objects.requireNonNull(definition, "definition");
+		Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
+		for (QuestTransition transition : definition.definition().transitions()) {
+			if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
+					|| !"ACTION_ITEM_USE".equals(actionType)) {
+				continue;
+			}
+			String aiName = aiNameByTemplate.apply(templateId);
+			if (aiName == null || aiName.isBlank()) {
+				throw new IllegalStateException("quest " + definition.id() + " ACTION_ITEM_USE template "
+					+ templateId + " has no NPC template/AI");
+			}
+			if (!"quest_use_item".equals(aiName)) {
+				continue;
+			}
+			boolean explicitTalk = definition.definition().transitions().stream()
+				.map(QuestTransition::event)
+				.filter(QuestEvent.TalkToNpc.class::isInstance)
+				.map(QuestEvent.TalkToNpc.class::cast)
+				.anyMatch(talk -> talk.npcId() == templateId);
+			boolean hasDrop = definition.definition().metadata().drops().stream()
+				.anyMatch(drop -> drop.npcId() == templateId);
+			if (!explicitTalk && !hasDrop) {
+				throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
+					+ templateId + " has neither TALK route nor catalog drop metadata");
+			}
+			if (!explicitTalk && (!Objects.equals(transition.sourceNode(), transition.targetNode())
+					|| !transition.actions().isEmpty() || !transition.afterCommit().isEmpty())) {
+				throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
+					+ templateId + " requires an explicit TALK route for side effects");
+			}
+		}
+		validateCatalogDrops(definition, aiNameByTemplate);
 	}
 
 	private static void validateCatalogDrops(CompiledQuestDefinition definition,

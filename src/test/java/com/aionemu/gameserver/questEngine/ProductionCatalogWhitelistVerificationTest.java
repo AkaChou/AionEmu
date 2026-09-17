@@ -5,6 +5,8 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectTestData;
+import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * 临时验证：逐个编译生产 catalog 条目，报告编译失败与白名单违规。
@@ -28,9 +31,11 @@ public class ProductionCatalogWhitelistVerificationTest {
 			}
 			QuestDefinitionCatalogManifest manifest = QuestDefinitionCatalogManifest.load(input);
 			List<String> compileFailures = new ArrayList<>();
+			List<String> interactionFailures = new ArrayList<>();
 			List<String> violations = new ArrayList<>();
 			int ok = 0;
 			int expectedExecutables = 0;
+			IntFunction<String> aiResolver = QuestInteractionObjectTestData.npcAiResolver(loader);
 			for (var entry : manifest.entries()) {
 				if (entry.mode() != com.aionemu.gameserver.questEngine.definition.QuestCatalogEntryMode.EXECUTABLE) {
 					continue;
@@ -59,6 +64,12 @@ public class ProductionCatalogWhitelistVerificationTest {
 				ok++;
 				if (d.id() != entry.id()) {
 					violations.add(entry.id() + ":ID_MISMATCH:" + d.id());
+				}
+				try {
+					QuestInteractionObjectValidator.validateDefinition(d, aiResolver);
+				} catch (IllegalStateException e) {
+					interactionFailures.add(d.id() + ":"
+						+ String.valueOf(e.getMessage()).lines().findFirst().orElse(e.getClass().getSimpleName()));
 				}
 				for (var t : d.definition().transitions()) {
 					if (t.event() instanceof QuestEvent.EnterZone
@@ -107,12 +118,16 @@ public class ProductionCatalogWhitelistVerificationTest {
 			System.out.println("PRODUCTION_COMPILE_OK=" + ok);
 			System.out.println("PRODUCTION_COMPILE_FAILURES=" + compileFailures.size());
 			compileFailures.stream().limit(30).forEach(System.out::println);
+			System.out.println("PRODUCTION_INTERACTION_OBJECT_FAILURES=" + interactionFailures.size());
+			interactionFailures.stream().limit(30).forEach(System.out::println);
 			System.out.println("PRODUCTION_WHITELIST_VIOLATIONS=" + violations.size());
 			violations.stream().limit(60).forEach(System.out::println);
 			org.junit.jupiter.api.Assertions.assertEquals(expectedExecutables, ok,
 				() -> "production catalog compile failures: " + compileFailures);
 			org.junit.jupiter.api.Assertions.assertTrue(compileFailures.isEmpty(),
 				() -> "production catalog compile failures: " + compileFailures);
+			org.junit.jupiter.api.Assertions.assertTrue(interactionFailures.isEmpty(),
+				() -> "production interaction-object contract failures: " + interactionFailures);
 			org.junit.jupiter.api.Assertions.assertTrue(violations.isEmpty(),
 				() -> "production catalog whitelist violations: " + violations);
 		}
