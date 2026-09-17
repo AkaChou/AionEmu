@@ -177,26 +177,44 @@ class SkillCancellationTest {
 			skillData.setSkillTemplates(List.of(first, second, third));
 			DataManager.SKILL_DATA = skillData;
 
-			Skill skill = new Skill(first, caster, 2, caster, null);
-			skill.setFirstTargetAttribute(FirstTargetAttribute.ME);
-			skill.setDuration(690);
-			ChargeSkillTemplate chargeTemplate = new ChargeSkillTemplate();
-			setField(chargeTemplate, "min_charge", 400);
-			setField(chargeTemplate, "type", BonusChargeType.MAGICAL);
-			setField(chargeTemplate, "charges", List.of(charge(4303, 1500), charge(4304, 1500), charge(4305, 7000)));
-			setField(skill, "chargeTemplate", chargeTemplate);
-			float multiplier = invokeChargeTimeMultiplier(skill);
-			setField(skill, "chargeTimeMultiplier", multiplier);
-			setField(skill, "castStart", System.currentTimeMillis() - 2500);
-			caster.setCasting(skill);
-
-			invokeEndCast(skill);
-
-			assertEquals(0.845f, multiplier, 0.001f);
-			assertSame(third, skill.getSkillTemplate());
+			// 施法时长 690ms / 模板 1000ms ⇒ 系数 0.69，阶段窗口 1035 / 1035 / 4830ms。
+			// Cast 690ms over a 1000ms template gives factor 0.69 and stage windows 1035 / 1035 / 4830ms.
+			assertEquals(0.69f, chargeTimeMultiplier(first, caster), 0.001f);
+			assertSame(first, chargedStage(first, caster, 800));
+			assertSame(second, chargedStage(first, caster, 1500));
+			// 客户端刚进入第三阶段（2 × 1035ms）就松手，必须结算第三阶段，而不是前两个阶段。
+			// Releasing right after the client's stage-three boundary (2 × 1035ms) must resolve stage three.
+			assertSame(third, chargedStage(first, caster, 2100));
+			assertSame(third, chargedStage(first, caster, 6000));
 		} finally {
 			DataManager.SKILL_DATA = previousSkillData;
 		}
+	}
+
+	private static float chargeTimeMultiplier(SkillTemplate first, TestCreature caster) throws Exception {
+		return invokeChargeTimeMultiplier(chargedSkill(first, caster));
+	}
+
+	private static SkillTemplate chargedStage(SkillTemplate first, TestCreature caster, long chargeMillis)
+			throws Exception {
+		Skill skill = chargedSkill(first, caster);
+		setField(skill, "castStart", System.currentTimeMillis() - chargeMillis);
+		invokeEndCast(skill);
+		return skill.getSkillTemplate();
+	}
+
+	private static Skill chargedSkill(SkillTemplate first, TestCreature caster) throws Exception {
+		Skill skill = new Skill(first, caster, 2, caster, null);
+		skill.setFirstTargetAttribute(FirstTargetAttribute.ME);
+		skill.setDuration(690);
+		ChargeSkillTemplate chargeTemplate = new ChargeSkillTemplate();
+		setField(chargeTemplate, "min_charge", 400);
+		setField(chargeTemplate, "type", BonusChargeType.MAGICAL);
+		setField(chargeTemplate, "charges", List.of(charge(4303, 1500), charge(4304, 1500), charge(4305, 7000)));
+		setField(skill, "chargeTemplate", chargeTemplate);
+		setField(skill, "chargeTimeMultiplier", invokeChargeTimeMultiplier(skill));
+		caster.setCasting(skill);
+		return skill;
 	}
 
 	private static SkillTemplate skillTemplate(int skillId) {

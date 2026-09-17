@@ -49,6 +49,10 @@ public final class PathService implements DisposableBean {
 	private static final float NEAREST_GROUND_PATH_RADIUS = 2;
 	private static final float NEAREST_GROUND_PATH_VERTICAL = 0.7f;
 	private static final float SPATIAL_CLEARANCE_SAMPLE = 0.5f;
+	// ponytail: 与 GeoMap#getClosestCollision 的贴地窄带 [z-2, z+1] 同源；强制位移地面校验复用该带。
+	// ponytail: same band as the ground snap in GeoMap#getClosestCollision; reused by forced-move ground checks.
+	private static final float FORCED_MOVE_GROUND_PROBE_UP = 1f;
+	private static final float FORCED_MOVE_GROUND_PROBE_DOWN = 2f;
 	private static final float GLOBAL_WATER_SAMPLE = 2;
 	/** 起终点量化格子（米）；与追击 repath 量级一致。 / Query cell size in meters. */
 	private static final float RESULT_CACHE_CELL = 2f;
@@ -202,6 +206,42 @@ public final class PathService implements DisposableBean {
 		}
 		WaterArea water = owner.isFlying() ? null : waterArea(owner);
 		return canMoveStraight(owner, x, y, z, water, owner.isFlying() || water != null);
+	}
+
+	/**
+	 * 判断强制位移（混沌/恐惧等失控移动）的目标点是否踩在可站立地面上。
+	 * Whether a forced-movement target lies on standable ground (confuse/fear style movement).
+	 *
+	 * <p>平台或悬崖边缘之外没有地面，但 {@code GeoMap#getClosestCollision} 只判碰撞，会把这类点原样返回；
+	 * 角色一旦被推过去，客户端会拒绝该位移并把角色拉回原位，形成“跑出去又瞬间回位”的循环。
+	 * 这里用与贴地同源的窄带向下探测判定目标点是否有地面：起点本身无地形数据（哑地图/悬空）时不作判定。</p>
+	 *
+	 * <p>No ground exists beyond platform or cliff edges, yet {@code GeoMap#getClosestCollision} only checks
+	 * collisions and returns such a point unchanged; the client then rejects the move and snaps the character back.
+	 * A narrow downward probe on the same band as the ground snap decides whether the target has ground. When the
+	 * origin itself has no terrain data (dummy map or mid-air) the check stays inert.</p>
+	 *
+	 * @param owner 位移生物 / moving creature
+	 * @param x 目标 X / target X
+	 * @param y 目标 Y / target Y
+	 * @param z 目标 Z / target Z
+	 * @return 目标点可站立返回 true / true when the target stands on ground
+	 */
+	public boolean hasStandableGround(Creature owner, float x, float y, float z) {
+		if (owner == null || !GeoDataConfig.GEO_ENABLE || usesSpatialPath(owner)) {
+			return true;
+		}
+		GeoMap map = GameWorldServices.geoService().getGeoMap(owner.getWorldId());
+		int instanceId = owner.getInstanceId();
+		float ownerZ = owner.getZ();
+		if (Float.isNaN(groundProbeZ(map, owner.getX(), owner.getY(), ownerZ, instanceId))) {
+			return true;
+		}
+		return !Float.isNaN(groundProbeZ(map, x, y, z, instanceId));
+	}
+
+	private static float groundProbeZ(GeoMap map, float x, float y, float z, int instanceId) {
+		return map.getZ(x, y, z + FORCED_MOVE_GROUND_PROBE_UP, z - FORCED_MOVE_GROUND_PROBE_DOWN, instanceId);
 	}
 
 	public int waypointSkipIndex(Creature owner, float[][] path, int lookahead) {

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
@@ -131,6 +132,15 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		float newX = (targetDestX - x) * distFraction + x;
 		float newY = (targetDestY - y) * distFraction + y;
 		float newZ = (targetDestZ - z) * distFraction + z;
+
+		// 失控位移（恐惧/混沌）不得把角色推离可站立地面：平台/悬崖外的下一步落在空中时，客户端会拒绝
+		// 该位移并把角色拉回原位，形成“跑出去又瞬间回位”的循环；拦下后由周期任务重选方向。
+		// Forced movement (fear/confuse) must not push a grounded playable off walkable ground: the client
+		// rejects an in-air step and snaps the character back, looping until the effect ends.
+		if (isControlled() && !GameWorldServices.pathService().hasStandableGround(owner, newX, newY, newZ)) {
+			abortMove();
+			return;
+		}
 
 		/*
 		 * if ((movementMask & MovementMask.MOUSE) == 0) { targetDestX = newX + vectorX;

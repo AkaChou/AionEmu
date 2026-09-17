@@ -98,6 +98,8 @@ public class Skill {
 	private TargetRangeAttribute targetRangeAttribute;
 	private int skillskinId = 0;
 	private int skillskinHitTIme = 0;
+	/** 充能阶段时间缩放的兜底下限，避免速度修正为 0 时阶段窗口塌缩。 / Lower bound for charge-stage time scaling. */
+	private static final float MIN_CHARGE_SPEED_RATIO = 0.3f;
 	private ChargeSkillTemplate chargeTemplate = null;
 	private float chargeTimeMultiplier = 1;
 	private volatile Future<?> castingTask = null;
@@ -1085,6 +1087,21 @@ public class Skill {
 		}
 	}
 
+	/**
+	 * 充能阶段的时间缩放系数，与客户端蓄力条同源。
+	 * Charge-stage time factor, shared with the client charge gauge.
+	 *
+	 * <p>客户端按 {@code SM_CASTSPELL} 下发的（已受速度修正的）施法时长缩放蓄力条，物理充能则按攻速比例缩放；
+	 * 因此阶段窗口与最小充能必须按同一比例缩放。旧实现只取该比例的一半（{@code 1 - (1 - ratio) * 0.5}），
+	 * 使服务器阶段窗口恒长于客户端，表现为客户端已进入第三阶段、服务器仍按前两阶段结算伤害。</p>
+	 *
+	 * <p>The client scales its gauge by the speed-corrected cast time sent in {@code SM_CASTSPELL}, and physical
+	 * charge skills by the attack-delay ratio, so stage windows must use that same ratio. The previous
+	 * half-weighted blend ({@code 1 - (1 - ratio) * 0.5}) kept the server's windows longer than the client's, so a
+	 * release the client showed as stage three could still be resolved as stage one or two.</p>
+	 *
+	 * @return 缩放系数 / scaling factor
+	 */
 	private float calculateChargeTimeMultiplier() {
 		BonusChargeType bonusType = chargeTemplate.getBonusChargeType();
 		float speedRatio;
@@ -1096,7 +1113,7 @@ public class Skill {
 		} else {
 			return 1;
 		}
-		return 1 - (1 - speedRatio) * 0.5f;
+		return Math.max(speedRatio, MIN_CHARGE_SPEED_RATIO);
 	}
 
 	private int scaleChargeTime(int time) {

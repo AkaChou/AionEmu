@@ -98,11 +98,32 @@ public class ConfuseEffect extends EffectTemplate {
 
     private record ConfuseTask(Creature effected) implements Runnable {
 
+        /** 每次重选方向的最大尝试次数 / Maximum direction attempts per tick. */
+        private static final int MAX_DIRECTION_ATTEMPTS = 8;
+
         @Override
         public void run() {
             if (!effected.getEffectController().isConfused()) {
                 return;
             }
+            // 平台/悬崖边缘的方向落在没有地面的空中时，客户端会拒绝该位移并把角色拉回原位，
+            // 表现为“跑出去又瞬间回到起点”的反复循环。这里先做地面校验，取第一个可站立的方向。
+            // A direction over a platform/cliff edge has no ground: the client rejects the move and snaps the
+            // character back, looping until the effect ends. Validate the ground and take the first standable one.
+            for (int attempt = 0; attempt < MAX_DIRECTION_ATTEMPTS; attempt++) {
+                if (moveToRandomDirection()) {
+                    return;
+                }
+            }
+        }
+
+        /**
+         * 随机选一个方向并在目标点可站立时启动移动。
+         * Picks a random direction and starts moving when its destination is standable.
+         *
+         * @return 已启动移动返回 true / true when a move was started
+         */
+        private boolean moveToRandomDirection() {
             float angle = Rnd.get() * 360f;
             double radian = Math.toRadians(angle);
             float distance = effected.getGameStats().getMovementSpeedFloat();
@@ -111,6 +132,10 @@ public class ConfuseEffect extends EffectTemplate {
             byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
             Vector3f destination = GameWorldServices.geoService().getClosestCollision(effected, targetX, targetY,
                     effected.getZ(), true, intentions);
+            if (!GameWorldServices.pathService().hasStandableGround(effected, destination.getX(), destination.getY(),
+                    destination.getZ())) {
+                return false;
+            }
             byte heading = MathUtil.convertDegreeToHeading(angle);
             if (effected instanceof Npc) {
                 ((Npc) effected).getMoveController().resetMove();
@@ -119,6 +144,7 @@ public class ConfuseEffect extends EffectTemplate {
                 effected.getMoveController().setNewDirection(destination.getX(), destination.getY(), destination.getZ(), heading);
                 effected.getMoveController().startMovingToDestination();
             }
+            return true;
         }
     }
 }
