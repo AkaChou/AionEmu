@@ -1572,3 +1572,79 @@ EffectControllerTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,
 NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,LongObjectHashMapTest test
 ```
 → **BUILD SUCCESS，32 个测试类 327 例全绿**。
+
+### 12.23 第二十七轮：`CreatureGameStats` 属性表与读写锁懒物化（D 切片九）
+
+```java
+private final Map<StatEnum, TreeSet<IStatFunction>> stats = new LinkedHashMap<>();   // 每个生物一个
+private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();            // 每个生物一把
+```
+
+RRWL 实际是 5 个对象（RRWL + ReadLock + WriteLock + NonfairSync + ThreadLocalHoldCounter ≈128 B），加表头合计
+≈176 B/生物；play-15 口径 ≈12.7 万生物 ⇒ **≈16 MB（锁）+ ≈6 MB（表）**，而绝大多数生物从不登记属性函数。
+
+#### 12.23.1 做法与"发布顺序"不变式
+
+两者都改成首次写入才分配：`stats` 初始指向 `Collections.emptyMap()` 占位符，`lock` 初始为 `null`，
+`writableStats()` 双检 + `synchronized (this)`。**关键不变式：先发布锁、再发布表**（两个字段都是 `volatile`）：
+
+- 读到**非占位符表**的线程，必然也能读到那把锁（volatile 顺序：写 lock 排在写 stats 之前）⇒ 可以安全地
+  `lock.readLock().lock()`，不会 NPE；
+- 读到**占位符**的线程表示"这张生物没有任何属性函数"，而原实现在"表里没有该 stat"时本来就是直接返回基础值
+  （`getStat`/`getSetStatValue`/`getItemStatBoost` 的 `functions == null` 分支，且**不会**走
+  `StatCapUtil.calculateBaseValue` 与 `SecurityConfig.STATS_CHECK`）⇒ 免锁跳过与原行为逐字等价。
+
+因此读路径保持**读写锁语义不变**（同一把 RRWL、读读并行），没有把 RRWL 换成互斥锁 —— 也就是说这次没有改变任何
+锁语义与锁顺序，只改变了"锁何时存在"。这一点很重要：属性函数中存在**跨对象嵌套**（`SummonGameStats` 等在持有自身
+读锁时读 `owner.getMaster().getGameStats()`，方向恒为子→主），若改成互斥锁/`synchronized`，嵌套方向一旦出现反向
+就会死锁；保持读写锁则嵌套恒为读-读，结构上不可能死锁。
+
+改动点（5 处）：
+
+| 方法 | 改动 |
+|---|---|
+| `addEffectOnly` | `writableStats()` 物化后取局部锁引用，写锁内用**局部表引用**（不再读字段） |
+| `endEffect` | 占位符即"无条目可移除"，跳过锁；但**结尾 `onStatsChange()` 照旧执行**（原实现在空表上也会走到） |
+| `getStat` | 占位符 → 直接 `return stat`；否则读锁内用快照查表 |
+| `getSetStatValue` | 占位符 → `return null`；否则同上 |
+| `getItemStatBoost` | 占位符 → `return stat`；否则同上 |
+
+`getStatsByStatEnum` 增加私有重载 `(StatEnum, Map)`：加锁的读路径先取 volatile 快照再加锁，**绝不在加锁后二次读
+字段**（否则可能迭代到一张自己没锁住的表）。公共 `getStatsByStatEnum(StatEnum)` 行为不变（GM 命令仍按无锁复制用）。
+表一旦物化就不回退到占位符（其他线程可能仍持有它），与 12.21 的约定一致。
+
+#### 12.23.2 测试（`CreatureGameStatsTest`，4 例）
+
+1. 未写入时两个实例共享同一占位符、`lock == null`，且只读路径（`getStat`/`getSetStatValue`）与无函数的
+   `endEffect` 都不物化；
+2. 首次 `addEffectOnly` 后锁与表都已物化、修正生效（100 → 150），`endEffect` 后修正被移除且**表不退回占位符**；
+3. 并发首次写入（8 线程 × 16 个不同 `StatEnum`）必须收敛到同一张表——断言 128 个函数全部落在同一张表里
+   （用不同 StatEnum 规避 `TreeSet` 按 priority/hashCode 判重带来的偶发合并）；
+4. `readsRacingTheFirstWriteNeverSeeANullLock`：1 个写线程刷 2000 次 + 2 个读线程空转 `getStat`/`getItemStatBoost`/
+   `getSetStatValue`，顺序反了就会 NPE——把 12.23.1 的发布顺序不变式钉成回归测试。
+
+#### 12.23.3 验证
+
+```
+mvn -Dtest=CreatureGameStatsTest,CreatureGameStatsBytecodeTest,NpcGameStatsTest,NpcLifeStatsTest,AggroListTest,
+AbstractAIDeathListenerListTest,AttackUtilTest,GetMostPlayerDamageNullGateTest,AI2EngineRetailSelectionTest,
+RetailPatternAI2Test,ObserveControllerTest,ObserveControllerAttackContextTest,ObserveControllerLifeChangedTest,
+AbstractCollisionObserverTest,KnownListTest,KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,
+NpcShoutDataTest,ShoutEventHandlerTest,MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,
+EffectControllerTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,
+NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，33 个测试类 331 例全绿**。
+
+### 12.24 第二十八轮（评估后**不做**）：`TreeSet<IStatFunction>` 92k 个 / ≈22 MB
+
+D 项最后一个候选（play-15：`TreeSet` 92,150 + `TreeMap` 92,150 + `Entry` 560,031）评估结论：**不满足"零判定变化
+的降本"标准，明确不做**：
+
+1. 这些 `TreeSet` 已经是**按需创建**的——只出现在 `addEffectOnly` 的 `stats.put(name, new TreeSet<>())` 分支里，
+   没有函数就永远不建。92k 个 ÷ ≈12.7 万生物 ≈ 0.7/生物，说明它们基本都在真实使用，没有可懒物化的空壳；
+2. `IStatFunction extends Comparable<IStatFunction>`，`TreeSet` 在这里承担的是**应用顺序**语义
+   （`StatFunction.compareTo` 用 priority，平手再按 hashCode 兜底），换成 `ArrayList`/`HashSet` 会改变属性应用的
+   顺序假设 —— 属于语义变更而非等价降本，收益不足以承担该风险；
+3. 若日后仍要动这块，方向应是"减少每条函数一个 `StatFunctionProxy` 包装对象"或"空集合清理"这类单独取证的改动，
+   而不是替换容器类型。

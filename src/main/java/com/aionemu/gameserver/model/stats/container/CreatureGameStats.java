@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.stats.container;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -47,8 +48,26 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 */
 	private static final CalculationType[] NO_CALCULATION_TYPES = new CalculationType[0];
 	private long lastGeoUpdate = 0;
-	private final Map<StatEnum, TreeSet<IStatFunction>> stats;
-	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	/**
+	 * 属性函数表（懒物化）：每个生物原本都预制一个 {@code LinkedHashMap} 和一把 {@code ReentrantReadWriteLock}
+	 * （RRWL + ReadLock + WriteLock + NonfairSync + ThreadLocalHoldCounter ≈128 B/实例，全服 ≈12.7 万生物 ≈16 MB），
+	 * 但绝大多数生物从不登记属性函数（12.15 的 EffectController 统计同样显示多数生物不带 effect）。
+	 * 这里两者都改为首次写入才分配：读路径读到占位符即表示"没有任何属性函数"，此时原实现本来就直接返回基础值，
+	 * 因此无需加锁。
+	 * Stats-function map, materialised lazily: every creature pre-created a LinkedHashMap plus a
+	 * ReentrantReadWriteLock (~128 B, ~16 MB over ~127k creatures in play-15) although almost none of them ever
+	 * registers a stat function. Reads that still see the placeholder mean "no stat functions at all", which the old
+	 * code answered with the plain base value anyway, so they need no lock.
+	 *
+	 * <p>发布顺序是硬约束：{@link #writableStats()} 先写 {@code lock} 再写 {@code stats}，所以"读到非占位符的表"
+	 * 一定也能读到那把锁（volatile 顺序），读路径据此才能安全地免锁跳过。
+	 * The publication order is load-bearing: the lock is written before the map, so a reader that sees a
+	 * materialised map is guaranteed to see the lock as well (volatile ordering).
+	 */
+	private static final Map<StatEnum, TreeSet<IStatFunction>> EMPTY_STATS = Collections.emptyMap();
+	private volatile Map<StatEnum, TreeSet<IStatFunction>> stats = EMPTY_STATS;
+	/** 属性表读写锁（与表一起在首次写入时分配）。 / Stats map lock, allocated with the map on the first write. */
+	private volatile ReentrantReadWriteLock lock;
 	/**
 	 * @return the atcount
 	 */
@@ -60,7 +79,30 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	protected CreatureGameStats(T owner) {
 		this.owner = owner;
-		this.stats = new LinkedHashMap<StatEnum, TreeSet<IStatFunction>>();
+	}
+
+	/**
+	 * 物化属性表与配套读写锁：双检 + {@code synchronized (this)}，并发首次写入收敛到同一张表和同一把锁。
+	 * <p>先发布锁、后发布表（见 {@link #stats} 的说明），读路径依赖这个顺序判断是否可以免锁。
+	 * Materialises the stats map and its lock with a double-checked {@code synchronized (this)} so concurrent first
+	 * writes converge on one map and one lock; the lock is published before the map on purpose.
+	 *
+	 * @return 可写表 / writable map
+	 */
+	private Map<StatEnum, TreeSet<IStatFunction>> writableStats() {
+		Map<StatEnum, TreeSet<IStatFunction>> current = stats;
+		if (current != EMPTY_STATS) {
+			return current;
+		}
+		synchronized (this) {
+			if (stats == EMPTY_STATS) {
+				if (lock == null) {
+					lock = new ReentrantReadWriteLock();
+				}
+				stats = new LinkedHashMap<StatEnum, TreeSet<IStatFunction>>();
+			}
+			return stats;
+		}
 	}
 
 	/**
@@ -85,20 +127,22 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	/** 添加 effect only / Adds effect only */
 	public final void addEffectOnly(StatOwner statOwner, List<? extends IStatFunction> functions) {
-		lock.writeLock().lock();
+		Map<StatEnum, TreeSet<IStatFunction>> current = writableStats();
+		ReentrantReadWriteLock statsLock = lock;
+		statsLock.writeLock().lock();
 		try {
 			for (IStatFunction function : functions) {
-				if (!stats.containsKey(function.getName())) {
-					stats.put(function.getName(), new TreeSet<IStatFunction>());
+				if (!current.containsKey(function.getName())) {
+					current.put(function.getName(), new TreeSet<IStatFunction>());
 				}
 				IStatFunction func = function;
 				if (function instanceof StatFunction) {
 					func = new StatFunctionProxy(statOwner, function);
 				}
-				addFunction(function.getName(), func);
+				addFunction(current, function.getName(), func);
 			}
 		} finally {
-			lock.writeLock().unlock();
+			statsLock.writeLock().unlock();
 		}
 	}
 
@@ -110,19 +154,27 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	/** 结束效果 / End Effect */
 	public final void endEffect(StatOwner statOwner) {
-		lock.writeLock().lock();
-		try {
-			for (Entry<StatEnum, TreeSet<IStatFunction>> e : stats.entrySet()) {
-				TreeSet<IStatFunction> value = e.getValue();
-				for (Iterator<IStatFunction> iter = value.iterator(); iter.hasNext();) {
-					IStatFunction ownedMod = iter.next();
-					if (ownedMod.getOwner() != null && ownedMod.getOwner().equals(statOwner)) {
-						iter.remove();
+		// 占位符表示这张生物从未登记过属性函数：没有条目可移除（等价于原来遍历空表），也就不需要加锁——
+		// 但结尾的 onStatsChange() 必须照旧执行，原实现在空表上也会走到那里。
+		// The placeholder means the creature never registered a stat function, so there is nothing to remove and no
+		// lock is needed; onStatsChange() still runs, exactly as it did after iterating an empty map.
+		Map<StatEnum, TreeSet<IStatFunction>> current = stats;
+		if (current != EMPTY_STATS) {
+			ReentrantReadWriteLock statsLock = lock;
+			statsLock.writeLock().lock();
+			try {
+				for (Entry<StatEnum, TreeSet<IStatFunction>> e : current.entrySet()) {
+					TreeSet<IStatFunction> value = e.getValue();
+					for (Iterator<IStatFunction> iter = value.iterator(); iter.hasNext();) {
+						IStatFunction ownedMod = iter.next();
+						if (ownedMod.getOwner() != null && ownedMod.getOwner().equals(statOwner)) {
+							iter.remove();
+						}
 					}
 				}
+			} finally {
+				statsLock.writeLock().unlock();
 			}
-		} finally {
-			lock.writeLock().unlock();
 		}
 		onStatsChange();
 	}
@@ -178,9 +230,16 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, Stat2 stat, CalculationType... calculationTypes) {
-		lock.readLock().lock();
+		Map<StatEnum, TreeSet<IStatFunction>> current = stats;
+		if (current == EMPTY_STATS) {
+			// 占位符等价于"没有任何属性函数"：原实现在这里同样直接返回基础值（不走 StatCapUtil/校验）。
+			// The placeholder means "no stat functions", which returned the plain base stat before as well.
+			return stat;
+		}
+		ReentrantReadWriteLock statsLock = lock;
+		statsLock.readLock().lock();
 		try {
-			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum, current);
 			if (functions == null) {
 				return stat;
 			}
@@ -197,14 +256,19 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 			return stat;
 		} finally {
-			lock.readLock().unlock();
+			statsLock.readLock().unlock();
 		}
 	}
 
 	public Integer getSetStatValue(StatEnum statEnum) {
-		lock.readLock().lock();
+		Map<StatEnum, TreeSet<IStatFunction>> current = stats;
+		if (current == EMPTY_STATS) {
+			return null;
+		}
+		ReentrantReadWriteLock statsLock = lock;
+		statsLock.readLock().lock();
 		try {
-			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum, current);
 			if (functions == null) {
 				return null;
 			}
@@ -218,15 +282,20 @@ public abstract class CreatureGameStats<T extends Creature> {
 			}
 			return value;
 		} finally {
-			lock.readLock().unlock();
+			statsLock.readLock().unlock();
 		}
 	}
 
 	/** 返回 item stat boost / Returns the item stat boost */
 	public Stat2 getItemStatBoost(StatEnum statEnum, Stat2 stat) {
-		lock.readLock().lock();
+		Map<StatEnum, TreeSet<IStatFunction>> current = stats;
+		if (current == EMPTY_STATS) {
+			return stat;
+		}
+		ReentrantReadWriteLock statsLock = lock;
+		statsLock.readLock().lock();
 		try {
-			Set<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			Set<IStatFunction> functions = getStatsByStatEnum(statEnum, current);
 			if (functions == null || functions.isEmpty()) {
 				return stat;
 			}
@@ -237,7 +306,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 				}
 			}
 		} finally {
-			lock.readLock().unlock();
+			statsLock.readLock().unlock();
 		}
 		return stat;
 	}
@@ -436,7 +505,20 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 * @return 函数视图或 null / the function view, or null
 	 */
 	public Set<IStatFunction> getStatsByStatEnum(StatEnum stat) {
-		TreeSet<IStatFunction> allStats = stats.get(stat);
+		return getStatsByStatEnum(stat, stats);
+	}
+
+	/**
+	 * 在调用方自己的快照上查表：加锁的读路径先取 volatile 快照再加锁，避免二次读字段而迭代一张自己没锁住的表。
+	 * Looks the functions up in the caller's own snapshot, so a locked read never re-reads the volatile field and
+	 * ends up iterating a map it did not lock.
+	 *
+	 * @param stat stat 名 / stat enum
+	 * @param source 调用方的表快照 / the caller's map snapshot
+	 * @return 函数视图或 null / the function view, or null
+	 */
+	private Set<IStatFunction> getStatsByStatEnum(StatEnum stat, Map<StatEnum, TreeSet<IStatFunction>> source) {
+		TreeSet<IStatFunction> allStats = source.get(stat);
 		if (allStats == null) {
 			return null;
 		}
@@ -456,8 +538,8 @@ public abstract class CreatureGameStats<T extends Creature> {
 		return setFuncs == null ? allStats : setFuncs;
 	}
 
-	private void addFunction(StatEnum stat, IStatFunction function) {
-		TreeSet<IStatFunction> allStats = stats.get(stat);
+	private void addFunction(Map<StatEnum, TreeSet<IStatFunction>> target, StatEnum stat, IStatFunction function) {
+		TreeSet<IStatFunction> allStats = target.get(stat);
 		allStats.add(function);
 	}
 
