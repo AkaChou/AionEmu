@@ -121,7 +121,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <collect-item item-id="182213214" count="8"/>
+        <collect-item item-id="182213208" count="50"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

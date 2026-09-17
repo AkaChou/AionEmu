@@ -699,3 +699,25 @@ first_check: 比对任务 <drops> 与真端 quest.xml 的 drop_monster/drop_prob
 
 - **判定规则**：任务的掉落契约不得低于真端 quest.xml——允许生产把同一批怪重新分行、允许比重端多来源，但**不得少于真端任一概率档的怪物数、不得丢失掉落道具**；收集类交付目标必须至少存在一条获得路径（掉落或 `give-item`）。豁免必须逐条写入有证据的例外清单，禁止任务级通配豁免。
 - **代表案例**：雷山塔 `15400`（三个野外箱的掉落行整体丢失，s3 交付三个道具永远无法满足）、活动任务 `51022`（货箱掉落丢失）、`50019`（活动怪掉落丢失）、`14016`/`21107`（真端双来源被裁成单来源）、以及 75 个概率被写成 100% 的任务；由 `QuestDropContractGateTest` + 真端基线 TSV 守护。
+
+---
+
+## [QE-031] 二十九、任务道具角色归属与收集事件监听对象 (QUEST_ITEM_ROLE_OWNERSHIP)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务 metadata <items>/<inventory-items>/<has-item>/<remove-item>/<collect-item> 与真端 collect_item/check_item 的角色归属
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 收集任务的怪物掉落正常，交付对话却始终提示物品不足；或收集进度条完全不刷新、任务停在收集阶段无法进入下一步
+root_cause: 1. 批量迁移把"道具块"按邻居任务复制：15010 写成 15011 的 quest_15011a(7)、15012 写成 15013a、15043 写成 15044a、15070 写成 15071a、51021 写成 51018a——掉落发的是自家道具，交付却校验邻居任务的道具，玩家永远凑不齐；2. collect-item 事件监听对象错写成邻居任务道具、count 误用掉落行数：28836 监听 quest_28835a(5)、28838 监听 quest_41257b(8)，而这两个任务各有 5/8 条掉落行，事件永不触发，客户端收集进度不刷新
+fix_or_guardrail: 1. 5 个任务的交付条件改为自家真端道具（15010 = quest_15010a x5 + quest_15010b x3，15012/15043/15070 分别为 quest_15012a x5、quest_15043a x7、quest_15070a x10，51021 = quest_51017a x3）；2. 2 个任务的 collect-item 事件改为自家道具 + 收集数量（28836 → 182213207 count 50，28838 → 182213208 count 50，真端 collect_item/check_item 均为 50）；3. 新增 QuestItemSourceContractGateTest：全库不变量 I1「collect-item 事件只能监听本任务声明/发放/上报的道具」+ 7 个修复任务的交付集合回归；4. 真端 collect_item/check_item 名称经 item_template `name_desc` 映射为 ID，生成 /quest/quest-item-role-baseline.tsv（3,660 任务）供后续逐条评审
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/15010.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15012.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15043.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15070.xml; src/main/resources/aion/data/static_data/quest_definition/quests/51021.xml; src/main/resources/aion/data/static_data/quest_definition/quests/28836.xml; src/main/resources/aion/data/static_data/quest_definition/quests/28838.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestItemSourceContractGateTest.java; src/test/resources/quest/quest-item-role-baseline.tsv; .agents/summary/quest/item-producer-scan/audit_cross_quest_item_roles.py; .agents/summary/quest/item-producer-scan/generate_item_role_baseline.py
+validation: 道具开发名核对（182215668 = quest_15013a 而 15012 真端 collect/check 为 quest_15012a）与真端字段逐条比对确认 7 处均为迁移错配；全库不变量 I1 复核 0 违规
+boundaries: 真端 collect/check 名称在我方交付集合中缺失的 89 行（item-role-gaps.tsv）是独立待评审轴，未纳入门禁；item_template 缺少 name_desc 的道具无法映射，不参与该判定；跨任务道具交接链（如 13904 交付 13903 的道具、50048 消耗 50047 的奖励）属真端设计，不得按本模式一律判错
+superseded_by: none
+see_also: [QE-030]
+first_check: 任务交付条件里的道具是否等于本任务 items/drops 里的道具（开发名见 item_template name_desc）；collect-item 事件是否监听本任务道具
+-->
+
+- **判定规则**：任务的交付/消耗条件只能校验**本任务自己声明或发放**的道具；`collect-item` 事件是客户端进度刷新的触发点，监听对象必须是本任务自己的道具。道具归属以 item_template 的 `name_desc`（`quest_<questId>...`）为权威，跨任务引用必须能给出真端 collect/check 或交接链证据。
+- **代表案例**：`15012` 掉落 quest_15012a 却校验 quest_15013a（15013 的道具，同批 15010/15043/15070/51021 都是 +1 偏移复制）；`28836`/`28838` 的 collect-item 事件监听邻居任务道具并把 count 写成掉落行数（5/8），收集进度永不刷新；由 `QuestItemSourceContractGateTest` 守护。

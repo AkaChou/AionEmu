@@ -61,10 +61,12 @@
         <dialog type="TALK_TO_NPC" npc-id="804700" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <has-item item-id="182215666" count="7"/>
+        <has-item item-id="182215664" count="5"/>
+        <has-item item-id="182215665" count="3"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215666" count="7"/>
+        <remove-item item-id="182215664" count="5"/>
+        <remove-item item-id="182215665" count="3"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

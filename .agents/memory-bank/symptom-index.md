@@ -64,6 +64,7 @@
 | 多档任务在 REWARD 阶段重新与交付 NPC 对话（USE_OBJECT / SELECT_QUEST_REWARD）时，客户端渲染的仍是第 1 档奖励文案与物品；或两条交付分支各自进入的窗口与最终发放的档位相反（在“正直奖赏”窗口里拿到“满足愿望”档位的奖励） | `QE-028` | 检查每个 npc-complete 预览下发的页面是否等于 rewardWindowForTier(complete-reward-index)，以及 REWARD 节点的进入窗口档位与实际发放档位是否一致 |
 | 任务 NPC 被世界级清理、其他玩家击杀或实例场景清理销毁后，玩家再回到同一阶段（含重登、重进副本、重新触发 self-loop 生成）时任务 NPC 不再出现，任务永久无法推进且没有任何报错 | `QE-029` | 检查任务 slot 的幂等判定是否只看 contains，以及被击杀/离开世界后的 NPC 是否还能在同一 slot 重建 |
 | 击杀任务指定怪物或使用任务对象成百上千次永远拿不到任务道具，收集类交付目标（check-item / npc-item-report / has-item）无法满足，任务卡在收集阶段 | `QE-030` | 比对任务 <drops> 与真端 quest.xml 的 drop_monster/drop_prob（按怪物加权直方图），以及收集类目标是否至少存在掉落或 give-item 获得路径 |
+| 收集任务的怪物掉落正常，交付对话却始终提示物品不足；或收集进度条完全不刷新、任务停在收集阶段无法进入下一步 | `QE-031` | 任务交付条件里的道具是否等于本任务 items/drops 里的道具（开发名见 item_template name_desc）；collect-item 事件是否监听本任务道具 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

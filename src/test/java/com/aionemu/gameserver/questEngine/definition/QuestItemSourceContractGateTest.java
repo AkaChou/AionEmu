@@ -1,0 +1,151 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * 任务道具来源契约门禁：收集类事件必须监听本任务自己声明/发放的道具，且跨任务道具引用必须与真端角色一致。
+ *
+ * Quest item source contract gate. A {@code collect-item} event decides when the client progress
+ * refresh fires, so it may only watch an item the quest itself declares (metadata items /
+ * inventory-items / work-items), drops, grants, or reports. A quest that watches a neighbouring
+ * quest's item never refreshes progress and can leave the collection stage stalled.
+ *
+ * <p>此外锁定 2026-09-17 修复的 7 个"引用邻居任务道具"任务：其交付条件必须使用本任务在真端
+ * collect_item/check_item 中声明的道具（道具开发名见 item_template 的 name_desc）。</p>
+ * It also pins the seven quests repaired on 2026-09-17 whose turn-in condition referenced the
+ * neighbouring quest's item instead of the item retail declares for that quest.
+ */
+class QuestItemSourceContractGateTest {
+
+	@Test
+	void collectItemEventsOnlyWatchItemsTheQuestItselfTracks() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		List<String> violations = new ArrayList<>();
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			Set<Integer> tracked = trackedItems(definition);
+			for (QuestTransition transition : definition.transitions()) {
+				if (transition.event() instanceof QuestEvent.CollectItem collect && !tracked.contains(collect.itemId())) {
+					violations.add("quest " + definition.id() + " node " + transition.sourceNode() + " watches collect-item "
+						+ collect.itemId() + " which the quest never declares, drops, grants or reports");
+				}
+			}
+		}
+		assertTrue(violations.isEmpty(),
+			() -> "collect-item events must watch an item owned by the same quest: " + violations);
+	}
+
+	@Test
+	void repairedQuestsRequireTheirOwnRetailCollectItems() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		// 15010 真端 collect/check = quest_15010a 5 + quest_15010b 3（原写成 15011 的 quest_15011a 7）
+		assertTurnInItems(catalog, 15010, Map.of(182215664, 5, 182215665, 3));
+		// 15012 真端 collect/check = quest_15012a 5（原写成 15013 的 quest_15013a）
+		assertTurnInItems(catalog, 15012, Map.of(182215667, 5));
+		// 15043 真端 collect/check = quest_15043a 7（原写成 15044 的 quest_15044a 5）
+		assertTurnInItems(catalog, 15043, Map.of(182215677, 7));
+		// 15070 真端 collect/check = quest_15070a 10（原写成 15071 的 quest_15071a 1）
+		assertTurnInItems(catalog, 15070, Map.of(182215682, 10));
+		// 51021 真端 collect/check = quest_51017a 3（原写成 51018 的 quest_51018a）
+		assertTurnInItems(catalog, 51021, Map.of(182215182, 3));
+		// 28836/28838：collect-item 事件原先监听邻居任务道具且 count 误用掉落行数，改为本任务道具 + 收集数量
+		assertCollectEvent(catalog, 28836, 182213207, 50);
+		assertCollectEvent(catalog, 28838, 182213208, 50);
+	}
+
+	/**
+	 * 任务自己声明、发放或汇报的道具集合。
+	 * Items the quest itself declares, grants, drops or reports.
+	 */
+	private static Set<Integer> trackedItems(QuestDefinition definition) {
+		QuestMetadata metadata = definition.metadata();
+		Set<Integer> tracked = new LinkedHashSet<>();
+		metadata.itemRequirements().forEach(requirement -> tracked.add(requirement.itemId()));
+		metadata.inventoryItems().forEach(requirement -> tracked.add(requirement.itemId()));
+		metadata.questWorkItems().forEach(requirement -> tracked.add(requirement.itemId()));
+		metadata.drops().stream().filter(drop -> drop.chance() > 0).forEach(drop -> tracked.add(drop.itemId()));
+		trackItemRewards(tracked, metadata.rewards());
+		trackItemRewards(tracked, metadata.extendedRewards());
+		trackRewardGroups(tracked, metadata.rewardGroups());
+		trackRewardGroups(tracked, metadata.extendedRewardGroups());
+		for (QuestTransition transition : definition.transitions()) {
+			for (QuestCondition condition : transition.conditions()) {
+				if (condition instanceof QuestCondition.HasItem hasItem) {
+					tracked.add(hasItem.itemId());
+				}
+			}
+			for (QuestAction action : transition.actions()) {
+				if (action instanceof QuestAction.GiveItem giveItem) {
+					tracked.add(giveItem.itemId());
+				}
+			}
+		}
+		return tracked;
+	}
+
+	private static void trackRewardGroups(Set<Integer> tracked, List<QuestRewardGroup> groups) {
+		groups.forEach(group -> trackItemRewards(tracked, group.rewards()));
+	}
+
+	private static void trackItemRewards(Set<Integer> tracked, List<QuestReward> rewards) {
+		for (QuestReward reward : rewards) {
+			String kind = reward.kind() == null ? "" : reward.kind().toUpperCase();
+			if ("ITEM".equals(kind) || "ITEM_SET".equals(kind)) {
+				tracked.add(reward.id());
+			}
+		}
+	}
+
+	/**
+	 * 断言交付条件只要求给定道具，且移除动作不触碰其它道具。
+	 * Asserts the turn-in conditions require exactly the given items and removals touch nothing else.
+	 */
+	private static void assertTurnInItems(QuestCatalog catalog, int questId, Map<Integer, Integer> expected) {
+		QuestDefinition definition = definition(catalog, questId);
+		Map<Integer, Set<Integer>> required = new LinkedHashMap<>();
+		Set<Integer> removed = new TreeSet<>();
+		for (QuestTransition transition : definition.transitions()) {
+			for (QuestCondition condition : transition.conditions()) {
+				if (condition instanceof QuestCondition.HasItem hasItem && hasItem.expected()) {
+					required.computeIfAbsent(hasItem.itemId(), ignored -> new TreeSet<>()).add(hasItem.count());
+				}
+			}
+			for (QuestAction action : transition.actions()) {
+				if (action instanceof QuestAction.RemoveItem removeItem) {
+					removed.add(removeItem.itemId());
+				}
+			}
+		}
+		assertEquals(expected.keySet(), required.keySet(),
+			() -> "quest " + questId + " must require exactly the retail collect items");
+		expected.forEach((itemId, count) -> assertEquals(Set.of(count), required.get(itemId),
+			() -> "quest " + questId + " must require " + count + " of item " + itemId));
+		assertTrue(expected.keySet().containsAll(removed),
+			() -> "quest " + questId + " may only remove the items it requires: " + removed);
+	}
+
+	private static void assertCollectEvent(QuestCatalog catalog, int questId, int itemId, int count) {
+		QuestDefinition definition = definition(catalog, questId);
+		boolean matched = definition.transitions().stream()
+			.anyMatch(transition -> transition.event() instanceof QuestEvent.CollectItem collect
+				&& collect.itemId() == itemId && collect.count() == count);
+		assertTrue(matched, () -> "quest " + questId + " must watch collect-item " + itemId + " count " + count);
+	}
+
+	private static QuestDefinition definition(QuestCatalog catalog, int questId) {
+		return catalog.findExecutable(questId)
+			.orElseThrow(() -> new AssertionError("quest " + questId + " has no executable definition"))
+			.definition();
+	}
+}
