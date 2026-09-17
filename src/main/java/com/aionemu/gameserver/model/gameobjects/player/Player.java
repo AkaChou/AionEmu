@@ -437,7 +437,8 @@ public class Player extends Creature {
 	private boolean enchantBoost;
 	private boolean authorizeBoost;
 	private boolean setMinionSpawned;
-	private Map<Integer, MaxCountOfDay> maxCountEvent;
+	/** 事件物品每日限购注册表 / Event-item daily purchase-limit registry */
+	private final PlayerItemDailyLimits itemDailyLimits = new PlayerItemDailyLimits();
 	/**
 	 * 月华骰子游戏。
 	 * Luna Dice Game
@@ -2331,43 +2332,32 @@ public class Player extends Creature {
 
 	/** 添加 item max count of day / Adds item max count of day */
 	public void addItemMaxCountOfDay(int itemId, int thisCount) {
-		if (maxCountEvent == null) {
-			maxCountEvent = new LinkedHashMap<Integer, MaxCountOfDay>();
-		}
-		if (maxCountEvent.get(itemId) != null) {
-			maxCountEvent.get(itemId).setThisCount(thisCount);
-		} else {
-			maxCountEvent.put(itemId, new MaxCountOfDay(thisCount));
-		}
+		itemDailyLimits.addItemMaxCount(itemId, thisCount);
 	}
 
 	/** 返回 item max this count / Returns the item max this count */
 	public int getItemMaxThisCount(int itemId) {
-		if (maxCountEvent == null || !maxCountEvent.containsKey(itemId)) {
-			return 0;
-		}
-		return maxCountEvent.get(itemId).getThisCount();
+		return itemDailyLimits.getItemMaxCount(itemId);
 	}
 
 	/** 移除 item max this count / Removes item max this count */
 	public void removeItemMaxThisCount(int itemId) {
-		if (maxCountEvent == null) {
-			return;
-		}
-		maxCountEvent.remove(itemId);
+		itemDailyLimits.removeItemMaxCount(itemId);
 	}
 
 	/** 清除物品本次数上限 / Clear item max this count */
 	public void clearItemMaxThisCount() {
-		if (maxCountEvent == null) {
-			return;
-		}
-		maxCountEvent.clear();
+		itemDailyLimits.clear();
 	}
 
-	/** 返回 item max this counts / Returns the item max this counts */
+	/**
+	 * 返回原始物品当日次数表。
+	 * Returns the backing per-day item count map.
+	 *
+	 * @return 当日次数表（live 视图），未创建时为 null / live map, or null when not created
+	 */
 	public Map<Integer, MaxCountOfDay> getItemMaxThisCounts() {
-		return maxCountEvent;
+		return itemDailyLimits.getItemMaxCounts();
 	}
 
 	/** 设置 bandit / Sets the bandit */
