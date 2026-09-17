@@ -15,7 +15,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * 玩家创造点列表，用于创造点相关逻辑。
  * Player CP List for cp logic.
  */
-public final class PlayerCPList implements CPList<Player> {
+public final class PlayerCPList {
 
 	private final Map<Integer, PlayerCPEntry> entry;
 
@@ -73,7 +73,6 @@ public final class PlayerCPList implements CPList<Player> {
 	}
 
 	/** 添加点。 / Adds point. */
-	@Override
 	public boolean addPoint(Player player, int slot, int point) {
 		return addPoint(player, slot, point, PersistentState.NEW);
 	}
@@ -85,7 +84,6 @@ public final class PlayerCPList implements CPList<Player> {
 	}
 
 	/** 移除点。 / Removes point. */
-	@Override
 	public synchronized boolean removePoint(Player player, int slot) {
 		PlayerCPEntry entries = entry.get(slot);
 		if (entries != null) {
@@ -97,7 +95,6 @@ public final class PlayerCPList implements CPList<Player> {
 	}
 
 	/** 大小 / size. */
-	@Override
 	public int size() {
 		return entry.size();
 	}

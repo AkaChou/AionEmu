@@ -17,7 +17,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * @author Ranastic
  */
 
-public final class PlayerABList implements ABList<Player> {
+public final class PlayerABList {
 	private final Map<Integer, PlayerABEntry> entry;
 
 	public PlayerABList() {
@@ -44,7 +44,6 @@ public final class PlayerABList implements ABList<Player> {
 	}
 
 	/** 添加。 / Add. */
-	@Override
 	public boolean add(Player player, int id, int killCount, int level, int claimReward) {
 		return add(player, id, killCount, level, claimReward, PersistentState.NEW);
 	}
@@ -57,7 +56,6 @@ public final class PlayerABList implements ABList<Player> {
 	}
 
 	/** 移除。 / Remove. */
-	@Override
 	public synchronized boolean remove(Player player, int id) {
 		PlayerABEntry entries = entry.get(id);
 		if (entries != null) {
@@ -69,7 +67,6 @@ public final class PlayerABList implements ABList<Player> {
 	}
 
 	/** 返回条目数。 / Returns the number of entries. */
-	@Override
 	public int size() {
 		return entry.size();
 	}

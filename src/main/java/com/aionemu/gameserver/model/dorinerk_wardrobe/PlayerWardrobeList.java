@@ -16,7 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  *
  * @author Ranastic
  */
-public final class PlayerWardrobeList implements WardrobeList<Player> {
+public final class PlayerWardrobeList {
 
 	private final Map<Integer, PlayerWardrobeEntry> entry;
 
@@ -44,7 +44,6 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 	}
 
 	/** 添加物品。 / Adds item. */
-	@Override
 	public boolean addItem(Player player, int itemId, int slot, int reskin_count) {
 		return addItem(player, itemId, slot, reskin_count, PersistentState.NEW);
 	}
@@ -56,7 +55,6 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 	}
 
 	/** 移除物品。 / Removes item. */
-	@Override
 	public synchronized boolean removeItem(Player player, int itemId) {
 		PlayerWardrobeEntry entries = entry.get(itemId);
 		if (entries != null) {
@@ -68,7 +66,6 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 	}
 
 	/** 大小。 / Size. */
-	@Override
 	public int size() {
 		return entry.size();
 	}

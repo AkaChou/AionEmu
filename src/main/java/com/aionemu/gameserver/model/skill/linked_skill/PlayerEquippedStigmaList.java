@@ -20,7 +20,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  *
  * @author Ranastic
  */
-public final class PlayerEquippedStigmaList implements StigmaList<Player> {
+public final class PlayerEquippedStigmaList {
 
 	private final Map<Integer, EquippedStigmasEntry> itemList;
 	private final List<EquippedStigmasEntry> deletedItems;
@@ -59,7 +59,6 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 	}
 
 	/** 添加物品。 / Adds item. */
-	@Override
 	public boolean addItem(Player player, int itemId, String itemName) {
 		return addItem(player, itemId, itemName, PersistentState.NEW);
 	}
@@ -71,7 +70,6 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 	}
 
 	/** 移除。 / Remove. */
-	@Override
 	public boolean remove(Player player, int itemId) {
 		boolean removed = removeInTransaction(itemId);
 		if (player != null) {
@@ -137,13 +135,11 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 	}
 
 	/** 是否物品存在 / Whether item present*/
-	@Override
 	public boolean isItemPresent(int itemId) {
 		return itemList.containsKey(itemId);
 	}
 
 	/** 大小 / size. */
-	@Override
 	public int size() {
 		return itemList.size();
 	}

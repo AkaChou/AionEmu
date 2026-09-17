@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Rolandas
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Serializable {
+public class LastUsedCache<K extends Comparable, V> implements Serializable {
 
 	/**
 	 * 序列化版本。
@@ -168,7 +168,6 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 *
 	 * @return 键值对数组 / Array of pairs
 	 */
-	@Override
 	public CachePair[] getAll() {
 		CachePair[] p = new CachePair[maxSize];
 		int count = 0;
@@ -193,7 +192,6 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * @param key 键 / Key
 	 * @return 缓存值，不存在时为 null / Value or null
 	 */
-	@Override
 	public V get(K key) {
 		Item cur = map.get(key);
 		if (cur == null) {
@@ -212,7 +210,6 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 */
-	@Override
 	public void put(K key, V value) {
 		Item cur = map.get(key);
 		if (cur != null) {
@@ -237,7 +234,6 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 *
 	 * @param key 键 / Key
 	 */
-	@Override
 	public void remove(K key) {
 		Item cur = map.get(key);
 		if (cur == null) {
@@ -253,7 +249,6 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 *
 	 * @return 条目数 / Entry count
 	 */
-	@Override
 	public int size() {
 		return map.size();
 	}

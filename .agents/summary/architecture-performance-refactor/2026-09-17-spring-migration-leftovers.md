@@ -182,3 +182,45 @@
 - 验证：`LegionServiceTest`(3) + `LegionContainerTest`(3) + `LegionMemberContainerTest`(2) +
   `PlayerEnterWorldVipTest`(3) + `ModelCollectionImplementationTest`(18) +
   `ServiceInternalCollectionImplementationTest`(6) + `ShutdownHookTest`(5) = **40 例全绿**；`mvn test-compile` 通过。
+
+## 十一、单实现接口清理 + 成员域/天梯域分离（2026-09-17）
+
+### 1. 删除 6 个单实现接口（策略接口只是机械重复实现类方法名）
+
+| 删除的接口 | 唯一实现 | 处理 |
+|---|---|---|
+| `utils/collections/ICache` | `LastUsedCache` | 去掉 `implements`，`@Override` 内联剥离 |
+| `model/atreian_bestiary/ABList` | `PlayerABList` | 同上 |
+| `model/event_window/EventWindowList` | `PlayerEventWindowList` | 同上 |
+| `model/dorinerk_wardrobe/WardrobeList` | `PlayerWardrobeList` | 同上 |
+| `model/cp/CPList` | `PlayerCPList` | 同上 |
+| `model/skill/linked_skill/StigmaList` | `PlayerEquippedStigmaList` | 同上 |
+
+- 判定依据：接口名在仓库内仅出现 2 次（自身 + 唯一 `implements`），**没有任何以接口类型声明的变量/参数/返回值**
+  （DAO、Player 字段都用具体实现类），删除不影响 API 契约与多态语义。
+- 结果：6 个文件去除，实现类方法名/签名/行为不变。
+
+### 2. `LegionService` 成员域分离 → `LegionMembers`（387 行）
+
+- 迁出内容：成员缓存与持久化（`storeLegionMember` ×2、`storeLegionMemberExInCache`、`addCachedLegionMember(Ex)`、
+  `deleteLegionMemberFromDB`、`getLegionMemberEx` ×2、`loadLegionMemberExList`）、加入/踢出/离开
+  （`addLegionMember` ×2、`removeLegionMember`、`removePlayerFromLegionAsItself`）、登录/下线同步（`onLogin`、`onLogout`）。
+- 宿主协作：`LegionService` 暴露包内 `world()`、`allCachedLegionMembers()`、`allCachedLegions()`、`storeLegion()`、
+  `storeLegionAnnouncements()`、`addHistory(...)`、`displayLegionMessage(...)`、`getLegionMemberEx(String)`；
+  `LegionMembers` 惰性构造（`legionMembers()`）。
+- 对外 API 不变：`loadLegionMemberExList`、`removePlayerFromLegionAsItself`、`onLogin`、`onLogout` 在 `LegionService`
+  保留同名门面；`LegionRestrictions` 的 `directAddPlayer`/`getLegionMemberEx` 调用照旧。
+- `LegionService` 行数：2572 → 1957（第十节后） → **1723**。
+
+### 3. `Battleground` 天梯评分域 → `BattlegroundLadder`（107 行）
+
+- 迁出内容：`playerWinMatch`、`playerLoseMatch`、`performLadderUpdate`、`calcRatingChange`、`getLadderDAO`。
+- 兼容策略：`Battleground` 保留全部 `protected` 同名委托（`DeathmatchBg`/`SoloSurvivorBg`/`TwoTeamBg`/
+  `TwoTeamSmallBg` 的 `super.xxx` 调用与 `super.K_VALUE` 均不变）。
+- 未继续拆 `Battleground` 的原因：该类是 4 个战场子类的抽象基类，`preparePlayer`/`onDieDefault`/`onLeaveDefault`/
+  `performTeleport` 等 2000 行主体是被子类 `super` 调用的继承契约，抽离会改变继承面且缺乏运行时验证手段，
+  风险高于收益；只抽出唯一可作为纯域独立演进的天梯评分。
+- 验证：`BattlegroundCollectionsTest`(1) + `LadderServiceTest`(3) + `ServiceMapImplementationTest`(6) +
+  `LegionServiceTest`(3) + `LegionContainerTest`(3) + `LegionMemberContainerTest`(2) + `ModelCollectionImplementationTest`(18)
+  + `ServiceInternalCollectionImplementationTest`(6) + `PlayerEnterWorldVipTest`(3) + `ShutdownHookTest`(5)
+  + `GameLegacyServiceBridgeConfigurationTest`(57) = **140 例全绿**（含并行 quest 侧测试，一起跑无回归）；`mvn test-compile` 通过。

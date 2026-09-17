@@ -17,7 +17,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  *
  * @author Ranastic
  */
-public class PlayerEventWindowList implements EventWindowList<Player> {
+public class PlayerEventWindowList {
 
 	private final Map<Integer, PlayerEventWindowEntry> entry = new HashMap<>(0);
 
@@ -50,7 +50,6 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 	}
 
 	/** 添加。 / Add. */
-	@Override
 	public boolean add(Player player, int remaining, Timestamp timestamp, int Time) {
 		return add(player, remaining, timestamp, Time, PersistentState.NEW);
 	}
@@ -58,7 +57,6 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 	/**
 	 * 移除玩家 eventwindow 列表。 / remove player event window list
 	 */
-	@Override
 	public synchronized boolean remove(Player player, int remaining) {
 		PlayerEventWindowEntry playerEventWindowEntry = entry.get(remaining);
 		if (playerEventWindowEntry != null) {
@@ -75,7 +73,6 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 	 *
 	 * @return 条目数量 / Number of entries
 	 */
-	@Override
 	public int size() {
 		return entry.size();
 	}

@@ -915,34 +915,36 @@ public abstract class Battleground {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 	}
 
+
+
+
+
 	/**
 	 * 记录玩家胜场与评分变化。
 	 * Records a player win and rating change.
 	 *
-	 * @param player 玩家 / player
+	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	protected void playerWinMatch(Player player, int ratingChange) {
 		if (is1v1()) {
 			return;
 		}
-		getLadderDAO().addWin(player);
-		getLadderDAO().addRating(player, Math.round(ratingChange / (getLadderDAO().getRating(player) * 0.0015f)));
+		BattlegroundLadder.playerWinMatch(player, ratingChange);
 	}
 
 	/**
 	 * 记录玩家负场与评分变化。
 	 * Records a player loss and rating change.
 	 *
-	 * @param player 玩家 / player
+	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	protected void playerLoseMatch(Player player, int ratingChange) {
 		if (is1v1()) {
 			return;
 		}
-		getLadderDAO().addLoss(player);
-		getLadderDAO().addRating(player, Math.round(ratingChange * (getLadderDAO().getRating(player) * 0.0015f)));
+		BattlegroundLadder.playerLoseMatch(player, ratingChange);
 	}
 
 	/**
@@ -950,44 +952,32 @@ public abstract class Battleground {
 	 * Batch ladder update for winners and losers.
 	 *
 	 * @param winner 胜方玩家集合 / winners
-	 * @param loser 败方玩家集合 / losers
+	 * @param loser  败方玩家集合 / losers
 	 */
 	protected void performLadderUpdate(Collection<Player> winner, Collection<Player> loser) {
-		int avgWinnerRating = 0;
-		int avgLoserRating = 0;
-		for (Player pl : winner) {
-			getLadderDAO().addWin(pl);
-			avgWinnerRating += getLadderDAO().getRating(pl);
-		}
-		for (Player pl : loser) {
-			getLadderDAO().addLoss(pl);
-			avgLoserRating += getLadderDAO().getRating(pl);
-		}
-		if (winner.size() > 0) {
-			avgWinnerRating = avgWinnerRating / winner.size();
-		}
-		if (loser.size() > 0) {
-			avgLoserRating = avgLoserRating / loser.size();
-		}
-		int ratingChange = calcRatingChange(avgWinnerRating, avgLoserRating);
-		for (Player pl : winner) {
-			getLadderDAO().addRating(pl, +ratingChange);
-		}
-		for (Player pl : loser) {
-			getLadderDAO().addRating(pl, -ratingChange);
-		}
+		BattlegroundLadder.performLadderUpdate(winner, loser);
 	}
 
 	/**
 	 * 计算 Elo 评分变化量。
-	 * Calculates Elo rating change.
+	 * Calculates the Elo rating change.
 	 *
 	 * @param ratingA 胜方平均评分 / rating A
 	 * @param ratingB 败方平均评分 / rating B
 	 * @return 评分变化量 / delta
 	 */
 	protected int calcRatingChange(int ratingA, int ratingB) {
-		return (int) Math.round(K_VALUE * (1 / (1 + Math.pow(10, ((float) ratingB - (float) ratingA) / 400))));
+		return BattlegroundLadder.calcRatingChange(ratingA, ratingB);
+	}
+
+	/**
+	 * 读取天梯 DAO。
+	 * Resolves the ladder DAO.
+	 *
+	 * @return 天梯 DAO / ladder DAO
+	 */
+	protected static LadderDAO getLadderDAO() {
+		return BattlegroundLadder.dao();
 	}
 
 	/**
@@ -1453,15 +1443,6 @@ public abstract class Battleground {
 		}
 	}
 
-	/**
-	 * 获取天梯 DAO。
-	 * Returns the ladder DAO.
-	 *
-	 * @return 天梯 DAO / the ladder DAO
-	 */
-	protected static LadderDAO getLadderDAO() {
-		return DAOManager.getDAO(LadderDAO.class);
-	}
 
 	/**
 	 * 随机选取地图并创建副本实例。
