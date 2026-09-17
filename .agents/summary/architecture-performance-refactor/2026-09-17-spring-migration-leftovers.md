@@ -353,3 +353,19 @@
   `clazz.isAnnotationPresent(Data.class)` 恒为 false，反射护栏会静默失效（首版即踩此坑，已修正）。
 - 护栏有效性已验证：临时把 `Item` 的 `@Getter @Setter` 换成 `@Data`，测试立即红并给出业务解释
   （`Item 的源码不应出现 @Data：字段可变且被当作 Map 键…`）；恢复后 3 例全绿。
+
+### 5. 规则化（去名单）：@Data 判定交给规则，护栏按规则自动扫描（2026-09-17）
+
+- 规则落档：`.agents/rules/lombok.md`
+  - 「Beans and Data Objects」新增第 2 条（**访问器注解优先加在类型上**）与第 4 条（**@Data 逐类自检 5 问**：
+    字段是否可变 / 是否作为容器键或元素 / 对象图是否回指自身 / 是否由框架按特定构造器创建 / 是否含敏感字段；
+    任一为"是"即改用 `@Getter` + 定向注解）。
+  - 「Usage Boundaries」新增第 4 条：`@Data` 是 **CLASS retention**，反射 `isAnnotationPresent` 恒为 false，护栏必须读源码。
+- 护栏改造：`EntityIdentitySemanticsTest#classesAnnotatedWithDataMustNotDependOnIdentityEquality`
+  - **去掉类型名单**，改为全仓库规则扫描：先收集所有带 `@Data` 的类型，再检查 `Map<该类型,` 键位与 `Set<该类型>` 元素位
+    （`Map<Integer, Item>`、`List<Item>` 这类值位用法不误报），外加敏感字段检查。
+  - 效果：把 `Item` 临时改成 `@Data` 后，护栏自动列出仓库中全部 3 处把 `Item` 当键的位置
+    （`TemporaryTradeTimeTask:35`、`Equipment`、`QuestInventoryPersistenceStage:25`），无需任何名单维护。
+- 验证：正常状态下 3 例全绿（约 8s，全仓库源码扫描）；注入 `@Data` 到 `Item` 时立即失败并给出上述文件清单；
+  恢复后 `git diff src/main/java` 为空（无残留）。回归 `EntityIdentitySemanticsTest` + `ModelCollectionImplementationTest`
+  + `GameLegacyServiceBridgeConfigurationTest` + `ItemTest` 全绿。

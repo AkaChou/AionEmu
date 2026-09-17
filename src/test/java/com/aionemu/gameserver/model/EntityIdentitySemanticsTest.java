@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,29 +8,28 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-
-import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Item;
-import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.skillengine.model.Effect;
 
 import lombok.Data;
 
 /**
- * 固化实体类的"身份相等"契约：实体不能套 @Data。
- * Pins the identity-equality contract of game entities: entity classes must not use @Data.
+ * 固化实体类的身份相等契约，并按规则约束 @Data 的使用范围。
+ * Pins the identity-equality contract of game entities and constrains where @Data may be used.
  *
- * <p>背景：{@code TemporaryTradeTimeTask} 用 {@code HashMap<Item, Collection<Integer>>} 记录临时交易窗口，
- * 且 Item 的 count/color/enchant 等字段在交易期间会被改写。若 Item 获得按字段比较的 equals/hashCode，
- * {@code items.get(item)} 会因哈希值变化而失效，交易窗口静默丢失。
- * Background: {@code TemporaryTradeTimeTask} keeps a {@code HashMap<Item, Collection<Integer>>} for
- * temporary-trade windows while item fields such as count/color/enchant are mutated during the trade.
- * If Item gained field-based equals/hashCode, {@code items.get(item)} would silently fail.</p>
+ * <p>规则出处：{@code .agents/rules/lombok.md} → 「Beans and Data Objects」第 4 条。
+ * 本测试不维护类型名单，只按规则自动判定：只要某个 @Data 类型被任何源码放进
+ * {@code Map<该类型, …>} 的键位或 {@code Set<该类型>} 的元素位，该类型就依赖身份相等，
+ * @Data 生成的按字段 equals/hashCode 会让这些容器静默失效。
+ * The rule lives in {@code .agents/rules/lombok.md}. This test keeps no type allowlist: whenever any
+ * source places an @Data type in a map key position or a set element position, that type depends on
+ * identity equality and @Data would silently break those containers.</p>
  *
  * @author refactor-guard
  */
@@ -39,7 +37,7 @@ class EntityIdentitySemanticsTest {
 
 	/**
 	 * 反例：把 @Data（按字段 equals/hashCode）套到可变实体上，改成键后查不回来。
-	 * Negative case: @Data (field-based equals/hashCode) on a mutable entity loses its map entry after mutation.
+	 * Negative case: @Data on a mutable entity loses its map entry after a field mutation.
 	 */
 	@Test
 	void fieldBasedEqualityLosesMapEntryWhenTheEntityMutates() {
@@ -50,12 +48,12 @@ class EntityIdentitySemanticsTest {
 
 		entity.setAmount(150); // 模拟 Item#setItemCount 这类字段改写 / mimics Item#setItemCount
 
-		assertNull(byEntity.get(entity), "字段改动后应按 @Data 语义查不到 / @Data semantics loses the entry");
+		assertNull(byEntity.get(entity), "字段改动后应按 @Data 语义查不到 / @Data semantics lose the entry");
 	}
 
 	/**
 	 * 正例：保持身份相等的实体，字段改动后仍能命中同一条目（当前仓库行为）。
-	 * Positive case: identity-based entities keep their map entry across field mutation (current behavior).
+	 * Positive case: identity-based entities keep their map entry across field mutation.
 	 */
 	@Test
 	void identityEqualityKeepsMapEntryWhenTheEntityMutates() {
@@ -71,58 +69,109 @@ class EntityIdentitySemanticsTest {
 	}
 
 	/**
-	 * 护栏：核心实体类的源码不得出现 @Data / @EqualsAndHashCode / @ToString。
-	 * Guard: the source of core entity classes must not carry @Data / @EqualsAndHashCode / @ToString.
+	 * 规则护栏：带 @Data 的类不得被当作 Map 键 / Set 元素，也不得持有敏感字段。
+	 * Rule guard: a class annotated with @Data must not be used as a map key or set element,
+	 * and must not carry secret fields.
 	 *
-	 * <p>为什么读源码而不是反射：Lombok 的 @Data 只有 CLASS retention，不进运行时可见注解，
-	 * {@code clazz.isAnnotationPresent(Data.class)} 永远为 false，起不到护栏作用。
-	 * Why source-level instead of reflection: Lombok's @Data keeps CLASS retention only, so it never
-	 * appears in RuntimeVisibleAnnotations and a reflective guard would silently pass.</p>
-	 *
-	 * <p>为什么禁用这三个注解：这些类的字段可变、会被当作 Map 键（见 {@code TemporaryTradeTimeTask}），
-	 * 且对象图存在双向引用。按字段 equals/hashCode 会让 Map/Set 静默失效，递归 toString 有栈溢出风险。
-	 * Why these three: the fields are mutable, the instances are used as map keys (see
-	 * {@code TemporaryTradeTimeTask}) and the object graphs contain cycles, so field-based
-	 * equals/hashCode breaks lookups and a recursive toString risks stack overflow.</p>
+	 * <p>为什么扫源码：Lombok 的 @Data 只有 CLASS retention，不写进 RuntimeVisibleAnnotations，
+	 * 反射检查恒为通过（见 lombok.md 使用边界第 4 条）。
+	 * Why source scanning: Lombok's @Data has CLASS retention only and never reaches
+	 * RuntimeVisibleAnnotations, so a reflective check would silently pass.</p>
 	 */
 	@Test
-	void coreEntitySourcesMustNotDeclareFieldBasedEqualityOrToString() throws Exception {
-		Class<?>[] entities = { Player.class, Creature.class, Npc.class, Item.class, Effect.class };
-		for (Class<?> entity : entities) {
-			String source = readSource(entity);
-			for (String forbidden : new String[] { "@Data", "@EqualsAndHashCode", "@ToString" }) {
-				assertFalse(hasAnnotationLine(source, forbidden),
-						entity.getSimpleName() + " 的源码不应出现 " + forbidden
-								+ "：字段可变且被当作 Map 键，按字段比较会让 Map/Set 静默失效"
-								+ " / must not use field-based equality: mutable fields are used as map keys");
+	void classesAnnotatedWithDataMustNotDependOnIdentityEquality() throws Exception {
+		List<Path> sources = gameServerSources();
+		List<String> dataTypes = new ArrayList<>();
+		for (Path source : sources) {
+			String text = Files.readString(source, StandardCharsets.UTF_8);
+			String typeName = declaredTypeName(text);
+			if (typeName != null && RegexHolder.DATA_ANNOTATION.matcher(text).find()) {
+				dataTypes.add(typeName);
 			}
+		}
+		assertTrue(!dataTypes.isEmpty(), "未扫描到任何 @Data 类，测试可能失效 / no @Data class was scanned");
+
+		List<String> violations = new ArrayList<>();
+		for (Path source : sources) {
+			String text = Files.readString(source, StandardCharsets.UTF_8);
+			String typeName = declaredTypeName(text);
+			if (typeName != null && dataTypes.contains(typeName)
+					&& RegexHolder.SECRET_FIELD.matcher(text).find()) {
+				violations.add(source.getFileName() + " → 敏感字段 / secret field");
+			}
+			for (String dataType : dataTypes) {
+				if (RegexHolder.mapKey(dataType).matcher(text).find()
+						|| RegexHolder.setElement(dataType).matcher(text).find()) {
+					violations.add(source.getFileName() + " → 把 @Data 类型 " + dataType
+							+ " 用作 Map 键 / Set 元素（" + source + "）");
+				}
+			}
+		}
+		assertTrue(violations.isEmpty(),
+				"违反 .agents/rules/lombok.md 第 4 条：@Data 类型依赖身份相等，按字段 equals/hashCode "
+						+ "会让 Map/Set 静默失效 / @Data types used with identity semantics: " + violations);
+	}
+
+	/**
+	 * 列出游戏服主源码目录下的全部 .java 文件。
+	 * Lists all .java files under the game server main source tree.
+	 */
+	private static List<Path> gameServerSources() throws Exception {
+		Path classesDir = Paths.get(EntityIdentitySemanticsTest.class.getProtectionDomain()
+				.getCodeSource().getLocation().toURI());
+		Path sourceRoot = classesDir.getParent().getParent().resolve("src/main/java/com/aionemu/gameserver");
+		assertTrue(Files.isDirectory(sourceRoot), "未找到主源码目录 / source root not found: " + sourceRoot);
+		try (Stream<Path> walk = Files.walk(sourceRoot)) {
+			return walk.filter(path -> path.toString().endsWith(".java")).toList();
 		}
 	}
 
 	/**
-	 * 读取被测类的源码。
-	 * Reads the source file of the given class.
+	 * 读取源码中声明的公开类型名（class / enum / record）。
+	 * Reads the public type name declared in the given source.
 	 */
-	private static String readSource(Class<?> type) throws Exception {
-		Path classesDir = Paths.get(type.getProtectionDomain().getCodeSource().getLocation().toURI());
-		Path projectRoot = classesDir.getParent().getParent();
-		Path source = projectRoot.resolve("src/main/java").resolve(type.getName().replace('.', '/') + ".java");
-		assertTrue(Files.exists(source), "未找到源码文件 / source file not found: " + source);
-		return Files.readString(source, StandardCharsets.UTF_8);
+	private static String declaredTypeName(String source) {
+		var matcher = RegexHolder.TYPE_DECLARATION.matcher(source);
+		return matcher.find() ? matcher.group(1) : null;
 	}
 
 	/**
-	 * 判断源码里是否存在该注解声明的独立行（避免匹配注释中的文字）。
-	 * Whether the source declares the annotation on its own line (avoids matching comments).
+	 * 预编译的正则集合。
+	 * Precompiled regular expressions.
 	 */
-	private static boolean hasAnnotationLine(String source, String annotation) {
-		for (String line : source.split(System.lineSeparator())) {
-			String trimmed = line.trim();
-			if (trimmed.equals(annotation) || trimmed.startsWith(annotation + "(")) {
-				return true;
-			}
+	private static final class RegexHolder {
+
+		/** 类级 @Data 注解 / class level @Data annotation */
+		private static final Pattern DATA_ANNOTATION = Pattern.compile("(?m)^\\s*@Data\\s*(?:\\(|$)");
+
+		/** 字段级敏感信息 / secret-bearing fields */
+		private static final Pattern SECRET_FIELD = Pattern.compile(
+				"(?im)^\\s*(?:private|protected|public)\\s+[^;=]*\\b(?:password|passwd|secret|token|credential)\\b");
+
+		/** 公开类型声明 / declared public type */
+		private static final Pattern TYPE_DECLARATION =
+				Pattern.compile("(?m)^\\s*public\\s+(?:final\\s+|abstract\\s+)?(?:class|enum|record)\\s+(\\w+)");
+
+		/**
+		 * Map 键位：要求该类型是第一个类型参数（`Map<Item,` 命中，`Map<Integer, Item>` 不命中）。
+		 * Map key position: the type must be the first type argument.
+		 */
+		private static Pattern mapKey(String type) {
+			return Pattern.compile("\\b(?:Map|HashMap|ConcurrentHashMap|WeakHashMap|IdentityHashMap|"
+					+ "TreeMap|LinkedHashMap)\\s*<\\s*" + Pattern.quote(type) + "\\s*,");
 		}
-		return false;
+
+		/**
+		 * Set 元素位：`Set<Item>` 命中（`List<Item>` 不命中）。
+		 * Set element position: matches {@code Set<Item>} but not {@code List<Item>}.
+		 */
+		private static Pattern setElement(String type) {
+			return Pattern.compile("\\b(?:Set|HashSet|CopyOnWriteArraySet|TreeSet|LinkedHashSet)"
+					+ "\\s*<\\s*" + Pattern.quote(type) + "\\s*>");
+		}
+
+		private RegexHolder() {
+		}
 	}
 
 	/**
