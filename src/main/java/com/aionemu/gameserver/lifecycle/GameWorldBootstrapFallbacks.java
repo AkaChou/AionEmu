@@ -37,7 +37,7 @@ final class GameWorldBootstrapFallbacks {
      * @return ZoneService 单例 / ZoneService singleton
      */
     static ZoneService zoneService() {
-        return ZoneServiceFallback.INSTANCE;
+        return ZoneService.getInstance();
     }
 
     /**
@@ -47,7 +47,7 @@ final class GameWorldBootstrapFallbacks {
      * @return HotspotTeleportService 单例 / HotspotTeleportService singleton
      */
     static HotspotTeleportService hotspotTeleportService() {
-        return HotspotTeleportServiceFallback.INSTANCE;
+        return HotspotTeleportService.getInstance();
     }
 
     /**
@@ -57,7 +57,7 @@ final class GameWorldBootstrapFallbacks {
      * @return RoadService 单例 / RoadService singleton
      */
     static RoadService roadService() {
-        return RoadServiceFallback.INSTANCE;
+        return RoadService.getInstance();
     }
 
     /**
@@ -68,41 +68,5 @@ final class GameWorldBootstrapFallbacks {
      */
     static World world() {
         return World.getInstance();
-    }
-
-    /**
-     * ZoneService 回退持有者。
-     * ZoneService fallback holder.
-     */
-    private static final class ZoneServiceFallback {
-        /**
-         * ZoneService 单例。
-         * ZoneService singleton.
-         */
-        private static final ZoneService INSTANCE = ZoneService.getInstance();
-    }
-
-    /**
-     * HotspotTeleportService 回退持有者。
-     * HotspotTeleportService fallback holder.
-     */
-    private static final class HotspotTeleportServiceFallback {
-        /**
-         * HotspotTeleportService 单例。
-         * HotspotTeleportService singleton.
-         */
-        private static final HotspotTeleportService INSTANCE = HotspotTeleportService.getInstance();
-    }
-
-    /**
-     * RoadService 回退持有者。
-     * RoadService fallback holder.
-     */
-    private static final class RoadServiceFallback {
-        /**
-         * RoadService 单例。
-         * RoadService singleton.
-         */
-        private static final RoadService INSTANCE = RoadService.getInstance();
     }
 }

@@ -175,17 +175,26 @@ public class AI2Engine implements GameEngine {
 	}
 
 	/**
-	 * 获取引擎单例（优先 Spring Provider，否则回退静态持有者）。
-	 * Returns the engine singleton (Spring provider first, else static holder).
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * @return AI2Engine 实例 / AI2Engine instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static final AI2Engine getInstance() {
 		ObjectProvider<AI2Engine> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		AI2Engine provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("AI2Engine 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return SingletonHolder.instance;
+		return provided;
 	}
 
 	/**
@@ -196,15 +205,5 @@ public class AI2Engine implements GameEngine {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AI2Engine> provider) {
 		instanceProvider = provider;
-	}
-
-	/**
-	 * 静态单例持有者。
-	 * Static singleton holder.
-	 */
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-
-		protected static final AI2Engine instance = new AI2Engine();
 	}
 }

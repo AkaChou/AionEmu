@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import com.aionemu.gameserver.services.MotionLoggingService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,6 +53,16 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.context.support.StaticMessageSource;
 
 class XmlDataLoaderTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(MotionLoggingService.class, new MotionLoggingService());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(MotionLoggingService.class);
+	}
 
 	@TempDir
 	Path tempDir;

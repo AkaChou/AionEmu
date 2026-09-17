@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.ai;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import com.aionemu.gameserver.dataholders.RetailAiData.NpcParty;
 import com.aionemu.gameserver.dataholders.RetailAiData.NpcPartyMember;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -25,6 +29,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class RetailNpcPartyEngineTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(AI2Engine.class, new AI2Engine());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(AI2Engine.class);
+	}
 
 	@Test
 	void createsEveryExplicitMemberWithWorldScopedStableToken() {

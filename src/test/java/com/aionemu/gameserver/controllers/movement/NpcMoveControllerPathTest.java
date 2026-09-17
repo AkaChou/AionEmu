@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.controllers.movement;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +48,16 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NpcMoveControllerPathTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(MoveTaskManager.class, new MoveTaskManager());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(MoveTaskManager.class);
+	}
 
 	@BeforeAll
 	static void configurePacketProcessor() {

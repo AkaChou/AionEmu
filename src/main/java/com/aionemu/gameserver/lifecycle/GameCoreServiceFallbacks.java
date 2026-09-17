@@ -46,7 +46,7 @@ final class GameCoreServiceFallbacks {
      * @return HTML 缓存 / HTML cache
      */
     static HTMLCache htmlCache() {
-        return HtmlCacheFallback.INSTANCE;
+        return HTMLCache.getInstance();
     }
 
     /**
@@ -56,22 +56,6 @@ final class GameCoreServiceFallbacks {
      * @return XML 数据加载器 / XML data loader
      */
     static XmlDataLoader xmlDataLoader() {
-        return XmlDataLoaderFallback.INSTANCE;
-    }
-
-    /**
-     * {@link HTMLCache} 懒加载单例持有者。
-     * Lazy singleton holder for {@link HTMLCache}.
-     */
-    private static final class HtmlCacheFallback {
-        private static final HTMLCache INSTANCE = HTMLCache.getInstance();
-    }
-
-    /**
-     * {@link XmlDataLoader} 懒加载单例持有者。
-     * Lazy singleton holder for {@link XmlDataLoader}.
-     */
-    private static final class XmlDataLoaderFallback {
-        private static final XmlDataLoader INSTANCE = XmlDataLoader.getInstance();
+        return XmlDataLoader.getInstance();
     }
 }

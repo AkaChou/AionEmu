@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,6 +20,16 @@ import com.aionemu.gameserver.world.WorldPosition;
 import org.junit.jupiter.api.Test;
 
 class PacketBroadcasterTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(PacketBroadcaster.class, new PacketBroadcaster());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(PacketBroadcaster.class);
+	}
 
 	@Test
 	void updateQueuedDuringSendRemainsPending() {

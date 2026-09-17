@@ -26,7 +26,7 @@ final class GameHousingFallbacks {
      * @return 房屋竞拍服务 / Housing-bid service
      */
     static HousingBidService housingBidService() {
-        return HousingBidServiceFallback.INSTANCE;
+        return HousingBidService.getInstance();
     }
 
     /**
@@ -36,7 +36,7 @@ final class GameHousingFallbacks {
      * @return 房屋维护任务 / Maintenance task
      */
     static MaintenanceTask maintenanceTask() {
-        return MaintenanceTaskFallback.INSTANCE;
+        return MaintenanceTask.getInstance();
     }
 
     /**
@@ -46,7 +46,7 @@ final class GameHousingFallbacks {
      * @return 城镇服务 / Town service
      */
     static TownService townService() {
-        return TownServiceFallback.INSTANCE;
+        return TownService.getInstance();
     }
 
     /**
@@ -56,7 +56,7 @@ final class GameHousingFallbacks {
      * @return 房屋服务 / Housing service
      */
     static HousingService housingService() {
-        return HousingServiceFallback.INSTANCE;
+        return HousingService.getInstance();
     }
 
     /**
@@ -66,46 +66,6 @@ final class GameHousingFallbacks {
      * @return 挑战任务服务 / Challenge-task service
      */
     static ChallengeTaskService challengeTaskService() {
-        return ChallengeTaskServiceFallback.INSTANCE;
-    }
-
-    /**
-     * 房屋竞拍服务懒加载回退持有者。
-     * Lazy fallback holder for the housing-bid service.
-     */
-    private static final class HousingBidServiceFallback {
-        private static final HousingBidService INSTANCE = HousingBidService.getInstance();
-    }
-
-    /**
-     * 房屋维护任务懒加载回退持有者。
-     * Lazy fallback holder for the maintenance task.
-     */
-    private static final class MaintenanceTaskFallback {
-        private static final MaintenanceTask INSTANCE = MaintenanceTask.getInstance();
-    }
-
-    /**
-     * 城镇服务懒加载回退持有者。
-     * Lazy fallback holder for the town service.
-     */
-    private static final class TownServiceFallback {
-        private static final TownService INSTANCE = TownService.getInstance();
-    }
-
-    /**
-     * 房屋服务懒加载回退持有者。
-     * Lazy fallback holder for the housing service.
-     */
-    private static final class HousingServiceFallback {
-        private static final HousingService INSTANCE = HousingService.getInstance();
-    }
-
-    /**
-     * 挑战任务服务懒加载回退持有者。
-     * Lazy fallback holder for the challenge-task service.
-     */
-    private static final class ChallengeTaskServiceFallback {
-        private static final ChallengeTaskService INSTANCE = ChallengeTaskService.getInstance();
+        return ChallengeTaskService.getInstance();
     }
 }

@@ -26,7 +26,7 @@ final class GameEventBootstrapFallbacks {
      * @return 露娜商店服务 / Luna-shop service
      */
     static LunaShopService lunaShopService() {
-        return LunaShopServiceFallback.INSTANCE;
+        return LunaShopService.getInstance();
     }
 
     /**
@@ -36,7 +36,7 @@ final class GameEventBootstrapFallbacks {
      * @return 宠物役从服务 / Minion service
      */
     static MinionService minionService() {
-        return MinionServiceFallback.INSTANCE;
+        return MinionService.getInstance();
     }
 
     /**
@@ -46,7 +46,7 @@ final class GameEventBootstrapFallbacks {
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     static ShugoSweepService shugoSweepService() {
-        return ShugoSweepServiceFallback.INSTANCE;
+        return ShugoSweepService.getInstance();
     }
 
     /**
@@ -56,7 +56,7 @@ final class GameEventBootstrapFallbacks {
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     static AtreianPassportService atreianPassportService() {
-        return AtreianPassportServiceFallback.INSTANCE;
+        return AtreianPassportService.getInstance();
     }
 
     /**
@@ -66,46 +66,6 @@ final class GameEventBootstrapFallbacks {
      * @return 事件窗口服务 / Event-window service
      */
     static EventWindowService eventWindowService() {
-        return EventWindowServiceFallback.INSTANCE;
-    }
-
-    /**
-     * 露娜商店服务懒加载回退持有者。
-     * Lazy fallback holder for the Luna-shop service.
-     */
-    private static final class LunaShopServiceFallback {
-        private static final LunaShopService INSTANCE = LunaShopService.getInstance();
-    }
-
-    /**
-     * 宠物役从服务懒加载回退持有者。
-     * Lazy fallback holder for the minion service.
-     */
-    private static final class MinionServiceFallback {
-        private static final MinionService INSTANCE = MinionService.getInstance();
-    }
-
-    /**
-     * 修勾扫荡服务懒加载回退持有者。
-     * Lazy fallback holder for the Shugo-sweep service.
-     */
-    private static final class ShugoSweepServiceFallback {
-        private static final ShugoSweepService INSTANCE = ShugoSweepService.getInstance();
-    }
-
-    /**
-     * 阿特里亚护照服务懒加载回退持有者。
-     * Lazy fallback holder for the Atreian-passport service.
-     */
-    private static final class AtreianPassportServiceFallback {
-        private static final AtreianPassportService INSTANCE = AtreianPassportService.getInstance();
-    }
-
-    /**
-     * 事件窗口服务懒加载回退持有者。
-     * Lazy fallback holder for the event-window service.
-     */
-    private static final class EventWindowServiceFallback {
-        private static final EventWindowService INSTANCE = EventWindowService.getInstance();
+        return EventWindowService.getInstance();
     }
 }

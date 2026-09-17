@@ -25,7 +25,7 @@ final class GameMaintenanceServiceFallbacks {
      * @return 数据库清理服务 / Database cleaning service
      */
     static DatabaseCleaningService databaseCleaningService() {
-        return DatabaseCleaningServiceFallback.INSTANCE;
+        return DatabaseCleaningService.getInstance();
     }
 
     /**
@@ -35,7 +35,7 @@ final class GameMaintenanceServiceFallbacks {
      * @return 欧比斯排名清理服务 / Abyss-rank cleaning service
      */
     static AbyssRankCleaningService abyssRankCleaningService() {
-        return AbyssRankCleaningServiceFallback.INSTANCE;
+        return AbyssRankCleaningService.getInstance();
     }
 
     /**
@@ -45,7 +45,7 @@ final class GameMaintenanceServiceFallbacks {
      * @return 术古皇陵生成管理器 / Shugo Imperial Tomb spawn manager
      */
     static ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
-        return ShugoImperialTombSpawnManagerFallback.INSTANCE;
+        return ShugoImperialTombSpawnManager.getInstance();
     }
 
     /**
@@ -55,38 +55,6 @@ final class GameMaintenanceServiceFallbacks {
      * @return 赛季排名更新服务 / Season-ranking update service
      */
     static SeasonRankingUpdateService seasonRankingUpdateService() {
-        return SeasonRankingUpdateServiceFallback.INSTANCE;
-    }
-
-    /**
-     * {@link DatabaseCleaningService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link DatabaseCleaningService}.
-     */
-    private static final class DatabaseCleaningServiceFallback {
-        private static final DatabaseCleaningService INSTANCE = DatabaseCleaningService.getInstance();
-    }
-
-    /**
-     * {@link AbyssRankCleaningService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link AbyssRankCleaningService}.
-     */
-    private static final class AbyssRankCleaningServiceFallback {
-        private static final AbyssRankCleaningService INSTANCE = AbyssRankCleaningService.getInstance();
-    }
-
-    /**
-     * {@link ShugoImperialTombSpawnManager} 懒加载单例持有者。
-     * Lazy singleton holder for {@link ShugoImperialTombSpawnManager}.
-     */
-    private static final class ShugoImperialTombSpawnManagerFallback {
-        private static final ShugoImperialTombSpawnManager INSTANCE = ShugoImperialTombSpawnManager.getInstance();
-    }
-
-    /**
-     * {@link SeasonRankingUpdateService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link SeasonRankingUpdateService}.
-     */
-    private static final class SeasonRankingUpdateServiceFallback {
-        private static final SeasonRankingUpdateService INSTANCE = SeasonRankingUpdateService.getInstance();
+        return SeasonRankingUpdateService.getInstance();
     }
 }

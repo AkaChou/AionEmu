@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.QuestEngine;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -45,6 +50,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Production-chain proof for quest 1112 from packed a5b5 through completion protocol. */
 class Quest1112ProductionFlowTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(QuestEngine.class, new QuestEngine());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(QuestEngine.class);
+	}
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 1112;
 	private static final int NPC_ID = 203072;

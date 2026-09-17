@@ -19,12 +19,13 @@
 ### ① 双源静态兜底（本期在做）
 
 - 形态：`provider.getIfAvailable(() -> SingletonHolder.instance)`——Spring 优先、静态兜底。
-- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **105 处带 `SingletonHolder` 兜底**（退役前 131 处；
-  已完成 `InGameShopEn` 试点 + 第一批 16 类 + 第二批 9 类，其余 105 处待退役）。
+- 规模：源码中 `getIfAvailable(() ->` 共 268 处，其中 **0 处带 `SingletonHolder` 兜底**
+  （原 131 处已全部退役：`InGameShopEn` 试点 + A 组 16 + B 组 9 + 第三批 105）。
 - 另有 15 个文件含 `SingletonHolder` 字样，属于 chat/login/commons 侧纯静态持有，不是双源兜底，不在本期范围。
 - 危害：兜底一旦被走到，就在容器之外静默创建第二套实例（两套状态），且不在启动期暴露。
 - 现状：全部有 provider 注入点（手写 `setInstanceProvider` 或 Lombok `@Setter`），无孤儿；但每个类都至少被 1 个测试文件直接调用 `getInstance()`（`GameServiceProviderCompatibilityTest` 165 处调用、387 条断言），必须逐类迁移、同步改测试。
-- 治理：`LegacySingletonFallbackAuditTest` 冻结计数（当前 130），只能显式下调；新增兜底必须先在本文件登记。
+- 治理：`LegacySingletonFallbackAuditTest` 现冻结"零回落"：131 个退役文件清单 + 全库回落点必须为 0；
+  新增兜底会同时触发数量断言与退役类断言。
 - 批量计划：先按"除 `GameServiceProviderCompatibilityTest` 外还有多少测试文件直接调用 `getInstance()`"分批，
   再用"是否经 `*Fallbacks` 静态持有者回落"细化：
   - A 组（facade 直接 `getIfAvailable(provider, X::getInstance)`）：与试点同形，可机械退役；已完成 16 类。
@@ -100,9 +101,29 @@
 - 计数：114 → **105**（累计 26 类退役）。
 - 工具：`.agents/summary/architecture-performance-refactor/thin_retired_fallbacks.py`（收敛 fallback 条目）。
 
+### 第三批（其余 105 类，收口为零）
+
+- 退役清单：其余 105 个双源类（含 `ThreadPoolManager`、`AI2Engine`、`QuestEngine`、`InstanceEngine`、`World`、
+  `DataManager` 之后的全部剩余类）。
+- 收敛方式：`retire_all_fallbacks_v2.py` 统一改 fail-fast（支持 `NewSingletonHolder`、全限定持有者、`resolvedInstance`
+  缓存、空格缩进）；`thin_retired_fallbacks_v2.py` 收敛 9 个 `*Fallbacks` 文件里的 39 个 eager 持有者
+  （第 40 个 `ThreadPoolManager` 早已走 lifecycle bridge）。
+- 测试面：
+  - 31 处 destroy 后回退断言（`assertNotSame`）翻转为 `assertThrows(IllegalStateException.class, …)`
+    （compat 6 处、legacy-config 26 处，均按 FQN 过滤同名类）；
+  - 新增测试工具 `TestServiceProviders`，为 12 个依赖旧兜底实例的测试类安装/清理 provider
+    （`DropService`、`DropRegistrationService`、`AI2Engine`、`MoveTaskManager`、`MotionLoggingService`、
+    `LsPacketHandlerFactory`、`QuestEngine`、`GMService`、`PacketBroadcaster`）。
+  - `LegacySingletonFallbackAuditTest` 改为 131 文件清单 + 零回落冻结；compat 反射 fail-fast 契约覆盖全部 131 类。
+- 结果：全量测试中 `未由 Spring 提供` 报错 **0**；剩余失败均为并行会话在途的 quest 侧（65 失败 + 20 错误）
+  与 1 个既有 `SMPlayerSpawnTest` 字段类型不匹配，均与本迁移无关。
+
 ## 六、后续顺序
 
 ② 配置（`@ConfigurationProperties`）→ ③ DAO 归 Spring → ④⑤ 随链路收口；2265/823 静态门面调用点按 AR-001 结论不动。
+
+> 回归注意：新增服务若走"Spring provider + 静态兜底"双源，会被 `LegacySingletonFallbackAuditTest` 拦截；
+> 测试需要旧实例时用 `TestServiceProviders.install(...)` 安装 provider，而不是恢复兜底。
 
 ## 七、证据来源
 

@@ -197,40 +197,149 @@ class GameServiceProviderCompatibilityTest {
     void retiredSingletonAccessorsFailFastWithoutSpringProvider() throws Exception {
         // 已退役双源兜底的类：provider 被清空后必须 fail-fast，而不是静默创建第二套实例。
         // Retired dual-source classes must fail fast once their provider is cleared.
-        List<Class<?>> retired = List.of(
-                AbyssLandingSpecialService.class,
-                AnnouncementService.class,
-                BGService.class,
-                CuringZoneService.class,
-                DebugService.class,
-                FindGroupService.class,
-                FlyRingService.class,
-                GameTimeService.class,
-                LandingUpdateService.class,
-                MailService.class,
-                PeriodicSaveService.class,
-                SpringZoneService.class,
-                TaskManagerFromDB.class,
-                ThievesGuildService.class,
-                VeteranRewardsService.class,
-                WebshopService.class,
-                AionPacketHandlerFactory.class,
-                ChatServer.class,
-                DataManager.class,
-                EventScheduler.class,
-                IDFactory.class,
-                LoginServer.class,
-                LsPacketHandlerFactory.class,
-                PacketFloodFilter.class,
-                World.class);
+        // 全部退役类：FQN 清单与 LegacySingletonFallbackAuditTest 的清单一致。
+        // All retired classes; the FQN list mirrors the audit-test manifest.
+        List<String> retired = List.of(
+                "com.aionemu.gameserver.ai2.AI2Engine",
+                "com.aionemu.gameserver.cache.HTMLCache",
+                "com.aionemu.gameserver.dataholders.DataManager",
+                "com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader",
+                "com.aionemu.gameserver.eventEngine.EventScheduler",
+                "com.aionemu.gameserver.instance.InstanceEngine",
+                "com.aionemu.gameserver.model.house.MaintenanceTask",
+                "com.aionemu.gameserver.model.ingameshop.InGameShopEn",
+                "com.aionemu.gameserver.model.siege.Influence",
+                "com.aionemu.gameserver.network.PacketFloodFilter",
+                "com.aionemu.gameserver.network.PacketLoggerService",
+                "com.aionemu.gameserver.network.chatserver.ChatServer",
+                "com.aionemu.gameserver.network.factories.AionPacketHandlerFactory",
+                "com.aionemu.gameserver.network.factories.LsPacketHandlerFactory",
+                "com.aionemu.gameserver.network.loginserver.LoginServer",
+                "com.aionemu.gameserver.questEngine.QuestEngine",
+                "com.aionemu.gameserver.services.AStationService",
+                "com.aionemu.gameserver.services.AbyssLandingService",
+                "com.aionemu.gameserver.services.AbyssLandingSpecialService",
+                "com.aionemu.gameserver.services.AdminService",
+                "com.aionemu.gameserver.services.AnnouncementService",
+                "com.aionemu.gameserver.services.AutoGroupService",
+                "com.aionemu.gameserver.services.BrokerService",
+                "com.aionemu.gameserver.services.ChallengeTaskService",
+                "com.aionemu.gameserver.services.CuringZoneService",
+                "com.aionemu.gameserver.services.DatabaseCleaningService",
+                "com.aionemu.gameserver.services.DebugService",
+                "com.aionemu.gameserver.services.DuelService",
+                "com.aionemu.gameserver.services.EventService",
+                "com.aionemu.gameserver.services.ExchangeService",
+                "com.aionemu.gameserver.services.F2pService",
+                "com.aionemu.gameserver.services.FindGroupService",
+                "com.aionemu.gameserver.services.FlyRingService",
+                "com.aionemu.gameserver.services.GameTimeService",
+                "com.aionemu.gameserver.services.HousingBidService",
+                "com.aionemu.gameserver.services.HousingService",
+                "com.aionemu.gameserver.services.KiskService",
+                "com.aionemu.gameserver.services.LegionService",
+                "com.aionemu.gameserver.services.LimitedItemTradeService",
+                "com.aionemu.gameserver.services.MotionLoggingService",
+                "com.aionemu.gameserver.services.NpcShoutsService",
+                "com.aionemu.gameserver.services.PeriodicSaveService",
+                "com.aionemu.gameserver.services.PetitionService",
+                "com.aionemu.gameserver.services.ProtectorConquerorService",
+                "com.aionemu.gameserver.services.PvpService",
+                "com.aionemu.gameserver.services.RepurchaseService",
+                "com.aionemu.gameserver.services.RoadService",
+                "com.aionemu.gameserver.services.ShieldService",
+                "com.aionemu.gameserver.services.SpringZoneService",
+                "com.aionemu.gameserver.services.StaticDoorService",
+                "com.aionemu.gameserver.services.SurveyService",
+                "com.aionemu.gameserver.services.TownService",
+                "com.aionemu.gameserver.services.WeatherService",
+                "com.aionemu.gameserver.services.WebshopService",
+                "com.aionemu.gameserver.services.WindyGorgeService",
+                "com.aionemu.gameserver.services.abyss.AbyssRankCleaningService",
+                "com.aionemu.gameserver.services.abyss.AbyssRankUpdateService",
+                "com.aionemu.gameserver.services.abyss.AbyssRankingCache",
+                "com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService",
+                "com.aionemu.gameserver.services.craft.CraftSkillUpdateService",
+                "com.aionemu.gameserver.services.craft.RelinquishCraftStatus",
+                "com.aionemu.gameserver.services.drop.DropDistributionService",
+                "com.aionemu.gameserver.services.drop.DropRegistrationService",
+                "com.aionemu.gameserver.services.drop.DropService",
+                "com.aionemu.gameserver.services.events.ArcadeUpgradeService",
+                "com.aionemu.gameserver.services.events.AtreianPassportService",
+                "com.aionemu.gameserver.services.events.BGService",
+                "com.aionemu.gameserver.services.events.BanditService",
+                "com.aionemu.gameserver.services.events.BoostEventService",
+                "com.aionemu.gameserver.services.events.CrazyDaevaService",
+                "com.aionemu.gameserver.services.events.EventWindowService",
+                "com.aionemu.gameserver.services.events.FFAService",
+                "com.aionemu.gameserver.services.events.LadderService",
+                "com.aionemu.gameserver.services.events.ShugoSweepService",
+                "com.aionemu.gameserver.services.events.ThievesGuildService",
+                "com.aionemu.gameserver.services.instance.AsyunatarService",
+                "com.aionemu.gameserver.services.instance.DredgionService2",
+                "com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService",
+                "com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService",
+                "com.aionemu.gameserver.services.instance.HallOfTenacityService",
+                "com.aionemu.gameserver.services.instance.IDRunService",
+                "com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService",
+                "com.aionemu.gameserver.services.instance.IdgelDomeService",
+                "com.aionemu.gameserver.services.instance.IronWallWarfrontService",
+                "com.aionemu.gameserver.services.instance.KamarBattlefieldService",
+                "com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService",
+                "com.aionemu.gameserver.services.item.CoalescenceService",
+                "com.aionemu.gameserver.services.mail.MailService",
+                "com.aionemu.gameserver.services.mail.SystemMailService",
+                "com.aionemu.gameserver.services.player.AtreianBestiaryService",
+                "com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService",
+                "com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService",
+                "com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService",
+                "com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Accuracy",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Health",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Power",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision",
+                "com.aionemu.gameserver.services.player.CreativityPanel.stats.Will",
+                "com.aionemu.gameserver.services.player.GrowthEnergy",
+                "com.aionemu.gameserver.services.player.LunaShopService",
+                "com.aionemu.gameserver.services.player.PlayerEventService",
+                "com.aionemu.gameserver.services.player.PlayerLimitService",
+                "com.aionemu.gameserver.services.ranking.SeasonRankingService",
+                "com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService",
+                "com.aionemu.gameserver.services.reward.RewardService",
+                "com.aionemu.gameserver.services.teleport.HotspotTeleportService",
+                "com.aionemu.gameserver.services.territory.TerritoryService",
+                "com.aionemu.gameserver.services.toypet.MinionService",
+                "com.aionemu.gameserver.services.toypet.PetService",
+                "com.aionemu.gameserver.services.transfers.PlayerTransferService",
+                "com.aionemu.gameserver.services.veteranreward.VeteranRewardsService",
+                "com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager",
+                "com.aionemu.gameserver.taskmanager.TaskManagerFromDB",
+                "com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask",
+                "com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager",
+                "com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask",
+                "com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster",
+                "com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager",
+                "com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater",
+                "com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater",
+                "com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask",
+                "com.aionemu.gameserver.utils.ThreadPoolManager",
+                "com.aionemu.gameserver.utils.audit.GMService",
+                "com.aionemu.gameserver.utils.idfactory.IDFactory",
+                "com.aionemu.gameserver.world.World",
+                "com.aionemu.gameserver.world.geo.GeoService",
+                "com.aionemu.gameserver.world.zone.ZoneService",
+                "com.aionemu.gameserver.world.zone.ZoneUpdateService");
 
-        for (Class<?> type : retired) {
+        for (String name : retired) {
+            Class<?> type = Class.forName(name);
             Method setter = type.getMethod("setInstanceProvider", ObjectProvider.class);
             setter.invoke(null, (Object) null);
 
             InvocationTargetException failure = assertThrows(InvocationTargetException.class,
                     () -> type.getMethod("getInstance").invoke(null), type.getName());
-            assertInstanceOf(IllegalStateException.class, failure.getCause(), type.getName());
+            assertInstanceOf(IllegalStateException.class, failure.getCause(), name);
         }
     }
 
@@ -802,11 +911,11 @@ class GameServiceProviderCompatibilityTest {
             featureServices = null;
 
             assertNotSame(bonusService, BonusService.getInstance());
-            assertNotSame(petService, PetService.getInstance());
-            assertNotSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
-            assertNotSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
-            assertNotSame(coalescenceService, CoalescenceService.getInstance());
-            assertNotSame(growthEnergy, GrowthEnergy.getInstance());
+            assertThrows(IllegalStateException.class, PetService::getInstance);
+            assertThrows(IllegalStateException.class, ArcadeUpgradeService::getInstance);
+            assertThrows(IllegalStateException.class, AtreianBestiaryService::getInstance);
+            assertThrows(IllegalStateException.class, CoalescenceService::getInstance);
+            assertThrows(IllegalStateException.class, GrowthEnergy::getInstance);
             assertProviderCleared(SystemMailService.class);
             assertProviderCleared(FFAService.class);
             assertProviderCleared(LadderService.class);
@@ -1239,7 +1348,7 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(riftService, GameLocationBootstrapServices.riftService());
             assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
             assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
-            assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingSpecialService);
         }
     }

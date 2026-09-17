@@ -1,5 +1,11 @@
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.drop.DropService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcData;
@@ -39,6 +45,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailConditionSpawnEngineTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(DropService.class, new DropService());
+		TestServiceProviders.install(DropRegistrationService.class, new DropRegistrationService());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(DropService.class);
+		TestServiceProviders.clear(DropRegistrationService.class);
+	}
 	private static final int WORLD_ID = 1;
 	private static final int NPC_ID = 999_999;
 	private static final ObjenesisStd OBJENESIS = new ObjenesisStd();

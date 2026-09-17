@@ -191,17 +191,26 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	}
 
 	/**
-	 * 获取单例：优先 Spring 提供者，否则静态 holder。
-	 * Get the singleton: prefer Spring provider, otherwise the static holder.
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * @return 管理器实例 / Manager instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static MoveTaskManager getInstance() {
 		ObjectProvider<MoveTaskManager> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		MoveTaskManager provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("MoveTaskManager 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return SingletonHolder.INSTANCE;
+		return provided;
 	}
 
 	/**
@@ -212,18 +221,5 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 */
 	public static void setInstanceProvider(ObjectProvider<MoveTaskManager> provider) {
 		instanceProvider = provider;
-	}
-
-	/**
-	 * 静态单例持有者。
-	 * Static singleton holder.
-	 */
-	private static final class SingletonHolder {
-
-		/**
-		 * 默认单例实例。
-		 * Default singleton instance.
-		 */
-		private static final MoveTaskManager INSTANCE = new MoveTaskManager();
 	}
 }

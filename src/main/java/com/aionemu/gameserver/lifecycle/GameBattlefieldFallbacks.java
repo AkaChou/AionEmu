@@ -30,7 +30,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static KamarBattlefieldService kamarBattlefieldService() {
-        return KamarBattlefieldServiceFallback.INSTANCE;
+        return KamarBattlefieldService.getInstance();
     }
 
     /**
@@ -40,7 +40,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
-        return EngulfedOphidanBridgeServiceFallback.INSTANCE;
+        return EngulfedOphidanBridgeService.getInstance();
     }
 
     /**
@@ -50,7 +50,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
-        return SuspiciousOphidanBridgeServiceFallback.INSTANCE;
+        return SuspiciousOphidanBridgeService.getInstance();
     }
 
     /**
@@ -60,7 +60,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static IronWallWarfrontService ironWallWarfrontService() {
-        return IronWallWarfrontServiceFallback.INSTANCE;
+        return IronWallWarfrontService.getInstance();
     }
 
     /**
@@ -70,7 +70,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static IdgelDomeService idgelDomeService() {
-        return IdgelDomeServiceFallback.INSTANCE;
+        return IdgelDomeService.getInstance();
     }
 
     /**
@@ -80,7 +80,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static IdgelDomeLandmarkService idgelDomeLandmarkService() {
-        return IdgelDomeLandmarkServiceFallback.INSTANCE;
+        return IdgelDomeLandmarkService.getInstance();
     }
 
     /**
@@ -90,7 +90,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static HallOfTenacityService hallOfTenacityService() {
-        return HallOfTenacityServiceFallback.INSTANCE;
+        return HallOfTenacityService.getInstance();
     }
 
     /**
@@ -100,7 +100,7 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static GrandArenaTrainingCampService grandArenaTrainingCampService() {
-        return GrandArenaTrainingCampServiceFallback.INSTANCE;
+        return GrandArenaTrainingCampService.getInstance();
     }
 
     /**
@@ -110,78 +110,6 @@ final class GameBattlefieldFallbacks {
      * @return 服务实例 / Service instance
      */
     static IDRunService idRunService() {
-        return IdRunServiceFallback.INSTANCE;
-    }
-
-    /**
-     * {@link KamarBattlefieldService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link KamarBattlefieldService}.
-     */
-    private static final class KamarBattlefieldServiceFallback {
-        private static final KamarBattlefieldService INSTANCE = KamarBattlefieldService.getInstance();
-    }
-
-    /**
-     * {@link EngulfedOphidanBridgeService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link EngulfedOphidanBridgeService}.
-     */
-    private static final class EngulfedOphidanBridgeServiceFallback {
-        private static final EngulfedOphidanBridgeService INSTANCE = EngulfedOphidanBridgeService.getInstance();
-    }
-
-    /**
-     * {@link SuspiciousOphidanBridgeService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link SuspiciousOphidanBridgeService}.
-     */
-    private static final class SuspiciousOphidanBridgeServiceFallback {
-        private static final SuspiciousOphidanBridgeService INSTANCE = SuspiciousOphidanBridgeService.getInstance();
-    }
-
-    /**
-     * {@link IronWallWarfrontService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link IronWallWarfrontService}.
-     */
-    private static final class IronWallWarfrontServiceFallback {
-        private static final IronWallWarfrontService INSTANCE = IronWallWarfrontService.getInstance();
-    }
-
-    /**
-     * {@link IdgelDomeService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link IdgelDomeService}.
-     */
-    private static final class IdgelDomeServiceFallback {
-        private static final IdgelDomeService INSTANCE = IdgelDomeService.getInstance();
-    }
-
-    /**
-     * {@link IdgelDomeLandmarkService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link IdgelDomeLandmarkService}.
-     */
-    private static final class IdgelDomeLandmarkServiceFallback {
-        private static final IdgelDomeLandmarkService INSTANCE = IdgelDomeLandmarkService.getInstance();
-    }
-
-    /**
-     * {@link HallOfTenacityService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link HallOfTenacityService}.
-     */
-    private static final class HallOfTenacityServiceFallback {
-        private static final HallOfTenacityService INSTANCE = HallOfTenacityService.getInstance();
-    }
-
-    /**
-     * {@link GrandArenaTrainingCampService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link GrandArenaTrainingCampService}.
-     */
-    private static final class GrandArenaTrainingCampServiceFallback {
-        private static final GrandArenaTrainingCampService INSTANCE = GrandArenaTrainingCampService.getInstance();
-    }
-
-    /**
-     * {@link IDRunService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link IDRunService}.
-     */
-    private static final class IdRunServiceFallback {
-        private static final IDRunService INSTANCE = IDRunService.getInstance();
+        return IDRunService.getInstance();
     }
 }

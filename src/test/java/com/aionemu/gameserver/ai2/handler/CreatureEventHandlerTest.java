@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.ai2.AI2Engine;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,6 +23,16 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 class CreatureEventHandlerTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(AI2Engine.class, new AI2Engine());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(AI2Engine.class);
+	}
 
 	@Test
 	void aggroUsesConfiguredSensoryRangeWithoutLegacyMultiplier() {

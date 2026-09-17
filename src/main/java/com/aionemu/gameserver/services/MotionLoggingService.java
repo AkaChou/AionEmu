@@ -58,17 +58,26 @@ public class MotionLoggingService {
 	private boolean started = false;
 
 	/**
-	 * 获取服务单例（优先 Spring 提供者）。
-	 * Returns the service singleton (preferring the Spring provider).
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * service instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static final MotionLoggingService getInstance() {
 		ObjectProvider<MotionLoggingService> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		MotionLoggingService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("MotionLoggingService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return SingletonHolder.instance;
+		return provided;
 	}
 
 	/**
@@ -582,11 +591,6 @@ public class MotionLoggingService {
 	 */
 	public MotionLoggingService() {
 		log.info(I18n.get("log.ef112ac23508"));
-	}
-
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-		protected static final MotionLoggingService instance = new MotionLoggingService();
 	}
 
 	private class MotionLog {

@@ -24,7 +24,7 @@ final class GameWorldServiceFallbacks {
      * @return GeoService 单例 / GeoService singleton
      */
     static GeoService geoService() {
-        return GeoServiceFallback.INSTANCE;
+        return GeoService.getInstance();
     }
 
     /**
@@ -44,30 +44,6 @@ final class GameWorldServiceFallbacks {
      * @return DropRegistrationService 单例 / DropRegistrationService singleton
      */
     static DropRegistrationService dropRegistrationService() {
-        return DropRegistrationServiceFallback.INSTANCE;
-    }
-
-    /**
-     * GeoService 回退持有者。
-     * GeoService fallback holder.
-     */
-    private static final class GeoServiceFallback {
-        /**
-         * GeoService 单例。
-         * GeoService singleton.
-         */
-        private static final GeoService INSTANCE = GeoService.getInstance();
-    }
-
-    /**
-     * DropRegistrationService 回退持有者。
-     * DropRegistrationService fallback holder.
-     */
-    private static final class DropRegistrationServiceFallback {
-        /**
-         * DropRegistrationService 单例。
-         * DropRegistrationService singleton.
-         */
-        private static final DropRegistrationService INSTANCE = DropRegistrationService.getInstance();
+        return DropRegistrationService.getInstance();
     }
 }

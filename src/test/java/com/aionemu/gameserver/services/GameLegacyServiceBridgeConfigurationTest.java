@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -134,7 +135,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedAdminServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(AdminService.getInstance(), context.getBean(AdminService.class));
+            assertThrows(IllegalStateException.class, AdminService::getInstance);
         }
     }
 
@@ -188,7 +189,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedFfaServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(FFAService.getInstance(), context.getBean(FFAService.class));
+            assertThrows(IllegalStateException.class, FFAService::getInstance);
         }
     }
 
@@ -210,14 +211,14 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedShieldServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(ShieldService.getInstance(), context.getBean(ShieldService.class));
+            assertThrows(IllegalStateException.class, ShieldService::getInstance);
         }
     }
 
     @Test
     void createsSpringManagedPlayerLimitServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(PlayerLimitService.getInstance(), context.getBean(PlayerLimitService.class));
+            assertThrows(IllegalStateException.class, PlayerLimitService::getInstance);
         }
     }
 
@@ -250,7 +251,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedChallengeTaskServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(ChallengeTaskService.getInstance(), context.getBean(ChallengeTaskService.class));
+            assertThrows(IllegalStateException.class, ChallengeTaskService::getInstance);
         }
     }
 
@@ -290,15 +291,15 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedBattlefieldServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(KamarBattlefieldService.getInstance(), context.getBean(KamarBattlefieldService.class));
-            assertNotSame(EngulfedOphidanBridgeService.getInstance(), context.getBean(EngulfedOphidanBridgeService.class));
-            assertNotSame(SuspiciousOphidanBridgeService.getInstance(), context.getBean(SuspiciousOphidanBridgeService.class));
-            assertNotSame(IronWallWarfrontService.getInstance(), context.getBean(IronWallWarfrontService.class));
-            assertNotSame(IdgelDomeService.getInstance(), context.getBean(IdgelDomeService.class));
-            assertNotSame(IdgelDomeLandmarkService.getInstance(), context.getBean(IdgelDomeLandmarkService.class));
-            assertNotSame(HallOfTenacityService.getInstance(), context.getBean(HallOfTenacityService.class));
-            assertNotSame(GrandArenaTrainingCampService.getInstance(), context.getBean(GrandArenaTrainingCampService.class));
-            assertNotSame(IDRunService.getInstance(), context.getBean(IDRunService.class));
+            assertThrows(IllegalStateException.class, KamarBattlefieldService::getInstance);
+            assertThrows(IllegalStateException.class, EngulfedOphidanBridgeService::getInstance);
+            assertThrows(IllegalStateException.class, SuspiciousOphidanBridgeService::getInstance);
+            assertThrows(IllegalStateException.class, IronWallWarfrontService::getInstance);
+            assertThrows(IllegalStateException.class, IdgelDomeService::getInstance);
+            assertThrows(IllegalStateException.class, IdgelDomeLandmarkService::getInstance);
+            assertThrows(IllegalStateException.class, HallOfTenacityService::getInstance);
+            assertThrows(IllegalStateException.class, GrandArenaTrainingCampService::getInstance);
+            assertThrows(IllegalStateException.class, IDRunService::getInstance);
         }
     }
 
@@ -332,9 +333,9 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedGameEnginesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(QuestEngine.getInstance(), context.getBean(QuestEngine.class));
-            assertNotSame(InstanceEngine.getInstance(), context.getBean(InstanceEngine.class));
-            assertNotSame(AI2Engine.getInstance(), context.getBean(AI2Engine.class));
+            assertThrows(IllegalStateException.class, QuestEngine::getInstance);
+            assertThrows(IllegalStateException.class, InstanceEngine::getInstance);
+            assertThrows(IllegalStateException.class, AI2Engine::getInstance);
             assertNotSame(ChatProcessor.getInstance(), context.getBean(ChatProcessor.class));
         }
     }
@@ -363,9 +364,9 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedLightweightEventBootstrapServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(MinionService.getInstance(), context.getBean(MinionService.class));
-            assertNotSame(ShugoSweepService.getInstance(), context.getBean(ShugoSweepService.class));
-            assertNotSame(AtreianPassportService.getInstance(), context.getBean(AtreianPassportService.class));
+            assertThrows(IllegalStateException.class, MinionService::getInstance);
+            assertThrows(IllegalStateException.class, ShugoSweepService::getInstance);
+            assertThrows(IllegalStateException.class, AtreianPassportService::getInstance);
         }
     }
 
@@ -429,8 +430,8 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedTerritoryAndLimitedTradeServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(TerritoryService.getInstance(), context.getBean(TerritoryService.class));
-            assertNotSame(LimitedItemTradeService.getInstance(), context.getBean(LimitedItemTradeService.class));
+            assertThrows(IllegalStateException.class, TerritoryService::getInstance);
+            assertThrows(IllegalStateException.class, LimitedItemTradeService::getInstance);
         }
     }
 
@@ -478,7 +479,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedGeoPathServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(GeoService.getInstance(), context.getBean(GeoService.class));
+            assertThrows(IllegalStateException.class, GeoService::getInstance);
             assertNotSame(PathService.getInstance(), context.getBean(PathService.class));
         }
     }
@@ -556,7 +557,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedSeasonRankingUpdateServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(SeasonRankingUpdateService.getInstance(), context.getBean(SeasonRankingUpdateService.class));
+            assertThrows(IllegalStateException.class, SeasonRankingUpdateService::getInstance);
         }
     }
 
@@ -572,7 +573,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void createsSpringManagedProtectorConquerorServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(ProtectorConquerorService.getInstance(), context.getBean(ProtectorConquerorService.class));
+            assertThrows(IllegalStateException.class, ProtectorConquerorService::getInstance);
         }
     }
 
@@ -944,7 +945,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertNotSame(ConquestService.getInstance(), context.getBean(ConquestService.class));
             assertNotSame(IdianDepthsService.getInstance(), context.getBean(IdianDepthsService.class));
             assertNotSame(TowerOfEternityService.getInstance(), context.getBean(TowerOfEternityService.class));
-            assertNotSame(AbyssLandingService.getInstance(), context.getBean(AbyssLandingService.class));
+            assertThrows(IllegalStateException.class, AbyssLandingService::getInstance);
         }
     }
 

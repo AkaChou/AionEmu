@@ -28,7 +28,7 @@ final class GameEventRuntimeFallbacks {
      * @return 事件服务 / Event service
      */
     static EventService eventService() {
-        return EventServiceFallback.INSTANCE;
+        return EventService.getInstance();
     }
 
     /**
@@ -38,7 +38,7 @@ final class GameEventRuntimeFallbacks {
      * @return 玩家事件服务 / Player-event service
      */
     static PlayerEventService playerEventService() {
-        return PlayerEventServiceFallback.INSTANCE;
+        return PlayerEventService.getInstance();
     }
 
     /**
@@ -48,7 +48,7 @@ final class GameEventRuntimeFallbacks {
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     static CrazyDaevaService crazyDaevaService() {
-        return CrazyDaevaServiceFallback.INSTANCE;
+        return CrazyDaevaService.getInstance();
     }
 
     /**
@@ -58,7 +58,7 @@ final class GameEventRuntimeFallbacks {
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     static AbyssRankUpdateService abyssRankUpdateService() {
-        return AbyssRankUpdateServiceFallback.INSTANCE;
+        return AbyssRankUpdateService.getInstance();
     }
 
     /**
@@ -68,7 +68,7 @@ final class GameEventRuntimeFallbacks {
      * @return 数据包广播器 / Packet broadcaster
      */
     static PacketBroadcaster packetBroadcaster() {
-        return PacketBroadcasterFallback.INSTANCE;
+        return PacketBroadcaster.getInstance();
     }
 
     /**
@@ -80,45 +80,5 @@ final class GameEventRuntimeFallbacks {
      */
     static EventScheduler eventScheduler() {
         return EventScheduler.getInstance();
-    }
-
-    /**
-     * 事件服务懒加载回退持有者。
-     * Lazy fallback holder for the event service.
-     */
-    private static final class EventServiceFallback {
-        private static final EventService INSTANCE = EventService.getInstance();
-    }
-
-    /**
-     * 玩家事件服务懒加载回退持有者。
-     * Lazy fallback holder for the player-event service.
-     */
-    private static final class PlayerEventServiceFallback {
-        private static final PlayerEventService INSTANCE = PlayerEventService.getInstance();
-    }
-
-    /**
-     * 疯狂守护者服务懒加载回退持有者。
-     * Lazy fallback holder for the Crazy-Daeva service.
-     */
-    private static final class CrazyDaevaServiceFallback {
-        private static final CrazyDaevaService INSTANCE = CrazyDaevaService.getInstance();
-    }
-
-    /**
-     * 欧比斯排名更新服务懒加载回退持有者。
-     * Lazy fallback holder for the abyss-rank update service.
-     */
-    private static final class AbyssRankUpdateServiceFallback {
-        private static final AbyssRankUpdateService INSTANCE = AbyssRankUpdateService.getInstance();
-    }
-
-    /**
-     * 数据包广播器懒加载回退持有者。
-     * Lazy fallback holder for the packet broadcaster.
-     */
-    private static final class PacketBroadcasterFallback {
-        private static final PacketBroadcaster INSTANCE = PacketBroadcaster.getInstance();
     }
 }

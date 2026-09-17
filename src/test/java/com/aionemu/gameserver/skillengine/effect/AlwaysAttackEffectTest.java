@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +22,16 @@ import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 class AlwaysAttackEffectTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(PacketBroadcaster.class, new PacketBroadcaster());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(PacketBroadcaster.class);
+	}
 
 	@Test
 	void exposesAndConsumesPhysicalAndMagicalBypassCharges() throws ReflectiveOperationException {

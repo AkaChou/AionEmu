@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.network.loginserver;
 
+import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -7,6 +12,16 @@ import com.aionemu.commons.network.ConnectionTransport;
 import org.junit.jupiter.api.Test;
 
 class LoginServerConnectionTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(LsPacketHandlerFactory.class, new LsPacketHandlerFactory());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(LsPacketHandlerFactory.class);
+	}
 
     @Test
     void supportsNettyTransportConstruction() {

@@ -27,7 +27,7 @@ final class GameEngineServiceFallbacks {
      * @return 任务引擎 / Quest engine
      */
     static QuestEngine questEngine() {
-        return QuestEngineFallback.INSTANCE;
+        return QuestEngine.getInstance();
     }
 
     /**
@@ -47,7 +47,7 @@ final class GameEngineServiceFallbacks {
      * @return 副本引擎 / Instance engine
      */
     static InstanceEngine instanceEngine() {
-        return InstanceEngineFallback.INSTANCE;
+        return InstanceEngine.getInstance();
     }
 
     /**
@@ -57,7 +57,7 @@ final class GameEngineServiceFallbacks {
      * @return AI2 引擎 / AI2 engine
      */
     static AI2Engine ai2Engine() {
-        return Ai2EngineFallback.INSTANCE;
+        return AI2Engine.getInstance();
     }
 
     /**
@@ -81,35 +81,11 @@ final class GameEngineServiceFallbacks {
     }
 
     /**
-     * 任务引擎懒加载回退持有者。
-     * Lazy fallback holder for the quest engine.
-     */
-    private static final class QuestEngineFallback {
-        private static final QuestEngine INSTANCE = QuestEngine.getInstance();
-    }
-
-    /**
      * 技能引擎懒加载回退持有者。
      * Lazy fallback holder for the skill engine.
      */
     private static final class SkillEngineFallback {
         private static final SkillEngine INSTANCE = SkillEngine.getInstance();
-    }
-
-    /**
-     * 副本引擎懒加载回退持有者。
-     * Lazy fallback holder for the instance engine.
-     */
-    private static final class InstanceEngineFallback {
-        private static final InstanceEngine INSTANCE = InstanceEngine.getInstance();
-    }
-
-    /**
-     * AI2 引擎懒加载回退持有者。
-     * Lazy fallback holder for the AI2 engine.
-     */
-    private static final class Ai2EngineFallback {
-        private static final AI2Engine INSTANCE = AI2Engine.getInstance();
     }
 
     /**

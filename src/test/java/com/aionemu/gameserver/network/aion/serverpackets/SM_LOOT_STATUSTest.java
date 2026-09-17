@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
@@ -11,6 +15,16 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import org.junit.jupiter.api.Test;
 
 class SM_LOOT_STATUSTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(DropRegistrationService.class, new DropRegistrationService());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(DropRegistrationService.class);
+	}
 
 	@Test
 	void readsDropItemsUnderTheirMutationLock() {

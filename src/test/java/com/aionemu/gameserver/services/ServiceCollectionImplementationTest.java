@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.services;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
@@ -25,6 +29,16 @@ import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 
 class ServiceCollectionImplementationTest {
+
+	@BeforeEach
+	void installRetiredServiceProvider() {
+		TestServiceProviders.install(GMService.class, new GMService());
+	}
+
+	@AfterEach
+	void clearRetiredServiceProvider() {
+		TestServiceProviders.clear(GMService.class);
+	}
 
 	@Test
 	void utilityServicesUseJdkMaps() throws Exception {

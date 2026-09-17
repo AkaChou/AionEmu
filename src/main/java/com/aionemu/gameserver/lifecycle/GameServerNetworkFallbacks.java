@@ -60,7 +60,7 @@ final class GameServerNetworkFallbacks {
      * @return 数据包日志服务 / Packet logger service
      */
     static PacketLoggerService packetLoggerService() {
-        return PacketLoggerServiceFallback.INSTANCE;
+        return PacketLoggerService.getInstance();
     }
 
     /**
@@ -116,18 +116,6 @@ final class GameServerNetworkFallbacks {
          * Fallback instance.
          */
         private static final BannedMacManager INSTANCE = BannedMacManager.getInstance();
-    }
-
-    /**
-     * 懒加载 {@link PacketLoggerService} 回退单例。
-     * Lazy holder for the {@link PacketLoggerService} fallback singleton.
-     */
-    private static final class PacketLoggerServiceFallback {
-        /**
-         * 回退实例。
-         * Fallback instance.
-         */
-        private static final PacketLoggerService INSTANCE = PacketLoggerService.getInstance();
     }
 
     /**

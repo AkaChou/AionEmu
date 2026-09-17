@@ -114,17 +114,26 @@ public class LimitedItemTradeService {
 	}
 
 	/**
-	 * 获取服务单例，优先走 Spring ObjectProvider。
-	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * service instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static LimitedItemTradeService getInstance() {
 		ObjectProvider<LimitedItemTradeService> provider = instanceProvider;
-		if (provider == null) {
-			return SingletonHolder.INSTANCE;
+		LimitedItemTradeService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("LimitedItemTradeService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		return provided;
 	}
 
 	/**
@@ -135,9 +144,5 @@ public class LimitedItemTradeService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<LimitedItemTradeService> instanceProvider) {
 		LimitedItemTradeService.instanceProvider = instanceProvider;
-	}
-
-	private static class SingletonHolder {
-		protected static final LimitedItemTradeService INSTANCE = new LimitedItemTradeService();
 	}
 }

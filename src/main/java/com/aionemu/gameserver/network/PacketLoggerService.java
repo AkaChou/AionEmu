@@ -42,24 +42,27 @@ public class PacketLoggerService {
 		}
 	}
 
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-
-		protected static final PacketLoggerService instance = new PacketLoggerService();
-	}
-
 	/**
-	 * 获取服务单例（优先 Spring Provider）。
-	 * Returns the service singleton (prefers Spring provider).
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
 	 *
-	 * service instance
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static final PacketLoggerService getInstance() {
 		ObjectProvider<PacketLoggerService> provider = instanceProvider;
-		if (provider == null) {
-			return SingletonHolder.instance;
+		PacketLoggerService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("PacketLoggerService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> SingletonHolder.instance);
+		return provided;
 	}
 
 	/**
