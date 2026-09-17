@@ -9,7 +9,7 @@ This file provides project-level guidance for AI coding agents working in this r
 1. Do NOT run build commands unless explicitly requested by the user. When verification genuinely requires tests or a build, ask the user for authorization first and state the exact command and scope; without authorization keep the work `PENDING` and record the commands that were not executed.
 2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
 3. `.agents/summary/` is the canonical directory for all summary files.
-4. `.agent/summary/` is a legacy path. Do not create a real directory or new files there; use `.agents/summary/` instead. If a legacy tool still requests the old path, its writes must resolve through the repository compatibility link when that link is present; do not recreate or remove the link as part of an unrelated task.
+4. Do NOT use, recreate, or reference `.agent/` or `.agent/summary/`. All agent rules, memory bank, and summary directories reside strictly under `.agents/`.
 5. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
 6. Worktree discipline (worktree 使用纪律): do not create a git worktree unless the main working tree cannot be used for the required verification (for example, a parallel task makes the production catalog fail to build). Keep any worktree under a temporary path outside the repository, use it only for that verification, never commit from it, and remove it with `git worktree remove --force <path>` followed by `git worktree prune` as soon as the verification finishes. Never leave a worktree, its build output, or a temporary checkout behind.
 

@@ -166,13 +166,11 @@ def validate_links(paths: tuple[Path, ...], errors: list[str]) -> int:
 
 def validate_summary_compatibility(root: Path, errors: list[str]) -> None:
     canonical = root / ".agents/summary"
-    legacy = root / ".agent/summary"
+    legacy = root / ".agent"
     if not canonical.is_dir():
         errors.append(f"missing canonical summary directory: {canonical}")
-    if not legacy.is_symlink():
-        errors.append(f"legacy summary path must be a symlink: {legacy}")
-    elif legacy.resolve() != canonical.resolve():
-        errors.append(f"legacy summary symlink does not target {canonical}: {legacy}")
+    if legacy.exists() or legacy.is_symlink():
+        errors.append(f"legacy .agent path must not exist; use {canonical}: {legacy}")
 
 
 def resolve_commit(root: Path, reference: str) -> str | None:

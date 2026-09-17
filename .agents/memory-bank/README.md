@@ -17,7 +17,7 @@
 
 **与 Quest Playbook 的分工**：`docs/quest/repair-playbook/PATTERNS.zh-CN.md` 是 Quest **细粒度指纹库**（按症状、IR/owner 指纹、代表提交与测试组织，覆盖单个任务的修复合同）；本目录 `patterns/quest-engine.md` 是**跨域长期不变量**（只记录可复用的根因、护栏和失效边界）。二者存在对应关系（如 Playbook 的 `NPC_DIALOG_ROUTE_GATE_COLLISION` 对应 `QE-006`），排查 Quest 问题时应先读 Playbook 定位具体合同，再读 memory-bank 卡片确认跨域护栏。
 
-路径契约：`.agents/summary/` 是唯一真实目录；旧工具使用的 `.agent/summary` 必须是指向它的相对符号链接，不能另建第二份 summary。
+路径契约：`.agents/`（含 `.agents/summary/`）是唯一规范目录；严禁使用或创建 `.agent/`。
 
 ## 2. 目录结构与读取顺序 (Layout and Read Order)
 
