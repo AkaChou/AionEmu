@@ -126,7 +126,59 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/** METADATA_ONLY 条目不经过执行编译器，按其 resource XML 解析接取元数据。 */
-	private static List<Integer> metadataOnlyQuestIds() throws Exception {
+	/** 供同类门禁复用：METADATA_ONLY 条目的 resource 元数据解析。 */
+	static List<Integer> metadataOnlyQuestIds() throws Exception {
+		return metadataOnlyQuestIdsInternal();
+	}
+
+	/** 供同类门禁复用：解析任务 XML 的 metadata（min/max/races/gender/repeat）。 */
+	static QuestMetadata parseQuestMetadata(int questId) throws Exception {
+		Element root = parseXml(
+			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")
+			.getDocumentElement();
+		Element metadata = (Element) root.getElementsByTagName("metadata").item(0);
+		Set<String> races = new java.util.HashSet<>();
+		var raceNodes = metadata.getElementsByTagName("race");
+		for (int i = 0; i < raceNodes.getLength(); i++) {
+			races.add(((Element) raceNodes.item(i)).getAttribute("id"));
+		}
+		String gender = "";
+		var genderNodes = metadata.getElementsByTagName("gender");
+		if (genderNodes.getLength() > 0) {
+			gender = ((Element) genderNodes.item(0)).getAttribute("id");
+		}
+		int maxRepeat = 1;
+		var repeatNodes = metadata.getElementsByTagName("repeat");
+		if (repeatNodes.getLength() > 0) {
+			maxRepeat = Integer.parseInt(
+				((Element) repeatNodes.item(0)).getAttribute("max-repeat-count"));
+		}
+		// 档位 1 数值奖励：平铺 <rewards>，多档任务取第一个 <group>
+		List<QuestReward> rewards = new ArrayList<>();
+		var groups = metadata.getElementsByTagName("group");
+		var rewardNodes = groups.getLength() > 0
+			? ((Element) groups.item(0)).getElementsByTagName("reward")
+			: metadata.getElementsByTagName("reward");
+		for (int i = 0; i < rewardNodes.getLength(); i++) {
+			Element reward = (Element) rewardNodes.item(i);
+			rewards.add(new QuestReward(reward.getAttribute("kind"),
+				Integer.parseInt(reward.getAttribute("id")),
+				Long.parseLong(reward.getAttribute("amount"))));
+		}
+		return new QuestMetadata(metadata.getAttribute("name"),
+			Integer.parseInt(metadata.getAttribute("display-name-id")),
+			Integer.parseInt(metadata.getAttribute("min-level")),
+			Integer.parseInt(metadata.getAttribute("max-level")),
+			races, metadata.getAttribute("category"),
+			maxRepeat == 1 ? RepeatPolicy.once()
+				: new RepeatPolicy(maxRepeat, 0, false, false),
+			Set.of(), List.of(), rewards, List.of(), Set.of(), gender, 0, 1, 1,
+			false, false, false, 0, null, null, false, Set.of(), 0, "NONE", "NONE", 0,
+			List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+			Map.of(), List.of(), List.of(), List.of());
+	}
+
+	private static List<Integer> metadataOnlyQuestIdsInternal() throws Exception {
 		Element root = parseXml(CATALOG_RESOURCE).getDocumentElement();
 		List<Integer> ids = new ArrayList<>();
 		var nodes = root.getElementsByTagName("definition");

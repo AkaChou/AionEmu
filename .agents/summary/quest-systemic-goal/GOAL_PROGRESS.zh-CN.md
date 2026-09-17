@@ -85,11 +85,35 @@
   （真端与生产互有缺失，17 级使命链语义缺仓库内证据；取证方向：客户端任务文本职业说明、
   真端服务器抓包接取行为）
 - 门禁：`QuestRetailClassGateTest`（3 例）+ 基线 `quest-class-retail-contract.tsv`（135 行快照）
-- 状态：DONE
+- 状态：DONE（commit 1a9a80f72）
 
 ## 阶段 P4：奖励结算精确对齐
 
-- 状态：PENDING
+### 第一批：档位 1 数值奖励（EXP/GOLD/AP/GP）——DONE
+
+- audit count：6,215（真端有档位 1 字段的生产任务；真端字段缺失=未配置，生产自建奖励属服务端设计）
+- 审计脚本：audit_reward_axis.py（道具 name_desc->id 映射 128,310 项 + 真端 client_items 兜底）
+- 语义规则（取证结论）：
+  - 真端字段存在（含 0）即权威；字段缺失（RETAIL_UNSET）跳过
+  - 生产档位 1 = 平铺 <rewards>；多档任务取第一个 <group>；npc-complete 的
+    fixed/choice reward-index 绑定容器内位置，插入必须尾部追加、删除前必须核对索引合同
+  - 实际修复：EXP 17 + GOLD 23 + AP 10 + GP 25 + EXP 占位删除 3 = 78 处数值对齐
+    （含 2641/2724/1908/2345 等任务；80989/80990 真端 0 但生产 1 点经验占位按
+    npc-complete 索引合同保留为例外）
+- intentional 例外 20 条：AP 服务端 4 倍版本倍率族（11279~11286、21281~21288、
+  18849、18850、28849、28850，生产=真端精确 ×4）
+- EVIDENCE_BLOCKED：
+  - ITEM_UNMAPPED 956：真端奖励道具名（SCROLL_speed_fly_50A 等 4.x 旧名）无法映射到
+    5.8 道具 id；client_items_etc.xml 为专用容器格式不可解析。取证方向：解包真端
+    item 表（etc 部分）或以 strings/tooltip 反查
+  - TITLE 173：真端 reward_title1 为名称字符串（light_title04），本机无 title 模板表
+    可映射数字 id。取证方向：解包真端 title 表
+- 留待第二批：ITEM_DIFF 38 / SELECTABLE_DIFF 34（生产多分支平铺 vs 真端单件的逐任务
+  分支取证；真端 selectable 缺失型 1941/1942/1944 为真实缺陷候选）
+- 门禁：`QuestRewardValueGateTest`（1 例，覆盖全部 6,222 任务含 METADATA_ONLY）+
+  基线 `quest-reward-value-retail-contract.tsv`（6,215 行）
+- 状态：DONE（数值轴全库 0 未解释差异；门禁测试 46 例全绿、
+  PRODUCTION_COMPILE_OK=6189、0 白名单违规）
 
 ## 阶段 P5：下一类未根治维度
 

@@ -8,6 +8,7 @@
     <reward-groups>
       <group>
         <reward kind="ITEM" id="186000414" amount="10" />
+      <reward kind="GP" id="0" amount="10"/>
       </group>
     </reward-groups>
   </metadata>

@@ -5,8 +5,8 @@
       <race id="ASMODIANS"/>
     </races>
     <rewards>
-      <reward kind="GOLD" id="0" amount="1000"/>
-      <reward kind="EXP" id="0" amount="169600"/>
+      <reward kind="GOLD" id="0" amount="185880"/>
+      <reward kind="EXP" id="0" amount="3015580"/>
       <reward kind="ITEM" id="186000007" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100000305" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100100300" amount="1"/>
@@ -17,6 +17,7 @@
       <reward kind="SELECTABLE_ITEM" id="101300303" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="101500307" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="101700290" amount="1"/>
+      <reward kind="AP" id="0" amount="100"/>
     </rewards>
   </metadata>
   <progress>

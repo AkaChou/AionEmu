@@ -10,6 +10,7 @@
       <item id="182007150" count="100"/>
     </items>
     <rewards>
+      <reward kind="GP" id="0" amount="5100"/>
 
     </rewards>
   </metadata>

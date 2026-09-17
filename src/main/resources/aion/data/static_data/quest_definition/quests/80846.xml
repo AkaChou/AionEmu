@@ -10,6 +10,7 @@
     </items>
     <rewards>
       <reward kind="ITEM" id="186000236" amount="20"/>
+      <reward kind="GP" id="0" amount="10"/>
     </rewards>
   </metadata>
   <progress>

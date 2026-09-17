@@ -14,7 +14,7 @@
     <reward-groups>
       <group>
         <reward kind="GOLD" id="0" amount="18370"/>
-        <reward kind="EXP" id="0" amount="215550"/>
+      <reward kind="EXP" id="0" amount="413113"/>
         <reward kind="ITEM" id="160000011" amount="15"/>
         <reward kind="ITEM" id="186000008" amount="1"/>
       </group>

@@ -5,7 +5,7 @@
       <race id="ELYOS"/>
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="2020220"/>
+      <reward kind="EXP" id="0" amount="643724"/>
       <reward kind="ITEM" id="186000004" amount="3"/>
     </rewards>
     <start-conditions>

@@ -6,8 +6,6 @@
     </races>
     <reward-groups>
       <group>
-        <reward kind="GOLD" id="0" amount="225990" />
-        <reward kind="EXP" id="0" amount="3446553" />
       </group>
     </reward-groups>
   </metadata>

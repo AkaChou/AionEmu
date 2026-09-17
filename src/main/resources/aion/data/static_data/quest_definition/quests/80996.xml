@@ -13,6 +13,7 @@
         <reward kind="EXP" id="0" amount="1400000000" />
         <reward kind="ABYSS_OP" id="0" amount="50000" />
         <reward kind="ITEM" id="186000454" amount="1" />
+      <reward kind="AP" id="0" amount="50000"/>
       </group>
     </reward-groups>
   </metadata>

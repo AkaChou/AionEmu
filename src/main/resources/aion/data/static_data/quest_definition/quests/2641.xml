@@ -5,8 +5,9 @@
       <race id="ASMODIANS"/>
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="1582400"/>
+      <reward kind="EXP" id="0" amount="1974220"/>
       <reward kind="ITEM" id="186000008" amount="3"/>
+      <reward kind="GOLD" id="0" amount="28860"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="2640"/>

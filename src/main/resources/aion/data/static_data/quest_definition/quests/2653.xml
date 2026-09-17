@@ -7,6 +7,7 @@
     <rewards>
       <reward kind="EXP" id="0" amount="2954681"/>
       <reward kind="ITEM" id="186000009" amount="3"/>
+      <reward kind="AP" id="0" amount="100"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="2652"/>
