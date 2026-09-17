@@ -173,6 +173,13 @@ class QuestItemSourceContractGateTest {
 		// 28836/28838：collect-item 事件原先监听邻居任务道具且 count 误用掉落行数，改为本任务道具 + 收集数量
 		assertCollectEvent(catalog, 28836, 182213207, 50);
 		assertCollectEvent(catalog, 28838, 182213208, 50);
+		// 1870/2870/3217/4217/28739/28740：消除既有无条件交付分支，交付边必须校验并扣除自家收集物
+		assertTurnInItems(catalog, 1870, Map.of(182215905, 4, 182215906, 4));
+		assertTurnInItems(catalog, 2870, Map.of(182215907, 4, 182215908, 4));
+		assertTurnInItems(catalog, 3217, Map.of(182209095, 3));
+		assertTurnInItems(catalog, 4217, Map.of(182209110, 3));
+		assertTurnInItems(catalog, 28739, Map.of(182215695, 5));
+		assertTurnInItems(catalog, 28740, Map.of(182215696, 8));
 	}
 
 	/**

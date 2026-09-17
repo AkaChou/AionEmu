@@ -87,24 +87,44 @@
         <dialog type="TALK_TO_NPC" npc-id="804732" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804732" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="804732" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
+      <conditions>
+        <has-item item-id="182215696" count="8"/>
+      </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <remove-item item-id="182215696" count="8"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804732" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="804732" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804732" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
 
     <!-- 区域/事件接取任务：对话仅显示 select_none 履行简报，FINISH_DIALOG 关闭；
          start-eligible 供 repeatable 任务在 COMPLETE 态别名复用。 -->

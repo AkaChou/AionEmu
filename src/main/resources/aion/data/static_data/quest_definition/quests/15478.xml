@@ -496,31 +496,79 @@
     <npc-complete npc-id="805803" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="started" target="reward">
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805799" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215936" count="6"/>
+        <has-item item-id="182215935" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215936" count="ALL"/>
+        <remove-item item-id="182215935" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805799" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805801" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215936" count="6"/>
+        <has-item item-id="182215935" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215936" count="ALL"/>
+        <remove-item item-id="182215935" count="1"/>
+      </actions>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805801" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805803" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215936" count="6"/>
+        <has-item item-id="182215935" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215936" count="ALL"/>
+        <remove-item item-id="182215935" count="1"/>
+      </actions>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="started" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805803" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <transition source="complete" target="complete">

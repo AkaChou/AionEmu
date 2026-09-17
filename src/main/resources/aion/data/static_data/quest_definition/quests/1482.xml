@@ -134,13 +134,27 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started2" target="reward">
+    <transition source="started2" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182201399" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182201399" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <transition source="started2" target="started2">

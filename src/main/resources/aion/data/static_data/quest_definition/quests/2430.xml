@@ -405,16 +405,27 @@
       </after-commit>
     </transition>
 
-    <transition source="s8" target="reward_c">
+    <transition source="s8" target="reward_c" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204300" action="SELECT_QUEST_REWARD"/>
       </event>
+      <conditions>
+        <has-item item-id="182204222" count="1"/>
+      </conditions>
       <actions>
         <remove-item item-id="182204222" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204300" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_2"/>
       </after-commit>
     </transition>
     <!-- 完成:三个分支各自完成 NPC,发放对应奖励组 (reward 0/1/2)。 -->
