@@ -145,7 +145,11 @@
      守护；剩余盲区=非 work-item 任务道具的放弃恢复，待专项扫描
   2. repeatable 重复接取/周期/冷却/奖励幂等：repeat 轴（max_repeat_count 全量）与
      daily/weekly cycles 已由 QuestRetailStartMetadataGateTest 锁定 0 差异；
-     cooldown-seconds/daily/weekly 的真端比对待扩展进基线
+     **reward_repeat_count 已扫描收敛（2026-09-18）**：真端 265 条字段值全部等于
+     max_repeat_count，生产缺省（XML 缺省=maxRepeatCount）全部等价，0 真实差异；
+     cooldown-seconds/daily/weekly 无真端解包来源（data_driven_quest.xml 仅含
+     category/reward_npc/progress 字段）→ EVIDENCE_BLOCKED（取证方向：真端
+     challenge_task 表或服务器侧周期数据）
   3. 事件任务生成/回收：80xxx 活动任务生产自建（SERVER_ONLY 清单 7 条）已入
      start-metadata 门禁例外；生成/回收运行时行为待运行时验证（PENDING 用户侧）
   4. NPC 报告目标与客户端页面所有者一致性：已有 Playbook 多 NPC owner 模式
