@@ -1648,3 +1648,84 @@ D 项最后一个候选（play-15：`TreeSet` 92,150 + `TreeMap` 92,150 + `Entry
    顺序假设 —— 属于语义变更而非等价降本，收益不足以承担该风险；
 3. 若日后仍要动这块，方向应是"减少每条函数一个 `StatFunctionProxy` 包装对象"或"空集合清理"这类单独取证的改动，
    而不是替换容器类型。
+
+### 12.25 第二十九轮复测（`play-16`）：D 项全部落地后的三口径对照
+
+- 采样：PID 48651（2026-09-17 16:54 启动，含 12.15–12.24 全部改动），`jcmd 48651 JFR.start name=play16
+  settings=/tmp/alloc-detail.jfc filename=/tmp/play-16.jfr duration=300s`，窗口 **16:57:35 → 17:02:35**（恰好 300 s）；
+  结束后抓 `GC.class_histogram`。原始件：`/tmp/play-16.jfr`、`/tmp/play-16-{alloc,tlab,cpu,threads,histogram}.txt`；
+  另存空转基线 `/tmp/hist-after-d7.txt`（16:5x，重启后无战斗）。
+- 口径校验：TLAB 重算 play-15 = **277.9 MB**（12.13 记录 281.8 MB，同一管线，误差 1.4%）→ 两轮可比。
+- ⚠️ 两轮强度不同：CPU 样本 333 → **552（+66%）**，寻路量显著更大（`pathfinder` TLAB 77.8 → 114.7 MB），因此**绝对总量不能直接比**，
+  下文给出按 CPU 样本归一化的口径。
+
+#### 12.25.1 常驻：容器类全部塌到"只有真正用到的实例"
+
+| 类（`GC.class_histogram` 存活对象） | play-15（改前） | play-16（改后，重负载） | Δ |
+|---|---|---|---|
+| `ConcurrentHashMap` | 1,194,676 | **313,191** | −881,485 |
+| `ConcurrentHashMap$KeySetView` | 294,764 | **3,950** | −290,814 |
+| `java.util.HashSet` | 202,280 | **7,982** | −194,298 |
+| `java.util.HashMap` | 519,742 | **32,007** | −487,735 |
+| `java.util.LinkedHashMap` | 683,219 | **196,089** | −487,130 |
+| `CopyOnWriteArrayList` | 509,628 | **118,450** | −391,178 |
+| `ReentrantReadWriteLock`(+`$NonfairSync`) | 174,256 / 174,255 | **57,960 / 57,959** | −116,296（另有 `ReadLock`/`WriteLock`/`ThreadLocalHoldCounter` 同量级） |
+| `ReentrantLock`(+`$NonfairSync`) | 914,470 / 915,125 | 674,076 / 674,731 | −240,394（12.17 三锁合一） |
+| `TreeSet` / `TreeMap` | 92,074 / 92,150 | 94,332 / 94,397 | 持平（12.24 有意保留） |
+| `NpcMoveController`（生物数） | 127,075 | 129,849 | **+2.2%（本轮场面更大）** |
+| **存活堆总量** | 45,730,484 / **2.955 GB** | 41,862,145 / **2.822 GB** | **−3,868,339 对象 / −133 MB** |
+
+即：**生物多 2.2%、寻路量更大**的前提下，对象总数仍少 387 万、存活堆少 133 MB（`PathData$MapData$Node` 因寻路
+高水位从 64.9 万涨到 105.8 万，抵消了约 16 MB，所以容器侧的真实降幅大于 133 MB）。
+
+#### 12.25.2 分配（TLAB，未采样，300 s 窗口）
+
+| 线程组 | play-15 | play-16 | Δ |
+|---|---|---|---|
+| 合计 | 277.9 MB | 302.3 MB | +24.4 |
+| `pathfinder` | 77.8 | **114.7** | +36.9 |
+| `pool-4-thread-*` | 64.8 | 53.3 | −11.5 |
+| `ForkJoinPool-1-worker-*` | 51.6 | 63.0 | +11.4 |
+| `netty eventloop` | 10.3 | 8.3 | −2.0 |
+| `RMI TCP` | 7.4 | 8.0 | +0.6 |
+| `PacketProcessor:*` | 1.7 | 0.5 | −1.2 |
+| **按 CPU 样本归一** | 0.835 MB/样本 | **0.548 MB/样本** | **−34%** |
+
+站点级（首个 `com.aionemu` 帧，play-16）：`PathData$MapData$SearchWorkspace.{node,openNode,searchNode,point,releaseWorkspace}`
+合计 **≈87.5 MB（最大单项）**、`<library/jdk>` 67.8、`KnownList.knownObjectsSnapshot` 11.4、`BIHNode.intersectWhere` 10.96、
+`MapData.point` 9.45、`WaterVolumeStore.find` 8.62、`PathService.waypoints` 8.18、`GeoMap.canPassWalker` 6.73、
+`PathData.hasMap` 5.81、`GeoMap.canSee` 5.72。
+
+#### 12.25.3 CPU（`ExecutionSample`，含任意帧匹配；n 333 → 552）
+
+| 帧 | play-15 | play-16 |
+|---|---|---|
+| `PathData$MapData.searchLowLevel` | 41.1% | 20.3% |
+| `PriorityQueue`（开放集） | 14.4% | **21.6%** |
+| `Node.collideWith`（geo 射线） | 16.2% | 15.2% |
+| `Sector.heightAt` | 7.5% | 8.3% |
+| `Buffer.checkIndex` | 7.5% | **0.0%**（12.19 `bytes` 直读在实战确认归零） |
+| `LongObjectHashMap` | 5.7% | 1.1% |
+| `Arrays.fill` | 4.5% | **0.0%**（12.14 `clear()` 记账确认归零） |
+| `GeoService.getZ`/`GeoMap.getZ` | 17.7% | 8.3% |
+| `AbstractAI` / `NpcMoveController` / `RetailPatternAI2` | 15.0 / 12.0 / 7.5% | 2.4 / 1.6 / 3.1% |
+| **`CreatureGameStats` / `AggroList` / `ReentrantReadWriteLock`** | 1.5 / 1.5 / 0.6% | **0.4 / 0.2 / 0.0%** |
+
+最后一行是本轮的直接证据：**懒物化与"锁随表物化"没有带来任何 CPU 回归**，锁簇已完全不出现在采样里。
+
+#### 12.25.4 功能面证据（本窗口日志）
+
+`awk '/^09-17 (16:5|17:0)/' log/console.log | grep -cE "Exception|UnsupportedOperation|NullPointer|ConcurrentModification|IndexOutOfBounds"`
+= **0**，`log/warn.log` 同窗口 **0**，`log/error.log` 本轮窗口无时间戳条目；console 仅 1 条无关 WARN
+（"收到玩家登出事件，但客户端未认证"）。⇒ 并发首写、占位符空操作、锁懒分配在实战里均未暴露问题。
+
+#### 12.25.5 结论与下一批候选
+
+1. **D 项目标达成**：所有"每实体预制容器"都变成"写入才分配"，容器类对象数与存活堆显著下降，且是在更大场面下取到的。
+2. **分配侧剩下的大头已经全部转移到寻路/geo**：`SearchWorkspace.*` ≈87.5 MB（A\* 工作区对象）、geo 碰撞
+   （`BIHNode.intersectWhere` + `canPassWalker` + `canSee` ≈23 MB）、`KnownList.knownObjectsSnapshot` 11.4 MB。
+3. **勘误**：12.13 用采样口径宣布"`WaterVolumeStore.find` 归零"，但未采样的 TLAB 显示它 **仍有 5.90 MB（play-15）→ 8.62 MB（play-16）**；
+   同一节对 `MoveTaskManager$1.apply`/`NpcShoutData.getNpcShouts` 的"归零"结论未受影响（本轮 top 站点里不再出现）。
+   ⇒ 采样权重的"存在/消失"判断只在**样本量足够**时可信，该站点的结论应回退为"未验证"。
+4. 下一批（按证据，均为设计型改动、非纯降本）：① `SearchWorkspace` 的 node/open/searchNode 分配与 `PriorityQueue` 21.6% CPU
+   一体优化（工作区容量与开放集结构）；② `WaterVolumeStore.find` 的每次调用分配；③ `KnownList.knownObjectsSnapshot` 快照。
