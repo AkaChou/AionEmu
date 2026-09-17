@@ -14,8 +14,8 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="212846" item-id="182215809" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="214621" item-id="182215809" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="212846" item-id="182215809" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="214621" item-id="182215809" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
     <start-condition-groups>
       <group>

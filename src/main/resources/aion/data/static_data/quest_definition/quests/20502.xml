@@ -20,7 +20,7 @@
     <drops>
       <drop npc-id="219682" item-id="182215639" chance="100" each-member="true" collecting-step="3"/>
       <drop npc-id="219683" item-id="182215639" chance="100" each-member="true" collecting-step="3"/>
-      <drop npc-id="219681" item-id="182215639" chance="100" each-member="true" collecting-step="3"/>
+      <drop npc-id="219681" item-id="182215639" chance="50" each-member="true" collecting-step="3"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="20501"/>

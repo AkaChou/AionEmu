@@ -27,6 +27,10 @@
     </rewards>
     <drops>
       <drop npc-id="233873" item-id="182215317" chance="100" each-member="true" collecting-step="2"/>
+      <!-- 真端 drop_monster_1 还包含 IDAbGateL1_Noble_Vritra_High_As_20_Q_An（npc 模板名核对为 210753），
+           迁移时只保留了 NagaFightersQ_21_An(233873)，此处补回对等的第二来源。 -->
+      <!-- Retail lists a second drop source for the same quest item; migration kept only one. -->
+      <drop npc-id="210753" item-id="182215317" chance="100" each-member="true" collecting-step="2"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="14010"/>

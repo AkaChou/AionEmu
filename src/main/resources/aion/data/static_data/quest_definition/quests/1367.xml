@@ -27,11 +27,11 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="210930" item-id="182201331" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="210887" item-id="182201332" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="210912" item-id="182201332" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="210871" item-id="182201333" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="210896" item-id="182201333" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210930" item-id="182201331" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="210887" item-id="182201332" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="210912" item-id="182201332" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="210871" item-id="182201333" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="210896" item-id="182201333" chance="80" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="1901"/>

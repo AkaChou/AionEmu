@@ -12,16 +12,16 @@
       <reward kind="EXP" id="0" amount="56346"/>
     </rewards>
     <drops>
-      <drop npc-id="211298" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211297" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211304" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212370" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211300" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211307" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211310" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211305" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211302" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212372" item-id="182213206" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211298" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211297" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211304" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="212370" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211300" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211307" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211310" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211305" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="211302" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
+      <drop npc-id="212372" item-id="182213206" chance="60" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="28833"/>

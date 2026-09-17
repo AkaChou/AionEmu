@@ -16,6 +16,14 @@
     <items>
       <item id="182215172" count="3"/>
     </items>
+    <!--
+      真端 collect_item1 = quest_50011a 3，drop_monster_1 = ValentineEvent_Brownie_Solo，drop_prob=100，
+      drop_each_member=1；npc 模板名已核对为 219315（Happy Singleton，ATTACKABLE/aggressive）。
+      该活动怪的生成由活动配置负责（本检出内无 spawn 记录），但掉落行本身在迁移时丢失，
+      导致 npc-item-report 交付永远无法满足。
+      Retail requires three drops from the Valentine event brownie (219315). The event spawns are owned by the
+      event configuration, but the drop row itself was lost in migration, so the turn-in could never be satisfied.
+    -->
     <work-items>
       <item id="182215174" count="1"/>
     </work-items>
@@ -24,6 +32,9 @@
       <reward kind="ITEM" id="160010208" amount="1"/>
       <reward kind="ITEM" id="160010209" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="219315" item-id="182215172" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

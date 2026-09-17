@@ -25,10 +25,10 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="234525" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="234283" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="234284" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="234285" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234525" item-id="182215895" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234283" item-id="182215895" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234284" item-id="182215895" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234285" item-id="182215895" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
     <start-condition-groups>
       <group>

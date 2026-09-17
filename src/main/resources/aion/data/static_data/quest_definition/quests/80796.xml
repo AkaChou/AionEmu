@@ -14,7 +14,7 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="256693" item-id="182215807" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="256693" item-id="182215807" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
     <start-condition-groups>
       <group>

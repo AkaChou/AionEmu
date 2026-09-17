@@ -15,7 +15,7 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="215630" item-id="182215636" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="215630" item-id="182215636" chance="80" each-member="false" collecting-step="0" scope="NONE" />
     </drops>
   </metadata>
   <progress>

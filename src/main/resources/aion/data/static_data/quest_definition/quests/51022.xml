@@ -11,11 +11,20 @@
     <items>
       <item id="182215183" count="3"/>
     </items>
+    <!--
+      真端 drop_monster_1 = Event_Cargobox, drop_item_1 = quest_51018a, drop_prob=100, drop_each_member=1；
+      旧 quest_data 的数值 ID 701470（npc 模板名 Event_Cargobox，ai=quest_use_item）已核对。
+      The event cargobox grants the three exchange items; production lost the drop row during migration, so
+      the npc-item-report turn-in could never be satisfied.
+    -->
     <rewards>
       <reward kind="ITEM" id="188051770" amount="1"/>
       <reward kind="ITEM" id="160010214" amount="1"/>
       <reward kind="ITEM" id="160010215" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="701470" item-id="182215183" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

@@ -18,12 +18,12 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="213880" item-id="182215111" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="213882" item-id="182215111" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="211314" item-id="182215112" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="212387" item-id="182215112" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="212388" item-id="182215113" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="212435" item-id="182215113" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="213880" item-id="182215111" chance="50" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="213882" item-id="182215111" chance="50" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="211314" item-id="182215112" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="212387" item-id="182215112" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="212388" item-id="182215113" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="212435" item-id="182215113" chance="80" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
   </metadata>
   <progress>

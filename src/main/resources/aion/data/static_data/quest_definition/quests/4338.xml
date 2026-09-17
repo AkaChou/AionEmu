@@ -22,8 +22,8 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="212442" item-id="182215325" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
-      <drop npc-id="212443" item-id="182215325" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="212442" item-id="182215325" chance="80" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="212443" item-id="182215325" chance="80" each-member="true" collecting-step="1" scope="GROUP" />
     </drops>
   </metadata>
 </quest-definition>

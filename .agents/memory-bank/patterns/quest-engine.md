@@ -677,3 +677,25 @@ first_check: 检查任务 slot 的幂等判定是否只看 contains，以及被�
 
 - **判定规则**：任务 slot 的幂等语义是“权威 handle 仍可用”，不是“曾经登记过”。真实 NPC 一旦死亡或离开世界，该 slot 必须允许重建；重建只能替换调用方判定的陈旧 handle，并在并发下保留他人已换入的 handle，禁止制造无人登记的孤儿 NPC。
 - **代表案例**：`1922` 的 `<delete-world-npcs/>` 会清空世界地图实例内的全部 NPC，任何在该实例留有 slot 登记的任务此后都无法再生成自己的 NPC；`QuestSpawnRegistry.replaceStale` + `isUsableAuthoritativeHandle` 让被杀/被外部销毁的任务 NPC 能重建，并由 `replaceStaleSwapsOnlyTheJudgedHandle`、`questNpcDestroyedOutsideTheRegistryIsRebuiltForItsOwner` 守护。
+
+---
+
+## [QE-030] 二十八、任务掉落契约真端基线门禁 (QUEST_DROP_CONTRACT_BASELINE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务元数据 <drops> / 真端 quest.xml 掉落契约 / 收集类任务交付
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 击杀任务指定怪物或使用任务对象成百上千次永远拿不到任务道具，收集类交付目标（check-item / npc-item-report / has-item）无法满足，任务卡在收集阶段
+root_cause: 1. 迁移时把任务对象的掉落行整体丢失（15400 三个雷山塔野外箱、51022 活动货箱、50019 情人节活动怪），道具只在别处需要、没有任何获得路径；2. 掉落来源被裁剪（14016 少一个来源、21107 少一个来源）或概率统一写成 100%（75 个任务与真端 drop_prob 不符，含 18834/4078 等 60/75 档）
+fix_or_guardrail: 1. 按真端 drop_monster/drop_item/drop_prob/each_member 与旧 quest_data 数值 ID 恢复缺失掉落（15400/51022/50019），补齐被裁剪的来源（14016→210753、21107→216535）；2. 75 个任务的概率按真端收敛（67 个统一档 + 8 个修正档 + 6 个混合档先按 npc 模板名核对再逐行对齐）；3. 新增 test resource `/quest/quest-drop-retail-contract.tsv`（1,158 任务：掉落道具种数 + 按怪物加权的概率直方图，由真端 quest.xml 生成，生成脚本入库）+ `/quest/quest-drop-contract-exceptions.tsv`（仅 1127 直接 give-item 与 25604 刻意重构两条，含证据理由）+ `QuestDropContractGateTest` 全库门禁：生产可按同一批怪重新分行、可比真端多来源，但任一概率档的怪物数或掉落道具种数低于基线即失败
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/15400.xml; src/main/resources/aion/data/static_data/quest_definition/quests/51022.xml; src/main/resources/aion/data/static_data/quest_definition/quests/50019.xml; src/main/resources/aion/data/static_data/quest_definition/quests/14016.xml; src/main/resources/aion/data/static_data/quest_definition/quests/21107.xml; src/test/resources/quest/quest-drop-retail-contract.tsv; src/test/resources/quest/quest-drop-contract-exceptions.tsv; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDropContractGateTest.java; .agents/summary/quest/twin-pair-scan/audit_drop_shape_vs_retail.py
+validation: 真端形态审计由 84 条不一致降为 6 条（4 条为生产多来源的超集、2 条为有证据豁免）；mvn test 任务门禁套件 31 项全绿，PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0
+boundaries: 真端只提供名称，离线无法把名称映射成 ID，故基线为“按怪物加权的结构契约”而非逐道具逐怪精确比对；each-member 组合语义与任务目录之外的来源（商店/合成/其他系统）不在本门禁范围
+superseded_by: none
+see_also: [QE-025], [QE-029]
+first_check: 比对任务 <drops> 与真端 quest.xml 的 drop_monster/drop_prob（按怪物加权直方图），以及收集类目标是否至少存在掉落或 give-item 获得路径
+-->
+
+- **判定规则**：任务的掉落契约不得低于真端 quest.xml——允许生产把同一批怪重新分行、允许比重端多来源，但**不得少于真端任一概率档的怪物数、不得丢失掉落道具**；收集类交付目标必须至少存在一条获得路径（掉落或 `give-item`）。豁免必须逐条写入有证据的例外清单，禁止任务级通配豁免。
+- **代表案例**：雷山塔 `15400`（三个野外箱的掉落行整体丢失，s3 交付三个道具永远无法满足）、活动任务 `51022`（货箱掉落丢失）、`50019`（活动怪掉落丢失）、`14016`/`21107`（真端双来源被裁成单来源）、以及 75 个概率被写成 100% 的任务；由 `QuestDropContractGateTest` + 真端基线 TSV 守护。

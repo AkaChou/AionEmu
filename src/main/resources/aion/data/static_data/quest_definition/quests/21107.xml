@@ -13,7 +13,11 @@
       <reward kind="ITEM" id="162000050" amount="9"/>
     </rewards>
     <drops>
-      <drop npc-id="215897" item-id="182207858" chance="100" each-member="true" collecting-step="0"/>
+      <!-- 真端 drop_prob_1 = 80，drop_monster_1 = DF4_Hiiv_DR_54_An(215897) + DF4_Hiiv_DR_53_An(216535)，
+           迁移时概率误作 100 且丢了第二个来源，此处按真端对齐。 -->
+      <!-- Retail uses prob 80 for both Hiiv fanatics; migration raised it to 100 and dropped one source. -->
+      <drop npc-id="215897" item-id="182207858" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="216535" item-id="182207858" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

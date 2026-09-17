@@ -1,0 +1,11 @@
+# 真端掉落契约豁免清单：仅收录有证据证明“等价或刻意重构”的差异。
+# Retail drop-contract exceptions: only evidence-backed equivalent or deliberately refactored cases.
+# 列 / columns: questId <TAB> reason
+# 1127: 真端把 quest_1127a 记为 OldCube_Q19(700001) 的掉落；生产由同一对象 USE_OBJECT 直接 give-item，
+#       等价获得路径，故不按掉落形态比对。 / Retail models the item as a drop from the same cube object the
+#       production definition uses as a direct give-item route.
+1127	item granted by the same cube object's give-item route instead of a drop row
+# 25604: 生产刻意把真端 6 只 Fanatic 掉落重构为单一祭品守护者(703125)：它同时是击杀计数目标与掉落来源，
+#       掉落仍 each-member 且任务可完成，属体例重构。 / Production deliberately reworks the six retail
+#       fanatics into one sacrifice guardian that is both the counter target and the drop source.
+25604	single sacrifice guardian replaces six retail fanatic drop sources by design

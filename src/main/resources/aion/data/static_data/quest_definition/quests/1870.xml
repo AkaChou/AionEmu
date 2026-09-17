@@ -17,30 +17,30 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="220259" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220260" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220261" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220264" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220265" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220266" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220269" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220270" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220271" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220274" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220275" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220276" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220279" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220280" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220281" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220284" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220285" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220286" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220289" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220290" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220291" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220294" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220295" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
-      <drop npc-id="220296" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220259" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220260" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220261" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220264" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220265" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220266" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220269" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220270" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220271" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220274" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220275" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220276" item-id="182215905" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220279" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220280" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220281" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220284" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220285" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220286" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220289" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220290" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220291" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220294" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220295" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220296" item-id="182215906" chance="33" each-member="true" collecting-step="0" scope="GROUP" />
     </drops>
   </metadata>
   <progress>
