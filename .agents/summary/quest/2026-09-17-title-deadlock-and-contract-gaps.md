@@ -57,3 +57,12 @@
 - **修复与防御**：
   - 移除 18992.xml 中误配的自指 start-conditions；
   - 在 CompletedQuestPrerequisiteRegressionTest 中新增全库前置拓扑有向图 DFS 环路与自依赖门禁 noQuestRequiresItsOwnRewardTitle，彻底杜绝任何任务自指依赖或多任务相互前置死锁。
+
+## 8. 领奖预览阶段提前扣除道具死锁与等级前置严重错配根治（24012, 24051, 28649, 2724）
+- **领奖预览重复扣除死锁（24012, 24051）**：
+  - 深入排查发现魔族核心使命 24012（伊斯哈尔芬）与 24051（莫尔海姆“调查失踪事件”）在 reward -> reward 奖励预览阶段（USE_OBJECT / SELECT_QUEST_REWARD）就提前执行了 remove-item 动作扣除了任务道具；
+  - 随后在 reward -> complete 选定奖励确认完成时，又重复执行了 remove-item 扣除；由于玩家背包已无该道具，确认领奖时事务必然失败死锁；
+  - 修复：彻底清除 reward 预览阶段的提前扣除动作，道具统一在最终确认领奖时扣除 1 次；在 MissionItemConsumptionBatchRegressionTest 中新增全量门禁 rewardWindowPreviewDoesNotPrematurelyConsumeQuestItems。
+- **等级前置严重错配阻断接取（28649, 2724）**：
+  - 28649（魔族 37 级重要任务“奈尔图斯的召唤”）：服务端误配为 min-level="66"，导致 37-65 级正常升级玩家完全无法接取；真端客户端权威数据与天族对称任务 18649 均为 37 级，已纠正为 min-level="37"；
+  - 2724（魔族欧比斯任务）：服务端遗留了旧版 min-level="25"，与 5.8 客户端（minlevel 50）及天族对称任务 1724（min-level="50"）脱节，已纠正为 min-level="50"。
