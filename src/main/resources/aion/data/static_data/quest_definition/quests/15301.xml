@@ -65,15 +65,19 @@
         <dialog type="TALK_TO_NPC" npc-id="805327" action="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805327" action="QUEST_ACCEPT_1"/>
       </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_1_2"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
 

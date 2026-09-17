@@ -157,12 +157,16 @@
          其余阶段按 legacy 的 default 分支结束对话，避免提前领奖。 -->
     <!-- The SETPRO2 button on SELECT2_1 is only valid at k7 (legacy handler grants the device when
          var==7); other stages end the conversation as the legacy default did, never granting the reward. -->
-    <transition source="started" target="started" priority="1">
+    <transition source="k7" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799530" action="SETPRO2"/>
       </event>
+      <actions>
+        <give-item item-id="182212110" count="1"/>
+      </actions>
       <after-commit>
-        <close-dialog/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="k7" target="k7">
@@ -189,12 +193,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="k7" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730373" action="SETPRO2"/>
       </event>
+      <actions>
+        <give-item item-id="182212110" count="1"/>
+      </actions>
       <after-commit>
-        <close-dialog/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -203,6 +211,34 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730374" action="SETPRO2"/>
+      </event>
+      <actions>
+        <give-item item-id="182212110" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799530" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730373" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">

@@ -80,13 +80,16 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="started">
+    <transition source="unaccepted" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="202549" action="SETPRO1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -276,11 +279,18 @@
       </after-commit>
     </transition>
 
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="v2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="202549" action="SETPRO2"/>
       </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
       <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

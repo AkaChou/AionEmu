@@ -14,10 +14,10 @@
       <reward kind="ITEM" id="186000236" amount="20"/>
     </rewards>
     <drops>
-      <drop npc-id="233887" item-id="182215786" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="234990" item-id="182215788" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="233898" item-id="182215788" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="234991" item-id="182215788" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="233887" item-id="182215786" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="234990" item-id="182215788" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="233898" item-id="182215788" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="234991" item-id="182215788" chance="100" each-member="true" collecting-step="1"/>
     </drops>
   </metadata>
   <progress>
@@ -30,8 +30,11 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -39,12 +42,10 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="802350" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="802350" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="802350" source="s1" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="802350" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-
 
     <transition source="started" target="started">
       <event>
@@ -62,16 +63,36 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="206361" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="899"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="206361" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="206361" action="SETPRO1"/>
       </event>
       <after-commit>
-        <play-movie movie-id="899"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="s1" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="802350" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -88,7 +109,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="s1" target="s1" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="802350" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>

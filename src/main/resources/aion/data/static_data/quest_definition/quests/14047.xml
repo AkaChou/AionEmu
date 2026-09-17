@@ -363,46 +363,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
-    <transition source="s1" target="s1">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
-    <transition source="s2" target="s2">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
-    <transition source="s3" target="s3">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
-    <transition source="s4" target="s4">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
     <transition source="s5" target="s6">
       <event>
         <kill-npc npc-id="214599"/>
@@ -415,14 +375,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <play-movie movie-id="422"/>
-      </after-commit>
-    </transition>
-    <transition source="s6" target="s6">
-      <event>
-        <kill-npc npc-id="214599"/>
-      </event>
-      <after-commit>
         <play-movie movie-id="422"/>
       </after-commit>
     </transition>

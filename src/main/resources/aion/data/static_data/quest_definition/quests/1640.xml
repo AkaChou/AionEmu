@@ -144,5 +144,13 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730033" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
 </transitions>
 </quest-definition>

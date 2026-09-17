@@ -545,3 +545,25 @@ first_check: 检查 start-conditions 中 finished 条件的 quest-id 是否等�
 
 - **判定规则**：任务的前置条件（`prerequisites`、`start-conditions`、`start-condition-groups`）严禁引用自身任务 ID，且整个前置依赖有向图中严禁存在环路（Cycle-Free Directed Acyclic Graph）。
 - **代表案例**：天族重大副本任务 `18992`，其 `<start-conditions>` 误配了 `finished quest-id="18992"` 导致自身死锁；修复后由 DFS 环路门禁守护。
+
+---
+
+## [QE-024] 二十二、任务影片循环与推进假死重复对话防线 (MOVIE_LOOP_AND_PROGRESS_STALL_FREE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务影片播放 (play-movie)、剧情推进对话 (SETPRO*) 与状态机流转
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 看完电影没有下一步，再次点击 NPC 无限重复看电影；或者玩家点击推进选项（SETPRO*）后对话直接关闭或停在原步数，再次点击 NPC 完全重复对话，任务目标无法推进
+root_cause: 1. 包含 play-movie 的 transition 被错误配置为 source == target 且无变量变更、无 movie-end 事件、无后续对话页下发，导致动画播放后任务依然停在原状态，再次交互形成无限观影循环；或在非击杀阶段错配击杀怪物播放电影（如 14047）；2. 核心推进动作（SETPRO*、QUEST_ACCEPT_1）被错误配置为 source == target 且 actions 为空，导致玩家点击推进后原地打转，无法推进到打怪/收集/交付阶段（如 14112, 24155, 28301, 50010, 15301, 25301, 1423）
+fix_or_guardrail: 1. 为电影推进对话补充独立 step 节点（如 s1）并配置 set-variable，转移报告源至新节点，新节点配置防重播保护；2. 移除错配在非目标阶段的击杀电影垃圾路由；3. 补齐推进动作的目标节点、任务道具发放与变量变更；4. 新增 QuestMovieAndDialogLoopRegressionTest，对全服可执行任务建立无纯电影死循环门禁
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/16942.xml; src/main/resources/aion/data/static_data/quest_definition/quests/26942.xml; src/main/resources/aion/data/static_data/quest_definition/quests/14047.xml; src/main/resources/aion/data/static_data/quest_definition/quests/14112.xml; src/main/resources/aion/data/static_data/quest_definition/quests/24155.xml; src/main/resources/aion/data/static_data/quest_definition/quests/28301.xml; src/main/resources/aion/data/static_data/quest_definition/quests/50010.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15301.xml; src/main/resources/aion/data/static_data/quest_definition/quests/25301.xml; src/main/resources/aion/data/static_data/quest_definition/quests/1423.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java
+validation: 全库 6,222 个任务全量扫描 0 纯电影死循环，测试用例通过
+boundaries: 适用于所有含影片交互与 SETPRO 推进的任务；显式记录的 24053 fallback 除外
+superseded_by: none
+see_also: [QE-013], [QE-022]
+first_check: 检查 play-movie 或 SETPRO 所在 transition 的 source 与 target 是否相同且无 actions，检查非目标阶段是否存在冗余 kill-npc 触发电影
+-->
+
+- **判定规则**：任务影片播放或 SETPRO 推进动作必须实现明确的状态迁移或变量改变。严禁配置 `source == target` 且 `actions` 为空的纯消费自环（除非有后续 `movie-end` 推进或明确翻页），严禁在非目标阶段错配全节点击杀怪物播放电影。
+- **代表案例**：巴鲁纳研究所 `16942/26942`（SETPRO1 播放电影 899/900 留原地死循环）、阿祖图兰要塞 `14047`（错配 6 处击杀伊卡罗尼斯 214599 乱播电影 422）、消除污染 `14112`（SETPRO1 停在 started 无法推进到击杀）、结界塔修复 `24155`（SETPRO2 停在 started 无法破坏装置）、空中要塞 `28301`（SETPRO2 停在 started 无法拾取动力装置）、活动任务 `50010`（单身线 SETPRO2 停在 unaccepted 永远接不上任务）、圣灵装备 `15301/25301`（QUEST_ACCEPT_1 强制停留在 unaccepted）、飞行术 `1423`（SETPRO1 留原地无法交付）。修复后由 `QuestMovieAndDialogLoopRegressionTest` 全局防护。

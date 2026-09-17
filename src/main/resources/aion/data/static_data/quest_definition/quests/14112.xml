@@ -77,24 +77,28 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="k1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203148" action="SETPRO1"/>
       </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203148" action="SETPRO1"/>
-      </event>
+      <actions>
+        <give-item item-id="182215455" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1">
+    <transition source="k1" target="k1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203148" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k1">
       <event>
         <kill-npc npc-id="210318"/>
       </event>
