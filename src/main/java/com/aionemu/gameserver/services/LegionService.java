@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -45,7 +44,6 @@ import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
-import com.aionemu.gameserver.model.team.legion.LegionPermissionsMask;
 import com.aionemu.gameserver.model.team.legion.LegionRank;
 import com.aionemu.gameserver.model.team.legion.LegionWarehouse;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
@@ -71,7 +69,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -98,11 +95,15 @@ public class LegionService {
 	/** 踢出成员的军团动作操作码 / Legion action opcode for kicking a member. */
 	public final static int LEGION_ACTION_KICK = 4;
 	/** 军团最高等级 / Maximum legion level. */
-	private static final int MAX_LEGION_LEVEL = 8;
+	static final int MAX_LEGION_LEVEL = 8;
 	/** 军团排行缓存 / Legion ranking cache. */
 	private Map<Integer, Integer> legionRanking;
 	/** 军团操作限制校验器 / Legion operation restriction checker. */
-	private final LegionRestrictions legionRestrictions = new LegionRestrictions();
+	/**
+	 * 惰性构造的判权集合，避免构造期暴露 this。
+	 * Lazily built permission checker, which keeps {@code this} out of the constructor.
+	 */
+	private LegionRestrictions legionRestrictions;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -145,16 +146,6 @@ public class LegionService {
 		this.world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 	}
 
-	/**
-	 * 校验军团名称是否合法（匹配配置的正则）。
-	 * Checks whether a legion name is valid (matches the configured pattern).
-	 *
-	 * @param name 军团名称 / Legion name
-	 * @return 合法返回 true，否则 false / True if valid, false otherwise
-	 */
-	public boolean isValidName(String name) {
-		return LegionConfig.LEGION_NAME_PATTERN.matcher(name).matches();
-	}
 
 	/**
 	 * 将军团数据存入数据库。
@@ -548,7 +539,7 @@ public class LegionService {
 	 * @param playerName
 	 * @return LegionMemberEx
 	 */
-	private LegionMemberEx getLegionMemberEx(String playerName) {
+	LegionMemberEx getLegionMemberEx(String playerName) {
 		if (this.allCachedLegionMembers.containsEx(playerName)) {
 			return this.allCachedLegionMembers.getMemberEx(playerName);
 		} else {
@@ -567,7 +558,7 @@ public class LegionService {
 	 */
 	public void requestDisbandLegion(Creature npc, final Player activePlayer) {
 		final Legion legion = activePlayer.getLegion();
-		if (legionRestrictions.canDisbandLegion(activePlayer, legion)) {
+		if (restrictions().canDisbandLegion(activePlayer, legion)) {
 			RequestResponseHandler disbandResponseHandler = new RequestResponseHandler(npc) {
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
@@ -600,7 +591,7 @@ public class LegionService {
 	 * legion creator NPC
 	 */
 	public void createLegion(Player activePlayer, String legionName, Npc creatorNpc) {
-		if (legionRestrictions.canCreateLegion(activePlayer, legionName, creatorNpc)) {
+		if (restrictions().canCreateLegion(activePlayer, legionName, creatorNpc)) {
 			/**
 	 * 创建新军团并放入发起者作为首位成员。 / Create new legion and put originator as first member
 	 */
@@ -632,10 +623,6 @@ public class LegionService {
 		}
 	}
 
-	static boolean isNearLegionCreator(Player player, Npc creatorNpc) {
-		return creatorNpc != null && MathUtil.isInRange(player, creatorNpc,
-				creatorNpc.getObjectTemplate().getTalkDistance() + 2);
-	}
 
 	/**
 	 * 按军团 ID 将玩家直接加入军团（不走邀请流程）。
@@ -689,7 +676,7 @@ public class LegionService {
 	 * target player
 	 */
 	private void invitePlayerToLegion(final Player activePlayer, final Player targetPlayer) {
-		if (legionRestrictions.canInvitePlayer(activePlayer, targetPlayer)) {
+		if (restrictions().canInvitePlayer(activePlayer, targetPlayer)) {
 			final Legion legion = activePlayer.getLegion();
 			RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
 				@Override
@@ -753,7 +740,7 @@ public class LegionService {
 	 * target player
 	 */
 	private void appointBrigadeGeneral(final Player activePlayer, final Player targetPlayer) {
-		if (legionRestrictions.canAppointBrigadeGeneral(activePlayer, targetPlayer)) {
+		if (restrictions().canAppointBrigadeGeneral(activePlayer, targetPlayer)) {
 			final Legion legion = activePlayer.getLegion();
 			RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
 				@Override
@@ -816,7 +803,7 @@ public class LegionService {
 			log.error(I18n.get("log.10437023e015", charName));
 			return;
 		}
-		if (legionRestrictions.canAppointRank(activePlayer, LM.getObjectId())) {
+		if (restrictions().canAppointRank(activePlayer, LM.getObjectId())) {
 			Legion legion = activePlayer.getLegion();
 			LegionRank rank = LegionRank.values()[rankId];
 			int msgId = 0;
@@ -848,7 +835,7 @@ public class LegionService {
 	 * active player
 	 */
 	private void appointRank(Player activePlayer, Player targetPlayer, int rankId) {
-		if (legionRestrictions.canAppointRank(activePlayer, targetPlayer.getObjectId())) {
+		if (restrictions().canAppointRank(activePlayer, targetPlayer.getObjectId())) {
 			Legion legion = activePlayer.getLegion();
 			int msgId = 0;
 			LegionRank rank = LegionRank.values()[rankId];
@@ -880,7 +867,7 @@ public class LegionService {
 	 * @param newSelfIntro 新自我介绍 / new self intro
 	 */
 	private void changeSelfIntro(Player activePlayer, String newSelfIntro) {
-		if (legionRestrictions.canChangeSelfIntro(activePlayer, newSelfIntro)) {
+		if (restrictions().canChangeSelfIntro(activePlayer, newSelfIntro)) {
 			LegionMember legionMember = activePlayer.getLegionMember();
 			legionMember.setSelfIntro(newSelfIntro);
 			PacketSendUtility.broadcastPacketToLegion(legionMember.getLegion(),
@@ -914,7 +901,7 @@ public class LegionService {
 	 * active player
 	 */
 	private void requestChangeLevel(Player activePlayer) {
-		if (legionRestrictions.canChangeLevel(activePlayer)) {
+		if (restrictions().canChangeLevel(activePlayer)) {
 			Legion legion = activePlayer.getLegion();
 			activePlayer.getInventory().decreaseKinah(legion.getKinahPrice());
 			changeLevel(legion, legion.getLegionLevel() + 1, false);
@@ -962,7 +949,7 @@ public class LegionService {
 			}
 			legionMember = getLegionMember(LM.getObjectId());
 		}
-		if (legionRestrictions.canChangeNickname(legion, legionMember.getObjectId(), newNickname)) {
+		if (restrictions().canChangeNickname(legion, legionMember.getObjectId(), newNickname)) {
 			legionMember.setNickname(newNickname);
 			PacketSendUtility.broadcastPacketToLegion(legion,
 					new SM_LEGION_UPDATE_NICKNAME(legionMember.getObjectId(), newNickname));
@@ -1067,7 +1054,7 @@ public class LegionService {
 	 */
 	public void storeLegionEmblem(Player activePlayer, int legionId, int emblemId, int color_r, int color_g,
 			int color_b, LegionEmblemType emblemType) {
-		if (legionRestrictions.canStoreLegionEmblem(activePlayer, legionId, emblemId)) {
+		if (restrictions().canStoreLegionEmblem(activePlayer, legionId, emblemId)) {
 			Legion legion = activePlayer.getLegion();
 			if (legion.getLegionEmblem().isDefaultEmblem()) {
 				addHistory(legion, "", LegionHistoryType.EMBLEM_REGISTER);
@@ -1152,7 +1139,7 @@ public class LegionService {
 	 * Warehouse NPC
 	 */
 	public void openLegionWarehouse(Player player, Npc npc) {
-		if (legionRestrictions.canOpenWarehouse(player)) {
+		if (restrictions().canOpenWarehouse(player)) {
 			LegionWhUpdate(player);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));// 基纳 / kinah
 			int whLvl = player.getLegion().getWarehouseLevel();
@@ -1180,7 +1167,7 @@ public class LegionService {
 	 */
 	public void recreateLegion(Npc npc, Player activePlayer) {
 		final Legion legion = activePlayer.getLegion();
-		if (legionRestrictions.canRecreateLegion(activePlayer, legion)) {
+		if (restrictions().canRecreateLegion(activePlayer, legion)) {
 			RequestResponseHandler disbandResponseHandler = new RequestResponseHandler(npc) {
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
@@ -1302,7 +1289,7 @@ public class LegionService {
 	 */
 	public void uploadEmblemInfo(Player activePlayer, int totalSize, int color_r, int color_g, int color_b,
 			LegionEmblemType emblemType) {
-		if (legionRestrictions.canUploadEmblemInfo(activePlayer)) {
+		if (restrictions().canUploadEmblemInfo(activePlayer)) {
 			LegionEmblem legionEmblem = activePlayer.getLegion().getLegionEmblem();
 			legionEmblem.resetUploadSettings();
 
@@ -1322,7 +1309,7 @@ public class LegionService {
 	 * @param data 本片数据 / Chunk bytes
 	 */
 	public void uploadEmblemData(Player activePlayer, int size, byte[] data) {
-		if (legionRestrictions.canUploadEmblem(activePlayer)) {
+		if (restrictions().canUploadEmblem(activePlayer)) {
 			LegionEmblem legionEmblem = activePlayer.getLegion().getLegionEmblem();
 			legionEmblem.addUploadedSize(size);
 			legionEmblem.addUploadData(data);
@@ -1422,7 +1409,7 @@ public class LegionService {
 	 * announcement
 	 */
 	private void changeAnnouncement(Player activePlayer, String announcement) {
-		if (legionRestrictions.canChangeAnnouncement(activePlayer.getLegionMember(), announcement)) {
+		if (restrictions().canChangeAnnouncement(activePlayer.getLegionMember(), announcement)) {
 			Legion legion = activePlayer.getLegion();
 
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -1638,7 +1625,7 @@ public class LegionService {
 			/**
 	 * 检查玩家是否可被踢出军团。 / Check whether the player can be kicked from the legion.
 	 */
-			if (legionRestrictions.canKickPlayer(activePlayer, charName)) {
+			if (restrictions().canKickPlayer(activePlayer, charName)) {
 				if (removeLegionMember(charName, true, activePlayer.getName())) {
 					// 向成员发送数据包？ / send packet to members?
 					if (targetPlayer != null) {
@@ -1724,7 +1711,7 @@ public class LegionService {
 	 * Leave legion
 	 */
 		case 0x02:
-			if (legionRestrictions.canLeave(activePlayer)) {
+			if (restrictions().canLeave(activePlayer)) {
 				if (removeLegionMember(activePlayer.getName(), false, "")) {
 					Legion legion = activePlayer.getLegion();
 					PacketSendUtility.sendPacket(activePlayer,
@@ -1833,740 +1820,138 @@ public class LegionService {
 	}
 
 	/**
-	 * 军团功能限制校验集合，封装创建/邀请/踢人/权限/仓库等前置条件。
-	 * Restriction checks for legion features: create, invite, kick, rights, warehouse, etc.
+	 * 惰性获取判权集合。
+	 * Lazily resolves the permission-checker collection.
 	 *
-	 * @author Simple
+	 * @return 判权集合 / permission checker
 	 */
-	private class LegionRestrictions {
-
-		/**
-	 * 静态徽章信息。
-	 * Static Emblem information
+	/**
+	 * 返回当前全部已缓存军团的快照列表。
+	 * Returns a snapshot list of all currently cached legions.
+	 *
+	 * @return 缓存军团列表 / cached legions
 	 */
-		private static final int MIN_EMBLEM_ID = 0;
-		private static final int MAX_EMBLEM_ID = 49;
+	public List<Legion> getAllCachedLegions() {
+		return allCachedLegions.getAllLegions();
+	}
 
-		/**
-	 * 检查创建军团的全部限制条件。
-	 * This method checks all restrictions for legion creation
-	 *
-	 * @param activePlayer
-	 * @param legionName
-	 *
-	 * @return 允许 / 成功则为 true / true if allow to create a legion
-	 */
-		private boolean canCreateLegion(Player activePlayer, String legionName, Npc creatorNpc) {
-			/* Some reasons why legions can' be created */
-			if (!isValidName(legionName)) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATE_INVALID_GUILD_NAME);
-				return false;
-			} else if (!isNearLegionCreator(activePlayer, creatorNpc)) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATE_TOO_FAR_FROM_CREATOR_NPC);
-				return false;
-			} else if (!isFreeName(legionName)) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATE_SAME_GUILD_EXIST);
-				return false;
-			} else if (activePlayer.isLegionMember()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATE_ALREADY_BELONGS_TO_GUILD);
-				return false;
-			} else if (activePlayer.getInventory().getKinah() < LegionConfig.LEGION_CREATE_REQUIRED_KINAH) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATE_NOT_ENOUGH_MONEY);
-				return false;
-			}
-			return true;
+	LegionRestrictions restrictions() {
+		LegionRestrictions current = legionRestrictions;
+		if (current == null) {
+			current = new LegionRestrictions(this);
+			legionRestrictions = current;
 		}
-
-		/**
-	 * 检查邀请玩家加入军团的全部限制条件。
-	 * This method checks all restrictions for invite player to legion
-	 *
-	 * @param activePlayer
-	 * @param targetPlayer
-	 *
-	 * @return 允许 / 成功则为 true / true if can invite player
-	 */
-		private boolean canInvitePlayer(Player activePlayer, Player targetPlayer) {
-			Legion legion = activePlayer.getLegion();
-			if (activePlayer.getLifeStats().isAlreadyDead()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_CANT_INVITE_WHEN_DEAD);
-				return false;
-			}
-			if (isSelf(activePlayer, targetPlayer.getObjectId())) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_CAN_NOT_INVITE_SELF);
-				return false;
-			} else if (targetPlayer.isLegionMember()) {
-				if (legion.isMember(targetPlayer.getObjectId())) {
-					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_HE_IS_MY_GUILD_MEMBER(targetPlayer.getName()));
-				} else {
-					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_HE_IS_OTHER_GUILD_MEMBER(targetPlayer.getName()));
-				}
-				return false;
-			} else // 不同种族 / Not Same Race
-				if (!activePlayer.getLegionMember().hasRights(LegionPermissionsMask.INVITE)) {
-				// 无权邀请 / No rights to invite
-				return false;
-			} else return activePlayer.getRace() == targetPlayer.getRace() || LegionConfig.LEGION_INVITEOTHERFACTION;
-		}
-
-		/**
-	 * 检查将玩家踢出军团的全部限制条件。
-	 * This method checks all restrictions for kicking a player from a legion
-	 *
-	 * @param activePlayer
-	 * @param charName
-	 *
-	 * @return 允许 / 成功则为 true / true if can kick player
-	 */
-		private boolean canKickPlayer(Player activePlayer, String charName) {
-			/**
-	 * 从缓存获取 LegionMemberEx，离线则读库。
-	 * Get LegionMemberEx from cache or database if offline
-	 */
-			LegionMemberEx legionMember = getLegionMemberEx(charName);
-			if (legionMember == null) {
-				log.error(I18n.get("log.10437023e015", charName));
-				return false;
-			}
-
-			// STR_GUILD_BANISH_DONT_HAVE_RIGHT_TO_BANISH
-			Legion legion = activePlayer.getLegion();
-
-			if (isSelf(activePlayer, legionMember.getObjectId())) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_BANISH_CANT_BANISH_SELF);
-				return false;
-			} else if (legionMember.isBrigadeGeneral()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_BANISH_CAN_BANISH_MASTER);
-				return false;
-			} else if (legionMember.getRank() == activePlayer.getLegionMember().getRank()) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_BANISH_DONT_HAVE_RIGHT_TO_BANISH);
-				return false;
-			} else if (!legion.isMember(legionMember.getObjectId())) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_BANISH_DONT_HAVE_RIGHT_TO_BANISH);
-				return false;
-			} else if (!activePlayer.getLegionMember().hasRights(LegionPermissionsMask.KICK)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_BANISH_DONT_HAVE_RIGHT_TO_BANISH);
-				return false;
-			}
-			return true;
-		}
-
-		/**
-	 * 检查任命军团长的全部限制条件。
-	 * This method checks all restrictions for appointing brigade general
-	 *
-	 * @param activePlayer
-	 * @param targetPlayer
-	 *
-	 * @return 允许 / 成功则为 true / true if can appoint brigade general
-	 */
-		private boolean canAppointBrigadeGeneral(Player activePlayer, Player targetPlayer) {
-			Legion legion = activePlayer.getLegion();
-			if (!isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MEMBER_RANK_DONT_HAVE_RIGHT);
-				return false;
-			}
-			// 不在同一军团 / not in same legion
-			if (isSelf(activePlayer, targetPlayer.getObjectId())) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_ERROR_SELF);
-				return false;
-			} else return legion.isMember(targetPlayer.getObjectId());
-		}
-
-		/**
-	 * 检查任命军阶的全部限制条件。
-	 * This method checks all restrictions for appointing rank
-	 *
-	 * @param activePlayer
-	 * @param targetObjId
-	 *
-	 * @return 允许 / 成功则为 true / true if can appoint rank
-	 */
-		private boolean canAppointRank(Player activePlayer, int targetObjId) {
-			Legion legion = activePlayer.getLegion();
-			if (!isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MEMBER_RANK_DONT_HAVE_RIGHT);
-				return false;
-			}
-			// 不在同一军团 / not in same legion
-			if (isSelf(activePlayer, targetObjId)) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_ERROR_SELF);
-				return false;
-			} else return legion.isMember(targetObjId);
-		}
-
-		/**
-	 * 检查修改自我介绍的全部限制条件。
-	 * This method checks all restrictions for changing self intro
-	 *
-	 * @param activePlayer
-	 * @param newSelfIntro
-	 *
-	 * @return 允许 / 成功则为 true / true if allowed to change self intro
-	 */
-		private boolean canChangeSelfIntro(Player activePlayer, String newSelfIntro) {
-			return isValidSelfIntro(newSelfIntro);
-		}
-
-		/**
-	 * 检查变更军团等级的全部限制条件。
-	 * This method checks all restrictions for changing legion level
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
-	 * @return 允许 / 成功则为 true / true if allowed to change legion level
-	 */
-		private boolean canChangeLevel(Player activePlayer) {
-			Legion legion = activePlayer.getLegion();
-			int levelContributionPrice = legion.getContributionPrice();
-
-			if (legion.getLegionLevel() == MAX_LEGION_LEVEL) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_CANT_LEVEL_UP);
-				return false;
-			} else if (LegionConfig.ENABLE_GUILD_TASK_REQ && legion.getLegionLevel() >= 5) {
-				if (!GameHousingServices.challengeTaskService().canRaiseLegionLevel(legion.getLegionId(),
-						legion.getLegionLevel())) {
-					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_GUILD_LEVEL_UP_CHALLENGE_TASK(legion.getLegionLevel()));
-					return false;
-				}
-			} else if (activePlayer.getInventory().getKinah() < legion.getKinahPrice()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_MONEY);
-				return false;
-			} else if (!legion.hasRequiredMembers()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_MEMBER);
-				return false;
-			} else if (legion.getContributionPoints() < levelContributionPrice) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_NOT_ENOUGH_POINT);
-				return false;
-			}
-			return true;
-		}
-
-		/**
-	 * 处理军团相关逻辑。
-	 * This method will check all restrictions for changing nickname
-	 *
-	 * @param legion
-	 * @return true if allowed to change nickname of target player
-	 */
-		private boolean canChangeNickname(Legion legion, int targetObjectId, String newNickname) {
-			// 不在同一军团 / not in same legion
-			if (!isValidNickname(newNickname)) {
-				// 无效昵称 / invalid nickname
-				return false;
-			} else return legion.isMember(targetObjectId);
-		}
-
-		/**
-	 * 检查修改公告的全部限制条件。
-	 * This method checks all restrictions for changing announcements
-	 *
-	 * @param legionMember
-	 * @param announcement
-	 *
-	 * @return 允许 / 成功则为 true / true if can change announcement
-	 */
-		private boolean canChangeAnnouncement(LegionMember legionMember, String announcement) {
-			return legionMember.hasRights(LegionPermissionsMask.EDIT)
-					&& (announcement.isEmpty() || isValidAnnouncement(announcement));
-		}
-
-		/**
-	 * 检查解散军团的全部限制条件。
-	 * This method checks all restrictions for disband legion
-	 *
-	 * @param activePlayer
-	 * @param legion
-	 *
-	 * @return 允许 / 成功则为 true / true if can disband legion
-	 */
-		private boolean canDisbandLegion(Player activePlayer, Legion legion) {
-			if (legion == null) {
-				return false;
-			}
-			if (!isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_ONLY_MASTER_CAN_DISPERSE);
-				return false;
-			} else if (legion.getLegionWarehouse().getWhUser() != 0) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_CANT_DISPERSE_GUILD_WHILE_USING_WAREHOUSE);
-				return false;
-			} else if (legion.isDisbanding()) {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_ALREADY_REQUESTED);
-				return false;
-			} else if (legion.getLegionWarehouse().size() > 0) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_CANT_DISPERSE_GUILD_STORE_ITEM_IN_WAREHOUSE);
-				return false;
-			}
-			return true;
-		}
-
-		/**
-	 * 检查离开军团的全部限制条件。
-	 * This method checks all restrictions for leaving
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
-	 * @return 允许 / 成功则为 true / true if allowed to leave
-	 */
-		private boolean canLeave(Player activePlayer) {
-			if (isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_MASTER_CANT_LEAVE_BEFORE_CHANGE_MASTER);
-				return false;
-			}
-			return true;
-		}
-
-		/**
-		 * 是否允许修改入团设置（仅旅长）。
-		 * Whether the player may change join settings (brigade general only).
-		 *
-		 * @param activePlayer 操作玩家 / Acting player
-		 * @return 允许修改时为 {@code true} / {@code true} if allowed
-		 */
-		public boolean canChangeLegionJoinSetting(Player activePlayer) {
-			return isBrigadeGeneral(activePlayer);
-		}
-
-		/**
-	 * 检查重建军团的全部限制条件。
-	 * This method checks all restrictions for recreate legion
-	 *
-	 * @param activePlayer
-	 * @param legion
-	 *
-	 * @return 允许 / 成功则为 true / true if allowed to recreate legion
-	 */
-		private boolean canRecreateLegion(Player activePlayer, Legion legion) {
-			// 军团未在解散 / Legion is not disbanding
-			if (!isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_ONLY_MASTER_CAN_DISPERSE);
-				return false;
-			} else return legion.isDisbanding();
-		}
-
-		/**
-	 * 检查上传徽章信息的全部限制条件。
-	 * This method checks all restrictions for upload emblem info
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
-	 * @return 允许 / 成功则为 true / true if allowed to upload emblem info
-	 */
-		private boolean canUploadEmblemInfo(Player activePlayer) {
-			if (!isBrigadeGeneral(activePlayer)) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_EMBLEM_DONT_HAVE_RIGHT);
-				return false;
-			} else if (activePlayer.getLegion().getLegionLevel() < 3) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_EMBLEM_DONT_HAVE_RIGHT);
-				return false;
-			}
-			return true;
-		}
-
-		/**
-	 * 检查上传徽章的全部限制条件。
-	 * This method checks all restrictions for uploading emblem
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
-	 * @return 允许 / 成功则为 true / true if allowed to upload emblem
-	 */
-		private boolean canUploadEmblem(Player activePlayer) {
-			if (!isBrigadeGeneral(activePlayer)) {
-				// 不是军团长 / Not legion leader
-				return false;
-			} else // 未上传徽章 / Not uploading emblem
-				if (activePlayer.getLegion().getLegionLevel() < 3) {
-				// 军团等级不够高 / Legion level isn't high enough
-				return false;
-			} else return activePlayer.getLegion().getLegionEmblem().isUploading();
-		}
-
-		/**
-		 * 是否允许打开军团仓库（成员状态、解散中、配置与占用锁）。
-		 * Whether the player may open the legion warehouse (membership, disband, config, lock).
-		 *
-		 * @param player 操作玩家 / Acting player
-		 * @return 允许打开时为 {@code true} / {@code true} if allowed
-		 */
-		public boolean canOpenWarehouse(Player player) {
-			if (!player.isLegionMember()) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_NO_GUILD_TO_DEPOSIT);
-				return false;
-			}
-			Legion legion = player.getLegion();
-			LegionWarehouse legWh = legion.getLegionWarehouse();
-			int whUser = legWh.getWhUser();
-			int playerId = player.getObjectId();
-			if (legion.isDisbanding()) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_WAREHOUSE_CANT_USE_WHILE_DISPERSE);
-				return false;
-			} else if (!LegionConfig.LEGION_WAREHOUSE) {
-				// 军团仓库未启用 / Legion Warehouse not enabled
-				return false;
-			} else if (whUser != playerId && legWh.getWhUser() != 0) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_WAREHOUSE_IN_USE);
-				return false;
-			}
-			legWh.setWhUser(player.getObjectId());
-			return true;
-		}
-
-		/**
-		 * 是否允许保存军团徽章（ID 范围、等级与基纳）。
-		 * Whether the player may store a legion emblem (id range, level and kinah).
-		 *
-		 * @param activePlayer 操作玩家 / Acting player
-		 * @param legionId 军团 ID / Legion ID
-		 * @param emblemId 徽章模板 ID / Emblem template ID
-		 * @return 允许保存时为 {@code true} / {@code true} if allowed
-		 */
-		public boolean canStoreLegionEmblem(Player activePlayer, int legionId, int emblemId) {
-			Legion legion = activePlayer.getLegion();
-			if (emblemId < MIN_EMBLEM_ID || emblemId > MAX_EMBLEM_ID) {
-				// 非有效徽章 ID / Not a valid emblemId
-				return false;
-			} else if (legionId != legion.getLegionId()) {
-				// 军团 ID 不相等 / legion id not equal
-				return false;
-			} else if (legion.getLegionLevel() < 2) {
-				// 军团等级不够高 / legion level not high enough
-				return false;
-			} else if (activePlayer.getInventory().getKinah() < LegionConfig.LEGION_EMBLEM_REQUIRED_KINAH) {
-				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(LegionConfig.LEGION_EMBLEM_REQUIRED_KINAH));
-				return false;
-			}
-			return true;
-		}
-
-		/**
-	 * 检查玩家是否为军团长，否则返回提示消息。 / Check whether the player is the brigade general and return a message otherwise.
-	 *
-	 * @param player
-	 * @return
-	 */
-		private boolean isBrigadeGeneral(Player player) {
-			return player.getLegionMember().isBrigadeGeneral();
-		}
-
-		/**
-	 * 检查是否目标为相同作为当前玩家。 / Checks if target is same as current player
-	 *
-	 * @param player
-	 * @param targetObjId
-	 * @return
-	 */
-		private boolean isSelf(Player player, int targetObjId) {
-			return player.sameObjectId(targetObjId);
-		}
-
-		/**
-	 * 检查是否名称为已经占用与否。 / Checks if name is already taken or not
-	 *
-	 * @param name character name
-	 * @return true if is free, false in other case
-	 */
-		private boolean isFreeName(String name) {
-			return !DAOManager.getDAO(LegionDAO.class).isNameUsed(name);
-		}
-
-		/**
-	 * 检查是否自我介绍为有效 . 其应包含仅英文字母。 / Checks if a self intro is valid. It should contain only english letters
-	 *
-	 * @param name character name
-	 * @return true if name is valid, false overwise
-	 */
-		private boolean isValidSelfIntro(String name) {
-			return LegionConfig.SELF_INTRO_PATTERN.matcher(name).matches();
-		}
-
-		/**
-	 * 检查是否昵称为有效 . 其应包含仅英文字母。 / Checks if a nickname is valid. It should contain only english letters
-	 *
-	 * @param name character name
-	 * @return true if name is valid, false overwise
-	 */
-		private boolean isValidNickname(String name) {
-			return LegionConfig.NICKNAME_PATTERN.matcher(name).matches();
-		}
-
-		/**
-	 * 检查是否公告为有效 . 其应包含仅英文字母。 / Checks if a announcement is valid. It should contain only english letters
-	 *
-	 * @param name announcement
-	 * @return true if name is valid, false overwise
-	 */
-		private boolean isValidAnnouncement(String name) {
-			return LegionConfig.ANNOUNCEMENT_PATTERN.matcher(name.replaceAll("\\r\\n", "")).matches();
-		}
+		return current;
 	}
 
 	/**
-	 * 记录军团仓库存取物品历史（存入/取出）。
-	 * Records legion warehouse item deposit/withdraw history.
+	 * 校验军团名称是否合法（匹配配置的正则）。
+	 * Checks whether a legion name is valid (matches the configured pattern).
 	 *
-	 * Acting player
-	 * Item template id
-	 * Count
-	 * Source storage
-	 * Destination storage
+	 * @param name 军团名称 / Legion name
+	 * @return 合法返回 true，否则 false / True if valid, false otherwise
 	 */
-	public void addWHItemHistory(Player player, int itemId, long count, IStorage sourceStorage, IStorage destStorage) {
-		Legion legion = player.getLegion();
-		if (legion != null) {
-			String description = itemId + ":" + count;
-			if (sourceStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
-						description);
-			} else if (destStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
-						description);
-			}
-		}
+	public boolean isValidName(String name) {
+		return restrictions().isValidName(name);
 	}
 
 	/**
-	 * 处理军团搜索：type=0 全量缓存，type=1 按名称模糊匹配。
-	 * Handles legion search: type 0 all cached, type 1 name contains filter.
+	 * 判断玩家是否在军团创建者 NPC 的交谈距离内。
+	 * Checks whether the player is within the legion creator NPC's talk distance.
 	 *
-	 * Requesting player
-	 * @param type 搜索类型 / Search type
-	 * @param legionName 名称关键字 / Name keyword
+	 * @param player     玩家 / player
+	 * @param creatorNpc 创建者 NPC / creator NPC
+	 * @return 在范围内为 true / true when in range
+	 */
+	public static boolean isNearLegionCreator(Player player, Npc creatorNpc) {
+		return LegionRestrictions.isNearLegionCreator(player, creatorNpc);
+	}
+
+	/**
+	 * 查询军团（按名称）并返回匹配列表。
+	 * Searches legions by type and name and answers the client.
 	 */
 	public void handleLegionSearch(Player player, int type, String legionName) {
-		List<Legion> matchingLegions = new ArrayList<>();
-		switch (type) {
-		case 0:
-			matchingLegions = allCachedLegions.getAllLegions();
-			break;
-		case 1:
-			for (Legion legion : allCachedLegions.getAllLegions()) {
-				if (legion.getLegionName().toLowerCase().contains(legionName.toLowerCase())) {
-					matchingLegions.add(legion);
-				}
-			}
-			break;
-		}
-		PacketSendUtility.sendPacket(player, new SM_LEGION_SEARCH(matchingLegions));
+		restrictions().handleLegionSearch(player, type, legionName);
 	}
 
 	/**
 	 * 设置军团入团说明（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join description (brigade general only) and syncs client/DB.
-	 *
-	 * Acting player
-	 * Join description
 	 */
 	public void setJoinDescription(Player player, String description) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
-			legion.setDescription(description);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0C, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		restrictions().setJoinDescription(player, description);
 	}
 
 	/**
 	 * 设置军团入团类型（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join type (brigade general only) and syncs client/DB.
-	 *
-	 * Acting player
-	 * Join type
 	 */
 	public void setJoinType(Player player, int joinType) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
-			legion.setJoinType(joinType);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0D, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		restrictions().setJoinType(player, joinType);
 	}
 
 	/**
 	 * 设置入团最低等级（仅旅长），并同步客户端与数据库。
 	 * Sets the minimum join level (brigade general only) and syncs client/DB.
-	 *
-	 * Acting player
-	 * Minimum level
 	 */
 	public void setJoinMinLevel(Player player, int minLevel) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
-			legion.setMinJoinLevel(minLevel);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0E, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		restrictions().setJoinMinLevel(player, minLevel);
 	}
 
 	/**
 	 * 向玩家发送当前入团申请对应的军团信息包。
 	 * Sends the join-request legion info packet to the player.
-	 *
-	 * Target player
-	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
 	 */
 	public void sendLegionJoinRequestPacket(Player player, int legionId) {
-		if (legionId <= 0) {
-			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
-		} else {
-			Legion legion = getLegion(legionId);
-			PacketSendUtility.sendPacket(player,
-					new SM_LEGION_REQUEST_INFO(legion.getLegionId(), legion.getLegionName()));
-		}
+		restrictions().sendLegionJoinRequestPacket(player, legionId);
 	}
 
 	/**
 	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
 	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 *
-	 * Target player
 	 */
 	public void sendLegionJoinRequestPacketonEnterWorld(Player player) {
-		int legionId = player.getCommonData().getJoinRequestLegionId();
-		if (legionId <= 0) {
-			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
-		} else {
-			Legion legion = getLegion(legionId);
-			PacketSendUtility.sendPacket(player,
-					new SM_LEGION_REQUEST_INFO(legion.getLegionId(), legion.getLegionName()));
-		}
+		restrictions().sendLegionJoinRequestPacketonEnterWorld(player);
 	}
 
 	/**
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。
 	 * Handles a player join request: apply, direct join, or reject if not recruiting.
-	 *
-	 * Applying player
-	 * Target legion id
-	 * Join type
-	 * Application message
 	 */
 	public void handleLegionJoinRequest(Player player, int legionId, int joinType, String joinRequestMsg) {
-		Legion legion = getLegion(legionId);
-		if (legion == null) {
-			return;
-		}
-		switch (joinType) {
-		case 0:
-			player.getCommonData().setJoinRequestLegionId(legionId);
-			sendLegionJoinRequestPacket(player, legionId);
-			LegionJoinRequest ljr = new LegionJoinRequest(legionId, player, joinRequestMsg);
-			legion.addJoinRequest(ljr);
-			DAOManager.getDAO(LegionDAO.class).storeLegionJoinRequest(ljr);
-			player.getCommonData().setJoinRequestLegionId(legionId);
-			Player brigadeGeneral = getBrigadeGeneral(legion);
-			if (brigadeGeneral != null) {
-				PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST_PLAYER(ljr));
-			}
-			break;
-		case 1:
-			directAddPlayer(legion, player);
-			break;
-		default:
-			PacketSendUtility.sendMessage(player, "This Legion isn't recruiting new members..");
-			break;
-		}
+		restrictions().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
 	}
 
 	/**
 	 * 取消玩家对指定军团的入团申请，并通知旅长。
 	 * Cancels the player join request for a legion and notifies the brigade general.
-	 *
-	 * Applying player
-	 * Legion id
 	 */
 	public void handleJoinRequestCancel(Player player, int legionId) {
-		Legion legion = getLegion(legionId);
-		player.clearJoinRequest();
-		sendLegionJoinRequestPacket(player, 0);
-		legion.getJoinRequestMap().remove(player.getObjectId());
-		Player bg = getBrigadeGeneral(legion);
-		if (bg != null) {
-			PacketSendUtility.sendPacket(bg, new SM_LEGION_REQUEST(player.getObjectId(), false));
-		}
+		restrictions().handleJoinRequestCancel(player, legionId);
 	}
 
 	/**
 	 * 玩家侧处理入团申请结果（接受则入团，拒绝则清理申请）。
 	 * Applies join-request answer on the player side (join on accept, clear on deny).
-	 *
-	 * Applying player
 	 */
 	public void handleJoinRequestGetAnswer(Player player) {
-		PlayerCommonData pcd = player.getCommonData();
-		switch (pcd.getJoinRequestState()) {
-		case ACCEPTED:
-			if (!player.isOnAStation()) {
-				directAddPlayer(pcd.getJoinRequestLegionId(), player);
-				handleJoinRequestCancel(player, player.getCommonData().getJoinRequestLegionId());
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_APPLICATION_ACCEPTED);
-			} else {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_JOIN_SERVER_CHANGE);
-			}
-			break;
-		case DENIED:
-			handleJoinRequestCancel(player, player.getCommonData().getJoinRequestLegionId());
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_APPLICATION_DENIED);
-			break;
-		default:
-			break;
-		}
+		restrictions().handleJoinRequestGetAnswer(player);
 	}
 
 	/**
 	 * 旅长批复入团申请：在线则即时处理，离线则写库状态。
 	 * Brigade general answers a join request: handles online immediately or persists offline state.
-	 *
-	 * Brigade general player
-	 * Applicant object id
-	 * Whether accepted
 	 */
 	public void handleJoinRequestGiveAnswer(Player brigadeGeneral, int playerId, boolean accept) {
-		boolean playerOnline = true;
-		LegionJoinRequestState state = accept ? LegionJoinRequestState.ACCEPTED : LegionJoinRequestState.DENIED;
-		Legion legion = brigadeGeneral.getLegion();
-		if (legion == null) {
-			return;
-		}
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
-		if (player == null) {
-			playerOnline = false;
-			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);
-			legion.getJoinRequestMap().remove(playerId);
-		}
-		PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST(playerId, accept));
-		if (playerOnline) {
-			player.getCommonData().setJoinRequestState(state);
-			handleJoinRequestGetAnswer(player);
-		}
+		restrictions().handleJoinRequestGiveAnswer(brigadeGeneral, playerId, accept);
+	}
+
+	/**
+	 * 记录军团仓库存取物品历史（存入/取出）。
+	 * Records legion warehouse item deposit/withdraw history.
+	 */
+	public void addWHItemHistory(Player player, int itemId, long count, IStorage sourceStorage, IStorage destStorage) {
+		restrictions().addWHItemHistory(player, itemId, count, sourceStorage, destStorage);
 	}
 }

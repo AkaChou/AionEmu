@@ -4,7 +4,10 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +18,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.model.house.PlayerScript;
-import com.aionemu.gameserver.utils.xml.CompressUtil;
 
 /**
  * 玩家 Scripts 游戏对象。
@@ -52,7 +54,7 @@ public class PlayerScripts {
 			script.setData(new byte[0], 0);
 		}
 		try {
-			byte[] bytes = CompressUtil.Compress(scriptXML);
+			byte[] bytes = compress(scriptXML);
 			int oldLength = bytes.length;
 			bytes = Arrays.copyOf(bytes, bytes.length + 8);
 			for (int i = oldLength; i < bytes.length; i++) {
@@ -89,7 +91,7 @@ public class PlayerScripts {
 		}
 
 		try {
-			return CompressUtil.Decompress(bytes);
+			return decompress(bytes);
 		} catch (Exception ex) {
 			log.error(I18n.get("log.4c634fc1f594", ex));
 			return null;
@@ -108,7 +110,7 @@ public class PlayerScripts {
 			size = 0;
 		} else {
 			try {
-				content = CompressUtil.Decompress(compressedXML);
+				content = decompress(compressedXML);
 				byte[] bytes = content.getBytes(StandardCharsets.UTF_16LE);
 				if (bytes.length != uncompressedSize) {
 					return false;
@@ -157,5 +159,70 @@ public class PlayerScripts {
 	/** 返回大小 / Returns the size*/
 	public int getSize() {
 		return 8;
+	}
+
+	/**
+	 * 将文本以 UTF-16LE 编码后 Deflate 压缩。
+	 * Encode text as UTF-16LE and Deflate-compress it.
+	 *
+	 * @param text 源文本 / source text
+	 * @return 压缩字节 / compressed bytes
+	 * @throws Exception 压缩失败时 / on compress failure
+	 */
+	private static byte[] compress(String text) throws Exception {
+		Deflater compressor = new Deflater();
+		byte[] bytes = text.getBytes(StandardCharsets.UTF_16LE);
+		compressor.setInput(bytes);
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		compressor.finish();
+
+		byte[] buffer = new byte[1024];
+		try {
+			while (!compressor.finished()) {
+				int count = compressor.deflate(buffer);
+				bos.write(buffer, 0, count);
+			}
+		} finally {
+			compressor.end();
+		}
+
+		bos.close();
+		return bos.toByteArray();
+	}
+
+	/**
+	 * 解压字节数组为 UTF-16LE 字符串。
+	 * Decompress a byte array into a UTF-16LE string.
+	 *
+	 * @param bytes 压缩数据 / compressed bytes
+	 * @return 解压后的文本 / decompressed text
+	 * @throws Exception 解压失败时 / on decompress failure
+	 */
+	private static String decompress(byte[] bytes) throws Exception {
+		Inflater decompressor = new Inflater();
+		decompressor.setInput(bytes);
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(bytes.length);
+
+		byte[] buffer = new byte[1024];
+		try {
+			while (true) {
+				int count = decompressor.inflate(buffer);
+				if (count > 0) {
+					bos.write(buffer, 0, count);
+				} else {
+					if ((count == 0) && (decompressor.finished())) {
+						break;
+					}
+					throw new RuntimeException("Bad zip data, size: " + bytes.length);
+				}
+			}
+		} finally {
+			decompressor.end();
+		}
+
+		bos.close();
+		return bos.toString(StandardCharsets.UTF_16LE);
 	}
 }

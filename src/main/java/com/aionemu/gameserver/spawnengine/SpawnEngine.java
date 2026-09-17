@@ -23,6 +23,10 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.controllers.StaticObjectController;
+import com.aionemu.gameserver.model.gameobjects.StaticObject;
+import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
@@ -583,7 +587,7 @@ public class SpawnEngine {
 					RiftManager.addRiftSpawnTemplate(spawn);
 					break;
 				case STATIC:
-					StaticObjectSpawnManager.spawnTemplate(spawn, instanceId);
+					spawnStaticObjectTemplate(spawn, instanceId);
 				default:
 					break;
 			}
@@ -672,5 +676,50 @@ public class SpawnEngine {
 		public int getGatherableCount() {
 			return gatherableCount;
 		}
+	}
+
+	/**
+	 * 按刷怪组在指定实例中刷出静态物体（原 StaticObjectSpawnManager）。
+	 * Spawns static objects from a spawn group into the given instance (merged from StaticObjectSpawnManager).
+	 *
+	 * @param spawn 刷怪组 / the spawn group
+	 * @param instanceIndex 实例索引 / instance index
+	 */
+	private static void spawnStaticObjectTemplate(SpawnGroup2 spawn, int instanceIndex) {
+		VisibleObjectTemplate objectTemplate = DataManager.ITEM_DATA.getItemTemplate(spawn.getNpcId());
+		if (objectTemplate == null) {
+			return;
+		}
+		if (spawn.hasPool()) {
+			spawn.resetTemplates(instanceIndex);
+			for (int i = 0; i < spawn.getPool(); i++) {
+				SpawnTemplate template = spawn.getRndTemplate(instanceIndex);
+				int objectId = GameWorldBootstrapServices.idFactory().nextId();
+				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
+						objectTemplate);
+				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
+				bringStaticObjectIntoWorld(staticObject, template, instanceIndex);
+			}
+		} else {
+			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
+				int objectId = GameWorldBootstrapServices.idFactory().nextId();
+				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
+						objectTemplate);
+				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
+				bringStaticObjectIntoWorld(staticObject, template, instanceIndex);
+			}
+		}
+	}
+
+	/**
+	 * 将静态物体登记、定位并刷入世界。
+	 * Stores, positions and spawns the static object into the world.
+	 */
+	private static void bringStaticObjectIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
+		World world = GameWorldBootstrapServices.world();
+		world.storeObject(visibleObject);
+		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
+				spawn.getHeading());
+		world.spawn(visibleObject);
 	}
 }

@@ -10,11 +10,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
+import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_AUTH;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_LOGOUT;
-import com.aionemu.gameserver.network.factories.CsPacketHandlerFactory;
+import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_AUTH_RESPONSE;
+import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_PLAYER_AUTH_RESPONSE;
 
 /**
  * 游戏服连接聊天服的门面：负责建连、重连、断开以及玩家登录/登出通知。
@@ -180,9 +182,9 @@ public class ChatServer {
 	private boolean connectWithNetty() {
 		shutdownNettyClient();
 		try {
-			CsPacketHandlerFactory csPacketHandlerFactory = new CsPacketHandlerFactory();
+			CsPacketHandler handler = buildPacketHandler();
 			NettyClient client = new NettyClient(NetworkConfig.CHAT_ADDRESS, "ChatServer", transport -> {
-				ChatServerConnection connection = new ChatServerConnection(transport, csPacketHandlerFactory.getPacketHandler());
+				ChatServerConnection connection = new ChatServerConnection(transport, handler);
 				chatServer = connection;
 				return connection;
 			});
@@ -272,6 +274,56 @@ public class ChatServer {
 	public void sendPlayerLogout(Player player) {
 		if (chatServer != null) {
 			chatServer.sendPacket(new SM_CS_PLAYER_LOGOUT(player.getObjectId()));
+		}
+	}
+
+	/**
+	 * 构建聊天服 CS 包处理器（原型 + 合法连接状态）。
+	 * Builds the chat-server CS packet handler (prototypes + valid connection states).
+	 *
+	 * @return 已注册原型的处理器 / handler with registered prototypes
+	 */
+	private static CsPacketHandler buildPacketHandler() {
+		return new CsPacketFactory().getPacketHandler();
+	}
+
+	/**
+	 * 聊天服包处理器工厂：注册 CS 客户端包原型。
+	 * Chat-server packet handler factory: registers CS client packet prototypes.
+	 */
+	private static final class CsPacketFactory {
+
+		/** 包原型 → 合法状态注册表 / packet prototype → valid-state registry */
+		private final CsPacketHandler handler = new CsPacketHandler();
+
+		/**
+		 * 注册聊天服包处理器。
+		 * Registers chat-server packet handlers.
+		 */
+		private CsPacketFactory() {
+			addPacket(new CM_CS_AUTH_RESPONSE(0x00), State.CONNECTED);
+			addPacket(new CM_CS_PLAYER_AUTH_RESPONSE(0x01), State.AUTHED);
+		}
+
+		/**
+		 * 向处理器注册包原型及合法状态。
+		 * Registers a packet prototype with valid states.
+		 *
+		 * @param prototype 包原型 / packet prototype
+		 * @param states    合法连接状态 / valid connection states
+		 */
+		private void addPacket(CsClientPacket prototype, State... states) {
+			handler.addPacketPrototype(prototype, states);
+		}
+
+		/**
+		 * 获取已注册的包处理器。
+		 * Returns the registered packet handler.
+		 *
+		 * @return 包处理器 / packet handler
+		 */
+		private CsPacketHandler getPacketHandler() {
+			return handler;
 		}
 	}
 }

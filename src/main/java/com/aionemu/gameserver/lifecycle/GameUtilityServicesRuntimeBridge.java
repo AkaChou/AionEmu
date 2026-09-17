@@ -9,7 +9,6 @@ import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.dao.impl.GameDAOClassProvider;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +33,9 @@ public class GameUtilityServicesRuntimeBridge {
      * Report callback support status based on Java-agent configuration.
      */
     public void reportCallbackSupport() {
-        if (JavaAgentUtils.isConfigured()) {
-            log.info(I18n.get("console.startup.callback_ok"));
-        } else {
-            log.warn(I18n.get("console.startup.callback_missing"));
-        }
+        // 构建期织入后回调系统恒就绪：仅保留启动提示，不再保留 javaagent 探测外壳。
+        // The callback system is always ready after build-time weaving: keep the startup hint only.
+        log.info(I18n.get("console.startup.callback_ok"));
     }
 
     /**

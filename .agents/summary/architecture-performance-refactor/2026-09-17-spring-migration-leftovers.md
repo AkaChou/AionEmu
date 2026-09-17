@@ -130,3 +130,55 @@
 - `.agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md`（12.13/12.25/12.26 性能口径）
 - `.agents/summary/architecture-performance-refactor/2026-09-17-login-link-shutdown-robustness.md`（关机链路证据）
 - memory-bank：`AR-001`（启动/热路径准则）、`AR-002`（SPI 废除与 legacy bridges 边界）、`AR-010`（懒物化）
+
+## 八、结构优化轮（2026-09-17，大类分离）
+
+- 目标类：`GameLegacyServiceBridgeConfiguration`（2053 行、162 个 `@Bean`，纯平铺、无跨 bean 调用、无辅助成员）。
+- 拆分方案：按域拆成 6 个 `@Configuration(proxyBeanMethods = false)`：
+  `CoreRuntimeServiceBeans`(40) / `EngineBeans`(21) / `NetworkBeans`(9) / `EventBeans`(22) /
+  `SiegeBattlefieldBeans`(41) / `TaskAndStatBeans`(29)。
+- 兼容性：原类保留为 `@Import` 聚合入口，Bean 名称与类型不变，现有 `AnnotationConfigApplicationContext(原类)`
+  的注册方式继续有效；工具：`split_legacy_bridge_config.py`。
+- 测试适配：`GameLegacyServiceBridgeConfigurationTest.assertConfigurationCreatesNew(...)` 改为扫描
+  "聚合入口 + 6 个域配置"，保持"该类型必须由配置类 new 构造为 Spring Bean"的审计语义。
+- 验证：`GameLegacyServiceBridgeConfigurationTest`(57) + `GameStaticDataLifecycleTest`(10) +
+  `GameRuntimeServicesLifecycleTest`(6) + 两个 RuntimeBridge 测试 = **90 例全绿**；`mvn test-compile` 通过。
+
+## 九、碎片类收拢（2026-09-17，无效类删除 / 强绑定小类合并）
+
+判定口径：只被一个核心类使用、生命周期完全依附、无独立领域语义、不在 Spring Bean / AOP / API 契约上。
+
+| 批次 | 原类（行数） | 处置 | 结果 |
+|---|---|---|---|
+| 一 | `ai2/scenario/WalkScenario`(11) | 删除（0 引用空子类） | 文件去除 |
+| 一 | `utils/javaagent/JavaAgentUtils`(18) | 唯一方法恒真，内联进 `GameUtilityServicesRuntimeBridge` | 文件 + 测试去除 |
+| 一 | `loginserver/utils/AccountUtils`(39) | 单静态方法内联进 `AccountController` | 文件去除 |
+| 一 | `spawnengine/StaticObjectSpawnManager`(71) | 2 个私有静态方法内联进 `SpawnEngine` | 文件去除 |
+| 二 | `world/zone/handler/GeneralZoneHandler`(27) | 空实现 → `ZoneService.NoOpZoneHandler`（`private static final`） | 文件去除 |
+| 二 | `network/factories/CsPacketHandlerFactory`(48) | 内联进 `ChatServer`（`private static final class CsPacketFactory`） | 文件去除 |
+| 二 | `utils/WorkStealThreadFactory`(104) | 内联进 `ThreadPoolManager`（`WorkStealThreadFactory` + `WorkStealThread`） | 文件去除 |
+| 二 | `utils/xml/CompressUtil`(79) | `Compress`/`Decompress` → `PlayerScripts` 私有静态方法 | 文件去除 |
+
+- 对外面影响：`ZoneService.DUMMY_ZONE_HANDLER`、`ChatServer`/`ThreadPoolManager`/`PlayerScripts` 的原有公开方法签名全部不变；
+  被删类为内部实现类，仓库内无其它引用（含 XML / properties / 反射清单已核对）。
+- 保留独立的同类候选（不合并）：注册表/AI/zone `*Handler`、JAXB `*Data` 模板、Spring Bean、`Effects` 注册表类。
+- 机械扫描（引用计数）不足以判定死类：AdminCommand、AI2、实例脚本均走反射/注册表装配，必须逐类核对使用路径后再动。
+
+## 十、大类分离（2026-09-17，LegionService 判权 / 入团申请域拆分）
+
+- 原类：`LegionService` 2572 行 / 1 个外部入口（`GameCoreGameplayServices.legionService()`）+ `CM_LEGION` 等 6 处报文入口。
+- 拆出：`services/LegionRestrictions`（811 行，包内可见，`@Slf4j`），承接两块高内聚实现：
+  1. 判权集合（原 `private class LegionRestrictions`，22 个 `can*` / `is*` 校验）；
+  2. 入团申请与军团仓库历史流程（原 `handleJoinRequest*`、`setJoin*`、`sendLegionJoinRequest*`、
+     `handleLegionSearch`、`addWHItemHistory`）。
+- 归属判定：这两块与 `LegionService` 的缓存/DAO 状态强耦合但成员间自成体系，判权与流程共用一个
+  宿主引用即可，属于「对内实现细节适当收拢、对能力按域拆出」。
+- 兼容性：`LegionService` 保留全部对外公开方法签名与语义，改为一行转调 `restrictions()`；
+  `restrictions()` 惰性构造（构造期不暴露 `this`），`getLegionMemberEx(String)`、`MAX_LEGION_LEVEL` 提为包内可见；
+  新增 `getAllCachedLegions()` 供搜索复用。外部调用点（`CM_LEGION`、`CM_LEGION_SEARCH`、`CM_LEGION_JOIN_*`、
+  `ItemMoveService`、`ItemSplitService`、`PlayerEnterWorldService`）零改动。
+- 测试适配：`LegionServiceTest` 反射路径由 `LegionService$LegionRestrictions` 改为顶层
+  `LegionRestrictions`，判权注入改走 `service.restrictions()`。
+- 验证：`LegionServiceTest`(3) + `LegionContainerTest`(3) + `LegionMemberContainerTest`(2) +
+  `PlayerEnterWorldVipTest`(3) + `ModelCollectionImplementationTest`(18) +
+  `ServiceInternalCollectionImplementationTest`(6) + `ShutdownHookTest`(5) = **40 例全绿**；`mvn test-compile` 通过。

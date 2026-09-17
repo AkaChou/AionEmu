@@ -1,6 +1,13 @@
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.commons.utils.Base64;
+
+import com.aionemu.boot.i18n.I18n;
+
 import java.sql.Timestamp;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +37,9 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_CHARACTER_
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.service.VipService;
-import com.aionemu.loginserver.utils.AccountUtils;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 账号动作总控：登录、重连、踢人及 GS 角色数统计。
@@ -41,6 +48,7 @@ import lombok.experimental.UtilityClass;
  * @author KID
  * @author SoulKeeper
  */
+@Slf4j
 @UtilityClass
 public class AccountController {
 
@@ -193,7 +201,7 @@ public class AccountController {
         }
 
         // 检查密码是否相等 / check for paswords beeing equals
-        if (!account.getPasswordHash().equals(AccountUtils.encodePassword(password))) {
+        if (!account.getPasswordHash().equals(encodePassword(password))) {
             return AionAuthResponse.INVALID_PASSWORD;
         }
 
@@ -321,7 +329,7 @@ public class AccountController {
      * @return 账号对象或 null / Account object or null
      */
     public Account createAccount(String name, String password) {
-        String passwordHash = AccountUtils.encodePassword(password);
+        String passwordHash = encodePassword(password);
         Account account = new Account();
 
         account.setName(name);
@@ -441,5 +449,23 @@ public class AccountController {
         accountsGSCharacterCounts
             .computeIfAbsent(accountId, id -> new ConcurrentHashMap<Integer, Integer>())
             .put(gsid, characterCount);
+    }
+
+    /**
+     * 对密码进行编码：先 SHA-1 哈希，再以 Base64 包装为字符串（原 AccountUtils）。
+     * Encodes the password: SHA-1 hash wrapped in Base64 (merged from AccountUtils).
+     *
+     * @param password 待编码密码 / password to encode
+     * @return 编码后的密码 / encoded password
+     */
+    private static String encodePassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.update(password.getBytes(StandardCharsets.UTF_8));
+            return Base64.encodeToString(digest.digest(), false);
+        } catch (NoSuchAlgorithmException e) {
+            log.error(I18n.get("log.4f2731090659"));
+            throw new Error(e);
+        }
     }
 }

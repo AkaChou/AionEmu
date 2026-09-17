@@ -113,6 +113,7 @@ import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -987,13 +988,32 @@ class GameLegacyServiceBridgeConfigurationTest {
         assertFalse(beanFactory.getBeanDefinition(beanName).isLazyInit());
     }
 
+    /**
+     * 装配类源码清单：聚合入口 + 按域拆分出的配置类。
+     * Configuration sources: the aggregator plus the per-domain split classes.
+     */
+    private static final List<String> CONFIGURATION_SOURCES = List.of(
+            "src/main/java/com/aionemu/gameserver/services/GameLegacyServiceBridgeConfiguration.java",
+            "src/main/java/com/aionemu/gameserver/services/CoreRuntimeServiceBeans.java",
+            "src/main/java/com/aionemu/gameserver/services/EngineBeans.java",
+            "src/main/java/com/aionemu/gameserver/services/NetworkBeans.java",
+            "src/main/java/com/aionemu/gameserver/services/EventBeans.java",
+            "src/main/java/com/aionemu/gameserver/services/SiegeBattlefieldBeans.java",
+            "src/main/java/com/aionemu/gameserver/services/TaskAndStatBeans.java");
+
     private static void assertConfigurationCreatesNew(Class<?> type) {
         try {
-            String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/GameLegacyServiceBridgeConfiguration.java"));
+            for (String path : CONFIGURATION_SOURCES) {
+                String source = Files.readString(Path.of(path));
 
-            assertTrue(source.contains("return new " + type.getSimpleName() + "();"));
+                if (source.contains("return new " + type.getSimpleName() + "();")) {
+                    return;
+                }
+            }
+            throw new AssertionError(type.getSimpleName()
+                    + " 必须由某个配置类以 new 构造为 Spring Bean / must be created as a Spring bean by a configuration class");
         } catch (IOException e) {
-            throw new AssertionError("Unable to read GameLegacyServiceBridgeConfiguration source", e);
+            throw new AssertionError("Unable to read configuration sources", e);
         }
     }
 }

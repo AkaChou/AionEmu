@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -73,23 +72,15 @@ class LegionServiceTest {
 	}
 
 	private boolean canDisband(LegionService service, Player player, Legion legion) throws Exception {
-		Object restrictions = newRestrictions(service);
-		Method method = restrictions.getClass().getDeclaredMethod("canDisbandLegion", Player.class, Legion.class);
+		Method method = LegionRestrictions.class.getDeclaredMethod("canDisbandLegion", Player.class, Legion.class);
 		method.setAccessible(true);
-		return (boolean) method.invoke(restrictions, player, legion);
+		return (boolean) method.invoke(service.restrictions(), player, legion);
 	}
 
 	private void initializeRestrictions(LegionService service) throws Exception {
 		Field field = LegionService.class.getDeclaredField("legionRestrictions");
 		field.setAccessible(true);
-		field.set(service, newRestrictions(service));
-	}
-
-	private Object newRestrictions(LegionService service) throws Exception {
-		Class<?> restrictionsClass = Class.forName(LegionService.class.getName() + "$LegionRestrictions");
-		Constructor<?> constructor = restrictionsClass.getDeclaredConstructor(LegionService.class);
-		constructor.setAccessible(true);
-		return constructor.newInstance(service);
+		field.set(service, new LegionRestrictions(service));
 	}
 
 	private static WorldPosition position(float x, float y) {

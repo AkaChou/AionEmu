@@ -27,6 +27,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.ZoneData;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.geometry.Area;
 import com.aionemu.gameserver.model.geometry.CylinderArea;
 import com.aionemu.gameserver.model.geometry.PolyArea;
@@ -42,7 +43,6 @@ import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.services.ShieldService;
-import com.aionemu.gameserver.world.zone.handler.GeneralZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.MaterialZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;
@@ -69,7 +69,7 @@ public final class ZoneService implements GameEngine {
 	/** 区域名称 → 可碰撞处理器实例 / zone name → collidable handler instance */
 	private final Map<ZoneName, ZoneHandler> collidableHandlers = new ConcurrentHashMap<ZoneName, ZoneHandler>();
 	/** 默认空处理器 / default no-op handler */
-	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();
+	public static final ZoneHandler DUMMY_ZONE_HANDLER = new NoOpZoneHandler();
 
 	/**
 	 * 从静态数据初始化区域索引。
@@ -442,5 +442,20 @@ public final class ZoneService implements GameEngine {
 		ZoneData zoneData = new ZoneData();
 		zoneData.zoneList = templates;
 		zoneData.saveData();
+	}
+
+	/**
+	 * 空实现的通用区域处理器（占位 / 默认处理器）。
+	 * General zone handler with empty implementations (placeholder / default handler).
+	 */
+	private static final class NoOpZoneHandler implements ZoneHandler {
+
+		@Override
+		public void onEnterZone(Creature player, ZoneInstance zone) {
+		}
+
+		@Override
+		public void onLeaveZone(Creature player, ZoneInstance zone) {
+		}
 	}
 }

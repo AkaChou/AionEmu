@@ -19,6 +19,8 @@ import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ForkJoinWorkerThread;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 
 /**
@@ -389,5 +391,80 @@ public final class ThreadPoolManager {
 	public static void setInstanceProvider(ObjectProvider<ThreadPoolManager> instanceProvider) {
 		ThreadPoolManager.instanceProvider = instanceProvider;
 		resolvedInstance = null;
+	}
+
+	/**
+	 * 支持工作窃取（ForkJoin）的优先级线程工厂。
+	 * Priority thread factory that produces work-stealing (ForkJoin) worker threads.
+	 */
+	private static final class WorkStealThreadFactory extends PriorityThreadFactory
+			implements ForkJoinWorkerThreadFactory {
+
+		/**
+		 * 使用给定名称前缀与普通优先级创建工厂。
+		 * Creates a factory with the given name prefix and normal priority.
+		 *
+		 * @param namePrefix 线程名前缀 / Thread name prefix
+		 */
+		private WorkStealThreadFactory(String namePrefix) {
+			super(namePrefix, Thread.NORM_PRIORITY);
+		}
+
+		/**
+		 * 设置默认 ForkJoin 池；若为 null 则使用公共池。
+		 * Sets the default ForkJoin pool; uses the common pool when null.
+		 *
+		 * @param pool ForkJoin 池 / ForkJoin pool
+		 */
+		private void setDefaultPool(ForkJoinPool pool) {
+			if (pool == null) {
+				pool = ForkJoinPool.commonPool();
+			}
+			super.setDefaultPool(pool);
+		}
+
+		/**
+		 * 为指定池创建工作窃取线程。
+		 * Creates a work-stealing worker thread for the given pool.
+		 *
+		 * @param pool ForkJoin 池 / ForkJoin pool
+		 * @return 工作线程 / Worker thread
+		 */
+		@Override
+		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+			return new WorkStealThread(pool);
+		}
+	}
+
+	/**
+	 * 工作窃取线程，终止时记录异常。
+	 * Work-stealing thread that logs exceptions on termination.
+	 */
+	@Slf4j
+	private static final class WorkStealThread extends ForkJoinWorkerThread {
+
+		/**
+		 * 绑定到指定池创建工作线程。
+		 * Creates a worker thread bound to the given pool.
+		 *
+		 * @param pool ForkJoin 池 / ForkJoin pool
+		 */
+		private WorkStealThread(ForkJoinPool pool) {
+			super(pool);
+		}
+
+		/**
+		 * 线程终止钩子；若有异常则记录。
+		 * Thread termination hook; logs any terminating exception.
+		 *
+		 * @param exception 终止异常，可为 null / Termination exception, may be null
+		 */
+		@Override
+		protected void onTermination(Throwable exception) {
+			if (exception != null) {
+				log.error(I18n.get("log.07f358910e11", this.getName(), exception));
+			}
+			super.onTermination(exception);
+		}
 	}
 }
