@@ -63,22 +63,18 @@ public class Effect implements StatOwner {
 	 * Gets skill level.
 	 *
 	 */
-	@Getter
 	private final int skillLevel;
 	/**
 	 * 获取持续时间。
 	 * Gets duration.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int duration;
 	/**
 	 * 获取结束时间戳。
 	 * Gets end timestamp.
 	 *
 	 */
-	@Getter
 	private long endTime;
 	private final PeriodicActions periodicActions;
 	/**
@@ -86,29 +82,24 @@ public class Effect implements StatOwner {
 	 * Gets skill move type.
 	 *
 	 */
-	@Getter
-	@Setter
 	private SkillMoveType skillMoveType = SkillMoveType.DEFAULT;
 	/**
 	 * 获取受影响者。
 	 * Gets the effected creature.
 	 *
 	 */
-	@Getter
 	private final Creature effected;
 	/**
 	 * 获取施法者。
 	 * Gets the effector.
 	 *
 	 */
-	@Getter
 	private final Creature effector;
 	/**
 	 * 设置主任务。
 	 * Sets main task.
 	 *
 	 */
-	@Setter
 	private Future<?> task = null;
 	private Future<?>[] periodicTasks = null;
 	private Future<?> periodicActionsTask = null;
@@ -117,21 +108,18 @@ public class Effect implements StatOwner {
 	 * Whether hide effect.
 	 *
 	 */
-	@Getter
 	private boolean isHideEffect = false;
 	/**
 	 * 是否麻痹效果。
 	 * Whether paralyze effect.
 	 *
 	 */
-	@Getter
 	private boolean isParalyzeEffect = false;
 	/**
 	 * 是否庇护效果。
 	 * Whether sanctuary effect.
 	 *
 	 */
-	@Getter
 	private boolean isSanctuaryEffect = false;
 	/**
 	 * 获取目标 X。
@@ -139,7 +127,6 @@ public class Effect implements StatOwner {
 	 *
 	 * @return X
 	 */
-	@Getter
 	private float targetX = 0;
 	/**
 	 * 获取目标 Y。
@@ -147,7 +134,6 @@ public class Effect implements StatOwner {
 	 *
 	 * @return Y
 	 */
-	@Getter
 	private float targetY = 0;
 	/**
 	 * 获取目标 Z。
@@ -155,15 +141,12 @@ public class Effect implements StatOwner {
 	 *
 	 * @return Z
 	 */
-	@Getter
 	private float targetZ = 0;
 	/**
 	 * 获取 MP 护盾值。
 	 * Gets MP shield value.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int mpShield = 0;
 	private int reserved1;
 	private final IdentityHashMap<EffectTemplate, Integer> reserved1ByEffect = new IdentityHashMap<>();
@@ -173,32 +156,24 @@ public class Effect implements StatOwner {
 	 * Gets reserved value 2.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reserved2;
 	/**
 	 * 获取保留值 3。
 	 * Gets reserved value 3.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reserved3;
 	/**
 	 * 获取保留值 4。
 	 * Gets reserved value 4.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reserved4;
 	/**
 	 * 获取保留值 5。
 	 * Gets reserved value 5.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reserved5;
 	private int[] reservedInts;
 	/**
@@ -206,24 +181,18 @@ public class Effect implements StatOwner {
 	 * Gets spell status.
 	 *
 	 */
-	@Getter
-	@Setter
 	private SpellStatus spellStatus = SpellStatus.NONE;
 	/**
 	 * 获取冲刺状态。
 	 * Gets dash status.
 	 *
 	 */
-	@Getter
-	@Setter
 	private DashStatus dashStatus = DashStatus.NONE;
 	/**
 	 * 获取攻击状态。
 	 * Gets attack status.
 	 *
 	 */
-	@Getter
-	@Setter
 	private AttackStatus attackStatus = AttackStatus.NORMALHIT;
 	private AttackStatus[] periodicAttackStatuses;
 	/**
@@ -231,40 +200,30 @@ public class Effect implements StatOwner {
 	 * Gets shield defense value.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int shieldDefense;
 	/**
 	 * 获取反射伤害。
 	 * Gets reflected damage.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reflectedDamage = 0;
 	/**
 	 * 获取反射技能 ID。
 	 * Gets reflected skill id.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int reflectedSkillId = 0;
 	/**
 	 * 获取保护技能 ID。
 	 * Gets protected skill id.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int protectedSkillId = 0;
 	/**
 	 * 获取被保护伤害。
 	 * Gets protected damage.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int protectedDamage = 0;
 	/**
 	 * 获取保护者 ID。
@@ -272,8 +231,6 @@ public class Effect implements StatOwner {
 	 *
 	 * @return ID
 	 */
-	@Getter
-	@Setter
 	private int protectorId = 0;
 	private boolean addedToController;
 	private AttackCalcObserver[] attackStatusObserver;
@@ -283,18 +240,13 @@ public class Effect implements StatOwner {
 	 * Whether to launch sub-effect.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean launchSubEffect = true;
 	/**
 	 * 获取子效果。
 	 * Gets sub-effect.
 	 *
 	 */
-	@Getter
-	@Setter
 	private Effect subEffect;
-	@Getter
 	private volatile boolean isStopped;
 	private int startedTemplateCount;
 	private ActionObserver equipmentObserver;
@@ -305,31 +257,24 @@ public class Effect implements StatOwner {
 	 * Whether delayed damage.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isDelayedDamage;
 	/**
 	 * 是否伤害效果。
 	 * Whether damage effect.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isDamageEffect;
 	/**
 	 * 是否宠物指令。
 	 * Whether pet order.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isPetOrder;
 	/**
 	 * 是否召唤中。
 	 * Whether summoning.
 	 *
 	 */
-	@Getter
 	private boolean isSummoning;
 	// 经验加成。 / Xp Boost.
 	/**
@@ -337,8 +282,6 @@ public class Effect implements StatOwner {
 	 * Sets XP boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isXpBoost;
 	// AP 加成。 / Ap Boost.
 	/**
@@ -346,8 +289,6 @@ public class Effect implements StatOwner {
 	 * Sets AP boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isApBoost;
 	// Dr 加成。 / Dr Boost.
 	/**
@@ -355,8 +296,6 @@ public class Effect implements StatOwner {
 	 * Sets drop boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isDrBoost;
 	// Bdr 加成。 / Bdr Boost.
 	/**
@@ -364,8 +303,6 @@ public class Effect implements StatOwner {
 	 * Sets BDR boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isBdrBoost;
 	// 授权加成。 / Authorize Boost.
 	/**
@@ -373,8 +310,6 @@ public class Effect implements StatOwner {
 	 * Sets authorize boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isAuthorizeBoost;
 	// 强化加成。 / Enchant Boost.
 	/**
@@ -382,8 +317,6 @@ public class Effect implements StatOwner {
 	 * Sets enchant boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isEnchantBoost;
 	// 强化选项加成。 / Enchant Option Boost.
 	/**
@@ -391,8 +324,6 @@ public class Effect implements StatOwner {
 	 * Sets enchant option boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isEnchantOptionBoost;
 	// 伊顿掉落加成。 / Idun Drop Boost.
 	/**
@@ -400,8 +331,6 @@ public class Effect implements StatOwner {
 	 * Sets Idun drop boost flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isIdunDropBoost;
 	// 新效果 / New Effect
 	/**
@@ -409,102 +338,78 @@ public class Effect implements StatOwner {
 	 * Sets sprint FP reduce flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isSprintFpReduce;
 	/**
 	 * 设置回城冷却减免标记。
 	 * Sets return cooldown reduce flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isReturnCoolReduce;
 	/**
 	 * 设置死亡惩罚降低标记。
 	 * Sets death penalty reduce flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isDeathPenaltyReduce;
 	/**
 	 * 设置奥德拉恢复提升标记。
 	 * Sets Odella recover increase flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isOdellaRecoverIncrease;
 	/**
 	 * 设置受伤取消标记。
 	 * Sets cancel-on-damage flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isCancelOnDmg;
 	/**
 	 * 子效果是否因条件中止。
 	 * Whether sub-effect aborted by conditions.
 	 *
 	 */
-	@Getter
 	private boolean subEffectAbortedBySubConditions;
 	/**
 	 * 获取关联物品模板。
 	 * Gets related item template.
 	 *
 	 */
-	@Getter
 	private ItemTemplate itemTemplate;
 	/**
 	 * 设置 HiPass 标记。
 	 * Sets HiPass flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isHiPass;
 	/**
 	 * 设置无死亡惩罚标记。
 	 * Sets no-death-penalty flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isNoDeathPenalty;
 	/**
 	 * 设置死亡惩罚减免标记。
 	 * Sets no-death-penalty-reduce flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isNoDeathPenaltyReduce;
 	/**
 	 * 设置无复活惩罚标记。
 	 * Sets no-resurrect-penalty flag.
 	 *
 	 */
-	@Getter
-	@Setter
 	private boolean isNoResurrectPenalty;
 	/**
 	 * 获取嘲讽仇恨。
 	 * Gets taunt hate.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int tauntHate;
 	/**
 	 * 获取效果仇恨。
 	 * Gets effect hate.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int effectHate;
 	private final List<EffectTemplate> successEffects = new ArrayList<EffectTemplate>();
 	/**
@@ -512,23 +417,18 @@ public class Effect implements StatOwner {
 	 * Gets carved signet count.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int carvedSignet = 0;
 	/**
 	 * 获取印记爆发数量。
 	 * Gets signet burst count.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int signetBurstedCount = 0;
 	/**
 	 * 获取异常状态掩码。
 	 * Gets abnormal state mask.
 	 *
 	 */
-	@Getter
 	protected int abnormals;
 	private ActionObserver[] actionObserver;
 	float x, y, z;
@@ -538,7 +438,6 @@ public class Effect implements StatOwner {
 	 * Sets forced duration flag.
 	 *
 	 */
-	@Setter
 	private boolean forcedDuration = false;
 	private boolean isForcedEffect = false;
 	/**
@@ -546,16 +445,12 @@ public class Effect implements StatOwner {
 	 * Gets power.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int power = 10;
 	/**
 	 * 设置命中修正加成。
 	 * Sets accuracy mod boost.
 	 *
 	 */
-	@Getter
-	@Setter
 	private int accModBoost = 0;
 	private EffectResult effectResult = EffectResult.NORMAL;
 	private final AtomicBoolean allowGodstoneActivation = new AtomicBoolean(true);
@@ -1643,14 +1538,12 @@ public class Effect implements StatOwner {
 	 * Whether physical state.
 	 *
 	 */
-	@Getter
 	private boolean isPhysicalState = false;
 	/**
 	 * 是否魔法控制状态。
 	 * Whether magical state.
 	 *
 	 */
-	@Getter
 	private boolean isMagicalState = false;
 
 	/**

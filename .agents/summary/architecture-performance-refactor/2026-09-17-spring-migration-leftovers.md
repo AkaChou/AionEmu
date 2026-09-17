@@ -271,3 +271,24 @@
   `CreatureTest`(1) + `LadderServiceTest`(3) + `BattlegroundCollectionsTest`(1) + `GameLegacyServiceBridgeConfigurationTest`(57)
   + `ModelCollectionImplementationTest`(18) + `ServiceInternalCollectionImplementationTest`(6) + `ServiceMapImplementationTest`(6)
   = **101 例全绿**。
+
+## 十四、Lombok 注解统一到类级（2026-09-17）
+
+按「Lombok 优先加在类上」的口径，把四个类里散落的字段级注解全部收成类级：
+
+| 类 | 字段级 @Getter | 字段级 @Setter | 收成 | 行数变化 |
+|---|---|---|---|---|
+| `Effect` | 61 | 46 | 类级 `@Getter @Setter` | 1705 → 1598 |
+| `ItemTemplate` | 42 | 2 | 类级 `@Getter @Setter` | 775 → 733 |
+| `Item` | 29 | 16 | 类级 `@Getter @Setter` | 1129 → 1086 |
+| `Creature` | 15 | 8 | 类级 `@Getter @Setter` | 936 → 914 |
+
+- 效果：**147 个字段级 `@Getter` + 72 个字段级 `@Setter` → 4 组类级注解**，净减 214 行，且类的"访问器策略"从"逐字段分散"变成一眼可见。
+- 兼容性：Lombok 在已有同名方法时不生成，因此上一批保留的历史别名（`Effect#getIsForcedEffect`、
+  `Item#getRandomCount/isAmplified/isEnhance`、`ItemTemplate#getTempExchangeTime`）依旧是手写实现，未被覆盖。
+- 字段级注解残留检查：四个文件均为 0；字节码抽查 `getAggroList`/`getPacketBroadcastMask`/`getExpireTime`/
+  `getFuncPetId`/`getSkill`/`getWorldId` 等全部存在。
+- 验证：`mvn test-compile` 通过；`EffectTest`(6) + `BuffStunEffectTest`(1) + `SkillEngineTest`(1) + `ItemTest`(1)
+  + `CreatureTest`(1) + `LadderServiceTest`(3) + `BattlegroundCollectionsTest`(1) + `GameLegacyServiceBridgeConfigurationTest`(57)
+  + `ModelCollectionImplementationTest`(18) + `ServiceInternalCollectionImplementationTest`(6) + `ServiceMapImplementationTest`(6)
+  = **101 例全绿**。

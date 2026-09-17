@@ -36,65 +36,54 @@ import lombok.Setter;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(namespace = "", name = "ItemTemplate")
+@Getter
+@Setter
 public class ItemTemplate extends VisibleObjectTemplate {
-	@Getter
 	@XmlAttribute(name = "id", required = true)
 	@XmlID
 	private String id;
 	/** 设置物品 ID / Sets the item id */
-	@Setter
 	private int itemId;
 
 	@XmlElement(name = "modifiers", required = false)
 	protected ModifiersTemplate modifiers;
 
 	/** 返回 descr / Returns the descr */
-	@Getter
 	@XmlAttribute(name = "descr")
 	private String descr;
 
-	@Getter
 	@XmlElement(name = "actions", required = false)
 	protected ItemActions actions;
 
 	/** 返回 namedesc / Returns the namedesc */
-	@Getter
 	@XmlAttribute(name = "name_desc")
 	private String namedesc;
 
-	@Getter
 	@XmlAttribute(name = "mask")
 	private int mask;
 
-	@Getter
 	@XmlAttribute(name = "category")
 	private ItemCategory category = ItemCategory.NONE;
 
-	@Getter
 	@XmlAttribute(name = "slot")
 	private int itemSlot;
 
-	@Getter
 	@XmlAttribute(name = "equipment_type")
 	private EquipType equipmentType = EquipType.NONE;
 
 	/** 返回武器加速 / Returns the weapon boost*/
-	@Getter
 	@XmlAttribute(name = "weapon_boost")
 	private int weaponBoost;
 
-	@Getter
 	@XmlAttribute(name = "price")
 	private int price;
 
-	@Getter
 	@XmlAttribute(name = "luna_price")
 	private int lunaPrice;
 
 	@XmlAttribute(name = "robot_id")
 	private int robot_id;
 
-	@Getter
 	@XmlAttribute(name = "abyss_point")
 	private int abyssPoint;
 
@@ -104,37 +93,30 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "unit_sell_count")
 	private int unitSellCount = 1;
 
-	@Getter
 	@XmlAttribute(name = "level")
 	private int level;
 
-	@Getter
 	@XmlAttribute(name = "quality")
 	private ItemQuality itemQuality;
 
-	@Getter
 	@XmlAttribute(name = "item_type")
 	private ItemType itemType;
 
-	@Getter
 	@XmlAttribute(name = "weapon_type")
 	private WeaponType weaponType;
 
 	@XmlAttribute(name = "armor_type")
 	private ArmorType armorType;
 
-	@Getter
 	@XmlAttribute(name = "attack_type")
 	private ItemAttackType attackType;
 
-	@Getter
 	@XmlAttribute(name = "attack_gap")
 	private float attackGap;
 
 	@XmlAttribute(name = "desc")
 	private String description;
 
-	@Getter
 	@XmlAttribute(name = "option_slot_bonus")
 	private int optionSlotBonus;
 
@@ -148,21 +130,17 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private int wrappable_count = 0;
 
 	/** 返回 max authorize / Returns the max authorize */
-	@Getter
 	@XmlAttribute(name = "max_authorize")
 	private int maxAuthorize;
 
 	/** 返回 tempering table id / Returns the tempering table id */
-	@Getter
 	@XmlAttribute(name = "tempering_table_id")
 	private int temperingTableId;
 
 	/** 返回 robot name / Returns the robot name */
-	@Getter
 	@XmlAttribute(name = "robot_name")
 	private int robotName = 0;
 
-	@Getter
 	@XmlAttribute(name = "bonus_apply")
 	private String bonusApply;
 
@@ -173,27 +151,22 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private boolean itemDyePermitted;
 
 	/** 获取种族。 / Returns the race. */
-	@Getter
 	@XmlAttribute(name = "race")
 	private Race race = Race.PC_ALL;
 
 	/** 返回返回世界 ID / Returns the return world id */
-	@Getter
 	@XmlAttribute(name = "return_world")
 	private int returnWorldId;
 
 	/** 返回 return alias / Returns the return alias */
-	@Getter
 	@XmlAttribute(name = "return_alias")
 	private String returnAlias;
 
 	/** 返回神石信息 / Returns the godstone info*/
-	@Getter
 	@XmlElement(name = "godstone")
 	private GodstoneInfo godstoneInfo;
 
 	/** 返回烙印之石 / Returns the stigma*/
-	@Getter
 	@XmlElement(name = "stigma")
 	private Stigma stigma;
 
@@ -213,12 +186,10 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private byte[] restrictsMax;
 
 	/** 返回魔石槽位 / Returns the manastone slots*/
-	@Getter
 	@XmlAttribute(name = "m_slots")
 	private int manastoneSlots;
 
 	/** 返回特殊槽位 / Returns the special slots*/
-	@Getter
 	@XmlAttribute(name = "s_slots")
 	private int specialSlots;
 
@@ -242,7 +213,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/** 获取过期时间。 / Returns the expire time. */
-	@Getter
 	@XmlAttribute(name = "expire_time")
 	protected int expireTime;
 
@@ -250,41 +220,33 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	protected WeaponStats weaponStats;
 
 	/** 返回 activation count / Returns the activation count */
-	@Getter
 	@XmlAttribute(name = "activate_count")
 	private int activationCount;
 
 	@XmlAttribute(name = "func_pet_id")
-	@Getter
 	private int funcPetId;
 
 	/** 返回 tradein list / Returns the tradein list */
-	@Getter
 	@XmlElement(name = "tradein_list")
 	protected TradeinList tradeinList;
 
 	/** 返回 acquisition / Returns the acquisition */
-	@Getter
 	@XmlElement(name = "acquisition")
 	private Acquisition acquisition;
 
 	/** 返回 disposition / Returns the disposition */
-	@Getter
 	@XmlElement(name = "disposition")
 	private Disposition disposition;
 
 	/** 返回 improvement / Returns the improvement */
-	@Getter
 	@XmlElement(name = "improve")
 	private Improvement improvement;
 
 	/** 返回 use limits / Returns the use limits */
-	@Getter
 	@XmlElement(name = "uselimits")
 	private ItemUseLimits useLimits = new ItemUseLimits();
 
 	/** 返回 purchable limits / Returns the purchable limits */
-	@Getter
 	@XmlElement(name = "purchable")
 	private ItemPurchableLimits purchableLimits = new ItemPurchableLimits();
 
@@ -292,13 +254,10 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private ExtraInventory extraInventory;
 
 	/** 获取伊迪安动作。 / Returns the idian action. */
-	@Getter
 	@XmlElement(name = "idian")
 	private Idian idianAction;
 
 	/** 是否任务更新物品 / Whether quest update item*/
-	@Getter
-	@Setter
 	@XmlTransient
 	private boolean isQuestUpdateItem;
 
@@ -315,7 +274,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private int enchant_base = 0;
 
 	/** 返回 item custom set / Returns the item custom set */
-	@Getter
 	@XmlAttribute(name = "item_custom_set")
 	private int itemCustomSet = 0;
 

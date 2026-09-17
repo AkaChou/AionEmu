@@ -45,12 +45,12 @@ import lombok.Setter;
  * Creature game object.
  */
 @Slf4j
+@Getter
+@Setter
 public abstract class Creature extends VisibleObject {
 	/** 设置 AI 2 / Sets the ai 2 */
-	@Setter
 	protected AI2 ai2;
 	/** 设置延迟消失 / Sets whether the despawn is delayed */
-	@Setter
 	private boolean isDespawnDelayed = false;
 	/**
 	 * 返回生命属性。
@@ -58,8 +58,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 生命属性 / the lifeStats
 	 */
-	@Getter
-	@Setter
 	private CreatureLifeStats<? extends Creature> lifeStats;
 	/**
 	 * 返回游戏属性。
@@ -67,8 +65,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 游戏属性 / the gameStats
 	 */
-	@Getter
-	@Setter
 	private CreatureGameStats<? extends Creature> gameStats;
 	/**
 	 * 返回效果控制器。
@@ -76,11 +72,8 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 效果控制器 / the effectController
 	 */
-	@Getter
-	@Setter
 	private EffectController effectController;
 	/** 返回移动控制器 / Returns the move controller */
-	@Getter
 	protected MoveController moveController;
 	/**
 	 * 返回状态。
@@ -88,7 +81,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 状态 / state
 	 */
-	@Getter
 	private int state = CreatureState.ACTIVE.getId();
 	/**
 	 * 返回可视状态。
@@ -96,7 +88,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 可视状态 / visualState
 	 */
-	@Getter
 	private int visualState = CreatureVisualState.VISIBLE.getId();
 	/**
 	 * 返回感知状态。
@@ -104,7 +95,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 感知状态 / seeState
 	 */
-	@Getter
 	private int seeState = CreatureSeeState.NORMAL.getId();
 	/**
 	 * 返回当前施放技能。
@@ -112,7 +102,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 施放技能 / current casting skill
 	 */
-	@Getter
 	private volatile Skill castingSkill;
 	/**
 	 * 返回技能冷却表。
@@ -120,7 +109,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 技能冷却表 / the skillCoolDowns
 	 */
-	@Getter
 	private Map<Integer, Long> skillCoolDowns;
 	private Map<Integer, Long> skillCoolDownsBase;
 	/**
@@ -129,7 +117,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 观察控制器 / the observeController
 	 */
-	@Getter
 	private final ObserveController observeController;
 	/**
 	 * 返回变身模型。
@@ -137,7 +124,6 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @return 变身模型 / the transformModel
 	 */
-	@Getter
 	private TransformModel transformModel;
 		@Getter
 private final AggroList aggroList;
@@ -148,21 +134,14 @@ private final AggroList aggroList;
 	 *
 	 * @param usingItem 正在使用的物品 / item being used
 	 */
-	@Getter
-	@Setter
 	private Item usingItem;
 	private final transient byte[] zoneTypes = new byte[ZoneType.values().length];
 	/** 返回技能编号 / Returns the skill number */
-	@Getter
-	@Setter
 	private int skillNumber;
 	/** 返回被攻击次数 / Returns the attacked count */
-	@Getter
 	private int attackedCount;
 	private final long spawnTime = System.currentTimeMillis();
 	/** 返回拉取倍率 / Returns the pulled multi */
-	@Getter
-	@Setter
 	private int PulledMulti = 1;
 	/** 真实 stat ratio，1000 表示 1.0。 / Retail stat ratio, 1000 = 1.0. */
 	private int statRatio = 1000;

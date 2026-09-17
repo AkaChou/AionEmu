@@ -44,6 +44,8 @@ import lombok.Setter;
  * @author ATracer, Wakizashi, xTz
  */
 @Slf4j
+@Getter
+@Setter
 public class Item extends AionObject implements IExpirable, StatOwner {
 
 	/**
@@ -82,10 +84,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 堆叠数量 / the itemCount
 	 */
-	@Getter
 	private long itemCount = 1;
 	private int itemColor = 0;
-	@Getter
 	private int colorExpireTime = 0;
 	/**
 	 * 设置物品制作者。
@@ -93,7 +93,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @param itemCreator 要设置的物品制作者 / the itemCreator to set
 	 */
-	@Setter
 	private String itemCreator;
 	/**
 	 * 返回物品模板。
@@ -101,11 +100,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 物品模板 / the itemTemplate
 	 */
-	@Getter
 	private final ItemTemplate itemTemplate;
 	private ItemTemplate itemSkinTemplate;
 	/** 返回融合物品模板 / Returns the fusioned item template */
-	@Getter
 	private ItemTemplate fusionedItemTemplate;
 	/**
 	 * 返回是否已装备。
@@ -113,7 +110,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 是否已装备 / whether equipped
 	 */
-	@Getter
 	private boolean isEquipped = false;
 	/**
 	 * 返回装备槽位，可为 ItemSlot 枚举（已装备）或背包位置。
@@ -121,7 +117,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 装备槽位 / the equipmentSlot
 	 */
-	@Getter
 	private long equipmentSlot = ItemStorage.FIRST_AVAILABLE_SLOT;
 	/**
 	 * 返回持久化状态。
@@ -129,15 +124,10 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 持久化状态 / the persistentState
 	 */
-	@Getter
 	private PersistentState persistentState;
 	private Set<ManaStone> manaStones;
 	private Set<ManaStone> fusionStones;
-	@Getter
-	@Setter
 	private int optionalSocket;
-	@Getter
-	@Setter
 	private int optionalFusionSocket;
 	private int enchant_bonus;
 	/**
@@ -146,12 +136,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 神石 / the godStone
 	 */
-	@Getter
-	@Setter
 	private GodStone godStone;
 	/** 返回伊迪安石 / Returns the idian stone */
-	@Getter
-	@Setter
 	private IdianStone idianStone;
 	/**
 	 * 是否已灵魂绑定。
@@ -159,10 +145,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 是否已绑定 / whether soul bound
 	 */
-	@Getter
 	private boolean isSoulBound = false;
 	/** 获取物品位置。 / Returns the item location. */
-	@Getter
 	private int itemLocation;
 	/**
 	 * 返回强化等级。
@@ -170,11 +154,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 强化等级 / the enchantLevel
 	 */
-	@Getter
 	private int enchantLevel;
 	/** 设置过期时间。 / Sets the expire time. */
-	@Setter
-	@Getter
 	private int expireTime = 0;
 	/**
 	 * 返回临时交换时间。
@@ -182,34 +163,21 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 临时交换时间 / the temporary exchange time
 	 */
-	@Getter
-	@Setter
 	private int temporaryExchangeTime = 0;
 	/** 设置回购价格 / Sets the repurchase price */
-	@Getter
-	@Setter
 	private long repurchasePrice;
 	/** 返回激活次数 / Returns the activation count */
-	@Getter
-	@Setter
 	private int activationCount = 0;
 	/** 返回调谐信息 / Returns the conditioning info */
-	@Getter
 	private ChargeInfo conditioningInfo;
 	/** 返回加成编号 / Returns the bonus number */
-	@Getter
-	@Setter
 	private int bonusNumber = 0;
 	private List<StatFunction> currentModifiers;
 	/** 返回随机属性 / Returns the random stats */
-	@Getter
-	@Setter
 	private RandomStats randomStats;
 	private int rndCount;
 	public static int MAX_BASIC_STONES = 6;
 	/** 设置包装计数 / Sets the wrappable count */
-	@Getter
-	@Setter
 	private int wrappableCount;
 	/**
 	 * 返回是否已打包。
@@ -217,34 +185,23 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 *
 	 * @return 是否已打包 / whether packed
 	 */
-	@Getter
 	private boolean isPacked = false;
 	/** 返回授权等级 / Returns the authorize */
-	@Getter
 	private int authorize;
 	/** 设置注能 / Sets the amplification */
-	@Setter
 	private boolean amplification = false;
 	/** 设置注能技能 / Sets the amplification skill */
-	@Getter
-	@Setter
 	private int amplificationSkill = 0;
 	private int SkinSkill = 0;
 	private boolean luna_reskin = false;
 	/** 返回减免等级 / Returns the reduction level */
-	@Getter
 	private int ReductionLevel = 0;
 	/** 返回解除封印标记 / Returns the unseal flag */
-	@Getter
 	private int unSeal = 0;
 	private boolean canEnhance;
 	/** 返回强化技能 ID / Returns the enhance skill id */
-	@Getter
-	@Setter
 	private int enhanceSkillId;
 	/** 返回强化等级 / Returns the enhance enchant level */
-	@Getter
-	@Setter
 	private int enhanceEnchantLevel;
 
 	public Item(int objId, ItemTemplate itemTemplate) {
