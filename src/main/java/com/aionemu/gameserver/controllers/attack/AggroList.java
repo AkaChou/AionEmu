@@ -5,6 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -43,10 +44,43 @@ public class AggroList {
 		void onDamageAdded(Creature creature, int damage);
 	}
 
-	private final List<DamageListener> damageListeners = new CopyOnWriteArrayList<>();
+	/**
+	 * 共享空监听器占位符：全服 ≈12.7 万生物各自预制一个 {@code CopyOnWriteArrayList}（play-15 的 509,628 个
+	 * COW 实例里，这里与 {@code AbstractAI} 各占约四分之一 ≈3 MB），而绝大多数生物从不注册伤害监听器。
+	 * 首次写入才物化；读路径（{@code isEmpty}/for-each）读到占位符即空列表，空列表上的 {@code remove} 也是安全
+	 * 空操作，因此这些调用点一行未改。物化后的类型与改动前一致，并发语义等价。
+	 * Shared empty placeholder: every one of the ~127k creatures pre-created a CopyOnWriteArrayList for damage
+	 * listeners (~3 MB here, ~3 MB more in AbstractAI) although almost none ever registers one. The real list is
+	 * materialised on the first write; reads (isEmpty/for-each) and remove are no-ops on the placeholder, so those
+	 * call sites stay untouched and the materialised type/concurrency behaviour is unchanged.
+	 */
+	private static final List<DamageListener> EMPTY_DAMAGE_LISTENERS = Collections.emptyList();
+	private volatile List<DamageListener> damageListeners = EMPTY_DAMAGE_LISTENERS;
+
+	/**
+	 * 物化伤害监听器列表：双检 + {@code synchronized (this)}，并发首次注册收敛到同一个列表
+	 * （否则先注册的监听器会落进被丢弃的列表，之后再也收不到伤害回调）。
+	 * Materialises the damage-listener list with a double-checked {@code synchronized (this)} so concurrent first
+	 * registrations converge on one list; otherwise the first listeners would land in a discarded list and never
+	 * receive damage callbacks.
+	 *
+	 * @return 可写列表 / writable list
+	 */
+	private List<DamageListener> writableDamageListeners() {
+		List<DamageListener> current = damageListeners;
+		if (current != EMPTY_DAMAGE_LISTENERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (damageListeners == EMPTY_DAMAGE_LISTENERS) {
+				damageListeners = new CopyOnWriteArrayList<>();
+			}
+			return damageListeners;
+		}
+	}
 
 	public void addDamageListener(DamageListener listener) {
-		damageListeners.add(listener);
+		writableDamageListeners().add(listener);
 	}
 
 	public void removeDamageListener(DamageListener listener) {

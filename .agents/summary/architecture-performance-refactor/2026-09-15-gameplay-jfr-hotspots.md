@@ -1529,3 +1529,46 @@ GeoServiceSkillObstacleTest,LongObjectHashMapTest test
 - `CreatureGameStats` 的 `TreeSet<IStatFunction>`（92k 个 ≈ 22 MB，`TreeMap` + Entry 560k）。
 
 收尾建议：重启后用 `jcmd <pid> GC.class_histogram` 复核统一口径，再决定是否继续 D。
+
+### 12.22 第二十六轮：`AggroList`/`AbstractAI` 的监听器列表写时物化（D 切片八）
+
+12.18 处理了 `ObserveController` 的两个 COW 列表后，play-15 的 509,628 个 `CopyOnWriteArrayList` 里还剩
+两处同源实例（≈127k 生物各一个）：
+
+```java
+AggroList.damageListeners   = new CopyOnWriteArrayList<>();   // ≈3 MB
+AbstractAI.aiDeathListeners = new CopyOnWriteArrayList<>();   // ≈3 MB
+```
+
+#### 12.22.1 做法
+
+与 12.18 完全同一范式：`Collections.emptyList()` 共享占位符 + `volatile` 字段 + 双检 `synchronized (this)` 物化
+访问器（`writableDamageListeners()` / `writableAiDeathListeners()`），**只有 `add` 改走物化访问器**：
+
+| 容器 | 使用点 | 改动 |
+|---|---|---|
+| `damageListeners` | `add`(2 个别名方法) / `remove`(2 个) / `isEmpty`+for-each(1) | 2 处 `add` → `writableDamageListeners()` |
+| `aiDeathListeners` | `add`(2 个) / `remove`(2 个) / `isEmpty`+for-each(2) | 2 处 `add` → `writableAiDeathListeners()` |
+
+读与空操作一行未改：空列表上的 `remove` 返回 `false`、`isEmpty()` 为真、for-each 空迭代，都是安全空操作
+（与 `Collections.emptyMap` 的 `remove(key,value)` 不同）。并发首次注册必须收敛到同一列表，否则先注册的监听器
+会落进被丢弃的列表——伤害回调/死亡回调永久丢失，正是"静默功能缺失"类缺陷，因此双检是硬要求而非优化。
+
+#### 12.22.2 测试
+
+- `AggroListTest` +2 例：未注册时两个实例共享同一占位符、`remove`/`isEmpty` 安全空操作、首次注册后物化出独立列表；
+  8 线程 × 32 次并发首次注册必须收敛到同一列表（断言 256 个监听器全部在册）。
+- 新增 `AbstractAIDeathListenerListTest`（2 例）：同上契约 + 并发收敛（用 `new RetailPatternAI2()` 作为具体 AI）。
+
+#### 12.22.3 验证
+
+```
+mvn -Dtest=AggroListTest,AbstractAIDeathListenerListTest,AttackUtilTest,GetMostPlayerDamageNullGateTest,
+AI2EngineRetailSelectionTest,RetailPatternAI2Test,ObserveControllerTest,ObserveControllerAttackContextTest,
+ObserveControllerLifeChangedTest,AbstractCollisionObserverTest,NpcLifeStatsTest,NpcGameStatsTest,
+CreatureGameStatsBytecodeTest,KnownListTest,KnownListIterationSafetyTest,WorldTest,WorldMapTest,WorldMapInstanceTest,
+NpcShoutDataTest,ShoutEventHandlerTest,MoveTaskManagerTest,PlayerMoveTaskManagerTest,WaterVolumeStoreTest,
+EffectControllerTest,PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,
+NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest,LongObjectHashMapTest test
+```
+→ **BUILD SUCCESS，32 个测试类 327 例全绿**。

@@ -3,14 +3,23 @@ package com.aionemu.gameserver.controllers.attack;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -44,6 +53,59 @@ class AggroListTest {
 				entries.values().remove(aggroInfo);
 			}
 		});
+	}
+
+	@Test
+	void damageListenerListStaysOnTheSharedPlaceholderUntilTheFirstListener() throws ReflectiveOperationException {
+		// 伤害监听器列表懒物化：未注册时两个实例共享同一占位符，写入后才各自独立。
+		// The damage-listener list is lazy: untouched instances share the placeholder and only diverge after a write.
+		AggroList untouched = new AggroList(null);
+		AggroList other = new AggroList(null);
+		assertSame(damageListeners(untouched), damageListeners(other), "未注册监听器时应共享同一占位符");
+		assertDoesNotThrow(() -> untouched.removeDamageListener(noOpListener()));
+		assertTrue(damageListeners(untouched).isEmpty(), "空占位符上的 remove/isEmpty 应是安全空操作");
+
+		untouched.addDamageListener(noOpListener());
+
+		assertNotSame(damageListeners(untouched), damageListeners(other), "首次注册后应物化出独立列表");
+		assertEquals(1, damageListeners(untouched).size());
+		assertTrue(damageListeners(other).isEmpty());
+	}
+
+	@Test
+	void concurrentFirstListenerRegistrationsConvergeOnOneList() throws Exception {
+		// 并发首次注册必须收敛到同一列表，否则先注册的监听器会落进被丢弃的列表而永久丢失伤害回调。
+		// Concurrent first registrations must converge on one list or the first listeners are lost for good.
+		AggroList aggroList = new AggroList(null);
+		int threads = 8;
+		int perThread = 32;
+		ExecutorService pool = Executors.newFixedThreadPool(threads);
+		CountDownLatch start = new CountDownLatch(1);
+		List<Future<?>> futures = new ArrayList<>();
+		try {
+			for (int thread = 0; thread < threads; thread++) {
+				futures.add(pool.submit(() -> {
+					try {
+						start.await();
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						throw new AssertionError(e);
+					}
+					for (int i = 0; i < perThread; i++) {
+						aggroList.addDamageListener(noOpListener());
+					}
+					return null;
+				}));
+			}
+			start.countDown();
+			for (Future<?> future : futures) {
+				future.get(30, TimeUnit.SECONDS);
+			}
+		} finally {
+			pool.shutdownNow();
+		}
+
+		assertEquals(threads * perThread, damageListeners(aggroList).size());
 	}
 
 	@Test
@@ -105,6 +167,18 @@ class AggroListTest {
 		info.setHate(permanentHate);
 		info.addVolatileHate(volatileHate);
 		return info;
+	}
+
+	private static AggroList.DamageListener noOpListener() {
+		return (creature, damage) -> {
+		};
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<AggroList.DamageListener> damageListeners(AggroList target) throws ReflectiveOperationException {
+		Field field = AggroList.class.getDeclaredField("damageListeners");
+		field.setAccessible(true);
+		return (List<AggroList.DamageListener>) field.get(target);
 	}
 
 	private static void setAggroList(AggroList target, Map<Integer, AggroInfo> value) throws ReflectiveOperationException {

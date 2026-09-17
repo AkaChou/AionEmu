@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai2;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -47,10 +48,38 @@ public abstract class AbstractAI implements AI2 {
 		void onAfterDie(AbstractAI obj);
 	}
 
-	private final List<AiDeathListener> aiDeathListeners = new CopyOnWriteArrayList<>();
+	/**
+	 * 共享空监听器占位符（范式同 {@code AggroList} 的伤害监听器）：≈12.7 万 AI 各自预制一个
+	 * {@code CopyOnWriteArrayList}（≈3 MB），而绝大多数 AI 从不注册死亡监听器。首次写入才物化；
+	 * {@code isEmpty}/for-each/remove 在占位符上都是安全空操作，故这些调用点未改。
+	 * Shared empty placeholder (same pattern as AggroList's damage listeners): every AI pre-created a
+	 * CopyOnWriteArrayList (~3 MB) although almost none registers a death listener. Materialised on the first write;
+	 * isEmpty/for-each/remove are no-ops on the placeholder, so those call sites stay untouched.
+	 */
+	private static final List<AiDeathListener> EMPTY_AI_DEATH_LISTENERS = Collections.emptyList();
+	private volatile List<AiDeathListener> aiDeathListeners = EMPTY_AI_DEATH_LISTENERS;
+
+	/**
+	 * 物化 AI 死亡监听器列表：双检 + {@code synchronized (this)}，并发首次注册收敛到同一个列表。
+	 * Materialises the death-listener list with a double-checked {@code synchronized (this)}.
+	 *
+	 * @return 可写列表 / writable list
+	 */
+	private List<AiDeathListener> writableAiDeathListeners() {
+		List<AiDeathListener> current = aiDeathListeners;
+		if (current != EMPTY_AI_DEATH_LISTENERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (aiDeathListeners == EMPTY_AI_DEATH_LISTENERS) {
+				aiDeathListeners = new CopyOnWriteArrayList<>();
+			}
+			return aiDeathListeners;
+		}
+	}
 
 	public void addAiDeathListener(AiDeathListener listener) {
-		aiDeathListeners.add(listener);
+		writableAiDeathListeners().add(listener);
 	}
 
 	public void removeAiDeathListener(AiDeathListener listener) {
