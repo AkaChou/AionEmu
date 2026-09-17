@@ -276,6 +276,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798132" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182208064" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208064" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -285,6 +291,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798166" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182208064" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208064" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -294,6 +306,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798201" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182208064" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208064" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -303,6 +321,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798202" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182208064" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208064" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -312,6 +336,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798204" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182208064" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208064" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

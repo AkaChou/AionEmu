@@ -138,6 +138,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204743" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182215329" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215329" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -147,6 +153,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204768" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182215329" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215329" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -156,6 +168,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204808" action="SETPRO2"/>
       </event>
+      <conditions>
+        <has-item item-id="182215329" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215329" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

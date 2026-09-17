@@ -79,8 +79,11 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204032" action="SETPRO1"/>
       </event>
+      <conditions>
+        <has-item item-id="182215479" count="5"/>
+      </conditions>
       <actions>
-        <!-- 无物品变更 -->
+        <remove-item item-id="182215479" count="5"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

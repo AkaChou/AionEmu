@@ -92,6 +92,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798132" action="SET_SUCCEED"/>
       </event>
+      <conditions>
+        <has-item item-id="182208008" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208008" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -101,6 +107,12 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798146" action="SET_SUCCEED"/>
       </event>
+      <conditions>
+        <has-item item-id="182208008" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182208008" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>

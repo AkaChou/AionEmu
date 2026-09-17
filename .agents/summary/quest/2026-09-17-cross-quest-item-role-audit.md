@@ -49,3 +49,31 @@ python3 .agents/summary/quest/item-producer-scan/audit_cross_quest_item_roles.py
 - 跨任务道具交接链是**真端设计**，不得一律判错：如 13904 交付 13903 的道具、80795 使用 80723 的道具、50048 消耗 50047 的奖励（50047 的 reward 即 186000401）。
 - `item_template` 缺少 `name_desc` 的道具不参与名称映射判定。
 - 验证：`mvn test -Dtest=QuestItemSourceContractGateTest,QuestDropContractGateTest,QuestMovieAndDialogLoopRegressionTest,QuestDefinitionDirectoryLoaderTest,CompletedQuestPrerequisiteRegressionTest,QuestClientContractGateTest,ProductionCatalogWhitelistVerificationTest` → Tests run: 33, Failures: 0, Errors: 0；PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0。未做真机客户端验收。
+
+## 6. 追加批次（零进度交付类，同日）
+
+对 89 行待评审轴逐条定性（`item-role-gaps.tsv` 增加 verdict 列）：
+
+| 定性 | 条数 | 处置 |
+|---|---|---|
+| OWN_COLLECT_NO_TURNIN_GATE_SINGLE_EDGE / MULTI_EDGE | 35（本批修 7） | 任务掉落并声明自家道具、却没有任何交付校验 → 玩家可零进度领奖、道具永不消耗 |
+| EXTERNAL_SOURCE_ITEM | 48 | 副本钥匙/材料/活动/商城道具，非交付缺陷 |
+| OWN_COLLECT_NO_DROP | 22 | 自家道具但本任务不掉落，需确认交接链 |
+| UNMAPPED_NAME | 11 | 名称未映射，需人工核对 |
+| OTHER_QUEST_ITEM | 4 | 他任务道具（交接链或错配） |
+
+**本批修复（7）**：1932 / 3547 / 14121 / 14201 / 24121 / 24152 / 24242 —— 四重证据（唯一进入 reward 的交付边、任务自行掉落该道具、`<items>` 数量与真端 collect_item 一致、其中 3 个真端 COLLECT_ITEM 注释 NPC 与交付边 NPC 吻合）后，在交付边补回
+`has-item item-id=X count=N` + `remove-item item-id=X count=N`。
+
+**隔离验证说明**：主工作树当时被并行协作者的 `LegionService`/`LegionMembers` 在途重构阻塞（主源码不可编译），按仓库 worktree 纪律改用 `/tmp` 临时 worktree（仅复制本批 8 个文件）验证，验证后已 `git worktree remove --force` + `prune`，无残留。
+
+**真机验收清单**：`2026-09-17-collect-turnin-acceptance-checklist.md`。
+
+## 7. 第三批（多 NPC 变体，同日）
+
+`2232 / 2239 / 2289 / 3013 / 3088 / 4542`：同一任务由多个 NPC 交付（2~5 个变体），**17 条进入 reward 的交付边全部没有任何条件** → 任一入口都可零进度领奖。
+六者均为单一自家道具、`<items>` 数量与真端 collect_item 完全一致、且任务自行掉落该道具，故对每条交付边统一补 `has-item` + `remove-item`。
+
+修复后待评审轴由 89 行降为 **76 行**：48 外部来源 / 29 同类缺交付校验（剩余部分为无 reward 入边或已存在其它道具校验，需逐条确认）/ 22 本任务无掉落 / 11 名称待映射 / 4 他任务道具。
+
+**验证**：`mvn test` 同套门禁 33 项全绿（主工作树恢复可编译后复跑），PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0。

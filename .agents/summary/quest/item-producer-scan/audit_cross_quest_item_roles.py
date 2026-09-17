@@ -21,7 +21,9 @@ ITEMS = ROOT / "src/main/resources/aion/data/static_data/items"
 RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
 BASELINE = ROOT / "src/test/resources/quest/quest-item-role-baseline.tsv"
 GAPS = ROOT / ".agents/summary/quest/item-producer-scan/item-role-gaps.tsv"
-REPAIRED = {15010, 15012, 15043, 15070, 51021, 28836, 28838}
+REPAIRED = {15010, 15012, 15043, 15070, 51021, 28836, 28838,
+            1932, 3547, 14121, 14201, 24121, 24152, 24242,
+            2232, 2239, 2289, 3013, 3088, 4542}
 
 
 def dev_names() -> dict[int, str]:
@@ -63,6 +65,30 @@ def load_quest(path: Path):
     return tracked, needed, events
 
 
+OWN_ITEM = re.compile(r"^(?:doc_)?quest_(\d+)[a-z]?$")
+
+
+def _verdict(quest_id: int, item_id: int, dev_name: str, tracked: set[int], path: Path) -> str:
+    """单条缺失的定性 / verdict for one missing retail item."""
+    import xml.etree.ElementTree as ET
+
+    root = ET.parse(path).getroot()
+    drops = {int(e.get("item-id")) for e in root.iter("drop") if int(e.get("chance", "100")) > 0}
+    match = OWN_ITEM.match(dev_name)
+    if not match:
+        if dev_name.startswith(("key_", "cash_", "material_", "shopmaterial", "plant_", "noblemetal", "airmetal", "charge_core", "relic", "junk_", "gold", "assembly_", "world_event", "event_", "ta_part", "jr_part", "treasure_")):
+            return "EXTERNAL_SOURCE_ITEM"
+        return "UNMAPPED_NAME"
+    owner = int(match.group(1))
+    if owner != quest_id:
+        return "OTHER_QUEST_ITEM"
+    if item_id in drops:
+        reward_nodes = {n.get("label") for n in root.iter("node") if (n.get("status") or "").upper() in {"REWARD", "COMPLETE"}}
+        edges = [t for t in root.iter("transition") if t.get("target") in reward_nodes]
+        return "OWN_COLLECT_NO_TURNIN_GATE_SINGLE_EDGE" if len(edges) == 1 else "OWN_COLLECT_NO_TURNIN_GATE_MULTI_EDGE"
+    return "OWN_COLLECT_NO_DROP"
+
+
 def main() -> int:
     names = dev_names()
     baseline = []
@@ -87,10 +113,11 @@ def main() -> int:
         path = QUESTS / f"{qid}.xml"
         if not path.exists():
             continue
-        _tracked, needed, _events = load_quest(path)
+        tracked, needed, _events = load_quest(path)
         missing = allowed - set(needed)
         if missing:
-            gaps.append((qid, sorted(missing), [names.get(i, "?") for i in sorted(missing)]))
+            gaps.append((qid, sorted(missing), [names.get(i, "?") for i in sorted(missing)],
+                         [_verdict(qid, item, names.get(item, "?"), tracked, path) for item in sorted(missing)]))
 
     print("== 回归（7 个已修复任务，交付条件应为自家真端道具）==")
     for qid, items, labels in regression:
@@ -98,8 +125,16 @@ def main() -> int:
     print(f"== 不变量 I1（collect-item 事件监听本任务道具）违规={len(invariant)} ==")
     for row in invariant:
         print("   ", row)
-    GAPS.write_text("\n".join(f"{q}\t{','.join(map(str, m))}\t{','.join(n)}" for q, m, n in gaps) + "\n")
+    GAPS.write_text(
+        "# questId\tmissingItemIds\tdevNames\tverdict\n"
+        + "\n".join(f"{q}\t{','.join(map(str, m))}\t{','.join(n)}\t{'|'.join(v)}" for q, m, n, v in gaps) + "\n")
+    tally: dict[str, int] = {}
+    for _q, _m, _n, verdicts in gaps:
+        for verdict in verdicts:
+            tally[verdict] = tally.get(verdict, 0) + 1
     print(f"== 后续待评审轴：真端 collect/check 名称在我方交付集合中缺失 {len(gaps)} 行 -> {GAPS.name} ==")
+    for verdict, count in sorted(tally.items(), key=lambda kv: -kv[1]):
+        print(f"     {verdict}: {count}")
     return 0
 
 

@@ -21,8 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * inventory-items / work-items), drops, grants, or reports. A quest that watches a neighbouring
  * quest's item never refreshes progress and can leave the collection stage stalled.
  *
- * <p>此外锁定 2026-09-17 修复的 7 个"引用邻居任务道具"任务：其交付条件必须使用本任务在真端
- * collect_item/check_item 中声明的道具（道具开发名见 item_template 的 name_desc）。</p>
+ * <p>此外锁定 2026-09-17 修复的 20 个任务：7 个"引用邻居任务道具"的任务其交付条件必须使用本任务在真端
+ * collect_item/check_item 中声明的道具（开发名见 item_template 的 name_desc），另有 7 个 COLLECT_ITEM 交付缺失
+ * has-item 的任务必须重新校验并扣除自己的任务道具。</p>
  * It also pins the seven quests repaired on 2026-09-17 whose turn-in condition referenced the
  * neighbouring quest's item instead of the item retail declares for that quest.
  */
@@ -59,6 +60,23 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItems(catalog, 15070, Map.of(182215682, 10));
 		// 51021 真端 collect/check = quest_51017a 3（原写成 51018 的 quest_51018a）
 		assertTurnInItems(catalog, 51021, Map.of(182215182, 3));
+		// 1932/3547/14121/14201/24121/24152/24242：真端 COLLECT_ITEM 交付缺少 has-item，玩家可零进度领奖、
+		// 掉落的任务道具永不被消耗；交付边（唯一进入 reward 的过渡）补回校验与扣除，数量取真端 collect_item 值
+		assertTurnInItems(catalog, 1932, Map.of(182206008, 1));
+		assertTurnInItems(catalog, 3547, Map.of(182215334, 10));
+		assertTurnInItems(catalog, 14121, Map.of(182215479, 5));
+		assertTurnInItems(catalog, 14201, Map.of(182215468, 1));
+		assertTurnInItems(catalog, 24121, Map.of(182215470, 1));
+		assertTurnInItems(catalog, 24152, Map.of(182215461, 1));
+		assertTurnInItems(catalog, 24242, Map.of(182215583, 1));
+		// 2232/2239/2289/3013/3088/4542：同一任务由多个 NPC 变体交付，17 条交付边此前完全没有条件
+		// （零进度可领奖）；每个变体的交付边都必须校验并扣除自家任务道具
+		assertTurnInItems(catalog, 2232, Map.of(182203224, 9));
+		assertTurnInItems(catalog, 2239, Map.of(182203228, 3));
+		assertTurnInItems(catalog, 2289, Map.of(182203016, 1));
+		assertTurnInItems(catalog, 3013, Map.of(182208008, 1));
+		assertTurnInItems(catalog, 3088, Map.of(182208064, 1));
+		assertTurnInItems(catalog, 4542, Map.of(182215329, 1));
 		// 28836/28838：collect-item 事件原先监听邻居任务道具且 count 误用掉落行数，改为本任务道具 + 收集数量
 		assertCollectEvent(catalog, 28836, 182213207, 50);
 		assertCollectEvent(catalog, 28838, 182213208, 50);
