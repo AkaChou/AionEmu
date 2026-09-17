@@ -340,5 +340,4 @@
 - 最终 `@Data` 类总数：**15**（8 + 7），全部是字段全为标量或简单值的纯数据载体。
 - 验证：`mvn test-compile` 0 错误；本轮 128 例测试全绿（含 `AbyssTeleporterQuestRequirementTest`、
   `AionBootApplicationTest`(12)、`GameLegacyServiceBridgeConfigurationTest`(57)、`ModelCollectionImplementationTest`(18) 等）。
-- 注意：`AssembledNpcPart` 上现存的 `@AllArgsConstructor` 拼写疑似历史笔误（Lombok 注解应为 `@AllArgsConstructor` 之外的
-  `@AllArgsConstructor` 不存在——本项目其余位置使用 `@AllArgsConstructor`），本次未擅自改名。
+- 说明：`AssembledNpcPart` 为 final 字段值对象，若套 `@Data` 会生成无效的 setter，故保留 `@Getter` 与显式构造器。
