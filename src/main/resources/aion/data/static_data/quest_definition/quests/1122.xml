@@ -180,7 +180,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="4950" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="1"/>
-        <complete-quest reward-index="0"/>
+        <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -203,7 +203,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="3950" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="182000352" amount="1"/>
-        <complete-quest reward-index="0"/>
+        <complete-quest reward-index="2"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

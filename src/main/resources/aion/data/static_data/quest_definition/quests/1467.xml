@@ -218,6 +218,110 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <!-- reward1: select2_1 -> SHOW_SELECT_QUEST_REWARD_WINDOW1 -->
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- reward2: select2_2 -> SHOW_SELECT_QUEST_REWARD_WINDOW2 -->
+    <transition source="reward2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="reward2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      </after-commit>
+    </transition>
+    <transition source="reward2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- reward3: select2_3 -> SHOW_SELECT_QUEST_REWARD_WINDOW3 -->
+    <transition source="reward3" target="reward3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_3"/>
+      </after-commit>
+    </transition>
+    <transition source="reward3" target="reward3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      </after-commit>
+    </transition>
+    <transition source="reward3" target="reward3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- reward4: select2_4 -> SHOW_SELECT_QUEST_REWARD_WINDOW4 -->
+    <transition source="reward4" target="reward4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_4"/>
+      </after-commit>
+    </transition>
+    <transition source="reward4" target="reward4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW4"/>
+      </after-commit>
+    </transition>
+    <transition source="reward4" target="reward4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="reward1" target="complete">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204045" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
