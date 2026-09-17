@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="10011" version="1">
-  <metadata name="A Flower That Needs Blood to Bloom" display-name-id="1803216" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" target-type="FORCE">
+<quest-definition id="20011" version="1">
+  <metadata name="A Flower That Blooms With Death" display-name-id="1803229" min-level="66" max-level="2147483647" category="MISSION" target-type="FORCE" cannot-giveup="true">
     <races>
-      <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <prerequisites>
-      <quest id="10010"/>
+      <quest id="20010"/>
     </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="61295166"/>
@@ -18,8 +18,8 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -80,7 +80,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806585" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="806594" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
@@ -88,7 +88,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806585" action="SELECT1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806594" action="SELECT1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
@@ -96,7 +96,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806585" action="SELECT1_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806594" action="SELECT1_1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
@@ -104,7 +104,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806585" action="SELECT1_1_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806594" action="SELECT1_1_1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1_1"/>
@@ -112,7 +112,7 @@
     </transition>
     <transition source="started" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806585" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806594" action="SETPRO1"/>
       </event>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -124,7 +124,7 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731785" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="731788" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
@@ -132,7 +132,7 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731785" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="731788" action="SELECT2_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
@@ -140,7 +140,7 @@
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731785" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="731788" action="SETPRO2"/>
       </event>
       <actions>
         <set-variable field="var0" value="2"/>
@@ -152,7 +152,7 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731786" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="731789" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
@@ -160,7 +160,7 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731786" action="SELECT3_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="731789" action="SELECT3_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
@@ -168,7 +168,7 @@
     </transition>
     <transition source="s2" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731786" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="731789" action="SETPRO3"/>
       </event>
       <actions>
         <set-variable field="var0" value="3"/>
@@ -180,7 +180,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731787" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="731790" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
@@ -188,7 +188,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731787" action="SELECT4_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="731790" action="SELECT4_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
@@ -196,7 +196,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731787" action="SELECT4_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="731790" action="SELECT4_1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
@@ -204,7 +204,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731787" action="SELECT4_1_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="731790" action="SELECT4_1_1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1_1"/>
@@ -212,7 +212,7 @@
     </transition>
     <transition source="s3" target="s4">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="731787" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="731790" action="SETPRO4"/>
       </event>
       <actions>
         <set-variable field="var0" value="4"/>
@@ -261,10 +261,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="6"/>
-        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s7">
@@ -276,10 +275,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="7"/>
-        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s7" target="s8">
@@ -298,7 +296,7 @@
     </transition>
     <transition source="s8" target="s8">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806589" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="806598" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
@@ -306,7 +304,7 @@
     </transition>
     <transition source="s8" target="s8">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806589" action="SELECT9_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806598" action="SELECT9_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1"/>
@@ -314,7 +312,7 @@
     </transition>
     <transition source="s8" target="s8">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806589" action="SELECT9_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806598" action="SELECT9_1_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
@@ -322,7 +320,7 @@
     </transition>
     <transition source="s8" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806589" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="806598" action="SET_SUCCEED"/>
       </event>
       <actions>
         <set-variable field="var0" value="9"/>
@@ -334,28 +332,28 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806075" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="s1" target="s1">
       <event>
-        <can-act template-id="731785" action-type="ACTION_ITEM_USE"/>
+        <can-act template-id="731788" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <can-act template-id="731786" action-type="ACTION_ITEM_USE"/>
+        <can-act template-id="731789" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <can-act template-id="731787" action-type="ACTION_ITEM_USE"/>
+        <can-act template-id="731790" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
   </transitions>

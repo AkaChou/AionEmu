@@ -1,87 +1,166 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="13705" version="1">
   <metadata name="Coastal Bypass Operation" display-name-id="1111605" min-level="65" max-level="2147483647" category="QUEST">
     <races>
-      <race id="ELYOS" />
+      <race id="ELYOS"/>
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="3618881" />
-      <reward kind="ITEM" id="186000231" amount="2" />
-      <reward kind="ITEM" id="164000076" amount="18" />
-      <reward kind="ITEM" id="164000073" amount="18" />
-      <reward kind="ITEM" id="164000134" amount="18" />
+      <reward kind="EXP" id="0" amount="3618881"/>
+      <reward kind="ITEM" id="186000231" amount="2"/>
+      <reward kind="ITEM" id="164000076" amount="18"/>
+      <reward kind="ITEM" id="164000073" amount="18"/>
+      <reward kind="ITEM" id="164000134" amount="18"/>
     </rewards>
     <kills>
       <kill sequence="1">
-        <npc id="233919" />
+        <npc id="233919"/>
       </kill>
       <kill sequence="2">
-        <npc id="233919" />
-      </kill>
-      <kill sequence="3">
-        <npc id="233919" />
-      </kill>
-      <kill sequence="4">
-        <npc id="233920" />
-      </kill>
-      <kill sequence="5">
-        <npc id="233920" />
-      </kill>
-      <kill sequence="6">
-        <npc id="233920" />
+        <npc id="233920"/>
       </kill>
     </kills>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+    <bit-field name="var0" offset="0" width="6" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0" />
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0" />
-    </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1" />
-    </node>
-    <node label="k2" status="START">
-      <var name="var0" value="2" />
-    </node>
-    <node label="k3" status="START">
-      <var name="var0" value="3" />
-    </node>
-    <node label="k4" status="START">
-      <var name="var0" value="4" />
-    </node>
-    <node label="k5" status="START">
-      <var name="var0" value="5" />
-    </node>
-    <node label="k6" status="START">
-      <var name="var0" value="6" />
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
-      <var name="var0" value="6" />
+      <var name="var0" value="3"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0" />
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <kill-chain nodes="started k1 k2 k3">
+    <dialog type="NPC_START" npc-id="802331" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <!-- 怪兽 1 (233919) 计数，对应 SECTION_0 -->
+    <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="233919" />
+        <kill-npc npc-id="233919"/>
       </event>
-    </kill-chain>
-    <kill-chain nodes="k3 k4 k5 k6">
+      <conditions>
+        <variable-below field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-id="233920" />
+        <kill-npc npc-id="233919"/>
       </event>
-    </kill-chain>
-    <dialog type="NPC_START" npc-id="802331" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1" />
-    <dialog type="NPC_REPORT" npc-id="802333" source="k6" target="reward" page="SELECT5" />
+      <conditions>
+        <variable-at-least field="var0" value="2"/>
+        <variable-below field="var1" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-id="233919"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="2"/>
+        <variable-at-least field="var1" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 怪兽 2 (233920) 计数，对应 SECTION_1 -->
+    <transition source="started" target="started" priority="2">
+      <event>
+        <kill-npc npc-id="233920"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-id="233920"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="2"/>
+        <variable-below field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-id="233920"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="2"/>
+        <variable-at-least field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 满计数安全恢复路线 -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802333" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="3"/>
+        <variable-at-least field="var1" value="3"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+
+    <!-- 领奖阶段向 NPC 802333 报告 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802333" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="802333" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

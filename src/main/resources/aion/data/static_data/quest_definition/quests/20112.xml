@@ -22,8 +22,9 @@
     </drops>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -185,38 +186,98 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="s3" target="s3">
+    <!-- 阶段 3: 小怪消灭计数 (0..5), 对应 SECTION_1 -->
+    <transition source="s3" target="s3" priority="2">
       <event>
         <kill-npc npc-id="885140"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
-        <variable-below field="var1" value="5"/>
+        <variable-below field="var1" value="4"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="3"/>
         <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="s3" target="s4">
+    <transition source="s3" target="s3" priority="1">
+      <event>
+        <kill-npc npc-id="885140"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="4"/>
+        <variable-below field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4" priority="0">
+      <event>
+        <kill-npc npc-id="885140"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="4"/>
+        <variable-at-least field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 阶段 3: 首领消灭计数 (0..1), 对应 SECTION_2 -->
+    <transition source="s3" target="s3" priority="1">
       <event>
         <kill-npc npc-id="885141"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
+        <variable-below field="var1" value="5"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="4"/>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var2" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4" priority="0">
+      <event>
+        <kill-npc npc-id="885141"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">

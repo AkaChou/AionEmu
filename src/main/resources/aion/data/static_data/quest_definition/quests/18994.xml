@@ -9,49 +9,93 @@
       <reward kind="EXP" id="0" amount="27928284"/>
       <reward kind="ITEM" id="169000010" amount="100"/>
     </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="857974"/>
+        <npc id="857975"/>
+        <npc id="857976"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="220450"/>
+        <npc id="220518"/>
+      </kill>
+    </kills>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
-    </node>
-    <node label="k3" status="START">
-      <var name="var0" value="3"/>
-    </node>
-    <node label="k2" status="START">
-      <var name="var0" value="2"/>
-    </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="step2" status="START">
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="4"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <kill-chain nodes="started k1 k2 k3">
+    <dialog type="NPC_START" npc-id="806075" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <!-- 阶段 1: 击杀 0..1 个龙族增幅装置，累积 var1 -->
+    <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="857974 857975 857976"/>
       </event>
-    </kill-chain>
-    <transition source="k3" target="reward">
+      <conditions>
+        <variable-below field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 阶段 1: 第 3 次击杀达成，进入阶段 2 (var0=2, var1=0) -->
+    <transition source="started" target="step2" priority="0">
       <event>
-        <kill-npc npc-ids="220450 220518"/>
+        <kill-npc npc-ids="857974 857975 857976"/>
       </event>
+      <conditions>
+        <variable-at-least field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="0"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="806075" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
+    <!-- 阶段 2: 击杀信使队长，直入 reward 状态 -->
+    <transition source="step2" target="reward">
+      <event>
+        <kill-npc npc-ids="220450 220518"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖与报告 -->
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806075" action="QUEST_SELECT"/>
       </event>
@@ -62,8 +106,7 @@
     <npc-complete npc-id="806075" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <transition source="started" target="started">
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806241" action="QUEST_SELECT"/>
       </event>
@@ -71,32 +114,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-
-        <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806241" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="806241" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

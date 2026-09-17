@@ -18,8 +18,8 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -261,10 +261,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="6"/>
-        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s7">
@@ -276,10 +275,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="7"/>
-        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s7" target="s8">

@@ -62,94 +62,87 @@
         <npc id="884909"/>
         <npc id="884910"/>
       </kill>
-      <kill sequence="2">
-        <npc id="884544"/>
-        <npc id="884545"/>
-        <npc id="884546"/>
-        <npc id="884547"/>
-        <npc id="884548"/>
-        <npc id="884622"/>
-        <npc id="884623"/>
-        <npc id="884624"/>
-        <npc id="884625"/>
-        <npc id="884626"/>
-        <npc id="884700"/>
-        <npc id="884701"/>
-        <npc id="884702"/>
-        <npc id="884703"/>
-        <npc id="884704"/>
-        <npc id="884778"/>
-        <npc id="884779"/>
-        <npc id="884780"/>
-        <npc id="884781"/>
-        <npc id="884782"/>
-        <npc id="884856"/>
-        <npc id="884857"/>
-        <npc id="884858"/>
-        <npc id="884859"/>
-        <npc id="884860"/>
-        <npc id="884594"/>
-        <npc id="884595"/>
-        <npc id="884596"/>
-        <npc id="884597"/>
-        <npc id="884598"/>
-        <npc id="884672"/>
-        <npc id="884673"/>
-        <npc id="884674"/>
-        <npc id="884675"/>
-        <npc id="884676"/>
-        <npc id="884750"/>
-        <npc id="884751"/>
-        <npc id="884752"/>
-        <npc id="884753"/>
-        <npc id="884754"/>
-        <npc id="884828"/>
-        <npc id="884829"/>
-        <npc id="884830"/>
-        <npc id="884831"/>
-        <npc id="884832"/>
-        <npc id="884906"/>
-        <npc id="884907"/>
-        <npc id="884908"/>
-        <npc id="884909"/>
-        <npc id="884910"/>
-      </kill>
     </kills>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="k1" status="START">
       <var name="var0" value="1"/>
-    </node>
-    <node label="k2" status="START">
-      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <counter-grid>
-      <dimension field="var0" required="2" npc-ids="884544 884545 884546 884547 884548 884622 884623 884624 884625 884626 884700 884701 884702 884703 884704 884778 884779 884780 884781 884782 884856 884857 884858 884859 884860 884594 884595 884596 884597 884598 884672 884673 884674 884675 884676 884750 884751 884752 884753 884754 884828 884829 884830 884831 884832 884906 884907 884908 884909 884910"/>
-    </counter-grid>
-    <dialog type="NPC_START" npc-id="835722" source="unaccepted" target="started" selection-sources="unaccepted k2" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="835722" source="k2" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_START" npc-id="835722" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <!-- 击杀 0..1 累积计数，同时将 var0 保持为 1 自愈历史脏数据 -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="884544 884545 884546 884547 884548 884622 884623 884624 884625 884626 884700 884701 884702 884703 884704 884778 884779 884780 884781 884782 884856 884857 884858 884859 884860 884594 884595 884596 884597 884598 884672 884673 884674 884675 884676 884750 884751 884752 884753 884754 884828 884829 884830 884831 884832 884906 884907 884908 884909 884910"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 2 次击杀达成，直入 reward 状态 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="884544 884545 884546 884547 884548 884622 884623 884624 884625 884626 884700 884701 884702 884703 884704 884778 884779 884780 884781 884782 884856 884857 884858 884859 884860 884594 884595 884596 884597 884598 884672 884673 884674 884675 884676 884750 884751 884752 884753 884754 884828 884829 884830 884831 884832 884906 884907 884908 884909 884910"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 满计数安全恢复路线 -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835722" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="2"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835722" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="835722" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-
-
   </transitions>
 </quest-definition>

@@ -91,6 +91,45 @@ class QuestMonsterProgressContractAuditTest {
 		}
 	}
 
+	/**
+	 * 验证复杂多阶段/多目标杀怪任务必须根据客户端契约声明对应的独立字段 (var1, var2...)。
+	 * 彻底根除步骤号跳变与怪物计数漏记。
+	 */
+	@Test
+	void complexAndMultiDimensionKillQuestsAlignWithClientSections() throws Exception {
+		List<Integer> targetQuests = List.of(
+			13945, 18994, 28994, 13705, 25406, 25407, 25408, 25580,
+			15546, 25546, 17510, 27510, 10112, 20112, 10011, 20011);
+
+		for (int questId : targetQuests) {
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+
+			BitField var0 = layout.field("var0");
+			BitField var1 = layout.field("var1");
+			assertNotNull(var0, () -> "quest " + questId + " must declare var0");
+			assertNotNull(var1, () -> "quest " + questId + " must declare var1");
+			assertEquals(0, var0.offset());
+			assertEquals(6, var1.offset());
+
+			if (List.of(25406, 25407, 25408, 25580, 17510, 27510, 10112, 20112).contains(questId)) {
+				BitField var2 = layout.field("var2");
+				assertNotNull(var2, () -> "quest " + questId + " must declare var2");
+				assertEquals(12, var2.offset());
+			}
+
+			if (List.of(15546, 25546).contains(questId)) {
+				for (int i = 2; i <= 4; i++) {
+					final int fieldIndex = i;
+					BitField varField = layout.field("var" + fieldIndex);
+					assertNotNull(varField, () -> "quest " + questId + " must declare var" + fieldIndex);
+					assertEquals(6 * fieldIndex, varField.offset());
+				}
+			}
+		}
+	}
+
 	@Test
 	void clientMonsterProgressContractsCsvExistsAndHasExpectedShape() throws Exception {
 		assertTrue(Files.exists(CONTRACTS_CSV), "contracts CSV must exist in docs/quest/client-dialog-mapping/");
