@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.IExpirable;
@@ -17,7 +16,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ChargeInfo;
 import com.aionemu.gameserver.model.items.GodStone;
 import com.aionemu.gameserver.model.items.IdianStone;
-import com.aionemu.gameserver.model.items.ItemMask;
 import com.aionemu.gameserver.model.items.ManaStone;
 import com.aionemu.gameserver.model.items.RandomBonusResult;
 import com.aionemu.gameserver.model.items.RandomStats;
@@ -657,11 +655,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	private boolean isSoulBound(Player player) {
-		if (player.havePermission(MembershipConfig.DISABLE_SOULBIND)) {
-			return false;
-		} else {
-			return isSoulBound;
-		}
+		return ItemRestrictions.isSoulBoundFor(this, player);
 	}
 
 	/** 设置灵魂绑定 / Sets the soul bound */
@@ -738,38 +732,14 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * 返回掩码。
-	 * Returns the mask.
+	 * 返回叠加会员权限后的有效掩码。
+	 * Returns the effective mask with membership permissions applied.
 	 *
-	 * @return 掩码 / the mask
+	 * @param player 玩家 / player
+	 * @return 有效掩码 / the mask
 	 */
 	public int getItemMask(Player player) {
-		int finalMask = checkConfig(player, itemTemplate.getMask());
-		return finalMask;
-	}
-
-	/**
-	 * @param player
-	 * @return
-	 */
-	private int checkConfig(Player player, int mask) {
-		int newMask = mask;
-		if (player.havePermission(MembershipConfig.STORE_WH_ALL)) {
-			newMask = newMask | ItemMask.STORABLE_IN_WH;
-		}
-		if (player.havePermission(MembershipConfig.STORE_AWH_ALL)) {
-			newMask = newMask | ItemMask.STORABLE_IN_AWH;
-		}
-		if (player.havePermission(MembershipConfig.STORE_LWH_ALL)) {
-			newMask = newMask | ItemMask.STORABLE_IN_LWH;
-		}
-		if (player.havePermission(MembershipConfig.TRADE_ALL)) {
-			newMask = newMask | ItemMask.TRADEABLE;
-		}
-		if (player.havePermission(MembershipConfig.REMODEL_ALL)) {
-			newMask = newMask | ItemMask.REMODELABLE;
-		}
-		return newMask;
+		return ItemRestrictions.effectiveMask(this, player);
 	}
 
 	/**
@@ -787,7 +757,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可存入 / whether storable
 	 */
 	public boolean isStorableinWarehouse(Player player) {
-		return (getItemMask(player) & ItemMask.STORABLE_IN_WH) == ItemMask.STORABLE_IN_WH && !isSoulBound(player);
+		return ItemRestrictions.isStorableInWarehouse(this, player);
 	}
 
 	/**
@@ -798,7 +768,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可存入 / whether storable
 	 */
 	public boolean isStorableinAccWarehouse(Player player) {
-		return (getItemMask(player) & ItemMask.STORABLE_IN_AWH) == ItemMask.STORABLE_IN_AWH && !isSoulBound(player);
+		return ItemRestrictions.isStorableInAccWarehouse(this, player);
 	}
 
 	/**
@@ -809,7 +779,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可存入 / whether storable
 	 */
 	public boolean isStorableinLegWarehouse(Player player) {
-		return (getItemMask(player) & ItemMask.STORABLE_IN_LWH) == ItemMask.STORABLE_IN_LWH && !isSoulBound(player);
+		return ItemRestrictions.isStorableInLegWarehouse(this, player);
 	}
 
 	/**
@@ -820,7 +790,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可交易 / whether tradeable
 	 */
 	public boolean isTradeable(Player player) {
-		return (getItemMask(player) & ItemMask.TRADEABLE) == ItemMask.TRADEABLE && !isSoulBound(player);
+		return ItemRestrictions.isTradeable(this, player);
 	}
 
 	/**
@@ -831,7 +801,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可改造 / whether remodelable
 	 */
 	public boolean isRemodelable(Player player) {
-		return (getItemMask(player) & ItemMask.REMODELABLE) == ItemMask.REMODELABLE;
+		return ItemRestrictions.isRemodelable(this, player);
 	}
 
 	/**
@@ -841,7 +811,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可出售 / whether sellable
 	 */
 	public boolean isSellable() {
-		return (getItemMask() & ItemMask.SELLABLE) == ItemMask.SELLABLE;
+		return ItemRestrictions.isSellable(this);
 	}
 
 	/**
@@ -851,12 +821,12 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可提取 AP / whether AP extract
 	 */
 	public boolean canApExtract() {
-		return (getItemMask() & ItemMask.CAN_AP_EXTRACT) == ItemMask.CAN_AP_EXTRACT;
+		return ItemRestrictions.canApExtract(this);
 	}
 
 	/** 是否可以伊迪安。 / Whether idian. */
 	public boolean canIdian() {
-		return (getItemMask() & ItemMask.CAN_IDIAN) == ItemMask.CAN_IDIAN;
+		return ItemRestrictions.canIdian(this);
 	}
 
 	/**
@@ -866,7 +836,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否可镶嵌 / whether socket godstone
 	 */
 	public boolean canSocketGodstone() {
-		return (getItemMask() & ItemMask.CAN_PROC_ENCHANT) == ItemMask.CAN_PROC_ENCHANT;
+		return ItemRestrictions.canSocketGodstone(this);
 	}
 
 	/**
@@ -876,12 +846,12 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * @return 是否已注能 / whether amplified
 	 */
 	public boolean canAmplification() {
-		return (getItemMask() & ItemMask.CAN_AMPLIFICATION) == ItemMask.CAN_AMPLIFICATION;
+		return ItemRestrictions.canAmplification(this);
 	}
 
 	/** 是否为高阶守护者物品 / Whether arch daeva item */
 	public boolean isArchDaevaItem() {
-		return (getItemMask() & ItemMask.ITEM_ARCHDAEVA) == ItemMask.ITEM_ARCHDAEVA;
+		return ItemRestrictions.isArchDaevaItem(this);
 	}
 
 	/** 返回剩余过期时间 / Returns the expire time remaining */
