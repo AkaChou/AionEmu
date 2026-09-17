@@ -63,6 +63,8 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <!-- 交付成功即结束 30 分钟打赌倒计时（真端 handler: 成功交付时 questTimerEnd）。
+         Successful hand-in ends the 30-minute wager countdown (retail handler called questTimerEnd). -->
     <transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203621" action="CHECK_USER_HAS_QUEST_ITEM"/>
@@ -74,6 +76,7 @@
         <remove-item item-id="182203223" count="10"/>
       </actions>
       <after-commit>
+        <cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>

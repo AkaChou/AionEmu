@@ -611,3 +611,25 @@ first_check: 检查多档任务是否声明了 <reward-groups>，第 N 档是否
 
 - **判定规则**：多档结算任务必须按档位声明 `<reward-groups>`；第 N 档入口必须下发与该档客户端文案一致的 `SHOW_SELECT_QUEST_REWARD_WINDOWn`；每个声明的档位都必须存在可被发放的完成路径，严禁声明后无人发放的死档。
 - **代表案例**：天族事件兑换任务 `50023`（凭 1 个线索换小盒、凭 3 个线索换大盒）原先两档共用 `SHOW_SELECT_QUEST_REWARD_WINDOW1`，交 3 个线索时显示的是 1 个线索的文案；修复为两组 `<reward-groups>` + 档位 2 下发 `SHOW_SELECT_QUEST_REWARD_WINDOW2`（客户端 `select_quest_reward2` 文案“您有 3 个线索啊”），并由 `multiTierQuestsNeverDeclareDeadRewardGroups` 门禁守护死档。
+
+---
+
+## [QE-027] 二十五、任务计时器生命周期闭环 (QUEST_TIMER_LIFECYCLE_CLOSURE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务计时器 (start-quest-timer / start-invisible-timer / cancel-quest-timer / quest-timer-end / invisible-timer-end)
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家已完成计时任务的交付，客户端却继续跑倒计时并在归零时按“超时”渲染；或计时器到期后事件被静默丢弃，任务的时限语义完全失效
+root_cause: 任务通过 start-quest-timer / start-invisible-timer 启动了计时器，但既没有同 timer-id 的 cancel-quest-timer，也没有对应类型的 quest-timer-end / invisible-timer-end 事件路由，形成无人收尾的孤儿计时器
+fix_or_guardrail: 1. 计时器使命结束（交付成功、进入下一阶段）时必须 cancel-quest-timer；2. 依赖超时推进/失败的任务必须提供 quest-timer-end（可见）或 invisible-timer-end（不可见）路由；3. QuestMovieAndDialogLoopRegressionTest 新增 startedQuestTimersHaveCancelOrExpiryRoute() 全库门禁，按可见/不可见类型分别匹配到期事件，逐个 timer-id 校验闭环
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/2230.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java
+validation: 全库 28 个计时器任务扫描 0 孤儿计时器；QuestMovieAndDialogLoopRegressionTest 15 项用例全绿
+boundaries: 43 秒 invisible “返回”计时器按真端语义只靠 invisible-timer-end 路由闭环，无需 cancel；2230 的 1800 秒赌注倒计时按真端 handler 在交付成功时 questTimerEnd 收尾
+superseded_by: none
+see_also: [QE-024]
+first_check: 检查每个 start-quest-timer / start-invisible-timer 是否有同 timer-id 的 cancel-quest-timer，或有同类型的 timer-end 事件路由
+-->
+
+- **判定规则**：任务启动的每个计时器都必须闭环——要么有同 `timer-id` 的 `cancel-quest-timer`，要么有与计时器类型匹配的到期事件路由（可见 → `quest-timer-end`，不可见 → `invisible-timer-end`）。严禁出现既无取消又无到期处理的孤儿计时器。
+- **代表案例**：魔族任务 `2230`（30 分钟赌注倒计时）迁移后漏掉真端 handler 成功交付时的 `questTimerEnd`，客户端在交完 10 颗棕熊尖牙后仍继续倒计时；补 `cancel-quest-timer timer-id="visible"` 后由 `startedQuestTimersHaveCancelOrExpiryRoute` 门禁守护。

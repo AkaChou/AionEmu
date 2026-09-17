@@ -258,6 +258,67 @@ class QuestMovieAndDialogLoopRegressionTest {
 		assertTrue(violations.isEmpty(), "Dead reward groups found: " + violations);
 	}
 
+	@Test
+	void startedQuestTimersHaveCancelOrExpiryRoute() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		java.util.List<String> violations = new java.util.ArrayList<>();
+
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition def = compiled.definition();
+			java.util.Set<String> cancelled = new java.util.HashSet<>();
+			java.util.List<String> startedVisible = new java.util.ArrayList<>();
+			java.util.List<String> startedInvisible = new java.util.ArrayList<>();
+			boolean endsVisible = false;
+			boolean endsInvisible = false;
+
+			for (QuestTransition t : def.transitions()) {
+				if (t.event() instanceof QuestEvent.QuestTimerEnd) {
+					endsVisible = true;
+				} else if (t.event() instanceof QuestEvent.InvisibleTimerEnd) {
+					endsInvisible = true;
+				}
+				for (AfterCommitAction after : t.afterCommit()) {
+					if (after instanceof AfterCommitAction.CancelQuestTimer cancel) {
+						cancelled.add(cancel.identity().timerId());
+					} else if (after instanceof AfterCommitAction.StartQuestTimer start) {
+						startedVisible.add(start.policy().identity().timerId());
+					} else if (after instanceof AfterCommitAction.StartInvisibleTimer start) {
+						startedInvisible.add(start.policy().identity().timerId());
+					}
+				}
+			}
+
+			for (String timerId : startedVisible) {
+				if (!cancelled.contains(timerId) && !endsVisible) {
+					violations.add("Quest " + compiled.id() + " starts visible timer '" + timerId
+						+ "' without a cancel action or quest-timer-end route");
+				}
+			}
+			for (String timerId : startedInvisible) {
+				if (!cancelled.contains(timerId) && !endsInvisible) {
+					violations.add("Quest " + compiled.id() + " starts invisible timer '" + timerId
+						+ "' without a cancel action or invisible-timer-end route");
+				}
+			}
+		}
+
+		assertTrue(violations.isEmpty(), "Unterminated quest timers found: " + violations);
+	}
+
+	@Test
+	void quest2230StopsWagerCountdownOnHandIn() throws Exception {
+		QuestDefinition def = definition(2230).definition();
+		QuestTransition handIn = def.transitions().stream()
+			.filter(t -> "started".equals(t.sourceNode()) && "reward".equals(t.targetNode())
+				&& t.event() instanceof QuestEvent.TalkToNpc talk
+				&& Integer.valueOf(QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()).equals(talk.dialogId()))
+			.findFirst().orElseThrow();
+		assertTrue(handIn.afterCommit().stream().anyMatch(after ->
+			after instanceof AfterCommitAction.CancelQuestTimer cancel
+				&& QuestTimerPolicy.VISIBLE_TIMER_ID.equals(cancel.identity().timerId())),
+			"Quest 2230 must stop the 1800s visible wager timer once the fangs are handed in");
+	}
+
 	private static List<String> groupSignature(QuestRewardGroup group) {
 		return group.rewards().stream()
 			.map(reward -> reward.kind() + "|" + reward.id() + "|" + reward.amount())
