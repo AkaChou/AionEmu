@@ -67,11 +67,9 @@ public class PingPongThread implements Runnable {
             try {
                 connection.sendPacket(ping);
                 requests++;
-                if (SvStatsConfig.SVSTATS_ENABLE) {
-                    int currentID = this.connection.getGameServerInfo().getId();
-                    int currentPlayer = this.connection.getGameServerInfo().getCurrentPlayers();
-                    int currentMax = this.connection.getGameServerInfo().getMaxPlayers();
-                    DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Online(currentID, 1, currentPlayer, currentMax);
+                GameServerInfo info = this.connection.getGameServerInfo();
+                if (info != null) {
+                    updateSvStatsOnline(info.getId(), info.getCurrentPlayers(), info.getMaxPlayers());
                 }
             } catch (Exception ex) {
                 log.error(I18n.get("log.2d2a3f2b47fe", connection.getGameServerInfo().getId(), ex));
@@ -101,9 +99,9 @@ public class PingPongThread implements Runnable {
             uptime = false;
             log.info(I18n.get("log.3054e06f2cb1", connection.getGameServerInfo().getId(), this.serverPID));
 
-            if (SvStatsConfig.SVSTATS_ENABLE) {
-                int currentID = connection.getGameServerInfo().getId();
-                DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
+            GameServerInfo timedOutInfo = connection.getGameServerInfo();
+            if (timedOutInfo != null) {
+                updateSvStatsOffline(timedOutInfo.getId());
             }
             connection.close(false);
             if (killProcess && serverPID != -1) {
@@ -129,9 +127,45 @@ public class PingPongThread implements Runnable {
         uptime = false;
 
         GameServerInfo gameServerInfo = connection.getGameServerInfo();
-        if (SvStatsConfig.SVSTATS_ENABLE && gameServerInfo != null) {
-            int currentID = gameServerInfo.getId();
-            DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
+        if (gameServerInfo != null) {
+            updateSvStatsOffline(gameServerInfo.getId());
         }
+    }
+
+    /**
+     * 上报游戏服在线人数（在线统计）。
+     * Reports the game server's player counts (online).
+     *
+     * <p>DAO 注册表可能已经不存在：同一进程内 login/game/chat 共用一个 JVM，登录服的关闭流程会
+     * {@code DAOManager.shutdown()} 清空注册表，而 game 服侧的断开清理可能在那之后才跑到这里。
+     * 此时必须跳过（等价于"统计服务已下线"），否则会抛 {@code DAONotFoundException} 并让
+     * {@code GsConnection.onDisconnect()} 的剩余清理中断。
+     * The DAO registry may already be gone: login/game/chat share one JVM, the login shutdown calls
+     * {@code DAOManager.shutdown()}, and the game-side disconnect cleanup can run afterwards. Skipping is
+     * equivalent to "the stats service is down" and used to throw DAONotFoundException, which aborted the
+     * rest of {@code GsConnection.onDisconnect()}.</p>
+     *
+     * @param serverId 游戏服 ID / game server id
+     * @param currentPlayer 当前在线人数 / current players
+     * @param currentMax 人数上限 / max players
+     */
+    static void updateSvStatsOnline(int serverId, int currentPlayer, int currentMax) {
+        if (!SvStatsConfig.SVSTATS_ENABLE || !DAOManager.isInitialized()) {
+            return;
+        }
+        DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Online(serverId, 1, currentPlayer, currentMax);
+    }
+
+    /**
+     * 上报游戏服离线状态（范式同 {@link #updateSvStatsOnline(int, int, int)}：DAO 注册表已清空时跳过）。
+     * Reports the game server as offline, skipping when the DAO registry is gone.
+     *
+     * @param serverId 游戏服 ID / game server id
+     */
+    static void updateSvStatsOffline(int serverId) {
+        if (!SvStatsConfig.SVSTATS_ENABLE || !DAOManager.isInitialized()) {
+            return;
+        }
+        DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(serverId, 0, 0);
     }
 }

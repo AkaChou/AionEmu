@@ -3,6 +3,7 @@ package com.aionemu.loginserver;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
@@ -23,6 +24,25 @@ class PingPongThreadTest {
 
 		assertDoesNotThrow(pingPongThread::closeMe);
 		assertFalse(pingPongThread.uptime);
+	}
+
+	@Test
+	void svStatsUpdatesAreSkippedWhenTheDaoRegistryIsGone() {
+		// 同一进程内 login 服先关闭会清空 DAO 注册表，而 game 服的断开清理可能在其之后执行：
+		// 这里必须跳过而不是抛 DAONotFoundException（旧行为会让 GsConnection.onDisconnect() 的剩余清理中断）。
+		SvStatsConfig.SVSTATS_ENABLE = true;
+		assertFalse(DAOManager.isInitialized(), "测试 JVM 不应注册 DAO，否则本用例失去意义");
+
+		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOffline(1));
+		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOnline(1, 0, 0));
+	}
+
+	@Test
+	void svStatsUpdatesAreSkippedWhenTheFeatureIsDisabled() {
+		SvStatsConfig.SVSTATS_ENABLE = false;
+
+		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOffline(1));
+		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOnline(1, 0, 0));
 	}
 
 	private static final class StubTransport implements ConnectionTransport {

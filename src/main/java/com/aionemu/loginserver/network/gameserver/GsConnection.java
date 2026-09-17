@@ -123,8 +123,13 @@ public class GsConnection extends AConnection {
      */
     @Override
     protected final void onDisconnect() {
-        if (Config.ENABLE_PINGPONG) {
-            this.pingThread.closeMe();
+        // ping 线程只在 initialized() 里创建：连接在初始化前就被关闭（或同一次关闭被两端各清理一遍）时
+        // pingThread 仍为 null，早先这里会抛 NPE 并跳过下面的账号解绑与 gameServerInfo 清理。
+        // The ping thread is only created in initialized(): a connection closed before init (or cleaned up once per
+        // endpoint) still has a null pingThread, and the old code threw an NPE that skipped the unbind/cleanup below.
+        PingPongThread ping = this.pingThread;
+        if (Config.ENABLE_PINGPONG && ping != null) {
+            ping.closeMe();
         }
         log.info(I18n.get("log.e803a1d01bbf", this));
         if (gameServerInfo != null) {
