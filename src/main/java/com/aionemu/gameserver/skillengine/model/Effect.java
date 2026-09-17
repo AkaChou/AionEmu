@@ -2,7 +2,6 @@ package com.aionemu.gameserver.skillengine.model;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -14,10 +13,8 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
-import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
@@ -25,14 +22,12 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STANCE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_ACTIVATION;
-import com.aionemu.gameserver.skillengine.condition.Conditions;
 import com.aionemu.gameserver.skillengine.effect.AuthorizeBoostEffect;
 import com.aionemu.gameserver.skillengine.effect.DamageEffect;
 import com.aionemu.gameserver.skillengine.effect.DelayedSpellAttackInstantEffect;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.Effects;
 import com.aionemu.gameserver.skillengine.effect.EnchantBoostEffect;
-import com.aionemu.gameserver.skillengine.effect.FearEffect;
 import com.aionemu.gameserver.skillengine.effect.HideEffect;
 import com.aionemu.gameserver.skillengine.effect.ParalyzeEffect;
 import com.aionemu.gameserver.skillengine.effect.PetOrderUseUltraSkillEffect;
@@ -43,6 +38,7 @@ import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicAction;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -249,9 +245,8 @@ public class Effect implements StatOwner {
 	private Effect subEffect;
 	private volatile boolean isStopped;
 	private int startedTemplateCount;
-	private ActionObserver equipmentObserver;
-	private ActionObserver attackedObserver;
-	private ActionObserver dotAttackedObserver;
+	@Getter(AccessLevel.NONE)
+	private final EffectTerminationObservers terminationObservers = new EffectTerminationObservers(this);
 	/**
 	 * 是否延迟伤害。
 	 * Whether delayed damage.
@@ -411,7 +406,8 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	private int effectHate;
-	private final List<EffectTemplate> successEffects = new ArrayList<EffectTemplate>();
+	@Getter(AccessLevel.NONE)
+	private final EffectSuccessSet successEffects = new EffectSuccessSet();
 	/**
 	 * 获取刻印数量。
 	 * Gets carved signet count.
@@ -865,12 +861,7 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public boolean containsEffectId(int effectId) {
-		for (EffectTemplate template : successEffects) {
-			if (template.getEffectid() == effectId) {
-				return true;
-			}
-		}
-		return false;
+		return successEffects.containsEffectId(effectId);
 	}
 
 	/**
@@ -1049,8 +1040,7 @@ public class Effect implements StatOwner {
 				startedTemplateCount = i + 1;
 				successEffects.get(i).startEffect(this);
 			}
-			checkUseEquipmentConditions();
-			checkCancelOnDmg();
+			terminationObservers.attach();
 			if (isToggle() && effector instanceof Player) {
 				activateToggleSkill();
 			}
@@ -1152,7 +1142,7 @@ public class Effect implements StatOwner {
 			failure = collectFailure(failure, clearFailure);
 		}
 		addedToController = false;
-		failure = clearLifecycleObservers(failure);
+		failure = terminationObservers.clear(failure);
 		int leftAbnormals = previousAbnormals & ~effected.getEffectController().getAbnormals();
 		if (leftAbnormals != 0 && effected instanceof Npc npc) {
 			try {
@@ -1259,9 +1249,7 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public void addSucessEffect(EffectTemplate effect) {
-		if (!successEffects.contains(effect)) {
-			successEffects.add(effect);
-		}
+		successEffects.add(effect);
 	}
 
 	/**
@@ -1270,12 +1258,7 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public boolean isInSuccessEffects(int position) {
-		for (EffectTemplate effect : successEffects) {
-			if (effect.getPosition() == position) {
-				return true;
-			}
-		}
-		return false;
+		return successEffects.containsPosition(position);
 	}
 	/**
 	 * 获取成功效果集合。
@@ -1283,7 +1266,17 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public Collection<EffectTemplate> getSuccessEffect() {
-		return successEffects;
+		return successEffects.asCollection();
+	}
+
+	/**
+	 * 获取成功效果列表（兼容原字段访问器）。
+	 * Gets the success effect list (compatibility accessor for the former generated getter).
+	 *
+	 * @return 成功效果列表 / success effect list
+	 */
+	public List<EffectTemplate> getSuccessEffects() {
+		return successEffects.asList();
 	}
 
 	/**
@@ -1292,10 +1285,7 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public void addAllEffectToSucess() {
-		successEffects.clear();
-		for (EffectTemplate template : getEffectTemplates()) {
-			successEffects.add(template);
-		}
+		successEffects.replaceWith(getEffectTemplates());
 	}
 
 	/**
@@ -1403,81 +1393,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 检查全部在用装备条件。
-	 * Check all in-use equipment conditions.
-	 *
-	 * @return 全部满足则为 true / true if all conditions satisfied
-	 */
-	private boolean useEquipmentConditionsCheck() {
-		Conditions useEquipConditions = skillTemplate.getUseEquipmentconditions();
-		return useEquipConditions == null || useEquipConditions.validate(this);
-	}
-
-	/**
-	 * 必要时添加卸装观察者以检查装备使用条件。
-	 * Check use-equipment conditions by adding Unequip observer if needed
-	 */
-	private void checkUseEquipmentConditions() {
-		// 若技能有使用装备条件 / If skill has use equipment conditions
-		// 观察卸装事件，发生时移除效果 / Observe for unequip event and remove effect if event occurs
-		if ((getSkillTemplate().getUseEquipmentconditions() != null)
-				&& (getSkillTemplate().getUseEquipmentconditions().getConditions().size() > 0)) {
-			equipmentObserver = new ActionObserver(ObserverType.UNEQUIP) {
-
-				@Override
-				public void unequip(Item item, Player owner) {
-					if (!useEquipmentConditionsCheck()) {
-						endEffect();
-					}
-				}
-			};
-			effected.getObserveController().addObserver(equipmentObserver);
-		}
-	}
-
-	/**
-	 * 添加 Attacked/Dot_Attackedobservers 若此 effectneeds 到为 removed 在 damagereceived 按 effected。 / Add Attacked/Dot_Attacked observers if this effect needs to be removed on damage received by effected
-	 */
-	private void checkCancelOnDmg() {
-		if (isCancelOnDmg()) {
-			attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
-
-				@Override
-				public void attacked(Creature creature) {
-					effected.getEffectController().removeEffect(getSkillId());
-				}
-			};
-			effected.getObserveController().attach(attackedObserver);
-
-			dotAttackedObserver = new ActionObserver(ObserverType.DOT_ATTACKED) {
-
-				@Override
-				public void dotattacked(Creature creature, Effect dotEffect) {
-					effected.getEffectController().removeEffect(getSkillId());
-				}
-			};
-			effected.getObserveController().attach(dotAttackedObserver);
-		}
-	}
-
-	private Throwable clearLifecycleObservers(Throwable failure) {
-		ActionObserver equipment = equipmentObserver;
-		ActionObserver attacked = attackedObserver;
-		ActionObserver dotAttacked = dotAttackedObserver;
-		equipmentObserver = null;
-		attackedObserver = null;
-		dotAttackedObserver = null;
-		for (ActionObserver observer : new ActionObserver[] { equipment, attacked, dotAttacked }) {
-			try {
-				effected.getObserveController().removeObserver(observer);
-			} catch (RuntimeException | Error observerFailure) {
-				failure = collectFailure(failure, observerFailure);
-			}
-		}
-		return failure;
-	}
-
-	/**
 	 * 结束全部效果模板。
 	 * Ends all effect templates.
 	 *
@@ -1494,12 +1409,7 @@ public class Effect implements StatOwner {
 	 *
 	 */
 	public boolean isFearEffect() {
-		for (EffectTemplate template : successEffects) {
-			if (template instanceof FearEffect) {
-				return true;
-			}
-		}
-		return false;
+		return successEffects.containsFearEffect();
 	}
 
 	/**

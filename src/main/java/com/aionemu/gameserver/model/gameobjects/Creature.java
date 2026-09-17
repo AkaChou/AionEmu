@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AI2Engine;
-import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.ObserveController;
 import com.aionemu.gameserver.controllers.attack.AggroList;
@@ -35,8 +34,8 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -104,13 +103,13 @@ public abstract class Creature extends VisibleObject {
 	 */
 	private volatile Skill castingSkill;
 	/**
-	 * 返回技能冷却表。
-	 * Returns the skill cooldowns.
+	 * 返回技能冷却注册表。
+	 * Returns the skill-cooldown registry.
 	 *
-	 * @return 技能冷却表 / the skillCoolDowns
+	 * @return 冷却注册表 / cooldown registry
 	 */
-	private Map<Integer, Long> skillCoolDowns;
-	private Map<Integer, Long> skillCoolDownsBase;
+	@Getter(AccessLevel.NONE)
+	private final CreatureCooldowns cooldowns = new CreatureCooldowns(this);
 	/**
 	 * 返回观察控制器。
 	 * Returns the observe controller.
@@ -629,31 +628,7 @@ private volatile byte packetBroadcastMask;
 	 * @return 是否可施放 / whether usable
 	 */
 	public boolean isSkillDisabled(SkillTemplate template) {
-
-		if (skillCoolDowns == null) {
-			return false;
-		}
-		int delayId = template.getDelayId();
-		Long coolDown = skillCoolDowns.get(delayId);
-		if (coolDown == null) {
-			return false;
-		}
-
-		if (coolDown < System.currentTimeMillis()) {
-			removeSkillCoolDown(delayId);
-			return false;
-		}
-
-		/*
-		 * Some shared cooldown skills have indipendent and different cooldown they must
-		 * not be blocked
-		 */
-		if (skillCoolDownsBase != null && skillCoolDownsBase.get(delayId) != null) {
-			int cooldown = template.scaleCooldownByAttackDelay(template.getCooldown(), getGameStats().getAttackSpeed().getCurrent());
-			return (template.getDuration() + SkillConfig.scaleCooldown(cooldown) * 100L + skillCoolDownsBase.get(delayId)) >= System
-				.currentTimeMillis();
-		}
-		return true;
+		return cooldowns.isSkillDisabled(template);
 	}
 
 	/**
@@ -664,14 +639,11 @@ private volatile byte packetBroadcastMask;
 	 * @return 是否在冷却中 / whether on cooldown
 	 */
 	public long getSkillCoolDown(int delayId) {
-		if (skillCoolDowns == null || !skillCoolDowns.containsKey(delayId)) {
-			return 0;
-		}
-		return skillCoolDowns.get(delayId);
+		return cooldowns.getSkillCoolDown(delayId);
 	}
 
 	public long getSkillCoolDownBase(int delayId) {
-		return skillCoolDownsBase == null ? 0 : skillCoolDownsBase.getOrDefault(delayId, 0L);
+		return cooldowns.getSkillCoolDownBase(delayId);
 	}
 
 	/**
@@ -682,15 +654,7 @@ private volatile byte packetBroadcastMask;
 	 * @param time 冷却时间 / cooldown time
 	 */
 	public void setSkillCoolDown(int delayId, long time) {
-
-		if (delayId == 0) {
-			return;
-		}
-
-		if (skillCoolDowns == null) {
-			skillCoolDowns = new LinkedHashMap<Integer, Long>();
-		}
-		skillCoolDowns.put(delayId, time);
+		cooldowns.setSkillCoolDown(delayId, time);
 	}
 
 	/**
@@ -700,28 +664,34 @@ private volatile byte packetBroadcastMask;
 	 * @param delayId 冷却 ID / cooldown id
 	 */
 	public void removeSkillCoolDown(int delayId) {
-		if (skillCoolDowns == null) {
-			return;
-		}
-		skillCoolDowns.remove(delayId);
-		if (skillCoolDownsBase != null) {
-			skillCoolDownsBase.remove(delayId);
-		}
+		cooldowns.removeSkillCoolDown(delayId);
 	}
 
 	/**
 	 * 保存产生整组冷却的技能的当前毫秒时间。 / This function saves the currentMillis of skill that generated the cooldown of an entire cooldownGroup.
 	 */
 	public void setSkillCoolDownBase(int delayId, long baseTime) {
+		cooldowns.setSkillCoolDownBase(delayId, baseTime);
+	}
 
-		if (delayId == 0) {
-			return;
-		}
+	/** 返回原始技能冷却表，未创建时为 null。/ Backing skill-cooldown map, or null when not created. */
+	public Map<Integer, Long> getSkillCoolDowns() {
+		return cooldowns.getSkillCoolDowns();
+	}
 
-		if (skillCoolDownsBase == null) {
-			skillCoolDownsBase = new LinkedHashMap<Integer, Long>();
-		}
-		skillCoolDownsBase.put(delayId, baseTime);
+	/** 替换原始技能冷却表。/ Replaces the backing skill-cooldown map. */
+	public void setSkillCoolDowns(Map<Integer, Long> skillCoolDowns) {
+		cooldowns.setSkillCoolDowns(skillCoolDowns);
+	}
+
+	/** 返回原始整组冷却基准表，未创建时为 null。/ Backing base-time map, or null when not created. */
+	public Map<Integer, Long> getSkillCoolDownsBase() {
+		return cooldowns.getSkillCoolDownsBase();
+	}
+
+	/** 替换原始整组冷却基准表。/ Replaces the backing base-time map. */
+	public void setSkillCoolDownsBase(Map<Integer, Long> skillCoolDownsBase) {
+		cooldowns.setSkillCoolDownsBase(skillCoolDownsBase);
 	}
 
 	/**
