@@ -231,6 +231,16 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "temp_exchange_time")
 	protected int temExchangeTime;
 
+	/**
+	 * 返回临时交易时长（历史访问器名，保留以兼容既有调用）。
+	 * Returns the temporary-exchange duration (legacy accessor name kept for existing callers).
+	 *
+	 * @return 临时交易时长 / temporary exchange time
+	 */
+	public int getTempExchangeTime() {
+		return temExchangeTime;
+	}
+
 	/** 获取过期时间。 / Returns the expire time. */
 	@Getter
 	@XmlAttribute(name = "expire_time")
@@ -245,6 +255,7 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	private int activationCount;
 
 	@XmlAttribute(name = "func_pet_id")
+	@Getter
 	private int funcPetId;
 
 	/** 返回 tradein list / Returns the tradein list */
@@ -616,19 +627,9 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return weaponType.getRequiredSlots() == 2;
 	}
 
-	/** 返回 temp exchange time / Returns the temp exchange time */
-	public int getTempExchangeTime() {
-		return temExchangeTime;
-	}
-
 	/** 返回 weapon stats / Returns the weapon stats */
 	public final WeaponStats getWeaponStats() {
 		return weaponStats;
-	}
-
-	/** 返回 func pet id / Returns the func pet id */
-	public final int getFuncPetId() {
-		return funcPetId;
 	}
 
 	/** Modify Mask / Modify Mask */

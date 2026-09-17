@@ -52,6 +52,8 @@ import lombok.Setter;
  *
  * @author ATracer
  */
+@Getter
+@Setter
 public class Effect implements StatOwner {
 
 	private Skill skill;
@@ -563,15 +565,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取关联技能实例。
-	 * Gets related skill instance.
-	 *
-	 */
-	public final Skill getSkill() {
-		return skill;
-	}
-
-	/**
 	 * 设置异常状态掩码。
 	 * Sets abnormal state mask.
 	 *
@@ -660,15 +653,6 @@ public class Effect implements StatOwner {
 	 */
 	public String getSkillName() {
 		return skillTemplate.getName();
-	}
-
-	/**
-	 * 获取技能模板。
-	 * Gets skill template.
-	 *
-	 */
-	public final SkillTemplate getSkillTemplate() {
-		return skillTemplate;
 	}
 
 	public boolean isDamageProtectorEnabled() {
@@ -1501,52 +1485,6 @@ public class Effect implements StatOwner {
 		return skillTemplate.isDeityAvatar();
 	}
 	/**
-	 * 获取 X 坐标。
-	 * Gets X coordinate.
-	 *
-	 * @return X
-	 */
-	public float getX() {
-		return x;
-	}
-	/**
-	 * 获取 Y 坐标。
-	 * Gets Y coordinate.
-	 *
-	 * @return Y
-	 */
-	public float getY() {
-		return y;
-	}
-	/**
-	 * 获取 Z 坐标。
-	 * Gets Z coordinate.
-	 *
-	 * @return Z
-	 */
-	public float getZ() {
-		return z;
-	}
-
-	/**
-	 * 获取地图 ID。
-	 * Gets world id.
-	 *
-	 * 世界 ID / world id
-	 */
-	public int getWorldId() {
-		return worldId;
-	}
-
-	/**
-	 * 获取实例 ID。
-	 * Gets instance id.
-	 *
-	 */
-	public int getInstanceId() {
-		return instanceId;
-	}
-	/**
 	 * 设置目标位置（历史拼写）。
 	 * Sets target location (legacy spelling).
 	 *
@@ -1689,15 +1627,6 @@ public class Effect implements StatOwner {
 	public int removePower(int power) {
 		this.power -= power;
 		return this.power;
-	}
-
-	/**
-	 * 获取效果结算结果。
-	 * Gets effect result.
-	 *
-	 */
-	public final EffectResult getEffectResult() {
-		return effectResult;
 	}
 
 	/**

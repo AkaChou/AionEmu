@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
@@ -46,6 +45,36 @@ import lombok.Setter;
  */
 @Slf4j
 public class Item extends AionObject implements IExpirable, StatOwner {
+
+	/**
+	 * 返回随机数量（历史访问器名，保留以兼容既有调用）。
+	 * Returns the random-roll count (legacy accessor name kept for existing callers).
+	 *
+	 * @return 随机数量 / random count
+	 */
+	public int getRandomCount() {
+		return rndCount;
+	}
+
+	/**
+	 * 是否强化增幅（历史访问器名，保留以兼容既有调用）。
+	 * Whether the item is amplified (legacy accessor name kept for existing callers).
+	 *
+	 * @return 增幅时为 true / true when amplified
+	 */
+	public boolean isAmplified() {
+		return amplification;
+	}
+
+	/**
+	 * 是否可强化（历史访问器名，保留以兼容既有调用）。
+	 * Whether the item can be enhanced (legacy accessor name kept for existing callers).
+	 *
+	 * @return 可强化时为 true / true when enhanceable
+	 */
+	public boolean isEnhance() {
+		return canEnhance;
+	}
 
 	/**
 	 * 返回堆叠中的物品数量（不应超过模板最大堆叠数）。
@@ -145,6 +174,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	private int enchantLevel;
 	/** 设置过期时间。 / Sets the expire time. */
 	@Setter
+	@Getter
 	private int expireTime = 0;
 	/**
 	 * 返回临时交换时间。
@@ -897,17 +927,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return (getItemMask() & ItemMask.ITEM_ARCHDAEVA) == ItemMask.ITEM_ARCHDAEVA;
 	}
 
-	/**
-	 * 返回过期时间。
-	 * Returns the expire time.
-	 *
-	 * @return 过期时间 / the expire time
-	 */
-	@Override
-	public int getExpireTime() {
-		return expireTime;
-	}
-
 	/** 返回剩余过期时间 / Returns the expire time remaining */
 	public int getExpireTimeRemaining() {
 		if (expireTime == 0) {
@@ -1039,11 +1058,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		this.rndCount = rndCount;
 	}
 
-	/** 返回随机数量 / Returns the random count */
-	public int getRandomCount() {
-		return rndCount;
-	}
-
 	/** 设置授权等级 / Sets the authorize */
 	public void setAuthorize(int paramInt) {
 		authorize = paramInt;
@@ -1059,16 +1073,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	public void setPacked(boolean isPacked) {
 		this.isPacked = isPacked;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/**
-	 * 是否已注能。
-	 * Whether the item is amplified.
-	 *
-	 * @return 是否已注能 / whether amplified
-	 */
-	public boolean isAmplified() {
-		return amplification;
 	}
 
 	/** 设置物品外观技能。 / Sets the item skin skill. */
@@ -1116,16 +1120,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	public void setUnSeal(int unSeal) {
 		this.unSeal = unSeal;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/**
-	 * 是否已强化。
-	 * Whether the item is enhanced.
-	 *
-	 * @return 是否已强化 / whether enhanced
-	 */
-	public boolean isEnhance() {
-		return canEnhance;
 	}
 
 	/** 设置是否强化 / Sets whether enhanced */

@@ -45,7 +45,6 @@ import lombok.Setter;
  * Creature game object.
  */
 @Slf4j
-
 public abstract class Creature extends VisibleObject {
 	/** 设置 AI 2 / Sets the ai 2 */
 	@Setter
@@ -140,7 +139,8 @@ public abstract class Creature extends VisibleObject {
 	 */
 	@Getter
 	private TransformModel transformModel;
-	private final AggroList aggroList;
+		@Getter
+private final AggroList aggroList;
 	private byte adminFlags = 0;
 	/**
 	 * 设置正在使用的物品。
@@ -448,19 +448,10 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * 返回仇恨列表。
-	 * Returns the aggro list.
-	 *
-	 * @return 仇恨列表 / the aggroList
-	 */
-	public final AggroList getAggroList() {
-		return aggroList;
-	}
-
-	/**
 	 * 数据包广播掩码。 / PacketBroadcasterMask
 	 */
-	private volatile byte packetBroadcastMask;
+		@Getter
+private volatile byte packetBroadcastMask;
 
 	/**
 	 * 为玩家添加广播。
@@ -488,14 +479,6 @@ public abstract class Creature extends VisibleObject {
 		if (log.isDebugEnabled()) {
 			log.debug("PacketBroadcaster: Packet " + mode.name() + " removed from player " + this.getName()); // fix
 		}
-	}
-
-	/**
-	 * 广播获取器。
-	 * Broadcast getter.
-	 */
-	public final byte getPacketBroadcastMask() {
-		return packetBroadcastMask;
 	}
 
 	/**

@@ -250,3 +250,24 @@
   `GameLegacyServiceBridgeConfigurationTest`(57) + `ShutdownHookTest`(5) + `ServiceInternalCollectionImplementationTest`(6)
   + `ServiceMapImplementationTest`(6) + `SkillEngineTest`(1) + `BattlegroundCollectionsTest`(1) + `LegionServiceTest`(3)
   + `ModelCollectionImplementationTest`(18) = **106 例全绿**。
+
+## 十三、大类 Lombok 批处理（第二批：Effect / Creature / Item / ItemTemplate）
+
+这一批先做了逐字段可行性分析，结论与第一批差异很大：**这四个大类里能机械替换的访问器比例很低**。
+
+| 类 | 原行数 | 现行数 | 处理 |
+|---|---|---|---|
+| `Effect` | 1777 | 1705 | 类级 `@Getter @Setter`，删 9 个平凡 getter（其余 54 个访问器带逻辑或 `@Override` 语义，保留） |
+| `Creature` | 953 | 936 | 16 个"平凡体"里 14 个是 `return false` / `return this` / `return 0` 的多态桩或覆盖点，**不能删**；只为 `aggroList`、`packetBroadcastMask` 两个真字段加字段级 `@Getter` |
+| `Item` | 1136 | 1129 | 该文件本就有 28 个字段级 `@Getter`；4 个候选里只有 `expireTime` 可换，`getRandomCount`/`isAmplified`/`isEnhance` 是历史别名（字段 `rndCount`/`amplification`/`canEnhance` 与 Lombok 生成名不匹配），保留 |
+| `ItemTemplate` | 775 | 775 | 本就有 41 个字段级 `@Getter`；`getFuncPetId` 换为字段级注解，`getTempExchangeTime` 因字段拼写为 `temExchangeTime` 而保留原名 |
+
+- 过程中被编译期拦下的历史别名（均已加注释保留）：`Effect#getIsForcedEffect()`（字段 `isForcedEffect`，Lombok 会生成 `isIsForcedEffect`）、
+  `Item#getRandomCount/isAmplified/isEnhance`、`ItemTemplate#getTempExchangeTime`（字段 `temExchangeTime`，少一个 p）。
+- 结论：**大类的行数主要来自业务逻辑而不是访问器样板**——`Effect` 63 个访问器里 54 个带逻辑，`Creature` 61 个里 45 个带逻辑，
+  `Item` 68 个里 61 个带逻辑，`ItemTemplate` 60 个里 43 个带逻辑。继续做 Lombok 批处理的边际收益已经很低；
+  这些类的进一步瘦身应该走"按能力抽取实现类"（如 `Effect` 的效果结算、`Creature` 的仇恨/广播）而不是删除访问器。
+- 验证：`mvn test-compile` 通过；`EffectTest`(6) + `BuffStunEffectTest`(1) + `SkillEngineTest`(1) + `ItemTest`(1) +
+  `CreatureTest`(1) + `LadderServiceTest`(3) + `BattlegroundCollectionsTest`(1) + `GameLegacyServiceBridgeConfigurationTest`(57)
+  + `ModelCollectionImplementationTest`(18) + `ServiceInternalCollectionImplementationTest`(6) + `ServiceMapImplementationTest`(6)
+  = **101 例全绿**。
