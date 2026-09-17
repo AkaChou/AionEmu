@@ -1510,8 +1510,6 @@ public final class PathData {
 			private int gridY;
 			private int complexOffset;
 			private long key;
-			private float x;
-			private float y;
 			private float z;
 
 			private Node reset(Sector sector, int gridX, int gridY, int complexOffset, long key,

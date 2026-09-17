@@ -817,6 +817,9 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
   `min(budget, 8192)` 条目，原先 `512→…→16384` 的多次 `resize` 只剩一次分配。`clear()` 仍保留容量。
 - **A3（`Node` 去派生字段，≈4 MB 分配 + 4.2 MB 常驻）**：`Node.x/y` 存的是 `gridX * 0.5f + 0.25f` 的推导结果（两处调用点公式完全相同），
   现在由 `x()`/`y()` 按需推导，字段删除；`reset(...)`/`workspace().node(...)` 签名相应收窄。
+  - **勘误（2026-09-17，play-15 实测）**：该提交只删掉了 `x/y` 的**写入与传参**，`private float x; private float y;` 两个声明被漏删，
+    所以对象布局没变，8 字节/节点的常驻与分配收益**当时并未兑现**（play-14 / play-15 两次 class histogram 都实测 48 B/实例）。
+    字段已在后续提交删除，证据与量化见 12.13.3。
 - **A1（节点数组扩容）未做**：`Arrays.copyOf` 实测仅 3.4 MB/300 s，且属工作区首次长到峰值的一次性搬移；唯一"低风险替代"
   是按 50k 预算提前预分配，等于把内存提前吃满、把分配挪到启动期，不符合"不干扰功能、不涨常驻内存"的原则。
 - **未做（C 类）**：`reconstruct`/`waypoints`/`point`（≈18.5 MB/300 s）是交给 `NpcMoveController` 跨 tick 消费、
@@ -859,3 +862,131 @@ visualPlayers.values())` 这种就地迭代，只允许先 `new ArrayList<>(...)
 **测试**：`mvn -Dtest=PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest test`
 → **BUILD SUCCESS，7 个测试类 126 例全绿**；其中 `PathGoldenDiffTest` 仍与 **23:47 录制（A/C 改动之前）** 的基线逐字一致
 （`path-golden.txt` 未被重写，时间戳不变）→ 13,081 节点绕墙路径的 256 个坐标点没有变化。
+
+### 12.13 第十七轮复测（`play-15`）：目标站点全部归零，但总量不可比
+
+- 采样：PID 1745（2026-09-17 11:13:45 启动，含 12.11 / 12.12 全部改动），`jcmd 1745 JFR.start name=play-15
+  settings=/tmp/alloc-detail.jfc filename=/tmp/play-15.jfr duration=300s`，窗口 **11:15:30.144 → 11:20:30.148**（恰好 300 s）；
+  结束后抓 `GC.class_histogram`。原始件：`/tmp/play-15.jfr`、`/tmp/play-15-{alloc,tlab,cpu,threads,histogram}.txt`。
+- 对照：`play-14`（2026-09-16 22:54:25 → 22:59:25，改动前）。
+
+#### 12.13.1 口径校验（先证明两轮可比）
+
+1. `jfr print --events jdk.ThreadAllocationStatistics /tmp/play-14.jfr` 重算，**逐字复现** 12.10 记录的 185.4 MB / pathfinder 67.5 MB /
+   FJP 14.5 MB → 本轮与 12.10 用的是同一套聚合管线。
+2. `ThreadAllocationStatistics.allocated` 是**线程启动以来的累计值**：267 个双采样线程中 **0 个第二采样变小**、94 个完全不变
+   （空转线程），因此 `max − min` 就是 300 s 内的精确增量。
+3. 用未采样的 `ObjectAllocationInNewTLAB.tlabSize` 求和做第三方校验：`222.9 / 185.4 = 1.20`（play-14）、`281.8 / 240.1 = 1.17`（play-15），
+   两轮比例一致 → **TLS 增量是权威总量**。
+4. ⚠️ `ObjectAllocationSample` 的权重总量本轮**严重低估**：play-14 = 399 事件 / 182.6 MB，play-15 = **仅 148 事件 / 133.4 MB**
+   （实际 240.1 MB）。因此**采样权重的绝对值不能跨轮比较**，只能做"存在/消失"与占比判断；本轮所有站点级结论都按此口径给出。
+
+#### 12.13.2 线程聚合与站点验证
+
+| 线程组 | play-14 | play-15 | Δ |
+|---|---|---|---|
+| 合计 | 185.4 | **240.1** | +54.7 |
+| `pathfinder` | 67.5 | 83.7 | +16.2 |
+| `pool-4-thread-*` | 75.0 | 77.3 | +2.3 |
+| `ForkJoinPool-1-worker-*` | 14.5 | **57.7** | +43.2 |
+| `multiThreadIoEventLoopGroup-*` | 9.8 | 9.9 | +0.1 |
+| `RMI TCP Connection*` | 7.0 | 7.2 | +0.2 |
+| `PacketProcessor:*` | 9.8 | 2.4 | −7.4 |
+
+**目标站点全部归零**（`ObjectAllocationSample`，首次 `com.aionemu` 帧归因，MB / 样本数）：
+
+| 站点 | play-14 | play-15 |
+|---|---|---|
+| `NpcShoutData.getNpcShouts` | 12.74 / 10 | **0 / 0** |
+| `PathData$MapData.reconstruct` | 9.39 / 13 | **0 / 0** |
+| `MoveTaskManager$1.apply` | 6.09 / 4 | **0 / 0** |
+| `WaterVolumeStore.find` | 5.39 / 8 | **0 / 0** |
+| `PathData.getMap` | 2.95 / 4 | **0 / 0** |
+| 合计 | 36.56 / 39（占 9.8%） | **0 / 148** |
+
+若速率不变，148 个样本里应出现约 14.5 个目标站点样本，实测 0 个 → `p ≈ e⁻¹⁴·⁵ ≈ 5×10⁻⁷`。**五处改动确实生效**（另有
+`LongObjectHashMap.init` 的样本占比 2.47% → 1.75%、`Arrays.copyOf` 权重占比 6.14% → 3.94%）。play-15 的 class histogram 里也能看到
+A 阶段新增的冻结结构（`PathData$MapLookup` ×2、`WaterVolumeStore$WorldVolumes` ×2、`NpcShoutData$WorldShouts` ×1）。
+
+#### 12.13.3 常驻侧：A3 的 8 字节/节点**当时并未兑现**（本轮已补）
+
+| 类 | play-14 | play-15 | 每实例 |
+|---|---|---|---|
+| `PathData$MapData$Node` | 523,557 / 25.13 MB | 649,182 / 31.16 MB | **48 B**（两轮都是 48 B） |
+| `…$OpenNode` | 139,205 / 5.57 MB | 171,549 / 6.86 MB | 40 B |
+| `…$SearchNode` | 138,340 / 4.43 MB | 170,899 / 5.47 MB | 32 B |
+| `…$Sector` | 52,879 / 2.96 MB | 48,944 / 2.74 MB | 56 B |
+| `[L…$Node;` | 9 / 2.82 MB | 9 / 3.31 MB | — |
+| 堆总量 | 45,885,803 / 2.96 GB | 45,730,484 / 2.96 GB | — |
+
+`31,160,736 / 649,182 = 48.00 B`、`25,130,736 / 523,557 = 48.00 B`：**两轮完全一致**，说明 12.11.2 里"字段删除"的描述与
+`javap -p target/classes` 的实测不符——该提交只删掉了 `x/y` 的写入与传参，`private float x; private float y;` 两个声明被漏删
+（源码行 `PathData.java:1513-1514`），所以对象布局没变：`12 头 + sector/gridX/gridY/complexOffset 4×4 + key 8 + x,y,z 4×3 = 48 B`。
+删掉两个死字段后应为 40 B（−8 B/节点，−16.7%），对应 play-15 规模下 **−5.19 MB 常驻**，以及每次搜索下发的节点字节 −16.7%
+（按 play-14 采样归因的 `Node` 26.06 MB × 16.7% ≈ −4.4 MB/300 s）。**本轮已删除这两个声明**，`reset(...)`/`x()`/`y()` 等派生入口不受影响（`Node` 内已无裸
+`x`/`y` 读写）。
+
+⇒ 结论：这不是新引入的回归，而是**已提交改动里的一条"声称但未兑现"的收益**，现已补齐。
+
+#### 12.13.4 CPU 侧：A2 预分配的代价显形，另有两个新热点需观察
+
+| 采样帧（含任意帧匹配） | play-14 (n=343) | play-15 (n=333) |
+|---|---|---|
+| `PathData$MapData.searchLowLevel` | 35.3% | 41.1% |
+| `Node.collideWith`（geo 射线） | 16.0% | 16.2% |
+| `PriorityQueue.siftUp` / `offer` | 3.2% | 7.8% |
+| `PriorityQueue.siftDown` / `poll` | 7.3% | 6.3% |
+| `LongObjectHashMap.clear` + `Arrays.fill` | 2.0% | **4.5%** |
+| `Sector.heightAt` | 5.2% | 7.5% |
+| `Buffer.checkIndex` | 5.5% | 7.5% |
+| 线程占比 | pool-4 38% / pathfinder 34% / FJP 22% | pathfinder 47% / pool-4 28% / FJP 19% |
+
+- **`clear()` 的占比翻倍，是 A2 预分配的直接代价**：`LongObjectHashMap.clear()` 会 `Arrays.fill(used)` + `Arrays.fill(values)`
+  ——**填满整个底层数组**（不是填 size）；`ensureCapacity(min(budget, 8192))` 在 `LOAD_FACTOR = 0.75` 下把每个工作区的表直接抬到
+  **16384 槽（128 KB `long[]` + 64 KB `Object[]` + 16 KB `byte[]`）**，而此前容量是各工作区按自己实际搜到的深度长出来的，浅搜工作区
+  的表远小于 16384。按搜索量归一（`searchLowLevel` 41.1/35.3 ≈ 1.16）后 `clear` 的每次搜索成本仍约 **×1.7–2.0**。
+  这是"用 CPU 换分配"（`LongObjectHashMap.init` 4.51→2.33 MB）的已知交换，**本轮不动**；若后续要调，唯一安全的旋钮是把
+  `VISITED_PREALLOC_ENTRIES` 从 8192 降到 1024/2048（纯参数、无语义），但必须再跑一轮对照才能判定净收益。
+- **`Collections$ReverseComparator2.compare`（4.8%，play-14 为 0）不是回归**：它就是 A\* 开放集比较器
+  `comparingDouble(score).thenComparing(comparingLong(sequence).reversed())` 的**平局分支**（该 `.reversed()` 来自 2026-07-17 的
+  `41eccbeeb`，两轮二进制一致）；play-14 没采到只说明该窗口里"分数相等"的比较占比低。合计 `thenComparing` 帧 7.9% → 13.8% 属搜索
+  规模差异，不是代码变化。
+- play-15 新出现 `MaxCountProperty.lambda$set$0` 3.9%、`ImmutableCollections$MapN.probe` 3.0%、`RetailPatternAI2.supports`
+  的分配样本 4 → 13（1.07 → 6.80 MB）、NPC 生成链（`Npc.<init>`/`KnownList.<init>`/`CreatureController.<init>`/`DropGroup.dropCalculator`）、
+  `ItemInfoBlob.addBlobEntry` 4.10 MB —— 同属"持续战斗 + 大量 NPC 移动"场面，但由**玩家具体操作**（技能/掉落/背包/刷怪）决定，
+  与本轮寻路改动无因果关系。
+
+#### 12.13.4b FJP worker 的 +43.2 MB：三个口径互相矛盾，**不可归因**
+
+确认 play-15 与 play-14 是同一类场面（持续战斗 + 大量 NPC 移动）后，这 +43.2 MB 必须解释，但三个独立口径给出互相冲突的结果：
+
+| 口径（`ForkJoinPool-1-worker-*` 合计） | play-14 | play-15 | 变化 |
+|---|---|---|---|
+| `ObjectAllocationInNewTLAB.tlabSize`（每次 TLAB 预留，未采样） | 49.04 MB | 51.63 MB | **+5%** |
+| `ThreadAllocationStatistics`（实际分配字节） | 14.5 MB | 57.7 MB | **+298%** |
+| `ExecutionSample`（CPU 样本） | 75 个（22%） | 62 个（19%） | **−17%** |
+| `ObjectAllocationSample` 对该组的覆盖率 | 96–97%（worker-13 7.23→6.92） | **0–43%**（worker-10 8.10→0.00，worker-1/-6 0 样本） | — |
+
+每线程的 TLAB 预留量两轮几乎相同（play-14 `9.5/7.3/7.2/6.4/5.8/4.7/4.3/3.9`，play-15 `7.2/7.1/6.9/6.9/6.5/6.4/5.5/5.1`），
+**两组都是 8 个 worker、每线程 ≈4–9 MB**；变的不是量级而是采样可见性。同时 FJP 的 CPU 样本反而减少。
+
+⇒ 结论：**本轮无法把这 43 MB 归因到任何代码站点**。它只出现在"实际分配字节"这一个口径上，既不对应 TLAB 预留的增加，
+也不对应 CPU 增加，且采样器在该组上整体失明（很可能是 TLAB 自适应尺寸 / retire 时机带来的口径差，而非应用对象回归）。
+**不要在拿到更细的时间序列前把它当成回归**；反之也不能用本轮数字声称 FJP 变好了。
+
+下一轮若要一个**可信的总量**，只需改采样配置、不改代码：把 `jdk.ThreadAllocationStatistics` 的 `period` 从 `everyChunk`
+（300 s 只有 2 次 flush，端点效应不可控）改成 **10 s**（300 s 得 30 次 flush），即可去掉端点效应并得到逐 10 s 的时间序列，
+直接看出增量发生在哪一段、哪个线程组。
+
+#### 12.13.5 结论与下一步
+
+1. **12.11 / 12.12 的五处目标全部验证归零**（p ≈ 5×10⁻⁷），golden 路径指纹未变 → 修复有效且未改动寻路结果。
+2. **总量 185.4 → 240.1 MB 不能当作"变差"**：其中 +43.2 MB 落在 FJP，而该组三个口径互相矛盾（12.13.4b）、不可归因；
+   其余增量主要来自**寻路量**——`pathfinder` 三个口径同向上升（TLS 67.5→83.7、TLAB 59.3→77.8、CPU 占比 34%→47%），
+   而按搜索归一后的单元成本没有变差（golden 指纹逐字一致、节点字节/搜索不变）。
+3. 本轮唯一的实质遗留是 12.13.3 的"声称未兑现"，**已补齐并验证**：删掉两个死字段后 `javap` 里 `Node` 已无 `x/y`，
+   对象 48 B → 40 B；`mvn -Dtest=PathGoldenDiffTest,PathDataTest,PathServiceConcurrencyTest,PathServiceCompressionTest,NpcMoveControllerPathTest,GeoServiceGroundSearchTest,GeoServiceSkillObstacleTest test`
+   → **BUILD SUCCESS，7 个测试类 126 例全绿**，`PathGoldenDiffTest` 仍与 23:47（A/C 之前）基线逐字一致，
+   `src/test/resources/aion/geo/path-golden.txt` 时间戳未变（2026-09-16 23:47）。
+4. **收口建议**：性能线到此为止。再往后只有两件事值得做，且都不是"修 bug"：①下一轮把 TLS 采样周期改成 10 s 以得到可信总量
+   （见 12.13.4b 结尾）；②若确认 A2 的 `clear()` CPU 代价不划算，把 `VISITED_PREALLOC_ENTRIES` 8192 → 1024/2048 再对照一轮。
