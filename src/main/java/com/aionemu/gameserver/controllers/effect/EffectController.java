@@ -50,12 +50,23 @@ public class EffectController {
 	@Getter
 	private final Creature owner;
 
-	/** 被动效果映射。 / Passive effect map. */
-	protected Map<String, Effect> passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
-	/** 不显示图标的效果映射。 / No-show effect map. */
-	protected Map<String, Effect> noshowEffects = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
-	/** 异常效果映射。 / Abnormal effect map. */
-	protected Map<String, Effect> abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+	/**
+	 * 空映射占位符：绝大多数的生物从不携带效果，但每个实例原本都为三张表各持有一个
+	 * {@link LinkedHashMap} 与一个 {@code synchronizedMap} 包装（play-15 实测 382,161 个包装 / 12.2 MB，
+	 * 以及同量级的空表）。真实映射改为首次写入时才分配，读路径直接读字段，读到占位符即表示空。
+	 * Shared empty placeholder: most creatures never carry an effect, yet every instance used to hold a
+	 * {@link LinkedHashMap} plus a {@code synchronizedMap} wrapper for each of the three maps (382,161
+	 * wrappers / 12.2 MB in play-15, plus as many empty tables). The real maps are allocated on the first
+	 * write; readers read the field and treat the placeholder as "empty".
+	 */
+	private static final Map<String, Effect> EMPTY_EFFECTS = Collections.emptyMap();
+
+	/** 被动效果映射（首次写入时才分配）。 / Passive effect map, allocated on the first write. */
+	protected volatile Map<String, Effect> passiveEffectMap = EMPTY_EFFECTS;
+	/** 不显示图标的效果映射（首次写入时才分配）。 / No-show effect map, allocated on the first write. */
+	protected volatile Map<String, Effect> noshowEffects = EMPTY_EFFECTS;
+	/** 异常效果映射（首次写入时才分配）。 / Abnormal effect map, allocated on the first write. */
+	protected volatile Map<String, Effect> abnormalEffectMap = EMPTY_EFFECTS;
 	private final ArrayDeque<List<Effect>> maintainEffectGroups = new ArrayDeque<>();
 
 	/** 效果映射互斥锁。 / Mutex for effect maps. */
@@ -171,7 +182,10 @@ public class EffectController {
 			if (existingEffect != null && existingEffect != nextEffect) {
 				existingEffect.endEffect();
 			}
-			mapToUpdate.put(nextEffect.getStack(), nextEffect);
+			// 只在真正写入时才惰性分配映射；上面的 size/get 检查读的是当前字段（可能仍是空占位符）。
+			// The map is allocated only when something is actually stored; the size/get checks above read
+			// the current field, which may still be the empty placeholder.
+			writableMapForEffect(nextEffect).put(nextEffect.getStack(), nextEffect);
 		} finally {
 			lock.unlock();
 		}
@@ -290,6 +304,83 @@ public class EffectController {
 	}
 
 	/**
+	 * 取该效果类型对应的可写映射，必要时惰性分配。
+	 * Returns the writable map for the effect type, allocating it on demand.
+	 *
+	 * @param effect 效果 / effect
+	 * @return 可写映射 / writable map
+	 */
+	private Map<String, Effect> writableMapForEffect(Effect effect) {
+		if (effect.isPassive()) {
+			return writablePassiveEffectMap();
+		}
+		if (effect.isToggle()) {
+			return writableNoshowEffects();
+		}
+		return writableAbnormalEffects();
+	}
+
+	/**
+	 * 惰性分配被动效果映射。
+	 * Allocates the passive effect map on demand.
+	 *
+	 * @return 被动效果映射 / passive effect map
+	 */
+	private Map<String, Effect> writablePassiveEffectMap() {
+		Map<String, Effect> current = passiveEffectMap;
+		if (current != EMPTY_EFFECTS) {
+			return current;
+		}
+		synchronized (this) {
+			if (passiveEffectMap == EMPTY_EFFECTS) {
+				passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+			}
+			return passiveEffectMap;
+		}
+	}
+
+	/**
+	 * 惰性分配不显示效果映射。
+	 * Allocates the no-show effect map on demand.
+	 *
+	 * @return 不显示效果映射 / no-show effect map
+	 */
+	private Map<String, Effect> writableNoshowEffects() {
+		Map<String, Effect> current = noshowEffects;
+		if (current != EMPTY_EFFECTS) {
+			return current;
+		}
+		synchronized (this) {
+			if (noshowEffects == EMPTY_EFFECTS) {
+				noshowEffects = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+			}
+			return noshowEffects;
+		}
+	}
+
+	/**
+	 * 惰性分配异常效果映射：双检在 {@code this} 上加锁，与 {@link #clearEffect(Effect)} 同一监视器，
+	 * 保证并发创建者最终看到同一个实例（否则先写入的效果会落进被丢弃的映射而丢失）。
+	 * Allocates the abnormal effect map on demand. The double-check locks {@code this} — the same monitor as
+	 * {@link #clearEffect(Effect)} — so concurrent creators converge on one instance; otherwise the first
+	 * effect could be stored into a discarded map and lost.
+	 *
+	 * @return 异常效果映射 / abnormal effect map
+	 */
+	protected final Map<String, Effect> writableAbnormalEffects() {
+		Map<String, Effect> current = abnormalEffectMap;
+		if (current != EMPTY_EFFECTS) {
+			return current;
+		}
+		synchronized (this) {
+			if (abnormalEffectMap == EMPTY_EFFECTS) {
+				abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+			}
+			return abnormalEffectMap;
+		}
+	}
+
+	/**
 	 * 按 stack 键获取异常效果。
 	 * Returns the abnormal effect for the given stack key.
 	 *
@@ -374,7 +465,11 @@ public class EffectController {
 	 */
 	public synchronized void clearEffect(Effect effect) {
 		Map<String, Effect> mapForEffect = getMapForEffect(effect);
-		if (mapForEffect.remove(effect.getStack(), effect)) {
+		// 占位符表示该类型从未写入过：这里必然没有目标效果，直接跳过；同时不可变空表的
+		// remove(key,value) 在 JDK 上会抛 UnsupportedOperationException（本次改造由 AlwaysAttackEffectTest 抓到）。
+		// A placeholder means this effect type was never written: nothing to remove here, and (unlike
+		// remove(key) on a real map) the immutable empty map throws UnsupportedOperationException.
+		if (mapForEffect != EMPTY_EFFECTS && mapForEffect.remove(effect.getStack(), effect)) {
 			int remainingAbnormals = getMappedAbnormals();
 			abnormals &= ~(effect.getAbnormals() & ~remainingAbnormals);
 		}

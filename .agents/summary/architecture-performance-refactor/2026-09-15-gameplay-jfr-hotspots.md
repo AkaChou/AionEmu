@@ -1070,3 +1070,80 @@ A\* 工作区的 `visited` 表按搜索预算预分配（`min(budget, 8192)` →
 | 网格碰撞探测次数（16.2%，10 个调用点） | 大 | 高风险：任何"少探测/短探测"都改变判定，与"不能干扰功能"冲突 |
 | `IntObjectHashMap` 系统性替换（87 文件） | 分散 | 架构债，宜单独任务；`World.getWorldMap` 这类热查表已在 12.11 换成 `int[]` |
 | 网络出站包零拷贝（`writeAndConsume`） | 中（分配侧） | 触碰 `AR-004` 的 Netty 缓冲不变量，宜单独任务 |
+
+### 12.15 第十九轮：D 项（假原始类型 Map）重新界定 + 首个常驻内存切片
+
+#### 12.15.1 先纠偏：`IntObjectHashMap` 不是常驻大头
+
+"87 个文件使用 `IntObjectHashMap`"曾是 D 项的立项理由，但 `play-15` 的 class histogram 显示它**只有 1,749 个实例 / 112 KB**，
+而且热路径装箱已经被 12.11/12.12 清干净了：
+
+| 口径 | play-14 | play-15 |
+|---|---|---|
+| 装箱对象（`Integer`/`Long`/…）采样权重 | 30.27 MB（34 样本） | **0.60 MB（1 样本）** |
+| ↳ 其中 `NpcShoutData`/`MoveTaskManager`/`PathData.getMap`/`WaterVolumeStore`/`World.getWorldMap` | 29.7 MB | **0** |
+
+⇒ 按性能口径，**D 项的原始形态（逐个替换 `IntObjectHashMap`）不值得做**。真正的大头是**每实体常驻容器**：
+
+| 常驻结构（`play-15` 实测） | 实例数 | 字节 | 说明 |
+|---|---|---|---|
+| `LinkedHashMap` + `LinkedHashMap$Entry` | 683,219 / 1,731,858 | 43.7 MB + 69.3 MB | ≈5.4 个/生物 |
+| `Collections$SynchronizedMap` | 382,161 | 12.2 MB | = 3 × 127,075 生物（见下） |
+| `ReentrantReadWriteLock` 族（Sync/ReadLock/WriteLock/HoldCounter） | 174,256 套 | ≈20.9 MB | 每生物一到两把 |
+| `java.lang.Integer`（装箱） | 1,893,261 | 30.3 MB | 多为 `Map<Integer,…>` 的键 |
+| `ConcurrentHashMap` | 1,194,676 | 76.5 MB | ≈9.4 个/生物 |
+| `TreeMap` + Entry（`TreeSet` 内部） | 92,150 / 560,031 | 4.4 MB + 22.4 MB | `CreatureGameStats` 的 `TreeSet<IStatFunction>` |
+
+即：**"每个生物都预制一批小容器"是真正的架构债**，代价是常驻内存与启动/生成开销，而不是 tick 期 CPU。
+
+#### 12.15.2 切片一：`EffectController` 的三张效果表改为首次写入才分配
+
+`EffectController` 每个实例（127,075 个生物）都预制：
+
+```java
+protected Map<String, Effect> passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<>());
+protected Map<String, Effect> noshowEffects     = Collections.synchronizedMap(new LinkedHashMap<>());
+protected Map<String, Effect> abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<>());
+```
+
+= 每个生物 3 个 `LinkedHashMap` + 3 个 `synchronizedMap` 包装，而绝大多数 NPC 从不携带效果。
+改动：三张表初始指向**共享的不可变空表**（`EMPTY_EFFECTS`），只有真正写入时才分配真实映射。
+
+- 字段改 `volatile`（读路径可能与其他线程的写入并发）；
+- 新增 `writablePassiveEffectMap/writableNoshowEffects/writableAbnormalEffects`，**双检 + `synchronized (this)`**；
+  与 `clearEffect` 用同一监视器，保证并发创建者最终看到同一个实例——否则先写入的效果会落进被丢弃的映射而丢失；
+- 创建点只有两处：`addEffect` 真正 `put` 时（此前的 `size/get` 检查继续读当前字段，仍是空表即正确），
+  以及 `PlayerEffectController.addSavedEffect`（登出补登）改走 `writableAbnormalEffects()`；
+- 读路径**不需要 null 检查**：读到占位符就是空表（`get`/`isEmpty`/快照遍历都天然成立）。
+
+**收益**：382,161 个 `SynchronizedMap` + 382,161 个空 `LinkedHashMap` 不再创建（约 **36 MB 常驻**），
+启动/刷怪时每个 NPC 少 6 次对象分配（全服 ≈76 万次）。
+
+#### 12.15.3 顺带修掉一个真实缺陷（由既有测试抓到）
+
+首轮改动跑测试时 `AlwaysAttackEffectTest.exposesAndConsumesPhysicalAndMagicalBypassCharges` 直接
+`UnsupportedOperationException`：`clearEffect` 里
+
+```java
+Map<String, Effect> mapForEffect = getMapForEffect(effect);
+if (mapForEffect.remove(effect.getStack(), effect)) { … }
+```
+
+在"该类型表从未分配"时会对**不可变空表**调用 `remove(key,value)`（JDK 的 `Collections.EmptyMap` 覆写了该方法并直接抛异常），
+而**结束一个从未入表的 effect 本来就会走到这条路径**（`Effect.endEffect → clearEffect`），所以这是生产路径的真实缺陷，不只是测试问题。
+现改为 `mapForEffect != EMPTY_EFFECTS && mapForEffect.remove(...)`：占位符意味着"该类型从未写入"，本来就没有可移除项。
+
+#### 12.15.4 验证与后续切片
+
+`mvn -Dtest=EffectControllerTest,SkillCancellationTest,AlwaysAttackEffectTest,TargetStatusPropertyTest,KnownListIterationSafetyTest,CMMoveControlEffectTest,SMTeamMemberInfoTest,PacketBroadcasterTest test`
+→ **BUILD SUCCESS，8 个测试类 47 例全绿**；新增 2 例：
+`effectMapsAreAllocatedOnlyOnFirstWrite`（新建控制器三表共用占位符、只分配被写的那张）与
+`clearedEffectKeepsTheAllocatedMapReusable`（清空后仍复用同一张表，并能继续写入）。
+
+后续切片（按证据排序，均为"每实体预制容器/锁"，尚未做）：
+1. `CreatureGameStats`：每生物 1 个 `LinkedHashMap` + 1 个 `ReentrantReadWriteLock`，且每个 stat 一个 `TreeSet<IStatFunction>`
+   （92k 个 `TreeSet` / 22 MB 的 `TreeMap` + Entry）。懒加载 + 只在有修正项时才建 `TreeSet` 的收益最大，
+   但 `getStat` 是战斗热路径，必须先补 stat 计算的等价性测试。
+2. `KnownList`/`AggroList` 的每生物 `ConcurrentHashMap`（1,194,676 个 / 76.5 MB）：需要先确认这 119 万个 CHM 的完整归属
+   （本轮只证实了外观面，未逐一钉死属主）。
+3. 装箱 `Integer` 189 万个 / 30.3 MB：多数是 `Map<Integer,…>` 键，与切片 2 同源，替换为原始键表可一并解决。

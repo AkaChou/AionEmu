@@ -140,7 +140,9 @@ public class PlayerEffectController extends EffectController {
 			return;
 		}
 		Effect effect = new Effect(getOwner(), getOwner(), template, skillLvl, remainingTime);
-		abnormalEffectMap.put(effect.getStack(), effect);
+		// 与基类的惰性映射保持一致：登出补登也是"首次写入"的一种。
+		// Keep the base class's lazy map contract: restoring after logout is just another first write.
+		writableAbnormalEffects().put(effect.getStack(), effect);
 		effect.addAllEffectToSucess();
 		effect.startEffect(true);
 

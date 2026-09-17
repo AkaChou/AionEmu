@@ -3,6 +3,7 @@ package com.aionemu.gameserver.controllers.effect;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -206,6 +207,51 @@ class EffectControllerTest {
 
 		assertTrue(oldEffect.ended());
 		assertSame(replacementEffect, controller.abnormalEffect("same"));
+	}
+
+	@Test
+	void effectMapsAreAllocatedOnlyOnFirstWrite() throws Exception {
+		TestEffectController controller = new TestEffectController();
+
+		// 新建控制器三张表共用同一个空占位符：不再为每个生物预制 3 张空表 + 3 个 synchronizedMap 包装。
+		// A fresh controller shares one empty placeholder across all three maps: no per-creature tables.
+		Object placeholder = effectMap(controller, "passiveEffectMap");
+		assertSame(placeholder, effectMap(controller, "noshowEffects"));
+		assertSame(placeholder, effectMap(controller, "abnormalEffectMap"));
+		assertFalse(controller.hasAbnormalEffect(10));
+
+		TestEffect effect = abnormalEffect(controller, "lazy", 10, 1, 1);
+		controller.addEffect(effect);
+
+		// 只有被写入的那张表真正分配，另外两张仍是占位符。
+		// Only the written map is allocated; the other two stay on the placeholder.
+		assertNotSame(placeholder, effectMap(controller, "abnormalEffectMap"));
+		assertSame(placeholder, effectMap(controller, "passiveEffectMap"));
+		assertSame(placeholder, effectMap(controller, "noshowEffects"));
+		assertSame(effect, controller.abnormalEffect("lazy"));
+	}
+
+	@Test
+	void clearedEffectKeepsTheAllocatedMapReusable() throws Exception {
+		TestEffectController controller = new TestEffectController();
+		TestEffect effect = abnormalEffect(controller, "lazy", 10, 1, 1);
+		controller.addEffect(effect);
+		Object allocated = effectMap(controller, "abnormalEffectMap");
+
+		controller.clearEffect(effect);
+
+		assertNull(controller.abnormalEffect("lazy"));
+		assertSame(allocated, effectMap(controller, "abnormalEffectMap"));
+
+		TestEffect next = abnormalEffect(controller, "lazy-2", 11, 2, 1);
+		controller.addEffect(next);
+		assertSame(next, controller.abnormalEffect("lazy-2"));
+	}
+
+	private static Object effectMap(EffectController controller, String name) throws Exception {
+		Field field = EffectController.class.getDeclaredField(name);
+		field.setAccessible(true);
+		return field.get(controller);
 	}
 
 	@Test
