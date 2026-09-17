@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-018`
+> Pattern IDs: `QE-001`–`QE-023`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
 > last_reviewed: 2026-09-16
@@ -502,3 +502,46 @@ first_check: 比对 Quest_unpacked/quest.xml 中的 finished_quest_cond1/cond2�
 
 - **判定规则**：真端客户端数据中凡声明了 `finished_quest_cond1`、`finished_quest_cond2` 等多个前置字段的任务，其业务语义是“完成路线 A **或** 路线 B 均可接取”。服务端严禁写在同一个 `<start-conditions>`（AND）中，必须使用 `<start-condition-groups>`，以 `<group>` 包裹各分支条件，保证走任一剧情分支的玩家都能顺利接取后续任务。
 - **代表案例**：任务 `2303`（真端完成 2304 或 2305 或 2499 任一即可）、守护者系列 `19008` 等 43 个任务全量重构为 `<start-condition-groups>`。
+---
+
+## [QE-022] 二十、状态机拓扑可达性与击杀汇报源状态错位 (NO_REACHABLE_DEAD_END_NODES)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务状态机节点流转、杀怪与击杀链目标节点、报告 NPC 源状态配置
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家杀怪达成数量后任务显示已完成，但去找对应 NPC 时 NPC 无响应或无汇报选项，任务无法推进至领奖，陷入“没有下一步”
+root_cause: 击杀 transition 或 kill-chain 节点链将任务状态推进到了新状态（如 k1 或 k5），但 NPC_REPORT 或后续对话转换却机械配置了初始状态 source="started"；导致达成击杀后由于源节点不匹配，目标 NPC 无法触发领奖流转，形成可达死胡同
+fix_or_guardrail: NPC_REPORT 的 source 必须精确匹配前序步骤/击杀链最终到达的节点 label；在 QuestDefinitionDirectoryLoaderTest 中增加全量状态图 BFS 遍历门禁 executableQuestsHaveNoReachableDeadEndNodes()，禁止除 COMPLETE 以外的任何无出边可达死胡同
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/16900.xml; src/main/resources/aion/data/static_data/quest_definition/quests/24151.xml; src/main/resources/aion/data/static_data/quest_definition/quests/1640.xml; src/main/resources/aion/data/static_data/quest_definition/quests/2569.xml
+validation: 全库 6,186 个生产执行任务全量 BFS 连通性通过，0 死胡同节点，单测全部通过
+boundaries: 适用于所有带中间推进节点（k1..kN, s1..sN）的状态机任务；纯 unaccepted 自环交互的活动派发任务（如 89999）除外
+superseded_by: none
+see_also: [QE-002]
+first_check: 检查前序 kill/kill-chain 的 target node 是否与后续 NPC_REPORT 的 source node 一致
+-->
+
+- **判定规则**：任务状态机中任何可达节点（除 `COMPLETE` 终态外）必须具有通向下一阶段或完成状态的出边转移。凡通过 `kill-npc` 或 `kill-chain` 改变状态的任务，后续 `NPC_REPORT` 的 `source` 必须严格指向击杀结束后的目标节点，严禁误配为 `started`。
+- **代表案例**：天族任务 `16900~16903`（杀怪后进入 k1 但报告 NPC 只认 started）、魔族任务 `24151`（5 连杀进入 k5 但报告 NPC 只认 started）、`1640`（reward 状态缺失安装部件完成路由）、`2569`（虚设 s2 死胡同）；修复后由全量 BFS 拓扑门禁永久拦截。
+
+---
+
+## [QE-023] 二十一、任务前置自依赖与循环死锁拦截 (PREREQUISITE_DEPENDENCY_CYCLE_FREE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务元数据前置条件（prerequisites、start-conditions、start-condition-groups）
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 玩家无论达到何种等级或进度均无法在 NPC 处看到或接取任务，任务永久断链
+root_cause: 任务配置了指向自身 ID 的 finished 前置条件（自指依赖），或多个任务相互引用形成闭环前置死锁，导致不完成自身就无法接取自身的拓扑死循环
+fix_or_guardrail: 彻底清除自身依赖，在 CompletedQuestPrerequisiteRegressionTest 中增加全库前置拓扑有向图 DFS 环路门禁 noQuestRequiresItselfOrCreatesDependencyCycle()，禁止任何自环或相互依赖环路
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/18992.xml
+validation: 全库 6,222 个任务全量前置 DFS 拓扑环路扫描 0 环路，单测通过
+boundaries: 适用于所有任务前置依赖声明
+superseded_by: none
+see_also: [QE-001], [QE-021]
+first_check: 检查 start-conditions 中 finished 条件的 quest-id 是否等于自身任务 ID，或是否存在 A->B->A 环路
+-->
+
+- **判定规则**：任务的前置条件（`prerequisites`、`start-conditions`、`start-condition-groups`）严禁引用自身任务 ID，且整个前置依赖有向图中严禁存在环路（Cycle-Free Directed Acyclic Graph）。
+- **代表案例**：天族重大副本任务 `18992`，其 `<start-conditions>` 误配了 `finished quest-id="18992"` 导致自身死锁；修复后由 DFS 环路门禁守护。

@@ -54,6 +54,8 @@
 | 任务在客户端对话列表中可见、点击后能打开详情页，但点击“接受任务”（动作 20000 / QUEST_ACCEPT_SIMPLE 等）后无反应直接关闭对话框，服务端未下发 SM_QUEST_ACTION | `QE-019` | 任务元数据是否声明 prerequisites 或 start-conditions；接取转换推导出的 questIdSets/equipment 是否为 true；snapshot 中 completedQuestsCaptured 是否为 true |
 | 任务已顺利推进到 REWARD 阶段，与终点 NPC 对话无法打开奖励页面，或点击领奖后提示失败/无反应，任务无法完结 | `QE-020` | 检查背包道具是否在前面的 transition 中已经被 remove-item；reward -> complete 中是否有针对同一 item-id 的 has-item 或严格 remove-item |
 | 玩家已完成对应前置剧情，但后续任务在 NPC 处不可见或无法接取；只有把所有互斥分支/新老使命全部做完的非正常账号才能接取 | `QE-021` | 比对 Quest_unpacked/quest.xml 中的 finished_quest_cond1/cond2，确认是否为分支剧情、互斥制作专精或新老版本使命替换 |
+| 玩家杀怪达成数量后任务显示已完成，但去找对应 NPC 时 NPC 无响应或无汇报选项，任务无法推进至领奖，陷入“没有下一步” | `QE-022` | 检查前序 kill/kill-chain 的 target node 是否与后续 NPC_REPORT 的 source node 一致 |
+| 玩家无论达到何种等级或进度均无法在 NPC 处看到或接取任务，任务永久断链 | `QE-023` | 检查 start-conditions 中 finished 条件的 quest-id 是否等于自身任务 ID，或是否存在 A->B->A 环路 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |
