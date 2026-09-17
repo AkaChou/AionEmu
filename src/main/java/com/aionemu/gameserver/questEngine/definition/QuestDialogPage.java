@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * 由 Aion 5.8 客户端 HtmlPages.xml 与活动任务 XML 引用生成。
@@ -176,5 +177,27 @@ public enum QuestDialogPage {
 	public static QuestDialogPage fromId(int id) {
 		return Arrays.stream(values()).filter(value -> value.id == id).findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("unknown QuestDialogPage id " + id));
+	}
+
+	/**
+	 * 第 N 档（0 基）奖励在客户端渲染的奖励窗口页面。
+	 * Client reward-window page rendering the zero-based Nth reward tier.
+	 *
+	 * <p>客户端只声明 6 档奖励窗口：第 1~4 档对应页面 5..8，第 5/6 档对应页面 45/46；
+	 * 超过 6 档时没有可下发页面，调用方必须显式降级或拒绝，禁止再用线性偏移猜测页面号。
+	 * The client declares exactly six reward windows: tiers 1..4 map to pages 5..8 and tiers
+	 * 5/6 to pages 45/46. Tiers beyond six have no client page, so callers must degrade or
+	 * reject explicitly instead of extrapolating a page number.</p>
+	 */
+	public static Optional<QuestDialogPage> rewardWindowForTier(int tier) {
+		return switch (tier) {
+			case 0 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW1);
+			case 1 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW2);
+			case 2 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW3);
+			case 3 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW4);
+			case 4 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW5);
+			case 5 -> Optional.of(SHOW_SELECT_QUEST_REWARD_WINDOW6);
+			default -> Optional.empty();
+		};
 	}
 }

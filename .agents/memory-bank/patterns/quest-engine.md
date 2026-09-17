@@ -633,3 +633,25 @@ first_check: 检查每个 start-quest-timer / start-invisible-timer 是否有同
 
 - **判定规则**：任务启动的每个计时器都必须闭环——要么有同 `timer-id` 的 `cancel-quest-timer`，要么有与计时器类型匹配的到期事件路由（可见 → `quest-timer-end`，不可见 → `invisible-timer-end`）。严禁出现既无取消又无到期处理的孤儿计时器。
 - **代表案例**：魔族任务 `2230`（30 分钟赌注倒计时）迁移后漏掉真端 handler 成功交付时的 `questTimerEnd`，客户端在交完 10 颗棕熊尖牙后仍继续倒计时；补 `cancel-quest-timer timer-id="visible"` 后由 `startedQuestTimersHaveCancelOrExpiryRoute` 门禁守护。
+
+---
+
+## [QE-028] 二十六、多档奖励窗口档位页面与交付分支档位一致性 (REWARD_WINDOW_TIER_PAGE_FIDELITY)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务奖励窗口预览 (npc-complete preview / 编译器合成预览) 与多档交付分支 (reward-groups + COMPLETE)
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: 多档任务在 REWARD 阶段重新与交付 NPC 对话（USE_OBJECT / SELECT_QUEST_REWARD）时，客户端渲染的仍是第 1 档奖励文案与物品；或两条交付分支各自进入的窗口与最终发放的档位相反（在“正直奖赏”窗口里拿到“满足愿望”档位的奖励）
+root_cause: 1. QuestXmlBlockExpander.expandNpcComplete 的预览路由写死 ShowQuestDialog(5)，忽略 complete-reward-index，使第 2/3 档重开窗口时回到第 1 档；2. QuestDefinitionCompiler.restoreRewardPreviewContract 用 5 + rewardIndex 线性推算页面，第 5/6 档在客户端是页面 45/46，会下发不存在的页面 9/10；3. 1114 两条交付分支的 complete-reward-index 与进入窗口相反，导致窗口文案与实发奖励错配
+fix_or_guardrail: 1. 新增唯一档位查表 QuestDialogPage.rewardWindowForTier(tier)（0..5 → 5/6/7/8/45/46，越界返回空），禁止任何线性偏移推算；2. expandNpcComplete 预览改用查表页面，声明预览却落在客户端未声明档位时以 NPC_COMPLETE_REWARD_WINDOW_UNSUPPORTED 编译失败；3. restoreRewardPreviewContract 改用同一查表，无窗口可用时不合成；4. 1114 的 Asteros 分支改 complete-reward-index="0"、Namus 分支改发第 2 档并修正 reward-index；5. QuestMovieAndDialogLoopRegressionTest 新增全库门禁：档位查表锁定、合成与显式预览页面、5,351 个 npc-complete 预览块逐块断言、多档任务“进入窗口档位 = 结算档位”
+evidence: src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogPage.java; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCompiler.java; src/main/resources/aion/data/static_data/quest_definition/quests/1114.xml; src/main/resources/aion/data/static_data/quest_definition/quests/1367.xml; src/main/resources/aion/data/static_data/quest_definition/quests/2430.xml; src/main/resources/aion/data/static_data/quest_definition/quests/50023.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java
+validation: mvn test -Dtest=QuestMovieAndDialogLoopRegressionTest,QuestDefinitionDirectoryLoaderTest,CompletedQuestPrerequisiteRegressionTest,QuestClientContractGateTest,ProductionCatalogWhitelistVerificationTest 共 30 项用例全绿；PRODUCTION_COMPILE_OK=6186、FAILURES=0、WHITELIST_VIOLATIONS=0；21 个多档任务静态审计 0 发现
+boundaries: 适用于所有声明 <reward-groups> 的多档任务与所有 npc-complete 预览；单档任务（rewardGroups <= 1）继续固定第 1 档窗口；1122/2513 这类“按档位手写 grant-reward + 持久化索引 0”的体例以显式 grant 命中奖励组来判定档位
+superseded_by: none
+see_also: [QE-026], [QE-017]
+first_check: 检查每个 npc-complete 预览下发的页面是否等于 rewardWindowForTier(complete-reward-index)，以及 REWARD 节点的进入窗口档位与实际发放档位是否一致
+-->
+
+- **判定规则**：奖励窗口页面只能由档位查表得到（第 1~4 档 = 页面 5/6/7/8，第 5/6 档 = 页面 45/46）；`npc-complete` 预览必须下发本档自己的窗口；多档任务中 `REWARD` 节点的进入窗口档位必须等于它实际结算的档位。严禁写死第 1 档页面或按 `5 + index` 线性推算，也严禁窗口与 `complete-reward-index`/`grant-reward` 档位相互矛盾。
+- **代表案例**：魔族任务 `1367`（三档收集窗口分别对应脖子肉/里脊/火鸟大腿肉，预览写死第 1 档导致第 2/3 档重开错档）、`2430`（reward_b/reward_c 预览同样回到第 1 档）、天族事件任务 `50023`（r2 重开路径仍显示第 1 档文案）、天族任务 `1114`（Asteros 与 Namus 两条交付分支的档位与窗口相反）；修复后由 `rewardWindowTierMappingCoversEveryClientWindow`、`synthesisedAndDeclaredPreviewUseTheTableDrivenTierPage`、`npcCompletePreviewsOpenTheirOwnTierWindowAcrossTheCatalog`、`multiTierHandInWindowsMatchTheirGrantedTier` 四项门禁守护。

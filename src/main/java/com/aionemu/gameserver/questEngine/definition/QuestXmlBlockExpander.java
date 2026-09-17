@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -1359,10 +1360,22 @@ final class QuestXmlBlockExpander {
 				"must be SELECTION_DIALOG, CLOSE_DIALOG, or NONE");
 		}
 
+		// 预览路由必须下发本档自己的奖励窗口；写死第 1 档会让多档任务重开窗口时渲染错误文案与奖励。
+		// Preview routes must open this block's own reward window; a hard-coded tier-1 page makes
+		// multi-tier quests render the wrong text and rewards whenever the window is re-opened.
+		Optional<QuestDialogPage> previewWindow = QuestDialogPage.rewardWindowForTier(completeRewardIndex);
+		if (!previewDialogIds.isEmpty() && previewWindow.isEmpty()) {
+			return fail("NPC_COMPLETE_REWARD_WINDOW_UNSUPPORTED", context, "npc-complete",
+				"complete-reward-index", "reward tier " + completeRewardIndex
+					+ " has no client reward window page");
+		}
+		int previewPage = previewWindow.map(QuestDialogPage::id)
+			.orElse(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id());
+
 		List<QuestTransition> result = new ArrayList<>();
 		for (int dialogId : previewDialogIds) {
 			result.add(talk(npcId, dialogId, List.of(), List.of(), source, source, null,
-				List.of(new AfterCommitAction.ShowQuestDialog(5))));
+				List.of(new AfterCommitAction.ShowQuestDialog(previewPage))));
 		}
 		for (CompletionRoute route : routes) {
 			List<QuestAction> actions = new ArrayList<>(fixedRewards);

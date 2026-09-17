@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -365,10 +366,14 @@ public final class QuestDefinitionCompiler {
 				continue;
 			}
 			int rewardIndex = indexes.iterator().next();
-			if (rewardIndex > Integer.MAX_VALUE - 5) {
+			// 档位 -> 页面必须查表：第 5/6 档在客户端是页面 45/46，线性偏移会下发不存在的页面。
+			// Tier -> page must be table-driven: tiers 5/6 are client pages 45/46, and a linear
+			// offset would send a page the client never declared.
+			Optional<QuestDialogPage> rewardWindow = QuestDialogPage.rewardWindowForTier(rewardIndex);
+			if (rewardWindow.isEmpty()) {
 				continue;
 			}
-			int rewardPage = 5 + rewardIndex;
+			int rewardPage = rewardWindow.get().id();
 			for (int dialogId : List.of(-1, 1009)) {
 				if (hasRewardPreview(definition, statuses, key, dialogId)) {
 					continue;

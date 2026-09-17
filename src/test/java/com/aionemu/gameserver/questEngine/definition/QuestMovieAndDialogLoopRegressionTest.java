@@ -3,9 +3,17 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Element;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -317,6 +325,227 @@ class QuestMovieAndDialogLoopRegressionTest {
 			after instanceof AfterCommitAction.CancelQuestTimer cancel
 				&& QuestTimerPolicy.VISIBLE_TIMER_ID.equals(cancel.identity().timerId())),
 			"Quest 2230 must stop the 1800s visible wager timer once the fangs are handed in");
+	}
+
+	@Test
+	void rewardWindowTierMappingCoversEveryClientWindow() {
+		int[] clientPages = {5, 6, 7, 8, 45, 46};
+		for (int tier = 0; tier < clientPages.length; tier++) {
+			assertEquals(clientPages[tier], QuestDialogPage.rewardWindowForTier(tier).orElseThrow().id(),
+				"tier " + tier + " must map to client reward window page " + clientPages[tier]);
+		}
+		assertTrue(QuestDialogPage.rewardWindowForTier(6).isEmpty(),
+			"the client declares exactly six reward windows; tier 7 has no page");
+		assertTrue(QuestDialogPage.rewardWindowForTier(-1).isEmpty());
+	}
+
+	@Test
+	void synthesisedAndDeclaredPreviewUseTheTableDrivenTierPage() throws Exception {
+		// 未显式声明预览时由编译器合成：第 5 档必须是客户端页面 45，而不是线性推算出的 9。
+		// Synthesised previews must use the tier table: tier 5 is client page 45, never 5 + 4 = 9.
+		assertRewardPreviewPages(compileTierFixture(4, false).definition(), 45);
+		// npc-complete 显式声明预览时同样按 complete-reward-index 取页。
+		// A declared npc-complete preview must use its own complete-reward-index page.
+		assertRewardPreviewPages(compileTierFixture(1, true).definition(), 6);
+	}
+
+	@Test
+	void npcCompletePreviewsOpenTheirOwnTierWindowAcrossTheCatalog() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+		var builder = factory.newDocumentBuilder();
+		java.util.List<String> violations = new java.util.ArrayList<>();
+		int previewedBlocks = 0;
+		try (var files = Files.newDirectoryStream(
+				Path.of("src/main/resources/aion/data/static_data/quest_definition/quests"), "*.xml")) {
+			for (Path file : files) {
+				var document = builder.parse(file.toFile());
+				org.w3c.dom.NodeList blocks = document.getElementsByTagName("npc-complete");
+				if (blocks.getLength() == 0) {
+					continue;
+				}
+				int questId = Integer.parseInt(document.getDocumentElement().getAttribute("id"));
+				java.util.Optional<CompiledQuestDefinition> compiled = catalog.findExecutable(questId);
+				if (compiled.isEmpty()) {
+					continue;
+				}
+				QuestDefinition definition = compiled.get().definition();
+				for (int index = 0; index < blocks.getLength(); index++) {
+					Element block = (Element) blocks.item(index);
+					boolean previewed = block.getElementsByTagName("preview").getLength() > 0
+						|| !block.getAttribute("preview-dialog-ids").isBlank();
+					if (!previewed) {
+						continue;
+					}
+					previewedBlocks++;
+					int tier = Integer.parseInt(block.getAttribute("complete-reward-index"));
+					int npcId = Integer.parseInt(block.getAttribute("npc-id"));
+					String source = block.getAttribute("source");
+					int expectedPage = QuestDialogPage.rewardWindowForTier(tier)
+						.orElseThrow(() -> new AssertionError("tier " + tier + " has no client reward window"))
+						.id();
+					boolean routed = definition.transitions().stream().anyMatch(transition ->
+						source.equals(transition.sourceNode())
+							&& transition.event() instanceof QuestEvent.TalkToNpc talk
+							&& talk.npcId() == npcId
+							&& (Integer.valueOf(-1).equals(talk.dialogId())
+								|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId()))
+							&& transition.afterCommit().stream().anyMatch(after ->
+								after instanceof AfterCommitAction.ShowQuestDialog page
+									&& page.dialogId() == expectedPage));
+					if (!routed) {
+						violations.add("Quest " + questId + " npc-complete(source=" + source + ", npc=" + npcId
+							+ ") tier " + tier + " preview must open page " + expectedPage);
+					}
+				}
+			}
+		}
+		assertTrue(previewedBlocks > 0, "expected at least one previewed npc-complete block");
+		assertTrue(violations.isEmpty(),
+			"npc-complete previews opening another tier's client window: " + violations);
+	}
+
+	@Test
+	void multiTierHandInWindowsMatchTheirGrantedTier() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		java.util.List<String> violations = new java.util.ArrayList<>();
+
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			List<QuestRewardGroup> groups = definition.metadata().rewardGroups();
+			if (groups.size() < 2) {
+				continue;
+			}
+			java.util.Map<String, java.util.Set<Integer>> entryPages = new java.util.HashMap<>();
+			java.util.Map<String, java.util.Set<Integer>> inlineTiers = new java.util.HashMap<>();
+			java.util.Map<String, java.util.Set<Integer>> persistedTiers = new java.util.HashMap<>();
+			for (QuestTransition transition : definition.transitions()) {
+				if (transition.targetNode() != null) {
+					for (AfterCommitAction after : transition.afterCommit()) {
+						if (after instanceof AfterCommitAction.ShowQuestDialog page
+								&& rewardTierOf(page.dialogId()) >= 0) {
+							entryPages.computeIfAbsent(transition.targetNode(), ignored -> new java.util.TreeSet<>())
+								.add(page.dialogId());
+						}
+					}
+				}
+				if (transition.sourceNode() == null) {
+					continue;
+				}
+				List<QuestAction.GrantReward> grants = transition.actions().stream()
+					.filter(QuestAction.GrantReward.class::isInstance)
+					.map(QuestAction.GrantReward.class::cast)
+					.toList();
+				if (!grants.isEmpty()) {
+					List<String> signature = grants.stream()
+						.map(grant -> grant.kind() + "|" + grant.id() + "|" + grant.amount())
+						.sorted()
+						.toList();
+					for (int index = 0; index < groups.size(); index++) {
+						if (groupSignature(groups.get(index)).equals(signature)) {
+							inlineTiers.computeIfAbsent(transition.sourceNode(), ignored -> new java.util.TreeSet<>())
+								.add(index);
+						}
+					}
+				}
+				for (QuestAction action : transition.actions()) {
+					if (action instanceof QuestAction.CompleteQuest completion) {
+						persistedTiers.computeIfAbsent(transition.sourceNode(), ignored -> new java.util.TreeSet<>())
+							.add(completion.rewardIndex());
+					}
+				}
+			}
+			for (java.util.Map.Entry<String, java.util.Set<Integer>> entry : entryPages.entrySet()) {
+				if (entry.getValue().size() != 1) {
+					continue;
+				}
+				int entryPage = entry.getValue().iterator().next();
+				java.util.Set<Integer> granted = inlineTiers.getOrDefault(entry.getKey(), java.util.Set.of());
+				if (granted.isEmpty()) {
+					granted = persistedTiers.getOrDefault(entry.getKey(), java.util.Set.of());
+				}
+				if (granted.size() != 1) {
+					continue;
+				}
+				int tier = granted.iterator().next();
+				java.util.Optional<QuestDialogPage> window = QuestDialogPage.rewardWindowForTier(tier);
+				if (window.isPresent() && window.get().id() != entryPage) {
+					violations.add("Quest " + compiled.id() + " reward node " + entry.getKey()
+						+ " opens page " + entryPage + " but grants tier " + (tier + 1)
+						+ " (page " + window.get().id() + ")");
+				}
+			}
+		}
+		assertTrue(violations.isEmpty(), "Reward windows and granted tiers diverge: " + violations);
+	}
+
+	private static int rewardTierOf(int pageId) {
+		for (int tier = 0; tier < 6; tier++) {
+			if (QuestDialogPage.rewardWindowForTier(tier).orElseThrow().id() == pageId) {
+				return tier;
+			}
+		}
+		return -1;
+	}
+
+	private static void assertRewardPreviewPages(QuestDefinition definition, int expectedPage) {
+		List<QuestTransition> previews = definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& (Integer.valueOf(-1).equals(talk.dialogId())
+					|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())))
+			.toList();
+		assertFalse(previews.isEmpty(), "expected a reward preview route");
+		for (QuestTransition preview : previews) {
+			assertTrue(preview.afterCommit().stream().anyMatch(after ->
+					after instanceof AfterCommitAction.ShowQuestDialog page && page.dialogId() == expectedPage),
+				"reward preview " + preview.event() + " must open page " + expectedPage
+					+ " but was " + preview.afterCommit());
+		}
+	}
+
+	private static CompiledQuestDefinition compileTierFixture(int tier, boolean declaredPreview) throws Exception {
+		StringBuilder groups = new StringBuilder();
+		for (int index = 0; index <= tier; index++) {
+			groups.append("      <group><reward kind=\"ITEM\" id=\"18805").append(100 + index)
+				.append("\" amount=\"1\"/></group>\n");
+		}
+		String preview = declaredPreview
+			? "      <preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>\n" : "";
+		String xml = """
+			<quest-definition id="990777" version="1">
+			  <metadata name="tier" display-name-id="0" min-level="1" max-level="2147483647" category="QUEST">
+			    <races><race id="ELYOS"/></races>
+			    <reward-groups>
+			%s    </reward-groups>
+			  </metadata>
+			  <progress>
+			    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+			  </progress>
+			  <nodes>
+			    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+			    <node label="started" status="START"><var name="var0" value="0"/></node>
+			    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
+			    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+			  </nodes>
+			  <transitions>
+			    <transition source="unaccepted" target="started">
+			      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="QUEST_ACCEPT_SIMPLE"/></event>
+			      <conditions><start-eligible/></conditions>
+			      <after-commit><close-dialog/></after-commit>
+			    </transition>
+			    <transition source="started" target="reward">
+			      <event><kill-npc npc-id="210001"/></event>
+			      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+			    </transition>
+			    <npc-complete npc-id="700001" source="reward" target="complete" complete-reward-index="%d"
+			        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" finish="SELECTION_DIALOG">
+			%s    </npc-complete>
+			  </transitions>
+			</quest-definition>
+			""".formatted(groups.toString(), tier, preview);
+		return QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	private static List<String> groupSignature(QuestRewardGroup group) {

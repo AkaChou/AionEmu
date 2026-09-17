@@ -61,6 +61,7 @@
 | 玩家击杀任务指定怪物或采集目标物体成百上千次，永远无法掉落任何任务道具，任务彻底卡死无法进行 | `QE-025` | 检查 drops 中 collecting-step 是否非 0 且该值在 nodes 的 var0 中未定义 |
 | 玩家交出更高档位的兑换材料后，客户端奖励窗口显示的仍是第 1 档文案（例：交出 3 个线索却显示“收到了 1 个线索”），或任务声明了多档奖励但某一档位永远无法被发放（死档） | `QE-026` | 检查多档任务是否声明了 <reward-groups>，第 N 档是否下发 SHOW_SELECT_QUEST_REWARD_WINDOWn，且每档都有可发放的完成路径 |
 | 玩家已完成计时任务的交付，客户端却继续跑倒计时并在归零时按“超时”渲染；或计时器到期后事件被静默丢弃，任务的时限语义完全失效 | `QE-027` | 检查每个 start-quest-timer / start-invisible-timer 是否有同 timer-id 的 cancel-quest-timer，或有同类型的 timer-end 事件路由 |
+| 多档任务在 REWARD 阶段重新与交付 NPC 对话（USE_OBJECT / SELECT_QUEST_REWARD）时，客户端渲染的仍是第 1 档奖励文案与物品；或两条交付分支各自进入的窗口与最终发放的档位相反（在“正直奖赏”窗口里拿到“满足愿望”档位的奖励） | `QE-028` | 检查每个 npc-complete 预览下发的页面是否等于 rewardWindowForTier(complete-reward-index)，以及 REWARD 节点的进入窗口档位与实际发放档位是否一致 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

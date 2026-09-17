@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  1114 仙女的礼服：两条交付分支各对应一档奖励，档位必须与客户端窗口一致。
+  * 阿斯特罗斯(203058) 分支 = 诚实交还，下发 select_quest_reward1，领取第 1 档(GOLD 1920 / EXP 4367)；
+  * 纳摩斯(203075) 分支 = 满足其愿望，下发 select_quest_reward2，领取第 2 档(GOLD 960 / EXP 3120)。
+  证据：旧版 handler 中 Asteros 发送页面 5、Namus 发送页面 6；真端 quest.xml 第 1/2 档奖励分别
+  为 4367/1920 与 3120/960；客户端 select_quest_reward1 文案为“被你的正直感动”的正直奖赏。
+  1114 The Nymph's Gown: each hand-in branch owns exactly one reward tier and must open its own
+  client window. Asteros (203058) = honest return -> select_quest_reward1 -> tier 1 (GOLD 1920 /
+  EXP 4367); Namus (203075) = fulfils his wish -> select_quest_reward2 -> tier 2 (GOLD 960 /
+  EXP 3120). Evidence: the legacy handler sends page 5 for Asteros and page 6 for Namus, retail
+  quest.xml lists tier 1/2 as 4367/1920 and 3120/960, and the client's select_quest_reward1 text
+  is the honesty reward.
+-->
 <quest-definition id="1114" version="1">
   <metadata name="The Nymph's Gown" display-name-id="1102214" min-level="4" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
@@ -228,9 +241,9 @@
         <dialog type="TALK_TO_NPC" npc-id="203075" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="1920" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="4367" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
+        <grant-reward kind="GOLD" id="0" amount="960" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3120" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -238,7 +251,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203058" source="reward3" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="203058" source="reward3" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="v1" target="v1">
