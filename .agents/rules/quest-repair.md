@@ -30,7 +30,7 @@ When `CASES.zh-CN.md` links a matched case to `docs/quest/repair-playbook/cases/
 ## Implementation Boundaries
 
 1. Production quest execution is owned by the quest XML and production catalog. Legacy handlers, client data, and logs are authoritative behavior evidence, not production owners.
-2. Prefer a quest-specific XML fix and quest-specific regression coverage for a single-quest page or state problem.
+2. Systemic Over Isolated Repair (以全部类似任务角度根本解决): Do not repair only the single reported quest in isolation. Always investigate from the perspective of the whole class of similar quests. Determine whether the defect stems from a shared engine/compiler/planner mechanism (e.g. fact requirements, state gates) or a common XML contract mismatch across a quest family (e.g. multi-kill step variables, counter limits, prerequisite inheritance). If it is an engine/compiler issue, fix it centrally at the root layer so all quests benefit permanently. If it is a contract mismatch, sweep the entire production catalog and client datasets to repair all matching quests together and establish a regression audit suite.
 3. A shared runtime or AI change must prove its impact scope and add shared regression coverage or a production-directory audit.
 4. Tests must lock down the source, target, status, variables, event, conditions, transactional actions, and complete `after-commit` order. Asserting only the final state is insufficient.
 5. A repair is incomplete when state is correct but page display, close behavior, spawning, following, teleportation, or another side effect remains wrong.

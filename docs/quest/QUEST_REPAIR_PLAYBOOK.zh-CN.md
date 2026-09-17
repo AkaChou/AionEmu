@@ -24,6 +24,7 @@
 4. 保留用户已有的脏工作区改动。禁止 `git reset --hard`、`git checkout --`、`git restore`、覆盖整文件或无范围的批量替换。
 5. 项目命令使用标准系统入口；Maven/Javac writer 串行运行。不要让多个 agent 同时执行 Maven 或清理 `target`。
 6. “提交”默认是本地 commit，不是 push。只暂存本次修改的明确路径。用户明确表示当前任务“客户端验证通过”“客户端验证完成”“客户端验收通过”或“客户端验收完成”时，该回复同时构成本任务修复的本地提交授权，不再等待额外的“提交”指令。
+7. **以全部类似任务角度出发，拒绝狭隘单点修补 (Systemic Family Governance)**：排查与修改任务时，必须先判定缺陷是底层引擎/编译器机制问题（如事实推导、状态门控），还是某类任务的结构契约错配（如多目标击杀步骤变量、多计数器直入 reward）。严禁只修当前单个任务的 XML；若是引擎核心问题必须在根源层彻底根治，若是契约错配必须扫描全服所有类似任务并全量重构，杜绝存量隐患留存。
 
 ## 2. 运行链和故障边界
 
@@ -569,7 +570,7 @@ docs/quest/client-dialog-mapping/README.zh-CN.md、当前 checkout 的 AGENTS.md
 3. 找到 catalog owner、当前 XML、编译后的 transition、旧 handler/正式模板和客户端 page/action 证据。
 4. 明确 source/target/status/vars、条件、事务动作和 after-commit 顺序。
 5. 判断是 XML 单任务问题、共享 runtime 问题、AI 副作用问题、客户端资源问题还是性能放大问题。
-6. 只做最小修复；不要用候选 XML 或通用 page 猜值，不要删除必要的 visibility refresh。
+6. 坚持根本解决与全类治理：若属于引擎/编译器通用缺陷在根源层修复，若属于某类任务契约错配则地毯式排查并全量修复全服类似任务，杜绝只改单个任务的狭隘打补丁。
 7. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
 8. 仅在用户明确要求运行构建或测试时，串行执行任务专用编译测试、生产 catalog/whitelist，必要时 clean verify；否则列出未执行项并保持 `PENDING`，不得请用户进入客户端复测。可执行不触发构建的 diff 检查。
 9. 客户端复测前确认启动日志没有 typed quest engine 初始化、quest compilation、ambiguous transition 或 production catalog compile failure；命中任一项时停止客户端层排查。
