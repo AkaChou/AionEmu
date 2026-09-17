@@ -226,9 +226,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203605" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
-      <actions>
-        <remove-item item-id="182215356" count="1"/>
-      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>

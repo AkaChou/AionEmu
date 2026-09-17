@@ -18,6 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MissionItemConsumptionBatchRegressionTest {
 
 	@Test
+	void rewardWindowPreviewDoesNotPrematurelyConsumeQuestItems() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		for (int questId : List.of(24012, 24051)) {
+			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
+			for (QuestTransition t : compiled.definition().transitions()) {
+				if ("reward".equals(t.sourceNode()) && "reward".equals(t.targetNode())) {
+					boolean removesSpecificItem = t.actions().stream()
+						.anyMatch(a -> a instanceof QuestAction.RemoveItem rm && rm.count() > 0);
+					assertFalse(removesSpecificItem,
+						() -> "quest " + questId + " reward preview transition must not remove specific items");
+				}
+			}
+		}
+	}
+
+	@Test
 	void kaligaWeaponExchangeQuestsConsumeKaligaKey() throws Exception {
 		int[] kaligaQuests = {
 			18618, 18619, 18620, 18621, 18622, 18623, 18624, 18625, 18626, 18627,
