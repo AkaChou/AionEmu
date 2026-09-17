@@ -19,6 +19,75 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CompletedQuestPrerequisiteRegressionTest {
 	@Test
+	void noQuestRequiresItselfOrCreatesDependencyCycle() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		java.util.Set<Integer> existingIds = catalog.all().stream()
+			.map(CompiledQuestDefinition::id)
+			.collect(java.util.stream.Collectors.toSet());
+
+		java.util.Map<Integer, java.util.List<Integer>> graph = new java.util.HashMap<>();
+		for (CompiledQuestDefinition compiled : catalog.all()) {
+			int qid = compiled.id();
+			QuestMetadata meta = compiled.definition().metadata();
+			java.util.List<Integer> reqs = new java.util.ArrayList<>();
+			reqs.addAll(meta.prerequisites());
+			for (QuestStartCondition cond : meta.startConditions()) {
+				if ("finished".equalsIgnoreCase(cond.type())) {
+					reqs.add(cond.questId());
+				}
+			}
+			for (QuestStartConditionGroup group : meta.startConditionGroups()) {
+				for (QuestStartCondition cond : group.conditions()) {
+					if ("finished".equalsIgnoreCase(cond.type())) {
+						reqs.add(cond.questId());
+					}
+				}
+			}
+			for (int req : reqs) {
+				org.junit.jupiter.api.Assertions.assertNotEquals(qid, req,
+					() -> "quest " + qid + " must not require itself as prerequisite");
+			}
+			graph.put(qid, reqs);
+		}
+
+		java.util.Map<Integer, Integer> state = new java.util.HashMap<>();
+		java.util.List<String> cycles = new java.util.ArrayList<>();
+
+		for (int qid : existingIds) {
+			if (state.getOrDefault(qid, 0) == 0) {
+				dfsCheckCycle(qid, graph, existingIds, state, new java.util.ArrayList<>(), cycles);
+			}
+		}
+
+		assertTrue(cycles.isEmpty(), "prerequisite dependency cycles found: " + cycles);
+	}
+
+	private static void dfsCheckCycle(int current, java.util.Map<Integer, java.util.List<Integer>> graph,
+			java.util.Set<Integer> existingIds, java.util.Map<Integer, Integer> state,
+			java.util.List<Integer> path, java.util.List<String> cycles) {
+		state.put(current, 1);
+		path.add(current);
+
+		for (int next : graph.getOrDefault(current, java.util.List.of())) {
+			if (!existingIds.contains(next)) {
+				continue;
+			}
+			int nextState = state.getOrDefault(next, 0);
+			if (nextState == 1) {
+				int startIdx = path.indexOf(next);
+				java.util.List<Integer> cycle = new java.util.ArrayList<>(path.subList(startIdx, path.size()));
+				cycle.add(next);
+				cycles.add(cycle.toString());
+			} else if (nextState == 0) {
+				dfsCheckCycle(next, graph, existingIds, state, path, cycles);
+			}
+		}
+
+		path.remove(path.size() - 1);
+		state.put(current, 2);
+	}
+
+	@Test
 	void gatesInggisonMissionAutomaticStartsOnAllFourPriorMissions() throws Exception {
 		CompiledQuestDefinition definition = load(10035);
 		for (QuestEvent event : new QuestEvent[] {new QuestEvent.LevelUp(), new QuestEvent.ZoneMissionEnd()}) {
