@@ -18,6 +18,7 @@
 | 游戏内 JFR（300s）：Object[] 占采样分配 39.6%（其中 WorldMapInstance.getNpcs 单站点 207MB）、KeyValueHolder 占 12.5% 且全部来自 QuestSnapshot 的 withXxx 校验链 | `AR-007` | Map.of/Map.copyOf 结果上的 entrySet()/forEach/stream；实例级 getNpcs()/getPlayersInside() 的新增调用点 |
 | 游戏内 JFR（300s）：TemporarySpawn.getTime 单站点占采样分配 52.4MB / 17.2%（另见同源 String[] 2.83%） | `AR-008` | 任何在每次事件里 String.split/String.format/Pattern.compile 的模板读取点 |
 | 跑图窗口 JFR：BoundingBox.collideWithRay 97.2MB、CollisionResults.addCollision 30.9MB、Vector3f.clone 24.5MB、ArrayList.grow 68.7MB，均为“为拿一个 t 区间/一次遍历”而构造的临时对象 | `AR-009` | 为“只要一个标量/区间”的判定而构造集合或结果对象的碰撞调用；每查询 new 的向量/矩阵 |
+| play-15 class histogram 常驻 2.95GB 里空容器占大头 —— CHM 1,194,676 / 76.5MB（其中约 88 万为空表）、ReentrantReadWriteLock 914,470 + NonfairSync 915,125 ≈44MB、COW 509,628 / 12.2MB、RetailPatternAI2 单类 5 个 HashMap/Set ≈28MB | `AR-010` | 构造函数里 `new` 的集合/锁；改造前先确认该容器上各变更方法在占位符上的实际行为，以及首次写入是否可能来自多个线程 |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |

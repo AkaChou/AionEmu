@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-009`
+> Pattern IDs: `AR-001`–`AR-010`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-17
 
 ---
 
@@ -237,3 +237,25 @@ first_check: 为“只要一个标量/区间”的判定而构造集合或结果
 2. **scratch 必须走池并且“每个出口”都回收**：`intersectWhere` 有两个返回点（`onlyFirst` 提前返回、正常返回），漏掉任一处都会泄漏池化对象。
 3. **先确认所有权再决定能否回收**：`Ray.setOrigin/setDirection` 是拷贝（可回收调用方临时量），而 `Ray(origin,direction)` 构造函数持有引用（传入的向量在其存活期内不可回收）。
 4. **验证方式**：用同一批射线对拍改造前后的最近/最远距离与命中条数，再跑 geo 套件；仅靠"测试通过"不足以证明几何数值等价。
+
+## [AR-010] 十、实例级容器的懒物化（占位符语义 / 首写收敛 / 锁先于表）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 每实体预制容器的“零判定变化降本”改造（GameStats / AI 控制器 / EffectController / 监听器列表等）
+first_seen: 2026-09-17
+last_verified: 2026-09-17
+symptom: play-15 class histogram 常驻 2.95GB 里空容器占大头 —— CHM 1,194,676 / 76.5MB（其中约 88 万为空表）、ReentrantReadWriteLock 914,470 + NonfairSync 915,125 ≈44MB、COW 509,628 / 12.2MB、RetailPatternAI2 单类 5 个 HashMap/Set ≈28MB
+root_cause: 构造函数里“为每个实体预制容器”，而绝大多数实体从不写入：空 HashSet 内嵌一个 HashMap、ReentrantReadWriteLock 实为 5 个对象（RRWL + ReadLock + WriteLock + NonfairSync + ThreadLocalHoldCounter）
+fix_or_guardrail: 字段指向共享占位符（`Collections.emptySet()`/`emptyMap()`）+ `volatile` + 双检 `synchronized (this)` 物化访问器；**只把真实写入点**改走访问器，读路径与空操作保持原样；并发首写必须收敛；绝不把字段写回占位符；锁与表一起懒物化时先发布锁
+evidence: src/main/java/com/aionemu/gameserver/model/stats/container/CreatureGameStats.java; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java; src/main/java/com/aionemu/gameserver/ai2/AbstractAI.java; src/main/java/com/aionemu/gameserver/controllers/attack/AggroList.java; src/main/java/com/aionemu/gameserver/controllers/effect/EffectController.java; src/test/java/com/aionemu/gameserver/model/stats/container/CreatureGameStatsTest.java
+validation: 每轮聚焦套件 27–33 个测试类 303–331 例全绿（含 PathGoldenDiffTest 寻路闸门 + 并发首写收敛 / 发布顺序 / 占位符空操作契约回归）；各轮 300s JFR 复测常驻与分配下降
+boundaries: 已确认**不能**懒物化的：`TreeSet<IStatFunction>`（承担属性应用顺序语义）、本来就在写入分支里按需 `new` 的容器；纯读路径不得为了“顺手”而物化
+superseded_by: none
+first_check: 构造函数里 `new` 的集合/锁；改造前先确认该容器上各变更方法在占位符上的实际行为，以及首次写入是否可能来自多个线程
+-->
+
+1. **占位符的变更语义并不一致（JDK 26.0.2.1 实测）**：`Collections.emptySet()` 的 `remove`/`removeIf`/`removeAll`/`retainAll`/`clear` 全是安全空操作；`Collections.emptyMap()` 只有 `remove(key)` 与 `clear()` 安全，而 `put`、`computeIfAbsent`、**两参数** `remove(key,value)` 抛 `UnsupportedOperationException`。所以只让真实写入点走物化访问器；不要把"map 上的 remove 也会抛"当成结论（本项目曾据此误记过一次）。
+2. **并发首次写入必须收敛到同一实例**：`volatile` + 双检 `synchronized (this)`。否则先写入的数据会落进被丢弃的容器而**静默消失**（定时器再也无法取消、监听器收不到回调、属性函数不生效）。读路径取局部快照且不加锁；不要用"共享空容器 + `synchronized (共享实例)`"混搭，那等于全局锁。
+3. **绝不把字段写回占位符**：重置路径只 `clear()` 内容——其他线程可能仍持有已物化的引用，回写会让它们的写入凭空消失。
+4. **锁与表一起懒物化时，先发布锁、再发布表**（两个字段都 `volatile`）：读路径才能做到"看到占位符 ⇒ 免锁（本来就没有内容）；看到表 ⇒ 必然也能看到锁"。并且**保持原有锁类型**：把 `ReentrantReadWriteLock` 顺手换成互斥锁/`synchronized` 会改变跨对象嵌套的死锁面（属性函数存在"子 stats 持读锁 → 读主 stats"的固定方向嵌套，读写锁下恒为读-读，互斥锁下就变成锁序依赖）。
+5. **验收标准是"物化后容器类型与改动前一致"**：单线程语义逐字相同、并发语义与改动前等价，唯一新增要求是首写收敛。按需创建（只在写入分支里 `new`）的容器没有懒物化空间，别为了凑数硬改。
