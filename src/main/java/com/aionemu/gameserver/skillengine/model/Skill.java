@@ -1,7 +1,8 @@
 package com.aionemu.gameserver.skillengine.model;
 
-
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -73,7 +74,20 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
  * @author ATracer Modified by Wakzashi
  */
 @Slf4j
+@Getter
+@Setter
+
 public class Skill {
+
+	/**
+	 * 设置多段施法标记（历史方法名，保留以兼容既有调用）。
+	 * Sets the multi-cast flag (legacy setter name kept for existing callers).
+	 *
+	 * @param isMultiCast 是否多段施法 / whether multi-cast
+	 */
+	public void setIsMultiCast(boolean isMultiCast) {
+		this.isMultiCast = isMultiCast;
+	}
 
 	private SkillMethod skillMethod = SkillMethod.CAST;
 	private final List<Creature> effectedList;
@@ -83,6 +97,11 @@ public class Skill {
 	private final int skillStackLvl;
 	private final StartMovingListener conditionChangeListener;
 	private SkillTemplate skillTemplate;
+	/**
+	 * -- GETTER --
+	 *  是否检查主目标距离。
+	 *  Whether first-target range is checked.
+	 */
 	private boolean firstTargetRangeCheck = true;
 	private ItemTemplate itemTemplate;
 	private int itemObjectId = 0;
@@ -144,16 +163,6 @@ public class Skill {
 	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget, int skillLevel) {
 		this(skillTemplate, effector, skillLevel, firstTarget, null);
-	}
-
-	/**
-	 * 获取充能技能模板。
-	 * Gets charge skill template.
-	 *
-	 * @return 充能技能模板 / charge skill template
-	 */
-	public ChargeSkillTemplate getChargeTemplate() {
-		return chargeTemplate;
 	}
 	/**
 	 * 构造运行时技能实例。
@@ -251,7 +260,7 @@ public class Skill {
 		}
 
 		// 空对象目标施法无效；自身与范围技能仍可在无命中目标时激活。 / Empty object-target casts are invalid; self-targeted and area skills can still activate without a hit target.
-		if (targetType == 0 && effectedList.size() == 0 && firstTargetAttribute != FirstTargetAttribute.ME && targetRangeAttribute != TargetRangeAttribute.AREA) {
+		if (targetType == 0 && effectedList.isEmpty() && firstTargetAttribute != FirstTargetAttribute.ME && targetRangeAttribute != TargetRangeAttribute.AREA) {
 			log.debug("targettype failed");
 			return false;
 		}
@@ -1711,92 +1720,12 @@ public class Skill {
 		return skillConditions == null || skillConditions.validate(this);
 	}
 	/**
-	 * 设置技能消耗加成。
-	 * Sets skill cost boost.
-	 *
-	 */
-	public void setBoostSkillCost(int value) {
-		boostSkillCost = value;
-	}
-	/**
-	 * 获取技能消耗加成。
-	 * Gets skill cost boost.
-	 *
-	 */
-	public int getBoostSkillCost() {
-		return boostSkillCost;
-	}
-	/**
-	 * 获取受影响目标列表。
-	 * Gets list of effected creatures.
-	 *
-	 */
-	public List<Creature> getEffectedList() {
-		return effectedList;
-	}
-	/**
-	 * 获取施法者。
-	 * Gets the effector.
-	 *
-	 */
-	public Creature getEffector() {
-		return effector;
-	}
-	/**
-	 * 获取技能等级。
-	 * Gets skill level.
-	 *
-	 */
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
 	 */
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
-	}
-	/**
-	 * 获取技能堆叠等级。
-	 * Gets skill stack level.
-	 *
-	 */
-	public int getSkillStackLvl() {
-		return skillStackLvl;
-	}
-	/**
-	 * 获取移动条件监听器。
-	 * Gets start-moving condition listener.
-	 *
-	 */
-	public StartMovingListener getConditionChangeListener() {
-		return conditionChangeListener;
-	}
-	/**
-	 * 获取技能模板。
-	 * Gets skill template.
-	 *
-	 */
-	public SkillTemplate getSkillTemplate() {
-		return skillTemplate;
-	}
-	/**
-	 * 获取主目标。
-	 * Gets first target.
-	 *
-	 */
-	public Creature getFirstTarget() {
-		return firstTarget;
-	}
-	/**
-	 * 设置主目标。
-	 * Sets first target.
-	 *
-	 */
-	public void setFirstTarget(Creature firstTarget) {
-		this.firstTarget = firstTarget;
 	}
 	/**
 	 * 是否被动技能。
@@ -1806,23 +1735,7 @@ public class Skill {
 	public boolean isPassive() {
 		return skillTemplate.getActivationAttribute() == ActivationAttribute.PASSIVE;
 	}
-	/**
-	 * 是否检查主目标距离。
-	 * Whether first-target range is checked.
-	 *
-	 */
-	public boolean isFirstTargetRangeCheck() {
-		return firstTargetRangeCheck;
-	}
-	/**
-	 * 设置主目标属性。
-	 * Sets first-target attribute.
-	 *
-	 * @param firstTargetAttribute 主目标属性 / first target attribute
-	 */
-	public void setFirstTargetAttribute(FirstTargetAttribute firstTargetAttribute) {
-		this.firstTargetAttribute = firstTargetAttribute;
-	}
+
 	/**
 	 * 是否非指向 AOE。
 	 * Whether non-target AOE.
@@ -1864,58 +1777,6 @@ public class Skill {
 		return (this.firstTargetAttribute == FirstTargetAttribute.POINT);
 	}
 	/**
-	 * 设置是否检查主目标距离。
-	 * Sets first-target range check flag.
-	 *
-	 */
-	public void setFirstTargetRangeCheck(boolean firstTargetRangeCheck) {
-		this.firstTargetRangeCheck = firstTargetRangeCheck;
-	}
-	/**
-	 * 设置关联物品模板。
-	 * Sets related item template.
-	 *
-	 */
-	public void setItemTemplate(ItemTemplate itemTemplate) {
-		this.itemTemplate = itemTemplate;
-	}
-
-	/**
-	 * 获取关联物品模板。
-	 * Gets related item template.
-	 *
-	 */
-	public ItemTemplate getItemTemplate() {
-		return this.itemTemplate;
-	}
-
-	/**
-	 * 设置物品对象 ID。
-	 * Sets item object id.
-	 *
-	 * @param id 对象 ID / object id
-	 */
-	public void setItemObjectId(int id) {
-		this.itemObjectId = id;
-	}
-
-	/**
-	 * 获取物品对象 ID。
-	 * Gets item object id.
-	 *
-	 */
-	public int getItemObjectId() {
-		return this.itemObjectId;
-	}
-	/**
-	 * 设置目标范围属性。
-	 * Sets target range attribute.
-	 *
-	 */
-	public void setTargetRangeAttribute(TargetRangeAttribute targetRangeAttribute) {
-		this.targetRangeAttribute = targetRangeAttribute;
-	}
-	/**
 	 * 设置目标类型与坐标。
 	 * Sets target type and coordinates.
 	 *
@@ -1943,72 +1804,6 @@ public class Skill {
 		this.y = y;
 		this.z = z;
 		this.h = h;
-	}
-
-	/**
-	 * 设置施法持续时间。
-	 * Sets cast duration.
-	 *
-	 * @param t 时长 / duration
-	 */
-	public void setDuration(int t) {
-		this.duration = t;
-	}
-
-	/**
-	 * 获取目标 X。
-	 * Gets target X.
-	 *
-	 * @return X
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * 获取目标 Y。
-	 * Gets target Y.
-	 *
-	 * @return Y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * 获取目标 Z。
-	 * Gets target Z.
-	 *
-	 * @return Z
-	 */
-	public float getZ() {
-		return z;
-	}
-
-	/**
-	 * 获取目标朝向。
-	 * Gets target heading.
-	 *
-	 * 朝向 / heading
-	 */
-	public final byte getH() {
-		return h;
-	}
-	/**
-	 * 获取命中时间。
-	 * Gets hit time.
-	 *
-	 */
-	public int getHitTime() {
-		return hitTime;
-	}
-	/**
-	 * 设置命中时间。
-	 * Sets hit time.
-	 *
-	 */
-	public void setHitTime(int time) {
-		this.hitTime = time;
 	}
 
 	/**
@@ -2120,33 +1915,6 @@ public class Skill {
 	}
 
 	/**
-	 * 设置连锁类别。
-	 * Sets chain category.
-	 *
-	 */
-	public void setChainCategory(String chainCategory) {
-		this.chainCategory = chainCategory;
-	}
-
-	/**
-	 * 获取连锁类别。
-	 * Gets chain category.
-	 *
-	 */
-	public String getChainCategory() {
-		return this.chainCategory;
-	}
-
-	/**
-	 * 获取技能方法类型。
-	 * Gets skill method type.
-	 *
-	 */
-	public SkillMethod getSkillMethod() {
-		return this.skillMethod;
-	}
-
-	/**
 	 * 是否点对点技能。
 	 * Whether point-to-point skill.
 	 *
@@ -2162,15 +1930,6 @@ public class Skill {
 	 */
 	public boolean isMulticast() {
 		return this.isMultiCast;
-	}
-
-	/**
-	 * 设置多重施放标记。
-	 * Sets multicast flag.
-	 *
-	 */
-	public void setIsMultiCast(boolean isMultiCast) {
-		this.isMultiCast = isMultiCast;
 	}
 
 	/**

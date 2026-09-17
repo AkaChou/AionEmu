@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.Calendar;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -13,6 +15,8 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 
 @Slf4j
+@Getter
+@Setter
 public class AbyssRank {
 
 	// AP
@@ -145,38 +149,10 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return 每日欧比斯点数 / The daily Abyss Point count
-	 */
-	public int getDailyAP() {
-		return dailyAP;
-	}
-
-	/**
-	 * @return 每周欧比斯点数 / The weekly Abyss Point count
-	 */
-	public int getWeeklyAP() {
-		return weeklyAP;
-	}
-
-	/**
 	 * @return 历史欧比斯点数 / The all time Abyss Point count
 	 */
 	public int getAp() {
 		return currentAp;
-	}
-
-	/**
-	 * @return 每日荣耀点数 / The daily Glory Point count
-	 */
-	public int getDailyGP() {
-		return dailyGP;
-	}
-
-	/**
-	 * @return 每周荣耀点数 / The weekly Glory Point count
-	 */
-	public int getWeeklyGP() {
-		return weeklyGP;
 	}
 
 	/**
@@ -187,48 +163,6 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return 当前排名 / the rank
-	 */
-	public AbyssRankEnum getRank() {
-		return rank;
-	}
-
-	/**
-	 * @return 当前排名的配额排名 / The top ranking of the current rank
-	 */
-	public int getTopRanking() {
-		return topRanking;
-	}
-
-	/**
-	 * @param topRanking
-	 */
-	public void setTopRanking(int topRanking) {
-		this.topRanking = topRanking;
-	}
-
-	/**
-	 * @return 每日击杀数 / The daily count kill
-	 */
-	public int getDailyKill() {
-		return dailyKill;
-	}
-
-	/**
-	 * @return 每周击杀数 / The weekly count kill
-	 */
-	public int getWeeklyKill() {
-		return weeklyKill;
-	}
-
-	/**
-	 * @return 总击杀数 / all Kill
-	 */
-	public int getAllKill() {
-		return allKill;
-	}
-
-	/**
 	 * 为玩家增加一次击杀。
 	 * Add one kill to a player
 	 */
@@ -236,34 +170,6 @@ public class AbyssRank {
 		this.dailyKill += 1;
 		this.weeklyKill += 1;
 		this.allKill += 1;
-	}
-
-	/**
-	 * @return 最高排名 / max Rank
-	 */
-	public int getMaxRank() {
-		return maxRank;
-	}
-
-	/**
-	 * @return 上周击杀数 / The last week count kill
-	 */
-	public int getLastKill() {
-		return lastKill;
-	}
-
-	/**
-	 * @return 上周欧比斯点数 / The last week Abyss Point count
-	 */
-	public int getLastAP() {
-		return lastAP;
-	}
-
-	/**
-	 * @return 上周荣耀点数 / The last week Glory Point count
-	 */
-	public int getLastGP() {
-		return lastGP;
 	}
 
 	/**
@@ -286,13 +192,6 @@ public class AbyssRank {
 		this.dailyKill += 1;
 		this.weeklyKill += 1;
 		this.allKill += 1;
-	}
-
-	/**
-	 * @return the persistentState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/**
@@ -341,13 +240,6 @@ public class AbyssRank {
 			maxRank = savedMaxRank;
 			persistentState = savedPersistentState;
 		}
-	}
-
-	/**
-	 * @return 欧比斯排名的最后更新时间 / The last update of the AbyssRank
-	 */
-	public long getLastUpdate() {
-		return lastUpdate;
 	}
 
 	/**

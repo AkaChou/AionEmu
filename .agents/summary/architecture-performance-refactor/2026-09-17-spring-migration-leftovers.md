@@ -224,3 +224,29 @@
   `LegionServiceTest`(3) + `LegionContainerTest`(3) + `LegionMemberContainerTest`(2) + `ModelCollectionImplementationTest`(18)
   + `ServiceInternalCollectionImplementationTest`(6) + `PlayerEnterWorldVipTest`(3) + `ShutdownHookTest`(5)
   + `GameLegacyServiceBridgeConfigurationTest`(57) = **140 例全绿**（含并行 quest 侧测试，一起跑无回归）；`mvn test-compile` 通过。
+
+## 十二、大类 Lombok 批处理（2026-09-17）
+
+处理口径（只做**零 Lombok 注解**且"字段名 ↔ 访问器名严格一致 + 平凡实现"的类；有字段级 `@Getter/@Setter` 的类不动）：
+
+| 类 | 原行数 | 现行数 | 删除段/行 | 处理 |
+|---|---|---|---|---|
+| `PlayerCommonData` | 1284 | 1022 | 50 段 / 275 行 | 类级 `@Getter @Setter`，字段名与访问器一致的平凡 getter/setter 全部删除 |
+| `Skill` | 2192 | 1952 | 8 段 / 253 行 | 同上 |
+| `Battleground` | 2130 | 1930 | 8 段 / 210 行 | 同上 |
+| `AbyssRank` | 397 | 288 | 6 段 / 112 行 | 同上 |
+
+- 判定严格化：只删「方法名 = Lombok 会生成的名字」且「方法体是 `return field;` / `this.field = arg;`」的方法；
+  名字不匹配（如 `is*` 前缀布尔字段）或体里有校验/发消息等副作用的访问器一律保留。
+- 三个历史别名访问器显式保留并加注释（删掉会破坏现有调用点）：
+  `PlayerCommonData#getNoExp()`（无同名字段可匹配）、`Battleground#setIsEvent(boolean)`（字段名 `isEvent`）、
+  `Skill#setIsMultiCast(boolean)`（字段名 `isMultiCast`）。
+- 字节码核验：`javap` 确认 Lombok 已生成被删访问器（`PlayerCommonData` 180 / `Battleground` 76 /
+  `Skill` 90 / `AbyssRank` 43 个 public 方法），`getNoExp`、`setIsEvent`/`setIsMultiCast`、`setOnline`、
+  `getSkillId` 等抽样全部存在。
+- 未处理的高价值候选（留待下一批）：`Item`(1136)、`ItemTemplate`(775)、`Creature`(953)、`Effect`(1777)、
+  `PetCommonData`/`MinionCommonData`（已混用字段级注解，需先统一策略）。
+- 验证：`mvn test-compile` 通过；`LadderServiceTest`(3) + `GameRuntimeServicesLifecycleTest`(6) +
+  `GameLegacyServiceBridgeConfigurationTest`(57) + `ShutdownHookTest`(5) + `ServiceInternalCollectionImplementationTest`(6)
+  + `ServiceMapImplementationTest`(6) + `SkillEngineTest`(1) + `BattlegroundCollectionsTest`(1) + `LegionServiceTest`(3)
+  + `ModelCollectionImplementationTest`(18) = **106 例全绿**。

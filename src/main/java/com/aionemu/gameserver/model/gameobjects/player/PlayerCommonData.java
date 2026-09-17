@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.GameServer;
@@ -39,7 +41,19 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 
 @Slf4j
+@Getter
+@Setter
 public class PlayerCommonData extends VisibleObjectTemplate {
+
+	/**
+	 * 是否禁用经验获取（历史方法名，保留以兼容既有调用）。
+	 * Whether experience gain is disabled (legacy accessor name kept for existing callers).
+	 *
+	 * @return 禁用经验时为 true / true when exp gain is disabled
+	 */
+	public boolean getNoExp() {
+		return noExp;
+	}
 	private final int playerObjId;
 	private Race race;
 	private String name;
@@ -113,30 +127,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 		this.playerObjId = objId;
 	}
 
-	public int getPlayerObjId() {
-		return playerObjId;
-	}
-
-	public long getExp() {
-		return this.exp;
-	}
-
-	public int getQuestExpands() {
-		return this.questExpands;
-	}
-
-	public void setQuestExpands(int questExpands) {
-		this.questExpands = questExpands;
-	}
-
-	public void setNpcExpands(int npcExpands) {
-		this.npcExpands = npcExpands;
-	}
-
-	public int getNpcExpands() {
-		return npcExpands;
-	}
-
 	/**
 	 * @return the AdvancedStigmaSlotSize
 	 */
@@ -203,10 +193,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 		long el = this.expRecoverable;
 		this.expRecoverable = 0;
 		this.setExp(this.exp + el, false);
-	}
-
-	public long getExpRecoverable() {
-		return this.expRecoverable;
 	}
 
 public double getExpMultiplier() {
@@ -473,94 +459,16 @@ public double getExpMultiplier() {
 		}
 	}
 
-	public void setNoExp(boolean value) {
-		this.noExp = value;
-	}
-
-	public boolean getNoExp() {
-		return noExp;
-	}
-
-	/**
-	 * @return 模板中的种族 / Race as from template
-	 */
-	public final Race getRace() {
-		return race;
-	}
-
 	public Race getOppositeRace() {
 		return race == Race.ELYOS ? Race.ASMODIANS : Race.ELYOS;
-	}
-
-	/**
-	 * @return the mentorFlagTime
-	 */
-	public int getMentorFlagTime() {
-		return mentorFlagTime;
 	}
 
 	public boolean isHaveMentorFlag() {
 		return mentorFlagTime > System.currentTimeMillis() / 1000;
 	}
 
-	/**
-	 * @param mentorFlagTime the mentorFlagTime to set
-	 */
-	public void setMentorFlagTime(int mentorFlagTime) {
-		this.mentorFlagTime = mentorFlagTime;
-	}
-
-	public void setRace(Race race) {
-		this.race = race;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public PlayerClass getPlayerClass() {
-		return playerClass;
-	}
-
-	public void setPlayerClass(PlayerClass playerClass) {
-		this.playerClass = playerClass;
-	}
-
 	public boolean isOnline() {
 		return online;
-	}
-
-	public void setOnline(boolean online) {
-		this.online = online;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
-
-	public WorldPosition getPosition() {
-		return position;
-	}
-
-	public Timestamp getLastOnline() {
-		return lastOnline;
-	}
-
-	public void setLastOnline(Timestamp timestamp) {
-		lastOnline = timestamp;
-	}
-
-	public int getLevel() {
-		return level;
 	}
 
 	public void setLevel(int level) {
@@ -578,30 +486,7 @@ public double getExpMultiplier() {
 		}
 	}
 
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	public int getTitleId() {
-		return titleId;
-	}
-
-	public void setTitleId(int titleId) {
-		this.titleId = titleId;
-	}
-
-	public int getBonusTitleId() {
-		return bonusTitleId;
-	}
-
 	/** 设置 bonus title id / Sets the bonus title id */
-	public void setBonusTitleId(int bonusTitleId) {
-		this.bonusTitleId = bonusTitleId;
-	}
 
 	/**
 	 * @param position 创建本类对象后应恰好调用一次。 / This method should be called exactly once after creating object of this class
@@ -661,9 +546,6 @@ public double getExpMultiplier() {
 	}
 
 	/** 获取神圣能量。 / Returns the dp. */
-	public int getDp() {
-		return this.dp;
-	}
 
 	/** 返回模板 ID / Returns the template id */
 	@Override
@@ -677,29 +559,9 @@ public double getExpMultiplier() {
 		return 0;
 	}
 
-	/**
-	 * @param warehouseSize the warehouseSize to set
-	 */
-	public void setWarehouseSize(int warehouseSize) {
-		this.warehouseSize = warehouseSize;
-	}
-
-	/**
-	 * @return the warehouseSize
-	 */
-	public int getWarehouseSize() {
-		return warehouseSize;
-	}
-
 	/** 设置 mailbox letters / Sets the mailbox letters */
-	public void setMailboxLetters(int count) {
-		this.mailboxLetters = count;
-	}
 
 	/** 返回 mailbox letters / Returns the mailbox letters */
-	public int getMailboxLetters() {
-		return mailboxLetters;
-	}
 
 	/**
 	 * @param boundRadius
@@ -709,10 +571,6 @@ public double getExpMultiplier() {
 	}
 
 	/** 获取边界半径。 / Returns the bound radius. */
-	@Override
-	public BoundRadius getBoundRadius() {
-		return boundRadius;
-	}
 
 	/** 设置 death count / Sets the death count */
 	public void setDeathCount(int count) {
@@ -749,34 +607,16 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置 last transfer time / Sets the last transfer time */
-	public void setLastTransferTime(long value) {
-		this.lastTransferTime = value;
-	}
 
 	/** 返回 last transfer time / Returns the last transfer time */
-	public long getLastTransferTime() {
-		return this.lastTransferTime;
-	}
 
 	/** 返回世界所有者 ID / Returns the world owner id */
-	public int getWorldOwnerId() {
-		return worldOwnerId;
-	}
 
 	/** 设置 world owner id / Sets the world owner id */
-	public void setWorldOwnerId(int worldOwnerId) {
-		this.worldOwnerId = worldOwnerId;
-	}
 
 	/** 返回上次盖章 / Returns the last stamp*/
-	public Timestamp getLastStamp() {
-		return lastStamp;
-	}
 
 	/** 设置 last stamp / Sets the last stamp */
-	public void setLastStamp(Timestamp setTime) {
-		lastStamp = setTime;
-	}
 
 	/** 返回通行证盖章 / Returns the passport stamps*/
 	public int getPassportStamps() {
@@ -789,14 +629,8 @@ public double getExpMultiplier() {
 	}
 
 	/** 返回玩家通行证 / Returns the player passports*/
-	public Map<Integer, AtreianPassport> getPlayerPassports() {
-		return playerPassports;
-	}
 
 	/** 返回 completed passports / Returns the completed passports */
-	public PlayerPassports getCompletedPassports() {
-		return completedPassports;
-	}
 
 	/** 添加 to completed passports / Adds to completed passports */
 	public void addToCompletedPassports(AtreianPassport atreianPassport) {
@@ -804,19 +638,10 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置 completed passports / Sets the completed passports */
-	public void setCompletedPassports(PlayerPassports playerPassports) {
-		completedPassports = playerPassports;
-	}
 
 	/** 返回通行证奖励 / Returns the passport reward*/
-	public int getPassportReward() {
-		return passportReward;
-	}
 
 	/** 设置 passport reward / Sets the passport reward */
-	public void setPassportReward(int passportReward) {
-		this.passportReward = passportReward;
-	}
 
 	/** 设置 arch daeva / Sets the arch daeva */
 	public void setArchDaeva(boolean isArchDaeva) {
@@ -831,14 +656,8 @@ public double getExpMultiplier() {
 	}
 
 	/** 返回 creativity point / Returns the creativity point */
-	public int getCreativityPoint() {
-		return creativityPoint;
-	}
 
 	/** 设置 creativity point / Sets the creativity point */
-	public void setCreativityPoint(int point) {
-		this.creativityPoint = point;
-	}
 
 	/** 返回 cp step / Returns the cp step */
 	public int getCPStep() {
@@ -851,44 +670,20 @@ public double getExpMultiplier() {
 	}
 
 	/** 返回 stone creativity point / Returns the stone creativity point */
-	public int getStoneCreativityPoint() {
-		return stoneCreativityPoint;
-	}
 
 	/** 设置 stone creativity point / Sets the stone creativity point */
-	public void setStoneCreativityPoint(int point) {
-		this.stoneCreativityPoint = point;
-	}
 
 	/** 返回 join request legion id / Returns the join request legion id */
-	public int getJoinRequestLegionId() {
-		return joinRequestLegionId;
-	}
 
 	/** 设置 join request legion id / Sets the join request legion id */
-	public void setJoinRequestLegionId(int joinRequestLegionId) {
-		this.joinRequestLegionId = joinRequestLegionId;
-	}
 
 	/** 返回 join request state / Returns the join request state */
-	public LegionJoinRequestState getJoinRequestState() {
-		return joinRequestState;
-	}
 
 	/** 设置 join request state / Sets the join request state */
-	public void setJoinRequestState(LegionJoinRequestState joinRequestState) {
-		this.joinRequestState = joinRequestState;
-	}
 
 	/** 设置 luna consume point / Sets the luna consume point */
-	public void setLunaConsumePoint(int point) {
-		this.lunaConsumePoint = point;
-	}
 
 	/** 返回 luna consume point / Returns the luna consume point */
-	public int getLunaConsumePoint() {
-		return lunaConsumePoint;
-	}
 
 	/** 设置 muni keys / Sets the muni keys */
 	public void setMuniKeys(int keys) {
@@ -911,14 +706,8 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置衣橱槽位。 / Sets the wardrobe slot. */
-	public void setWardrobeSlot(int slot) {
-		this.wardrobeSlot = slot;
-	}
 
 	/** 获取衣橱槽位。 / Returns the wardrobe slot. */
-	public int getWardrobeSlot() {
-		return wardrobeSlot;
-	}
 
 	/** 获取升级街机。 / Returns the upgrade arcade. */
 	public PlayerUpgradeArcade getUpgradeArcade() {
@@ -929,9 +718,6 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置升级街机。 / Sets the upgrade arcade. */
-	public void setUpgradeArcade(PlayerUpgradeArcade upgradeArcade) {
-		this.upgradeArcade = upgradeArcade;
-	}
 
 	/**
 	 * @return 是否已准备好获得成长光环 / Whether ready for aura of growth
@@ -972,9 +758,6 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置 aura of growth / Sets the aura of growth */
-	public void setAuraOfGrowth(long value) {
-		auraOfGrowth = value;
-	}
 
 	/** 返回 aura of growth / Returns the aura of growth */
 	public long getAuraOfGrowth() {
@@ -1197,14 +980,8 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置 floor / Sets the floor */
-	public void setFloor(int floor) {
-		this.floor = floor;
-	}
 
 	/** 返回 floor / Returns the floor */
-	public int getFloor() {
-		return floor;
-	}
 
 	private int time;
 
@@ -1219,47 +996,18 @@ public double getExpMultiplier() {
 	}
 
 	/** 返回 golden dice / Returns the golden dice */
-	public int getGoldenDice() {
-		return goldenDice;
-	}
 
 	/** 设置 golden dice / Sets the golden dice */
-	public void setGoldenDice(int dice) {
-		this.goldenDice = dice;
-	}
 
 	/** 返回 reset board / Returns the reset board */
-	public int getResetBoard() {
-		return resetBoard;
-	}
 
 	/** 设置 reset board / Sets the reset board */
-	public void setResetBoard(int reset) {
-		this.resetBoard = reset;
-	}
 
 	/** 设置 creation date / Sets the creation date */
-	public void setCreationDate(Timestamp date) {
-		creationDate = date;
-	}
 
 	/** 返回 creation date / Returns the creation date */
-	public Timestamp getCreationDate() {
-		return creationDate;
-	}
-
-	/**
-	 * 守护灵相关。
-	 * Minions section
-	 */
-	public int getMinionSkillPoints() {
-		return minionSkillPoints;
-	}
 
 	/** 设置守护灵技能点。 / Sets the minion skill points. */
-	public void setMinionSkillPoints(int minionSkillPoints) {
-		this.minionSkillPoints = minionSkillPoints;
-	}
 
 	/** 是否自动补充守护灵技能点 / Whether minion skill points auto charge */
 	public boolean isMinionSkillPointsAutoCharge() {
@@ -1267,17 +1015,8 @@ public double getExpMultiplier() {
 	}
 
 	/** 设置 minion skill points auto charge / Sets the minion skill points auto charge */
-	public void setMinionSkillPointsAutoCharge(boolean minionSkillPointsAutoCharge) {
-		this.minionSkillPointsAutoCharge = minionSkillPointsAutoCharge;
-	}
 
 	/** 返回 minion function time / Returns the minion function time */
-	public Timestamp getMinionFunctionTime() {
-		return minionFunctionTime;
-	}
 
 	/** 设置 minion function time / Sets the minion function time */
-	public void setMinionFunctionTime(Timestamp minionFunctionTime) {
-		this.minionFunctionTime = minionFunctionTime;
-	}
 }

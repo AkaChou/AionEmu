@@ -2,6 +2,9 @@ package com.aionemu.gameserver.services.events.bg;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -67,7 +70,19 @@ import java.util.Map;
  *
  * @Author Rinzler (Encom)
  */
+@Getter
+@Setter
 public abstract class Battleground {
+
+	/**
+	 * 设置活动战场标记（历史方法名，保留以兼容既有调用）。
+	 * Marks this battleground as an event match (legacy setter name kept for existing callers).
+	 *
+	 * @param isEvent 是否活动战场 / whether event mode
+	 */
+	public void setIsEvent(boolean isEvent) {
+		this.isEvent = isEvent;
+	}
 	/** 默认传送延迟（毫秒）。 / Default teleport delay in ms. */
 	protected static final int TELEPORT_DEFAULT_DELAY = 0;
 	/** Elo 评分 K 值 / Elo rating K-value. */
@@ -915,10 +930,6 @@ public abstract class Battleground {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 	}
 
-
-
-
-
 	/**
 	 * 记录玩家胜场与评分变化。
 	 * Records a player win and rating change.
@@ -1443,7 +1454,6 @@ public abstract class Battleground {
 		}
 	}
 
-
 	/**
 	 * 随机选取地图并创建副本实例。
 	 * Picks a random map and creates a world instance.
@@ -1481,96 +1491,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 获取战场名称。
-	 * Returns the battleground name.
-	 *
-	 * @return 战场名称 / the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 获取战场描述。
-	 * Returns the battleground description.
-	 *
-	 * @return 战场描述 / the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * 获取最小人数。
-	 * Returns minimum size.
-	 *
-	 * @return 最小人数 / minimum size
-	 */
-	public int getMinSize() {
-		return minSize;
-	}
-
-	/**
-	 * 获取最大人数。
-	 * Returns maximum size.
-	 *
-	 * @return 最大人数 / maximum size
-	 */
-	public int getMaxSize() {
-		return maxSize;
-	}
-
-	/**
-	 * 获取队伍数量。
-	 * Returns team count.
-	 *
-	 * @return 队伍数量 / team count
-	 */
-	public int getTeamCount() {
-		return teamCount;
-	}
-
-	/**
-	 * 获取当前地图 ID。
-	 * Returns current map id.
-	 *
-	 * @return 地图 ID / map id
-	 */
-	public int getMapId() {
-		return mapId;
-	}
-
-	/**
-	 * 设置对局时长（秒）。
-	 * Sets match length in seconds.
-	 *
-	 * @param matchLength 对局时长秒 / length in seconds
-	 */
-	public void setMatchLength(int matchLength) {
-		this.matchLength = matchLength;
-	}
-
-	/**
-	 * 获取对局时长（秒）。
-	 * Returns match length in seconds.
-	 *
-	 * @return 对局时长秒 / length in seconds
-	 */
-	public int getMatchLength() {
-		return matchLength;
-	}
-
-	/**
-	 * 获取当前战场地图配置。
-	 * Returns the current battleground map config.
-	 *
-	 * @return 地图配置 / map config
-	 */
-	public BattlegroundMap getMap() {
-		return map;
-	}
-
-	/**
 	 * 设置副本实例 ID。
 	 * Sets instance id.
 	 *
@@ -1578,36 +1498,6 @@ public abstract class Battleground {
 	 */
 	protected void setInstanceId(int instanceId) {
 		this.instanceId = instanceId;
-	}
-
-	/**
-	 * 获取副本实例 ID。
-	 * Returns instance id.
-	 *
-	 * @return 实例 ID / instance id
-	 */
-	public int getInstanceId() {
-		return instanceId;
-	}
-
-	/**
-	 * 设置战场注册 ID。
-	 * Sets registered battleground id.
-	 *
-	 * @param bgId 战场注册 ID / battleground id
-	 */
-	public void setBgId(Integer bgId) {
-		this.bgId = bgId;
-	}
-
-	/**
-	 * 获取战场注册 ID。
-	 * Returns registered battleground id.
-	 *
-	 * @return 战场注册 ID / battleground id
-	 */
-	public Integer getBgId() {
-		return bgId;
 	}
 
 	/**
@@ -1621,26 +1511,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 获取对局开始时间戳。
-	 * Returns match start timestamp.
-	 *
-	 * @return 时间戳 / timestamp
-	 */
-	public long getStartStamp() {
-		return startStamp;
-	}
-
-	/**
-	 * 设置是否锦标赛模式。
-	 * Sets tournament mode flag.
-	 *
-	 * @param isTournament 是否锦标赛 / tournament flag
-	 */
-	public void setIsTournament(boolean isTournament) {
-		this.isTournament = isTournament;
-	}
-
-	/**
 	 * 是否锦标赛模式。
 	 * Whether tournament mode.
 	 *
@@ -1648,16 +1518,6 @@ public abstract class Battleground {
 	 */
 	public boolean isTournament() {
 		return isTournament;
-	}
-
-	/**
-	 * 设置是否活动模式。
-	 * Sets event mode flag.
-	 *
-	 * @param isEvent 是否活动模式 / event flag
-	 */
-	public void setIsEvent(boolean isEvent) {
-		this.isEvent = isEvent;
 	}
 
 	/**
@@ -1681,16 +1541,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 设置是否 1v1 模式。
-	 * Sets 1v1 mode flag.
-	 *
-	 * @param is1v1 是否 1v1 / 1v1 flag
-	 */
-	public void setIs1v1(boolean is1v1) {
-		this.is1v1 = is1v1;
-	}
-
-	/**
 	 * 结束时是否解散队伍。
 	 * Whether teams should be disbanded on end.
 	 *
@@ -1701,16 +1551,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 设置结束时是否解散队伍。
-	 * Sets whether teams should disband on end.
-	 *
-	 * @param shouldDisband 是否解散 / disband flag
-	 */
-	public void setShouldDisband(boolean shouldDisband) {
-		this.shouldDisband = shouldDisband;
-	}
-
-	/**
 	 * 是否基于队伍。
 	 * Whether team-based.
 	 *
@@ -1718,36 +1558,6 @@ public abstract class Battleground {
 	 */
 	public boolean isTeamBased() {
 		return teamBased;
-	}
-
-	/**
-	 * 设置是否基于队伍。
-	 * Sets team-based flag.
-	 *
-	 * @param teamBased 是否基于队伍 / team-based flag
-	 */
-	public void setTeamBased(boolean teamBased) {
-		this.teamBased = teamBased;
-	}
-
-	/**
-	 * 获取世界地图实例。
-	 * Returns the world map instance.
-	 *
-	 * @return 世界地图实例 / the instance
-	 */
-	public WorldMapInstance getInstance() {
-		return instance;
-	}
-
-	/**
-	 * 设置世界地图实例。
-	 * Sets the world map instance.
-	 *
-	 * @param instance 世界地图实例 / the instance
-	 */
-	public void setInstance(WorldMapInstance instance) {
-		this.instance = instance;
 	}
 
 	/**
@@ -1838,16 +1648,6 @@ public abstract class Battleground {
 	 */
 	public ScheduledFuture<?> getBackgroundTask() {
 		return backgroundTask;
-	}
-
-	/**
-	 * 设置后台周期任务。
-	 * Sets the background periodic task.
-	 *
-	 * @param backgroundTask 后台周期任务 / the task
-	 */
-	public void setBackgroundTask(ScheduledFuture<?> backgroundTask) {
-		this.backgroundTask = backgroundTask;
 	}
 
 	/**
