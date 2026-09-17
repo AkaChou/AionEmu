@@ -326,10 +326,8 @@ public class Player extends Creature {
 	private boolean isCommandUsed = false;
 	private int abyssRankListUpdateMask = 0;
 	private BindPointPosition bindPoint;
-	/**
-	 * @return the itemCoolDowns
-	 */
-	private Map<Integer, ItemCooldown> itemCoolDowns;
+	/** 物品使用冷却注册表 / Item-use cooldown registry */
+	private final PlayerCooldowns cooldowns = new PlayerCooldowns();
 	/**
 	 * @return 传送门冷却列表 / portal cooldown list
 	 */
@@ -1415,19 +1413,7 @@ public class Player extends Creature {
 	 * @return
 	 */
 	public boolean isItemUseDisabled(ItemUseLimits limits) {
-		if (limits == null) {
-			return false;
-		}
-		if (itemCoolDowns == null || !itemCoolDowns.containsKey(limits.getDelayId())) {
-			return false;
-		}
-		Long coolDown = itemCoolDowns.get(limits.getDelayId()).getReuseTime();
-
-		if (coolDown < System.currentTimeMillis()) {
-			itemCoolDowns.remove(limits.getDelayId());
-			return false;
-		}
-		return true;
+		return cooldowns.isUseDisabled(limits);
 	}
 
 	/**
@@ -1435,10 +1421,7 @@ public class Player extends Creature {
 	 * @return
 	 */
 	public long getItemCoolDown(int delayId) {
-		if (itemCoolDowns == null || !itemCoolDowns.containsKey(delayId)) {
-			return 0;
-		}
-		return itemCoolDowns.get(delayId).getReuseTime();
+		return cooldowns.getCoolDown(delayId);
 	}
 
 	/**
@@ -1447,20 +1430,24 @@ public class Player extends Creature {
 	 * @param useDelay
 	 */
 	public void addItemCoolDown(int delayId, long time, int useDelay) {
-		if (itemCoolDowns == null) {
-			itemCoolDowns = new LinkedHashMap<Integer, ItemCooldown>();
-		}
-		itemCoolDowns.put(delayId, new ItemCooldown(time, useDelay));
+		cooldowns.addCoolDown(delayId, time, useDelay);
 	}
 
 	/**
 	 * @param itemMask
 	 */
 	public void removeItemCoolDown(int itemMask) {
-		if (itemCoolDowns == null) {
-			return;
-		}
-		itemCoolDowns.remove(itemMask);
+		cooldowns.removeCoolDown(itemMask);
+	}
+
+	/**
+	 * 返回原始物品冷却表。
+	 * Returns the backing item cooldown map.
+	 *
+	 * @return 冷却表（live 视图），未创建时为 null / live cooldown map, or null when not created
+	 */
+	public Map<Integer, ItemCooldown> getItemCoolDowns() {
+		return cooldowns.getItemCoolDowns();
 	}
 
 	/**
