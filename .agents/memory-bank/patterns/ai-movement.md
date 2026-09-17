@@ -71,15 +71,15 @@ first_check: shouldUseAttackSlot, CLOSE_FOLLOW_RANGE and refreshAttackSlotForRec
 status: CONFIRMED
 scope: Follow pathing through indoor non-convex geometry with missing path grids
 first_seen: 2026-09-14
-last_verified: 2026-09-14
-symptom: 拐角与门廊卡墙、贴墙无法脱困、NPC 切墙穿模、护送任务因模型死角超时失败
-root_cause: Straight-line interpolation has no horizontal collision and the indoor A-star fallback aims at the first raycast hit
+last_verified: 2026-09-17
+symptom: 拐角与门廊卡墙、贴墙无法脱困、NPC 切墙穿模、护送任务因模型死角超时失败、145885 onTargetTooFar 刷屏
+root_cause: canPassDirectly cleared breadcrumbs on line of sight through bars/doors, stopForPath froze follower, stuck recovery was dead code, and MOVE_VALIDATE spammed targetTooFar
 fix_or_guardrail: Follow the player breadcrumb trail while line of sight is blocked and keep catch-up teleport as a bounded safety net
 evidence: commit 7aab414d8; src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java:92; src/test/java/com/aionemu/gameserver/controllers/movement/NpcMoveControllerPathTest.java:56; docs/movement/escort-follow-movement-repair.md:27
 validation: static; focused-test; runtime/client validation not implied
 boundaries: Trail points only ever follow a route the player has physically walked; catch-up teleport is a fallback and must not replace normal pathing
 superseded_by: none
-first_check: followTrail sampling, canPassDirectly and catchupTeleportTo
+first_check: followTrail preservation, stopForPath fallback, stuckShadowConfirmed teleport, and MoveEventHandler onMoveValidate
 -->
 - **现象**：在地下牢房、走廊 90 度直角转弯等复杂构件区域，NPC 直接切入墙体内部或贴在墙面上无法脱困。
 - **根因链**：
@@ -87,11 +87,14 @@ first_check: followTrail sampling, canPassDirectly and catchupTeleportTo
   2. 室内缺失连通 `.path` 网格时，A* 回退至 `geoGroundPath` 取**第一个射线撞击点**，NPC 于是径直朝墙面碰撞点移动并卡死在墙上。
 - **修复方案（玩家历史足迹队列 / Breadcrumbs Trail）**：
   - **采样**：FIFO 队列 `followTrail`，玩家位移每累计 `TRAIL_STEP_DISTANCE = 2.0` 米记录一个足迹点，容量上限 20 点（`TRAIL_MAX_POINTS`）。
-  - **循迹**：当 NPC 与玩家视线被墙壁、门廊阻隔（`!canPassDirectly`）时，目标点指向队列头部的历史足迹点，沿玩家**踩过**的安全路线走出牢房与直角弯。
-  - **消费与直达优化**：NPC 到达当前足迹点 1.2 米内即出队并切换下一点；一旦视线完全开阔（`canPassDirectly` 为 true）**立即清空足迹直达玩家**，避免无谓绕行。
+  - **循迹与足迹保护**：严禁在视线开阔（`canPassDirectly`）时清空足迹！牢房铁栏、门廊与矮墙均可被射线穿透，清空足迹会导致转弯时丢失门洞路点而切墙卡死。足迹队列全程保留，NPC 到达当前足迹点 1.2 米内或更靠近下一点时出队，仅在贴身停步（`CLOSE_FOLLOW_RANGE = 3.0` 米）时清空。
+  - **无网格区域防定身**：在深渊牢房等无 Path 网格区域，跟随移动严禁执行 `stopForPath()`，无网格或寻路为空时直接回退朝向足迹点的 `moveToLocation`。
 - **脱困拉回兜底安全网（Catch-up Teleport）**：
-  - 触发条件：与跟随目标距离拉大至 30 米且视线阻隔（`tryFollowCatchupTeleport`），或复杂死角中连续 2 次卡死恢复（`tryStuckRecovery`）仍无法推进；
+  - 触发条件：与跟随目标距离拉大至 20 米且视线阻隔、或达到 35 米绝对超距门槛（防止 50 米任务失败）；在复杂死角中卡死确认（`stuckShadowConfirmed`）且处于 `FOLLOWING` 状态时，立即调用 `catchupTeleportTo`，消除重试上限判断之后的死代码。
   - 动作：`catchupTeleportTo(target)` 将 NPC 拉回玩家身边并广播 `SM_MOVE` 瞬移同步包，防止任务因模型死角超时失败。
+- **移动校验与过远事件解耦**：
+  - `MoveEventHandler.onMoveValidate` 为常规 100ms 移动步进校验，跟随状态下跳过 `TargetEventHandler.onTargetTooFar`。
+  - `FollowManager.targetTooFar` 在控制器已在向目标移动（`isMovingToTarget()`）时短路返回，根除 `addCreature` 重置 `nextUpdateAt = 0` 导致的 0ms 递归死循环与控制台日志刷屏。
 - **排查与修复规范**：
   - 足迹点**只能来自玩家实际走过的路线**，不得用插值或几何投影生成，否则会制造新的穿墙路径。
   - 拉回是**兜底安全网而非寻路替代**：正常路线可用时不应触发；新增室内场景时要先确认该区域的 `.path` 网格连通性与视线判定是否可靠。

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 
 /**
@@ -18,7 +19,9 @@ public class MoveEventHandler {
 	 */
 	public static final void onMoveValidate(NpcAI2 npcAI) {
 		npcAI.getOwner().getController().onMove();
-		TargetEventHandler.onTargetTooFar(npcAI);
+		if (npcAI.getState() != AIState.FOLLOWING) {
+			TargetEventHandler.onTargetTooFar(npcAI);
+		}
 	}
 
 	/**

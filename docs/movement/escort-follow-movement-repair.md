@@ -52,13 +52,18 @@ if ("quest_use_item".equals(fallback) || "quest_start_use_item".equals(fallback)
 ### 3. 工业级方案：玩家历史足迹队列（Breadcrumbs Trail）
 在 [NpcMoveController.java](../../src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java) 中实现足迹追踪：
 1. **采样**：维护 FIFO 队列 `followTrail`，玩家位移每累计达到 `TRAIL_STEP_DISTANCE = 2.0` 米时记录一个足迹点（容量上限 20 点）。
-2. **循迹**：当 NPC 与玩家视线被墙壁、门廊阻隔（`!canPassDirectly`）时，NPC 目标点指向队列头部的历史足迹点，沿着玩家踩过的安全路线走出牢房和直角弯。
-3. **消费与直达优化**：NPC 到达当前足迹点 1.2 米内时出队该点并切换下一个；一旦转过拐角视线完全开阔（`canPassDirectly` 为 true），立即清空足迹直达玩家。
+2. **循迹与足迹全程保护**：严禁在视线开阔（`canPassDirectly`）时清空足迹。牢房铁栏杆、门廊与矮墙均可被视线射线穿透，清空足迹会导致转弯时丢失门洞路点而切墙卡死。足迹队列全程保留，直到进入玩家贴身范围（3.0 米）才清空。
+3. **消费与就近优化**：NPC 到达当前足迹点 1.2 米内、或更靠近队列中下一路点时出队并切换下一个，防止路点回拉。
+4. **无网格区域防定身**：在深渊牢房等无 Path 网格区域，跟随移动严禁执行 `stopForPath()`，无网格或寻路为空时直接回退朝向足迹点的 `moveToLocation`。
 
 ### 4. 脱困拉回兜底安全网（Catch-up Teleport）
-- 当 NPC 与跟随目标距离拉大至 30 米且视线阻隔（`tryFollowCatchupTeleport`）；
-- 或 NPC 在复杂死角连续 2 次卡死恢复（`tryStuckRecovery`）依然无法推进时；
+- 当 NPC 与跟随目标距离拉大至 20 米且视线阻隔（`tryFollowCatchupTeleport`），或达到 35 米绝对超距门槛（严防 50 米任务失败）；
+- 或 NPC 在复杂死角卡死确认（`stuckShadowConfirmed`）时，在 `tryStuckRecovery` 中立即调用 `catchupTeleportTo(target)`（消除重试上限判断之后的死代码）；
 调用 `catchupTeleportTo(target)` 将 NPC 安全拉回到玩家身边，广播 `SM_MOVE` 瞬移同步包，彻底防止任务因模型死角超时失败。
+
+### 5. 跟随移动步进与过远事件解耦（防日志刷屏与死循环）
+- `MoveEventHandler.onMoveValidate` 为常规 100ms 移动推进，跟随状态下跳过 `TargetEventHandler.onTargetTooFar`。
+- `FollowManager.targetTooFar` 在控制器已在向目标移动（`isMovingToTarget()`）时短路返回，彻底根除 `addCreature` 重置 `nextUpdateAt = 0` 导致的 0ms 递归死循环与控制台日志刷屏。
 
 ---
 

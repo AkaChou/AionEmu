@@ -19,6 +19,13 @@ public class FollowManager {
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
+		Npc npc = npcAI.getOwner();
+		if (npc == null || !npcAI.isMoveSupported()) {
+			return;
+		}
+		if (npc.getMoveController().isMovingToTarget()) {
+			return;
+		}
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "Follow manager - targetTooFar");
 		}

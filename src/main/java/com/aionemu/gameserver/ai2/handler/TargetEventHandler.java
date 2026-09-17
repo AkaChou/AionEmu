@@ -84,7 +84,12 @@ public class TargetEventHandler {
 				AttackManager.targetTooFar(npcAI);
 				break;
 			case FOLLOWING:
-				FollowManager.targetTooFar(npcAI);
+				if (!npcAI.getOwner().getMoveController().isStarted()) {
+					VisibleObject target = npcAI.getOwner().getTarget();
+					if (target instanceof Creature creature && !FollowEventHandler.isInRange(npcAI, creature)) {
+						FollowManager.targetTooFar(npcAI);
+					}
+				}
 				break;
 			case FEAR:
 				break;

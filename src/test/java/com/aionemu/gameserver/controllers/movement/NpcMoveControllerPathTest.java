@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.objenesis.ObjenesisStd;
@@ -50,6 +51,63 @@ class NpcMoveControllerPathTest {
 		NetworkConfig.PACKET_PROCESSOR_MAX_THREADS = 1;
 		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 1;
 		NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 1;
+	}
+
+	@Test
+	void followTrailPreservesWaypointsThroughLineOfSight() {
+		Player target = new ObjenesisStd().newInstance(Player.class);
+		WorldPosition targetPos = new WorldPosition(210010000);
+		targetPos.setXYZH(10f, 0f, 0f, (byte) 0);
+		target.setPosition(targetPos);
+
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition ownerPos = new WorldPosition(210010000);
+		ownerPos.setXYZH(0f, 0f, 0f, (byte) 0);
+		owner.setPosition(ownerPos);
+
+		NpcMoveController controller = new NpcMoveController(owner);
+		targetPos.setXYZH(2.5f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		targetPos.setXYZH(5.0f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		targetPos.setXYZH(7.5f, 0f, 0f, (byte) 0);
+		controller.updateFollowTrail(target, 0);
+		assertEquals(3, controller.followTrailSize());
+
+		Point3D waypoint = controller.selectFollowWaypoint(target, 0);
+		assertEquals(2.5f, waypoint.getX());
+		assertEquals(3, controller.followTrailSize());
+	}
+
+	@Test
+	void tryFollowCatchupTeleportTriggersAtConfiguredThresholds() throws ReflectiveOperationException {
+		Player target = new ObjenesisStd().newInstance(Player.class);
+		WorldPosition targetPos = new WorldPosition(210010000);
+		targetPos.setXYZH(40f, 0f, 0f, (byte) 0);
+		target.setPosition(targetPos);
+
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		setField(AionObject.class, owner, "objectId", 210667);
+		owner.setKnownlist(new KnownList(owner));
+		WorldPosition ownerPos = new WorldPosition(210010000);
+		ownerPos.setXYZH(0f, 0f, 0f, (byte) 0);
+		owner.setPosition(ownerPos);
+
+		World oldWorld = setWorld(new ObjenesisStd().newInstance(PositionUpdatingWorld.class));
+		try {
+			NpcMoveController controller = new NpcMoveController(owner);
+			assertTrue(controller.tryFollowCatchupTeleport(target));
+		} finally {
+			setWorld(oldWorld);
+		}
+	}
+
+	@Test
+	void isMovingToTargetReflectsDestinationAndStarted() throws ReflectiveOperationException {
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		NpcMoveController controller = new NpcMoveController(owner);
+		assertFalse(controller.isMovingToTarget());
+		assertFalse(controller.isStarted());
 	}
 
 	@Test

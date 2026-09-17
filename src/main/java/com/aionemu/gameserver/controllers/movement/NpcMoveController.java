@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -95,7 +96,9 @@ public class NpcMoveController
     /** 最大足迹缓存点数。 / Maximum breadcrumb points kept in memory. */
     public static final int TRAIL_MAX_POINTS = 20;
     /** 跟随严重脱节瞬移兜底距离（米）。 / Distance threshold to trigger catch-up teleport when line of sight blocked (meters). */
-    public static final float FOLLOW_CATCHUP_TELEPORT_DISTANCE = 30.0f;
+    public static final float FOLLOW_CATCHUP_TELEPORT_DISTANCE = 20.0f;
+    /** 跟随绝对超距瞬移兜底距离（米），防止达到 50 米任务判定失败。 / Absolute distance threshold to force catch-up teleport before quest 50m fail. */
+    public static final float FOLLOW_ABSOLUTE_TELEPORT_DISTANCE = 35.0f;
     private static final int[] TARGET_SLOT_ADJUSTMENTS = {0, 20, -20, 40, -40};
     private static final LongAdder stuckSuspected = new LongAdder();
     private static final LongAdder stuckConfirmed = new LongAdder();
@@ -210,6 +213,14 @@ public class NpcMoveController
      */
     public NpcMoveController(Npc owner) {
         super(owner);
+    }
+
+    public boolean isStarted() {
+        return this.started.get();
+    }
+
+    public boolean isMovingToTarget() {
+        return this.destination == Destination.TARGET_OBJECT && this.started.get();
     }
 
     /**
@@ -555,7 +566,15 @@ public class NpcMoveController
                     if (tryFollowCatchupTeleport(creature)) {
                         return;
                     }
-                    advanceFollowTrail(creature, getTargetZ(GameWorldServices.pathService().usesSpatialPath(owner), creature));
+                    float targetZ = getTargetZ(GameWorldServices.pathService().usesSpatialPath(owner), creature);
+                    updateFollowTrail(creature, targetZ);
+                    advanceFollowTrail(creature, targetZ);
+                    Point3D waypoint = selectFollowWaypoint(creature, targetZ);
+                    pointX = waypoint.getX();
+                    pointY = waypoint.getY();
+                    pointZ = waypoint.getZ();
+                    moveToLocation(pointX, pointY, pointZ, FollowEventHandler.CLOSE_FOLLOW_RANGE);
+                    break;
                 }
                 if (usesPath()) {
                     boolean targetChanged = trackedTargetId != creature.getObjectId();
@@ -784,10 +803,6 @@ public class NpcMoveController
         if (followTrail.isEmpty()) {
             return new Point3D(target.getX(), target.getY(), targetZ);
         }
-        if (canPassDirectly(target)) {
-            followTrail.clear();
-            return new Point3D(target.getX(), target.getY(), targetZ);
-        }
         while (!followTrail.isEmpty()) {
             Point3D head = followTrail.peekFirst();
             if (head == null) {
@@ -797,9 +812,20 @@ public class NpcMoveController
                     head.getX(), head.getY(), head.getZ());
             if (dist <= TRAIL_ARRIVE_DISTANCE) {
                 followTrail.pollFirst();
-            } else {
-                break;
+                continue;
             }
+            if (followTrail.size() >= 2) {
+                Iterator<Point3D> it = followTrail.iterator();
+                it.next();
+                Point3D second = it.next();
+                float distSecond = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(),
+                        second.getX(), second.getY(), second.getZ());
+                if (distSecond < dist) {
+                    followTrail.pollFirst();
+                    continue;
+                }
+            }
+            break;
         }
         if (followTrail.isEmpty()) {
             return new Point3D(target.getX(), target.getY(), targetZ);
@@ -811,21 +837,24 @@ public class NpcMoveController
         if (followTrail.isEmpty()) {
             return false;
         }
-        if (canPassDirectly(target)) {
-            followTrail.clear();
-            pointX = target.getX();
-            pointY = target.getY();
-            pointZ = targetZ;
-            resetPath();
-            return true;
-        }
         Point3D head = followTrail.peekFirst();
         if (head == null) {
             return false;
         }
         float dist = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(),
                 head.getX(), head.getY(), head.getZ());
-        if (dist <= TRAIL_ARRIVE_DISTANCE) {
+        boolean shouldPop = dist <= TRAIL_ARRIVE_DISTANCE;
+        if (!shouldPop && followTrail.size() >= 2) {
+            Iterator<Point3D> it = followTrail.iterator();
+            it.next();
+            Point3D second = it.next();
+            float distSecond = (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(),
+                    second.getX(), second.getY(), second.getZ());
+            if (distSecond < dist) {
+                shouldPop = true;
+            }
+        }
+        if (shouldPop) {
             followTrail.pollFirst();
             Point3D next = followTrail.isEmpty() ? new Point3D(target.getX(), target.getY(), targetZ)
                     : followTrail.peekFirst();
@@ -857,6 +886,10 @@ public class NpcMoveController
             catchupTeleportTo(target);
             return true;
         }
+        if (distance >= FOLLOW_ABSOLUTE_TELEPORT_DISTANCE) {
+            catchupTeleportTo(target);
+            return true;
+        }
         return false;
     }
 
@@ -866,6 +899,8 @@ public class NpcMoveController
         }
         clearFollowTrail();
         clearPathFailureContext();
+        clearStuckRecoveryState();
+        resetStuckShadow();
         abortMove();
         float targetZ = target.getZ();
         if (GeoDataConfig.GEO_ENABLE && !owner.isFlying()) {
@@ -875,8 +910,10 @@ public class NpcMoveController
         float oldY = owner.getY();
         float oldZ = owner.getZ();
         GameWorldBootstrapServices.world().updatePosition(owner, target.getX(), target.getY(), targetZ, target.getHeading());
-        PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), oldX, oldY, oldZ,
-                target.getX(), target.getY(), targetZ, target.getHeading(), MovementMask.IMMEDIATE));
+        if (owner.getKnownList() != null) {
+            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), oldX, oldY, oldZ,
+                    target.getX(), target.getY(), targetZ, target.getHeading(), MovementMask.IMMEDIATE));
+        }
     }
 
     private void resetTargetTracking() {
@@ -1022,14 +1059,17 @@ public class NpcMoveController
 
     void sampleStuckShadow(float x, float y, float z, float waypointX, float waypointY, float waypointZ,
             float speed, long now, float[][] path, float remaining, float stopOffset) {
-        if (path == null || path.length == 0 || speed <= MOVE_OFFSET
-                || destination == Destination.TARGET_OBJECT && path.length == 1 && remaining <= stopOffset) {
+        boolean following = owner != null && owner.getAi2() != null
+                && owner.getAi2().getState() == AIState.FOLLOWING;
+        if ((!following && (path == null || path.length == 0)) || speed <= MOVE_OFFSET
+                || (destination == Destination.TARGET_OBJECT && path != null && path.length == 1 && remaining <= stopOffset)) {
             resetStuckShadow();
             return;
         }
-        if (progressSampleAt == 0 || progressRequestId != pathRequestId || progressPathLength != path.length) {
+        int effectivePathLength = path == null ? 0 : path.length;
+        if (progressSampleAt == 0 || (!following && (progressRequestId != pathRequestId || progressPathLength != effectivePathLength))) {
             resetStuckShadow();
-            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, effectivePathLength);
             return;
         }
         long sampleMillis = now - progressSampleAt;
@@ -1038,7 +1078,7 @@ public class NpcMoveController
         }
         if (sampleMillis <= 0 || sampleMillis > STUCK_SAMPLE_MAX_DELAY_MS) {
             resetStuckShadow();
-            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, effectivePathLength);
             return;
         }
         boolean progressed = hasMeaningfulProgress(progressX, progressY, progressZ, x, y, z, waypointX, waypointY,
@@ -1069,7 +1109,7 @@ public class NpcMoveController
             }
             tryStuckRecovery(progressX, progressY, progressZ, waypointX, waypointY, waypointZ, now);
         }
-        beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+        beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, effectivePathLength);
     }
 
     private void beginStuckSample(float x, float y, float z, float waypointX, float waypointY, float waypointZ,
@@ -1359,19 +1399,17 @@ public class NpcMoveController
         if (destination == Destination.TARGET_OBJECT && target == null) {
             return;
         }
+        boolean following = owner.getAi2() != null && owner.getAi2().getState() == AIState.FOLLOWING;
+        if (following && target != null && stuckShadowConfirmed) {
+            catchupTeleportTo(target);
+            return;
+        }
         if (!shouldRequestStuckRecovery(stuckShadowConfirmed, pendingPath != null, stuckReplanAttemptCount,
                 lastStuckReplanAt, now)) {
             if (stuckShadowConfirmed && pendingPath == null && stuckReplanAttemptCount >= STUCK_REPLAN_MAX_ATTEMPTS) {
                 tryNearestPathRecovery(target);
             }
             return;
-        }
-        boolean following = owner.getAi2() != null && owner.getAi2().getState() == AIState.FOLLOWING;
-        if (following && target != null && stuckShadowConfirmed) {
-            if (stuckReplanAttemptCount >= STUCK_REPLAN_MAX_ATTEMPTS) {
-                catchupTeleportTo(target);
-                return;
-            }
         }
         if (target != null && chaseSlotTargetId == target.getObjectId() && chaseSlotValid) {
             refreshAttackSlotForRecovery(target);

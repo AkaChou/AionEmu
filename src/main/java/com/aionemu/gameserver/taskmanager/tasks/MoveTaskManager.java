@@ -148,7 +148,9 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * @param creature 生物 / Creature
 	 */
 	public void removeCreature(Creature creature) {
-		movingCreatures.remove(creature.getObjectId());
+		if (creature != null && creature.getObjectId() != null) {
+			movingCreatures.remove(creature.getObjectId());
+		}
 	}
 
 	/**
