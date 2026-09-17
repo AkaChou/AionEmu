@@ -18,6 +18,9 @@ out/
 .cursor
 .codex
 .claude
+.workbuddy
+.zcode
+.mcp.json
 
 # Runtime logs and pid files
 log/
@@ -36,8 +39,3 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
-
-
-
-/.workbuddy/
-/.mcp.json
