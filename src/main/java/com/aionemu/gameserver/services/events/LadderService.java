@@ -894,132 +894,7 @@ public class LadderService {
 	 * cloak template id
 	 */
 	public int getBgCloak(Player player, int bgIndex) {
-		int template;
-		switch (bgIndex + 1) {
-		case 1:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202617;
-			} else {
-				template = 202618;
-			}
-			break;
-		case 2:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202603;
-			} else {
-				template = 202604;
-			}
-			break;
-		case 3:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202539;
-			} else {
-				template = 202540;
-			}
-			break;
-		case 4:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202583;
-			} else {
-				template = 202584;
-			}
-			break;
-		case 5:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202529;
-			} else {
-				template = 202530;
-			}
-			break;
-		case 6:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202531;
-			} else {
-				template = 202532;
-			}
-			break;
-		case 7:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202537;
-			} else {
-				template = 202538;
-			}
-			break;
-		case 8:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202526;
-			} else {
-				template = 202527;
-			}
-			break;
-		case 9:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202541;
-			} else {
-				template = 202542;
-			}
-			break;
-		case 10:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202543;
-			} else {
-				template = 202544;
-			}
-			break;
-		case 11:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202551;
-			} else {
-				template = 202552;
-			}
-			break;
-		case 12:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202561;
-			} else {
-				template = 202562;
-			}
-			break;
-		case 13:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202571;
-			} else {
-				template = 202572;
-			}
-			break;
-		case 14:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202573;
-			} else {
-				template = 202574;
-			}
-			break;
-		case 15:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202575;
-			} else {
-				template = 202576;
-			}
-			break;
-		case 16:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202579;
-			} else {
-				template = 202580;
-			}
-			break;
-		case 17:
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				template = 202524;
-			} else {
-				template = 202525;
-			}
-			break;
-		default:
-			template = 0;
-			break;
-		}
-		return template;
+		return BattlegroundIdentity.getBgCloak(player, bgIndex);
 	}
 
 	/**
@@ -1031,20 +906,7 @@ public class LadderService {
 	 * display name
 	 */
 	public String getName(Player player, Player target) {
-		if (player.isSpectating() || (player.getBattleground() != null && player.getBattleground().isTournament())) {
-			return target.getName();
-		}
-		if (player.getAccessLevel() > 0 || (player.getBattleground() != null && player.getBattleground().is1v1())) {
-			return target.getName();
-		}
-		if (player.isInGroup2() && target.isInGroup2() && player.getPlayerGroup2().getMembers().contains(target)) {
-			return target.getName();
-		}
-		String playerName = "Contestant";
-		if (!player.isInGroup2() && !player.isInAlliance2()) {
-			playerName += " " + (target.getBgIndex() + 1);
-		}
-		return playerName;
+		return BattlegroundIdentity.getName(player, target);
 	}
 
 	/**
@@ -1055,65 +917,7 @@ public class LadderService {
 	 * team name
 	 */
 	public String getNameByIndex(int bgIndex) {
-		String name;
-		switch (bgIndex + 1) {
-		case 1:
-			name = "Daeva Of Chaos";
-			break;
-		case 2:
-			name = "Until Death";
-			break;
-		case 3:
-			name = "Happy Tiger's";
-			break;
-		case 4:
-			name = "Abyssal Inquin's";
-			break;
-		case 5:
-			name = "Puffy Bear's";
-			break;
-		case 6:
-			name = "Mossy Treant's";
-			break;
-		case 7:
-			name = "Cursed Pirate's";
-			break;
-		case 8:
-			name = "Naughty Kerub's";
-			break;
-		case 9:
-			name = "Tundra Tiger's";
-			break;
-		case 10:
-			name = "Tiger Lover's";
-			break;
-		case 11:
-			name = "Screamer's";
-			break;
-		case 12:
-			name = "Ninja Balaur's";
-			break;
-		case 13:
-			name = "Summer Inquin's";
-			break;
-		case 14:
-			name = "Volcano Inquin's";
-			break;
-		case 15:
-			name = "Savana Inquin's";
-			break;
-		case 16:
-			name = "Tropical Inquin's";
-			break;
-		case 17:
-			name = "Walking Dead";
-			break;
-		default:
-			name = "Invalid";
-			break;
-		}
-		name += "Team";
-		return name;
+		return BattlegroundIdentity.getNameByIndex(bgIndex);
 	}
 
 	/**
@@ -1124,50 +928,7 @@ public class LadderService {
 	 * emblem
 	 */
 	public LegionEmblem getCapeEmblemByIndex(int bgIndex) {
-		LegionEmblem emblem = new LegionEmblem();
-		byte[] uploadData = { 0, 0 };
-		switch (bgIndex + 1) {
-		case 1:
-			emblem.setEmblem(22, 0, 0, 255, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 2:
-			emblem.setEmblem(22, 255, 0, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 3:
-			emblem.setEmblem(22, 255, 255, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 4:
-			emblem.setEmblem(22, 0, 255, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 5:
-			emblem.setEmblem(22, 255, 0, 255, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 6:
-			emblem.setEmblem(22, 0, 255, 255, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 7:
-			emblem.setEmblem(22, 255, 128, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 8:
-			emblem.setEmblem(22, 255, 100, 180, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 9:
-			emblem.setEmblem(22, 115, 255, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 10:
-			emblem.setEmblem(22, 0, 255, 212, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 11:
-			emblem.setEmblem(22, 255, 255, 255, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		case 12:
-			emblem.setEmblem(22, 0, 0, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		default:
-			emblem.setEmblem(22, 0, 0, 0, LegionEmblemType.DEFAULT, uploadData);
-			break;
-		}
-		return emblem;
+		return BattlegroundIdentity.getCapeEmblemByIndex(bgIndex);
 	}
 
 	/**
