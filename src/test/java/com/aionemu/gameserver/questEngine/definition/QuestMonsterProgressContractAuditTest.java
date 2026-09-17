@@ -131,6 +131,18 @@ class QuestMonsterProgressContractAuditTest {
 	}
 
 	@Test
+	void repairedMultiKillQuestsDeclareSeparateKillCounters() throws Exception {
+		for (int questId : List.of(15324, 50091, 50092)) {
+			CompiledQuestDefinition compiled = load(questId);
+			ProgressLayout layout = compiled.definition().progressLayout();
+			assertNotNull(layout.field("var0"), "quest " + questId + " must declare var0");
+			assertNotNull(layout.field("var1"), "quest " + questId + " must declare var1");
+			assertEquals(0, layout.field("var0").offset());
+			assertEquals(6, layout.field("var1").offset());
+		}
+	}
+
+	@Test
 	void clientMonsterProgressContractsCsvExistsAndHasExpectedShape() throws Exception {
 		assertTrue(Files.exists(CONTRACTS_CSV), "contracts CSV must exist in docs/quest/client-dialog-mapping/");
 		try (BufferedReader reader = Files.newBufferedReader(CONTRACTS_CSV, StandardCharsets.UTF_8)) {
