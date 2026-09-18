@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -59,14 +58,25 @@ class SMPlayerSpawnTest {
 	}
 
 	private static World worldWithMap(int mapId) throws ReflectiveOperationException {
-		WorldMapTemplate template = OBJENESIS.newInstance(WorldMapTemplate.class);
 		WorldMap map = OBJENESIS.newInstance(WorldMap.class);
-		setField(WorldMap.class, map, "worldMapTemplate", template);
-		IntObjectHashMap<WorldMap> maps = new IntObjectHashMap<>();
-		maps.put(mapId, map);
-		World world = OBJENESIS.newInstance(World.class);
-		setField(World.class, world, "worldMaps", maps);
+		setField(WorldMap.class, map, "worldMapTemplate", new WorldMapTemplate());
+		TestWorld world = OBJENESIS.newInstance(TestWorld.class);
+		world.mapId = mapId;
+		world.map = map;
 		return world;
+	}
+
+	// 只替换查询边界，不耦合 World 的容器实现。
+	// Stub the lookup boundary without depending on World's storage representation.
+	private static final class TestWorld extends World {
+		private int mapId;
+		private WorldMap map;
+
+		@Override
+		public WorldMap getWorldMap(int id) {
+			assertEquals(mapId, id);
+			return map;
+		}
 	}
 
 	private static World setWorld(World world) throws ReflectiveOperationException {

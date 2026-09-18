@@ -17,7 +17,7 @@ globs: "**/*.java"
    4. Is the class created by a framework via a specific constructor or factory (JAXB templates, DAO-loaded entities, Spring beans)?
    5. Does any field hold a secret (`password`, `token`, `credential`) that must not reach `toString`?
    Lombok's `@Data` generates field-based `equals` / `hashCode` and a recursive `toString`. On mutable entities that breaks identity based lookups silently, and on cyclic graphs it can overflow the stack. These classes also usually already carry explicit constructors and invariants that `@RequiredArgsConstructor` would bypass.
-5. Class level `@Getter`, by contrast, is safe on entities: it only adds read accessors and never changes equality, hashing, or construction.
+5. Class-level `@Getter` does not change equality, hashing, or construction, but can still change framework property discovery. For JAXB method-bound attributes, check getter/setter type compatibility: a generated numeric getter can prevent an annotated String setter from binding. Suppress generation for that field when necessary, and verify actual XML deserialization rather than only checking compilation.
 6. When construction only assigns fields, prefer `@NoArgsConstructor`, `@RequiredArgsConstructor`, or `@AllArgsConstructor`. Use `@Builder` when it provides clearer creation semantics.
 7. Prefer `@Value` or a Java record for immutable data objects. Do not use Lombok to regenerate behavior already provided by a record.
 

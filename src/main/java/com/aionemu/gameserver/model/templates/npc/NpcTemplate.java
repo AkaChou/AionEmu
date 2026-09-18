@@ -40,6 +40,9 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	private static final int ALL_OTHER_ABNORMALS = 0x1FFFFFF & ~STUN_LIKE_ABNORMALS;
 
 	private int npcId;
+	// JAXB 的 String 写入属性不能配对 int getter，否则免疫字符串不会被解析。
+	// Keep the JAXB String write-only property from pairing with an incompatible int getter.
+	@Getter(lombok.AccessLevel.NONE)
 	private int abnormalImmunity;
 	/** 获取等级。 / Returns the level. */
 	@XmlAttribute(name = "level", required = true)
