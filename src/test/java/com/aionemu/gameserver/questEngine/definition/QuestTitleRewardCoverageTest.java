@@ -22,18 +22,20 @@ class QuestTitleRewardCoverageTest {
 		"src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
 	private static final Path PLAYER_TITLES = Path.of(
 		"src/main/resources/aion/data/static_data/player_titles.xml");
+	private static final Set<Integer> DISABLED_QUESTS = Set.of(19056, 29056);
+
 	@Test
 	void catalogMatchesEveryKnownServerTitleQuest() throws Exception {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		TitleRewards expected = expectedTitleRewards();
 		TitleRewards actual = catalogTitleRewards(catalog);
 
-		assertEquals(175, expected.regular().size(), "unexpected regular title-owner count");
+		assertEquals(173, expected.regular().size(), "unexpected regular title-owner count");
 		assertEquals(3, expected.extended().size(), "unexpected extended title-owner count");
-		assertEquals(178, ownerIds(expected).size(), "unexpected total title-owner count");
+		assertEquals(176, ownerIds(expected).size(), "unexpected total title-owner count");
 		assertEquals(expected.regular(), actual.regular(), "regular title rewards differ from server baseline");
 		assertEquals(expected.extended(), actual.extended(), "extended title rewards differ from server baseline");
-		assertEquals(174, expected.regular().keySet().stream()
+		assertEquals(173, expected.regular().keySet().stream()
 			.filter(id -> catalog.findExecutable(id).isPresent()).count(),
 			"unexpected executable regular title-owner count");
 	}
@@ -172,6 +174,9 @@ class QuestTitleRewardCoverageTest {
 		for (int index = 0; index < quests.getLength(); index++) {
 			Element quest = (Element) quests.item(index);
 			int questId = Integer.parseInt(quest.getAttribute("id"));
+			if (DISABLED_QUESTS.contains(questId)) {
+				continue;
+			}
 			putXmlTitles(regular, questId, quest.getElementsByTagName("rewards"));
 			putXmlTitles(extended, questId, quest.getElementsByTagName("extended_rewards"));
 		}

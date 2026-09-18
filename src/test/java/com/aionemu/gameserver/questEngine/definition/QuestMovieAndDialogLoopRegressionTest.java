@@ -72,15 +72,15 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest14112AdvancesToStep1OnSetpro1() throws Exception {
+	void quest14112AdvancesToArmedOnSetpro1() throws Exception {
 		QuestDefinition def = definition(14112).definition();
 		QuestTransition talk = def.transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && "k1".equals(t.targetNode())
+			.filter(t -> "started".equals(t.sourceNode()) && "armed".equals(t.targetNode())
 				&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 203148
 				&& Integer.valueOf(QuestDialogAction.SETPRO1.id()).equals(ttn.dialogId()))
 			.findFirst().orElseThrow();
 		assertTrue(talk.actions().stream().anyMatch(a -> a instanceof QuestAction.GiveItem gi && gi.itemId() == 182215455));
-		assertTrue(talk.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable sv && "var0".equals(sv.field()) && sv.value() == 1));
+		assertTrue(talk.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable sv && "var5".equals(sv.field()) && sv.value() == 0));
 	}
 
 	@Test

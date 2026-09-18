@@ -20,7 +20,7 @@ class SilenteraSpawnedDialogFamilyTest {
 		new Case(30056, 798929, 203901, 700569, 799034, "dirvisia",
 			List.of(new QuestItemRequirement(182209223, 1),
 				new QuestItemRequirement(182209224, 1)),
-			143620, 0, List.of(2, 3, 4, 5)),
+			71810, 0, List.of(2, 3, 4, 5)),
 		new Case(30156, 799234, 204304, 700570, 799339, "sinigalla-nep",
 			List.of(new QuestItemRequirement(182209253, 1)),
 			71810, 1, List.of(2, 3)),

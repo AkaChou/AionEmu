@@ -12,7 +12,7 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="6" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -22,7 +22,7 @@
     <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
-      <var name="var1" value="2"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -31,8 +31,8 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="805156" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
-    <!-- 击杀 0..0 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
-    <transition source="started" target="started" priority="1">
+    <!-- 击杀 236300 达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
+    <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="236300"/>
       </event>
@@ -40,24 +40,8 @@
         <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="0"/>
-        <increment-variable field="var1" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 第 2 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-ids="236300"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var1" value="1"/>
-      </conditions>
-      <actions>
         <set-variable field="var0" value="1"/>
-        <set-variable field="var1" value="2"/>
+        <set-variable field="var1" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -69,7 +53,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799670" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="2"/>
+        <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -84,7 +68,7 @@
         <dialog type="TALK_TO_NPC" npc-id="799670" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="2"/>
+        <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>

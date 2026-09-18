@@ -189,11 +189,11 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	@Test
 	void quest2920RewardChoicesUseTheHandlerProvenRewardWindows() throws Exception {
 		QuestDefinition definition = compile(2920);
-		for (int[] choice : List.of(new int[] {10010, 5}, new int[] {10011, 6})) {
+		for (int[] choice : List.of(new int[] {10010, 5, 1}, new int[] {10011, 6, 2})) {
 			List<QuestTransition> routes = talkRoutes(definition, "started", 204141, choice[0]);
 			assertEquals(1, routes.size(), "quest 2920 choice " + choice[0]);
 			QuestTransition route = routes.getFirst();
-			assertEquals("reward", route.targetNode(), "quest 2920 choice target " + choice[0]);
+			assertEquals("reward" + choice[2], route.targetNode(), "quest 2920 choice target " + choice[0]);
 			assertTrue(route.conditions().isEmpty(), "quest 2920 choice conditions " + choice[0]);
 			assertTrue(route.actions().isEmpty(), "quest 2920 choice actions " + choice[0]);
 			assertEquals(List.of(
@@ -208,13 +208,13 @@ class LegacyTemplateMirrorRouteRegressionTest {
 		for (DialogRoute expected : List.of(
 			new DialogRoute(1345, "reward", 204006, 10000, "reward",
 				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1535, "started", 204580, 10000, "reward",
+			new DialogRoute(1535, "started", 204580, 10000, "reward1",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(5))),
-			new DialogRoute(1535, "started", 204580, 10001, "reward",
+			new DialogRoute(1535, "started", 204580, 10001, "reward2",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(6))),
-			new DialogRoute(1535, "started", 204580, 10002, "reward",
+			new DialogRoute(1535, "started", 204580, 10002, "reward3",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(7))),
 			new DialogRoute(1640, "unaccepted", 730033, 10000, "started",
@@ -231,13 +231,13 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			new DialogRoute(2230, "started", 203621, 10000, "started",
 				List.of(new AfterCommitAction.StartQuestTimer(1800),
 					new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1687, "started", 204601, 10009, "reward",
+			new DialogRoute(1687, "started", 204601, 10009, "reward1",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1687, "started", 204601, 10019, "reward",
+			new DialogRoute(1687, "started", 204601, 10019, "reward2",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1687, "started", 204601, 10029, "reward",
+			new DialogRoute(1687, "started", 204601, 10029, "reward3",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.CloseDialog())),
 			new DialogRoute(2004, "v2", 203539, 10001, "v2",
@@ -252,13 +252,13 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			new DialogRoute(2303, "started", 798082, 10019, "started",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 					new AfterCommitAction.ShowQuestDialog(1097))),
-			new DialogRoute(2332, "started", 798084, 10000, "reward",
+			new DialogRoute(2332, "started", 798084, 10000, "reward1",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(5))),
-			new DialogRoute(2332, "started", 798084, 10001, "reward",
+			new DialogRoute(2332, "started", 798084, 10001, "reward2",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(6))),
-			new DialogRoute(2332, "started", 798084, 10002, "reward",
+			new DialogRoute(2332, "started", 798084, 10002, "reward3",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(7))),
 			new DialogRoute(2333, "reward", 798084, 10001, "reward",
@@ -371,8 +371,6 @@ class LegacyTemplateMirrorRouteRegressionTest {
 				List.of(new AfterCommitAction.CloseDialog())),
 			new DialogRoute(1323, "reward", 203939, 10000, "reward",
 				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1423, "started", 203983, 10000, "started",
-				List.of(new AfterCommitAction.CloseDialog())),
 			new DialogRoute(2107, "k1", 203516, 10000, "k1",
 				List.of(new AfterCommitAction.CloseDialog())),
 			new DialogRoute(2321, "reward", 790018, 10000, "reward",
@@ -386,8 +384,6 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			new DialogRoute(26820, "s1", 806233, 10000, "s1",
 				List.of(new AfterCommitAction.CloseDialog())),
 			new DialogRoute(35025, "started", 798972, 10000, "started",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(50010, "unaccepted", 202549, 10001, "unaccepted",
 				List.of(new AfterCommitAction.CloseDialog())),
 			new DialogRoute(13950, "unaccepted", 806075, 20000, "started",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),

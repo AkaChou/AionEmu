@@ -22,6 +22,7 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var5" offset="30" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -29,9 +30,15 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
+      <var name="var5" value="1"/>
+    </node>
+    <node label="armed" status="START">
+      <var name="var0" value="0"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="k1" status="START">
       <var name="var0" value="1"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
@@ -56,6 +63,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <set-variable field="var5" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -77,20 +87,28 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1">
+    <transition source="started" target="armed">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203148" action="SETPRO1"/>
       </event>
       <actions>
         <give-item item-id="182215455" count="1"/>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var5" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k1">
+    <transition source="armed" target="armed">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203148" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="armed" target="armed">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203148" action="SETPRO1"/>
       </event>
@@ -98,19 +116,25 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k1">
+    <transition source="armed" target="k1">
       <event>
         <kill-npc npc-id="210318"/>
       </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <spawn-npc-at-player slot="kato" template-id="203195" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="started">
+    <transition source="k1" target="armed">
       <event>
         <die/>
       </event>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
@@ -207,6 +231,14 @@
       </after-commit>
     </transition>
     <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203148" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="armed" target="armed">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203148" action="SELECT2_1"/>
       </event>

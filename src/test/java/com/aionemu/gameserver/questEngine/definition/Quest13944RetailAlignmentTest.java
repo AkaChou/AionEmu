@@ -32,13 +32,9 @@ class Quest13944RetailAlignmentTest {
 		assertEquals(List.of(new QuestKill(1, List.of(884940, 884986))), metadata.kills());
 
 		List<QuestTransition> transitions = definition.transitions();
-		assertEquals(3, transitions.stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
-				&& npcId == 884940)
-			.count());
-		assertEquals(3, transitions.stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
-				&& npcId == 884986)
+		assertEquals(2, transitions.stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet set
+				&& set.npcIds().containsAll(Set.of(884940, 884986)))
 			.count());
 		assertEquals(Set.of(835722), transitions.stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk

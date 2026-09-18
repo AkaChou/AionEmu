@@ -60,10 +60,18 @@ class AcceptAndConfirmationEntryContractTest {
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203792 && talk.dialogId() == 39)
 			.findFirst().orElseThrow();
-		assertEquals(List.of(new QuestCondition.HasItem(182201786, 1)), success.conditions(),
+		assertEquals(List.of(
+				new QuestCondition.HasItem(182201786, 1),
+				new QuestCondition.HasItem(152020034, 1),
+				new QuestCondition.HasItem(152020091, 1),
+				new QuestCondition.HasItem(169400060, 1)), success.conditions(),
 			"quest 1636 hand-over conditions");
-		assertEquals(List.of(new QuestAction.RemoveItem(182201786, 1)), success.actions(),
-			"quest 1636 hand-over removes the spirit");
+		assertEquals(List.of(
+				new QuestAction.RemoveItem(182201786, 1),
+				new QuestAction.RemoveItem(152020034, 1),
+				new QuestAction.RemoveItem(152020091, 1),
+				new QuestAction.RemoveItem(169400060, 1)), success.actions(),
+			"quest 1636 hand-over removes the spirit and crafting materials");
 		assertTrue(success.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(10000)),
 			"quest 1636 hand-over must show check_user_item_ok");
 		QuestTransition confirm = talkRoute(definition, "v2", 203792, 1008);
@@ -91,10 +99,14 @@ class AcceptAndConfirmationEntryContractTest {
 			.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
 			.findFirst().orElseThrow();
 		assertEquals("reward", hit.targetNode(), "quest 15010 hit target");
-		assertEquals(List.of(new QuestCondition.HasItem(182215666, 7)), hit.conditions(),
+		assertEquals(List.of(
+				new QuestCondition.HasItem(182215664, 5),
+				new QuestCondition.HasItem(182215665, 3)), hit.conditions(),
 			"quest 15010 hit conditions");
-		assertEquals(List.of(new QuestAction.RemoveItem(182215666, 7)), hit.actions(),
-			"quest 15010 hit removes the badges");
+		assertEquals(List.of(
+				new QuestAction.RemoveItem(182215664, 5),
+				new QuestAction.RemoveItem(182215665, 3)), hit.actions(),
+			"quest 15010 hit removes the items");
 		assertTrue(hit.afterCommit().contains(
 			new AfterCommitAction.ShowQuestDialog(5)), "quest 15010 hit opens reward window 1");
 		assertEquals("started", miss.targetNode(), "quest 15010 miss target");

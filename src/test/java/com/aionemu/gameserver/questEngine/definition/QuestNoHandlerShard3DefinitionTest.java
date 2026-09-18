@@ -56,17 +56,16 @@ class QuestNoHandlerShard3DefinitionTest {
 		QuestTransition counting = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 1)
 			.findFirst().orElseThrow();
 		assertEquals("started", counting.targetNode());
-		assertEquals(new QuestCondition.VariableBelow("var0", 9), counting.conditions().get(0));
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), counting.actions());
+		assertEquals(new QuestCondition.VariableBelow("var1", 9), counting.conditions().get(0));
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable("var1", 1)), counting.actions());
 		QuestTransition finishing = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 0)
 			.findFirst().orElseThrow();
-		assertEquals(new QuestCondition.VariableAtLeast("var0", 9), finishing.conditions().get(0));
-		assertEquals(new QuestCondition.VariableBelow("var0", 10), finishing.conditions().get(1));
-		assertEquals("ready", finishing.targetNode());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finishing.actions());
+		assertEquals(new QuestCondition.VariableAtLeast("var1", 9), finishing.conditions().get(0));
+		assertEquals("reward", finishing.targetNode());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", 10)), finishing.actions());
 
-		assertEquals(10, varsOf(compiled, "ready").get("var0"));
-		assertEquals(10, varsOf(compiled, "reward").get("var0"));
+		assertEquals(1, varsOf(compiled, "reward").get("var0"));
+		assertEquals(10, varsOf(compiled, "reward").get("var1"));
 		// Five selectable rewards -> five completion routes on npc 205164.
 		List<List<QuestAction>> completions = completionActions(compiled);
 		assertEquals(5, completions.size());

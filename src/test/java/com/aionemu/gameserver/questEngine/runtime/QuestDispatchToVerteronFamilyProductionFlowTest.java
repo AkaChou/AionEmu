@@ -41,7 +41,7 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 		for (int questId : List.of(19070, 19071)) {
 			var metadata = definition(questId).definition().metadata();
 			assertEquals(classes.get(questId), metadata.permittedClasses());
-			assertEquals(11237, metadata.rewards().getFirst().amount());
+			assertEquals(14046, metadata.rewards().getFirst().amount());
 			assertEquals(List.of(new QuestStartCondition("finished", 1007, rewardModes.get(questId))),
 				metadata.startConditions());
 			assertEquals(List.of(), metadata.questWorkItems());

@@ -39,7 +39,7 @@ class Quest1466ClientDialogAlignmentTest {
 
 		assertEquals(List.of(new QuestStartCondition("finished", 1465, 0)), definition.metadata().startConditions());
 		assertEquals(Set.of("GLADIATOR", "TEMPLAR", "ASSASSIN", "RANGER", "SORCERER", "SPIRIT_MASTER",
-			"CHANTER", "CLERIC", "PRIEST", "GUNSLINGER", "SONGWEAVER"), definition.metadata().permittedClasses());
+			"CHANTER", "CLERIC", "PRIEST", "GUNSLINGER", "SONGWEAVER", "AETHERTECH"), definition.metadata().permittedClasses());
 		assertEquals(List.of(), definition.metadata().itemRequirements());
 		assertEquals(List.of(new QuestItemRequirement(WORK_ITEM_ID, 1)), definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));

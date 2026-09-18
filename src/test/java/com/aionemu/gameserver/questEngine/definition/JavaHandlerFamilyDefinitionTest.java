@@ -111,14 +111,14 @@ class JavaHandlerFamilyDefinitionTest {
 		List<QuestAction> reward4 = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward4") && t.targetNode().equals("complete"))
 			.flatMap(t -> t.actions().stream()).toList();
-		assertTrue(reward4.contains(new QuestAction.GrantReward("GOLD", 0, 1920, QuestRewardAmountMode.QUEST_BASE)));
-		assertTrue(reward4.contains(new QuestAction.GrantReward("EXP", 0, 4367, QuestRewardAmountMode.QUEST_BASE)));
+		assertTrue(reward4.contains(new QuestAction.GrantReward("GOLD", 0, 960, QuestRewardAmountMode.QUEST_BASE)));
+		assertTrue(reward4.contains(new QuestAction.GrantReward("EXP", 0, 3120, QuestRewardAmountMode.QUEST_BASE)));
 
 		List<QuestAction> reward3 = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward3") && t.targetNode().equals("complete"))
 			.flatMap(t -> t.actions().stream()).toList();
-		assertTrue(reward3.contains(new QuestAction.GrantReward("GOLD", 0, 960, QuestRewardAmountMode.QUEST_BASE)));
-		assertTrue(reward3.contains(new QuestAction.GrantReward("EXP", 0, 3120, QuestRewardAmountMode.QUEST_BASE)));
+		assertTrue(reward3.contains(new QuestAction.GrantReward("GOLD", 0, 1920, QuestRewardAmountMode.QUEST_BASE)));
+		assertTrue(reward3.contains(new QuestAction.GrantReward("EXP", 0, 4367, QuestRewardAmountMode.QUEST_BASE)));
 	}
 
 	@Test

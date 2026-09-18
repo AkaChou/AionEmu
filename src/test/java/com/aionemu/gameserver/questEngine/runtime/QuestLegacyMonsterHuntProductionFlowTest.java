@@ -253,14 +253,14 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			assertEquals(new QuestEvent.KillNpcSet(targets),
 				transition(definition, "started", "started", new QuestEvent.KillNpcSet(targets), 1).event());
 			assertEquals(new QuestEvent.KillNpcSet(targets),
-				transition(definition, "started", "ready", new QuestEvent.KillNpcSet(targets), 0).event());
+				transition(definition, "started", "reward", new QuestEvent.KillNpcSet(targets), 0).event());
 			QuestTransition accept = transition(definition, "unaccepted", "started",
 				new QuestEvent.TalkToNpc(804719, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
 			assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
 			assertEquals(List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()), accept.afterCommit());
-			QuestTransition reportPage = transition(definition, "ready", "ready",
+			QuestTransition reportPage = transition(definition, "reward", "reward",
 				new QuestEvent.TalkToNpc(804719, QuestDialogAction.QUEST_SELECT.id()));
 			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 				reportPage.afterCommit());
@@ -404,8 +404,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		CompiledQuestDefinition compiled = load(29691);
 		QuestDefinition definition = compiled.definition();
 		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "ready", QuestStatus.START, Map.of("var0", 3));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 3));
 
 		Set<Integer> targetNpcIds = Set.of(
 			246200, 246201, 246202, 246203, 246204, 246205, 246206, 246207, 246208, 246209,
@@ -417,52 +416,36 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			248057, 248058, 248059, 248060, 248061, 248062, 248063, 248064, 248065, 248066,
 			248067, 248068, 248069, 248070, 248071, 248072, 248073, 248074, 248075, 248076);
 		QuestEvent targets = new QuestEvent.KillNpcSet(targetNpcIds);
-		QuestTransition continuing = transition(definition, "started", "started", targets);
-		assertEquals(List.of(new QuestCondition.VariableBelow("var0", 2)), continuing.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), continuing.actions());
+		QuestTransition continuing = transition(definition, "started", "started", targets, 1);
+		assertEquals(List.of(new QuestCondition.VariableBelow("var1", 2)), continuing.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable("var1", 1)), continuing.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			continuing.afterCommit());
 
-		QuestTransition finalKill = transition(definition, "started", "ready", targets);
-		// 上界把末杀限定在恰好 2：超杀会越过 ready 投影锁死报告路由。
-		// The upper bound pins the final kill to exactly 2: overkill would pass the
-		// ready projection and lock reporting.
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", 2),
-				new QuestCondition.VariableBelow("var0", 3)), finalKill.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finalKill.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+		QuestTransition finalKill = transition(definition, "started", "reward", targets, 0);
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 2)), finalKill.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", 3)), finalKill.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			finalKill.afterCommit());
 
 		QuestEvent reportEvent = new QuestEvent.TalkToNpc(806700,
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		QuestSnapshot snapshot = snapshot(29691, QuestStatus.START, Map.of("var0", 0), definition);
+		QuestSnapshot snapshot = snapshot(29691, QuestStatus.START, Map.of("var0", 0, "var1", 0), definition);
 		for (int count = 1; count <= 3; count++) {
 			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(246200));
 			snapshot = nextSnapshot(snapshot, plan);
-			assertEquals(QuestStatus.START, snapshot.status());
-			assertEquals(Map.of("var0", count),
-				definition.progressLayout().unpack(snapshot.packedVariables()));
 			if (count < 3) {
+				assertEquals(QuestStatus.START, snapshot.status());
+				assertEquals(Map.of("var0", 0, "var1", count),
+					definition.progressLayout().unpack(snapshot.packedVariables()));
 				assertNoMatch(compiled, snapshot, reportEvent);
+			} else {
+				assertEquals(QuestStatus.REWARD, snapshot.status());
+				assertEquals(Map.of("var0", 1, "var1", 3),
+					definition.progressLayout().unpack(snapshot.packedVariables()));
 			}
 		}
 		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(246200));
-
-		QuestTransition reportPage = transition(definition, "ready", "ready",
-			new QuestEvent.TalkToNpc(806700, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			reportPage.afterCommit());
-		QuestTransition report = transition(definition, "ready", "reward", reportEvent);
-		assertEquals(List.of(), report.conditions());
-		assertEquals(List.of(), report.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
-		QuestMutationPlan reportPlan = dispatch(compiled, snapshot, reportEvent);
-		snapshot = nextSnapshot(snapshot, reportPlan);
-		assertEquals(QuestStatus.REWARD, snapshot.status());
-		assertEquals(Map.of("var0", 3), definition.progressLayout().unpack(snapshot.packedVariables()));
 
 		QuestTransition reopen = transition(definition, "reward", "reward",
 			new QuestEvent.TalkToNpc(806700, QuestDialogAction.QUEST_SELECT.id()));
@@ -629,6 +612,99 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	private static void assertReportedMonsterHunt(ReportedMonsterHuntContract contract) throws Exception {
 		CompiledQuestDefinition compiled = load(contract.questId());
 		QuestDefinition definition = compiled.definition();
+		if (definition.nodes().stream().anyMatch(n -> "ready".equals(n.label()))) {
+			assertLegacyReportedMonsterHunt(compiled, contract);
+			return;
+		}
+		assertNode(definition, "started", QuestStatus.START, Map.of());
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", contract.requiredKills()));
+
+		QuestEvent targets = new QuestEvent.KillNpcSet(contract.targetNpcIds());
+		QuestTransition finalKill;
+		if (contract.requiredKills() == 1) {
+			finalKill = transition(definition, "started", "reward", targets, 0);
+			assertEquals(List.of(new QuestCondition.VariableBelow("var1", 1)), finalKill.conditions());
+		} else {
+			QuestTransition continuing = transition(definition, "started", "started", targets, 1);
+			assertEquals(List.of(new QuestCondition.VariableBelow("var1", contract.requiredKills() - 1)),
+				continuing.conditions());
+			assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable("var1", 1)), continuing.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				continuing.afterCommit());
+			finalKill = transition(definition, "started", "reward", targets, 0);
+			assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", contract.requiredKills() - 1)),
+				finalKill.conditions());
+		}
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", contract.requiredKills())), finalKill.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+			finalKill.afterCommit());
+
+		QuestEvent reportEvent = new QuestEvent.TalkToNpc(contract.endNpcId(),
+			QuestDialogAction.SELECT_QUEST_REWARD.id());
+		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START, Map.of("var0", 0, "var1", 0), definition);
+		List<Integer> targetNpcIds = contract.targetNpcIds().stream().toList();
+		for (int count = 1; count <= contract.requiredKills(); count++) {
+			QuestMutationPlan plan = dispatch(compiled, snapshot,
+				new QuestEvent.KillNpc(targetNpcIds.get((count - 1) % targetNpcIds.size())));
+			snapshot = nextSnapshot(snapshot, plan);
+			if (count < contract.requiredKills()) {
+				assertEquals(QuestStatus.START, snapshot.status());
+				assertEquals(Map.of("var0", 0, "var1", count),
+					definition.progressLayout().unpack(snapshot.packedVariables()));
+				assertNoMatch(compiled, snapshot, reportEvent);
+			} else {
+				assertEquals(QuestStatus.REWARD, snapshot.status());
+				assertEquals(Map.of("var0", 1, "var1", contract.requiredKills()),
+					definition.progressLayout().unpack(snapshot.packedVariables()));
+			}
+		}
+		assertNoMatch(compiled, snapshot,
+			new QuestEvent.KillNpc(contract.targetNpcIds().iterator().next()));
+
+		QuestTransition reopen = transition(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(contract.endNpcId(), QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			reopen.afterCommit());
+		QuestTransition preview = transition(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(contract.endNpcId(), QuestDialogAction.SELECT_QUEST_REWARD.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), preview.afterCommit());
+
+		QuestTransition completion = transition(definition, "reward", "complete",
+			new QuestEvent.TalkToNpc(contract.endNpcId(), QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
+		assertEquals(List.of(
+			new QuestAction.GrantReward("EXP", 0, contract.exp(), QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", contract.firstRewardItemId(), contract.firstRewardItemAmount(),
+				QuestRewardAmountMode.EXACT),
+			new QuestAction.CompleteQuest(0)), completion.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			completion.afterCommit());
+
+		if (contract.startNpcId() != contract.endNpcId()) {
+			assertTrue(routes(definition, "unaccepted", contract.endNpcId()).isEmpty());
+			assertTrue(routes(definition, "reward", contract.startNpcId()).isEmpty());
+		}
+		assertEquals(contract.startNpcId() == contract.endNpcId()
+				? Set.of(contract.startNpcId())
+				: Set.of(contract.startNpcId(), contract.endNpcId()),
+			definition.transitions().stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
+				.map(transition -> ((QuestEvent.TalkToNpc) transition.event()).npcId())
+				.collect(Collectors.toUnmodifiableSet()));
+		assertEquals(contract.requiredKills() == 1 ? 1 : 2, definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet)
+			.count());
+		assertTrue(definition.transitions().stream().allMatch(transition ->
+			transition.event() instanceof QuestEvent.TalkToNpc
+				|| transition.event() instanceof QuestEvent.KillNpcSet));
+	}
+
+	private static void assertLegacyReportedMonsterHunt(CompiledQuestDefinition compiled,
+			ReportedMonsterHuntContract contract) {
+		QuestDefinition definition = compiled.definition();
 		assertNode(definition, "started", QuestStatus.START, Map.of());
 		assertNode(definition, "ready", QuestStatus.START, Map.of("var0", contract.requiredKills()));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", contract.requiredKills()));
@@ -649,10 +725,6 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 				continuing.afterCommit());
 			finalKill = transition(definition, "started", "ready", targets);
 			assertEquals(0, finalKill.priority());
-			// 上界与 at-least 一起把末杀限定在恰好 requiredKills-1：超杀会继续 increment，
-			// 使 var0 越过 ready 投影并锁死报告路由。
-			// The upper bound pins the final kill to exactly requiredKills-1: overkill
-			// would keep incrementing var0 past the ready projection and lock reporting.
 			assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1),
 					new QuestCondition.VariableBelow("var0", contract.requiredKills())),
 				finalKill.conditions());
@@ -722,8 +794,6 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			assertTrue(routes(definition, "ready", contract.startNpcId()).isEmpty());
 			assertTrue(routes(definition, "reward", contract.startNpcId()).isEmpty());
 		}
-		// start 与 end 可能是同一 NPC；Set.of 不接受重复元素。
-		// Start and end may be the same NPC; Set.of rejects duplicates.
 		assertEquals(contract.startNpcId() == contract.endNpcId()
 				? Set.of(contract.startNpcId())
 				: Set.of(contract.startNpcId(), contract.endNpcId()),
@@ -828,18 +898,17 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			IndependentCountedMonsterHuntContract contract) throws Exception {
 		CompiledQuestDefinition compiled = load(contract.questId());
 		QuestDefinition definition = compiled.definition();
-		Map<String, Integer> ready = Map.of("var0", 4, "var1", 4);
+		Map<String, Integer> rewardVars = Map.of("var0", 1, "var1", 4, "var2", 4);
 		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "ready", QuestStatus.START, ready);
-		assertNode(definition, "reward", QuestStatus.REWARD, ready);
-		assertNode(definition, "complete", QuestStatus.COMPLETE, ready);
-		assertEquals(Set.of("unaccepted", "started", "ready", "reward", "complete"),
+		assertNode(definition, "reward", QuestStatus.REWARD, rewardVars);
+		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0, "var2", 0));
+		assertEquals(Set.of("unaccepted", "started", "reward", "complete"),
 			definition.nodes().stream().map(node -> node.label()).collect(Collectors.toUnmodifiableSet()));
 
-		assertIndependentCountedKillRoutes(definition, contract.firstTargetId(), "var0", "var1");
-		assertIndependentCountedKillRoutes(definition, contract.secondTargetId(), "var1", "var0");
-		assertIndependentCountedKillOrder(compiled, contract, contract.firstTargetId(), contract.secondTargetId());
-		assertIndependentCountedKillOrder(compiled, contract, contract.secondTargetId(), contract.firstTargetId());
+		assertIndependentCountedKillRoutes(definition, contract.firstTargetId(), "var1", "var2");
+		assertIndependentCountedKillRoutes(definition, contract.secondTargetId(), "var2", "var1");
+		assertIndependentCountedKillOrder(compiled, contract, contract.firstTargetId(), contract.secondTargetId(), "var1", "var2");
+		assertIndependentCountedKillOrder(compiled, contract, contract.secondTargetId(), contract.firstTargetId(), "var2", "var1");
 
 		QuestTransition accept = transition(definition, "unaccepted", "started",
 			new QuestEvent.TalkToNpc(805401, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
@@ -852,21 +921,13 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 
 		QuestEvent reportEvent = new QuestEvent.TalkToNpc(805401,
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		QuestTransition reportPage = transition(definition, "ready", "ready",
+		QuestTransition reportPage = transition(definition, "reward", "reward",
 			new QuestEvent.TalkToNpc(805401, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(), reportPage.conditions());
 		assertEquals(List.of(), reportPage.actions());
 		assertNull(reportPage.priority());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			reportPage.afterCommit());
-		QuestTransition report = transition(definition, "ready", "reward", reportEvent);
-		assertEquals(List.of(), report.conditions());
-		assertEquals(List.of(), report.actions());
-		assertNull(report.priority());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
 
 		QuestTransition reopen = transition(definition, "reward", "reward",
 			new QuestEvent.TalkToNpc(805401, QuestDialogAction.QUEST_SELECT.id()));
@@ -909,18 +970,19 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			IndependentGroupedCountedMonsterHuntContract contract) throws Exception {
 		CompiledQuestDefinition compiled = load(contract.questId());
 		QuestDefinition definition = compiled.definition();
-		Map<String, Integer> ready = Map.of("var0", 20, "var1", 20);
+		Map<String, Integer> rewardVars = Map.of("var0", 1, "var1", 20, "var2", 20);
 		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "ready", QuestStatus.START, ready);
-		assertNode(definition, "reward", QuestStatus.REWARD, ready);
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
+		assertNode(definition, "reward", QuestStatus.REWARD, rewardVars);
+		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0, "var2", 0));
+		assertEquals(Set.of("unaccepted", "started", "reward", "complete"),
+			definition.nodes().stream().map(node -> node.label()).collect(Collectors.toUnmodifiableSet()));
 
 		QuestEvent first = new QuestEvent.KillNpcSet(contract.firstTargets());
 		QuestEvent second = new QuestEvent.KillNpcSet(contract.secondTargets());
-		assertIndependentGroupedCountedKillRoutes(definition, first, "var0", "var1");
-		assertIndependentGroupedCountedKillRoutes(definition, second, "var1", "var0");
-		assertIndependentGroupedCountedKillOrder(compiled, first, second, "var0", "var1");
-		assertIndependentGroupedCountedKillOrder(compiled, second, first, "var1", "var0");
+		assertIndependentGroupedCountedKillRoutes(definition, first, "var1", "var2");
+		assertIndependentGroupedCountedKillRoutes(definition, second, "var2", "var1");
+		assertIndependentGroupedCountedKillOrder(compiled, first, second, "var1", "var2");
+		assertIndependentGroupedCountedKillOrder(compiled, second, first, "var2", "var1");
 
 		QuestTransition accept = transition(definition, "unaccepted", "started",
 			new QuestEvent.TalkToNpc(806116, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
@@ -929,17 +991,20 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());
 
-		QuestTransition reportPage = transition(definition, "ready", "ready",
+		QuestTransition reportPage = transition(definition, "reward", "reward",
 			new QuestEvent.TalkToNpc(806116, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			reportPage.afterCommit());
-		QuestEvent reportEvent = new QuestEvent.TalkToNpc(806116,
-			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		QuestTransition report = transition(definition, "ready", "reward", reportEvent);
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
+
+		QuestTransition reopen = transition(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(806116, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			reopen.afterCommit());
+		QuestTransition preview = transition(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(806116, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), preview.afterCommit());
+
 		QuestTransition completion = transition(definition, "reward", "complete",
 			new QuestEvent.TalkToNpc(806116, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
 		assertEquals(List.of(
@@ -962,21 +1027,25 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 
 	private static void assertIndependentGroupedCountedKillRoutes(QuestDefinition definition,
 			QuestEvent event, String field, String otherField) {
-		assertCounterRoute(transition(definition, "started", "started", event, 2), 2,
-			List.of(new QuestCondition.VariableBelow(field, 19)), field);
+		QuestTransition counting = transition(definition, "started", "started", event, 2);
+		assertEquals(List.of(new QuestCondition.VariableBelow(field, 19)), counting.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable(field, 1)), counting.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), counting.afterCommit());
+
 		QuestTransition penultimate = transition(definition, "started", "started", event, 1);
 		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs(field, 19),
+			new QuestCondition.VariableAtLeast(field, 19),
 			new QuestCondition.VariableBelow(otherField, 20)), penultimate.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable(field, 1)), penultimate.actions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.SetVariable(field, 20)), penultimate.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			penultimate.afterCommit());
-		QuestTransition finalKill = transition(definition, "started", "ready", event, 0);
+
+		QuestTransition finalKill = transition(definition, "started", "reward", event, 0);
 		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs(field, 19),
+			new QuestCondition.VariableAtLeast(field, 19),
 			new QuestCondition.VariableAtLeast(otherField, 20)), finalKill.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable(field, 1)), finalKill.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", 20), new QuestAction.SetVariable("var2", 20)), finalKill.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			finalKill.afterCommit());
 	}
 
@@ -987,7 +1056,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		QuestEvent reportEvent = new QuestEvent.TalkToNpc(806116,
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
 		QuestSnapshot snapshot = snapshot(compiled.id(), QuestStatus.START,
-			Map.of("var0", 0, "var1", 0), definition);
+			Map.of("var0", 0, "var1", 0, "var2", 0), definition);
 		assertNoMatch(compiled, snapshot, reportEvent);
 		int firstTarget = firstEvent instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
 			? npcIds.iterator().next() : 0;
@@ -997,26 +1066,29 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(firstTarget)));
 			assertEquals(QuestStatus.START, snapshot.status());
 			Map<String, Integer> values = definition.progressLayout().unpack(snapshot.packedVariables());
+			assertEquals(0, values.get("var0"));
 			assertEquals(count, values.get(firstField));
 			assertEquals(0, values.get(secondField));
 			assertNoMatch(compiled, snapshot, reportEvent);
 		}
 		for (int count = 1; count <= 20; count++) {
-			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(secondTarget)));
-			assertEquals(QuestStatus.START, snapshot.status());
-			Map<String, Integer> values = definition.progressLayout().unpack(snapshot.packedVariables());
-			assertEquals(20, values.get(firstField));
-			assertEquals(count, values.get(secondField));
+			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(secondTarget));
+			snapshot = nextSnapshot(snapshot, plan);
 			if (count < 20) {
+				assertEquals(QuestStatus.START, snapshot.status());
+				Map<String, Integer> values = definition.progressLayout().unpack(snapshot.packedVariables());
+				assertEquals(0, values.get("var0"));
+				assertEquals(20, values.get(firstField));
+				assertEquals(count, values.get(secondField));
 				assertNoMatch(compiled, snapshot, reportEvent);
+			} else {
+				assertEquals(QuestStatus.REWARD, snapshot.status());
+				Map<String, Integer> values = definition.progressLayout().unpack(snapshot.packedVariables());
+				assertEquals(1, values.get("var0"));
+				assertEquals(20, values.get("var1"));
+				assertEquals(20, values.get("var2"));
 			}
 		}
-		assertEquals(Map.of("var0", 20, "var1", 20),
-			definition.progressLayout().unpack(snapshot.packedVariables()));
-		QuestMutationPlan report = dispatch(compiled, snapshot, reportEvent);
-		assertEquals(QuestStatus.REWARD, report.nextStatus());
-		assertEquals(Map.of("var0", 20, "var1", 20),
-			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
 	private static void assertIndependentTripleCountedMonsterHunt(int questId, int reportNpcId,
@@ -1150,51 +1222,62 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	private static void assertIndependentCountedKillRoutes(QuestDefinition definition, int npcId,
 			String field, String otherField) {
 		QuestEvent event = new QuestEvent.KillNpc(npcId);
-		assertCounterRoute(transition(definition, "started", "started", event, 2), 2,
-			List.of(new QuestCondition.VariableBelow(field, 3)), field);
-		assertCounterRoute(transition(definition, "started", "started", event, 1), 1,
-			List.of(
-				new QuestCondition.QuestVariableIs(field, 3),
-				new QuestCondition.VariableBelow(otherField, 4)), field);
-		assertCounterRoute(transition(definition, "started", "ready", event), 0,
-			List.of(
-				new QuestCondition.QuestVariableIs(field, 3),
-				new QuestCondition.VariableAtLeast(otherField, 4)), field);
+		QuestTransition counting = transition(definition, "started", "started", event, 2);
+		assertEquals(List.of(new QuestCondition.VariableBelow(field, 3)), counting.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable(field, 1)), counting.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), counting.afterCommit());
+
+		QuestTransition penultimate = transition(definition, "started", "started", event, 1);
+		assertEquals(List.of(
+			new QuestCondition.VariableAtLeast(field, 3),
+			new QuestCondition.VariableBelow(otherField, 4)), penultimate.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.SetVariable(field, 4)), penultimate.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), penultimate.afterCommit());
+
+		QuestTransition finalKill = transition(definition, "started", "reward", event, 0);
+		assertEquals(List.of(
+			new QuestCondition.VariableAtLeast(field, 3),
+			new QuestCondition.VariableAtLeast(otherField, 4)), finalKill.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", 4), new QuestAction.SetVariable("var2", 4)), finalKill.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), finalKill.afterCommit());
 	}
 
 	private static void assertIndependentCountedKillOrder(CompiledQuestDefinition compiled,
-			IndependentCountedMonsterHuntContract contract, int firstNpcId, int secondNpcId) {
+			IndependentCountedMonsterHuntContract contract, int firstNpcId, int secondNpcId,
+			String firstField, String secondField) {
 		QuestDefinition definition = compiled.definition();
 		QuestEvent reportEvent = new QuestEvent.TalkToNpc(805401,
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
 		QuestSnapshot snapshot = snapshot(compiled.id(), QuestStatus.START,
-			Map.of("var0", 0, "var1", 0), definition);
+			Map.of("var0", 0, "var1", 0, "var2", 0), definition);
 		assertNoMatch(compiled, snapshot, reportEvent);
 		for (int count = 1; count <= 4; count++) {
 			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(firstNpcId)));
 			assertEquals(QuestStatus.START, snapshot.status());
-			assertEquals(firstNpcId == contract.firstTargetId() ? Map.of("var0", count, "var1", 0)
-				: Map.of("var0", 0, "var1", count),
-				definition.progressLayout().unpack(snapshot.packedVariables()));
+			Map<String, Integer> vars = definition.progressLayout().unpack(snapshot.packedVariables());
+			assertEquals(0, vars.get("var0"));
+			assertEquals(count, vars.get(firstField));
+			assertEquals(0, vars.get(secondField));
+			assertNoMatch(compiled, snapshot, reportEvent);
 		}
-		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(firstNpcId));
-		assertNoMatch(compiled, snapshot, reportEvent);
 		for (int count = 1; count <= 4; count++) {
-			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(secondNpcId)));
-			assertEquals(QuestStatus.START, snapshot.status());
-			assertEquals(secondNpcId == contract.firstTargetId() ? Map.of("var0", count, "var1", 4)
-				: Map.of("var0", 4, "var1", count),
-				definition.progressLayout().unpack(snapshot.packedVariables()));
+			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(secondNpcId));
+			snapshot = nextSnapshot(snapshot, plan);
 			if (count < 4) {
+				assertEquals(QuestStatus.START, snapshot.status());
+				Map<String, Integer> vars = definition.progressLayout().unpack(snapshot.packedVariables());
+				assertEquals(0, vars.get("var0"));
+				assertEquals(4, vars.get(firstField));
+				assertEquals(count, vars.get(secondField));
 				assertNoMatch(compiled, snapshot, reportEvent);
+			} else {
+				assertEquals(QuestStatus.REWARD, snapshot.status());
+				Map<String, Integer> vars = definition.progressLayout().unpack(snapshot.packedVariables());
+				assertEquals(1, vars.get("var0"));
+				assertEquals(4, vars.get("var1"));
+				assertEquals(4, vars.get("var2"));
 			}
 		}
-		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(contract.firstTargetId()));
-		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(contract.secondTargetId()));
-		QuestMutationPlan report = dispatch(compiled, snapshot, reportEvent);
-		assertEquals(QuestStatus.REWARD, report.nextStatus());
-		assertEquals(Map.of("var0", 4, "var1", 4),
-			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
 	private static void assertIndependentKillRoutes(QuestDefinition definition, int npcId,
@@ -1239,42 +1322,42 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		CompiledQuestDefinition compiled = load(contract.questId());
 		QuestDefinition definition = compiled.definition();
 		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", contract.requiredKills()));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", contract.requiredKills()));
 
 		QuestEvent configuredEvent = new QuestEvent.KillNpcSet(contract.targetNpcIds());
 		QuestTransition continuing = transition(definition, "started", "started", configuredEvent);
 		assertEquals(1, continuing.priority());
-		assertEquals(List.of(new QuestCondition.VariableBelow("var0", contract.requiredKills() - 1)),
+		assertEquals(List.of(new QuestCondition.VariableBelow("var1", contract.requiredKills() - 1)),
 			continuing.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), continuing.actions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable("var1", 1)), continuing.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			continuing.afterCommit());
 
 		QuestTransition completion = transition(definition, "started", "reward", configuredEvent);
 		assertEquals(0, completion.priority());
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1)),
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", contract.requiredKills() - 1)),
 			completion.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", contract.requiredKills())),
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", contract.requiredKills())),
 			completion.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			completion.afterCommit());
 
 		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START,
-			Map.of("var0", 0), definition);
+			Map.of("var0", 0, "var1", 0), definition);
 		for (int count = 1; count < contract.requiredKills(); count++) {
 			QuestMutationPlan plan = dispatch(compiled, snapshot,
 				new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
 			snapshot = nextSnapshot(snapshot, plan);
 			assertEquals(QuestStatus.START, snapshot.status());
-			assertEquals(Map.of("var0", count),
+			assertEquals(Map.of("var0", 0, "var1", count),
 				definition.progressLayout().unpack(snapshot.packedVariables()));
 		}
 
 		QuestMutationPlan finalKill = dispatch(compiled, snapshot,
 			new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
 		assertEquals(QuestStatus.REWARD, finalKill.nextStatus());
-		assertEquals(Map.of("var0", contract.requiredKills()),
+		assertEquals(Map.of("var0", 1, "var1", contract.requiredKills()),
 			definition.progressLayout().unpack(finalKill.nextPackedVariables()));
 		assertEquals(completion.actions(), finalKill.requiredActions());
 	}

@@ -23,7 +23,7 @@ class Quest14112LogoutPersistenceTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
 				&& npcId == 210318)
 			.findFirst().orElseThrow();
-		assertEquals("started", kill.sourceNode());
+		assertEquals("armed", kill.sourceNode());
 		assertEquals("k1", kill.targetNode());
 		assertTrue(kill.afterCommit().stream().anyMatch(action ->
 			action instanceof AfterCommitAction.SpawnNpc(String slot, int templateId, QuestSpawnLocation location)
