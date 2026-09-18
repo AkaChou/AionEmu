@@ -11,8 +11,11 @@
     </items>
     <rewards>
       <reward kind="ITEM" id="169401096" amount="2"/>
-      <reward kind="ITEM" id="186000178" amount="1"/>
     </rewards>
+    <extended-rewards>
+
+      <reward kind="ITEM" id="186000178" amount="1"/>
+</extended-rewards>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -167,7 +170,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="831090" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="831090" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

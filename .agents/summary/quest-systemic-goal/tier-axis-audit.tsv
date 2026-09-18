@@ -9,8 +9,6 @@ quest_id	category	detail
 1162	TIER2_MISSING_PROD	prod_groups=2 retail_numeric={'exp': 20250, 'gold': 1800} items=[('ITEM', 186000001, 1)]
 1205	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 275} items=[]
 1205	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 275} items=[]
-1305	EXT_DIFF	prod=[(0, 5000), (188050588, 1)] retail=[(188050588, 1)]
-1306	EXT_DIFF	prod=[(0, 4800), (188050588, 1)] retail=[(188050588, 1)]
 1367	TIER2_NUMERIC_DIFF	prod={'exp': 340413} retail={'exp': 340413, 'gold': 0}
 1367	TIER2_ITEM_DIFF	prod=[('ITEM', 162000048, 6), ('ITEM', 186000003, 1)] retail=[('ITEM', 162000048, 3), ('ITEM', 186000003, 1)]
 1367	TIER3_MISSING_PROD	prod_groups=3 retail_numeric={'exp': 340413, 'gold': 0} items=[('ITEM', 162000048, 6), ('ITEM', 186000003, 1)]
@@ -52,7 +50,6 @@ quest_id	category	detail
 2332	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 57000, 'gold': 4000} items=[('ITEM', 162000048, 6), ('ITEM', 186000008, 6)]
 2345	TIER2_MISSING_PROD	prod_groups=2 retail_numeric={'exp': 413113, 'gold': 18370} items=[('ITEM', 162000048, 6), ('ITEM', 186000008, 6)]
 2367	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 593431, 'gold': 1300} items=[('ITEM', 186000008, 1)]
-2368	EXT_DIFF	prod=[(77, 1), (188050584, 3)] retail=[(188050584, 3)]
 2392	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1244918} items=[('ITEM', 162000048, 4), ('ITEM', 186000008, 2)]
 2392	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1244918} items=[('ITEM', 162000048, 4), ('ITEM', 186000008, 2)]
 2411	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 806224, 'gold': 0} items=[('ITEM', 186000008, 2)]
@@ -78,25 +75,12 @@ quest_id	category	detail
 2994	TIER2_ITEM_DIFF	prod=[('SELECTABLE_ITEM', 100500572, 1), ('SELECTABLE_ITEM', 100600608, 1)] retail=[('SELECTABLE_ITEM', 100000723, 1), ('SELECTABLE_ITEM', 100200673, 1), ('SELECTABLE_ITEM', 101700594, 1)]
 2994	TIER3_NUMERIC_DIFF	prod={'exp': 7500} retail={'exp': 7500, 'gold': 0}
 2994	TIER3_ITEM_DIFF	prod=[('SELECTABLE_ITEM', 100100568, 1), ('SELECTABLE_ITEM', 101500566, 1), ('SELECTABLE_ITEM', 115000826, 1)] retail=[('SELECTABLE_ITEM', 100500572, 1), ('SELECTABLE_ITEM', 100600608, 1)]
-3015	EXT_DIFF	prod=[(0, 14400), (188050588, 1)] retail=[(188050588, 1)]
 3074	TIER2_UNMAPPED	names unmappable
 3074	TIER3_UNMAPPED	names unmappable
 3088	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 4451099, 'gold': 15000} items=[('ITEM', 186000005, 4)]
 3088	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 4451099, 'gold': 75000} items=[('ITEM', 186000005, 4)]
-3119	EXT_DIFF	prod=[] retail=[(188050587, 1)]
-3120	EXT_DIFF	prod=[] retail=[(186000005, 38)]
-4002	EXT_DIFF	prod=[(0, 8600), (188050584, 1)] retail=[(188050584, 1)]
-4009	EXT_DIFF	prod=[(0, 11600), (188050588, 1)] retail=[(188050588, 1)]
-4013	EXT_DIFF	prod=[(0, 8900), (188050584, 1)] retail=[(188050584, 1)]
-4035	EXT_DIFF	prod=[(0, 23700), (188050586, 1)] retail=[(188050586, 1)]
-4045	EXT_DIFF	prod=[(0, 17000), (188050589, 1)] retail=[(188050589, 1)]
 4074	TIER2_UNMAPPED	names unmappable
 4074	TIER3_UNMAPPED	names unmappable
-4094	EXT_DIFF	prod=[(0, 46200), (188050587, 1)] retail=[(188050587, 1)]
-4118	EXT_DIFF	prod=[] retail=[(188050587, 1)]
-4119	EXT_DIFF	prod=[] retail=[(186000010, 38)]
-4316	EXT_DIFF	prod=[(0, 10000), (188050584, 3)] retail=[(188050584, 3)]
-4319	EXT_DIFF	prod=[(0, 6400), (188050584, 3)] retail=[(188050584, 3)]
 9554	TIER2_NUMERIC_DIFF	prod={'exp': 100, 'gold': 1000} retail={'exp': 100, 'gold': 100}
 9554	TIER3_MISSING_PROD	prod_groups=3 retail_numeric={'exp': 100, 'gold': 1000} items=[]
 9555	TIER2_NUMERIC_DIFF	prod={'exp': 100, 'gold': 1000} retail={'exp': 100, 'gold': 100}
@@ -129,10 +113,6 @@ quest_id	category	detail
 14026	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 3504765, 'gold': 0} items=[('ITEM', 186000003, 40), ('ITEM', 188053407, 3), ('SELECTABLE_ITEM', 110101843, 1), ('SELECTABLE_ITEM', 110301826, 1), ('SELECTABLE_ITEM', 110301828, 1), ('SELECTABLE_ITEM', 110551154, 1), ('SELECTABLE_ITEM', 110551156, 1), ('SELECTABLE_ITEM', 110601629, 1)]
 14053	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 13054359, 'gold': 0} items=[('ITEM', 162000050, 50), ('SELECTABLE_ITEM', 114101707, 1), ('SELECTABLE_ITEM', 114301840, 1), ('SELECTABLE_ITEM', 114301842, 1), ('SELECTABLE_ITEM', 114501749, 1), ('SELECTABLE_ITEM', 114501751, 1), ('SELECTABLE_ITEM', 114601586, 1)]
 14054	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 13809218, 'gold': 0} items=[('ITEM', 188053408, 4), ('SELECTABLE_ITEM', 110101847, 1), ('SELECTABLE_ITEM', 110301834, 1), ('SELECTABLE_ITEM', 110301836, 1), ('SELECTABLE_ITEM', 110551162, 1), ('SELECTABLE_ITEM', 110551164, 1), ('SELECTABLE_ITEM', 110601633, 1)]
-16977	EXT_DIFF	prod=[] retail=[(188054371, 1)]
-16994	EXT_DIFF	prod=[] retail=[(188054371, 1)]
-18606	EXT_DIFF	prod=[] retail=[(190000016, 1)]
-18745	EXT_DIFF	prod=[] retail=[(188054371, 1)]
 18849	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 24000} items=[]
 18849	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 36000} items=[]
 18850	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 48000} items=[]
@@ -158,9 +138,6 @@ quest_id	category	detail
 21467	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 3663347, 'gold': 25400} items=[('ITEM', 186000019, 2)]
 24016	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 228880, 'gold': 0} items=[('SELECTABLE_ITEM', 100001737, 1), ('SELECTABLE_ITEM', 100101334, 1), ('SELECTABLE_ITEM', 100201503, 1), ('SELECTABLE_ITEM', 100501314, 1), ('SELECTABLE_ITEM', 100601431, 1), ('SELECTABLE_ITEM', 100901375, 1), ('SELECTABLE_ITEM', 101301267, 1), ('SELECTABLE_ITEM', 101501357, 1), ('SELECTABLE_ITEM', 101701368, 1), ('SELECTABLE_ITEM', 101801218, 1), ('SELECTABLE_ITEM', 101901127, 1), ('SELECTABLE_ITEM', 102001246, 1), ('SELECTABLE_ITEM', 102101072, 1)]
 24026	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 3504765, 'gold': 0} items=[('ITEM', 186000008, 20), ('SELECTABLE_ITEM', 114101704, 1), ('SELECTABLE_ITEM', 114301833, 1), ('SELECTABLE_ITEM', 114301835, 1), ('SELECTABLE_ITEM', 114501742, 1), ('SELECTABLE_ITEM', 114501744, 1), ('SELECTABLE_ITEM', 114601583, 1)]
-26977	EXT_DIFF	prod=[] retail=[(188054371, 1)]
-26994	EXT_DIFF	prod=[] retail=[(188054371, 1)]
-28745	EXT_DIFF	prod=[] retail=[(188054371, 1)]
 28849	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 24000} items=[]
 28849	TIER3_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 36000} items=[]
 28850	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 0, 'gold': 0, 'abyss_point': 48000} items=[]
@@ -168,22 +145,8 @@ quest_id	category	detail
 30155	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 5989348} items=[]
 50010	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1600} items=[]
 50023	TIER2_MISSING_PROD	prod_groups=2 retail_numeric={'exp': 0, 'gold': 0} items=[('ITEM', 188051782, 1)]
-50029	EXT_DIFF	prod=[] retail=[(186000178, 1)]
 51010	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1600} items=[]
 51023	TIER2_MISSING_PROD	prod_groups=2 retail_numeric={'exp': 0, 'gold': 0} items=[('ITEM', 188051783, 1)]
-51029	EXT_DIFF	prod=[] retail=[(186000178, 1)]
-80017	EXT_DIFF	prod=[] retail=[(188051106, 1)]
-80019	EXT_DIFF	prod=[] retail=[(188051106, 1)]
-80040	EXT_DIFF	prod=[(110900158, 1), (125040131, 1)] retail=[(110900158, 1)]
-80041	EXT_DIFF	prod=[(110900158, 1), (125040131, 1)] retail=[(110900158, 1)]
-80116	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010097, 1)] retail=[(160010097, 1)]
-80117	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010097, 1)] retail=[(160010097, 1)]
-80118	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010097, 1)] retail=[(160010097, 1)]
-80119	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010097, 1)] retail=[(160010097, 1)]
-80124	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010098, 1)] retail=[(160010098, 1)]
-80125	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010098, 1)] retail=[(160010098, 1)]
-80126	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010098, 1)] retail=[(160010098, 1)]
-80127	EXT_DIFF	prod=[(160010094, 2), (160010095, 2), (160010096, 2), (160010098, 1)] retail=[(160010098, 1)]
 80292	TIER2_UNMAPPED	names unmappable
 80292	TIER3_UNMAPPED	names unmappable
 80293	TIER2_UNMAPPED	names unmappable
@@ -196,6 +159,3 @@ quest_id	category	detail
 80299	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1600} items=[]
 80304	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1600} items=[]
 80305	TIER2_MISSING_PROD	prod_groups=1 retail_numeric={'exp': 1600} items=[]
-80875	EXT_DIFF	prod=[] retail=[(169610359, 1)]
-80899	EXT_DIFF	prod=[] retail=[(188055606, 1)]
-80990	EXT_DIFF	prod=[] retail=[(188058635, 1)]

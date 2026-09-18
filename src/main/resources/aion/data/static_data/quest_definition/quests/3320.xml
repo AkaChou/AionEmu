@@ -15,8 +15,10 @@
       <reward kind="SELECTABLE_ITEM" id="160003010" amount="15"/>
     </rewards>
     <extended-rewards>
+
+      <reward kind="GOLD" id="0" amount="3800"/>
       <reward kind="ITEM" id="188050584" amount="3"/>
-    </extended-rewards>
+</extended-rewards>
     <drops>
       <drop npc-id="211689" item-id="182201435" chance="80" each-member="true" collecting-step="0"/>
     </drops>

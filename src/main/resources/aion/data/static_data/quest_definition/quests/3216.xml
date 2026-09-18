@@ -15,19 +15,20 @@
       <reward kind="ITEM" id="188100335" amount="89"/>
     </rewards>
     <extended-rewards>
+
       <reward kind="GOLD" id="0" amount="56000"/>
-      <reward kind="SELECTABLE_ITEM" id="100200712" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100000783" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100100585" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100900596" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101700626" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101500609" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100600642" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100200712" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100500606" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100600642" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100900596" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101500609" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101700626" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="101800579" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102000607" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102100526" amount="1"/>
-    </extended-rewards>
+</extended-rewards>
     <drops>
       <drop npc-id="214913" item-id="182209093" chance="75" each-member="true" collecting-step="0"/>
       <drop npc-id="214914" item-id="182209093" chance="75" each-member="true" collecting-step="0"/>

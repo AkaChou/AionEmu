@@ -74,7 +74,8 @@ def parse_retail():
                 qid = (child.text or "").strip()
             elif re.match(r"^(reward_(exp|gold|abyss_point|glory_point)[123]|"
                           r"reward_item[123]_\d+|selectable_reward_item[123]_\d+|"
-                          r"reward_item_ext_1)$", tag):
+                          r"reward_item_ext_1|reward_gold_ext|reward_title_ext|"
+                          r"selectable_reward_item_ext_\d+)$", tag):
                 fields[tag] = (child.text or "").strip()
         if qid is not None and qid.isdigit():
             out[qid] = fields
@@ -103,8 +104,13 @@ def parse_prod():
             for r in meta.findall("./rewards/reward"):
                 rows.append((r.get("kind"), int(r.get("id")), int(r.get("amount"))))
             groups.append(rows)
-        ext = [(int(r.get("id")), int(r.get("amount")))
+        ext = [(r.get("kind"), int(r.get("id")), int(r.get("amount")))
                for r in meta.findall("./extended-rewards/reward")]
+        if not ext:
+            # 多档 extended 形态：组 1 即最后一轮追加奖励
+            for g in meta.findall("./extended-reward-groups/group"):
+                ext.extend((r.get("kind"), int(r.get("id")), int(r.get("amount")))
+                           for r in g.findall("reward"))
         out[qid] = (groups, ext)
     return out
 
@@ -144,6 +150,8 @@ def main():
                     numeric[f] = int(r[key])
             for key, val in r.items():
                 m = re.match(rf"^(reward|selectable_reward)_item{t}_(\d+)$", key)
+                if key.startswith("selectable_reward_item_ext_"):
+                    continue
                 if not m or not val:
                     continue
                 parts = val.rsplit(" ", 1)
@@ -188,16 +196,57 @@ def main():
         if len(groups) > 3 and len(retail_tiers) <= 1:
             note("TIER_EXTRA_PROD", qid, f"prod_groups={len(groups)}")
 
-        # 扩展奖励
+        # 扩展奖励：真端 ext 模型 = item_ext_1 + gold_ext + title_ext
+        # （title_ext 为名称字符串，无法映射数字 id，仅校验生产是否有 TITLE 声明）
         ext_field = r.get("reward_item_ext_1")
-        if ext_field:
-            parts = ext_field.rsplit(" ", 1)
-            iid = item_map.get(parts[0])
-            cnt = int(parts[1]) if len(parts) == 2 else 1
-            if iid is None:
-                note("EXT_UNMAPPED", qid, f"name={parts[0]}")
-            elif sorted(ext) != [(iid, cnt)]:
-                note("EXT_DIFF", qid, f"prod={sorted(ext)} retail=[({iid}, {cnt})]")
+        gold_ext = r.get("reward_gold_ext")
+        title_ext = r.get("reward_title_ext")
+        ext_selectable = sorted(
+            (int(k.rsplit("_", 1)[1]), v) for k, v in r.items()
+            if k.startswith("selectable_reward_item_ext_") and v)
+        if ext_field or gold_ext or title_ext or ext_selectable:
+            expected = []
+            unmapped = False
+            if ext_field:
+                parts = ext_field.rsplit(" ", 1)
+                iid = item_map.get(parts[0])
+                cnt = int(parts[1]) if len(parts) == 2 else 1
+                if iid is None:
+                    unmapped = True
+                else:
+                    expected.append(("ITEM", iid, cnt))
+            for _, val in ext_selectable:
+                parts = val.rsplit(" ", 1)
+                iid = item_map.get(parts[0])
+                cnt = int(parts[1]) if len(parts) == 2 else 1
+                if iid is None:
+                    unmapped = True
+                else:
+                    expected.append(("SELECTABLE_ITEM", iid, cnt))
+            if gold_ext:
+                try:
+                    expected.append(("GOLD", 0, int(gold_ext)))
+                except ValueError:
+                    pass
+            if unmapped:
+                note("EXT_UNMAPPED", qid, f"name={ext_field}")
+            else:
+                prod_items = sorted((iid, amt) for kind, iid, amt in ext
+                                    if kind not in ("GOLD", "TITLE"))
+                exp_items = sorted((iid, amt) for k, iid, amt in expected
+                                   if k in ("ITEM", "SELECTABLE_ITEM"))
+                prod_gold = next((amt for kind, iid, amt in ext if kind == "GOLD"), None)
+                exp_gold = next((amt for k, iid, amt in expected if k == "GOLD"), None)
+                prod_title = next((iid for kind, iid, amt in ext if kind == "TITLE"), None)
+                items_differ = prod_items != exp_items
+                gold_differ = (prod_gold != exp_gold) and not (
+                    prod_gold is None and exp_gold is None)
+                title_differ = bool(title_ext) and prod_title is None
+                if items_differ or gold_differ or title_differ:
+                    note("EXT_DIFF", qid,
+                         f"prod={sorted(ext)} "
+                         f"retail_items={exp_items} retail_gold={exp_gold} "
+                         f"retail_title={title_ext}")
 
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("quest_id\tcategory\tdetail\n")

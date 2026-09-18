@@ -9,8 +9,10 @@
       <reward kind="EXP" id="0" amount="2936700"/>
     </rewards>
     <extended-rewards>
+
+      <reward kind="GOLD" id="0" amount="7100"/>
       <reward kind="ITEM" id="188051050" amount="1"/>
-    </extended-rewards>
+</extended-rewards>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

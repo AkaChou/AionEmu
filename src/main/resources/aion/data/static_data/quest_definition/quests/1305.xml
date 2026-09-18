@@ -10,9 +10,10 @@
       <reward kind="EXP" id="0" amount="66900"/>
     </rewards>
     <extended-rewards>
+
       <reward kind="GOLD" id="0" amount="5000"/>
       <reward kind="ITEM" id="188050588" amount="1"/>
-    </extended-rewards>
+</extended-rewards>
     <bonuses>
       <bonus type="FOOD" level="20"/>
     </bonuses>

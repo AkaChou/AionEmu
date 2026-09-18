@@ -10,8 +10,11 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="3741284"/>
-      <reward kind="ITEM" id="188054371" amount="1"/>
     </rewards>
+    <extended-rewards>
+
+      <reward kind="ITEM" id="188054371" amount="1"/>
+</extended-rewards>
     <drops>
       <drop npc-id="702958" item-id="182215944" chance="100" each-member="false" collecting-step="0"/>
     </drops>
@@ -81,7 +84,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="804732" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="804732" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 

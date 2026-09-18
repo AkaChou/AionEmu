@@ -194,6 +194,26 @@
     complete-reward-index 与预览合同的完整取证，逐任务执行
   - TIER2/3_UNMAPPED 14 条：真端道具旧名不可映射，EVIDENCE_BLOCKED（同
     ITEM_UNMAPPED）
+- 第三批：extended（最后一轮追加）轴 —— DONE（2026-09-18 同日）
+  - 真端 ext 模型取证：reward_gold_ext + reward_item_ext_1 +
+    selectable_reward_item_ext_N + reward_title_ext（title 为名称字符串，
+    数字 id 映射 EVIDENCE_BLOCKED）
+  - 引擎语义：extended-rewards 由 QuestMutationPlanner.appendFinalRepeatRewards
+    在最后一轮重复完成（completeCount==rewardRepeatCount-1）时自动追加发放
+  - 修复 81 条：G1 补 gold_ext GOLD 行 27 条（2341/2346/3007/3010/3054/3110/
+    3314/3320/3321/3322/3534/4527/11138/11145/11226/11227/11229/11233/11464/
+    21076/21079/21237/21238/21240/21246/21464/28606）、G2 建容器补声明 39 条
+    （含 2658/2659/2660 的 selectable 对、3119 族移动形态、16977 族、80875/
+    80899/80990）、G3 4202/4206/4214/4216 补真端 selectable 件、G4 80040/
+    80041/80116 族缩池到真端单件、80990 删 ext 组 1 点 EXP 占位
+  - 形态兼容：extended-reward-groups 组 1 = 最后一轮追加奖励（3119 族 9 条
+    原生声明即为正确形态，audit 与门禁均已兼容）；18606/50029/51029 从
+    EXT_FLATTENED 例外移除（已按真端重建）
+  - 门禁：QuestRewardItemGateTest 扩为 3 例（fixed 多重集合 + 可选三来源 +
+    extended 全量），基线 TSV 增 retail_extended 列
+  - 验证：12 门禁 50 例全绿；PRODUCTION_COMPILE_OK=6189、0 失败、0 白名单违规
+  - 剩余 TIER_MISSING/NUMERIC/ITEM_DIFF 136 条维持「多档合同结构改造批次」
+    （QE-026 逐任务窗口/choice/组索引取证）
 - 下一检查点：P5 静态可扫项已全部收敛或登记；剩余验证依赖
   （a）Aion 5.8 客户端实机复测（用户侧 PENDING）、
   （b）真端 item/title 模板表解包（ITEM_UNMAPPED 956 / TITLE 173 / 2345 双路线）、

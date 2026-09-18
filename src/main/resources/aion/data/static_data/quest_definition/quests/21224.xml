@@ -15,6 +15,11 @@
       <reward kind="SELECTABLE_ITEM" id="121001001" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="121001002" amount="1"/>
     </rewards>
+    <extended-rewards>
+
+      <reward kind="ITEM" id="121001001" amount="1"/>
+      <reward kind="ITEM" id="121001002" amount="1"/>
+</extended-rewards>
     <drops>
       <drop npc-id="216124" item-id="182207879" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="216125" item-id="182207879" chance="100" each-member="true" collecting-step="0"/>

@@ -11,8 +11,10 @@
       <reward kind="ITEM" id="164000076" amount="3"/>
     </rewards>
     <extended-rewards>
+
+      <reward kind="GOLD" id="0" amount="38200"/>
       <reward kind="ITEM" id="188050587" amount="1"/>
-    </extended-rewards>
+</extended-rewards>
     <start-conditions>
       <condition type="finished" quest-id="11144"/>
     </start-conditions>

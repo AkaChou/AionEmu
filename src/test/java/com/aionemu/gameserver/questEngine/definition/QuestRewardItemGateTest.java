@@ -73,12 +73,13 @@ class QuestRewardItemGateTest {
 	private static Map<Integer, RetailItems> contract;
 	private static Map<Integer, ProductionItems> production;
 
-	record RetailItems(boolean fixedUnset, List<String> fixed, Set<Integer> selectable) {
+	record RetailItems(boolean fixedUnset, List<String> fixed, Set<Integer> selectable,
+		Long extGold, List<String> extItems) {
 	}
 
-	/** 生产档位 1 容器声明 + 三种可选来源。 */
+	/** 生产档位 1 容器声明 + 三种可选来源 + extended（最后一轮追加）声明。 */
 	record ProductionItems(List<String> fixed, Set<Integer> selectable,
-		Set<Integer> branchGranted) {
+		Set<Integer> branchGranted, Long extGold, List<String> extItems) {
 	}
 
 	@BeforeAll
@@ -91,7 +92,7 @@ class QuestRewardItemGateTest {
 					continue;
 				}
 				String[] cols = line.split("\t", -1);
-				assertEquals(3, cols.length, "contract row must have 3 columns: " + line);
+				assertEquals(4, cols.length, "contract row must have 4 columns: " + line);
 				boolean fixedUnset = RETAIL_UNSET.equals(cols[1]);
 				List<String> fixed = new ArrayList<>();
 				if (!fixedUnset && !cols[1].isEmpty()) {
@@ -105,8 +106,19 @@ class QuestRewardItemGateTest {
 						selectable.add(Integer.parseInt(id));
 					}
 				}
+				Long extGold = null;
+				List<String> extItems = new ArrayList<>();
+				if (!"-".equals(cols[3])) {
+					String[] extParts = cols[3].split("\\|", -1);
+					extGold = "-".equals(extParts[0]) ? null : Long.parseLong(extParts[0]);
+					if (!"-".equals(extParts[1])) {
+						for (String pair : extParts[1].split(";")) {
+							extItems.add(pair);
+						}
+					}
+				}
 				contract.put(Integer.parseInt(cols[0]),
-					new RetailItems(fixedUnset, fixed, selectable));
+					new RetailItems(fixedUnset, fixed, selectable, extGold, extItems));
 			}
 		}
 		assertFalse(contract.isEmpty(), "item contract must not be empty");
@@ -244,7 +256,38 @@ class QuestRewardItemGateTest {
 		Set<Integer> allSelectable = new TreeSet<>(selectableDeclared);
 		allSelectable.addAll(explicitBranch);
 		allSelectable.addAll(choiceSelectables);
-		return new ProductionItems(fixed, allSelectable, new TreeSet<>());
+
+		// extended-rewards（最后一轮追加）：容器直属 reward 行
+		Long extGold = null;
+		List<String> extItems = new ArrayList<>();
+		var extContainers = metadata.getElementsByTagName("extended-rewards");
+		var extGroupContainers = metadata.getElementsByTagName("extended-reward-groups");
+		if (extContainers.getLength() == 0 && extGroupContainers.getLength() > 0) {
+			// 多档 extended 形态：组 1 即最后一轮追加奖励
+			var extGroups = ((Element) extGroupContainers.item(0))
+				.getElementsByTagName("group");
+			if (extGroups.getLength() > 0) {
+				extContainers = extGroups;
+			}
+		}
+		if (extContainers.getLength() > 0) {
+			Element extContainer = (Element) extContainers.item(0);
+			for (Element child = firstElementChild(extContainer); child != null;
+					child = getNextElement(child)) {
+				if ("reward".equals(child.getTagName())) {
+					String kind = child.getAttribute("kind");
+					if ("GOLD".equals(kind)) {
+						extGold = Long.parseLong(child.getAttribute("amount"));
+					} else if ("ITEM".equals(kind) || "SELECTABLE_ITEM".equals(kind)) {
+						extItems.add(child.getAttribute("id") + ":"
+							+ child.getAttribute("amount"));
+					}
+				}
+			}
+		}
+		extItems.sort(null);
+		return new ProductionItems(fixed, allSelectable, new TreeSet<>(),
+			extGold, extItems);
 	}
 
 	/** 固定道具多重集合必须与真端一致（真端字段缺失跳过）。 */
@@ -308,5 +351,37 @@ class QuestRewardItemGateTest {
 				+ " but retail=" + retail.selectable());
 		}
 		assertTrue(problems.isEmpty(), () -> "selectable mismatches: " + problems);
+	}
+
+	/**
+	 * extended-rewards（真端 reward_gold_ext / reward_item_ext_1 /
+	 * selectable_reward_item_ext_N，引擎在最后一轮重复完成时追加发放）
+	 * 必须与真端一致；真端无 ext 字段（"-"）的任务不纳入比对。
+	 * 2368 的 title_ext=dark_title27 无模板表映射数字 id，TITLE 声明豁免。
+	 */
+	@Test
+	void extendedRewardsMatchTheRetailContract() {
+		List<String> problems = new ArrayList<>();
+		for (Map.Entry<Integer, RetailItems> entry : contract.entrySet()) {
+			if (entry.getValue().extGold() == null && entry.getValue().extItems().isEmpty()) {
+				continue;
+			}
+			int qid = entry.getKey();
+			ProductionItems actual = production.get(qid);
+			List<String> actualItems = new ArrayList<>(actual.extItems());
+			if (!actualItems.equals(entry.getValue().extItems())) {
+				problems.add("quest " + qid + " extended items=" + actualItems
+					+ " but retail=" + entry.getValue().extItems());
+				continue;
+			}
+			Long actualGold = actual.extGold();
+			Long retailGold = entry.getValue().extGold();
+			if (!(actualGold == null ? retailGold == null
+					: actualGold.equals(retailGold))) {
+				problems.add("quest " + qid + " extended gold=" + actualGold
+					+ " but retail=" + retailGold);
+			}
+		}
+		assertTrue(problems.isEmpty(), () -> "extended reward mismatches: " + problems);
 	}
 }

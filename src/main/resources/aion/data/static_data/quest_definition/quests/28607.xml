@@ -12,6 +12,12 @@
       <reward kind="EXP" id="0" amount="3921386"/>
       <reward kind="ITEM" id="186000009" amount="5"/>
     </rewards>
+    <extended-rewards>
+
+      <reward kind="GOLD" id="0" amount="47200"/>
+      <reward kind="ITEM" id="121001043" amount="1"/>
+      <reward kind="ITEM" id="121001044" amount="1"/>
+</extended-rewards>
     <drops>
       <drop npc-id="216989" item-id="182213007" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="216990" item-id="182213007" chance="100" each-member="true" collecting-step="0"/>

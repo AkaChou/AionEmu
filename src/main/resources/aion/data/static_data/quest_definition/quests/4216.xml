@@ -26,8 +26,20 @@
       <reward kind="SELECTABLE_ITEM" id="102100533" amount="1"/>
     </rewards>
     <extended-rewards>
+
       <reward kind="GOLD" id="0" amount="56000"/>
-    </extended-rewards>
+      <reward kind="ITEM" id="100000801" amount="1"/>
+      <reward kind="ITEM" id="100100600" amount="1"/>
+      <reward kind="ITEM" id="100200727" amount="1"/>
+      <reward kind="ITEM" id="100500621" amount="1"/>
+      <reward kind="ITEM" id="100600680" amount="1"/>
+      <reward kind="ITEM" id="100900611" amount="1"/>
+      <reward kind="ITEM" id="101500624" amount="1"/>
+      <reward kind="ITEM" id="101700646" amount="1"/>
+      <reward kind="ITEM" id="101800590" amount="1"/>
+      <reward kind="ITEM" id="102000618" amount="1"/>
+      <reward kind="ITEM" id="102100533" amount="1"/>
+</extended-rewards>
     <drops>
       <drop npc-id="214937" item-id="182209108" chance="75" each-member="true" collecting-step="0"/>
       <drop npc-id="214938" item-id="182209108" chance="75" each-member="true" collecting-step="0"/>

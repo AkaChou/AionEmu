@@ -13,7 +13,6 @@
     </reward-groups>
     <extended-reward-groups>
       <group>
-        <reward kind="EXP" id="0" amount="1" />
         <reward kind="ITEM" id="188058635" amount="1" />
       </group>
     </extended-reward-groups>
