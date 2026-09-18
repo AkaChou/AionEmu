@@ -221,3 +221,38 @@
 - 覆盖对**所有**调用方生效：Spring Bean 属性与遗留静态字段读取同一份有效值。
 - 例：`--gameserver.thread.basepoolsize=9` 会同时改变 `ThreadConfig` 的 Bean 属性与静态字段，
   并被后续 `Config.load()` 保留，不会被文件里的旧值覆盖。
+
+## 配置消费方代码优化（2026-09-18，用户要求"配置文件保持当前，但代码要继续优化"）
+
+### 1. `ThreadPoolManager` 改为注入线程配置（首个真正注入化的消费方）
+
+之前判定"消费点无法注入"是因为它们都不是 Bean。`ThreadPoolManager` 是**例外**：它由
+`EngineBeans.threadPoolManager()` 这个 `@Bean` 工厂方法创建，因此可以合法注入配置。
+
+| 变更 | 说明 |
+|---|---|
+| 新增 `ThreadPoolManager(ThreadConfig)` | 池大小、线程优先级、超时告警阈值全部来自注入的配置对象，不再读静态门面 |
+| 保留无参构造器 | 仅服务非 Bean 回退路径（`GameThreadPoolServices` 的 lazy holder）与既有测试，行为不变 |
+| `ThreadPoolRunnableWrapper` 由 `static` 改为内部类 | 包装器从实例字段读取告警阈值，不再静态读取 `ThreadConfig` |
+| 删除死常量 | `MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000`（全库零引用） |
+| `EngineBeans.threadPoolManager(ThreadConfig)` | Bean 工厂注入配置；消费点从 4 处静态读取降为 0 |
+
+### 2. `ThreadConfig` setter 立即收敛派生值
+
+原实现只在 `@PostConstruct` 重算 `THREAD_POOL_SIZE`，导致 setter 写入组件值后**派生值短暂不一致**。
+现改为每个 setter 写入后立即 `load()`，`@PostConstruct` 保留为"无 setter 调用时"的兜底。
+
+### 3. 测试更新
+
+- `GameThreadPoolManagerBoundsTest` 新增 `injectedThreadConfigDecidesPoolSizes`：断言 instant/scheduled
+  两个池的核心线程数由**注入配置**决定，并用 `try/finally` 还原静态字段；
+- `ThreadConfigTest` 的两条契约更新为：`bindingSettersRecomputeTheDerivedPoolSize`（setter 立即收敛）
+  与 `postConstructRecomputesTheDerivedPoolSize`（兜底重算）。
+
+### 4. 验证
+
+- 聚焦：`ThreadConfigTest`(3) / `GameThreadPoolManagerBoundsTest`(4) / `GameThreadPoolLifecycleTest` 全绿；
+- 全量 `mvn -B clean test`：**3445 例，Failures 0，Errors 6，Skipped 2**；
+  6 个错误全部是并行会话正在删除/改写的 quest audit 类造成的 `NoClassDefFound`，与本轮无关
+  （clean 构建后 `EffectControllerTest`、`NpcMoveControllerPathTest`、`AbstractCollisionObserverTest`
+  等匿名内部类加载错误随 `target` 清理一并消失，确认此前是脏增量构建的假失败）。
