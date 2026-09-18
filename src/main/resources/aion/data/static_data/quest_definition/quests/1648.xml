@@ -9,7 +9,7 @@
       <reward kind="ITEM" id="186000005" amount="4"/>
     </rewards>
     <start-conditions>
-      <condition type="finished" quest-id="1636"/>
+      <condition type="finished" quest-id="1643"/>
     </start-conditions>
   </metadata>
   <progress>

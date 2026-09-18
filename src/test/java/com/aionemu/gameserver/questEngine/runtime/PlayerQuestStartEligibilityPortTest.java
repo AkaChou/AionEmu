@@ -209,6 +209,52 @@ class PlayerQuestStartEligibilityPortTest {
 			List<PlayerClass> permittedClasses) {
 	}
 
+	@Test
+	void reciprocalRetailQuestFamiliesRejectActiveAndCompletedAlternatives() throws Exception {
+		for (int[] pair : List.of(new int[] {18250, 18251}, new int[] {28250, 28251},
+			new int[] {18975, 18976}, new int[] {18977, 18978},
+			new int[] {28975, 28976}, new int[] {28977, 28978})) {
+			for (int direction = 0; direction < 2; direction++) {
+				int questId = pair[direction];
+				int alternative = pair[1 - direction];
+				QuestMetadata target = metadata(questId);
+				Race race = questId >= 28000 ? Race.ASMODIANS : Race.ELYOS;
+				assertEquals(1, target.startConditionGroups().size());
+				assertEquals(java.util.Set.of("noacquired:" + alternative, "unfinished:" + alternative),
+					target.startConditionGroups().getFirst().conditions().stream()
+						.map(c -> c.type() + ":" + c.questId()).collect(java.util.stream.Collectors.toSet()));
+				assertTrue(port(player(66, race), Map.of(questId, target))
+					.snapshot(PLAYER_ID, questId, new QuestEvent.LevelUp()).eligible());
+				for (QuestStatus status : List.of(QuestStatus.NONE, QuestStatus.LOCKED,
+					QuestStatus.START, QuestStatus.REWARD, QuestStatus.COMPLETE)) {
+					Player candidate = player(66, race);
+					candidate.getQuestStateList().addQuest(alternative,
+						new QuestState(alternative, status, 0, 0, null, 0, null));
+					boolean allowed = status == QuestStatus.NONE || status == QuestStatus.LOCKED;
+					assertEquals(allowed, port(candidate, Map.of(questId, target))
+						.snapshot(PLAYER_ID, questId, new QuestEvent.LevelUp()).eligible(),
+						"quest " + questId + " alternative " + alternative + " status " + status);
+				}
+			}
+		}
+	}
+
+	@Test
+	void undeadWarAlertRequires1643RatherThanUnrelated1636() throws Exception {
+		QuestMetadata target = metadata(1648);
+		Player candidate = player(42);
+		PlayerQuestStartEligibilityPort eligibility = port(candidate, Map.of(1648, target));
+		assertRejected(eligibility, 1648, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+		candidate.getQuestStateList().addQuest(1636,
+			new QuestState(1636, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertRejected(eligibility, 1648, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+		candidate.getQuestStateList().addQuest(1643,
+			new QuestState(1643, QuestStatus.START, 0, 0, null, 0, null));
+		assertRejected(eligibility, 1648, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+		candidate.getQuestStateList().getQuestState(1643).setStatus(QuestStatus.COMPLETE);
+		assertTrue(eligibility.snapshot(PLAYER_ID, 1648, new QuestEvent.LevelUp()).eligible());
+	}
+
 	private static TitleList titleListWith(int requiredTitleId) {
 		return new TitleList() {
 			@Override
