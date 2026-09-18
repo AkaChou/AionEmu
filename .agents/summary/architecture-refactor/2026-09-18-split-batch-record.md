@@ -163,3 +163,63 @@
 - `services/conquestservice/`、`services/svsservice/`、`services/agentservice/`、`services/zorshivdredgionservice/`：
   内部 Runnable 收拢后子包仅剩 1~2 个强耦合类，可在阶段五并入对应领域包。
 - `services/item/` 与 `services/drop/` 的边界划分（物品模板查询 vs 掉落分发）需在阶段五统一评估。
+
+## 六阶段重构执行记录（2026-09-18 收口）
+
+按"先结构、后命名、最后 package"的分阶段纪律逐阶段执行，每阶段独立提交、独立验证：
+
+### 阶段一：代码结构重构（DONE）
+
+| 批次 | commit | 内容 |
+|---|---|---|
+| 配置层解耦 | `661d983f3` | `SvStatsConfig`/`IPConfig`/`ThreadConfig`/`SecurityConfig` 纳入 Spring 容器与 `@ConfigurationProperties`，静态字段双向兼容 |
+| 调度碎片第一批 | `661d983f3` | `RiftOpenRunnable`/`VortexStartRunnable`/`CircusStartRunnable`/`ConquestStartRunnable`/`MoltenusStartRunnable`/`InstanceStartRunnable` 收拢为宿主 Service 内部私有类 |
+| 调度/监听碎片第二批 | `8050f03f1` | `SiegeStartRunnable`（record）/`SvsStartRunnable`/`AgentStartRunnable`/`DredgionStartRunnable` + `SiegeBossDoAddDamageListener`/`SiegeBossDeathListener`/`GeneratorDestroyListener`/`ConquestBossDestroyListener` 收拢进宿主 |
+| 纯静态工具第三批 | `707d13a55` | `ItemInfoService` 内联进 `DropService`（保持 `getItemTemplate` 直查语义）；`RecipeService` 收拢为 `CraftLearnAction` 私有静态方法；两个独立类删除 |
+| 架构门禁修复 | `0df38c9fd` | 收拢后的裂隙任务改回 `GameLocationBootstrapServices` 委派，修复 `GameLocationBootstrapServicesTest` / `GameServiceSelfSingletonCleanupTest` 门禁（收拢时误用 `XxxService.getInstance()`） |
+
+保留审计（不为合并而合并）：`DanuarHero`/`CircusBound`/`SPLanding` 为模板方法族唯一实现；
+`ThievesType` 为领域枚举；`ConquerorBuffs`/`TerritoryBuff` 为独立 `StatOwner` 状态载体；
+`ItemInfoService`/`RecipeService` 之外的 `*Manager`（`DataManager`/`ThreadPoolManager`/`RestrictionsManager` 等）名称与职责相符。
+
+### 阶段二：编译 + 测试 + 启动验证（DONE）
+
+- `mvn -B test` 全量：**3434 例，46 failures，0 errors，2 skipped**，用时 3:17。
+- 46 例失败中 **44 例集中在 `questEngine`**（28 个测试类，并行会话正在改 quest XML/dispatch 文案），本阶段未触碰 quest 域；
+- 另 2 例为本轮收拢引入的架构门禁回归（`GameLocationBootstrapServicesTest`、`GameServiceSelfSingletonCleanupTest`），已由 `0df38c9fd` 修复并复测通过。
+- 结论：本阶段结构改动零遗留失败；剩余失败 100% 归属并行 quest 工作区。
+- 服务器启动验证由用户掌控生命周期，未执行启动/重启。
+
+### 阶段三：类命名优化（DONE，commit `336ec68aa`）
+
+| 原名 | 新名 | 依据 |
+|---|---|---|
+| `movement.processors.movement.PathfindHelper` | `PathfindSectorSampler` | 该类不是杂项工具，而是在 180° 可见扇形内按 20° 步长采样可通行点的具体算法；唯一调用方 `FollowMotor` 同步更新；全库无字符串/反射引用 |
+| `gameserver.dao.DAOUtils` | 删除 | 与 `gameserver.dao.impl.DAOUtils` 同名遮蔽且 `supports()` 语义不同，全库无任何引用（死代码） |
+
+- 未移动任何 package；未改动 `*RuntimeBridge`/`*Gateway`/`*Fallbacks`（经复核其名称与"解析 Spring provider 并委派"的职责相符）。
+- 全库搜索旧名（`.java`/`.xml`/`.properties`/`.json`/脚本）无残留（target/、aion/ 构建产物除外）。
+
+### 阶段四：再次编译/测试验证（DONE）
+
+- `mvn -q -DskipTests compile` 通过；
+- `FollowManagerTest`、`FollowSummonTaskAITest` 通过（重命名唯一影响面）。
+
+### 阶段五：package 结构优化（小批量 DONE）
+
+- 全库校验：**0 个** 类声明包与目录不一致；无空包残留（`find src/main/java -type d -empty` 为空）。
+- 已执行迁移：`services/player/PlayerMailboxState` → `services/mail/MailboxState`（邮箱开关/急件标志是邮件域常量，
+  却是该 player 包内唯一非玩家概念；同时去掉了与包语义重复的 `Player` 前缀）。
+  同步更新 `CM_CLOSE_DIALOG`、`SM_DIALOG_WINDOW`、`MailService`、`SystemMailService` 并清理自包 import。
+- 已完成迁移（阶段一顺带产物）：6 个仅含单个临时任务类的子包（`svsservice`/`agentservice`/`zorshivdredgionservice` 等）随收拢消失。
+- 审计保留：`services/` 根目录 96 个类中，`*Service` 门面对应 `services/<domain>` 子包的模式本身一致；
+  子包内保留的都是模板基类/唯一实现/枚举（如 `conquestservice` 的 `Offering`+`ConquestOffering`），
+  进一步平移只产生 import churn 而不改变边界，按"不为动而动"原则不做批量搬迁。
+- `@ComponentScan`/`@MapperScan`/`@EntityScan`/`@ConfigurationPropertiesScan` 扫描范围未受影响（迁移目标仍在 `com.aionemu` 前缀内）。
+
+### 阶段六：最终回归（DONE）
+
+- `mvn -q -DskipTests compile` 通过；
+- `SystemMailServiceTest` 通过（package 迁移唯一影响面）；
+- `GameLocationBootstrapServicesTest`、`GameServiceSelfSingletonCleanupTest` 通过（架构门禁）；
+- 全量 `mvn -B test` 结果同上（44 例 quest 并行域失败，非本阶段引入）。
