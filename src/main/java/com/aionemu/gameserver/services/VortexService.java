@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.vortexservice.DimensionalVortex;
 import com.aionemu.gameserver.services.vortexservice.Invasion;
-import com.aionemu.gameserver.services.vortexservice.VortexStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -490,5 +491,28 @@ public class VortexService {
 
 	private static class VortexServiceHolder {
 		private static final VortexService INSTANCE = new VortexService();
+	}
+
+	/**
+	 * 次元漩涡入侵启动定时任务。
+	 * Start runnable for dimensional-vortex invasions.
+	 */
+	@AllArgsConstructor
+	private static class VortexStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 查找匹配地点并启动入侵。
+		 * Finds the matching location and starts the invasion.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
+			for (final VortexLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					VortexService.getInstance().startInvasion(loc.getId());
+				}
+			}
+		}
 	}
 }

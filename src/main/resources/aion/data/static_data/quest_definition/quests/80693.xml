@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80693" version="1">
-  <metadata name="[Event] Zodica, the Crazed" display-name-id="1800542" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Zodica, the Crazed" display-name-id="1800561" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

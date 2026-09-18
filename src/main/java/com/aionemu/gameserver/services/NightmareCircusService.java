@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.nightmarecircusspawns.NightmareCircusSpawnTemplate;
 import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
-import com.aionemu.gameserver.services.nightmarecircusservice.CircusStartRunnable;
 import com.aionemu.gameserver.services.nightmarecircusservice.Nightmare;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -276,5 +277,29 @@ public class NightmareCircusService {
 
 	private static class NightmareCircusServiceHolder {
 		private static final NightmareCircusService INSTANCE = new NightmareCircusService();
+	}
+
+	/**
+	 * 梦魇马戏团活动启动定时任务。
+	 * Start runnable for the Nightmare Circus world event.
+	 */
+	@AllArgsConstructor
+	private static class CircusStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 执行启动流程。
+		 * Runs the start sequence.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
+					.getNightmareCircusLocations();
+			for (final NightmareCircusLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
+				}
+			}
+		}
 	}
 }

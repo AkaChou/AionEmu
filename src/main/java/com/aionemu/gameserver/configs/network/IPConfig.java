@@ -4,14 +4,17 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import jakarta.annotation.PostConstruct;
 import com.aionemu.commons.network.IPRange;
+import org.springframework.stereotype.Component;
 
 /**
- * 加载游戏服对外地址。
- * Loads the game-server public address.
+ * 加载游戏服对外地址，支持 Spring Bean 注入与静态门面访问。
+ * Loads the game-server public address, supporting both Spring Bean injection and static facade access.
  *
  * @author Taran, SoulKeeper
  */
+@Component
 public class IPConfig {
 	/**
 	 * 默认对外地址字节。
@@ -23,6 +26,7 @@ public class IPConfig {
 	 * 加载 IP 配置（支持启动覆盖项）。
 	 * Loads IP configuration (supports boot overrides).
 	 */
+	@PostConstruct
 	public static void load() {
 		String address = firstNonBlank(
 			NetworkConfig.PUBLIC_ADDRESS,
@@ -66,5 +70,23 @@ public class IPConfig {
 	 */
 	public static byte[] getDefaultAddress() {
 		return defaultAddress;
+	}
+
+	/**
+	 * 实例方法：获取对外地址字节。
+	 * Instance method: returns public address bytes.
+	 *
+	 * @return 默认地址字节 / Default address bytes
+	 */
+	public byte[] getPublicAddress() {
+		return getDefaultAddress();
+	}
+
+	/**
+	 * 实例方法：获取 IP 段列表。
+	 * Instance method: returns IP ranges.
+	 */
+	public List<IPRange> ipRanges() {
+		return getRanges();
 	}
 }

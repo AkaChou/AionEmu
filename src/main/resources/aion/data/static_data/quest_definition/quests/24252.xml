@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24252" version="1">
-  <metadata name="[Dungeon/Group] Stopping the Beritra's Legion" display-name-id="1801870" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Dungeon/Group] Stopping the Beritra's Legion" display-name-id="1801871" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

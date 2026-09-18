@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -17,7 +19,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.conquestspawns.ConquestSpawnTemplate;
 import com.aionemu.gameserver.services.conquestservice.ConquestOffering;
-import com.aionemu.gameserver.services.conquestservice.ConquestStartRunnable;
 import com.aionemu.gameserver.services.conquestservice.Offering;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import lombok.extern.slf4j.Slf4j;
@@ -246,5 +247,28 @@ public class ConquestService {
 
 	private static class ConquestServiceHolder {
 		private static final ConquestService INSTANCE = new ConquestService();
+	}
+
+	/**
+	 * 征服/供奉活动启动定时任务。
+	 * Start runnable for Conquest/Offering events.
+	 */
+	@AllArgsConstructor
+	private static class ConquestStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 启用对应地点。
+		 * Starts the matching location.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, ConquestLocation> locations = ConquestService.getInstance().getConquestLocations();
+			for (final ConquestLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					ConquestService.getInstance().startConquest(loc.getId());
+				}
+			}
+		}
 	}
 }

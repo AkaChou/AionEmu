@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80686" version="1">
-  <metadata name="[Event] Blessings of the Prismatic Serpent" display-name-id="1800574" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Blessings of the Prismatic Serpent" display-name-id="1800554" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

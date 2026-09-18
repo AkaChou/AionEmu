@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
-import com.aionemu.gameserver.services.rift.RiftOpenRunnable;
 
 /**
  * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。
@@ -278,5 +279,29 @@ public class RiftService {
 
 	private static class RiftServiceHolder {
 		private static final RiftService INSTANCE = new RiftService();
+	}
+
+	/**
+	 * 裂隙开启定时任务，按世界 ID 打开对应裂隙并向玩家广播状态。
+	 * Runnable that opens rifts for a world id and broadcasts rift state to players.
+	 */
+	@AllArgsConstructor
+	private static class RiftOpenRunnable implements Runnable {
+		private final int worldId;
+
+		/**
+		 * 打开该世界全部裂隙位置并发送裂隙信息。
+		 * Opens all rift locations in the world and sends rift info.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, RiftLocation> locations = RiftService.getInstance().getRiftLocations();
+			for (final RiftLocation loc : locations.values()) {
+				if (loc.getWorldId() == worldId) {
+					RiftService.getInstance().openRifts(loc);
+				}
+			}
+			RiftInformer.sendRiftsInfo(worldId);
+		}
 	}
 }

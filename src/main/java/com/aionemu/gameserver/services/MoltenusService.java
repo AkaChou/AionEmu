@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.model.templates.spawns.moltenusspawns.MoltenusSpaw
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.moltenusservice.Boss;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
-import com.aionemu.gameserver.services.moltenusservice.MoltenusStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -356,5 +357,32 @@ public class MoltenusService {
 
 	private static class MoltenusServiceHolder {
 		private static final MoltenusService INSTANCE = new MoltenusService();
+	}
+
+	/**
+	 * 熔岩领主（Moltenus）活动启动定时任务。
+	 * Start runnable for the Moltenus world event.
+	 */
+	@AllArgsConstructor
+	private static class MoltenusStartRunnable implements Runnable {
+		private final int id;
+
+		@Override
+		public void run() {
+			// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
+			MoltenusService.getInstance().sulfurFortressMsg(id);
+			// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
+			MoltenusService.getInstance().westernFortressMsg(id);
+			// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
+			MoltenusService.getInstance().easternFortressMsg(id);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();
+				for (final MoltenusLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						MoltenusService.getInstance().startMoltenus(loc.getId());
+					}
+				}
+			}, 600000);
+		}
 	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="17511" version="1">
-  <metadata name="Reminiscing" display-name-id="1802570" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="Reminiscing" display-name-id="1802760" min-level="66" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

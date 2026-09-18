@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80309" version="1">
-  <metadata name="[Event/Daily] Just Shove-l It" display-name-id="1199864" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] Just Shove-l It" display-name-id="1199862" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

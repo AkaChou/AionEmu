@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19064" version="1">
-  <metadata name="Templar Of Construction" display-name-id="1137044" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Templar Of Construction" display-name-id="1137062" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

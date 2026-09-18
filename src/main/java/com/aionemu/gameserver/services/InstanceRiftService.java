@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.instanceriftspawns.InstanceRiftSpawnTemplate;
-import com.aionemu.gameserver.services.instanceriftservice.InstanceStartRunnable;
 import com.aionemu.gameserver.services.instanceriftservice.Rift;
 import com.aionemu.gameserver.services.instanceriftservice.RiftInstance;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -276,5 +277,28 @@ public class InstanceRiftService {
 
 	private static class InstanceRiftServiceHolder {
 		private static final InstanceRiftService INSTANCE = new InstanceRiftService();
+	}
+
+	/**
+	 * 副本裂隙启动定时任务。
+	 * Start runnable for instance-rift events.
+	 */
+	@AllArgsConstructor
+	private static class InstanceStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 查找匹配地点并启动裂隙。
+		 * Finds the matching location and starts the rift.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, InstanceRiftLocation> locations = InstanceRiftService.getInstance().getInstanceRiftLocations();
+			for (InstanceRiftLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					InstanceRiftService.getInstance().startInstanceRift(loc.getId());
+				}
+			}
+		}
 	}
 }

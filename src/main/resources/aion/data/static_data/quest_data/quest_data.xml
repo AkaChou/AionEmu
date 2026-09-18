@@ -13942,13 +13942,13 @@
     <quest_drop npc_id="214689" item_id="182213256" chance="100" drop_each_member="1" />
     <quest_drop npc_id="214690" item_id="182213256" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="3120" name="[Instance/Group] Bounty Hunt" nameId="1137060" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="3120" name="[Instance/Group] Bounty Hunt" nameId="1137095" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="3773237" />
     <extended_rewards>
       <reward_item item_id="186000005" count="38" />
     </extended_rewards>
   </quest>
-  <quest id="3121" name="Archaeologist Pyrrha" nameId="1137097" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="3121" name="Archaeologist Pyrrha" nameId="1141744" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="1965399" title="47" />
     <class_permitted>TECHNIST AETHERTECH</class_permitted>
   </quest>
@@ -14946,7 +14946,7 @@
     <quest_drop npc_id="211944" item_id="182201844" chance="100" drop_each_member="1" />
     <quest_drop npc_id="211945" item_id="182201844" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="3547" name="Enemy Harassing the Elim" nameId="1129950" minlevel_permitted="31" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="3547" name="Enemy Harassing the Elim" nameId="1141745" minlevel_permitted="31" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
       <collect_item item_id="182215334" count="10" />
     </collect_items>
@@ -15242,7 +15242,7 @@
       <finished quest_id="1886" />
     </start_conditions>
   </quest>
-  <quest id="3745" name="First news of victory after the battle against an Asmodian Officer" nameId="1803064" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="3745" name="First news of victory after the battle against an Asmodian Officer" nameId="1803065" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <rewards gold="62640" exp="1110037" title="34">
       <reward_item item_id="188055830" count="1" />
     </rewards>
@@ -17104,23 +17104,23 @@
       <finished quest_id="4093" />
     </start_conditions>
   </quest>
-  <quest id="4115" name="Unidentifiable Fissure" nameId="1137061" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4115" name="Unidentifiable Fissure" nameId="1137096" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="1347585" />
   </quest>
-  <quest id="4116" name="[Group] Into The Theobomos Lab" nameId="1137062" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4116" name="[Group] Into The Theobomos Lab" nameId="1137097" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182213257" count="1" />
     </collect_items>
     <rewards gold="462240" exp="5390338" />
     <quest_drop npc_id="214668" item_id="182213257" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="4117" name="[Coin/Group] Preemptive Strike" nameId="1137063" minlevel_permitted="46" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4117" name="[Coin/Group] Preemptive Strike" nameId="1137098" minlevel_permitted="46" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="3773237">
       <reward_item item_id="186000010" count="1" />
       <reward_item item_id="188050919" count="1" />
     </rewards>
   </quest>
-  <quest id="4118" name="[Instance/Group] Valuable Essence" nameId="1137064" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4118" name="[Instance/Group] Valuable Essence" nameId="1137099" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182213258" count="10" />
     </collect_items>
@@ -17135,13 +17135,13 @@
     <quest_drop npc_id="214653" item_id="182213258" chance="100" drop_each_member="1" />
     <quest_drop npc_id="214651" item_id="182213258" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="4119" name="[Instance/Group] Eliminating The Troublemaker" nameId="1137065" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4119" name="[Instance/Group] Eliminating The Troublemaker" nameId="1137100" minlevel_permitted="46" max_repeat_count="5" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="3773237" />
     <extended_rewards>
       <reward_item item_id="186000010" count="38" />
     </extended_rewards>
   </quest>
-  <quest id="4120" name="[Instance/Group] The song Of death" nameId="1137102" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
+  <quest id="4120" name="[Instance/Group] The song Of death" nameId="1141730" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards exp="6937236" title="97">
       <selectable_reward_item item_id="112101614" count="1" />
       <selectable_reward_item item_id="112301716" count="1" />
@@ -18191,7 +18191,7 @@
       <reward_item item_id="186000008" count="3" />
     </rewards>
   </quest>
-  <quest id="4542" name="The secret Of The Seiren treasure" nameId="1129954" minlevel_permitted="38" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="4542" name="The secret Of The Seiren treasure" nameId="1141717" minlevel_permitted="38" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182215329" count="1" />
     </collect_items>
@@ -25499,7 +25499,7 @@
       <quest_work_item item_id="182215628" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="10035" name="Soar to the Corridor" nameId="1141845" minlevel_permitted="54" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
+  <quest id="10035" name="Soar to the Corridor" nameId="1141846" minlevel_permitted="54" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
     <rewards exp="22194087">
       <selectable_reward_item item_id="110101251" count="1" />
       <selectable_reward_item item_id="110301183" count="1" />
@@ -25511,13 +25511,13 @@
       <quest_work_item item_id="182215629" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="10100" name="Kahrun's Intrigue" nameId="1129956" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
+  <quest id="10100" name="Kahrun's Intrigue" nameId="1129955" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
     <rewards exp="24617969">
       <reward_item item_id="188053057" count="1" />
       <reward_item item_id="166100011" count="70" />
     </rewards>
   </quest>
-  <quest id="10101" name="Dismal Developments" nameId="1129957" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
+  <quest id="10101" name="Dismal Developments" nameId="1129956" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ELYOS" category="MISSION">
     <collect_items>
       <collect_item item_id="182215452" count="1" />
     </collect_items>
@@ -27341,7 +27341,7 @@
   <quest id="11319" name="Tour De Cygnea" nameId="1800549" minlevel_permitted="55" max_repeat_count="1" race_permitted="ELYOS" category="SEEN_MARKER">
     <rewards exp="11319" />
   </quest>
-  <quest id="11323" name="ShuGo Go Go" nameId="1800552" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="11323" name="ShuGo Go Go" nameId="1801129" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="150660" exp="3446553" />
   </quest>
   <quest id="11324" name="[Daily/Spy] No Mo' Asmos" nameId="1801244" minlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="PUBLIC" repeat_cycle="ALL">
@@ -28070,7 +28070,7 @@
       <finished quest_id="13914" />
     </start_conditions>
   </quest>
-  <quest id="13916" name="Agent's Brooch Fragment" nameId="1800096" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="QUEST" target_type="FORCE">
+  <quest id="13916" name="Agent's Brooch Fragment" nameId="1800108" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="QUEST" target_type="FORCE">
     <collect_items>
       <collect_item item_id="182215536" count="1" />
     </collect_items>
@@ -31323,7 +31323,7 @@
       <reward_item item_id="187300002" count="1" />
     </rewards>
   </quest>
-  <quest id="15693" name="[Infiltration/Weekly] Interfere with the Asmodian Exploration" nameId="1803563" minlevel_permitted="66" max_repeat_count="255" repeat_cycle="WED" race_permitted="ELYOS" category="QUEST">
+  <quest id="15693" name="[Infiltration/Weekly] Interfere with the Asmodian Exploration" nameId="1803821" minlevel_permitted="66" max_repeat_count="255" repeat_cycle="WED" race_permitted="ELYOS" category="QUEST">
     <rewards exp="79695360">
       <reward_item item_id="186000492" count="6" />
     </rewards>
@@ -31685,17 +31685,17 @@
       <selectable_reward_item item_id="167010285" count="1" />
     </rewards>
   </quest>
-  <quest id="16837" name="[Instanced Dungeon/Group] Artifact Protector Ganesh" nameId="1803206" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="16837" name="[Instanced Dungeon/Group] Artifact Protector Ganesh" nameId="1803207" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="SEEN_MARKER">
     <rewards gold="405720" exp="35455047" />
   </quest>
-  <quest id="16838" name="[Instanced Dungeon/Group] Records of the Abyss" nameId="1803207" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="16838" name="[Instanced Dungeon/Group] Records of the Abyss" nameId="1803208" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182216199" count="1" />
     </collect_items>
     <rewards gold="382200" exp="30396918" />
     <quest_drop npc_id="703454" item_id="182216199" drop_each_member="1" />
   </quest>
-  <quest id="16839" name="[Instanced Dungeon/Group] Dimensional Monster Bullion" nameId="1803208" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="SEEN_MARKER" cannot_share="true">
+  <quest id="16839" name="[Instanced Dungeon/Group] Dimensional Monster Bullion" nameId="1803209" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="SEEN_MARKER" cannot_share="true">
     <rewards exp="94025232">
       <reward_item item_id="188100391" count="500" />
     </rewards>
@@ -31804,7 +31804,7 @@
       <reward_item item_id="188052938" count="1" />
     </rewards>
   </quest>
-  <quest id="16962" name="[Alliance] Forward March" nameId="1129949" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="QUEST" target_type="FORCE">
+  <quest id="16962" name="[Alliance] Forward March" nameId="1129950" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="QUEST" target_type="FORCE">
     <rewards exp="8028623" gp="20" />
   </quest>
   <quest id="16974" name="Monster Abridged" nameId="1801099" minlevel_permitted="63" max_repeat_count="255" race_permitted="ELYOS" category="IMPORTANT">
@@ -32406,7 +32406,7 @@
       <reward_item item_id="162000178" count="3" />
     </rewards>
   </quest>
-  <quest id="17511" name="Reminiscing" nameId="1802570" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="QUEST">
+  <quest id="17511" name="Reminiscing" nameId="1802760" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="QUEST">
     <rewards gold="150000" exp="51840000" />
   </quest>
   <quest id="17525" name="[Instance Dungeon] Chilly Area" nameId="1803572" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="SIGNIFICANT">
@@ -32636,13 +32636,13 @@
       <finished quest_id="18212" />
     </start_conditions>
   </quest>
-  <quest id="18219" name="Arena Of Glory Challenge 1" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="18219" name="Arena Of Glory Challenge 1" nameId="1199530" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
     <rewards title="239" />
   </quest>
-  <quest id="18220" name="Arena Of Glory Challenge 2" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="18220" name="Arena Of Glory Challenge 2" nameId="1199531" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -32651,7 +32651,7 @@
       <finished quest_id="18219" />
     </start_conditions>
   </quest>
-  <quest id="18221" name="Arena Of Glory Challenge 3" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="18221" name="Arena Of Glory Challenge 3" nameId="1199532" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -32660,7 +32660,7 @@
       <finished quest_id="18220" />
     </start_conditions>
   </quest>
-  <quest id="18222" name="Arena Of Glory Challenge 4" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="18222" name="Arena Of Glory Challenge 4" nameId="1199533" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -32669,7 +32669,7 @@
       <finished quest_id="18221" />
     </start_conditions>
   </quest>
-  <quest id="18223" name="Arena Of Glory Challenge 5" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
+  <quest id="18223" name="Arena Of Glory Challenge 5" nameId="1199534" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -34972,7 +34972,7 @@
       <quest_work_item item_id="182212232" />
     </quest_work_items>
   </quest>
-  <quest id="19064" name="Templar Of Construction" nameId="1137044" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="19064" name="Templar Of Construction" nameId="1137062" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
       <collect_item item_id="182213237" count="1" />
       <collect_item item_id="186000081" count="1" />
@@ -34981,7 +34981,7 @@
       <finished quest_id="3935" />
     </start_conditions>
   </quest>
-  <quest id="19065" name="Insignia Evidence" nameId="1137045" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="19065" name="Insignia Evidence" nameId="1137063" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="5390338">
       <selectable_reward_item item_id="113100829" count="1" />
       <selectable_reward_item item_id="113300847" count="1" />
@@ -38017,62 +38017,62 @@
       <reward_item item_id="188056966" count="1" />
     </rewards>
   </quest>
-  <quest id="23930" name="[Alliance] Eliminate the Sentry Squad at the Krotan Fortress" nameId="1803130" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23930" name="[Alliance] Eliminate the Sentry Squad at the Krotan Fortress" nameId="1803139" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23931" name="[Alliance] Eliminate the Veteran Scout Squad at the Krotan Fortress" nameId="1803131" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23931" name="[Alliance] Eliminate the Veteran Scout Squad at the Krotan Fortress" nameId="1803140" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23932" name="[Alliance] Destroy the Castle Gate at the Krotan Fortress" nameId="1803132" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23932" name="[Alliance] Destroy the Castle Gate at the Krotan Fortress" nameId="1803141" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23933" name="[Alliance] Eliminate the Sentry Squad at the Miren Fortress" nameId="1803133" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23933" name="[Alliance] Eliminate the Sentry Squad at the Miren Fortress" nameId="1803142" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23934" name="[Alliance] Battle for Miren Fortress" nameId="1803134" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23934" name="[Alliance] Battle for Miren Fortress" nameId="1803143" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23935" name="[Alliance] Take the Gate!" nameId="1803135" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23935" name="[Alliance] Take the Gate!" nameId="1803144" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23936" name="[Alliance] Fight for Kysis Fortress!" nameId="1803136" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23936" name="[Alliance] Fight for Kysis Fortress!" nameId="1803145" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23937" name="[Alliance] Battle for Kysis Fortress" nameId="1803137" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23937" name="[Alliance] Battle for Kysis Fortress" nameId="1803146" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23938" name="[Alliance] Kysis Fortress Gate" nameId="1803138" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23938" name="[Alliance] Kysis Fortress Gate" nameId="1803147" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23940" name="[Alliance] Eliminate the Protectors at Wealhtheow's Keep" nameId="1803148" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23940" name="[Alliance] Eliminate the Protectors at Wealhtheow's Keep" nameId="1803151" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23941" name="[Alliance] Eliminate the Commanders of Wealhtheow's Keep" nameId="1803149" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23941" name="[Alliance] Eliminate the Commanders of Wealhtheow's Keep" nameId="1803152" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
   </quest>
-  <quest id="23942" name="[Alliance] Destroy the Castle Gate at Wealhtheow's Keep" nameId="1803150" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
+  <quest id="23942" name="[Alliance] Destroy the Castle Gate at Wealhtheow's Keep" nameId="1803153" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="SEEN_MARKER" target_type="BATTLEGROUP" repeat_cycle="ALL">
     <rewards exp="80251068">
       <reward_item item_id="188056967" count="1" />
     </rewards>
@@ -38582,7 +38582,7 @@
       <reward_item item_id="188050880" count="1" />
     </rewards>
   </quest>
-  <quest id="24111" name="What's Up, Dock?" nameId="1129971" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="24111" name="What's Up, Dock?" nameId="1129972" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182215472" count="1" />
     </collect_items>
@@ -38850,7 +38850,7 @@
       <noacquired>24270</noacquired>
     </start_conditions>
   </quest>
-  <quest id="24252" name="[Dungeon/Group] Stopping the Beritra's Legion" nameId="1801870" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="24252" name="[Dungeon/Group] Stopping the Beritra's Legion" nameId="1801871" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="6242224" />
   </quest>
   <quest id="24260" name="Invade the Past" nameId="1800208" minlevel_permitted="48" max_repeat_count="1" race_permitted="ASMODIANS" category="IMPORTANT">
@@ -39312,12 +39312,12 @@
       <reward_item item_id="186000469" count="63" />
     </rewards>
   </quest>
-  <quest id="25203" name="Creatures of Cloudtalon Valley" nameId="1801235" minlevel_permitted="58" max_repeat_count="40" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="25203" name="Creatures of Cloudtalon Valley" nameId="1801236" minlevel_permitted="58" max_repeat_count="40" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="2948155">
       <reward_item item_id="186000469" count="63" />
     </rewards>
   </quest>
-  <quest id="25204" name="[Daily] Elyos in Enshar?" nameId="1801236" minlevel_permitted="58" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST" repeat_cycle="ALL">
+  <quest id="25204" name="[Daily] Elyos in Enshar?" nameId="1801237" minlevel_permitted="58" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST" repeat_cycle="ALL">
     <rewards exp="2948155">
       <reward_item item_id="186000469" count="126" />
     </rewards>
@@ -39357,7 +39357,7 @@
       <reward_item item_id="186000236" count="5" />
     </rewards>
   </quest>
-  <quest id="25225" name="[Spy/Daily] Assail Erivale" nameId="18012323" minlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="PUBLIC" repeat_cycle="ALL">
+  <quest id="25225" name="[Spy/Daily] Assail Erivale" nameId="1801233" minlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="PUBLIC" repeat_cycle="ALL">
     <rewards exp="3618881" gp="6">
       <reward_item item_id="186000236" count="5" />
     </rewards>
@@ -42381,7 +42381,7 @@
       <finished quest_id="28036" />
     </start_conditions>
   </quest>
-  <quest id="28035" name="[Alliance] DRAKINT" nameId="1129843" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="28035" name="[Alliance] DRAKINT" nameId="1129849" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="903960" exp="9133366">
       <selectable_reward_item item_id="166050223" count="2" />
       <selectable_reward_item item_id="166050224" count="2" />
@@ -42390,13 +42390,13 @@
       <finished quest_id="28036" />
     </start_conditions>
   </quest>
-  <quest id="28036" name="Bastions Are Eternal; Positions Are Not" nameId="1141614" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="28036" name="Bastions Are Eternal; Positions Are Not" nameId="1141615" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="1723277" />
     <start_conditions>
       <finished quest_id="23305" />
     </start_conditions>
   </quest>
-  <quest id="28037" name="[Alliance] Keep Up the Defense" nameId="1129953" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST" target_type="AREA">
+  <quest id="28037" name="[Alliance] Keep Up the Defense" nameId="1129954" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST" target_type="AREA">
     <rewards gold="903960" exp="3618881" gp="100" />
     <start_conditions>
       <finished quest_id="28030" />
@@ -42511,13 +42511,13 @@
       <finished quest_id="28212" />
     </start_conditions>
   </quest>
-  <quest id="28219" name="Entering The Arena Of Glory" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28219" name="Entering The Arena Of Glory" nameId="1199535" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
     <rewards title="244" />
   </quest>
-  <quest id="28220" name="Back For More" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28220" name="Back For More" nameId="1199536" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -42526,7 +42526,7 @@
       <finished quest_id="28219" />
     </start_conditions>
   </quest>
-  <quest id="28221" name="Making an Impression" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28221" name="Making an Impression" nameId="1199537" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -42535,7 +42535,7 @@
       <finished quest_id="28220" />
     </start_conditions>
   </quest>
-  <quest id="28222" name="Making A Bigger Impression" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28222" name="Making A Bigger Impression" nameId="1199538" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -42544,7 +42544,7 @@
       <finished quest_id="28221" />
     </start_conditions>
   </quest>
-  <quest id="28223" name="The Final Test" nameId="2259269" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28223" name="The Final Test" nameId="1199539" minlevel_permitted="56" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <collect_items>
       <collect_item item_id="182213259" count="10" />
     </collect_items>
@@ -42580,7 +42580,7 @@
       <finished quest_id="28212" />
     </start_conditions>
   </quest>
-  <quest id="28227" name="Coliseum Efforts" nameId="1802432" minlevel_permitted="66" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
+  <quest id="28227" name="Coliseum Efforts" nameId="1802431" minlevel_permitted="66" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
     <rewards exp="7911702">
       <selectable_reward_item item_id="164000155" count="7" />
       <selectable_reward_item item_id="164000159" count="7" />
@@ -44862,7 +44862,7 @@
       <quest_work_item item_id="182212233" />
     </quest_work_items>
   </quest>
-  <quest id="29064" name="Fang Of Construction" nameId="1137046" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="29064" name="Fang Of Construction" nameId="1137064" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182213239" count="1" />
       <collect_item item_id="186000085" count="1" />
@@ -44871,7 +44871,7 @@
       <finished quest_id="4939" />
     </start_conditions>
   </quest>
-  <quest id="29065" name="Insignia Proof" nameId="1137047" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="29065" name="Insignia Proof" nameId="1137065" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="5390338">
       <selectable_reward_item item_id="113100830" count="1" />
       <selectable_reward_item item_id="113300848" count="1" />
@@ -48117,7 +48117,7 @@
   <quest id="30771" name="Impending Debris Energy" nameId="1800929" minlevel_permitted="57" max_repeat_count="1" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="99720" exp="2216451" />
   </quest>
-  <quest id="30772" name="Spy] Checking the Gate" nameId="1800930" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="30772" name="Spy] Checking the Gate" nameId="1800932" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="301320" exp="6893106">
       <reward_item item_id="186000469" count="210" />
     </rewards>
@@ -50867,7 +50867,7 @@
       <reward_item item_id="186000473" count="60" />
     </rewards>
   </quest>
-  <quest id="50071" name="[Event/Daily] Premium Quick Ascension Assistance" nameId="1803386" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL" cannot_share="true">
+  <quest id="50071" name="[Event/Daily] Premium Quick Ascension Assistance" nameId="1803434" minlevel_permitted="66" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL" cannot_share="true">
     <collect_items>
       <collect_item item_id="186000478" count="1" />
     </collect_items>
@@ -50876,7 +50876,7 @@
     </inventory_items>
     <rewards exp="260000000" />
   </quest>
-  <quest id="50072" name="[Event] Kill the Commanders of the Shugo Bandits" nameId="1803387" minlevel_permitted="45" max_repeat_count="255" race_permitted="PC_ALL" category="EVENT" cannot_share="true">
+  <quest id="50072" name="[Event] Kill the Commanders of the Shugo Bandits" nameId="1803440" minlevel_permitted="45" max_repeat_count="255" race_permitted="PC_ALL" category="EVENT" cannot_share="true">
     <rewards>
       <reward_item item_id="190200000" count="6" />
     </rewards>
@@ -53687,7 +53687,7 @@
       <selectable_reward_item item_id="102100519" />
     </rewards>
   </quest>
-  <quest id="80213" name="[Growth] Hearts Of Fire" nameId="1180177" minlevel_permitted="27" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80213" name="[Growth] Hearts Of Fire" nameId="1185319" minlevel_permitted="27" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182215196" count="20" />
     </collect_items>
@@ -53697,18 +53697,18 @@
       <reward_item item_id="188100335" count="704" />
     </rewards>
   </quest>
-  <quest id="80214" name="[Growth] Aether Intervention" nameId="1180178" minlevel_permitted="35" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80214" name="[Growth] Aether Intervention" nameId="1185320" minlevel_permitted="35" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="677000">
       <selectable_reward_item item_id="186000046" count="60" />
       <selectable_reward_item item_id="186000028" count="30" />
     </rewards>
   </quest>
-  <quest id="80215" name="[Growth] Bioweapon Interference" nameId="1180179" minlevel_permitted="39" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80215" name="[Growth] Bioweapon Interference" nameId="1185321" minlevel_permitted="39" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="883000">
       <reward_item item_id="188051857" />
     </rewards>
   </quest>
-  <quest id="80216" name="[Growth] Supress The Steel Rake" nameId="1180180" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80216" name="[Growth] Supress The Steel Rake" nameId="1185322" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1582400">
       <selectable_reward_item item_id="100001072" />
       <selectable_reward_item item_id="100100812" />
@@ -53725,7 +53725,7 @@
       <selectable_reward_item item_id="102100625" />
     </rewards>
   </quest>
-  <quest id="80217" name="[Growth] To Dark Poeta!" nameId="1180181" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80217" name="[Growth] To Dark Poeta!" nameId="1185323" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="182206068" count="40" />
       <selectable_reward_item item_id="182206069" count="40" />
@@ -53733,7 +53733,7 @@
       <selectable_reward_item item_id="182206072" count="4" />
     </rewards>
   </quest>
-  <quest id="80218" name="[Growth] Dark Poeta Encore" nameId="1180182" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80218" name="[Growth] Dark Poeta Encore" nameId="1185324" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="110100972" />
       <selectable_reward_item item_id="110100973" />
@@ -53748,7 +53748,7 @@
       <selectable_reward_item item_id="110551010" />
     </rewards>
   </quest>
-  <quest id="80219" name="[Growth] Dark Poeta Finale" nameId="1180183" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80219" name="[Growth] Dark Poeta Finale" nameId="1185325" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="100000765" />
       <selectable_reward_item item_id="100000766" />
@@ -53764,7 +53764,7 @@
     </rewards>
     <class_permitted>WARRIOR SCOUT MAGE PRIEST GLADIATOR TEMPLAR ASSASSIN RANGER</class_permitted>
   </quest>
-  <quest id="80220" name="[Growth] Dark Poeta Finale" nameId="1180184" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80220" name="[Growth] Dark Poeta Finale" nameId="1185326" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="100100580" />
       <selectable_reward_item item_id="100500601" />
@@ -53776,7 +53776,7 @@
     </rewards>
     <class_permitted>WARRIOR SCOUT MAGE PRIEST SORCERER SPIRIT_MASTER CHANTER CLERIC</class_permitted>
   </quest>
-  <quest id="80221" name="[Growth] Nochsana Infiltration" nameId="1180185" minlevel_permitted="25" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80221" name="[Growth] Nochsana Infiltration" nameId="1185327" minlevel_permitted="25" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="132200">
       <selectable_reward_item item_id="100000761" />
       <selectable_reward_item item_id="100100576" />
@@ -53794,7 +53794,7 @@
       <selectable_reward_item item_id="102100519" />
     </rewards>
   </quest>
-  <quest id="80222" name="[Growth] Heartburn" nameId="1180186" minlevel_permitted="27" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80222" name="[Growth] Heartburn" nameId="1185328" minlevel_permitted="27" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182215196" count="20" />
     </collect_items>
@@ -53804,18 +53804,18 @@
       <reward_item item_id="188100335" count="704" />
     </rewards>
   </quest>
-  <quest id="80223" name="[Growth] Mist Mane Oww" nameId="1180187" minlevel_permitted="35" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80223" name="[Growth] Mist Mane Oww" nameId="1185329" minlevel_permitted="35" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="677000">
       <selectable_reward_item item_id="186000047" count="60" />
       <selectable_reward_item item_id="186000029" count="30" />
     </rewards>
   </quest>
-  <quest id="80224" name="[Growth] Bad Bakarma" nameId="1180188" minlevel_permitted="39" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80224" name="[Growth] Bad Bakarma" nameId="1185330" minlevel_permitted="39" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="883000">
       <reward_item item_id="188051857" />
     </rewards>
   </quest>
-  <quest id="80225" name="[Growth] Stop The Steel Rake" nameId="1180189" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80225" name="[Growth] Stop The Steel Rake" nameId="1185331" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1582400">
       <selectable_reward_item item_id="100001072" />
       <selectable_reward_item item_id="100100812" />
@@ -53832,7 +53832,7 @@
       <selectable_reward_item item_id="102100625" />
     </rewards>
   </quest>
-  <quest id="80226" name="[Growth] A Test In Dark Poeta" nameId="1180190" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80226" name="[Growth] A Test In Dark Poeta" nameId="1185332" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="182207095" count="40" />
       <selectable_reward_item item_id="182207096" count="40" />
@@ -53840,7 +53840,7 @@
       <selectable_reward_item item_id="182207099" count="4" />
     </rewards>
   </quest>
-  <quest id="80227" name="[Growth] A Second Test In Dark Poeta" nameId="1180191" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80227" name="[Growth] A Second Test In Dark Poeta" nameId="1185333" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="110100972" />
       <selectable_reward_item item_id="110100973" />
@@ -53855,7 +53855,7 @@
       <selectable_reward_item item_id="110551010" />
     </rewards>
   </quest>
-  <quest id="80228" name="[Growth] Final Test In Dark Poeta" nameId="1180192" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80228" name="[Growth] Final Test In Dark Poeta" nameId="1185334" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="100000765" />
       <selectable_reward_item item_id="100000766" />
@@ -53871,7 +53871,7 @@
     </rewards>
     <class_permitted>WARRIOR SCOUT MAGE PRIEST GLADIATOR TEMPLAR ASSASSIN RANGER</class_permitted>
   </quest>
-  <quest id="80229" name="[Growth] Final Test In Dark Poeta" nameId="1180193" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80229" name="[Growth] Final Test In Dark Poeta" nameId="1185335" minlevel_permitted="48" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1421800">
       <selectable_reward_item item_id="100100580" />
       <selectable_reward_item item_id="100500601" />
@@ -54210,12 +54210,12 @@
       <quest_work_item item_id="182215211" />
     </quest_work_items>
   </quest>
-  <quest id="80268" name="[Event] The Brax Cafe Beckons" nameId="1180194" minlevel_permitted="21" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80268" name="[Event] The Brax Cafe Beckons" nameId="1185306" minlevel_permitted="21" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
     <rewards>
       <reward_item item_id="164000184" count="14" />
     </rewards>
   </quest>
-  <quest id="80269" name="[Event/Daily] Tasty Treats" nameId="1180195" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80269" name="[Event/Daily] Tasty Treats" nameId="1185307" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188051866" count="1" />
       <reward_item item_id="186000187" count="1" />
@@ -54224,12 +54224,12 @@
       <quest_work_item item_id="182215198" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="80270" name="[Event] Service With A Smile" nameId="1180196" minlevel_permitted="21" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80270" name="[Event] Service With A Smile" nameId="1185308" minlevel_permitted="21" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
     <rewards>
       <reward_item item_id="164000185" count="14" />
     </rewards>
   </quest>
-  <quest id="80271" name="[Event/Daily] Scrumptious Snacks" nameId="1180197" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80271" name="[Event/Daily] Scrumptious Snacks" nameId="1185309" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188051866" count="1" />
       <reward_item item_id="186000187" count="1" />
@@ -54658,15 +54658,15 @@
       <selectable_reward_item item_id="102001077" count="1" />
     </rewards>
   </quest>
-  <quest id="80298" name="[Event] Lover or Loner?" nameId="1199853" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80298" name="[Event] Lover or Loner?" nameId="1199851" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1600" />
     <rewards exp="1600" />
   </quest>
-  <quest id="80299" name="[Event] Lover or Loner?" nameId="1199854" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80299" name="[Event] Lover or Loner?" nameId="1199852" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards exp="1600" />
     <rewards exp="1600" />
   </quest>
-  <quest id="80300" name="[Event/Daily] Sweetie Choco Wuv-ums" nameId="1199855" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80300" name="[Event/Daily] Sweetie Choco Wuv-ums" nameId="1199853" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215288" count="3" />
     </collect_items>
@@ -54683,7 +54683,7 @@
       <quest_work_item item_id="182215290" />
     </quest_work_items>
   </quest>
-  <quest id="80301" name="[Event/Daily] Extra-Bitter Chocolate" nameId="1199856" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80301" name="[Event/Daily] Extra-Bitter Chocolate" nameId="1199854" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215289" count="3" />
     </collect_items>
@@ -54700,7 +54700,7 @@
       <quest_work_item item_id="182215291" />
     </quest_work_items>
   </quest>
-  <quest id="80302" name="[Event/Daily] Candygeddon" nameId="1199857" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80302" name="[Event/Daily] Candygeddon" nameId="1199855" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215292" count="3" />
     </collect_items>
@@ -54714,7 +54714,7 @@
       <finished quest_id="80299" reward="1" />
     </start_conditions>
   </quest>
-  <quest id="80303" name="[Event/Daily] Shove-l It" nameId="1199858" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80303" name="[Event/Daily] Shove-l It" nameId="1199856" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215293" count="3" />
     </collect_items>
@@ -54728,15 +54728,15 @@
       <finished quest_id="80299" reward="2" />
     </start_conditions>
   </quest>
-  <quest id="80304" name="[Event] Bitter or Sweet?" nameId="1199859" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80304" name="[Event] Bitter or Sweet?" nameId="1199857" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1600" />
     <rewards exp="1600" />
   </quest>
-  <quest id="80305" name="[Event] Bitter or Sweet?" nameId="1199860" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80305" name="[Event] Bitter or Sweet?" nameId="1199858" minlevel_permitted="9" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="1600" />
     <rewards exp="1600" />
   </quest>
-  <quest id="80306" name="[Event/Daily] Cutie-Wootie Choco Wuv" nameId="1199861" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80306" name="[Event/Daily] Cutie-Wootie Choco Wuv" nameId="1199859" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215294" count="3" />
     </collect_items>
@@ -54753,7 +54753,7 @@
       <quest_work_item item_id="182215296" />
     </quest_work_items>
   </quest>
-  <quest id="80307" name="[Event/Daily] Chocolate, Extra Bitter" nameId="1199862" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80307" name="[Event/Daily] Chocolate, Extra Bitter" nameId="1199860" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215295" count="3" />
     </collect_items>
@@ -54770,7 +54770,7 @@
       <quest_work_item item_id="182215297" />
     </quest_work_items>
   </quest>
-  <quest id="80308" name="[Event/Daily] Candypocalypse" nameId="1199863" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80308" name="[Event/Daily] Candypocalypse" nameId="1199861" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215298" count="3" />
     </collect_items>
@@ -54784,7 +54784,7 @@
       <finished quest_id="80305" reward="1" />
     </start_conditions>
   </quest>
-  <quest id="80309" name="[Event/Daily] Just Shove-l It" nameId="1199864" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80309" name="[Event/Daily] Just Shove-l It" nameId="1199862" minlevel_permitted="9" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215299" count="3" />
     </collect_items>
@@ -54798,7 +54798,7 @@
       <finished quest_id="80305" reward="2" />
     </start_conditions>
   </quest>
-  <quest id="80310" name="Thank You Gift" nameId="1199851" minlevel_permitted="55" max_repeat_count="1" cannot_share="true" use_class_reward="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80310" name="Thank You Gift" nameId="1199887" minlevel_permitted="55" max_repeat_count="1" cannot_share="true" use_class_reward="1" race_permitted="ELYOS" category="EVENT">
     <rewards exp="3000000" />
     <start_conditions>
       <finished quest_id="80290" />
@@ -54854,7 +54854,7 @@
     <songweaver_selectable_reward item_id="113101375" count="1" />
     <songweaver_selectable_reward item_id="110101513" count="1" />
   </quest>
-  <quest id="80311" name="Thank You Gift" nameId="1199852" minlevel_permitted="55" max_repeat_count="1" cannot_share="true" use_class_reward="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80311" name="Thank You Gift" nameId="1199888" minlevel_permitted="55" max_repeat_count="1" cannot_share="true" use_class_reward="1" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="3000000" />
     <start_conditions>
       <finished quest_id="80294" />
@@ -55006,44 +55006,44 @@
     </rewards>
     <class_permitted>WARRIOR SCOUT MAGE PRIEST TECHNIST MUSE SORCERER SPIRIT_MASTER CLERIC</class_permitted>
   </quest>
-  <quest id="80324" name="[Event/Daily] Prescription For Medicine" nameId="1199893" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80324" name="[Event/Daily] Prescription For Medicine" nameId="1199925" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <selectable_reward_item item_id="162000121" count="120" />
       <selectable_reward_item item_id="162000124" count="70" />
     </rewards>
   </quest>
-  <quest id="80325" name="[Event/Daily] Prescription For Psychiatric Medicine" nameId="1199894" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80325" name="[Event/Daily] Prescription For Psychiatric Medicine" nameId="1199926" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188054198" count="1" />
     </rewards>
   </quest>
-  <quest id="80326" name="[Event/Daily] Prescription For Medicine" nameId="1199895" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80326" name="[Event/Daily] Prescription For Medicine" nameId="1199927" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <selectable_reward_item item_id="162000121" count="120" />
       <selectable_reward_item item_id="162000124" count="70" />
     </rewards>
   </quest>
-  <quest id="80327" name="[Event/Daily] Prescription For Psychiatric Medicine" nameId="1199896" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80327" name="[Event/Daily] Prescription For Psychiatric Medicine" nameId="1199928" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188054198" count="1" />
     </rewards>
   </quest>
-  <quest id="80328" name="[Event/Daily] Wanderer Group's Dice" nameId="1199889" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80328" name="[Event/Daily] Wanderer Group's Dice" nameId="1199929" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052417" count="10" />
     </rewards>
   </quest>
-  <quest id="80329" name="[Event/Daily] Wanderer Group's Dice" nameId="1199890" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80329" name="[Event/Daily] Wanderer Group's Dice" nameId="1199930" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052417" count="10" />
     </rewards>
   </quest>
-  <quest id="80330" name="[Event/Daily] Transform with The Magic Cane" nameId="1199891" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80330" name="[Event/Daily] Transform with The Magic Cane" nameId="1199931" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052419" count="1" />
     </rewards>
   </quest>
-  <quest id="80331" name="[Event/Daily] Transform with The Magic Cane" nameId="1199892" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80331" name="[Event/Daily] Transform with The Magic Cane" nameId="1199932" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052419" count="1" />
     </rewards>
@@ -56947,7 +56947,7 @@
     <quest_drop npc_id="230858" item_id="182215425" chance="100" drop_each_member="1" />
     <quest_drop npc_id="832858" item_id="182215423" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80541" name="[Event/Daily] The Harlock Appearance" nameId="1185752" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80541" name="[Event/Daily] The Harlock Appearance" nameId="1185732" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215426" count="1" />
     </collect_items>
@@ -56957,7 +56957,7 @@
     <quest_drop npc_id="234180" item_id="182215426" chance="100" drop_each_member="1" />
     <quest_drop npc_id="234181" item_id="182215426" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80542" name="[Event/Daily/Spy] Shulacks and Harlock, Oh My!" nameId="1185753" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80542" name="[Event/Daily/Spy] Shulacks and Harlock, Oh My!" nameId="1185733" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215427" count="1" />
     </collect_items>
@@ -56966,7 +56966,7 @@
     </rewards>
     <quest_drop npc_id="234179" item_id="182215427" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80543" name="[Event/Daily] The Harlock Mystery" nameId="1185754" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80543" name="[Event/Daily] The Harlock Mystery" nameId="1185734" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215428" count="1" />
     </collect_items>
@@ -56976,7 +56976,7 @@
     <quest_drop npc_id="234180" item_id="182215428" chance="100" drop_each_member="1" />
     <quest_drop npc_id="234181" item_id="182215428" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80544" name="[Event/Daily/Spy] Harlock and Shulacks, Oh My!" nameId="1185755" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80544" name="[Event/Daily/Spy] Harlock and Shulacks, Oh My!" nameId="1185735" minlevel_permitted="21" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215429" count="1" />
     </collect_items>
@@ -56985,13 +56985,13 @@
     </rewards>
     <quest_drop npc_id="234178" item_id="182215429" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80545" name="[Event/Daily] A Gracious Thought" nameId="1185732" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80545" name="[Event/Daily] A Gracious Thought" nameId="1185744" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052962" count="1" />
     </rewards>
     <gender_permitted>FEMALE</gender_permitted>
   </quest>
-  <quest id="80546" name="[Event/Daily] A Noble Mission" nameId="1185733" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80546" name="[Event/Daily] A Noble Mission" nameId="1185745" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052963" count="1" />
     </rewards>
@@ -57000,24 +57000,24 @@
       <quest_work_item item_id="182215430" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="80547" name="[Event/Daily] Spread the Joy" nameId="1185734" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80547" name="[Event/Daily] Spread the Joy" nameId="1185746" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="160010341" count="10" />
     </rewards>
   </quest>
-  <quest id="80548" name="[Event] Flower Power" nameId="1185735" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80548" name="[Event] Flower Power" nameId="1185747" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <rewards>
       <reward_item item_id="125045253" count="1" />
     </rewards>
     <gender_permitted>FEMALE</gender_permitted>
   </quest>
-  <quest id="80549" name="[Event/Daily] A Gracious Hand" nameId="1185736" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80549" name="[Event/Daily] A Gracious Hand" nameId="1185748" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052962" count="1" />
     </rewards>
     <gender_permitted>FEMALE</gender_permitted>
   </quest>
-  <quest id="80550" name="[Event/Daily] A Gallant Mission" nameId="1185737" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80550" name="[Event/Daily] A Gallant Mission" nameId="1185749" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052963" count="1" />
     </rewards>
@@ -57026,12 +57026,12 @@
       <quest_work_item item_id="182215431" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="80551" name="[Event/Daily] Bundle the Joy" nameId="1185738" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80551" name="[Event/Daily] Bundle the Joy" nameId="1185750" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="160010341" count="10" />
     </rewards>
   </quest>
-  <quest id="80552" name="[Event] A Little Surprise" nameId="1185739" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80552" name="[Event] A Little Surprise" nameId="1185751" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <rewards>
       <reward_item item_id="125045253" count="1" />
     </rewards>
@@ -57135,21 +57135,21 @@
       <collect_item item_id="182007102" count="1" />
     </collect_items>
   </quest>
-  <quest id="80565" name="[Event] First Flight to Glory" nameId="1199985" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80565" name="[Event] First Flight to Glory" nameId="1185768" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="1" />
       <collect_item item_id="182007131" count="1" />
     </collect_items>
     <rewards gp="51" />
   </quest>
-  <quest id="80566" name="[Event] First Path to Glory" nameId="1199986" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80566" name="[Event] First Path to Glory" nameId="1185769" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="1" />
       <collect_item item_id="182007131" count="1" />
     </collect_items>
     <rewards gp="51" />
   </quest>
-  <quest id="80567" name="[Event] A Search for Aion" nameId="1185744" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
+  <quest id="80567" name="[Event] A Search for Aion" nameId="1185770" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052977" count="1" />
       <collect_item item_id="188052978" count="1" />
@@ -57160,7 +57160,7 @@
       <reward_item item_id="188053009" count="1" />
     </rewards>
   </quest>
-  <quest id="80568" name="[Event] A Bit of the Abyss" nameId="1185745" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
+  <quest id="80568" name="[Event] A Bit of the Abyss" nameId="1185771" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052977" count="1" />
       <collect_item item_id="188052980" count="1" />
@@ -57171,7 +57171,7 @@
       <reward_item item_id="188053010" count="1" />
     </rewards>
   </quest>
-  <quest id="80569" name="[Event] Daeva Seeking Daeva" nameId="1185746" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
+  <quest id="80569" name="[Event] Daeva Seeking Daeva" nameId="1185772" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052982" count="1" />
       <collect_item item_id="188052977" count="2" />
@@ -57182,7 +57182,7 @@
       <reward_item item_id="188053011" count="1" />
     </rewards>
   </quest>
-  <quest id="80570" name="[Event] A Patron of Letters" nameId="1185747" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
+  <quest id="80570" name="[Event] A Patron of Letters" nameId="1185773" minlevel_permitted="10" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007147" count="100" />
     </collect_items>
@@ -57190,7 +57190,7 @@
       <reward_item item_id="188052984" count="1" />
     </rewards>
   </quest>
-  <quest id="80571" name="[Event] A Quest for Aion" nameId="1185748" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80571" name="[Event] A Quest for Aion" nameId="1185774" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052977" count="1" />
       <collect_item item_id="188052978" count="1" />
@@ -57201,7 +57201,7 @@
       <reward_item item_id="188053009" count="1" />
     </rewards>
   </quest>
-  <quest id="80572" name="[Event] Seek out the Abyss" nameId="1185749" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80572" name="[Event] Seek out the Abyss" nameId="1185775" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052977" count="1" />
       <collect_item item_id="188052980" count="1" />
@@ -57212,7 +57212,7 @@
       <reward_item item_id="188053010" count="1" />
     </rewards>
   </quest>
-  <quest id="80573" name="[Event] A Daeva for a Daeva" nameId="1185750" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80573" name="[Event] A Daeva for a Daeva" nameId="1185776" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188052982" count="1" />
       <collect_item item_id="188052977" count="2" />
@@ -57223,7 +57223,7 @@
       <reward_item item_id="188053011" count="1" />
     </rewards>
   </quest>
-  <quest id="80574" name="[Event] A Lover of Letters" nameId="1185751" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80574" name="[Event] A Lover of Letters" nameId="1185777" minlevel_permitted="10" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007147" count="100" />
     </collect_items>
@@ -57231,12 +57231,12 @@
       <reward_item item_id="188052984" count="1" />
     </rewards>
   </quest>
-  <quest id="80575" name="[Event] Snowy Wonderland" nameId="1185764" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80575" name="[Event] Snowy Wonderland" nameId="1185778" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052986" count="2" />
     </rewards>
   </quest>
-  <quest id="80576" name="[Event] Another Chance" nameId="1185765" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
+  <quest id="80576" name="[Event] Another Chance" nameId="1185779" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007148" count="10" />
     </collect_items>
@@ -57244,17 +57244,17 @@
       <reward_item item_id="188052986" count="1" />
     </rewards>
   </quest>
-  <quest id="80577" name="[Event] Happy Presents" nameId="1185766" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80577" name="[Event] Happy Presents" nameId="1185780" minlevel_permitted="30" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188053008" count="1" />
     </rewards>
   </quest>
-  <quest id="80578" name="[Event] A Winter Wonderland" nameId="1185767" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80578" name="[Event] A Winter Wonderland" nameId="1185781" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188052986" count="2" />
     </rewards>
   </quest>
-  <quest id="80579" name="[Event] A Generous Mood" nameId="1185768" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80579" name="[Event] A Generous Mood" nameId="1185782" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007148" count="10" />
     </collect_items>
@@ -57262,40 +57262,40 @@
       <reward_item item_id="188052986" count="1" />
     </rewards>
   </quest>
-  <quest id="80580" name="[Event] Joy Begets Presents" nameId="1185769" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80580" name="[Event] Joy Begets Presents" nameId="1185783" minlevel_permitted="30" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188053008" count="1" />
     </rewards>
   </quest>
-  <quest id="80581" name="[Event] Second Flight to Glory" nameId="1199987" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80581" name="[Event] Second Flight to Glory" nameId="1185784" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="10" />
       <collect_item item_id="182007131" count="10" />
     </collect_items>
     <rewards gp="510" />
   </quest>
-  <quest id="80582" name="[Event] Second Path to Glory" nameId="1199988" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80582" name="[Event] Second Path to Glory" nameId="1185785" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="10" />
       <collect_item item_id="182007131" count="10" />
     </collect_items>
     <rewards gp="510" />
   </quest>
-  <quest id="80583" name="[Event] Third Flight to Glory" nameId="1199989" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80583" name="[Event] Third Flight to Glory" nameId="1185786" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="100" />
       <collect_item item_id="182007131" count="100" />
     </collect_items>
     <rewards gp="5100" />
   </quest>
-  <quest id="80584" name="[Event] Third Path to Glory" nameId="1199990" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80584" name="[Event] Third Path to Glory" nameId="1185787" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182007130" count="100" />
       <collect_item item_id="182007131" count="100" />
     </collect_items>
     <rewards gp="5100" />
   </quest>
-  <quest id="80587" name="Find The Journal" nameId="1185778" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80587" name="Find The Journal" nameId="1185790" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="186000382" count="10" />
     </collect_items>
@@ -57306,7 +57306,7 @@
     </rewards>
     <quest_drop npc_id="701795" item_id="186000382" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80588" name="Enter With Luck" nameId="1185779" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80588" name="Enter With Luck" nameId="1185791" minlevel_permitted="65" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
     <rewards dp="2000">
       <selectable_reward_item item_id="160001386" count="20" />
       <selectable_reward_item item_id="160001388" count="20" />
@@ -57318,7 +57318,7 @@
       <reward_item item_id="161000004" count="3" />
     </rewards>
   </quest>
-  <quest id="80589" name="A Vicarious Memento" nameId="1185780" minlevel_permitted="65" max_repeat_count="3" race_permitted="ELYOS" category="EVENT">
+  <quest id="80589" name="A Vicarious Memento" nameId="1185792" minlevel_permitted="65" max_repeat_count="3" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="186000383" count="1" />
     </collect_items>
@@ -57327,7 +57327,7 @@
     </rewards>
     <quest_drop npc_id="701795" item_id="186000383" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80592" name="The Lost Journal" nameId="1185783" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80592" name="The Lost Journal" nameId="1185795" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="186000382" count="10" />
     </collect_items>
@@ -57338,7 +57338,7 @@
     </rewards>
     <quest_drop npc_id="701795" item_id="186000382" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80593" name="Into The Reliquary" nameId="1185784" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80593" name="Into The Reliquary" nameId="1185796" minlevel_permitted="65" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
     <rewards dp="2000">
       <selectable_reward_item item_id="160002384" count="20" />
       <selectable_reward_item item_id="160002386" count="20" />
@@ -57350,7 +57350,7 @@
       <reward_item item_id="161000004" count="3" />
     </rewards>
   </quest>
-  <quest id="80594" name="Runarinerk's Runadium treasure" nameId="1185785" minlevel_permitted="65" max_repeat_count="3" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80594" name="Runarinerk's Runadium treasure" nameId="1185797" minlevel_permitted="65" max_repeat_count="3" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="186000383" count="1" />
     </collect_items>
@@ -57359,42 +57359,42 @@
     </rewards>
     <quest_drop npc_id="701795" item_id="186000383" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80595" name="[Event] Honourable Exchange 1" nameId="1185788" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80595" name="[Event] Honourable Exchange 1" nameId="1185800" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="1" />
       <collect_item item_id="182007150" count="1" />
     </collect_items>
     <rewards gp="51" />
   </quest>
-  <quest id="80596" name="[Event] Honourable Exchange 1k" nameId="1185789" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80596" name="[Event] Honourable Exchange 1k" nameId="1185801" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="1" />
       <collect_item item_id="182007150" count="1" />
     </collect_items>
     <rewards gp="51" />
   </quest>
-  <quest id="80597" name="[Event] Honourable Exchange 2" nameId="1185790" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80597" name="[Event] Honourable Exchange 2" nameId="1185802" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="10" />
       <collect_item item_id="182007150" count="10" />
     </collect_items>
     <rewards gp="510" />
   </quest>
-  <quest id="80598" name="[Event] Honourable Exchange 2" nameId="1185791" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80598" name="[Event] Honourable Exchange 2" nameId="1185803" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="10" />
       <collect_item item_id="182007150" count="10" />
     </collect_items>
     <rewards gp="510" />
   </quest>
-  <quest id="80599" name="[Event] Honourable Exchange 3" nameId="1185792" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80599" name="[Event] Honourable Exchange 3" nameId="1185804" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="100" />
       <collect_item item_id="182007150" count="100" />
     </collect_items>
     <rewards gp="5100" />
   </quest>
-  <quest id="80600" name="[Event] Honourable Exchange 3" nameId="1185793" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80600" name="[Event] Honourable Exchange 3" nameId="1185805" minlevel_permitted="65" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182007149" count="100" />
       <collect_item item_id="182007150" count="100" />
@@ -57417,7 +57417,7 @@
       <selectable_reward_item item_id="160001392" count="6" />
     </rewards>
   </quest>
-  <quest id="80603" name="[Group] Remove The Head" nameId="1185786" minlevel_permitted="61" max_repeat_count="255" race_permitted="ELYOS" category="QUEST">
+  <quest id="80603" name="[Group] Remove The Head" nameId="1185806" minlevel_permitted="61" max_repeat_count="255" race_permitted="ELYOS" category="QUEST">
     <rewards exp="3387764" ap="700">
       <selectable_reward_item item_id="164000255" count="10" />
       <selectable_reward_item item_id="164000256" count="10" />
@@ -57450,7 +57450,7 @@
       <selectable_reward_item item_id="160002390" count="6" />
     </rewards>
   </quest>
-  <quest id="80608" name="[Group] Break The Chain Of Command" nameId="1185787" minlevel_permitted="61" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="80608" name="[Group] Break The Chain Of Command" nameId="1185807" minlevel_permitted="61" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="3387764" ap="700">
       <selectable_reward_item item_id="164000255" count="10" />
       <selectable_reward_item item_id="164000256" count="10" />
@@ -57520,7 +57520,7 @@
       <reward_item item_id="188053512" count="1" />
     </rewards>
   </quest>
-  <quest id="80617" name="[Event] Just One New Thing" nameId="1180158" minlevel_permitted="1" maxlevel_permitted="10" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80617" name="[Event] Just One New Thing" nameId="1180213" minlevel_permitted="1" maxlevel_permitted="10" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182006780" count="1" />
     </collect_items>
@@ -57530,7 +57530,7 @@
       <reward_item item_id="162002061" count="3" />
     </rewards>
   </quest>
-  <quest id="80618" name="[Event] Warming Hearts and Hands" nameId="1180159" minlevel_permitted="10" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
+  <quest id="80618" name="[Event] Warming Hearts and Hands" nameId="1180214" minlevel_permitted="10" max_repeat_count="1" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182006781" count="1" />
     </collect_items>
@@ -57538,7 +57538,7 @@
       <reward_item item_id="190020103" count="1" />
     </rewards>
   </quest>
-  <quest id="80619" name="[Event] Just One New Thing" nameId="1180160" minlevel_permitted="1" maxlevel_permitted="10" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80619" name="[Event] Just One New Thing" nameId="1180215" minlevel_permitted="1" maxlevel_permitted="10" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182006780" count="1" />
     </collect_items>
@@ -57548,7 +57548,7 @@
       <reward_item item_id="162002061" count="3" />
     </rewards>
   </quest>
-  <quest id="80620" name="[Event] Warming Hearts and Hands" nameId="1180161" minlevel_permitted="10" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80620" name="[Event] Warming Hearts and Hands" nameId="1180216" minlevel_permitted="10" max_repeat_count="1" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182006781" count="1" />
     </collect_items>
@@ -57556,7 +57556,7 @@
       <reward_item item_id="190020103" count="1" />
     </rewards>
   </quest>
-  <quest id="80621" name="[Event] Just One New Thing" nameId="1180158" minlevel_permitted="10" maxlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="WED">
+  <quest id="80621" name="[Event] Just One New Thing" nameId="1180217" minlevel_permitted="10" maxlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="WED">
     <collect_items>
       <collect_item item_id="182006780" count="1" />
     </collect_items>
@@ -57564,7 +57564,7 @@
       <reward_item item_id="188053540" count="5" />
     </rewards>
   </quest>
-  <quest id="80622" name="[Event] Just One New Thing" nameId="1180160" minlevel_permitted="10" maxlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="WED">
+  <quest id="80622" name="[Event] Just One New Thing" nameId="1180218" minlevel_permitted="10" maxlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="WED">
     <collect_items>
       <collect_item item_id="182006780" count="1" />
     </collect_items>
@@ -57936,7 +57936,7 @@
       <reward_item item_id="186000393" count="1" />
     </rewards>
   </quest>
-  <quest id="80673" name="[Event] Verify Symphony of Legend - The First Movement" nameId="1800528" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80673" name="[Event] Verify Symphony of Legend - The First Movement" nameId="1800533" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="10" />
     </collect_items>
@@ -57944,7 +57944,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80674" name="[Event] Verify Symphony of Legend - The Second Movement" nameId="1800529" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80674" name="[Event] Verify Symphony of Legend - The Second Movement" nameId="1800534" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100253" count="10" />
     </collect_items>
@@ -57952,7 +57952,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80675" name="[Event] Verify Symphony of Legend - The Third Movement" nameId="1800530" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80675" name="[Event] Verify Symphony of Legend - The Third Movement" nameId="1800535" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100254" count="10" />
     </collect_items>
@@ -57960,7 +57960,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80676" name="[Event] Verify Symphony of Legend - The Fourth Movement" nameId="1800531" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80676" name="[Event] Verify Symphony of Legend - The Fourth Movement" nameId="1800536" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100255" count="10" />
     </collect_items>
@@ -57968,7 +57968,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80677" name="[Event] How to Verify the Symphony of Legend" nameId="1800532" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80677" name="[Event] How to Verify the Symphony of Legend" nameId="1800537" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="10" />
     </collect_items>
@@ -57976,7 +57976,7 @@
       <reward_item item_id="182007170" count="1" />
     </rewards>
   </quest>
-  <quest id="80678" name="[Event] Verify Symphony of Legend - The First Movement" nameId="1800533" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80678" name="[Event] Verify Symphony of Legend - The First Movement" nameId="1800538" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="10" />
     </collect_items>
@@ -57984,7 +57984,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80679" name="[Event] Verify Symphony of Legend - The Second Movement" nameId="1800534" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80679" name="[Event] Verify Symphony of Legend - The Second Movement" nameId="1800539" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100253" count="10" />
     </collect_items>
@@ -57992,7 +57992,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80680" name="[Event] Verify Symphony of Legend - The Third Movement" nameId="1800535" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80680" name="[Event] Verify Symphony of Legend - The Third Movement" nameId="1800540" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100254" count="10" />
     </collect_items>
@@ -58000,7 +58000,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80681" name="[Event] Verify Symphony of Legend - The Fourth Movement" nameId="1800536" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80681" name="[Event] Verify Symphony of Legend - The Fourth Movement" nameId="1800541" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100255" count="10" />
     </collect_items>
@@ -58008,7 +58008,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80682" name="[Event] How to Verify the Symphony of Legend" nameId="1800537" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80682" name="[Event] How to Verify the Symphony of Legend" nameId="1800542" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="10" />
     </collect_items>
@@ -58016,12 +58016,12 @@
       <reward_item item_id="182007170" count="1" />
     </rewards>
   </quest>
-  <quest id="80683" name="[Event] Blessings of the Prismatic Serpent" nameId="1800567" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="WED">
+  <quest id="80683" name="[Event] Blessings of the Prismatic Serpent" nameId="1800543" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT" repeat_cycle="WED">
     <rewards>
       <reward_item item_id="188053672" count="1" />
     </rewards>
   </quest>
-  <quest id="80685" name="[Event] For the Glory of Rainbow Snake" nameId="1800573" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80685" name="[Event] For the Glory of Rainbow Snake" nameId="1800553" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007171" count="1" />
     </collect_items>
@@ -58029,12 +58029,12 @@
       <reward_item item_id="188053674" count="1" />
     </rewards>
   </quest>
-  <quest id="80686" name="[Event] Blessings of the Prismatic Serpent" nameId="1800574" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="WED">
+  <quest id="80686" name="[Event] Blessings of the Prismatic Serpent" nameId="1800554" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="WED">
     <rewards>
       <reward_item item_id="188053672" count="1" />
     </rewards>
   </quest>
-  <quest id="80688" name="[Event] For the Glory of Rainbow Snake" nameId="1800576" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80688" name="[Event] For the Glory of Rainbow Snake" nameId="1800556" minlevel_permitted="30" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007171" count="1" />
     </collect_items>
@@ -58042,12 +58042,12 @@
       <reward_item item_id="188053674" count="1" />
     </rewards>
   </quest>
-  <quest id="80689" name="[Event] Secret of the Vault" nameId="1800538" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80689" name="[Event] Secret of the Vault" nameId="1800557" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="188600310" count="1" />
     </rewards>
   </quest>
-  <quest id="80690" name="[Event/Daily] Kill Kinah Grabbers" nameId="1800539" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80690" name="[Event/Daily] Kill Kinah Grabbers" nameId="1800558" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="185000222" count="1" />
     </rewards>
@@ -58055,7 +58055,7 @@
       <finished quest_id="80689" />
     </start_conditions>
   </quest>
-  <quest id="80691" name="[Event] Recapturing the Vault" nameId="1800540" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80691" name="[Event] Recapturing the Vault" nameId="1800559" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="169610152" count="1" />
     </rewards>
@@ -58063,7 +58063,7 @@
       <finished quest_id="80689" />
     </start_conditions>
   </quest>
-  <quest id="80692" name="[Event] Mirez, the Mired" nameId="1800541" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80692" name="[Event] Mirez, the Mired" nameId="1800560" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="185000221" count="1" />
     </rewards>
@@ -58071,7 +58071,7 @@
       <finished quest_id="80689" />
     </start_conditions>
   </quest>
-  <quest id="80693" name="[Event] Zodica, the Crazed" nameId="1800542" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80693" name="[Event] Zodica, the Crazed" nameId="1800561" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="185000221" count="2" />
     </rewards>
@@ -58079,7 +58079,7 @@
       <finished quest_id="80692" />
     </start_conditions>
   </quest>
-  <quest id="80694" name="[Event] Budyn, the Bloodied" nameId="1800543" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80694" name="[Event] Budyn, the Bloodied" nameId="1800562" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="185000221" count="3" />
     </rewards>
@@ -58087,7 +58087,7 @@
       <finished quest_id="80693" />
     </start_conditions>
   </quest>
-  <quest id="80695" name="[Event] Rupasha, the Rapacious" nameId="1800544" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80695" name="[Event] Rupasha, the Rapacious" nameId="1800563" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="185000221" count="4" />
     </rewards>
@@ -58095,7 +58095,7 @@
       <finished quest_id="80694" />
     </start_conditions>
   </quest>
-  <quest id="80696" name="[Event] Gradi, the Grusome" nameId="1800545" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80696" name="[Event] Gradi, the Grusome" nameId="1800564" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="185000221" count="5" />
     </rewards>
@@ -58103,7 +58103,7 @@
       <finished quest_id="80695" />
     </start_conditions>
   </quest>
-  <quest id="80697" name="[Event] Mass Verification of Symphony of Legend - The First Movement" nameId="1800546" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80697" name="[Event] Mass Verification of Symphony of Legend - The First Movement" nameId="1800579" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="100" />
     </collect_items>
@@ -58111,7 +58111,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80698" name="[Event] Mass Verification of Symphony of Legend - The Second Movement" nameId="1800547" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80698" name="[Event] Mass Verification of Symphony of Legend - The Second Movement" nameId="1800580" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100253" count="100" />
     </collect_items>
@@ -58119,7 +58119,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80699" name="[Event] Mass Verification of Symphony of Legend - The Third Movement" nameId="1800548" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80699" name="[Event] Mass Verification of Symphony of Legend - The Third Movement" nameId="1800581" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100254" count="100" />
     </collect_items>
@@ -58127,7 +58127,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80700" name="[Event] Mass Verification of Symphony of Legend - The Fourth Movement" nameId="1800549" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80700" name="[Event] Mass Verification of Symphony of Legend - The Fourth Movement" nameId="1800582" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100255" count="100" />
     </collect_items>
@@ -58135,7 +58135,7 @@
       <finished quest_id="80677" />
     </start_conditions>
   </quest>
-  <quest id="80701" name="[Event] Mass Verification of Symphony of Legend - The First Movement" nameId="1800550" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80701" name="[Event] Mass Verification of Symphony of Legend - The First Movement" nameId="1800583" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100252" count="100" />
     </collect_items>
@@ -58143,7 +58143,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80702" name="[Event] Mass Verification of Symphony of Legend - The Second Movement" nameId="1800551" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80702" name="[Event] Mass Verification of Symphony of Legend - The Second Movement" nameId="1800584" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100253" count="100" />
     </collect_items>
@@ -58151,7 +58151,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80703" name="[Event] Mass Verification of Symphony of Legend - The Third Movement" nameId="1800552" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80703" name="[Event] Mass Verification of Symphony of Legend - The Third Movement" nameId="1800585" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100254" count="100" />
     </collect_items>
@@ -58159,7 +58159,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80704" name="[Event] Mass Verification of Symphony of Legend - The Fourth Movement" nameId="1800553" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80704" name="[Event] Mass Verification of Symphony of Legend - The Fourth Movement" nameId="1800586" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="188100255" count="100" />
     </collect_items>
@@ -58167,7 +58167,7 @@
       <finished quest_id="80682" />
     </start_conditions>
   </quest>
-  <quest id="80705" name="[Event] Confirmation of Friendship" nameId="1800554" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
+  <quest id="80705" name="[Event] Confirmation of Friendship" nameId="1800587" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007170" count="10" />
     </collect_items>
@@ -58175,7 +58175,7 @@
       <reward_item item_id="188053677" count="1" />
     </rewards>
   </quest>
-  <quest id="80706" name="[Event] Confirmation of Friendship" nameId="1800555" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
+  <quest id="80706" name="[Event] Confirmation of Friendship" nameId="1800588" minlevel_permitted="10" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
     <collect_items>
       <collect_item item_id="182007170" count="10" />
     </collect_items>
@@ -58227,12 +58227,12 @@
       <reward_item item_id="186000406" count="2" />
     </rewards>
   </quest>
-  <quest id="80715" name="[Event] Daily Gift of the Ice Festival Group" nameId="1801348" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80715" name="[Event] Daily Gift of the Ice Festival Group" nameId="1801324" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="188054036" count="1" />
     </rewards>
   </quest>
-  <quest id="80716" name="[Event] Collect Ice Crystals - Cold Ice Crystal" nameId="1801349" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80716" name="[Event] Collect Ice Crystals - Cold Ice Crystal" nameId="1801325" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215802" count="5" />
     </collect_items>
@@ -58240,7 +58240,7 @@
       <reward_item item_id="188054036" count="1" />
     </rewards>
   </quest>
-  <quest id="80717" name="[Event] Collect Ice Crystals - Heart-shaped Ice Crystal" nameId="1801350" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80717" name="[Event] Collect Ice Crystals - Heart-shaped Ice Crystal" nameId="1801326" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215803" count="3" />
     </collect_items>
@@ -58248,7 +58248,7 @@
       <reward_item item_id="188054036" count="1" />
     </rewards>
   </quest>
-  <quest id="80718" name="[Event] Collect Ice Crystals - Clear Ice Crystal" nameId="1801351" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80718" name="[Event] Collect Ice Crystals - Clear Ice Crystal" nameId="1801327" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215804" count="5" />
     </collect_items>
@@ -58256,12 +58256,12 @@
       <reward_item item_id="188054036" count="1" />
     </rewards>
   </quest>
-  <quest id="80719" name="[Event] I Am an Ice Sculptor Too!" nameId="1801352" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80719" name="[Event] I Am an Ice Sculptor Too!" nameId="1801328" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <rewards>
       <reward_item item_id="164002294" count="5" />
     </rewards>
   </quest>
-  <quest id="80720" name="[Event] Ice Festival Group's Token of Gratitude" nameId="1801353" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
+  <quest id="80720" name="[Event] Ice Festival Group's Token of Gratitude" nameId="1801329" minlevel_permitted="40" max_repeat_count="255" cannot_share="true" race_permitted="PC_ALL" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215805" count="50" />
     </collect_items>
@@ -58269,19 +58269,19 @@
       <reward_item item_id="185000236" count="1" />
     </rewards>
   </quest>
-  <quest id="80721" name="[Event] Black Star Alpharing Member" nameId="1801306" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80721" name="[Event] Black Star Alpharing Member" nameId="1801332" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <selectable_reward_item item_id="114101771" />
       <selectable_reward_item item_id="114301911" />
     </rewards>
   </quest>
-  <quest id="80722" name="[Event] Black Star Alpharing Member" nameId="1801307" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80722" name="[Event] Black Star Alpharing Member" nameId="1801333" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <selectable_reward_item item_id="114101771" />
       <selectable_reward_item item_id="114301911" />
     </rewards>
   </quest>
-  <quest id="80723" name="[Event] Black Star Betaring Member" nameId="1801308" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80723" name="[Event] Black Star Betaring Member" nameId="1801334" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215806" count="8" />
     </collect_items>
@@ -58291,7 +58291,7 @@
     </rewards>
     <quest_drop npc_id="256693" item_id="182215806" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80724" name="[Event] Black Star Betaring Member" nameId="1801309" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80724" name="[Event] Black Star Betaring Member" nameId="1801335" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215807" count="8" />
     </collect_items>
@@ -58301,7 +58301,7 @@
     </rewards>
     <quest_drop npc_id="256693" item_id="182215807" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80725" name="[Event] Black Star Gammaring Member" nameId="1801310" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80725" name="[Event] Black Star Gammaring Member" nameId="1801336" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215808" count="5" />
     </collect_items>
@@ -58314,7 +58314,7 @@
     <quest_drop npc_id="212846" item_id="182215808" chance="100" drop_each_member="1" />
     <quest_drop npc_id="214621" item_id="182215808" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80726" name="[Event] Black Star Gammaring Member" nameId="1801311" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80726" name="[Event] Black Star Gammaring Member" nameId="1801337" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215809" count="5" />
     </collect_items>
@@ -58327,7 +58327,7 @@
     <quest_drop npc_id="212846" item_id="182215809" chance="100" drop_each_member="1" />
     <quest_drop npc_id="214621" item_id="182215809" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80727" name="[Event] Black Star Deltaring Member" nameId="1801311" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80727" name="[Event] Black Star Deltaring Member" nameId="1801338" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215810" count="6" />
     </collect_items>
@@ -58349,7 +58349,7 @@
     <quest_drop npc_id="219033" item_id="182215810" chance="100" drop_each_member="1" />
     <quest_drop npc_id="215081" item_id="182215810" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80728" name="[Event] Black Star Deltaring Member" nameId="1801313" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80728" name="[Event] Black Star Deltaring Member" nameId="1801339" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215811" count="6" />
     </collect_items>
@@ -58367,7 +58367,7 @@
     <quest_drop npc_id="219033" item_id="182215811" chance="100" drop_each_member="1" />
     <quest_drop npc_id="215081" item_id="182215811" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80729" name="[Event] Black Star Silonring Member" nameId="1801314" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80729" name="[Event] Black Star Silonring Member" nameId="1801340" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215812" count="2" />
       <collect_item item_id="182215814" count="2" />
@@ -58379,7 +58379,7 @@
     <quest_drop npc_id="216264" item_id="182215814" chance="100" drop_each_member="1" />
     <quest_drop npc_id="216183" item_id="182215814" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80730" name="[Event] Black Star Silonring Member" nameId="1801315" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80730" name="[Event] Black Star Silonring Member" nameId="1801341" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="182215813" count="2" />
       <collect_item item_id="182215815" count="2" />
@@ -58391,7 +58391,7 @@
     <quest_drop npc_id="216264" item_id="182215815" chance="100" drop_each_member="1" />
     <quest_drop npc_id="216183" item_id="182215815" chance="100" drop_each_member="1" />
   </quest>
-  <quest id="80731" name="[Event] Black Star Zetaring Member" nameId="1801316" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT" target_type="FORCE">
+  <quest id="80731" name="[Event] Black Star Zetaring Member" nameId="1801342" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT" target_type="FORCE">
     <rewards>
       <selectable_reward_item item_id="125004356" />
       <selectable_reward_item item_id="125004357" />
@@ -58403,7 +58403,7 @@
       <selectable_reward_item item_id="125004363" />
     </rewards>
   </quest>
-  <quest id="80732" name="[Event] Black Star Zetaring Member" nameId="1801317" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80732" name="[Event] Black Star Zetaring Member" nameId="1801343" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <selectable_reward_item item_id="125004356" />
       <selectable_reward_item item_id="125004357" />
@@ -58415,17 +58415,17 @@
       <selectable_reward_item item_id="125004363" />
     </rewards>
   </quest>
-  <quest id="80733" name="[Event] Black Star Megaring Member" nameId="1801318" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT" target_type="FORCE">
+  <quest id="80733" name="[Event] Black Star Megaring Member" nameId="1801344" minlevel_permitted="65" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT" target_type="FORCE">
     <rewards>
       <reward_item item_id="187060181" count="1" />
     </rewards>
   </quest>
-  <quest id="80734" name="[Event] Black Star Megaring Member" nameId="1801319" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80734" name="[Event] Black Star Megaring Member" nameId="1801345" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="EVENT">
     <rewards>
       <reward_item item_id="188054623" count="1" />
     </rewards>
   </quest>
-  <quest id="80735" name="[Event] Hungry Shugorobo" nameId="1801304" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80735" name="[Event] Hungry Shugorobo" nameId="1801330" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="186000408" count="1" />
     </collect_items>
@@ -58433,7 +58433,7 @@
       <reward_item item_id="164002296" count="1" />
     </rewards>
   </quest>
-  <quest id="80736" name="[Event] Hungry Shugorobo" nameId="1801305" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="PC_ALL" category="EVENT">
+  <quest id="80736" name="[Event] Hungry Shugorobo" nameId="1801331" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="186000412" count="1" />
     </collect_items>
@@ -58578,7 +58578,7 @@
   <quest id="80761" name="[Daily] Elyos Reinforcement Request" nameId="1185878" minlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <rewards gp="10" />
   </quest>
-  <quest id="80762" name="[Daily] Withdraw the Elyos Soul" nameId="1185889" minlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
+  <quest id="80762" name="[Daily] Withdraw the Elyos Soul" nameId="1185879" minlevel_permitted="65" max_repeat_count="255" race_permitted="ELYOS" category="EVENT" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182215933" count="5" />
     </collect_items>

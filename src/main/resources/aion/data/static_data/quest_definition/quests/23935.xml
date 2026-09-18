@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23935" version="1">
-  <metadata name="[Alliance] Take the Gate!" display-name-id="1803135" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Alliance] Take the Gate!" display-name-id="1803144" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

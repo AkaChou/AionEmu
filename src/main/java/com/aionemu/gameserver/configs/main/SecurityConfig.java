@@ -1,11 +1,13 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import org.springframework.stereotype.Component;
 
 /**
- * 安全防护、反外挂与验证相关配置。
- * Security, anti-hack and validation related configuration.
+ * 安全防护、反外挂与验证相关配置，纳入 Spring Bean 托管。
+ * Security, anti-hack and validation related configuration managed as a Spring Bean.
  */
+@Component
 public class SecurityConfig {
 	/**
 	 * 是否广播 GM 审计消息。

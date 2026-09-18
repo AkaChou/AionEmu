@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3745" version="1">
-  <metadata name="First news of victory after the battle against an Asmodian Officer" display-name-id="1803064" min-level="45" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="First news of victory after the battle against an Asmodian Officer" display-name-id="1803065" min-level="45" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

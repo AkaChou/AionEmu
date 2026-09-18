@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80726" version="1">
-  <metadata name="[Event] Black Star Gammaring Member" display-name-id="1801311" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Black Star Gammaring Member" display-name-id="1801337" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

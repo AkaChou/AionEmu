@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3547" version="1">
-  <metadata name="Enemy Harassing the Elim" display-name-id="1129950" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Enemy Harassing the Elim" display-name-id="1141745" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

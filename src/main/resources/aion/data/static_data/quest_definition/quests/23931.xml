@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23931" version="1">
-  <metadata name="[Alliance] Eliminate the Veteran Scout Squad at the Krotan Fortress" display-name-id="1803131" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Alliance] Eliminate the Veteran Scout Squad at the Krotan Fortress" display-name-id="1803140" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>
