@@ -46,10 +46,23 @@ public class ThreadConfig {
 	 * 根据配置与 CPU 核心数计算线程池大小。
 	 * Computes thread pool size from config and available processors.
 	 */
-	@PostConstruct
 	public static void load() {
 		final int extraThreadPerCore = EXTRA_THREAD_PER_CORE;
-		THREAD_POOL_SIZE = (BASE_THREAD_POOL_SIZE + extraThreadPerCore) * Runtime.getRuntime().availableProcessors();
+		final int processors = Runtime.getRuntime().availableProcessors();
+		THREAD_POOL_SIZE = (BASE_THREAD_POOL_SIZE + extraThreadPerCore) * processors;
+	}
+
+	/**
+	 * Spring 绑定完成后重算线程池大小；绑定期间每个 setter 都会写入静态字段，
+	 * 因此在 {@code @PostConstruct} 统一重算一次即可，避免逐字段重算。
+	 *
+	 * Recomputes the thread-pool size after Spring binding completes. Each setter already
+	 * writes the static field, so one recomputation in {@code @PostConstruct} is enough and
+	 * avoids recomputing per field.
+	 */
+	@PostConstruct
+	void recomputeAfterBinding() {
+		load();
 	}
 
 	public void setBasepoolsize(int basepoolsize) {

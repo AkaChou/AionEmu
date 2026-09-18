@@ -50,3 +50,50 @@
 ### 测试验证（已授权）
 - **命令**：`mvn -q -Dtest=SiegeServiceTest,SiegeRaceCounterTest,GameSiegeScheduleLifecycleTest,GameDredgionLifecycleTest,SvsLocationTest,AgentLocationTest,ZorshivDredgionLocationTest test`
 - 测试全部通过（0 失败，0 错误），攻城流程、SVS、代理战、挖掘舰等调度与监听功能保持 100% 行为一致。
+
+## 配置消费点注入化可行性分析（2026-09-18，优先级 2）
+
+### 一、现状量化
+
+`SecurityConfig` / `ThreadConfig` / `IPConfig` / `SvStatsConfig` 已在 `661d983f3` 注册为 Spring Bean
+（其中两个为 `@ConfigurationProperties`）。四者的**真实消费点**（排除 `Configure.java` 的类字面量与
+各 `Config.java` 自身的加载器）如下：
+
+| 配置类 | 真实静态读取点 | 消费方文件 | 消费方是否 Spring Bean |
+|---|---:|---|---|
+| `SecurityConfig` | 44 | 22（`Player`/`Skill`/`AionConnection`/网络包/控制器/服务/`KnownList` 等） | **全部不是** |
+| `ThreadConfig` | 5 | 2（`ThreadPoolManager`、`AGameProcessor`） | **全部不是** |
+| `IPConfig` | 6 | 2（`SM_GS_AUTH`、`SM_CS_AUTH`，均为网络包构造路径） | **全部不是** |
+| `SvStatsConfig` | 3 | 2（`PingPongThread`、`Shutdown`） | **全部不是** |
+
+### 二、结论：不做「78 处调用点改注入」
+
+- 78 个消费点分布在 **30 个类**，其中 **0 个是 Spring Bean**：它们是实体（`Player`/`Skill`/`Item`）、
+  按引用创建的对象（`AionConnection`、网络包）、以及静态工厂/构造器创建的工具与线程（`ThreadPoolManager`、`PingPongThread`）。
+- 把这些类变成 Bean 或携带配置引用属于**对象图重设计**，会触碰玩家、技能、网络包与线程池的创建路径，
+  风险远大于收益，且与"不为动而动"纪律冲突。
+- 因此 `public static` 字段在此处不是临时兜底，而是**面向非 Bean 对象图的访问器层**：设置值必须同时
+  反映到该层的语义是当前架构的正确状态。
+
+### 三、本轮实际修掉的两个缺陷（`@PostConstruct` 静态方法无效）
+
+审计发现 `661d983f3` 把 `@PostConstruct` 加在了 **static 方法**上，而 Jakarta Annotations 规范中
+`@PostConstruct` 只适用于实例方法，Spring 不会回调。当前能工作只是因为遗留 `Config.load()` 又显式调用了一次。
+
+| 文件 | 原问题 | 处理 |
+|---|---|---|
+| `ThreadConfig` | `@PostConstruct public static void load()` 不会被回调；且 Spring 经 setter 绑定后派生值 `THREAD_POOL_SIZE` 不会重算，可能出现「实例属性=8、派生池大小仍按旧值」的分裂状态 | 移除静态注解；新增实例 `@PostConstruct void recomputeAfterBinding()`，绑定完成后统一重算一次派生池大小 |
+| `IPConfig` | 同类无效静态注解；而对外地址必须在遗留 `Config.load()` 写入 `NetworkConfig.PUBLIC_ADDRESS` **之后**解析，Spring 初始化更早，若在 Bean 生命周期里解析会把回环兜底地址固化 | 移除静态注解，并在类注释中明确"刻意不注册 Spring 生命周期回调"的原因；解析入口仍由遗留 `Config.load()` 调用，实例访问器 `getPublicAddress()`/`ipRanges()` 供 Bean 注入方使用 |
+
+### 四、新增回归测试
+
+`src/test/java/com/aionemu/gameserver/configs/main/ThreadConfigTest.java`（2 例）：
+
+1. `loadDerivesPoolSizeFromCurrentProperties`：池大小 = `(base + extra) × CPU 核心数`；
+2. `bindingSettersWriteFieldsWithoutRecomputingPoolSize`：setter 只写字段不重算，`recomputeAfterBinding()` 才重算，
+   固化"绑定期间逐字段写、绑定结束一次重算"的约定。
+
+### 五、验证
+
+- `mvn -q -Dtest=ThreadConfigTest,IPConfigTest,GameUtilityServicesLifecycleTest,GameThreadPoolManagerBoundsTest,PingPongThreadTest test`：全部通过。
+- 全库扫描确认无其它 static `@PostConstruct` 残留。
