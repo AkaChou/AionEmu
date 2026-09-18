@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11323" version="1">
-  <metadata name="ShuGo Go Go" display-name-id="1800552" min-level="65" max-level="2147483647" category="IMPORTANT">
+  <metadata name="ShuGo Go Go" display-name-id="1801129" min-level="65" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

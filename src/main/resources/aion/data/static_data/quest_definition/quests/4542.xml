@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4542" version="1">
-  <metadata name="The secret Of The Seiren treasure" display-name-id="1129954" min-level="38" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The secret Of The Seiren treasure" display-name-id="1141717" min-level="38" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28036" version="1">
-  <metadata name="Bastions Are Eternal; Positions Are Not" display-name-id="1141614" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Bastions Are Eternal; Positions Are Not" display-name-id="1141615" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

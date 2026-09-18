@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10101" version="1">
-  <metadata name="Dismal Developments" display-name-id="1129957" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+  <metadata name="Dismal Developments" display-name-id="1129956" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

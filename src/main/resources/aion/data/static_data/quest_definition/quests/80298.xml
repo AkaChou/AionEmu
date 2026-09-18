@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80298" version="1">
-  <metadata name="[Event] Lover or Loner?" display-name-id="1199853" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Lover or Loner?" display-name-id="1199851" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25225" version="1">
-  <metadata name="[Spy/Daily] Assail Erivale" display-name-id="18012323" min-level="65" max-level="2147483647" category="PUBLIC">
+  <metadata name="[Spy/Daily] Assail Erivale" display-name-id="1801233" min-level="65" max-level="2147483647" category="PUBLIC">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80574" version="1">
-  <metadata name="[Event] A Lover of Letters" display-name-id="1185751" min-level="10" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] A Lover of Letters" display-name-id="1185777" min-level="10" max-level="2147483647" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

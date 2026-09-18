@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80565" version="1">
-  <metadata name="[Event] First Flight to Glory" display-name-id="1199985" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] First Flight to Glory" display-name-id="1185768" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

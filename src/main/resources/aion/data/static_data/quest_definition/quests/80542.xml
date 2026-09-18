@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80542" version="1">
-  <metadata name="[Event/Daily/Spy] Shulacks and Harlock, Oh My!" display-name-id="1185753" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily/Spy] Shulacks and Harlock, Oh My!" display-name-id="1185733" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

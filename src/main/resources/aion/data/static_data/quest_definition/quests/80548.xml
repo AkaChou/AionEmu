@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80548" version="1">
-  <metadata name="[Event] Flower Power" display-name-id="1185735" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Flower Power" display-name-id="1185747" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

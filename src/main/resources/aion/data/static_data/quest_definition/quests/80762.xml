@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80762" version="1">
-<metadata name="[Daily] Withdraw the Elyos Soul" display-name-id="1185889" min-level="65" max-level="2147483647" category="EVENT">
+<metadata name="[Daily] Withdraw the Elyos Soul" display-name-id="1185879" min-level="65" max-level="2147483647" category="EVENT">
     <races>
       <race id="ELYOS" />
     </races>

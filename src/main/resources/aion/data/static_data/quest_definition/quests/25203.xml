@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25203" version="1">
-  <metadata name="Creatures of Cloudtalon Valley" display-name-id="1801235" min-level="58" max-level="2147483647" category="QUEST">
+  <metadata name="Creatures of Cloudtalon Valley" display-name-id="1801236" min-level="58" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

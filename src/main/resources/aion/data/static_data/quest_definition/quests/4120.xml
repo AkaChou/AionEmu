@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4120" version="1">
-  <metadata name="[Instance/Group] The song Of death" display-name-id="1137102" min-level="46" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Instance/Group] The song Of death" display-name-id="1141730" min-level="46" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

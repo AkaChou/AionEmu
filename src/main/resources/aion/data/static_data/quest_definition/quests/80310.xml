@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80310" version="1">
-  <metadata name="Thank You Gift" display-name-id="1199851" min-level="55" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="Thank You Gift" display-name-id="1199887" min-level="55" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

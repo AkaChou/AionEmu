@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80305" version="1">
-  <metadata name="[Event] Bitter or Sweet?" display-name-id="1199860" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Bitter or Sweet?" display-name-id="1199858" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

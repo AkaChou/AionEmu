@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80541" version="1">
-  <metadata name="[Event/Daily] The Harlock Appearance" display-name-id="1185752" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] The Harlock Appearance" display-name-id="1185732" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

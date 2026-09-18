@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80680" version="1">
-  <metadata name="[Event] Verify Symphony of Legend - The Third Movement" display-name-id="1800535" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Verify Symphony of Legend - The Third Movement" display-name-id="1800540" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

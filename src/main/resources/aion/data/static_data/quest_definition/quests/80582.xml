@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80582" version="1">
-  <metadata name="[Event] Second Path to Glory" display-name-id="1199988" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Second Path to Glory" display-name-id="1185785" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

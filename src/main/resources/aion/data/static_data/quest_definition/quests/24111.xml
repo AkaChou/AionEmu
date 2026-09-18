@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24111" version="1">
-  <metadata name="What's Up, Dock?" display-name-id="1129971" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="What's Up, Dock?" display-name-id="1129972" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80572" version="1">
-  <metadata name="[Event] Seek out the Abyss" display-name-id="1185749" min-level="10" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] Seek out the Abyss" display-name-id="1185775" min-level="10" max-level="2147483647" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

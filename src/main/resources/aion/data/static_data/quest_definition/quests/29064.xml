@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29064" version="1">
-  <metadata name="Fang Of Construction" display-name-id="1137046" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Fang Of Construction" display-name-id="1137064" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80223" version="1">
-  <metadata name="[Growth] Mist Mane Oww" display-name-id="1180187" min-level="35" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Mist Mane Oww" display-name-id="1185329" min-level="35" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80721" version="1">
-  <metadata name="[Event] Black Star Alpharing Member" display-name-id="1801306" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Black Star Alpharing Member" display-name-id="1801332" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

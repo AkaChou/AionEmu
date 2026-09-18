@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80580" version="1">
-  <metadata name="[Event] Joy Begets Presents" display-name-id="1185769" min-level="30" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] Joy Begets Presents" display-name-id="1185783" min-level="30" max-level="2147483647" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23936" version="1">
-  <metadata name="[Alliance] Fight for Kysis Fortress!" display-name-id="1803136" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Alliance] Fight for Kysis Fortress!" display-name-id="1803145" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

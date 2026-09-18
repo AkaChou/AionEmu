@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80306" version="1">
-  <metadata name="[Event/Daily] Cutie-Wootie Choco Wuv" display-name-id="1199861" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] Cutie-Wootie Choco Wuv" display-name-id="1199859" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

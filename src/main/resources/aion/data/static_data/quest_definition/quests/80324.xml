@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80324" version="1">
-  <metadata name="[Event/Daily] Prescription For Medicine" display-name-id="1199893" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] Prescription For Medicine" display-name-id="1199925" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

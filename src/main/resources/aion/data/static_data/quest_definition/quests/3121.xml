@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3121" version="1">
-  <metadata name="Archaeologist Pyrrha" display-name-id="1137097" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Archaeologist Pyrrha" display-name-id="1141744" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

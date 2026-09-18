@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80567" version="1">
-  <metadata name="[Event] A Search for Aion" display-name-id="1185744" min-level="10" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] A Search for Aion" display-name-id="1185770" min-level="10" max-level="2147483647" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

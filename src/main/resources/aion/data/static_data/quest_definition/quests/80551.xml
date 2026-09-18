@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80551" version="1">
-  <metadata name="[Event/Daily] Bundle the Joy" display-name-id="1185738" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] Bundle the Joy" display-name-id="1185750" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

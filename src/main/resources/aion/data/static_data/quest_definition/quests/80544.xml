@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80544" version="1">
-  <metadata name="[Event/Daily/Spy] Harlock and Shulacks, Oh My!" display-name-id="1185755" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily/Spy] Harlock and Shulacks, Oh My!" display-name-id="1185735" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

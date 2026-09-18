@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10100" version="1">
-  <metadata name="Kahrun's Intrigue" display-name-id="1129956" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+  <metadata name="Kahrun's Intrigue" display-name-id="1129955" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

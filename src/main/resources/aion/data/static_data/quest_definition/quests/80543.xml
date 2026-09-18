@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80543" version="1">
-  <metadata name="[Event/Daily] The Harlock Mystery" display-name-id="1185754" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Daily] The Harlock Mystery" display-name-id="1185734" min-level="21" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

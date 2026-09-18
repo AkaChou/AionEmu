@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <quest-definition id="16837" version="1">
-  <metadata name="[Instanced Dungeon/Group] Artifact Protector Ganesh" display-name-id="1803206" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Instanced Dungeon/Group] Artifact Protector Ganesh" display-name-id="1803207" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ELYOS" />
     </races>

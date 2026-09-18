@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10035" version="1">
-  <metadata name="Soar to the Corridor" display-name-id="1141845" min-level="54" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+  <metadata name="Soar to the Corridor" display-name-id="1141846" min-level="54" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

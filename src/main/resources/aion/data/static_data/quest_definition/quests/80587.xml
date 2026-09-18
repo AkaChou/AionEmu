@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80587" version="1">
-  <metadata name="Find The Journal" display-name-id="1185778" min-level="65" max-level="2147483647" category="EVENT">
+  <metadata name="Find The Journal" display-name-id="1185790" min-level="65" max-level="2147483647" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

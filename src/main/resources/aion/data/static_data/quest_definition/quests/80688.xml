@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80688" version="1">
-  <metadata name="[Event] For the Glory of Rainbow Snake" display-name-id="1800576" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] For the Glory of Rainbow Snake" display-name-id="1800556" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

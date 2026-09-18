@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80706" version="1">
-  <metadata name="[Event] Confirmation of Friendship" display-name-id="1800555" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Confirmation of Friendship" display-name-id="1800588" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

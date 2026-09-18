@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80617" version="1">
-  <metadata name="[Event] Just One New Thing" display-name-id="1180158" min-level="1" max-level="10" category="EVENT">
+  <metadata name="[Event] Just One New Thing" display-name-id="1180213" min-level="1" max-level="10" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

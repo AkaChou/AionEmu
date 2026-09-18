@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80703" version="1">
-  <metadata name="[Event] Mass Verification of Symphony of Legend - The Third Movement" display-name-id="1800552" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Mass Verification of Symphony of Legend - The Third Movement" display-name-id="1800585" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

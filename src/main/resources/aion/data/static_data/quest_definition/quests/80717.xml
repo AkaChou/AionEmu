@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80717" version="1">
-<metadata name="[Event] Collect Ice Crystals - Heart-shaped Ice Crystal" display-name-id="1801350" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+<metadata name="[Event] Collect Ice Crystals - Heart-shaped Ice Crystal" display-name-id="1801326" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL" />
     </races>

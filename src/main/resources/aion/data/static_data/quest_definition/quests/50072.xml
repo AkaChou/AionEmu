@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="50072" version="1">
-  <metadata name="[Event] Kill the Commanders of the Shugo Bandits" display-name-id="1803387" min-level="45" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Kill the Commanders of the Shugo Bandits" display-name-id="1803440" min-level="45" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL" />
     </races>

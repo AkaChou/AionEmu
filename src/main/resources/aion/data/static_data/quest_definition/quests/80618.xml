@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80618" version="1">
-  <metadata name="[Event] Warming Hearts and Hands" display-name-id="1180159" min-level="10" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] Warming Hearts and Hands" display-name-id="1180214" min-level="10" max-level="2147483647" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

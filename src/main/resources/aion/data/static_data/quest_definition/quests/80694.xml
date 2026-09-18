@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80694" version="1">
-  <metadata name="[Event] Budyn, the Bloodied" display-name-id="1800543" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Budyn, the Bloodied" display-name-id="1800562" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>
