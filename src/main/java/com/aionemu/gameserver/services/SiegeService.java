@@ -59,7 +59,6 @@ import com.aionemu.gameserver.services.siegeservice.FortressSiege;
 import com.aionemu.gameserver.services.siegeservice.Siege;
 import com.aionemu.gameserver.services.siegeservice.SiegeAutoRace;
 import com.aionemu.gameserver.services.siegeservice.SiegeException;
-import com.aionemu.gameserver.services.siegeservice.SiegeStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldType;
@@ -743,5 +742,18 @@ public class SiegeService {
 			return 10411;
 		}
 		return 0;
+	}
+
+	/**
+	 * 攻城启动任务，到点触发指定要塞攻城。
+	 * Siege start runnable triggering a fortress siege when due.
+	 *
+	 * @param locationId 据点 ID / location id
+	 */
+	public record SiegeStartRunnable(int locationId) implements Runnable {
+		@Override
+		public void run() {
+			SiegeService.getInstance().checkSiegeStart(locationId());
+		}
 	}
 }

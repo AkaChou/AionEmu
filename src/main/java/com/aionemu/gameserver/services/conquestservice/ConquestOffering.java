@@ -199,4 +199,25 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	public int getConquestLocationId() {
 		return conquestLocation.getId();
 	}
+
+	/**
+	 * 征服/供奉 BOSS 死亡监听器（预留钩子）。
+	 * Death listener for Conquest/Offering bosses (reserved hook).
+	 */
+	@SuppressWarnings("rawtypes")
+	public static class ConquestBossDestroyListener implements AbstractAI.AiDeathListener {
+		private final ConquestOffering<?> conquestOffering;
+
+		public ConquestBossDestroyListener(ConquestOffering<?> conquestOffering) {
+			this.conquestOffering = conquestOffering;
+		}
+
+		@Override
+		public void onBeforeDie(AbstractAI obj) {
+		}
+
+		@Override
+		public void onAfterDie(AbstractAI obj) {
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.zorshivdredgionservice.DredgionStartRunnable;
 import com.aionemu.gameserver.services.zorshivdredgionservice.Zorshiv;
 import com.aionemu.gameserver.services.zorshivdredgionservice.ZorshivDredgion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -433,5 +434,58 @@ public class ZorshivDredgionService {
 
 	private static class ZorshivDredgionServiceHolder {
 		private static final ZorshivDredgionService INSTANCE = new ZorshivDredgionService();
+	}
+
+	/**
+	 * 佐尔希夫挖掘舰活动启动定时任务。
+	 * Start runnable for the Zorshiv dredgion world event.
+	 */
+	@AllArgsConstructor
+	private static class DredgionStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 执行分阶段启动流程。
+		 * Runs the staged start sequence.
+		 */
+		@Override
+		public void run() {
+			// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+			ZorshivDredgionService.getInstance().clearAdventObjects(id);
+			// 入侵传送门。 / Invasion Portal.
+			ZorshivDredgionService.getInstance().adventPortalSP(id);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					// 入侵激光。 / Invasion Lazer.
+					ZorshivDredgionService.getInstance().adventDirectingSP(id);
+				}
+			}, 180000);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					// 入侵黑空。 / Invasion Black Sky.
+					ZorshivDredgionService.getInstance().adventControlSP(id);
+				}
+			}, 300000);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
+							.getZorshivDredgionLocations();
+					for (ZorshivDredgionLocation loc : locations.values()) {
+						if (loc.getId() == id) {
+							// 入侵浅蓝。 / Invasion Light Blue.
+							ZorshivDredgionService.getInstance().adventEffectSP(id);
+							// 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
+							ZorshivDredgionService.getInstance().levinshorMsg(id);
+							// 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
+							ZorshivDredgionService.getInstance().inggisonMsg(id);
+							ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
+						}
+					}
+				}
+			}, 600000);
+		}
 	}
 }

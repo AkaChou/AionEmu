@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.model.templates.spawns.svsspawns.SvsSpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.svsservice.Gate;
 import com.aionemu.gameserver.services.svsservice.Panesterra;
-import com.aionemu.gameserver.services.svsservice.SvsStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -420,5 +421,39 @@ public class SvsService {
 
 	private static class SvsServiceHolder {
 		private static final SvsService INSTANCE = new SvsService();
+	}
+
+	/**
+	 * 帕内斯特拉（SVS）活动启动定时任务。
+	 * Start runnable for Panesterra (SVS) events.
+	 */
+	@AllArgsConstructor
+	private static class SvsStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 执行启动流程。
+		 * Runs the start sequence.
+		 */
+		@Override
+		public void run() {
+			// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+			SvsService.getInstance().clearAdventObjects(id);
+			// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
+			SvsService.getInstance().transidiumAnnexMsg(id);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
+					SvsService.getInstance().advanceCorridorSP(id);
+				}
+			}, 480000);
+			Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
+			for (final SvsLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					SvsService.getInstance().startSvs(loc.getId());
+				}
+			}
+		}
 	}
 }

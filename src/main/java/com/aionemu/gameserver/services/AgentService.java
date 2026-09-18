@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import lombok.AllArgsConstructor;
+
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.agentspawns.AgentSpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.agentservice.AgentFight;
-import com.aionemu.gameserver.services.agentservice.AgentStartRunnable;
 import com.aionemu.gameserver.services.agentservice.Fight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -382,5 +383,54 @@ public class AgentService {
 
 	private static class AgentServiceHolder {
 		private static final AgentService INSTANCE = new AgentService();
+	}
+
+	/**
+	 * 代理战启动定时任务。
+	 * Start runnable for Agent Fight events.
+	 */
+	@AllArgsConstructor
+	private static class AgentStartRunnable implements Runnable {
+		private final int id;
+
+		/**
+		 * 执行倒计时与启动流程。
+		 * Runs the countdown and start sequence.
+		 */
+		@Override
+		public void run() {
+			// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
+			AgentService.getInstance().agentBattleMsg1(id);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
+					AgentService.getInstance().agentBattleMsg2(id);
+				}
+			}, 300000);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
+					for (final AgentLocation loc : locations.values()) {
+						if (loc.getId() == id) {
+							// 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
+							AgentService.getInstance().governorSunayakaMsg(id);
+							// 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
+							AgentService.getInstance().berserkerSunayakaMsg(id);
+							// 代理人之战 4.7 / Agent Fight 4.7
+							AgentService.getInstance().startAgentFight(loc.getId());
+						}
+					}
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+						@Override
+						public void visit(Player player) {
+							// 一名代理人已生成。 / An Agent has spawned.
+							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
+						}
+					});
+				}
+			}, 600000);
+		}
 	}
 }

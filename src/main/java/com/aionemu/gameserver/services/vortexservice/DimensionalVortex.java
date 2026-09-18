@@ -226,4 +226,27 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	public int getVortexLocationId() {
 		return vortexLocation.getId();
 	}
+
+	/**
+	 * 次元漩涡生成器死亡监听器：摧毁后结束对应入侵。
+	 * Death listener for the dimensional-vortex generator; ends the matching invasion when destroyed.
+	 */
+	@SuppressWarnings("rawtypes")
+	public static class GeneratorDestroyListener implements AbstractAI.AiDeathListener {
+		private final DimensionalVortex<?> vortex;
+
+		public GeneratorDestroyListener(DimensionalVortex<?> vortex) {
+			this.vortex = vortex;
+		}
+
+		@Override
+		public void onBeforeDie(AbstractAI obj) {
+		}
+
+		@Override
+		public void onAfterDie(AbstractAI obj) {
+			vortex.setGeneratorDestroyed(true);
+			GameLocationBootstrapServices.vortexService().stopInvasion(vortex.getVortexLocationId());
+		}
+	}
 }
