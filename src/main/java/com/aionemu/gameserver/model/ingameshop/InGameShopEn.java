@@ -19,7 +19,7 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
-import com.aionemu.gameserver.configs.main.AdvCustomConfig;
+import com.aionemu.gameserver.configs.main.InGameShopConfig;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -178,11 +178,11 @@ public class InGameShopEn {
 		}
 
 		IGItem item = getInstance().getIGItem(itemObjId);
-		if (AdvCustomConfig.GAMESHOP_LIMIT) {
-			if (item.getCategory() == AdvCustomConfig.GAMESHOP_CATEGORY) {
+		if (InGameShopConfig.GAMESHOP_LIMIT) {
+			if (item.getCategory() == InGameShopConfig.GAMESHOP_CATEGORY) {
 				if (lastUsage.containsKey(player.getObjectId())) {
-					if ((System.currentTimeMillis() - lastUsage.get(player.getObjectId())) < AdvCustomConfig.GAMESHOP_LIMIT_TIME * 60 * 1000) {
-						PacketSendUtility.sendMessage(player, "?????????????,??????????:" + (int) ((AdvCustomConfig.GAMESHOP_LIMIT_TIME * 60 * 1000 - (System.currentTimeMillis() - lastUsage.get(player.getObjectId()))) / 1000) + " ?");
+					if ((System.currentTimeMillis() - lastUsage.get(player.getObjectId())) < InGameShopConfig.GAMESHOP_LIMIT_TIME * 60 * 1000) {
+						PacketSendUtility.sendMessage(player, "?????????????,??????????:" + (int) ((InGameShopConfig.GAMESHOP_LIMIT_TIME * 60 * 1000 - (System.currentTimeMillis() - lastUsage.get(player.getObjectId()))) / 1000) + " ?");
 						return;
 					}
 				}
@@ -193,8 +193,8 @@ public class InGameShopEn {
 		request.accountId = player.getClientConnection().getAccount().getId();
 		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
 			activeRequests.add(request);
-		if (AdvCustomConfig.GAMESHOP_LIMIT) {
-			if (item.getCategory() == AdvCustomConfig.GAMESHOP_CATEGORY) {
+		if (InGameShopConfig.GAMESHOP_LIMIT) {
+			if (item.getCategory() == InGameShopConfig.GAMESHOP_CATEGORY) {
 				lastUsage.put(player.getObjectId(), System.currentTimeMillis());
 			}
 		}

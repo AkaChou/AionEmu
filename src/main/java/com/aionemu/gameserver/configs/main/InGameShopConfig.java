@@ -30,4 +30,25 @@ public class InGameShopConfig {
 	 */
 	@Property(key = "gameserver.ingameshop.allow.gift", defaultValue = "true")
 	public static boolean ALLOW_GIFTS;
+
+	/**
+	 * 是否启用商城限购。
+	 * Whether game shop purchase limit is enabled.
+	 */
+	@Property(key = "gameserver.gameshop.limit", defaultValue = "false")
+	public static boolean GAMESHOP_LIMIT;
+
+	/**
+	 * 商城限购分类。
+	 * Game shop limit category.
+	 */
+	@Property(key = "gameserver.gameshop.category", defaultValue = "0")
+	public static byte GAMESHOP_CATEGORY;
+
+	/**
+	 * 商城限购时间（分钟）。
+	 * Game shop limit time in minutes.
+	 */
+	@Property(key = "gameserver.gameshop.limit.time", defaultValue = "60")
+	public static long GAMESHOP_LIMIT_TIME;
 }

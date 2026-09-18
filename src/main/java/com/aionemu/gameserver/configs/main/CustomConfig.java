@@ -685,4 +685,11 @@ public class CustomConfig {
 	 */
 	@Property(key = "gameserver.disable.teleport.npcs", defaultValue = "0")
 	public static String DISABLE_TELEPORTER_NPCS;
+
+	/**
+	 * 新角色默认背包扩展格数。
+	 * Default cube expansion size for a new character.
+	 */
+	@Property(key = "gameserver.cube.size", defaultValue = "0")
+	public static int CUBE_SIZE;
 }

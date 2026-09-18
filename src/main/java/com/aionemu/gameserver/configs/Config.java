@@ -18,7 +18,6 @@ import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.AStationConfig;
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
-import com.aionemu.gameserver.configs.main.AdvCustomConfig;
 import com.aionemu.gameserver.configs.main.ArchDaevaConfig;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.BrokerConfig;
@@ -233,7 +232,6 @@ public class Config {
 			SkillConfig.refresh();
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
-			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);
 			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
 			ConfigurableProcessor.process(PvPModConfig.class, mainProps);
 			ConfigurableProcessor.process(FFAConfig.class, mainProps);
@@ -328,7 +326,6 @@ public class Config {
 			SkillConfig.refresh();
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
-			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);
 			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
 			ConfigurableProcessor.process(PvPModConfig.class, mainProps);
 			ConfigurableProcessor.process(FFAConfig.class, mainProps);

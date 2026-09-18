@@ -12,7 +12,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.configs.main.AdvCustomConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -68,7 +67,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private String note;
 	private WorldPosition position;
 	private int questExpands = 0;
-	private int npcExpands = AdvCustomConfig.CUBE_SIZE;
+	private int npcExpands = CustomConfig.CUBE_SIZE;
 	private int warehouseSize = 0;
 	private int AdvancedStigmaSlotSize = 0;
 	private int titleId = -1;
