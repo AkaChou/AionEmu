@@ -90,3 +90,47 @@
 1. `QuestService` 计时器域（约 250 行，QuestTimerKey 已有私有类型基础）——待 quest 并行任务收尾后实施。
 2. `LegionRestrictions`（703 行）与 `StatFunctions`（1095 行）拆分后已职责单一，无需进一步拆分。
 3. quest 域 80 例测试失败随并行任务 P5 收敛后，复跑全量 `mvn test` 确认（本轮基线对照已证实与本轮拆分无关）。
+
+
+## 最终收口与交付总结（2026-09-18，Final Closure）
+
+### 一、回归修复与非 Quest 测试清零（Commit: 084bec129）
+
+1. **NpcAbnormalImmunityTest 夹具修复**：
+   - **根因**：`NpcTemplate` JAXB 反序列化通过 `setBoundImmunity(...)` / `setDeformImmunity(...)` 等 setter 计算内部 `BitSet` 掩码。Lombok 类级 `@Getter` 自动为内部 `boundImmunity` 生成 getter，导致 JAXB 优先直接注入字段而绕过了 setter 逻辑，掩码未初始化。
+   - **修复**：对 `NpcTemplate` 的 8 个内部状态字段显式标注 `@Getter(AccessLevel.NONE)`，确保 JAXB 走业务 setter，并提供公共不可变掩码访问器。
+   - **规范沉淀**：已固化至 `.agents/rules/lombok.md`，明确 JAXB 实体上若存在“setter 计算衍生状态/掩码”，需阻止 Lombok 生成同名字段 getter。
+2. **SMPlayerSpawnTest 地图容器适配**：
+   - **根因**：`World.worldMaps` 在早前性能重构中从 `FastMap` 优化为平铺数组 `WorldMap[]`，测试中反射注入 `Map` 类型的桩发生类型转换异常。
+   - **修复**：测试改用 `World.getInstance().getWorldMap(mapId)` 正式接口或匹配数组类型的桩注入。
+3. **测试验证结果**：
+   - `mvn -q test` 验证：全量 3419 例测试中，所有非 quest 失败已**彻底清零（0 失败）**。
+   - 剩余全部 42 个失败类 100% 属于 `questEngine` 并行工作区，与架构重构代码完全解耦。
+
+### 二、11 个核心领域大类拆分交付清单
+
+| 宿主类 | 拆出组件 / 规则类 | 职责与模式 | 性能/分配影响 |
+|---|---|---|---|
+| `Effect` | `EffectSuccessSet`、`EffectTerminationObservers` | 状态集合位与终止观察者分离 | 无新对象分配 |
+| `Creature` | `CreatureCooldowns` | 冷却时间字典与计算逻辑 | 无状态纯策略 |
+| `Item` | `ItemRestrictions` | 物品佩戴、交易与使用限制校验 | 静态策略，零额外内存 |
+| `Player` | `PlayerCooldowns`、`PlayerItemDailyLimits`、`PlayerStorageRegistry`、`PlayerHouses`、`PlayerTags`、`PlayerPvpRules` | 冷却、日常、储物、房屋、展示标签、PvP 规则六大子域抽取 | 保持门面委托，原字段与访问器兼容 |
+| `LegionService` | `LegionRestrictions`、`LegionMembers`、`LegionEmblems`、`LegionJoinRequests` | 权限、成员流、徽章流、入团申请流 | 内部组件化委托 |
+| `Battleground` | `BattlegroundLadder`、`BattlegroundIdentity` | 天梯积分榜与段位装扮 | 静态算法与外观装扮提取 |
+| `Skill` | `SkillCooldownTables` | 烙印与强化冷却二维查表 | 静态常数表，消除重复映射 |
+| `EnchantService` | `EnchantItemRules` | 强化、突破、魔石镶嵌规则与概率校验 | 无状态规则组件 |
+| `TeleportService2` | `TransformPanelSync` | 变身面板同步协议与校验 | 静态协议辅助 |
+| `AttackUtil` | `AttackControlEffects` | 暴击击退、击倒、硬直等控制效果判断 | 战斗公式静态提取 |
+| `StatFunctions` | `KillRewardFormulas` | 击杀经验、AP、DP 计算公式 | 纯函数计算，零分配 |
+
+### 三、Spring Boot 与 Lombok 规范化达标
+
+1. **Spring 依赖注入统一**：
+   - 全库 `@Autowired` 字段注入已全部清理完毕，统一采用 `@RequiredArgsConstructor + private final` 构造器注入。
+   - 自定义生命周期与单例容器通过 Spring Bean 托管，消除隐式静态全局调用。
+2. **Lombok 规范化统一**：
+   - 消除手工手写 Logger，全库统一为 `@Slf4j`。
+   - 普通 DTO/VO 规范化使用 `@Data` / `@Builder`；不可变值对象使用 `record`。
+   - JAXB/JPA 实体严格规避类级无脑 `@Data`，严格保护反序列化与双向引用边界。
+3. **架构重构正式收口**：
+   - 至此，目标内的大类重构、坏味道治理、Spring Bean 依赖注入规范化以及非 quest 测试闭环已全部圆满完成，本阶段正式宣布收口！
