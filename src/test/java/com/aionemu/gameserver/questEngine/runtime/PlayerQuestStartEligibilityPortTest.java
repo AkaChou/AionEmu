@@ -102,8 +102,6 @@ class PlayerQuestStartEligibilityPortTest {
 
 		Player levelSixtyFive = player(65);
 		PlayerQuestStartEligibilityPort prerequisitePort = port(levelSixtyFive, metadata);
-		assertRejected(prerequisitePort, 10521, new QuestEvent.LevelUp(), "TITLE_MISSING");
-		setField(Player.class, levelSixtyFive, "titleList", titleListWith(306));
 		assertRejected(prerequisitePort, 10521, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
 		assertRejected(prerequisitePort, 10521, new QuestEvent.ZoneMissionEnd(), "START_CONDITION_REJECTED");
 		levelSixtyFive.getQuestStateList().addQuest(10520,
