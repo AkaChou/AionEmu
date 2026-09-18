@@ -3,7 +3,7 @@ package com.aionemu.chatserver.network.netty;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
-import com.aionemu.chatserver.network.gameserver.GsConnectionFactoryImpl;
+import com.aionemu.chatserver.network.gameserver.GameServerConnectionFactory;
 import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 
@@ -114,7 +114,7 @@ public class NettyServer {
         String gameHost = Config.GAME_ADDRESS.getAddress().getHostAddress();
         int gamePort = Config.GAME_ADDRESS.getPort();
         gameServerTransport = new com.aionemu.commons.network.NettyServer(
-            new NettyServerCfg(gameHost, gamePort, "Gs Connections", new GsConnectionFactoryImpl())
+            new NettyServerCfg(gameHost, gamePort, "Gs Connections", new GameServerConnectionFactory())
         );
         gameServerTransport.connect();
     }

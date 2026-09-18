@@ -4,8 +4,8 @@ import com.aionemu.commons.network.NettyServer;
 import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.network.aion.AionConnectionFactoryImpl;
-import com.aionemu.loginserver.network.gameserver.GsConnectionFactoryImpl;
+import com.aionemu.loginserver.network.aion.LoginClientConnectionFactory;
+import com.aionemu.loginserver.network.gameserver.GameServerConnectionFactory;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 
@@ -31,8 +31,8 @@ public class NetConnector {
      */
     private ServerTransport createTransport() {
         return new NettyServer(
-            new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl()),
-            new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl())
+            new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GameServerConnectionFactory()),
+            new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new LoginClientConnectionFactory())
         );
     }
 

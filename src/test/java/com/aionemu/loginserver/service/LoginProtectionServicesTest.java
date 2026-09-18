@@ -86,7 +86,7 @@ class LoginProtectionServicesTest {
 
     @Test
     void networkPacketCodeUsesProtectionBridgeInsteadOfDirectSingletons() throws IOException {
-        String connectionFactorySource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/aion/AionConnectionFactoryImpl.java"));
+        String connectionFactorySource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/aion/LoginClientConnectionFactory.java"));
         String loginPacketSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/aion/clientpackets/CM_LOGIN.java"));
 
         assertFalse(connectionFactorySource.contains("FloodProtector.getInstance()"));

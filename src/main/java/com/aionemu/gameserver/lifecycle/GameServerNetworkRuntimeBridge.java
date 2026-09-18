@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.network.BannedMacManager;
-import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
+import com.aionemu.gameserver.network.aion.GameClientConnectionFactory;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import org.springframework.beans.factory.ObjectProvider;
@@ -111,7 +111,7 @@ public class GameServerNetworkRuntimeBridge {
      *
      * @return 客户端连接工厂 / Game connection factory
      */
-    public GameConnectionFactoryImpl gameConnectionFactory() {
-        return new GameConnectionFactoryImpl();
+    public GameClientConnectionFactory gameConnectionFactory() {
+        return new GameClientConnectionFactory();
     }
 }

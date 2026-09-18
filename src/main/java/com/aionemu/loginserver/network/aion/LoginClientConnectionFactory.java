@@ -8,12 +8,12 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
 import java.io.IOException;
 
 /**
- * 创建 {@link LoginConnection} 的 Netty 连接工厂；可选洪水防护。
- * Netty connection factory that creates {@link LoginConnection}; optional flood protection.
+ * 创建登录客户端 {@link LoginConnection} 的 Netty 连接工厂；可选洪水防护。
+ * Netty connection factory for login-client {@link LoginConnection} instances; optional flood protection.
  *
  * @author -Nemesiss-
  */
-public class AionConnectionFactoryImpl implements NettyConnectionFactory {
+public class LoginClientConnectionFactory implements NettyConnectionFactory {
 
     /**
      * 为传入传输创建登录连接；洪水过快则关闭并返回 null。

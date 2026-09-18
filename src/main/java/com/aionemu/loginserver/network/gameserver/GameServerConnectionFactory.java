@@ -7,12 +7,12 @@ import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.NettyConnectionFactory;
 
 /**
- * 创建 {@link GsConnection} 的 Netty 连接工厂实现。
- * {@link NettyConnectionFactory} implementation that creates {@link GsConnection} instances.
+ * 创建游戏服（{@link GsConnection}）入站连接的 Netty 连接工厂。
+ * Netty connection factory for inbound game-server ({@link GsConnection}) connections.
  *
  * @author -Nemesiss-
  */
-public class GsConnectionFactoryImpl implements NettyConnectionFactory {
+public class GameServerConnectionFactory implements NettyConnectionFactory {
 
     /**
      * 基于传输层创建 GS 连接。

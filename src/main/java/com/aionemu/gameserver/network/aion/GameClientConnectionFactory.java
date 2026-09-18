@@ -14,13 +14,13 @@ import com.aionemu.gameserver.network.sequrity.FloodManager;
 import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
 
 /**
- * 创建 AionConnection 的 NettyConnectionFactory 实现，可选连接洪泛检测。
- * NettyConnectionFactory implementation that creates AionConnections with optional connection flood checks.
+ * 创建游戏客户端 {@link AionConnection} 的 Netty 连接工厂，可选连接洪泛检测。
+ * Netty connection factory for game-client {@link AionConnection} instances, with optional connection flood checks.
  *
  * @author -Nemesiss-
  */
 @Slf4j
-public class GameConnectionFactoryImpl implements NettyConnectionFactory {
+public class GameClientConnectionFactory implements NettyConnectionFactory {
 
 	private static final String GAME_CONTEXT = "game";
 
@@ -31,7 +31,7 @@ public class GameConnectionFactoryImpl implements NettyConnectionFactory {
 	 * 按配置初始化短/长周期连接洪泛过滤器。
 	 * Initializes short/long period connection flood filters when enabled.
 	 */
-	public GameConnectionFactoryImpl() {
+	public GameClientConnectionFactory() {
 		if (NetworkConfig.ENABLE_FLOOD_CONNECTIONS) {
 			floodAcceptor = new FloodManager(NetworkConfig.Flood_Tick,
 					new FloodManager.FloodFilter(NetworkConfig.Flood_SWARN, NetworkConfig.Flood_SReject,
