@@ -58,11 +58,7 @@ public class StatFunctions {
 	 * @return 单人经验奖励 / Solo XP reward
 	 */
 	public static long calculateSoloExperienceReward(Player player, Creature target) {
-		int playerLevel = player.getCommonData().getLevel();
-		int targetLevel = target.getLevel();
-		long baseXP = ((Npc) target).getObjectTemplate().getStatsTemplate().getMaxXp();
-		int xpPercentage = XPRewardEnum.xpRewardFrom(targetLevel - playerLevel);
-		return (int) Math.floor(baseXP * xpPercentage / 100d);
+		return KillRewardFormulas.calculateSoloExperienceReward(player, target);
 	}
 
 	/**
@@ -74,10 +70,7 @@ public class StatFunctions {
 	 * @return 队伍经验奖励 / Group XP reward
 	 */
 	public static long calculateGroupExperienceReward(int maxLevelInRange, Creature target) {
-		int targetLevel = target.getLevel();
-		long baseXP = ((Npc) target).getObjectTemplate().getStatsTemplate().getMaxXp();
-		int xpPercentage = XPRewardEnum.xpRewardFrom(targetLevel - maxLevelInRange);
-		return (int) Math.floor(baseXP * xpPercentage / 100d);
+		return KillRewardFormulas.calculateGroupExperienceReward(maxLevelInRange, target);
 	}
 
 	/**
@@ -89,13 +82,19 @@ public class StatFunctions {
 	 * Solo DP reward
 	 */
 	public static int calculateSoloDPReward(Player player, Creature target) {
-		int playerLevel = player.getCommonData().getLevel();
-		int targetLevel = target.getLevel();
-		NpcRating npcRating = ((Npc) target).getObjectTemplate().getRating();
-		int baseDP = targetLevel * calculateRatingMultipler(npcRating);
-		int xpPercentage = XPRewardEnum.xpRewardFrom(targetLevel - playerLevel);
-		float rate = player.getRates().getDpNpcRate();
-		return (int) Math.floor(baseDP * xpPercentage * rate / 100);
+		return KillRewardFormulas.calculateSoloDPReward(player, target);
+	}
+
+	/**
+	 * 计算队伍击杀目标的 DP 奖励
+	 * Calculate group DP reward from target
+	 *
+	 * 玩家 / Player
+	 * Target
+	 * Group DP reward
+	 */
+	public static int calculateGroupDPReward(Player player, Creature target) {
+		return KillRewardFormulas.calculateGroupDPReward(player, target);
 	}
 
 	/**
@@ -107,12 +106,7 @@ public class StatFunctions {
 	 * AP reward
 	 */
 	public static int calculatePvEApGained(Player player, Creature target) {
-		float apPercentage = target instanceof SiegeNpc ? 100f
-				: APRewardEnum.apReward(player.getAbyssRank().getRank().getId());
-		boolean lvlDiff = player.getCommonData().getLevel() - target.getLevel() > 10;
-		float apNpcRate = ApNpcRating(((Npc) target).getObjectTemplate().getRating());
-		return (int) (lvlDiff ? 1
-				: RewardType.AP_NPC.calcReward(player, (int) Math.floor(15 * apPercentage * apNpcRate / 100)));
+		return KillRewardFormulas.calculatePvEApGained(player, target);
 	}
 
 	/**
@@ -124,22 +118,7 @@ public class StatFunctions {
 	 * AP lost
 	 */
 	public static int calculatePvPApLost(Player defeated, Player winner) {
-		int pointsLost = Math
-				.round(defeated.getAbyssRank().getRank().getPointsLost() * defeated.getRates().getApPlayerLossRate());
-		int difference = winner.getLevel() - defeated.getLevel();
-		if (difference > 4) {
-			pointsLost = Math.round(pointsLost * 0.1f);
-		} else {
-			switch (difference) {
-			case 3:
-				pointsLost = Math.round(pointsLost * 0.85f);
-				break;
-			case 4:
-				pointsLost = Math.round(pointsLost * 0.65f);
-				break;
-			}
-		}
-		return pointsLost;
+		return KillRewardFormulas.calculatePvPApLost(defeated, winner);
 	}
 
 	/**
@@ -152,36 +131,7 @@ public class StatFunctions {
 	 * AP gained
 	 */
 	public static int calculatePvpApGained(Player defeated, int maxRank, int maxLevel) {
-		int pointsGained = defeated.getAbyssRank().getRank().getPointsGained();
-		int difference = maxLevel - defeated.getLevel();
-		if (difference > 4) {
-			pointsGained = Math.round(pointsGained * 0.1f);
-		} else if (difference < -3) {
-			pointsGained = Math.round(pointsGained * 1.3f);
-		} else {
-			switch (difference) {
-			case 3:
-				pointsGained = Math.round(pointsGained * 0.85f);
-				break;
-			case 4:
-				pointsGained = Math.round(pointsGained * 0.65f);
-				break;
-			case -2:
-				pointsGained = Math.round(pointsGained * 1.1f);
-				break;
-			case -3:
-				pointsGained = Math.round(pointsGained * 1.2f);
-				break;
-			}
-		}
-		int winnerAbyssRank = maxRank;
-		int defeatedAbyssRank = defeated.getAbyssRank().getRank().getId();
-		int abyssRankDifference = winnerAbyssRank - defeatedAbyssRank;
-		if (winnerAbyssRank <= 7 && abyssRankDifference > 0) {
-			float penaltyPercent = abyssRankDifference * 0.05f;
-			pointsGained -= Math.round(pointsGained * penaltyPercent);
-		}
-		return pointsGained;
+		return KillRewardFormulas.calculatePvpApGained(defeated, maxRank, maxLevel);
 	}
 
 	/**
@@ -193,23 +143,7 @@ public class StatFunctions {
 	 * GP lost
 	 */
 	public static int calculatePvPGpLost(Player defeated, Player winner) {
-		int pointsLost = Math
-				.round(defeated.getAbyssRank().getRank().getPointsLost() * defeated.getRates().getGpPlayerLossRate());
-		// 等级惩罚计算 / Level penalty calculation
-		int difference = winner.getLevel() - defeated.getLevel();
-		if (difference > 4) {
-			pointsLost = Math.round(pointsLost * 0.1f);
-		} else {
-			switch (difference) {
-			case 3:
-				pointsLost = Math.round(pointsLost * 0.85f);
-				break;
-			case 4:
-				pointsLost = Math.round(pointsLost * 0.65f);
-				break;
-			}
-		}
-		return pointsLost;
+		return KillRewardFormulas.calculatePvPGpLost(defeated, winner);
 	}
 
 	/**
@@ -222,36 +156,7 @@ public class StatFunctions {
 	 * XP gained
 	 */
 	public static int calculatePvpXpGained(Player defeated, int maxRank, int maxLevel) {
-		int pointsGained = 5000;
-		int difference = maxLevel - defeated.getLevel();
-		if (difference > 4) {
-			pointsGained = Math.round(pointsGained * 0.1f);
-		} else if (difference < -3) {
-			pointsGained = Math.round(pointsGained * 1.3f);
-		} else {
-			switch (difference) {
-			case 3:
-				pointsGained = Math.round(pointsGained * 0.85f);
-				break;
-			case 4:
-				pointsGained = Math.round(pointsGained * 0.65f);
-				break;
-			case -2:
-				pointsGained = Math.round(pointsGained * 1.1f);
-				break;
-			case -3:
-				pointsGained = Math.round(pointsGained * 1.2f);
-				break;
-			}
-		}
-		int winnerAbyssRank = maxRank;
-		int defeatedAbyssRank = defeated.getAbyssRank().getRank().getId();
-		int abyssRankDifference = winnerAbyssRank - defeatedAbyssRank;
-		if (winnerAbyssRank <= 7 && abyssRankDifference > 0) {
-			float penaltyPercent = abyssRankDifference * 0.05f;
-			pointsGained -= Math.round(pointsGained * penaltyPercent);
-		}
-		return pointsGained;
+		return KillRewardFormulas.calculatePvpXpGained(defeated, maxRank, maxLevel);
 	}
 
 	/**
@@ -264,12 +169,7 @@ public class StatFunctions {
 	 * DP gained
 	 */
 	public static int calculatePvpDpGained(Player defeated, int maxRank, int maxLevel) {
-		int pointsGained = 0;
-		int baseDp = 1064;
-		int dpPerRank = 57;
-		pointsGained = (defeated.getAbyssRank().getRank().getId() - maxRank) * dpPerRank + baseDp;
-		pointsGained = StatFunctions.adjustPvpDpGained(pointsGained, defeated.getLevel(), maxLevel);
-		return pointsGained;
+		return KillRewardFormulas.calculatePvpDpGained(defeated, maxRank, maxLevel);
 	}
 
 	/**
@@ -282,36 +182,7 @@ public class StatFunctions {
 	 * Adjusted DP
 	 */
 	public static int adjustPvpDpGained(int points, int defeatedLvl, int killerLvl) {
-		int pointsGained = points;
-		int difference = killerLvl - defeatedLvl;
-		if (difference >= 10) {
-			pointsGained = 0;
-		} else if (difference < 10 && difference >= 0) {
-			pointsGained -= pointsGained * difference * 0.1;
-		} else if (difference <= -10) {
-			pointsGained *= 1.1;
-		} else if (difference > -10 && difference < 0) {
-			pointsGained += pointsGained * Math.abs(difference) * 0.01;
-		}
-		return pointsGained;
-	}
-
-	/**
-	 * 计算队伍击杀目标的 DP 奖励
-	 * Calculate group DP reward from target
-	 *
-	 * 玩家 / Player
-	 * Target
-	 * Group DP reward
-	 */
-	public static int calculateGroupDPReward(Player player, Creature target) {
-		int playerLevel = player.getCommonData().getLevel();
-		int targetLevel = target.getLevel();
-		NpcRating npcRating = ((Npc) target).getObjectTemplate().getRating();
-		int baseDP = targetLevel * calculateRatingMultipler(npcRating);
-		int xpPercentage = XPRewardEnum.xpRewardFrom(targetLevel - playerLevel);
-		float rate = player.getRates().getDpNpcRate();
-		return (int) Math.floor(baseDP * xpPercentage * rate / 100);
+		return KillRewardFormulas.adjustPvpDpGained(points, defeatedLvl, killerLvl);
 	}
 
 	/**
