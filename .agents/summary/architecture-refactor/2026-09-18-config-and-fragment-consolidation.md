@@ -321,3 +321,26 @@ void restore() {
 仍在使用"方法内 try/finally 保存单个配置字段"的测试（如 `PathDataTest`、`PathServiceConcurrencyTest`、
 `NpcMoveControllerPathTest`、`TargetRangePropertyTest` 等，约 150 处）：这些是**用例级**局部开关，
 语义清晰、无跨用例泄漏风险，暂不强制迁移；新增或修改此类用例时可顺手改用 `ConfigSnapshot`。
+
+## 优先级 1：`AGameProcessor` 告警阈值改为显式传入（2026-09-18）
+
+### 变更
+
+| 文件 | 内容 |
+|---|---|
+| `AGameProcessor` | 新增 `protected AGameProcessor(int threadsCount, long maxRuntimeInMillisWithoutWarning)`，阈值存入实例字段；无参重载退化为 `this(threadsCount, ThreadConfig.MAXIMUM_RUNTIME…)`（仅供非 Bean 路径与既有调用方）；`RunnableTaskWrapper` 由 `static` 改为内部类并读取实例字段 |
+| `MovementProcessor` | 新增 `MovementProcessor(long maxRuntimeInMillisWithoutWarning)`；无参构造器保留给 `Global.MovementProcessor` 这一静态持有者 |
+
+### 效果
+
+`AGameProcessor` 的**调度热路径不再静态读取配置**——包装器使用实例阈值，显式构造器让调用方（未来可注入
+`ThreadConfig`）完全掌握该值。非 Bean 路径（`Global.MovementProcessor`）行为不变。
+
+### 新增测试
+
+`AGameProcessorTest`（2 例）：
+
+1. `explicitRuntimeThresholdIsUsed`：显式阈值 4321 必须被实例采用；
+2. `legacyConstructorUsesTheStaticFacadeThreshold`：无参构造器仍等于静态门面值（回退路径兼容）。
+
+验证：`AGameProcessorTest`、`NpcMoveControllerPathTest`、`PathDataTest` 全绿。

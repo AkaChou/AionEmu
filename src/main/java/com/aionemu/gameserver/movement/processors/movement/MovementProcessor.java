@@ -22,11 +22,21 @@ public class MovementProcessor extends AGameProcessor {
 	private final ConcurrentHashMap<Creature, AMovementMotor> _registeredCreatures = new ConcurrentHashMap<Creature, AMovementMotor>();
 
 	/**
-	 * 以 12 个工作线程创建移动处理器。
-	 * Create a movement processor with 12 worker threads.
+	 * 以 12 个工作线程和遗留静态门面的告警阈值创建移动处理器。
+	 * Create a movement processor with 12 worker threads and the legacy facade warning threshold.
 	 */
 	public MovementProcessor() {
 		super(12);
+	}
+
+	/**
+	 * 以显式告警阈值创建移动处理器。
+	 * Create a movement processor with an explicit warning threshold.
+	 *
+	 * @param maxRuntimeInMillisWithoutWarning 无告警最大运行毫秒 / Max ms without warning
+	 */
+	public MovementProcessor(long maxRuntimeInMillisWithoutWarning) {
+		super(12, maxRuntimeInMillisWithoutWarning);
 	}
 
 	/**

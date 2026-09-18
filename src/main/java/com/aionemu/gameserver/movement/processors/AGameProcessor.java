@@ -27,12 +27,30 @@ public class AGameProcessor {
 	private final ScheduledThreadPoolExecutor _processorPool;
 
 	/**
-	 * 以指定核心线程数创建处理器并预启动全部核心线程。
-	 * Create a processor with the given core-thread count and prestart all core threads.
+	 * 运行时告警阈值（毫秒）。
+	 * Runtime warning threshold in milliseconds.
+	 */
+	private final long maxRuntimeInMillisWithoutWarning;
+
+	/**
+	 * 以遗留静态门面提供的告警阈值创建处理器。
+	 * Create a processor using the warning threshold from the legacy static facade.
 	 *
 	 * @param threadsCount 核心线程数 / Core thread count
 	 */
 	protected AGameProcessor(int threadsCount) {
+		this(threadsCount, ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING);
+	}
+
+	/**
+	 * 以显式告警阈值创建处理器并预启动全部核心线程。
+	 * Create a processor with an explicit warning threshold and prestart all core threads.
+	 *
+	 * @param threadsCount 核心线程数 / Core thread count
+	 * @param maxRuntimeInMillisWithoutWarning 无告警最大运行毫秒 / Max ms without warning
+	 */
+	protected AGameProcessor(int threadsCount, long maxRuntimeInMillisWithoutWarning) {
+		this.maxRuntimeInMillisWithoutWarning = maxRuntimeInMillisWithoutWarning;
 		this._processorPool = new ScheduledThreadPoolExecutor(threadsCount);
 		this._processorPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		this._processorPool.prestartAllCoreThreads();
@@ -153,7 +171,7 @@ public class AGameProcessor {
 	 * 带运行时告警阈值的任务包装器。
 	 * Runnable wrapper with a runtime warning threshold.
 	 */
-	private static final class RunnableTaskWrapper extends RunnableWrapper {
+	private final class RunnableTaskWrapper extends RunnableWrapper {
 
 		/**
 		 * 使用全局线程配置中的最大无告警运行时间包装任务。
@@ -162,7 +180,7 @@ public class AGameProcessor {
 		 * @param runnable 原始任务 / Original runnable
 		 */
 		private RunnableTaskWrapper(Runnable runnable) {
-			super(runnable, ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING);
+			super(runnable, maxRuntimeInMillisWithoutWarning);
 		}
 	}
 }
