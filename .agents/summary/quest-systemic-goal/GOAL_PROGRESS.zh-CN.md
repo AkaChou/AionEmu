@@ -182,6 +182,18 @@
 - 追加修复（2026-09-18）：QuestWorkItemMigrationCoverageTest 首次纳入本轮门禁
   即暴露 25304 声明缺口（legacy quest_work_items=182215874 未声明，完成后残留
   背包，QE-011 同根因）→ 已补声明，3/3 全绿（commit 32b59d6d6）
+- 档位轴扫描（2026-09-18，audit_tier_axis.py 新增）：真端档位 2/3
+  （reward_exp2/gold2/abyss_point2/item2_N/selectable2_N 等）与生产
+  reward-groups 对照，残留 141 条多档差异整体定性为**多档合同结构改造批次**
+  （QE-026 REWARD_GROUP_TIER_FIDELITY 模式应用）：
+  - TIER2/3_MISSING_PROD 112 条：真端有实质档位 2/3、生产单组表达
+    （1687/2677 已回滚保留三档平铺单池；其余如 1122/1367/1535/1922 待重建）
+  - TIER2/3_NUMERIC/ITEM_DIFF 34 条：生产有组但组内容与真端档位不一致
+  - EXT_DIFF 40 条：真端 reward_item_ext_1 扩展奖励 vs 生产 extended-rewards
+  - 每条重建涉及档位窗口页（QE-026：第 5/6 档为页面 45/46）、choice 组分配、
+    complete-reward-index 与预览合同的完整取证，逐任务执行
+  - TIER2/3_UNMAPPED 14 条：真端道具旧名不可映射，EVIDENCE_BLOCKED（同
+    ITEM_UNMAPPED）
 - 下一检查点：P5 静态可扫项已全部收敛或登记；剩余验证依赖
   （a）Aion 5.8 客户端实机复测（用户侧 PENDING）、
   （b）真端 item/title 模板表解包（ITEM_UNMAPPED 956 / TITLE 173 / 2345 双路线）、
