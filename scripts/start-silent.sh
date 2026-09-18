@@ -47,7 +47,7 @@ fi
 
 if [ ! -f "$JAR_FILE" ]; then
   echo "Missing $JAR_FILE"
-  echo "Run ./package.sh first."
+  echo "Run ./scripts/package.sh first."
   exit 1
 fi
 

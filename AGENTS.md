@@ -53,14 +53,14 @@ AionEmu is an Aion 5.8 community server. A single Spring Boot application hosts 
 - `src/main/resources/aion/geo/` — Geo, Path, and terrain data
 - `src/test/java/` — Unit tests, production catalog checks, and regression tests
 - `docs/` — Design, quest-repair, and maintenance documentation
-- `scripts/` — Data generation, auditing, runtime helpers, and maintenance tools
+- `scripts/` — Runtime helpers, packaging, data generation, auditing, and maintenance tools
 - `aion/` — Local deployment directory; it is not source code or a long-lived build input
 
 ## Maven Module
 
 - The repository root is the only Maven module: `com.aionemu:aionemu`.
 - The Spring Boot repackaged artifact is `target/AionEmu.jar`.
-- `package.sh` deploys the JAR, resources, and lifecycle scripts to `aion/` or the directory specified by `AION_HOME`.
+- `scripts/package.sh` deploys the JAR, resources, and lifecycle scripts to `aion/` or the directory specified by `AION_HOME`.
 - Run all Maven commands from the repository root.
 
 ## Rules Index

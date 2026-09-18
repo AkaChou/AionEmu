@@ -2,7 +2,7 @@
 """Generate the Aion 5.8 VIP Game.dll in one step.
 
 Usage:
-  python3 scripts/patch_game_dll_vip.py --source /path/to/Game.dll \
+  python3 .agents/summary/patch-game-dll-vip/patch_game_dll_vip.py --source /path/to/Game.dll \
     --out /path/to/Game.vip-world.dll [--sts-ip 127.0.0.1]
 """
 

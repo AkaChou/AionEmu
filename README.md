@@ -1,6 +1,6 @@
 # AionEmu
 
-[中文](README.zh-CN.md)
+[中文](docs/README.zh-CN.md)
 
 Aion 5.8 community server. Single Maven project, JDK 25, Spring Boot starts login / game / chat.
 
@@ -66,7 +66,7 @@ mysql -u root -p < src/main/resources/db/mysql/al_server_gs.sql
 ### 2. Package the server
 
 ```bash
-./package.sh
+./scripts/package.sh
 ```
 
 This builds `target/AionEmu.jar` and deploys the JAR, resources, and lifecycle scripts to `aion/` (or the directory in `AION_HOME`). The default build skips tests; see [Development](#development) for test and repackaging options.
@@ -81,7 +81,7 @@ aion/config/network/database.properties
 aion/config/network/network.properties
 ```
 
-Set the database credentials and the public game/chat addresses before allowing clients to connect. Use `./re-package.sh` for later builds when existing runtime configuration must be preserved.
+Set the database credentials and the public game/chat addresses before allowing clients to connect. Use `./scripts/re-package.sh` for later builds when existing runtime configuration must be preserved.
 
 ### 4. Start and stop
 
@@ -150,8 +150,8 @@ Service enablement is configured in `src/main/resources/application.yml` (bundle
 | `AION_SHUTDOWN_TIMEOUT` | `120` | Graceful shutdown timeout in seconds |
 | `AION_STOP_TIMEOUT` | `30` | Stop timeout before force-kill in seconds |
 | `AION_FORCE_STOP` | `true` | Whether to force-kill after `AION_STOP_TIMEOUT` |
-| `AION_PRESERVE_CONFIG` | `false` | Preserve existing runtime config during `package.sh` when `true` |
-| `MAVEN_THREADS` | `1C` | Maven parallel build threads used by `package.sh` and `re-package.sh` (`1` disables reactor parallelism) |
+| `AION_PRESERVE_CONFIG` | `false` | Preserve existing runtime config during `scripts/package.sh` when `true` |
+| `MAVEN_THREADS` | `1C` | Maven parallel build threads used by `scripts/package.sh` and `scripts/re-package.sh` (`1` disables reactor parallelism) |
 
 ## Network Endpoints
 
@@ -177,7 +177,7 @@ Ports and advertised addresses are configured in [`network.properties`](src/main
 | `src/main/resources/aion/config/` | Versioned configuration defaults |
 | `src/main/resources/db/mysql/` | Login and game database schemas |
 | `aion/` | Local deployment directory for JAR, runtime config, and logs |
-| `scripts/` | Data generation, auditing, runtime helpers, and maintenance tools |
+| `scripts/` | Runtime, packaging, auditing, data generation, and maintenance tools |
 | `docs/` | Quest, pathfinding, terminology, and maintenance documentation |
 | `patch/` | Aion 5.8 client patch files and usage notes |
 
@@ -208,10 +208,10 @@ mvn package
 Or use the packaging wrapper to build and deploy in one step:
 
 ```bash
-./package.sh                              # default: clean + skip tests + package + deploy, using 1C Maven threads
-MAVEN_THREADS=2C ./package.sh             # use two Maven threads per available CPU core
-./package.sh -DskipTests=false package    # run tests during packaging
-./re-package.sh                           # deploy while preserving existing runtime config
+./scripts/package.sh                              # default: clean + skip tests + package + deploy, using 1C Maven threads
+MAVEN_THREADS=2C ./scripts/package.sh             # use two Maven threads per available CPU core
+./scripts/package.sh -DskipTests=false package    # run tests during packaging
+./scripts/re-package.sh                           # deploy while preserving existing runtime config
 ```
 
 The application entry point is `com.aionemu.AionBootApplication`.
@@ -220,11 +220,11 @@ The application entry point is `com.aionemu.AionBootApplication`.
 
 | Symptom | Likely fix |
 | --- | --- |
-| `Missing target/AionEmu.jar` | Run `./package.sh` first. |
+| `Missing target/AionEmu.jar` | Run `./scripts/package.sh` first. |
 | `AionEmu is already running` | Use `./aion/shutdown.sh` or `./aion/stop-silent.sh`; check `aion/log/aionemu.pid`. |
 | Database connection failure | Verify MySQL is running, credentials in `aion/config/login/database.properties` and `aion/config/network/database.properties`, and that both SQL dumps were imported. |
 | Client cannot connect | Check `aion/config/network/network.properties` public addresses/ports and firewall rules. |
-| Runtime config overwritten by build | Use `./re-package.sh` or set `AION_PRESERVE_CONFIG=true` when running `./package.sh`. |
+| Runtime config overwritten by build | Use `./scripts/re-package.sh` or set `AION_PRESERVE_CONFIG=true` when running `./scripts/package.sh`. |
 | Need a clean runtime | Run `./aion/start-silent.sh -c` (keeps JAR and scripts). |
 
 ## Credits

@@ -28,7 +28,7 @@
 > **安装提醒：** 补丁文件必须命名为 `Game.dll`，并放在 Aion 5.8 客户端的 `bin64` 目录下。
 
 ```bash
-python3 scripts/patch_game_dll_vip.py \
+python3 .agents/summary/patch-game-dll-vip/patch_game_dll_vip.py \
   --source /path/to/Game.dll.sts-auth-original \
   --out /path/to/Game.vip-world.dll \
   --sts-ip 127.0.0.1
@@ -68,7 +68,7 @@ Compatibility and verification:
 > **Installation:** The patched file must be named `Game.dll` and placed in the Aion 5.8 client's `bin64` directory.
 
 ```bash
-python3 scripts/patch_game_dll_vip.py \
+python3 .agents/summary/patch-game-dll-vip/patch_game_dll_vip.py \
   --source /path/to/Game.dll.sts-auth-original \
   --out /path/to/Game.vip-world.dll \
   --sts-ip 127.0.0.1

@@ -1,6 +1,6 @@
 # AionEmu
 
-[English](README.md)
+[English](../README.md)
 
 Aion 5.8 社区服务端。单 Maven 工程，JDK 25，Spring Boot 启动 login / game / chat。
 
@@ -66,7 +66,7 @@ mysql -u root -p < src/main/resources/db/mysql/al_server_gs.sql
 ### 2. 打包服务端
 
 ```bash
-./package.sh
+./scripts/package.sh
 ```
 
 该命令生成 `target/AionEmu.jar`，并将 JAR、资源和生命周期脚本部署到 `aion/`（也可以通过 `AION_HOME` 指定其他目录）。默认构建会跳过测试；测试与重新打包选项请参考[开发](#开发)。
@@ -81,7 +81,7 @@ aion/config/network/database.properties
 aion/config/network/network.properties
 ```
 
-启动前请设置数据库凭据，以及对客户端公布的 game/chat 地址。后续构建如需保留现有运行配置，请使用 `./re-package.sh`。
+启动前请设置数据库凭据，以及对客户端公布的 game/chat 地址。后续构建如需保留现有运行配置，请使用 `./scripts/re-package.sh`。
 
 ### 4. 启动与停止
 
@@ -106,7 +106,7 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 
 ## 客户端设置
 
-可选的 Aion 5.8 客户端补丁（任务本地化与 VIP `Game.dll`）请参阅[客户端补丁说明](patch/patch_documentation.md)。
+可选的 Aion 5.8 客户端补丁（任务本地化与 VIP `Game.dll`）请参阅[客户端补丁说明](../patch/patch_documentation.md)。
 
 ## 配置说明
 
@@ -150,8 +150,8 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | `AION_SHUTDOWN_TIMEOUT` | `120` | 优雅关闭超时（秒） |
 | `AION_STOP_TIMEOUT` | `30` | 停止超时（秒），超时后可选强制结束 |
 | `AION_FORCE_STOP` | `true` | 超过 `AION_STOP_TIMEOUT` 后是否强制结束 |
-| `AION_PRESERVE_CONFIG` | `false` | 执行 `package.sh` 时，为 `true` 则保留现有运行配置 |
-| `MAVEN_THREADS` | `1C` | `package.sh` 和 `re-package.sh` 使用的 Maven 并行线程数（设为 `1` 可关闭 Reactor 并行） |
+| `AION_PRESERVE_CONFIG` | `false` | 执行 `scripts/package.sh` 时，为 `true` 则保留现有运行配置 |
+| `MAVEN_THREADS` | `1C` | `scripts/package.sh` 和 `scripts/re-package.sh` 使用的 Maven 并行线程数（设为 `1` 可关闭 Reactor 并行） |
 
 ## 网络端口
 
@@ -163,7 +163,7 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | Game -> Login | `9014` | 服务间连接 |
 | Game -> Chat | `9021` | 服务间连接 |
 
-端口和对外公布地址配置在 [`network.properties`](src/main/resources/aion/config/network/network.properties)。
+端口和对外公布地址配置在 [`network.properties`](../src/main/resources/aion/config/network/network.properties)。
 
 ## 项目结构
 
@@ -177,19 +177,19 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | `src/main/resources/aion/config/` | 版本库中的默认配置 |
 | `src/main/resources/db/mysql/` | login 和 game 数据库结构 |
 | `aion/` | JAR、运行配置和日志的本地部署目录 |
-| `scripts/` | 数据生成、审计、运行辅助和维护工具 |
+| `scripts/` | 运行与打包脚本、数据生成与维护工具 |
 | `docs/` | 任务、寻路、术语和维护文档 |
 | `patch/` | Aion 5.8 客户端补丁和使用说明 |
 
 ## 文档
 
-- [A* PATH 寻路方案](docs/PATH_ASTAR_REFACTOR_PLAN.md)
-- [任务目录](docs/QUEST_CATALOG.zh-CN.md)
-- [任务编写指南](docs/quest/WRITING_GUIDE.zh-CN.md) / [English](docs/quest/WRITING_GUIDE.md)
-- [任务排查与修复 Playbook](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
-- [任务客户端对话框映射](docs/quest/client-dialog-mapping/README.zh-CN.md)
-- [游戏术语中英对照](docs/aion-game-terms-en-zh.md)
-- [客户端补丁说明](patch/patch_documentation.md)
+- [A* PATH 寻路方案](PATH_ASTAR_REFACTOR_PLAN.md)
+- [任务目录](QUEST_CATALOG.zh-CN.md)
+- [任务编写指南](quest/WRITING_GUIDE.zh-CN.md) / [English](quest/WRITING_GUIDE.md)
+- [任务排查与修复 Playbook](quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
+- [任务客户端对话框映射](quest/client-dialog-mapping/README.zh-CN.md)
+- [游戏术语中英对照](aion-game-terms-en-zh.md)
+- [客户端补丁说明](../patch/patch_documentation.md)
 
 ## 开发
 
@@ -205,13 +205,13 @@ mvn test
 mvn package
 ```
 
-也可以使用打包脚本一步完成构建和部署：
+也可以在仓库根目录使用打包脚本一步完成构建和部署：
 
 ```bash
-./package.sh                              # 默认：clean + 跳过测试 + package + 部署，使用 1C Maven 线程
-MAVEN_THREADS=2C ./package.sh             # 每个可用 CPU 核心使用两个 Maven 线程
-./package.sh -DskipTests=false package    # 打包时同时运行测试
-./re-package.sh                           # 部署时保留现有运行配置
+./scripts/package.sh                              # 默认：clean + 跳过测试 + package + 部署，使用 1C Maven 线程
+MAVEN_THREADS=2C ./scripts/package.sh             # 每个可用 CPU 核心使用两个 Maven 线程
+./scripts/package.sh -DskipTests=false package    # 打包时同时运行测试
+./scripts/re-package.sh                           # 部署时保留现有运行配置
 ```
 
 应用入口为 `com.aionemu.AionBootApplication`。
@@ -220,11 +220,11 @@ MAVEN_THREADS=2C ./package.sh             # 每个可用 CPU 核心使用两个 
 
 | 现象 | 常见处理 |
 | --- | --- |
-| `Missing target/AionEmu.jar` | 先运行 `./package.sh`。 |
+| `Missing target/AionEmu.jar` | 先运行 `./scripts/package.sh`。 |
 | `AionEmu is already running` | 使用 `./aion/shutdown.sh` 或 `./aion/stop-silent.sh`；检查 `aion/log/aionemu.pid`。 |
 | 数据库连接失败 | 确认 MySQL 已启动，检查 `aion/config/login/database.properties` 和 `aion/config/network/database.properties` 中的凭据，并确认已导入两个 SQL 文件。 |
 | 客户端无法连接 | 检查 `aion/config/network/network.properties` 中的对外地址/端口以及防火墙规则。 |
-| 构建后运行配置被覆盖 | 使用 `./re-package.sh`，或在执行 `./package.sh` 时设置 `AION_PRESERVE_CONFIG=true`。 |
+| 构建后运行配置被覆盖 | 使用 `./scripts/re-package.sh`，或在执行 `./scripts/package.sh` 时设置 `AION_PRESERVE_CONFIG=true`。 |
 | 需要干净运行环境 | 执行 `./aion/start-silent.sh -c`（保留 JAR 和脚本）。 |
 
 ## 致谢
@@ -235,4 +235,4 @@ MAVEN_THREADS=2C ./package.sh             # 每个可用 CPU 核心使用两个 
 
 ## 许可证
 
-本项目使用 [GPL-3.0](LICENSE) 许可证。
+本项目使用 [GPL-3.0](../LICENSE) 许可证。

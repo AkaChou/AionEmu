@@ -94,7 +94,7 @@ class StartSilentScriptTest {
         Files.createDirectories(runtimeConfig.getParent());
         Files.writeString(runtimeConfig, "custom-config");
 
-        ProcessResult result = runScript(root, "package.sh", root.resolve("java-args.txt"));
+        ProcessResult result = runScript(root, "scripts/package.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
@@ -144,7 +144,7 @@ class StartSilentScriptTest {
         Files.writeString(runtimeGameConfig, "custom-game");
         Files.writeString(runtimeLogback, "custom-logback");
 
-        ProcessResult result = runScript(root, "re-package.sh", root.resolve("java-args.txt"));
+        ProcessResult result = runScript(root, "scripts/re-package.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("custom-game", Files.readString(runtimeGameConfig));
@@ -182,8 +182,8 @@ class StartSilentScriptTest {
         Files.createDirectories(root.resolve("aion"));
         Files.writeString(root.resolve("aion/AionEmu.jar"), "jar");
         Files.createDirectories(root.resolve("scripts"));
-        Files.copy(Path.of("package.sh"), root.resolve("package.sh"));
-        Files.copy(Path.of("re-package.sh"), root.resolve("re-package.sh"));
+        Files.copy(Path.of("scripts/package.sh"), root.resolve("scripts/package.sh"));
+        Files.copy(Path.of("scripts/re-package.sh"), root.resolve("scripts/re-package.sh"));
         Files.copy(Path.of("scripts/start-silent.sh"), root.resolve("scripts/start-silent.sh"));
         Files.copy(Path.of("scripts/stop-silent.sh"), root.resolve("scripts/stop-silent.sh"));
         Files.copy(Path.of("scripts/shutdown.sh"), root.resolve("scripts/shutdown.sh"));
