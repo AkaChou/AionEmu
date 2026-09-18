@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
-import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
 import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.Ordered;
@@ -38,14 +37,20 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         loadLoginProperties(environment, properties);
         loadChatProperties(environment, properties);
         if (!properties.isEmpty()) {
+            // 以最低优先级注册：命令行、系统属性、环境变量与 application.yml 仍是有效覆盖，
+            // 文件值只在没有任何高优先级来源时生效。
+            // Registered at the lowest precedence: command line, system properties, environment
+            // variables and application.yml still override; file values apply only when nothing
+            // with a higher precedence defines the key.
             environment.getPropertySources().addLast(new MapPropertySource(PROPERTY_SOURCE_NAME, properties));
         }
-        // 让遗留 ConfigurableProcessor 也能看到命令行/环境变量/application.yml 这类高优先级来源，
-        // 否则 Bean 绑定与静态字段会各看一套值。
-        // Let the legacy ConfigurableProcessor see the higher-precedence sources (command line,
-        // environment variables, application.yml); otherwise bean binding and the static fields
-        // would each observe a different value.
-        ConfigSourceResolverHolder.publish(environment::getProperty);
+        // 这里刻意**不**发布 ConfigSourceResolverHolder：本处理器在任何 SpringApplication 实例化时
+        // 都会执行，一旦在此写入全局持有者，测试与并行上下文就会互相污染。解析器只由启动层单例
+        // BootConfigSourceResolver 在上下文装配时发布一次。
+        // Deliberately does NOT publish ConfigSourceResolverHolder here: this post-processor runs for
+        // every SpringApplication instantiation, so writing the global holder here would leak state
+        // between tests and parallel contexts. The resolver is published once by the bootstrap
+        // singleton BootConfigSourceResolver during context wiring.
     }
 
     /**

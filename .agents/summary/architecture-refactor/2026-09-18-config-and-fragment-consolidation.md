@@ -367,3 +367,48 @@ void restore() {
 
 `mvn -q -Dtest='IPConfigTest,PacketFloodFilterTest,AionBootApplicationTest,ConfigurableProcessorSourceResolverTest,ThreadConfigTest' test`
 → 全部通过；`AionBootApplicationTest` 实际启动 Spring 上下文并关闭，说明移除两个 Bean 注册不影响容器装配。
+
+## 验证提交：环境处理器泄漏未真正移除（2026-09-18 晚）
+
+### 发现
+
+`63bdffa97` 的提交信息写着"revert the post-processor to its previous responsibility (property sources only)"，
+但 `AionLegacyPropertySourceEnvironmentPostProcessor` **仍然在每次 `SpringApplication` 实例化时**执行：
+
+```java
+ConfigSourceResolverHolder.publish(environment::getProperty);
+```
+
+该提交只新增了 `BootConfigSourceResolver` 单例，没有删掉旧发布点——也就是说当初导致 `VipConfigPathTest`
+读错环境的全局泄漏点在最后一个 commit 之后依然存在，提交信息与代码不一致。
+
+### 处理
+
+- 删除 post-processor 里的 `ConfigSourceResolverHolder.publish(...)` 及其 import，并在代码里写明"刻意不在此发布"
+  的原因；解析器只由 `BootConfigSourceResolver` 在上下文装配时发布一次。
+- 顺带补注释说明 `addLast(MapPropertySource)` 的语义：文件值以**最低优先级**注册，命令行/系统属性/环境变量/
+  `application.yml` 仍然覆盖它。
+
+### 新增回归测试
+
+`src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java`（3 例）：
+
+1. `postProcessorLeavesTheGlobalResolverUntouched` —— 调用 post-processor 后 `ConfigSourceResolverHolder.resolve(...)`
+   必须仍为 `null`（守住隔离性，回归 `VipConfigPathTest` 事故）；
+2. `operatingSystemEnvironmentVariablesOutrankLegacyFileValues` —— 用 `SystemEnvironmentPropertySource`
+   模拟 `GAMESERVER_THREAD_BASEPOOLSIZE`，断言原始键与 `aion.legacy.game.property.*` 前缀键都取环境变量值
+   （即"文件不得反向覆盖外部环境变量"这一契约被测试固定下来，而不是只写在提交信息里）；
+3. `fileValueAppliesWhenNoHigherPrecedenceSourceDefinesTheKey` —— 无更高优先级来源时文件值仍然生效。
+
+验证：`mvn -B -Dstyle.color=never -Dtest='com.aionemu.boot.**' test` → **85 例，0 失败 0 错误**。
+
+## 静态配置类：审计与决策（2026-09-18 晚）
+
+详见 `.agents/summary/architecture-refactor/static-config-classes-decision.md`。要点：
+
+- 52 个 `@Property` 类 / 759 字段 / 756 键；Bean 内静态配置读取 30 处，**构造期读取 0 处**（全部在
+  `Config.load()` 之后由 `AionServiceLauncher` 按相位调用的方法体内）；
+- 3 个重复键是游戏服/聊天服各自加载同一份 `network/network.properties` 的镜像声明，取值必然一致；
+- 52 个配置类全部被 `ConfigurableProcessor.process(...)` 覆盖，不存在漏挂加载器的类；
+- 14 个字段全库零引用（其中 5 个在随包配置里保留着对应键），登记为"预留旋钮"，本轮不删除；
+- 结论：**其余 50 个静态配置类保持静态**，不迁移为 Spring Bean。
