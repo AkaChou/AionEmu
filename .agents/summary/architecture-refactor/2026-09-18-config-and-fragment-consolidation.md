@@ -187,3 +187,37 @@
   `BootConfigSourceResolver` 单例发布后，`VipConfigPathTest` 在全量运行中恢复通过。
 - 剩余失败/错误全部集中在 `questEngine`（并行会话在途：部分测试引用了正在改动的 audit 类，
   报 `NoClassDefFound`），与本轮配置改造无关。
+
+## 配置层正式收口（2026-09-18）
+
+### 收口结论
+
+配置层治理按用户约束（**配置文件保持当前路径、键名不变**）正式收口。收口范围与边界如下。
+
+### 已完成并验证
+
+| # | 事项 | 提交 |
+|---|---|---|
+| 1 | `SvStatsConfig`/`IPConfig`/`ThreadConfig`/`SecurityConfig` 纳入 Spring 容器，配置目录与键名不变 | `661d983f3` |
+| 2 | 修复无效的**静态** `@PostConstruct`：`ThreadConfig` 改为实例钩子并在绑定后重算派生池大小；`IPConfig` 明确不做生命周期回调的原因 | `803a27868` |
+| 3 | 实测并固化"遗留点号长键可直接绑定到 `@ConfigurationProperties`"，证明无需新增 yml 键、无需移动文件 | `817e4f46a` |
+| 4 | 权威唯一化：命令行参数 / 环境变量 / application.yml 覆盖对 Bean 绑定与静态字段同时生效（`ConfigSourceResolver` + `ConfigSourceResolverHolder` + `ConfigurableProcessor` 取值顺序） | `e2580742d` |
+| 5 | 解析器改由 `BootConfigSourceResolver` 单例在装配阶段发布一次，消除测试隔离污染（`VipConfigPathTest` 整包失败事故） | `63bdffa97` |
+| 6 | 全量回归：`mvn -B test` → 3444 例，**非 quest 失败 0**；剩余失败全部属并行 quest 工作区 | — |
+
+### 明确不在本次收口范围（登记备用）
+
+1. **其余 51 个 `@Property` 配置类**：保持纯静态形态，`Config.load()` 仍是其唯一权威。功能正常、有测试覆盖，
+   是否逐个迁移到可绑定形态属后续可选增量，不在本次范围。
+2. **`SecurityConfig` / `IPConfig` 的 Bean 注册**：两者保留 `@Component`，但当前不承载实例绑定
+   （`SecurityConfig` 无实例字段，`IPConfig` 的实例访问器暂无调用方）。属无副作用注册；若后续要清理空壳注册
+   或补齐实例绑定形态，需单独立项评估。
+3. **消费点注入化**：78 个静态读取点分布于 30 个**非 Bean** 类，注入化等价于对象图重设计，已判定不做
+   （详见前文"配置消费点注入化可行性分析"）。
+
+### 使用说明（给运维）
+
+- 覆盖优先级：**命令行参数 / 环境变量 / application.yml > 遗留 properties 文件 > `@Property` 默认值**。
+- 覆盖对**所有**调用方生效：Spring Bean 属性与遗留静态字段读取同一份有效值。
+- 例：`--gameserver.thread.basepoolsize=9` 会同时改变 `ThreadConfig` 的 Bean 属性与静态字段，
+  并被后续 `Config.load()` 保留，不会被文件里的旧值覆盖。
