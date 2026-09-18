@@ -24,6 +24,12 @@
 | `e83b9287e` | 审计汇总 round 5 | BattlegroundIdentity/AttackControlEffects + Equipment 保留审计。 |
 | `9832bddd9` 前基线 | 全量测试基线对照 | 3401 例 70F+21E；对 b2361c2cf 基线 diff 本轮拆分域零新增失败（详见下文全量测试回归结论）。 |
 | `0727e56f5` | Skill 冷却查表域 | `Skill`（1951→1305 行）烙印强化冷却查表（StigmaEnchantCoolDown，技能 ID 巨型 switch 约 650 行）→ package-private `SkillCooldownTables`；public 门面保留（当前零外部调用方），内部调用点直走查表类。`SkillEngineTest` 通过。 |
+| `b2b0a8d30` | Player 储物注册表 | `Player`（2542→2413 行）CUBE/宠物背包/房屋仓库/普通/账号/军团仓库注册与查询、脏物品收集、已存储标记、全物品收集 → package-private 静态 `PlayerStorageRegistry`；字段和 Lombok 访问器保留，公开门面签名不变，零分配。`PlayerStorageRegistryTest` 固化 CUBE/普通/账号/未知类型路由；`PlayerQuestCurrencyPortTest` 覆盖宠物背包/房屋仓库与持久化链路。 |
+
+## 追加审计结论（round 8，Player 储物域）
+
+- **Player 储物注册表已拆出**：`setStorage/getStorage/getDirtyItemsToUpdate/markDirtyItemContainersStored/getAllItems` 现由无状态 `PlayerStorageRegistry` 承担；存储字段、Lombok 访问器与公开签名保持不变。
+- **Player 仍约 2413 行**：下一批继续审计房屋域（houses/houseRegistry/buildingOwnerStates）与 PvP/关系判定域（canPvP/zone/siege relations）；`Battleground`、`ItemTemplate`、`LegionService` 的既有保留结论不变。
 
 ## 追加审计结论（round 5）
 
