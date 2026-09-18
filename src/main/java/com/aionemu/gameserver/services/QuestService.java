@@ -18,10 +18,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.IntConsumer;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -94,8 +92,6 @@ public final class QuestService {
 	static QuestsData questsData = DataManager.QUEST_DATA;
 	/** Supplemental drops declared by the remaining legacy handlers. Canonical catalog drops live in the dispatcher. */
 	private static final ConcurrentMap<Integer, List<QuestCatalogDrop>> handlerSideQuestDrops = new ConcurrentHashMap<>();
-	private static final ConcurrentMap<QuestTimerKey, ManagedQuestTimer> questTimers = new ConcurrentHashMap<>();
-	private static final Object questTimerLock = new Object();
 
 	/**
 	 * 清空全部任务掉落缓存。
@@ -1220,23 +1216,24 @@ public final class QuestService {
 	 * Starts a visible quest timer.
 	 *
 	 * @param env 任务环境 / quest environment
-	 * seconds
-	 *
+	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
-		return questTimerStart(env, timeInSeconds, QuestTimerPolicy.visible());
+		return QuestTimers.questTimerStart(env, timeInSeconds);
 	}
 
+	/**
+	 * 以指定策略启动可见的任务计时器。
+	 * Starts a visible quest timer with the given policy.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param timeInSeconds 计时秒数 / timer length in seconds
+	 * @param policy 计时器策略 / timer policy
+	 * @return 是否已启动 / whether started
+	 */
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
-		Player player = requireTimerArguments(env, timeInSeconds, policy);
-		TimerStartOutcome outcome = startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, true,
-			expiredQuestId -> GameEngineServices.questEngine().onQuestTimerEnd(
-				new QuestEnv(null, player, expiredQuestId, 0)));
-		if (outcome == TimerStartOutcome.STARTED) {
-			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), timeInSeconds));
-		}
-		return true;
+		return QuestTimers.questTimerStart(env, timeInSeconds, policy);
 	}
 
 	/**
@@ -1244,20 +1241,24 @@ public final class QuestService {
 	 * Starts an invisible quest timer (engine callback on timeout).
 	 *
 	 * @param env 任务环境 / quest environment
-	 * seconds
-	 *
+	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
-		return invisibleTimerStart(env, timeInSeconds, QuestTimerPolicy.invisible());
+		return QuestTimers.invisibleTimerStart(env, timeInSeconds);
 	}
 
+	/**
+	 * 以指定策略启动不可见任务计时器。
+	 * Starts an invisible quest timer with the given policy.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param timeInSeconds 计时秒数 / timer length in seconds
+	 * @param policy 计时器策略 / timer policy
+	 * @return 是否已启动 / whether started
+	 */
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
-		Player player = requireTimerArguments(env, timeInSeconds, policy);
-		startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, false,
-			expiredQuestId -> GameEngineServices.questEngine().onInvisibleTimerEnd(
-				new QuestEnv(null, player, expiredQuestId, 0)));
-		return true;
+		return QuestTimers.invisibleTimerStart(env, timeInSeconds, policy);
 	}
 
 	/**
@@ -1265,160 +1266,74 @@ public final class QuestService {
 	 * Ends and cancels the quest timer.
 	 *
 	 * @param env 任务环境 / quest environment
-	 * whether successful
+	 * @return 是否已处理 / whether handled
 	 */
 	public static boolean questTimerEnd(QuestEnv env) {
-		return questTimerEnd(env, QuestTimerPolicy.visible().identity());
+		return QuestTimers.questTimerEnd(env);
 	}
 
+	/**
+	 * 以指定身份结束并取消任务计时器。
+	 * Ends and cancels the quest timer with the given identity.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param identity 计时器身份 / timer identity
+	 * @return 是否已处理 / whether handled
+	 */
 	public static boolean questTimerEnd(QuestEnv env, QuestTimerPolicy.Identity identity) {
-		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0 || identity == null) {
-			return false;
-		}
-		Player player = env.getPlayer();
-		ManagedQuestTimer removed = cancelManagedTimer(player.getObjectId(), env.getQuestId(), identity);
-		if ((removed != null && removed.visible) || QuestTimerPolicy.VISIBLE_TIMER_ID.equals(identity.timerId())) {
-			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), 0));
-		}
-		return true;
+		return QuestTimers.questTimerEnd(env, identity);
 	}
 
+	/**
+	 * 清理指定玩家的指定任务计时器。
+	 * Cleans the timers of one quest for one player.
+	 *
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param questId 任务 ID / quest id
+	 */
 	public static void cleanupQuestTimers(int playerId, int questId) {
-		cleanupTimers(key -> key.playerId == playerId && key.questId == questId);
+		QuestTimers.cleanupQuestTimers(playerId, questId);
 	}
 
+	/**
+	 * 清理指定玩家的全部任务计时器。
+	 * Cleans every quest timer of one player.
+	 *
+	 * @param playerId 玩家对象 ID / player object id
+	 */
 	public static void cleanupPlayerQuestTimers(int playerId) {
-		cleanupTimers(key -> key.playerId == playerId);
+		QuestTimers.cleanupPlayerQuestTimers(playerId);
 	}
 
+	/**
+	 * 清理指定副本的全部任务计时器。
+	 * Cleans every quest timer of one instance.
+	 *
+	 * @param instanceId 副本实例 ID / instance id
+	 */
 	public static void cleanupInstanceQuestTimers(int instanceId) {
-		cleanupTimers(key -> {
-			ManagedQuestTimer timer = questTimers.get(key);
-			return timer != null && timer.instanceId == instanceId;
-		});
+		QuestTimers.cleanupInstanceQuestTimers(instanceId);
 	}
 
+	/**
+	 * 清空全部任务计时器。
+	 * Clears every quest timer.
+	 */
 	public static void cleanupAllQuestTimers() {
-		cleanupTimers(key -> true);
+		QuestTimers.cleanupAllQuestTimers();
 	}
 
+	/**
+	 * 判断某玩家的某任务是否已有计时器在跑。
+	 * Reports whether a player has a running timer for a quest.
+	 *
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param questId 任务 ID / quest id
+	 * @return 是否有计时器 / whether any timer is registered
+	 */
 	static boolean hasQuestTimers(int playerId, int questId) {
-		return questTimers.keySet().stream().anyMatch(key -> key.playerId == playerId && key.questId == questId);
+		return QuestTimers.hasQuestTimers(playerId, questId);
 	}
-
-	private static Player requireTimerArguments(QuestEnv env, int seconds, QuestTimerPolicy policy) {
-		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
-			throw new IllegalArgumentException("timer requires a player and positive questId");
-		}
-		if (seconds <= 0) {
-			throw new IllegalArgumentException("timer seconds must be positive");
-		}
-		if (policy == null) {
-			throw new NullPointerException("policy");
-		}
-		return env.getPlayer();
-	}
-
-	private static TimerStartOutcome startManagedTimer(Player player, int questId, int seconds, QuestTimerPolicy policy,
-			boolean visible, IntConsumer callback) {
-		return startManagedTimer(player, questId, seconds, policy, visible, callback,
-			(task, delayMillis) -> GameThreadPoolServices.threadPoolManager().schedule(task, delayMillis));
-	}
-
-	static TimerStartOutcome startManagedTimer(Player player, int questId, int seconds, QuestTimerPolicy policy,
-			boolean visible, IntConsumer callback, QuestTimerScheduler scheduler) {
-		if (player == null || questId <= 0 || seconds <= 0) {
-			throw new IllegalArgumentException("managed timer requires a player, positive questId, and positive seconds");
-		}
-		if (policy == null || callback == null || scheduler == null) {
-			throw new NullPointerException("managed timer policy, callback, and scheduler are required");
-		}
-		QuestTimerKey key = new QuestTimerKey(player.getObjectId(), questId, policy.identity());
-		synchronized (questTimerLock) {
-			ManagedQuestTimer existing = questTimers.get(key);
-			if (existing != null) {
-				switch (policy.overwritePolicy()) {
-					case KEEP_EXISTING -> {
-						return TimerStartOutcome.KEPT_EXISTING;
-					}
-					case FAIL_IF_RUNNING -> throw new IllegalStateException(
-						"quest timer is already running: " + policy.identity().timerId());
-					case REPLACE -> existing.cancel();
-				}
-			}
-			ManagedQuestTimer timer = new ManagedQuestTimer(policy, player.getInstanceId(), visible);
-			Future<?> future = scheduler.schedule(() -> {
-				boolean deliver;
-				synchronized (questTimerLock) {
-					deliver = questTimers.remove(key, timer);
-				}
-				if (deliver) {
-					callback.accept(questId);
-				}
-			}, seconds * 1000L);
-			timer.future = future;
-			questTimers.put(key, timer);
-			return TimerStartOutcome.STARTED;
-		}
-	}
-
-	enum TimerStartOutcome {
-		STARTED,
-		KEPT_EXISTING
-	}
-
-	@FunctionalInterface
-	interface QuestTimerScheduler {
-		Future<?> schedule(Runnable task, long delayMillis);
-	}
-
-	private static ManagedQuestTimer cancelManagedTimer(int playerId, int questId,
-			QuestTimerPolicy.Identity identity) {
-		QuestTimerKey key = new QuestTimerKey(playerId, questId, identity);
-		synchronized (questTimerLock) {
-			ManagedQuestTimer timer = questTimers.remove(key);
-			if (timer != null) {
-				timer.cancel();
-			}
-			return timer;
-		}
-	}
-
-	private static void cleanupTimers(java.util.function.Predicate<QuestTimerKey> predicate) {
-		synchronized (questTimerLock) {
-			questTimers.entrySet().removeIf(entry -> {
-				boolean match = predicate.test(entry.getKey());
-				if (match) {
-					entry.getValue().cancel();
-				}
-				return match;
-			});
-		}
-	}
-
-	private record QuestTimerKey(int playerId, int questId, QuestTimerPolicy.Identity identity) {
-	}
-
-	private static final class ManagedQuestTimer {
-		private final QuestTimerPolicy policy;
-		private final int instanceId;
-		private final boolean visible;
-		private volatile Future<?> future;
-
-		private ManagedQuestTimer(QuestTimerPolicy policy, int instanceId, boolean visible) {
-			this.policy = policy;
-			this.instanceId = instanceId;
-			this.visible = visible;
-		}
-
-		private void cancel() {
-			Future<?> task = future;
-			if (task != null) {
-				task.cancel(false);
-			}
-		}
-	}
-
 	/**
 	 * 放弃任务并清理相关状态。
 	 * Abandons a quest and cleans related state.

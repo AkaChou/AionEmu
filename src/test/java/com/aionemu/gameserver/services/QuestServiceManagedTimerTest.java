@@ -39,17 +39,17 @@ class QuestServiceManagedTimerTest {
 		QuestTimerPolicy keep = policy("policy", QuestTimerPolicy.OverwritePolicy.KEEP_EXISTING);
 		QuestTimerPolicy fail = policy("policy", QuestTimerPolicy.OverwritePolicy.FAIL_IF_RUNNING);
 
-		assertEquals(QuestService.TimerStartOutcome.STARTED,
+		assertEquals(QuestTimers.TimerStartOutcome.STARTED,
 			start(player, 1001, replace, scheduler, ignored -> { }));
 		RecordingFuture original = scheduler.futures.get(0);
-		assertEquals(QuestService.TimerStartOutcome.KEPT_EXISTING,
+		assertEquals(QuestTimers.TimerStartOutcome.KEPT_EXISTING,
 			start(player, 1001, keep, scheduler, ignored -> { }));
 		assertEquals(1, scheduler.tasks.size());
 		assertFalse(original.cancelled);
 		assertThrows(IllegalStateException.class,
 			() -> start(player, 1001, fail, scheduler, ignored -> { }));
 
-		assertEquals(QuestService.TimerStartOutcome.STARTED,
+		assertEquals(QuestTimers.TimerStartOutcome.STARTED,
 			start(player, 1001, replace, scheduler, ignored -> { }));
 		assertTrue(original.cancelled);
 		assertEquals(2, scheduler.tasks.size());
@@ -125,9 +125,9 @@ class QuestServiceManagedTimerTest {
 		assertFalse(QuestService.hasQuestTimers(PLAYER_TWO, 1002));
 	}
 
-	private static QuestService.TimerStartOutcome start(Player player, int questId, QuestTimerPolicy policy,
+	private static QuestTimers.TimerStartOutcome start(Player player, int questId, QuestTimerPolicy policy,
 			RecordingScheduler scheduler, java.util.function.IntConsumer callback) {
-		return QuestService.startManagedTimer(player, questId, 30, policy, false, callback, scheduler);
+		return QuestTimers.startManagedTimer(player, questId, 30, policy, false, callback, scheduler);
 	}
 
 	private static QuestTimerPolicy policy(String timerId, QuestTimerPolicy.OverwritePolicy overwritePolicy) {
@@ -148,7 +148,7 @@ class QuestServiceManagedTimerTest {
 		return player;
 	}
 
-	private static final class RecordingScheduler implements QuestService.QuestTimerScheduler {
+	private static final class RecordingScheduler implements QuestTimers.QuestTimerScheduler {
 		private final List<Runnable> tasks = new ArrayList<>();
 		private final List<RecordingFuture> futures = new ArrayList<>();
 
