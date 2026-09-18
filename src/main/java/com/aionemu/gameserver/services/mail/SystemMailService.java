@@ -34,7 +34,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
@@ -200,7 +199,7 @@ public class SystemMailService {
 			recipientMailbox.isMailListUpdateRequired = true;
 			if (recipientMailbox.mailBoxState != 0) {
 				boolean isPostman = (recipientMailbox.mailBoxState
-						& PlayerMailboxState.EXPRESS) == PlayerMailboxState.EXPRESS;
+						& MailboxState.EXPRESS) == MailboxState.EXPRESS;
 				PacketSendUtility.sendPacket(recipient,
 						new SM_MAIL_SERVICE(recipient, recipientMailbox.getLetters(), isPostman));
 			}

@@ -1,10 +1,10 @@
-package com.aionemu.gameserver.services.player;
+package com.aionemu.gameserver.services.mail;
 
 /**
- * 玩家邮箱状态常量，定义邮箱打开/关闭等状态位。
- * Player mailbox state constants defining open/closed mailbox flags.
+ * 邮箱状态常量，定义邮箱打开/关闭等状态位。
+ * Mailbox state constants defining open/closed mailbox flags.
  */
-public class PlayerMailboxState {
+public class MailboxState {
 	/** 关闭 / Closed */
 	public static final byte CLOSED = 0;
 	/** 普通邮箱 / Regular mailbox */

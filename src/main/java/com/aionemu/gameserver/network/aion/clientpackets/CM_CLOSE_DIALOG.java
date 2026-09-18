@@ -11,7 +11,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HEADING_UPDATE;
 import com.aionemu.gameserver.services.DialogService;
-import com.aionemu.gameserver.services.player.PlayerMailboxState;
+import com.aionemu.gameserver.services.mail.MailboxState;
 
 /**
  * 关闭与 NPC 对话或邮箱界面的客户端包。
@@ -60,8 +60,8 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 			}, 1200);
 		}
 		var mailbox = player.getMailbox();
-		if (mailbox != null && mailbox.mailBoxState != PlayerMailboxState.CLOSED) {
-			mailbox.mailBoxState = PlayerMailboxState.CLOSED;
+		if (mailbox != null && mailbox.mailBoxState != MailboxState.CLOSED) {
+			mailbox.mailBoxState = MailboxState.CLOSED;
 		}
 	}
 }

@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.player.PlayerMailboxState;
+import com.aionemu.gameserver.services.mail.MailboxState;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -63,10 +63,10 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 			AionObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
 			if (object != null && object instanceof Npc znpc) {
 				if (znpc.getNpcId() == 798100 || znpc.getNpcId() == 798101) {
-					player.getMailbox().mailBoxState = PlayerMailboxState.EXPRESS;
+					player.getMailbox().mailBoxState = MailboxState.EXPRESS;
 					writeH(2);
 				} else {
-					player.getMailbox().mailBoxState = PlayerMailboxState.REGULAR;
+					player.getMailbox().mailBoxState = MailboxState.REGULAR;
 				}
 			} else {
 				writeH(0);

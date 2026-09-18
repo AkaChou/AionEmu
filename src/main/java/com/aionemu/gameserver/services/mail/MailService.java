@@ -49,7 +49,6 @@ import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -316,7 +315,7 @@ public class MailService {
 			// 若收件人已打开邮件列表则应更新 / if recipient have opened mail list we should update it
 			if (recipientMailbox.mailBoxState != 0) {
 				boolean isPostman = (recipientMailbox.mailBoxState
-						& PlayerMailboxState.EXPRESS) == PlayerMailboxState.EXPRESS;
+						& MailboxState.EXPRESS) == MailboxState.EXPRESS;
 				PacketSendUtility.sendPacket(recipient,
 						new SM_MAIL_SERVICE(recipient, recipientMailbox.getLetters(), isPostman));
 			}
