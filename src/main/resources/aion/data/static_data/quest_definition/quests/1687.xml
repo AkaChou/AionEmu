@@ -9,23 +9,33 @@
       <item id="186000035" count="2"/>
       <item id="186000036" count="5"/>
     </items>
-    <rewards>
-      <reward kind="EXP" id="0" amount="3189900"/>
-      <reward kind="AP" id="0" amount="200"/>
-      <reward kind="SELECTABLE_ITEM" id="111100788" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111300792" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111500775" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111600767" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112100747" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112300744" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112500732" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112600743" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112301411" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114100825" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114300851" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114500797" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114600754" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3189900"/>
+        <reward kind="AP" id="0" amount="200"/>
+        <reward kind="SELECTABLE_ITEM" id="111100788" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111300792" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111500775" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111600767" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="3189900"/>
+        <reward kind="AP" id="0" amount="200"/>
+        <reward kind="SELECTABLE_ITEM" id="112100747" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112300744" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112500732" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112600743" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112301411" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="3189900"/>
+        <reward kind="AP" id="0" amount="200"/>
+        <reward kind="SELECTABLE_ITEM" id="114100825" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114300851" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114500797" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114600754" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -37,8 +47,14 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="reward1" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward3" status="REWARD">
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -46,21 +62,27 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="204601" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204601" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204601" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="204601" source="started" target="reward1" page="SELECT2"/>
+    <npc-complete npc-id="204601" source="reward1" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="204601" source="reward2" target="complete" fixed-reward-indices="0 1" complete-reward-index="1" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
-      <choice action="SELECTED_QUEST_REWARD6" reward-index="7"/>
-      <choice action="SELECTED_QUEST_REWARD7" reward-index="8"/>
-      <choice action="SELECTED_QUEST_REWARD8" reward-index="9"/>
-      <choice action="SELECTED_QUEST_REWARD9" reward-index="10"/>
-      <choice action="SELECTED_QUEST_REWARD10" reward-index="11"/>
-      <choice action="SELECTED_QUEST_REWARD11" reward-index="12"/>
-      <choice action="SELECTED_QUEST_REWARD12" reward-index="13"/>
-      <choice action="SELECTED_QUEST_REWARD13" reward-index="14"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="204601" source="reward3" target="complete" fixed-reward-indices="0 1" complete-reward-index="2" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">
@@ -87,7 +109,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_3"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="reward1" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204601" action="SETPRO10"/>
       </event>
@@ -104,7 +126,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="reward2" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204601" action="SETPRO20"/>
       </event>
@@ -121,7 +143,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="reward3" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204601" action="SETPRO30"/>
       </event>

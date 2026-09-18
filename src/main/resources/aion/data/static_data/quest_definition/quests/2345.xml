@@ -14,15 +14,15 @@
     <reward-groups>
       <group>
         <reward kind="GOLD" id="0" amount="18370"/>
-      <reward kind="EXP" id="0" amount="413113"/>
-        <reward kind="ITEM" id="160000011" amount="15"/>
-        <reward kind="ITEM" id="186000008" amount="1"/>
+        <reward kind="EXP" id="0" amount="413113"/>
+        <reward kind="ITEM" id="186000008" amount="6"/>
+        <reward kind="ITEM" id="162000048" amount="6"/>
       </group>
       <group>
-        <reward kind="GOLD" id="0" amount="6000"/>
-        <reward kind="EXP" id="0" amount="285000"/>
-        <reward kind="ITEM" id="160000009" amount="15"/>
-        <reward kind="ITEM" id="186000008" amount="1"/>
+        <reward kind="GOLD" id="0" amount="18370"/>
+        <reward kind="EXP" id="0" amount="413113"/>
+        <reward kind="ITEM" id="186000008" amount="6"/>
+        <reward kind="ITEM" id="162000048" amount="6"/>
       </group>
     </reward-groups>
     <drops>

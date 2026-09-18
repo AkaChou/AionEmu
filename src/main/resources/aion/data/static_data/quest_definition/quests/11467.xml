@@ -5,11 +5,23 @@
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="20" cooldown-seconds="0" daily="false" weekly="false"/>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="25400"/>
-      <reward kind="EXP" id="0" amount="3663347"/>
-      <reward kind="ITEM" id="186000018" amount="6"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25400"/>
+        <reward kind="EXP" id="0" amount="3663347"/>
+        <reward kind="ITEM" id="186000018" amount="6"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="25400"/>
+        <reward kind="EXP" id="0" amount="3663347"/>
+        <reward kind="ITEM" id="186000018" amount="3"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="25400"/>
+        <reward kind="EXP" id="0" amount="3663347"/>
+        <reward kind="ITEM" id="186000018" amount="2"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>

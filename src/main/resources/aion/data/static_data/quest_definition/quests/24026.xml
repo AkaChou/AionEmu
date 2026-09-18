@@ -26,18 +26,31 @@
       <quest id="24024"/>
       <quest id="24025"/>
     </prerequisites>
-    <rewards>
-      <reward kind="EXP" id="0" amount="3504765"/>
-      <reward kind="TITLE" id="60" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114101704" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114301833" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114301835" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114501742" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114501744" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114601583" amount="1"/>
-      <reward kind="ITEM" id="186000008" amount="20"/>
-      <reward kind="ITEM" id="190200000" amount="10"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3504765"/>
+        <reward kind="TITLE" id="60" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114101704" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114301833" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114301835" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114501742" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114501744" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114601583" amount="1"/>
+        <reward kind="ITEM" id="186000008" amount="20"/>
+        <reward kind="ITEM" id="190200000" amount="10"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="3504765"/>
+        <reward kind="TITLE" id="60" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114101704" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114301833" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114301835" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114501742" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114501744" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114601583" amount="1"/>
+        <reward kind="ITEM" id="186000008" amount="20"/>
+      </group>
+    </reward-groups>
     <start-conditions>
       <condition type="unfinished" quest-id="2041"/>
       <condition type="noacquired" quest-id="2041"/>

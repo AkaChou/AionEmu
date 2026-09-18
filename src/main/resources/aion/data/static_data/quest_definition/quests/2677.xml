@@ -13,21 +13,29 @@
       <item id="186000035" count="2"/>
       <item id="186000036" count="10"/>
     </items>
-    <rewards>
-      <reward kind="EXP" id="0" amount="2352448"/>
-      <reward kind="SELECTABLE_ITEM" id="111100789" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111300793" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111500776" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="111600768" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112100748" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112300745" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112500733" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="112600744" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114100826" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114300852" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114500798" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="114600755" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2352448"/>
+        <reward kind="SELECTABLE_ITEM" id="111100789" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111300793" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111500776" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="111600768" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="2352448"/>
+        <reward kind="SELECTABLE_ITEM" id="112100748" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112300745" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112500733" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="112600744" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="2352448"/>
+        <reward kind="SELECTABLE_ITEM" id="114100826" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114300852" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114500798" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="114600755" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

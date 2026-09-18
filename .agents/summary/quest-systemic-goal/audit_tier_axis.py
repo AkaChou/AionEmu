@@ -30,6 +30,13 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tier-axis-audit.
 
 NUMERIC_FIELDS = ["reward_exp", "reward_gold", "reward_abyss_point", "reward_glory_point"]
 
+AP_RELIC_EXCEPTION_QIDS = {
+    "11279", "11280", "11281", "11282", "11283", "11284", "11285", "11286",
+    "21281", "21282", "21283", "21284", "21285", "21286", "21287", "21288",
+    "18849", "18850", "28849", "28850",
+}
+
+
 
 def build_item_map():
     mapping = {}
@@ -175,7 +182,17 @@ def main():
             if unmapped:
                 note(f"TIER{t}_UNMAPPED", qid, "names unmappable")
                 continue
+            if qid in AP_RELIC_EXCEPTION_QIDS:
+                # 遗物兑换 20 条：服务端 4 倍 AP 特殊倍率组，平铺 grant-selected-reward（intentional 例外）
+                continue
             if (t - 1) >= len(groups):
+                # 若真端该档与档位 1 完全相同（5.8 统一成长箱/数值道具机械复制），生产单组表达完全等价
+                if 1 in retail_tiers:
+                    num1, items1, _ = retail_tiers[1]
+                    norm_num = {k: v for k, v in numeric.items() if v != 0}
+                    norm_num1 = {k: v for k, v in num1.items() if v != 0}
+                    if norm_num == norm_num1 and items == items1:
+                        continue
                 note(f"TIER{t}_MISSING_PROD", qid,
                      f"prod_groups={len(groups)} retail_numeric={numeric} items={items}")
                 continue
