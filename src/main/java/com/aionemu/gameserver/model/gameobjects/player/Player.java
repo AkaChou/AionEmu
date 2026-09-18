@@ -97,7 +97,6 @@ import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.model.templates.ride.RideInfo;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamPath;
-import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
@@ -123,7 +122,6 @@ import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.rates.RegularRates;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
-import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.LinkedHashMap;
 import lombok.Getter;
@@ -1056,7 +1054,7 @@ public class Player extends Creature {
 		if (enemy.isBandit() || this.isBandit()) {
 			return true;
 		}
-		return canPvP(enemy) || this.getController().isDueling(enemy);
+		return PlayerPvpRules.canPvP(this, enemy) || this.getController().isDueling(enemy);
 	}
 
 	public boolean isAggroIconTo(Player player) {
@@ -1067,69 +1065,6 @@ public class Player extends Creature {
 			return true;
 		}
 		return !player.getRace().equals(getRace()) || player.getBattleground() != null || GameFeatureServices.ffaService().isInArena(player) && player.isFFA() || player.isBandit();
-	}
-
-	private boolean canPvP(Player enemy) {
-		int worldId = enemy.getWorldId();
-		if (!enemy.getRace().equals(getRace())) {
-			if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).isPvpAllowed()) {
-				return (!this.isInDisablePvPZone() && !enemy.isInDisablePvPZone());
-			} else {
-				return (this.isInPvPZone() && enemy.isInPvPZone());
-			}
-		} else {
-			if (worldId != 210020000 && // Elten.
-					worldId != 210040000 && // Heiron.
-					worldId != 210060000 && // Theobomos.
-					worldId != 210070000 && // Cygnea.
-					worldId != 210100000 && // Iluma.
-					worldId != 210050000 && // Inggison.
-					worldId != 220020000 && // Morheim.
-					worldId != 220040000 && // Beluslan.
-					worldId != 220050000 && // Brusthonin.
-					worldId != 220080000 && // Enshar.
-					worldId != 220110000 && // Norsvold.
-					worldId != 220070000 && // Gelkmaros.
-					worldId != 220140000 && // Gelkmaros [Master Server].
-					// \\//\\//\\//\\//\\//
-					worldId != 400010000 && // Reshanta.
-					// \\//帕内斯特拉//\\// / \\//Panesterra//\\//
-					worldId != 400020000 && // 贝洛斯 / Belus.
-					worldId != 400040000 && // Aspida.
-					worldId != 400050000 && // Atanatos.
-					worldId != 400060000 && // Disillon.
-					// \\//\\//\\//\\//\\//
-					worldId != 600040000 && // Tiamaranta's Eye.
-					worldId != 600041000 && // Tiamaranta's Eye [Master Server].
-					worldId != 600050000 && // Katalam.
-					worldId != 600090000 && // Kaldor.
-					worldId != 600100000 && // Levinshor.
-					worldId != 600010000 && // Silentera Canyon.
-					worldId != 600110000) { // Silentera Canyon [Master Server].
-				return (this.isInsideZoneType(ZoneType.PVP) && enemy.isInsideZoneType(ZoneType.PVP) && !isInSameTeam(enemy));
-			}
-		}
-		return false;
-	}
-
-	private boolean isInDisablePvPZone() {
-		List<ZoneInstance> zones = this.getPosition().getMapRegion().getZones(this);
-		for (ZoneInstance zone : zones) {
-			if (!zone.isPvpAllowed()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isInPvPZone() {
-		List<ZoneInstance> zones = this.getPosition().getMapRegion().getZones(this);
-		for (ZoneInstance zone : zones) {
-			if (!zone.isPvpAllowed()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public boolean isInSameTeam(Player player) {
