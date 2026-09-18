@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import lombok.AllArgsConstructor;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -295,10 +296,10 @@ public class RiftService {
 		 */
 		@Override
 		public void run() {
-			Map<Integer, RiftLocation> locations = RiftService.getInstance().getRiftLocations();
+			Map<Integer, RiftLocation> locations = GameLocationBootstrapServices.riftService().getRiftLocations();
 			for (final RiftLocation loc : locations.values()) {
 				if (loc.getWorldId() == worldId) {
-					RiftService.getInstance().openRifts(loc);
+					GameLocationBootstrapServices.riftService().openRifts(loc);
 				}
 			}
 			RiftInformer.sendRiftsInfo(worldId);

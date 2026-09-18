@@ -2,8 +2,8 @@ package com.aionemu.gameserver.services;
 
 import lombok.AllArgsConstructor;
 
-
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -293,10 +293,10 @@ public class InstanceRiftService {
 		 */
 		@Override
 		public void run() {
-			Map<Integer, InstanceRiftLocation> locations = InstanceRiftService.getInstance().getInstanceRiftLocations();
+			Map<Integer, InstanceRiftLocation> locations = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations();
 			for (InstanceRiftLocation loc : locations.values()) {
 				if (loc.getId() == id) {
-					InstanceRiftService.getInstance().startInstanceRift(loc.getId());
+					GameLocationBootstrapServices.instanceRiftService().startInstanceRift(loc.getId());
 				}
 			}
 		}
