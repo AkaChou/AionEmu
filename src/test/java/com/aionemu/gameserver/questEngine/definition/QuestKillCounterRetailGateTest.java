@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -28,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestKillCounterRetailGateTest {
 	private static final String CONTRACT_RESOURCE = "/quest/quest-kill-counter-retail-contract.tsv";
-	private static final String OVERKILL_RESOURCE = "/quest/quest-kill-counter-overkill-pending.tsv";
 	/** 合同快照规模：低于该值说明基线被误删或生成脚本漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 414;
 
@@ -49,7 +47,6 @@ class QuestKillCounterRetailGateTest {
 	void singleCounterQuestsRequireExactlyTheClientGate() {
 		QuestCatalog catalog = catalog();
 		Map<Integer, Integer> contract = readings(CONTRACT_RESOURCE, "quest_id", "required_kills");
-		Map<Integer, Integer> overkill = readings(OVERKILL_RESOURCE, "quest_id", "engine_required");
 		for (Map.Entry<Integer, Integer> entry : contract.entrySet()) {
 			int questId = entry.getKey();
 			int gate = entry.getValue();
@@ -59,37 +56,9 @@ class QuestKillCounterRetailGateTest {
 			assertEquals(1, counters.size(),
 				"quest " + questId + " is in the single-counter contract but uses " + counters);
 			int required = QuestKillCounterSimulator.requiredKills(compiled);
-			if (overkill.containsKey(questId)) {
-				assertEquals(gate + 1, required,
-					"quest " + questId + " is ledgered as engine-required gate+1");
-				assertEquals(required, overkill.get(questId),
-					"quest " + questId + " ledger engine_required is stale");
-			} else {
-				assertEquals(gate, required,
-					"quest " + questId + " must require exactly the client kill gate");
-			}
+			assertEquals(gate, required,
+				"quest " + questId + " must require exactly the client kill gate");
 		}
-	}
-
-	@Test
-	void overkillLedgerIsExactAndSelfClearing() {
-		QuestCatalog catalog = catalog();
-		Map<Integer, Integer> contract = readings(CONTRACT_RESOURCE, "quest_id", "required_kills");
-		Map<Integer, Integer> overkill = readings(OVERKILL_RESOURCE, "quest_id", "engine_required");
-		assertFalse(overkill.isEmpty(),
-			"all single-counter quests now match the client gate: delete the pending ledger and fold the "
-				+ "task into the contract");
-		Set<Integer> derived = new LinkedHashSet<>();
-		for (Map.Entry<Integer, Integer> entry : contract.entrySet()) {
-			CompiledQuestDefinition compiled = catalog.findExecutable(entry.getKey()).orElseThrow();
-			if (QuestKillCounterSimulator.requiredKills(compiled) == entry.getValue() + 1) {
-				derived.add(entry.getKey());
-			}
-		}
-		assertEquals(derived, overkill.keySet(),
-			"the engine-required gate+1 ledger must list exactly the quests the simulator reports");
-		assertTrue(overkill.keySet().stream().allMatch(contract::containsKey),
-			"ledger entries must also exist in the contract snapshot");
 	}
 
 	/**

@@ -130,3 +130,43 @@
 |---|---|---|
 | 新门禁（隔离 worktree，含工作区新文件） | `mvn -o test -Dtest='QuestKillCounterRetailGateTest'` | 5/5 通过 |
 | 守卫脚本历史自检 | `check_quest_xml_block_attributes.py --base 3b4e7fc4c^ --head 3b4e7fc4c` | 精确报出 3 处属性丢失 |
+
+---
+
+## 追加（b→a）：34 个“引擎多要一只”任务的处理
+
+### b) 真端判定（静态证据链已成立）
+
+1. **同族 canonical 对照**（最直接）：45058/45060-45064（待裁）与 **45059/45065（canonical）同族、同报告 NPC 804931、同客户端门控 10**：
+   - 45059：`below 9` → `at-least 9` → `set var1=10`，XML 注释“第 **10** 次击杀达成”；
+   - 45058：`below 10` → `at-least 10` → `set var1=11`，XML 注释“第 **11** 次击杀达成”。
+2. **客户端数据**：`quest_monster.csv` 只给 `SECTION_1<10`；`data_driven_quest.xml` 的 `value0_progress_` 同为 10。
+3. **计数口径**：var1 位于 quest_vars 的 6..11 位（= 客户端 SECTION_1），无偏移；据此在 10 杀时客户端门控 `<10` 已为假（客户端判定该狩猎步骤完成），而服务端仍要求第 11 次击杀 → 玩家“多杀一只”。
+4. 门禁模拟器（真实 planner）与上述一致：全库仅这 34 个 `gate+1`，其余 514 个同形态任务都是正好 N 杀。
+
+结论：这 34 个是**服务端计数漂移**，不是客户端计数偏移。仍保留 `.agents/summary/quest-acceptance/2026-09-18-kill-counter-and-repeat-dialog-pending-client.md` 的实机点验步骤作为最终确认。
+
+### a) 批量修正（34 个任务）
+
+按同族 canonical 形态逐条对齐（脚本带严格形态断言，遇到未预期 var1 引用即失败）：
+
+| 项 | 修正前 | 修正后 |
+|---|---|---|
+| bit-field `var1` max | N+1 | N |
+| 累加门槛 `variable-below` | N | N-1 |
+| 收口门槛 `variable-at-least` | N | N-1 |
+| 收口 `set-variable var1` | N+1 | N |
+| reward 节点投影 `var1` | N+1 | N |
+| 满计数恢复路线 `variable-at-least`（2 条/NPC） | N+1 | N |
+| 注释 | “击杀 0..N-1”“第 N+1 次击杀达成” | “击杀 0..N-2”“第 N 次击杀达成” |
+
+任务清单：13955、23955、35052、35058-35065、36532-36536、45052、45058、45060-45064、46531、46535、46536、46539-46548。
+
+### 验证（隔离 worktree，工作区改动叠加在 `f3d80479d` 之上）
+
+| 范围 | 结果 |
+|---|---|
+| `QuestKillCounterRetailGateTest` | 4/4 通过 → 414 个单计数器任务**全部**正好等于客户端门控 |
+| `com.aionemu.gameserver.questEngine.**.*Test` | 1444 run / 0 failures / 0 errors / 1 skipped |
+
+门禁的待裁账本 `quest-kill-counter-overkill-pending.tsv` 已清空删除，门禁改为无条件断言“完成所需击杀数 == 客户端门控”。
