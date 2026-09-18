@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -43,7 +44,7 @@ class PathDataTest {
 		}
 		String oldGeo = System.getProperty("aion.game.geo.dir");
 		String oldCache = System.getProperty("aion.game.cache.dir");
-		boolean oldEnabled = GeoDataConfig.GEO_PATH_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_ENABLE");
 		try {
 			System.setProperty("aion.game.geo.dir", directory.resolve("geo").toString());
 			System.setProperty("aion.game.cache.dir", cache.toString());
@@ -55,7 +56,7 @@ class PathDataTest {
 		} finally {
 			restore("aion.game.geo.dir", oldGeo);
 			restore("aion.game.cache.dir", oldCache);
-			GeoDataConfig.GEO_PATH_ENABLE = oldEnabled;
+			snapshot.restore();
 		}
 	}
 
@@ -71,7 +72,7 @@ class PathDataTest {
 		}
 		String oldGeo = System.getProperty("aion.game.geo.dir");
 		String oldCache = System.getProperty("aion.game.cache.dir");
-		boolean oldEnabled = GeoDataConfig.GEO_PATH_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_ENABLE");
 		try {
 			System.setProperty("aion.game.geo.dir", directory.resolve("geo").toString());
 			System.setProperty("aion.game.cache.dir", cache.toString());
@@ -84,7 +85,7 @@ class PathDataTest {
 		} finally {
 			restore("aion.game.geo.dir", oldGeo);
 			restore("aion.game.cache.dir", oldCache);
-			GeoDataConfig.GEO_PATH_ENABLE = oldEnabled;
+			snapshot.restore();
 		}
 	}
 
@@ -96,7 +97,7 @@ class PathDataTest {
 		Files.write(geo.resolve("1.idx"), index(data, 137));
 		Files.writeString(geo.resolve("1.path.gz"), "not gzip");
 		String oldGeo = System.getProperty("aion.game.geo.dir");
-		boolean oldEnabled = GeoDataConfig.GEO_PATH_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_ENABLE");
 		try {
 			System.setProperty("aion.game.geo.dir", directory.resolve("geo").toString());
 			GeoDataConfig.GEO_PATH_ENABLE = true;
@@ -106,7 +107,7 @@ class PathDataTest {
 			assertFalse(paths.hasMap(1));
 		} finally {
 			restore("aion.game.geo.dir", oldGeo);
-			GeoDataConfig.GEO_PATH_ENABLE = oldEnabled;
+			snapshot.restore();
 		}
 	}
 
@@ -121,7 +122,7 @@ class PathDataTest {
 		}
 		String oldGeo = System.getProperty("aion.game.geo.dir");
 		String oldCache = System.getProperty("aion.game.cache.dir");
-		boolean oldEnabled = GeoDataConfig.GEO_PATH_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_ENABLE");
 		try {
 			System.setProperty("aion.game.geo.dir", directory.resolve("geo").toString());
 			System.setProperty("aion.game.cache.dir", directory.resolve("cache").toString());
@@ -138,7 +139,7 @@ class PathDataTest {
 			Thread.interrupted();
 			restore("aion.game.geo.dir", oldGeo);
 			restore("aion.game.cache.dir", oldCache);
-			GeoDataConfig.GEO_PATH_ENABLE = oldEnabled;
+			snapshot.restore();
 		}
 	}
 

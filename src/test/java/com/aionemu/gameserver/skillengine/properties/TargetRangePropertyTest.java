@@ -22,6 +22,7 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.KnownList;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class TargetRangePropertyTest {
 
@@ -42,7 +43,7 @@ class TargetRangePropertyTest {
 
 	@Test
 	void pointTargetSelectionIncludesCandidateCollisionRadius() {
-		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 		try {
 			GeoDataConfig.GEO_ENABLE = false;
 			TestCreature effector = new TestCreature(1);
@@ -58,13 +59,13 @@ class TargetRangePropertyTest {
 
 			assertTrue(skill.getEffectedList().contains(edgeTarget));
 		} finally {
-			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+			snapshot.restore();
 		}
 	}
 
 	@Test
 	void areaPointSkillSelectionIncludesCandidateCollisionRadius() {
-		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 		try {
 			GeoDataConfig.GEO_ENABLE = false;
 			TestCreature effector = new TestCreature(1);
@@ -82,7 +83,7 @@ class TargetRangePropertyTest {
 
 			assertTrue(skill.getEffectedList().contains(edgeTarget));
 		} finally {
-			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+			snapshot.restore();
 		}
 	}
 
@@ -107,7 +108,7 @@ class TargetRangePropertyTest {
 
 	@Test
 	void lightningBoltAreaUsesRetailLengthWidthAndAltitude() {
-		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 		try {
 			GeoDataConfig.GEO_ENABLE = false;
 			TestCreature effector = new TestCreature(1);
@@ -128,7 +129,7 @@ class TargetRangePropertyTest {
 			assertTrue(skill.getEffectedList().contains(leftTarget));
 			assertTrue(skill.getEffectedList().contains(rightTarget));
 		} finally {
-			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+			snapshot.restore();
 		}
 	}
 

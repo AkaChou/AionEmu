@@ -19,6 +19,7 @@ import org.springframework.core.env.StandardEnvironment;
 import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 
 /**
  * 单一权威验证：命令行/环境变量覆盖必须同时决定 Bean 绑定值与遗留静态字段值。
@@ -68,7 +69,7 @@ class LegacyConfigOverridePrecedenceTest {
 		ThreadConfig bound = new ThreadConfig();
 		Binder.get(environment).bind("gameserver.thread", Bindable.ofInstance(bound));
 
-		int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(ThreadConfig.class, "BASE_THREAD_POOL_SIZE");
 		try {
 			// 遗留侧组装：文件里是 7，但解析器给出 9，字段必须取 9。
 			// Legacy assembly: the file says 7, the resolver says 9, so the field must end up 9.
@@ -80,7 +81,7 @@ class LegacyConfigOverridePrecedenceTest {
 			assertEquals(bound.getBasepoolsize(), ThreadConfig.BASE_THREAD_POOL_SIZE,
 				"bean property and static field must not diverge");
 		} finally {
-			ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
+			snapshot.restore();
 		}
 	}
 
@@ -93,12 +94,12 @@ class LegacyConfigOverridePrecedenceTest {
 		ConfigSourceResolverHolder.publish(null);
 		assertNull(ConfigSourceResolverHolder.resolve("gameserver.thread.basepoolsize"));
 
-		int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(ThreadConfig.class, "BASE_THREAD_POOL_SIZE");
 		try {
 			ConfigurableProcessor.process(ThreadConfig.class, propertiesOf("gameserver.thread.basepoolsize", "5"));
 			assertEquals(5, ThreadConfig.BASE_THREAD_POOL_SIZE);
 		} finally {
-			ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
+			snapshot.restore();
 		}
 	}
 

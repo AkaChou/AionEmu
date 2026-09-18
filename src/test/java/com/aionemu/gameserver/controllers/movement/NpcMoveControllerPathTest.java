@@ -44,6 +44,7 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import com.aionemu.testutil.ConfigSnapshot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -430,7 +431,7 @@ class NpcMoveControllerPathTest {
 		Npc owner = movingNpc(startX, startY, startZ, observer);
 		NpcMoveController controller = new NpcMoveController(owner);
 		controller.lastMoveUpdate = System.currentTimeMillis() - 1_000;
-		boolean oldGeoEnable = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 		World oldWorld = setWorld(new ObjenesisStd().newInstance(PositionUpdatingWorld.class));
 
 		try {
@@ -446,7 +447,7 @@ class NpcMoveControllerPathTest {
 			assertEquals(startZ, floatField(packet, "_sZ"));
 			assertEquals(20, floatField(packet, "_tX"));
 		} finally {
-			GeoDataConfig.GEO_ENABLE = oldGeoEnable;
+			snapshot.restore();
 			setWorld(oldWorld);
 		}
 	}
@@ -772,8 +773,7 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void waypointReturnUsesTheSameGroundHeightCorrectionAsPatrol() throws ReflectiveOperationException {
-		boolean oldGeoEnable = GeoDataConfig.GEO_ENABLE;
-		boolean oldNpcMove = GeoDataConfig.GEO_NPC_MOVE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE", "GEO_NPC_MOVE");
 		Field resolvedGeoService = GameWorldServices.class.getDeclaredField("resolvedGeoService");
 		resolvedGeoService.setAccessible(true);
 		Object oldGeoService = resolvedGeoService.get(null);
@@ -798,8 +798,7 @@ class NpcMoveControllerPathTest {
 
 			assertEquals(102.5f, controller.getHomeReturnDestination().getZ());
 		} finally {
-			GeoDataConfig.GEO_ENABLE = oldGeoEnable;
-			GeoDataConfig.GEO_NPC_MOVE = oldNpcMove;
+			snapshot.restore();
 			resolvedGeoService.set(null, oldGeoService);
 		}
 	}

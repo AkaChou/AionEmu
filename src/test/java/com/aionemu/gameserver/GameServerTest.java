@@ -15,13 +15,14 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
 class GameServerTest {
 
 	@Test
 	void enhancedHomeReturnIsEnabledByDefaultAndCanBeDisabled() {
-		boolean original = AIConfig.ENHANCED_HOME_RETURN;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AIConfig.class, "ENHANCED_HOME_RETURN");
 		try {
 			ConfigurableProcessor.process(AIConfig.class, new Properties());
 			assertTrue(AIConfig.ENHANCED_HOME_RETURN);
@@ -31,7 +32,7 @@ class GameServerTest {
 			ConfigurableProcessor.process(AIConfig.class, properties);
 			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
 		} finally {
-			AIConfig.ENHANCED_HOME_RETURN = original;
+			snapshot.restore();
 		}
 	}
 

@@ -9,17 +9,15 @@ import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.commons.configuration.ConfigurableProcessor;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class InstanceConfigTest {
 
 	@Test
 	void bindsAndParsesInstanceProperties() throws Exception {
-		int cooldownRate = InstanceConfig.COOLDOWN_RATE;
-		int destroyDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
-		int soloDestroyDelay = InstanceConfig.SOLO_DESTROY_DELAY_SECONDS;
-		boolean scalingEnable = InstanceConfig.SCALING_ENABLE;
-		float hpFloor = InstanceConfig.SCALING_HP_FLOOR;
-		float dmgFloor = InstanceConfig.SCALING_DMG_FLOOR;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(InstanceConfig.class,
+			"COOLDOWN_RATE", "DESTROY_DELAY_SECONDS", "SOLO_DESTROY_DELAY_SECONDS",
+			"SCALING_ENABLE", "SCALING_HP_FLOOR", "SCALING_DMG_FLOOR");
 		String cooldownMaps = getPrivateString("cooldownExcludedMaps");
 		String scalingMaps = getPrivateString("scalingExcludedMaps");
 		Properties properties = new Properties();
@@ -46,12 +44,7 @@ class InstanceConfigTest {
 			assertEquals(0.6f, InstanceConfig.SCALING_DMG_FLOOR);
 			assertTrue(InstanceConfig.isScalingExcluded(300060000));
 		} finally {
-			InstanceConfig.COOLDOWN_RATE = cooldownRate;
-			InstanceConfig.DESTROY_DELAY_SECONDS = destroyDelay;
-			InstanceConfig.SOLO_DESTROY_DELAY_SECONDS = soloDestroyDelay;
-			InstanceConfig.SCALING_ENABLE = scalingEnable;
-			InstanceConfig.SCALING_HP_FLOOR = hpFloor;
-			InstanceConfig.SCALING_DMG_FLOOR = dmgFloor;
+			snapshot.restore();
 			setPrivateString("cooldownExcludedMaps", cooldownMaps);
 			setPrivateString("scalingExcludedMaps", scalingMaps);
 			InstanceConfig.refresh();

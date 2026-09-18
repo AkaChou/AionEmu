@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.aionemu.commons.configuration.Property;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
 class PlayerServiceCharacterDeletionTest {
@@ -31,7 +32,7 @@ class PlayerServiceCharacterDeletionTest {
 
 	@Test
 	void convertsConfiguredMinutesToDeletionDelay() {
-		int savedDelay = GSConfig.CHARACTER_DELETE_DELAY_MINUTES;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GSConfig.class, "CHARACTER_DELETE_DELAY_MINUTES");
 		try {
 			GSConfig.CHARACTER_DELETE_DELAY_MINUTES = 10;
 			assertEquals(TimeUnit.MINUTES.toMillis(10), PlayerService.getCharacterDeletionDelayMillis());
@@ -42,7 +43,7 @@ class PlayerServiceCharacterDeletionTest {
 			GSConfig.CHARACTER_DELETE_DELAY_MINUTES = -1;
 			assertEquals(0, PlayerService.getCharacterDeletionDelayMillis());
 		} finally {
-			GSConfig.CHARACTER_DELETE_DELAY_MINUTES = savedDelay;
+			snapshot.restore();
 		}
 	}
 }

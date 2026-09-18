@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,13 +55,13 @@ class PathServiceConcurrencyTest {
 
 	@Test
 	void givesLocationRequestsEnoughTimeWithoutDelayingTargetRequests() {
-		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		try {
 			GeoDataConfig.GEO_PATH_TIMEOUT_MS = 250;
 			assertEquals(250, PathService.requestTimeout(0));
 			assertEquals(1_000, PathService.requestTimeout(1));
 		} finally {
-			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+			snapshot.restore();
 		}
 	}
 
@@ -78,9 +79,9 @@ class PathServiceConcurrencyTest {
 
 	@Test
 	void returnsSlowRequestsWithoutBlockingTheCaller() throws Exception {
-		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
-		GeoDataConfig.GEO_PATH_TIMEOUT_MS = 1000;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		try {
+			GeoDataConfig.GEO_PATH_TIMEOUT_MS = 1000;
 			PathService service = new PathService();
 			long start = System.nanoTime();
 
@@ -93,7 +94,7 @@ class PathServiceConcurrencyTest {
 			assertFalse(result.isDone());
 			assertEquals(0, result.get(1, TimeUnit.SECONDS).length);
 		} finally {
-			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+			snapshot.restore();
 		}
 	}
 
@@ -143,7 +144,7 @@ class PathServiceConcurrencyTest {
 
 	@Test
 	void timeoutWhileQueuedRemainsTransient() throws Exception {
-		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		PathService service = new PathService();
 		CountDownLatch workersStarted = new CountDownLatch(workerCount(service));
 		CountDownLatch releaseWorkers = new CountDownLatch(1);
@@ -173,15 +174,15 @@ class PathServiceConcurrencyTest {
 		} finally {
 			releaseWorkers.countDown();
 			service.destroy();
-			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+			snapshot.restore();
 		}
 	}
 
 	@Test
 	void shutdownCompletesQueuedRequests() throws Exception {
-		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
-		GeoDataConfig.GEO_PATH_TIMEOUT_MS = 5000;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		try {
+			GeoDataConfig.GEO_PATH_TIMEOUT_MS = 5000;
 			PathService service = new PathService();
 			CountDownLatch workersStarted = new CountDownLatch(workerCount(service));
 			for (int i = 0; i < workerCount(service); i++) {
@@ -202,15 +203,15 @@ class PathServiceConcurrencyTest {
 
 			assertThrows(CancellationException.class, () -> queued.get(1, TimeUnit.SECONDS));
 		} finally {
-			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+			snapshot.restore();
 		}
 	}
 
 	@Test
 	void timesOutAndRecordsSlowRequests() throws Exception {
-		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
-		GeoDataConfig.GEO_PATH_TIMEOUT_MS = 10;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		try {
+			GeoDataConfig.GEO_PATH_TIMEOUT_MS = 10;
 			PathService service = new PathService();
 			float[][] result = service.execute(0, () -> {
 				TimeUnit.SECONDS.sleep(1);
@@ -221,7 +222,7 @@ class PathServiceConcurrencyTest {
 			assertEquals(1, service.metrics().submitted());
 			assertEquals(1, service.metrics().timedOut());
 		} finally {
-			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+			snapshot.restore();
 		}
 	}
 

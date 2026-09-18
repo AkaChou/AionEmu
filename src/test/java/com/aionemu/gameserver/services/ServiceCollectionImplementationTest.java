@@ -27,6 +27,7 @@ import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class ServiceCollectionImplementationTest {
 
@@ -44,12 +45,12 @@ class ServiceCollectionImplementationTest {
 	void utilityServicesUseJdkMaps() throws Exception {
 		assertHashMap(new ChatProcessor(), "commands");
 		assertHashMap(new ChatProcessor(), "accessLevel");
-		String announceLevels = AdminConfig.ANNOUNCE_LEVEL_LIST;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AdminConfig.class, "ANNOUNCE_LEVEL_LIST");
 		try {
 			AdminConfig.ANNOUNCE_LEVEL_LIST = "*";
 			assertHashMap(GMService.getInstance(), "gms");
 		} finally {
-			AdminConfig.ANNOUNCE_LEVEL_LIST = announceLevels;
+			snapshot.restore();
 		}
 	}
 

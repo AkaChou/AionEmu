@@ -17,6 +17,7 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.loginserver.configs.SvStatsConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
@@ -136,9 +137,9 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
             svstats.enable_svstats=true
             """);
 
-        int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
-        int savedExtra = ThreadConfig.EXTRA_THREAD_PER_CORE;
-        boolean savedSvStats = SvStatsConfig.SVSTATS_ENABLE;
+        ConfigSnapshot threadConfigSnapshot = ConfigSnapshot.of(ThreadConfig.class,
+            "BASE_THREAD_POOL_SIZE", "EXTRA_THREAD_PER_CORE");
+        ConfigSnapshot svStatsConfigSnapshot = ConfigSnapshot.of(SvStatsConfig.class, "SVSTATS_ENABLE");
         try {
             StandardEnvironment environment = new StandardEnvironment();
             environment.getPropertySources().addFirst(new MapPropertySource(
@@ -162,9 +163,8 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
             assertEquals(true, svStatsConfig.isEnableSvstats());
             assertEquals(true, SvStatsConfig.SVSTATS_ENABLE);
         } finally {
-            ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
-            ThreadConfig.EXTRA_THREAD_PER_CORE = savedExtra;
-            SvStatsConfig.SVSTATS_ENABLE = savedSvStats;
+            threadConfigSnapshot.restore();
+            svStatsConfigSnapshot.restore();
         }
     }
 

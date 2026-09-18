@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -18,7 +19,7 @@ class PacketFloodFilterTest {
 	@Test
 	void loadsRulesFromConfiguredGameConfigDirectory() throws IOException {
 		String oldConfigDir = System.getProperty("aion.config.dir");
-		boolean oldPffEnable = SecurityConfig.PFF_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SecurityConfig.class, "PFF_ENABLE");
 		try {
 			Path administrationDir = configDir.resolve("administration");
 			Files.createDirectories(administrationDir);
@@ -30,7 +31,7 @@ class PacketFloodFilterTest {
 
 			assertEquals(7, packetFloodFilter.getPackets()[1]);
 		} finally {
-			SecurityConfig.PFF_ENABLE = oldPffEnable;
+			snapshot.restore();
 			if (oldConfigDir == null) {
 				System.clearProperty("aion.config.dir");
 			} else {
@@ -42,7 +43,7 @@ class PacketFloodFilterTest {
 	@Test
 	void reloadsRulesAndKeepsPacketsAvailableWhenDisabled() throws IOException {
 		String oldConfigDir = System.getProperty("aion.config.dir");
-		boolean oldPffEnable = SecurityConfig.PFF_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SecurityConfig.class, "PFF_ENABLE");
 		try {
 			Path administrationDir = configDir.resolve("administration");
 			Files.createDirectories(administrationDir);
@@ -64,7 +65,7 @@ class PacketFloodFilterTest {
 			packetFloodFilter.reload();
 			assertEquals(0, packetFloodFilter.getPackets()[1]);
 		} finally {
-			SecurityConfig.PFF_ENABLE = oldPffEnable;
+			snapshot.restore();
 			if (oldConfigDir == null) {
 				System.clearProperty("aion.config.dir");
 			} else {

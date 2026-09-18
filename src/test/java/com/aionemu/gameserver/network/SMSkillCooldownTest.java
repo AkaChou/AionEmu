@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.model.skill.PlayerSkillList;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.testutil.ConfigSnapshot;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -47,16 +48,16 @@ class SMSkillCooldownTest {
 	@Test
 	void scalesLoginCooldownAnimation() throws Exception {
 		SkillData previousSkillData = DataManager.SKILL_DATA;
-		double previousMultiplier = SkillConfig.COOLDOWN_MULTIPLIER;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SkillConfig.class, "COOLDOWN_MULTIPLIER");
 		DataManager.SKILL_DATA = skillData(skillTemplate(1001, 10, 3000));
-		SkillConfig.COOLDOWN_MULTIPLIER = 0.01;
 		try {
+			SkillConfig.COOLDOWN_MULTIPLIER = 0.01;
 			ByteBuffer buffer = write(new SM_SKILL_COOLDOWN(playerWithSkills(1001), Map.of(10, System.currentTimeMillis() + 3_000), false));
 			buffer.position(9);
 
 			assertEquals(3_000, buffer.getInt());
 		} finally {
-			SkillConfig.COOLDOWN_MULTIPLIER = previousMultiplier;
+			snapshot.restore();
 			DataManager.SKILL_DATA = previousSkillData;
 		}
 	}

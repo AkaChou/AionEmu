@@ -7,6 +7,7 @@ import java.io.StringReader;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.configs.main.AIConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 
 import jakarta.xml.bind.JAXBContext;
 
@@ -14,7 +15,7 @@ class NpcTemplateAiTest {
 
 	@Test
 	void fearfulBeastOverrideFollowsSwitchAndTemplateConditions() throws Exception {
-		boolean previous = AIConfig.ENABLE_FEARFUL_BEAST_AI;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AIConfig.class, "ENABLE_FEARFUL_BEAST_AI");
 		try {
 			NpcTemplate beast = template("ATTACKABLE", 2, "BEAST", 9);
 			AIConfig.ENABLE_FEARFUL_BEAST_AI = false;
@@ -29,7 +30,7 @@ class NpcTemplateAiTest {
 			assertEquals("general", template("ATTACKABLE", 1, "BEAST", 10).getAi());
 			assertEquals("aggressive", template("ATTACKABLE", 1, "BEAST", 9, "aggressive").getAi());
 		} finally {
-			AIConfig.ENABLE_FEARFUL_BEAST_AI = previous;
+			snapshot.restore();
 		}
 	}
 

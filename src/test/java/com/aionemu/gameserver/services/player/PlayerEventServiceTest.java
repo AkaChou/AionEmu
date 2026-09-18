@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.lang.reflect.Field;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
 class PlayerEventServiceTest {
 
 	@Test
 	void disabledSubEventsDoNotCreateScheduledTasks() throws Exception {
-		boolean oldEventEnabled = EventsConfig.EVENT_ENABLED;
-		boolean oldAwakeEnabled = EventsConfig.ENABLE_AWAKE_EVENT;
-		boolean oldVipEnabled = EventsConfig.ENABLE_VIP_TICKETS;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EventsConfig.class,
+			"EVENT_ENABLED", "ENABLE_AWAKE_EVENT", "ENABLE_VIP_TICKETS");
 		try {
 			EventsConfig.EVENT_ENABLED = true;
 			EventsConfig.ENABLE_AWAKE_EVENT = false;
@@ -24,9 +24,7 @@ class PlayerEventServiceTest {
 			assertNull(task(service, "awakeTask"));
 			assertNull(task(service, "vipTask"));
 		} finally {
-			EventsConfig.EVENT_ENABLED = oldEventEnabled;
-			EventsConfig.ENABLE_AWAKE_EVENT = oldAwakeEnabled;
-			EventsConfig.ENABLE_VIP_TICKETS = oldVipEnabled;
+			snapshot.restore();
 		}
 	}
 

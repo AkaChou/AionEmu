@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.drop.DropModifiers;
 import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalRule;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class DropRegistrationServiceTest {
 	@Test
@@ -34,8 +35,8 @@ class DropRegistrationServiceTest {
 
 	@Test
 	void reductionHonorsGlobalMapAndLevelOneChestExemptions() {
-		boolean originalDisabled = DropConfig.DISABLE_DROP_REDUCTION;
-		String originalMaps = DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(DropConfig.class,
+			"DISABLE_DROP_REDUCTION", "DISABLE_DROP_REDUCTION_IN_ZONES");
 		try {
 			DropConfig.DISABLE_DROP_REDUCTION = false;
 			DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES = "0, 42,,";
@@ -48,8 +49,7 @@ class DropRegistrationServiceTest {
 			DropConfig.DISABLE_DROP_REDUCTION = true;
 			assertNull(service.getReductionDropRate(1, 20, 100, false));
 		} finally {
-			DropConfig.DISABLE_DROP_REDUCTION = originalDisabled;
-			DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES = originalMaps;
+			snapshot.restore();
 		}
 	}
 

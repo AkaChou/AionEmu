@@ -21,6 +21,7 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.DespawnableNode;
 import com.aionemu.gameserver.geoEngine.scene.DespawnableNode.DespawnableType;
 import com.aionemu.gameserver.world.geo.DummyGeoMap;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -83,14 +84,14 @@ class DespawnableGeoHookTest {
 	void missingDoorGeometryLogsOnlyForNonIgnorableDoors() {
 		Logger logger = (Logger) LoggerFactory.getLogger(GeoMap.class);
 		ListAppender<ILoggingEvent> appender = attachAppender(logger);
-		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 
 		try {
 			GeoDataConfig.GEO_ENABLE = true;
 			new GeoMap("300250000", 256).setDoorState(1, 78, true);
 			new GeoMap("300250000", 256).setDoorState(1, 999, true);
 		} finally {
-			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+			snapshot.restore();
 			detachAppender(logger, appender);
 		}
 
@@ -122,7 +123,7 @@ class DespawnableGeoHookTest {
 	void dummyGeoMapIgnoresDespawnableStateUpdates() {
 		Logger logger = (Logger) LoggerFactory.getLogger(GeoMap.class);
 		ListAppender<ILoggingEvent> appender = attachAppender(logger);
-		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 		DummyGeoMap map = new DummyGeoMap("300250000", 256);
 
 		try {
@@ -133,7 +134,7 @@ class DespawnableGeoHookTest {
 			map.updateTownToLevel(1, 5);
 			map.setHouseDoorState(1, 42, true);
 		} finally {
-			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+			snapshot.restore();
 			detachAppender(logger, appender);
 		}
 

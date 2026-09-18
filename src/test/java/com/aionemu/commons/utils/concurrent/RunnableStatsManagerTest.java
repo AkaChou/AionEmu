@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.aionemu.commons.configs.CommonsConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -16,7 +17,7 @@ class RunnableStatsManagerTest {
 
     @Test
     void disabledStatsAreNeitherCollectedNorDumped() throws ReflectiveOperationException, IOException {
-        boolean oldValue = CommonsConfig.RUNNABLESTATS_ENABLE;
+        ConfigSnapshot snapshot = ConfigSnapshot.of(CommonsConfig.class, "RUNNABLESTATS_ENABLE");
         long logsBefore = countMethodStatsLogs();
         try {
             CommonsConfig.RUNNABLESTATS_ENABLE = false;
@@ -28,7 +29,7 @@ class RunnableStatsManagerTest {
             assertFalse(classStats().containsKey(MethodOwner.class));
             assertEquals(logsBefore, countMethodStatsLogs());
         } finally {
-            CommonsConfig.RUNNABLESTATS_ENABLE = oldValue;
+            snapshot.restore();
         }
     }
 

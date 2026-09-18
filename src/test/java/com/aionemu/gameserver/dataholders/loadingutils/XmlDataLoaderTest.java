@@ -47,6 +47,7 @@ import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.testutil.ConfigSnapshot;
 import jakarta.xml.bind.annotation.XmlElement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -121,23 +122,23 @@ class XmlDataLoaderTest {
 	void loadSectionEntryCountsUsesDefaultsWhenEntryCountsAreDisabled() throws Exception {
 		byte[] staticData = "<not xml".getBytes(StandardCharsets.UTF_8);
 
-		boolean previous = GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
-		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GSConfig.class, "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE");
 		try {
+			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
 			Map<String, Integer> counts = new XmlDataLoader().loadSectionEntryCounts(staticData);
 
 			assertEquals(XmlDataLoader.staticDataSectionCount(), counts.size());
 		} finally {
-			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
+			snapshot.restore();
 		}
 	}
 
 	@Test
 	void consoleReporterOnlyPrintsElapsedTimeWhenEntryCountsAreDisabled() {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		boolean previous = GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
-		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GSConfig.class, "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE");
 		try {
+			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
 			StaticMessageSource messages = new StaticMessageSource();
 			messages.addMessage("console.static_data.loaded", Locale.ENGLISH, "Loaded static data in {0} ms");
 			I18n.setMessageSource(messages);
@@ -152,7 +153,7 @@ class XmlDataLoaderTest {
 			assertEquals("Loaded static data in 1234 ms%n".formatted(), output.toString());
 		} finally {
 			I18n.setMessageSource(null);
-			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
+			snapshot.restore();
 		}
 	}
 

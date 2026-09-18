@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
 class ScheduleHotReloadTest {
@@ -13,7 +14,7 @@ class ScheduleHotReloadTest {
 	@Test
 	void reloadReplacesRiftSchedulesAndSupportsDisableEnable() {
 		String oldConfigDir = System.getProperty("aion.config.dir");
-		boolean oldEnabled = CustomConfig.RIFT_ENABLED;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(CustomConfig.class, "RIFT_ENABLED");
 		try (ServiceContext.Scope ignored = ServiceContext.use("schedule-reload-test-" + System.nanoTime())) {
 			System.setProperty("aion.config.dir", "aion/config");
 			CustomConfig.RIFT_ENABLED = true;
@@ -35,7 +36,7 @@ class ScheduleHotReloadTest {
 			assertEquals(taskCount, GameCronServices.cronService().getRunnables().size());
 		} finally {
 			GameCronServices.shutdownIfInitialized();
-			CustomConfig.RIFT_ENABLED = oldEnabled;
+			snapshot.restore();
 			if (oldConfigDir == null) {
 				System.clearProperty("aion.config.dir");
 			} else {

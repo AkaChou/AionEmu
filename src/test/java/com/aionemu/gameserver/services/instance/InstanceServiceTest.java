@@ -17,6 +17,7 @@ import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class InstanceServiceTest {
 
@@ -40,27 +41,26 @@ class InstanceServiceTest {
 
 	@Test
 	void usesSeparateRegularAndSoloDestroyDelays() {
-		int regularDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
-		int soloDelay = InstanceConfig.SOLO_DESTROY_DELAY_SECONDS;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(InstanceConfig.class,
+			"DESTROY_DELAY_SECONDS", "SOLO_DESTROY_DELAY_SECONDS");
 		try {
 			InstanceConfig.DESTROY_DELAY_SECONDS = 90;
 			InstanceConfig.SOLO_DESTROY_DELAY_SECONDS = 30;
 			assertEquals(90_000L, InstanceService.getDestroyDelayMillis(false));
 			assertEquals(30_000L, InstanceService.getDestroyDelayMillis(true));
 		} finally {
-			InstanceConfig.DESTROY_DELAY_SECONDS = regularDelay;
-			InstanceConfig.SOLO_DESTROY_DELAY_SECONDS = soloDelay;
+			snapshot.restore();
 		}
 	}
 
 	@Test
 	void protectsPlayerTransitionsWhenDestroyDelayIsZero() {
-		int regularDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(InstanceConfig.class, "DESTROY_DELAY_SECONDS");
 		try {
 			InstanceConfig.DESTROY_DELAY_SECONDS = 0;
 			assertEquals(1000L, InstanceService.getScheduledDestroyDelayMillis(false));
 		} finally {
-			InstanceConfig.DESTROY_DELAY_SECONDS = regularDelay;
+			snapshot.restore();
 		}
 	}
 
