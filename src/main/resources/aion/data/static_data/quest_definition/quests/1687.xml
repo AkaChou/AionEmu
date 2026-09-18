@@ -16,6 +16,15 @@
       <reward kind="SELECTABLE_ITEM" id="111300792" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111500775" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111600767" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112100747" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112300744" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112500732" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112600743" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112301411" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114100825" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114300851" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114500797" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114600754" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -43,6 +52,15 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="7"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="9"/>
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="10"/>
+      <choice action="SELECTED_QUEST_REWARD10" reward-index="11"/>
+      <choice action="SELECTED_QUEST_REWARD11" reward-index="12"/>
+      <choice action="SELECTED_QUEST_REWARD12" reward-index="13"/>
+      <choice action="SELECTED_QUEST_REWARD13" reward-index="14"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">

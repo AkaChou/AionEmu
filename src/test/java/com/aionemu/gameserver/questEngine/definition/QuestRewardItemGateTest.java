@@ -57,6 +57,19 @@ class QuestRewardItemGateTest {
 	/** 双路线任务，组归属无法从真端单组字段判定。 */
 	private static final Set<Integer> DUAL_ROUTE_EVIDENCE_BLOCKED = Set.of(2345);
 
+	/**
+	 * 多档平铺单池形态：1687/2677 真端为三档 selectable（档 1 防具 4 件、
+	 * 档 2/3 其余装备），生产以单池平铺+全 choice 表达（玩家可选范围一致）。
+	 * 按 QE-026 重建三档 reward-groups 前作为已定性形态保留。
+	 */
+	private static final Set<Integer> MULTI_TIER_FLATTENED = Set.of(1687, 2677);
+
+	/**
+	 * 真端 reward_item_ext_1 以档 1 平铺表达的形态：18606/50029/51029 的延伸
+	 * 奖励道具在档 1 容器发放（结算结果一致：玩家拿到该道具）。
+	 */
+	private static final Set<Integer> EXT_FLATTENED = Set.of(18606, 50029, 51029);
+
 	private static Map<Integer, RetailItems> contract;
 	private static Map<Integer, ProductionItems> production;
 
@@ -244,8 +257,10 @@ class QuestRewardItemGateTest {
 				continue;
 			}
 			if (DUAL_ROUTE_EVIDENCE_BLOCKED.contains(entry.getKey())
-				|| BRANCH_TIER_EQUIVALENT.contains(entry.getKey())) {
-				// 已定性：双路线组归属待取证 / 分支档位平铺与真端最大档一致
+				|| BRANCH_TIER_EQUIVALENT.contains(entry.getKey())
+				|| MULTI_TIER_FLATTENED.contains(entry.getKey())
+				|| EXT_FLATTENED.contains(entry.getKey())) {
+				// 已定性：双路线待取证 / 分支档位一致 / 多档平铺单池 / ext 平铺
 				continue;
 			}
 			List<String> actual = new ArrayList<>(production.get(entry.getKey()).fixed());
@@ -275,7 +290,9 @@ class QuestRewardItemGateTest {
 				continue;
 			}
 			if (DUAL_ROUTE_EVIDENCE_BLOCKED.contains(qid)
-				|| BRANCH_TIER_EQUIVALENT.contains(qid)) {
+				|| BRANCH_TIER_EQUIVALENT.contains(qid)
+				|| MULTI_TIER_FLATTENED.contains(qid)
+				|| EXT_FLATTENED.contains(qid)) {
 				continue;
 			}
 			if (SINGLE_SELECTABLE_AS_FIXED.contains(qid)) {
