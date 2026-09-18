@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
+import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
 import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.Ordered;
@@ -39,6 +40,12 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         if (!properties.isEmpty()) {
             environment.getPropertySources().addLast(new MapPropertySource(PROPERTY_SOURCE_NAME, properties));
         }
+        // 让遗留 ConfigurableProcessor 也能看到命令行/环境变量/application.yml 这类高优先级来源，
+        // 否则 Bean 绑定与静态字段会各看一套值。
+        // Let the legacy ConfigurableProcessor see the higher-precedence sources (command line,
+        // environment variables, application.yml); otherwise bean binding and the static fields
+        // would each observe a different value.
+        ConfigSourceResolverHolder.publish(environment::getProperty);
     }
 
     /**

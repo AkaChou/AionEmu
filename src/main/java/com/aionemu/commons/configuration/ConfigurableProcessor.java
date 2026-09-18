@@ -138,7 +138,14 @@ public class ConfigurableProcessor {
         if (key.isEmpty()) {
             log.warn(I18n.get("log.9815dac71108", field.getName(), field.getDeclaringClass().getName()));
         } else {
-            value = findPropertyByKey(key, props);
+            // 先取启动层发布的高优先级来源（命令行/环境变量/application.yml），
+            // 保证 Bean 绑定与静态字段最终看到同一个值。
+            // Consult the bootstrap-published higher-precedence source first so bean binding and the
+            // static fields end up on the same value.
+            value = ConfigSourceResolverHolder.resolve(key);
+            if (value == null) {
+                value = findPropertyByKey(key, props);
+            }
         }
 
         if (value == null || value.trim().equals("")) {

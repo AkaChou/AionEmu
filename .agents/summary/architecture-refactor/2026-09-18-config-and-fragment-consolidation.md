@@ -144,3 +144,37 @@
 2. `SecurityConfig` 注册为 `@Component` 但**无实例字段、无 `@ConfigurationProperties`**，Spring 不绑定任何值；
    其 30 个静态字段仍由 `Config.load()` 写入。当前是无副作用的空壳注册。
 3. `IPConfig` 同样只有静态权威；实例访问器 `getPublicAddress()`/`ipRanges()` 目前无调用方。
+
+## 方案 A 落地：配置权威唯一化（2026-09-18）
+
+### 问题
+
+遗留 `ConfigurableProcessor` 以静态字段为唯一权威，而 Spring `@ConfigurationProperties` 绑定读 `Environment`
+（含命令行参数、环境变量、application.yml）。两者不打通时，操作者的命令行/环境变量覆盖只会写到 Bean 属性，
+随后被遗留加载器用文件值覆盖 → **Bean 看一套、非 Bean 调用方看另一套**。
+
+### 实现（不改配置路径、不改键名）
+
+| 件 | 作用 |
+|---|---|
+| `commons.configuration.ConfigSourceResolver` | 函数式接口：`String resolve(String key)` |
+| `commons.configuration.ConfigSourceResolverHolder` | 全局持有者，启动层发布一次；`publish(null)` 可清除 |
+| `AionLegacyPropertySourceEnvironmentPostProcessor` | 注册遗留 PropertySource 后 `publish(environment::getProperty)` |
+| `ConfigurableProcessor.getFieldValue` | 查值顺序变为：**已发布解析器 → `Properties[]` → 默认值** |
+
+- 解析器未发布时（单测、非 Boot 启动）行为与原来**完全一致**，即 `bootOverrides → 文件 → 默认值`。
+- 已发布时，命令行/环境变量/application.yml 对**所有**调用方（Bean 与静态字段）同时生效，权威唯一。
+- 配置文件目录与键名保持不变，仅复用既有 `EnvironmentPostProcessor` 的既有映射。
+
+### 新增回归测试
+
+1. `commons/configuration/ConfigurableProcessorSourceResolverTest`（2 例，不依赖 Spring 上下文）：
+   - 解析器优先于 `Properties` 与默认值；
+   - 解析器返回 `null` 时正确回退到 `Properties`/默认值，不吞值。
+2. `boot/config/LegacyConfigOverridePrecedenceTest`（2 例，真实 `EnvironmentPostProcessor`）：
+   - 文件 `basepoolsize=7` + 命令行 `=9` → 静态字段必须为 **9**（不得回退到文件值），且与 Bean 绑定值一致；
+   - 未发布解析器时 `Properties` 顺序行为不变。
+
+### 验证
+
+`mvn -q -Dtest=ConfigurableProcessorSourceResolverTest,LegacyConfigOverridePrecedenceTest,AionLegacyPropertySourceEnvironmentPostProcessorTest,LegacyConfigOverridesTest,LegacyServerConfigOverridesTest,ThreadConfigTest,IPConfigTest,GameUtilityServicesLifecycleTest,GameServiceLifecycleTest,LoginServiceLifecycleTest,ChatServiceLifecycleTest,VipConfigPathTest test` → 全部通过。
