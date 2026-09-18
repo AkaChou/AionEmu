@@ -175,21 +175,23 @@ def main():
             if unmapped:
                 note(f"TIER{t}_UNMAPPED", qid, "names unmappable")
                 continue
-            if t >= len(groups):
+            if (t - 1) >= len(groups):
                 note(f"TIER{t}_MISSING_PROD", qid,
                      f"prod_groups={len(groups)} retail_numeric={numeric} items={items}")
                 continue
-            prod_rows = groups[t]
-            prod_numeric = {k: v for k, v in
-                            (("exp", "EXP"), ("gold", "GOLD"),
-                             ("abyss_point", "AP"), ("glory_point", "GP"))
-                            for k, v in [(k, next((amt for kind, _, amt in prod_rows
-                                                   if kind == v), 0))] if v}
+            prod_rows = groups[t - 1]
+            prod_numeric = {k: next((amt for kind, _, amt in prod_rows if kind == v), 0)
+                            for k, v in (("exp", "EXP"), ("gold", "GOLD"),
+                                         ("abyss_point", "AP"), ("glory_point", "GP"))}
+            ret_numeric = {k: numeric.get(k, 0)
+                           for k in ("exp", "gold", "abyss_point", "glory_point")}
             prod_items = sorted((kind, iid, amt) for kind, iid, amt in prod_rows
                                 if kind in ("ITEM", "SELECTABLE_ITEM"))
-            if numeric != prod_numeric:
+            diff_fields = {k: (prod_numeric[k], ret_numeric[k])
+                           for k in prod_numeric if prod_numeric[k] != ret_numeric[k]}
+            if diff_fields:
                 note(f"TIER{t}_NUMERIC_DIFF", qid,
-                     f"prod={prod_numeric} retail={numeric}")
+                     f"diffs={diff_fields}")
             if items != prod_items:
                 note(f"TIER{t}_ITEM_DIFF", qid,
                      f"prod={prod_items} retail={items}")

@@ -212,8 +212,12 @@
   - 门禁：QuestRewardItemGateTest 扩为 3 例（fixed 多重集合 + 可选三来源 +
     extended 全量），基线 TSV 增 retail_extended 列
   - 验证：12 门禁 50 例全绿；PRODUCTION_COMPILE_OK=6189、0 失败、0 白名单违规
-  - 剩余 TIER_MISSING/NUMERIC/ITEM_DIFF 136 条维持「多档合同结构改造批次」
-    （QE-026 逐任务窗口/choice/组索引取证）
+  - 剩余多档差异经 audit_tier_axis.py 索引偏移（groups[t] -> groups[t-1]）与 0 值归一修复后，
+    由虚假 136 条收敛至 69 个真实任务（111 条记录），透彻定性为四类：
+    (1) 遗物兑换 20 条（11279 等）：服务端 4 倍 AP 特殊倍率组，平铺 grant-selected-reward（intentional 例外）
+    (2) 真端各档完全相同 22 条（1007/2009 等）：5.8 统一成长箱或数值道具，单组表达等价
+    (3) 道具名未映射 6 条（1582 等）：EVIDENCE_BLOCKED
+    (4) 真实剧情/结局差分任务 21 条：11 故事抉择差分、2 防具部位三档可选（1687/2677）、4 铸币档位、4 主线宠物道具差分，进入逐任务结构改造批次
 - 下一检查点：P5 静态可扫项已全部收敛或登记；剩余验证依赖
   （a）Aion 5.8 客户端实机复测（用户侧 PENDING）、
   （b）真端 item/title 模板表解包（ITEM_UNMAPPED 956 / TITLE 173 / 2345 双路线）、

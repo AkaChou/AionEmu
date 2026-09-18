@@ -76,6 +76,10 @@ def main():
                 qid = (child.text or "").strip()
             elif re.match(r"^(reward_item1|selectable_reward_item1)_\d+$", tag):
                 fields[tag] = (child.text or "").strip()
+            elif tag in ("reward_gold_ext", "reward_item_ext_1", "reward_title_ext"):
+                fields[tag] = (child.text or "").strip()
+            elif re.match(r"^selectable_reward_item_ext_\d+$", tag):
+                fields[tag] = (child.text or "").strip()
         if qid is not None and qid.isdigit():
             retail[qid] = fields
         elem.clear()
@@ -87,7 +91,8 @@ def main():
                  ".agents/summary/quest-systemic-goal/build_item_selectable_contract_tsv.py)\n")
         fh.write("# rows: production quests whose retail item names are all mappable; "
                  "rows with unmapped names are EVIDENCE_BLOCKED and excluded.\n")
-        fh.write("quest_id\tretail_fixed_items\tretail_selectable_ids\n")
+        fh.write("quest_id\tretail_fixed_items\tretail_selectable_ids\t"
+                 "retail_extended\n")
         for qid in sorted(retail, key=int):
             if not os.path.exists(os.path.join(PROD_DIR, qid + ".xml")):
                 continue
@@ -98,6 +103,10 @@ def main():
             for key, val in fields.items():
                 if not val:
                     continue
+                if key.startswith(("reward_gold_ext", "reward_title_ext",
+                                   "reward_item_ext_",
+                                   "selectable_reward_item_ext_")):
+                    continue  # ext 字段在下方单独提取
                 parts = val.rsplit(" ", 1)
                 name = parts[0]
                 cnt = int(parts[1]) if len(parts) == 2 else 1
@@ -117,7 +126,25 @@ def main():
             if not sel_out and not has_fixed_field:
                 continue
             sel_out = sel_out or "-"
-            fh.write(f"{qid}\t{fixed_out}\t{sel_out}\n")
+            # 真端 ext（最后一轮追加奖励）：gold_ext + item_ext + selectable_ext
+            ext_items = []
+            for key, val in fields.items():
+                if not key.startswith(("reward_item_ext_", "selectable_reward_item_ext_")):
+                    continue
+                if not val:
+                    continue
+                parts = val.rsplit(" ", 1)
+                iid = item_map.get(parts[0])
+                cnt = int(parts[1]) if len(parts) == 2 else 1
+                if iid is not None:
+                    ext_items.append(f"{iid}:{cnt}")
+            ext_items.sort()
+            ext_gold = fields.get("reward_gold_ext", "-")
+            if ext_items or ext_gold != "-":
+                ext_out = f"{ext_gold}|{';'.join(ext_items) if ext_items else '-'}"
+            else:
+                ext_out = "-"
+            fh.write(f"{qid}\t{fixed_out}\t{sel_out}\t{ext_out}\n")
             rows += 1
     print(f"item/selectable contract rows ({rows}) -> {OUT}")
 
