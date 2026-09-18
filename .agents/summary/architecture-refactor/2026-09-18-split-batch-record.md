@@ -22,11 +22,19 @@
 | `9832bddd9` | Legion 申请流域 | `LegionRestrictions`（810→703 行）入团申请流域（搜索、招募设置、申请提交/取消/批复、仓库历史，11 方法约 250 行）→ package-private `LegionJoinRequests`（持 service + permissions 双引用）；原方法一行委托，`LegionService` 调用链不变。测试 `LegionServiceTest` 等三件套通过。 |
 | `a399dff9d` | 击杀奖励公式域 | `StatFunctions`（1224→1095 行）奖励公式（solo/group XP/DP、PVP AP/GP/XP/DP 共 11 方法约 265 行）→ package-private `KillRewardFormulas`：奖励数值调整与战斗公式变化原因不同；跨域调用（ApNpcRating/calculateRatingMultipler）显式宿主前缀。测试 `StatFunctionsTest` 通过。 |
 | `e83b9287e` | 审计汇总 round 5 | BattlegroundIdentity/AttackControlEffects + Equipment 保留审计。 |
+| `9832bddd9` 前基线 | 全量测试基线对照 | 3401 例 70F+21E；对 b2361c2cf 基线 diff 本轮拆分域零新增失败（详见下文全量测试回归结论）。 |
+| `0727e56f5` | Skill 冷却查表域 | `Skill`（1951→1305 行）烙印强化冷却查表（StigmaEnchantCoolDown，技能 ID 巨型 switch 约 650 行）→ package-private `SkillCooldownTables`；public 门面保留（当前零外部调用方），内部调用点直走查表类。`SkillEngineTest` 通过。 |
 
 ## 追加审计结论（round 5）
 
 - **Equipment（1377 行）**：装备容器 + 校验规则深度耦合私有 `equipment` TreeMap 与 `owner` 字段（validateEquippedWeapon/validateEquippedArmor 直读私有容器）；同包拆出需扩字段可见性，风险大于收益。soulBindItem（75 行）独立过小。**保留**。
-- **EffectController（1366 行）/ MinionService（1317 行）/ BrokerService（1255 行）/ PlayerController（1453 行）**：控制器/容器，方法间共享内部状态密集；列入 backlog 待按同一标准审计。
+
+## 追加审计结论（round 7，backlog 清空）
+
+- **EffectController（1367 行）**：每生物一个的控制器，是 AR-010 性能线成果载体（EMPTY_EFFECTS 占位符 + 三表首次写入惰性分配，实测省 38 万包装对象/12.2 MB）；protected volatile 字段是子类 `PlayerEffectController` 契约，ReentrantLock 锁语义精细。任何实例域拆分 = 每实体新增辅助对象分配，直接触碰性能红线。**保留，勿拆**。
+- **MinionService（1318 行）/ BrokerService（1256 行）**：编排密集（DAO + 包发送 + 模型联动）；BrokerService 价格统计域深耦合宿主 `raceBrokerItems` 容器与排序器（唯一纯函数 getAvgMaxMinPrice 仅 25 行）。拆出均需持 service 引用，净收益为搬运。**保留**。
+- **PlayerController（1453 行）**：生命周期事件控制器（onDie/onLogin/对话/移动回调），多态回调密集，与 `CreatureController` 同构。**保留**。
+- 至此 >1200 行的非 quest、非 AI、非 geo、非脚本大类已全部审计完毕：要么完成域拆分（9 个宿主类），要么给出明确保留理由。
 
 ## 追加审计结论（round 6）
 
@@ -68,7 +76,5 @@
 ## 下一批候选（优先级）
 
 1. `QuestService` 计时器域（约 250 行，QuestTimerKey 已有私有类型基础）——待 quest 并行任务收尾后实施。
-2. `Skill`（1950 行）：施法阶段/效果链/冷却审计。
-3. `EffectController`（1366 行）、`MinionService`（1317 行）、`BrokerService`（1255 行）、`PlayerController`（1453 行）、`StatFunctions`（1223 行）：按"依赖聚类/变化原因聚类"同一标准逐个审计。
-4. `LegionRestrictions`（809 行）：它本身是已拆出的伴生类，如继续膨胀可再分"申请流"与"权限校验"两域。
-5. 全量 `mvn test`（需单独授权）作为最终回归。
+2. `LegionRestrictions`（703 行）与 `StatFunctions`（1095 行）拆分后已职责单一，无需进一步拆分。
+3. quest 域 80 例测试失败随并行任务 P5 收敛后，复跑全量 `mvn test` 确认（本轮基线对照已证实与本轮拆分无关）。
