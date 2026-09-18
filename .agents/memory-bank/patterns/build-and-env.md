@@ -27,7 +27,7 @@ first_check: launch command, target/classes, JAR or resource directory and log/c
 
 1. **Stale Class 陷阱与运行原理**：
    - 用户日常开发通常直接通过 IntelliJ IDEA 启动 Spring Boot 主类，CWD 为仓库根目录。
-   - IDEA 运行时读取的是 `target/classes/` 中的编译字节码与资源副本，**`aion/AionEmu.jar` 与 `aion/data/` 镜像完全不参与该运行模式**（仅 `package.sh` 打包部署路径使用）。
+   - IDEA 运行时读取的是 `target/classes/` 中的编译字节码与资源副本，**`aion/AionEmu.jar` 与 `aion/data/` 镜像完全不参与该运行模式**（仅 `scripts/package.sh` 打包部署路径使用）。
    - 运行时静态数据（含 Quest XML）通过 `QuestDefinitionDirectoryLoader` 从 classpath 加载。
 2. **验证改动的唯一可信依据**：
    - 排查“改了代码为何运行无反应/Bug 依然存在”时，**必须首先对比对应 `.class` 或资源文件的修改时间（mtime）是否晚于源文件修改时间**。
