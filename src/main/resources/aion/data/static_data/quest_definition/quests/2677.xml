@@ -38,7 +38,7 @@
     </reward-groups>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -47,345 +47,21 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="reward1" status="REWARD">
       <var name="var0" value="1"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward3" status="REWARD">
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="ASK_QUEST_ACCEPT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_ACCEPT_1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_ACCEPT_SIMPLE"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SETPRO1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_REFUSE_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <conditions>
-        <has-item item-id="186000035" count="2"/>
-        <has-item item-id="186000036" count="10"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="186000035" count="2"/>
-        <remove-item item-id="186000036" count="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
-      </event>
-      <conditions>
-        <has-item item-id="186000035" count="2"/>
-        <has-item item-id="186000036" count="10"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="186000035" count="2"/>
-        <remove-item item-id="186000036" count="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SET_SUCCEED"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD1"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="111100789" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD2"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="111300793" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD3"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="111500776" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD4"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="111600768" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD5"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="112100748" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD6"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="112300745" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD7"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="112500733" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD8"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="112600744" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD9"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="114100826" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD10"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="114300852" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD11"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="114500798" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECTED_QUEST_REWARD12"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2352448"/>
-        <grant-reward kind="ITEM" id="114600755" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
+    <dialog type="NPC_START" npc-id="204817" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECT1_1"/>
@@ -394,13 +70,118 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-      <transition source="started" target="started">
+    <transition source="complete" target="complete">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204817" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECT1_1"/>
       </event>
       <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="204817" source="started" target="reward1" page="SELECT2"/>
+    <npc-complete npc-id="204817" source="reward1" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="204817" source="reward2" target="complete" fixed-reward-indices="0" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="204817" source="reward3" target="complete" fixed-reward-indices="0" complete-reward-index="2" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECT2_1_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SELECT2_1_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_3"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SETPRO10"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000035" count="2"/>
+        <has-item item-id="186000036" count="10"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000035" count="2"/>
+        <remove-item item-id="186000036" count="10"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="reward2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SETPRO20"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000035" count="2"/>
+        <has-item item-id="186000036" count="10"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000035" count="2"/>
+        <remove-item item-id="186000036" count="10"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward3" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" action="SETPRO30"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000035" count="2"/>
+        <has-item item-id="186000036" count="10"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000035" count="2"/>
+        <remove-item item-id="186000036" count="10"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204817" actions="SETPRO10 SETPRO20 SETPRO30"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

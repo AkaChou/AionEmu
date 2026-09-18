@@ -43,14 +43,6 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="805331" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805331" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
     <transition source="h3" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805331" action="SELECT_QUEST_REWARD"/>
@@ -96,10 +88,10 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 阶段 2：哥尔哈怪物 20 只 -->
+    <!-- 阶段 2：雷文斯赫怪物 20 只 -->
     <transition source="h1" target="h1" priority="1">
       <event>
-        <kill-npc npc-ids="233921 233922 233923 233924 233925 233926 233927 233928"/>
+        <kill-npc npc-ids="233929 233930 233931 233932 233933 233934 233935 233936"/>
       </event>
       <conditions>
         <variable-below field="var1" value="19"/>
@@ -113,7 +105,7 @@
     </transition>
     <transition source="h1" target="h2" priority="0">
       <event>
-        <kill-npc npc-ids="233921 233922 233923 233924 233925 233926 233927 233928"/>
+        <kill-npc npc-ids="233929 233930 233931 233932 233933 233934 233935 233936"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="19"/>
@@ -126,10 +118,10 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 阶段 3：卡多尔怪物 20 只 -->
+    <!-- 阶段 3：卡尔多怪物 20 只 -->
     <transition source="h2" target="h2" priority="1">
       <event>
-        <kill-npc npc-ids="234273 234275 234276 234523"/>
+        <kill-npc npc-ids="234277 234278 234279 234280 234524 234526 234527 234528 234531 234532"/>
       </event>
       <conditions>
         <variable-below field="var1" value="19"/>
@@ -143,7 +135,7 @@
     </transition>
     <transition source="h2" target="h3" priority="0">
       <event>
-        <kill-npc npc-ids="234273 234275 234276 234523"/>
+        <kill-npc npc-ids="234277 234278 234279 234280 234524 234526 234527 234528 234531 234532"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="19"/>
@@ -162,15 +154,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805331" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
   </transitions>

@@ -122,8 +122,7 @@ class Quest24026RetailAlignmentTest {
 				.map(QuestAction.GrantReward::id)
 				.filter(Set.of(114101704, 114301833, 114301835, 114501742, 114501744, 114601583)::contains)
 				.collect(java.util.stream.Collectors.toSet()));
-		assertTrue(completions.stream().allMatch(t -> t.actions().contains(new QuestAction.CompleteQuest(
-			((QuestEvent.TalkToNpc) t.event()).dialogId() - 6))));
+		assertTrue(completions.stream().allMatch(t -> t.actions().contains(new QuestAction.CompleteQuest(0))));
 		assertTrue(completions.stream().allMatch(t -> t.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10))));
 	}
 

@@ -4,43 +4,24 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <reward-groups>
-      <group>
-        <reward kind="EXP" id="0" amount="457760"/>
-        <reward kind="TITLE" id="57" amount="1"/>
-        <reward kind="ITEM" id="190080012" amount="20"/>
-        <reward kind="SELECTABLE_ITEM" id="100001737" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100101334" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100201503" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100501314" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100601431" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100901375" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101301267" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101501357" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101701368" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101801218" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101901127" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="102001246" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="102101072" amount="1"/>
-      </group>
-      <group>
-        <reward kind="EXP" id="0" amount="228880"/>
-        <reward kind="TITLE" id="57" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100001737" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100101334" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100201503" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100501314" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100601431" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="100901375" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101301267" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101501357" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101701368" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101801218" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="101901127" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="102001246" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="102101072" amount="1"/>
-      </group>
-    </reward-groups>
+    <rewards>
+      <reward kind="EXP" id="0" amount="457760"/>
+      <reward kind="TITLE" id="57" amount="1"/>
+      <reward kind="ITEM" id="190080012" amount="20"/>
+      <reward kind="SELECTABLE_ITEM" id="100001737" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100101334" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100201503" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100501314" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100601431" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100901375" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101301267" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101501357" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101701368" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101801218" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101901127" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102001246" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102101072" amount="1"/>
+    </rewards>
     <start-conditions>
       <condition type="unfinished" quest-id="2022"/>
       <condition type="noacquired" quest-id="2022"/>

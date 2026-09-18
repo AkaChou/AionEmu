@@ -26,33 +26,19 @@
       <quest id="14024"/>
       <quest id="14025"/>
     </prerequisites>
-    <reward-groups>
-      <group>
-        <reward kind="EXP" id="0" amount="3504765"/>
-        <reward kind="TITLE" id="12" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110101843" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110301826" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110301828" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110551154" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110551156" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110601629" amount="1"/>
-        <reward kind="ITEM" id="188053407" amount="3"/>
-        <reward kind="ITEM" id="186000003" amount="40"/>
-        <reward kind="ITEM" id="190200000" amount="10"/>
-      </group>
-      <group>
-        <reward kind="EXP" id="0" amount="3504765"/>
-        <reward kind="TITLE" id="12" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110101843" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110301826" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110301828" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110551154" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110551156" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="110601629" amount="1"/>
-        <reward kind="ITEM" id="188053407" amount="3"/>
-        <reward kind="ITEM" id="186000003" amount="40"/>
-      </group>
-    </reward-groups>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3504765"/>
+      <reward kind="TITLE" id="12" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110101843" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110301826" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110301828" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110551154" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110551156" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="110601629" amount="1"/>
+      <reward kind="ITEM" id="188053407" amount="3"/>
+      <reward kind="ITEM" id="186000003" amount="40"/>
+      <reward kind="ITEM" id="190200000" amount="10"/>
+    </rewards>
     <start-conditions>
       <condition type="unfinished" quest-id="1043"/>
       <condition type="noacquired" quest-id="1043"/>
@@ -262,7 +248,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="2"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -281,7 +267,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="3"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -300,7 +286,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="4"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -319,7 +305,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="5"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -338,7 +324,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="6"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -357,7 +343,7 @@
         <grant-reward kind="ITEM" id="188053407" amount="3"/>
         <grant-reward kind="ITEM" id="186000003" amount="40"/>
         <grant-reward kind="ITEM" id="190200000" amount="10"/>
-        <complete-quest reward-index="7"/>
+        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

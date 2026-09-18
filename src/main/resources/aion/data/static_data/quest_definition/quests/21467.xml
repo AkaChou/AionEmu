@@ -42,6 +42,12 @@
     <node label="r0" status="REWARD">
       <var name="var0" value="0"/>
     </node>
+    <node label="r1" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="r2" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
@@ -153,7 +159,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="r0">
+    <transition source="s1" target="r1">
       <event>
         <kill-npc npc-id="215480"/>
       </event>
@@ -162,7 +168,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <transition source="s2" target="r0">
+    <transition source="s2" target="r2">
       <event>
         <kill-npc npc-id="215480"/>
       </event>
@@ -255,6 +261,29 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="799503" source="r0" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- 超时档位保留 var0，奖励预览和交付使用同一奖励组。 Timed tiers retain var0 and use the same group for preview and grant. -->
+    <transition source="r1" target="r1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799503" source="r1" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="r2" target="r2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799503" source="r2" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="2" finish="SELECTION_DIALOG">
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">
