@@ -46,7 +46,6 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.SummonedObject;
@@ -71,7 +70,6 @@ import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.model.ingameshop.InGameShop;
 import com.aionemu.gameserver.model.items.ItemCooldown;
 import com.aionemu.gameserver.model.items.storage.IStorage;
-import com.aionemu.gameserver.model.items.storage.LegionStorageProxy;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.skill.PlayerSkillList;
@@ -789,22 +787,7 @@ public class Player extends Creature {
 	 * @param storage the inventory to set Inventory should be set right after player object is created
 	 */
 	public void setStorage(Storage storage, StorageType storageType) {
-		if (storageType == StorageType.CUBE) {
-			this.inventory = storage;
-		}
-		if (storageType.getId() >= StorageType.PET_BAG_MIN && storageType.getId() <= StorageType.PET_BAG_MAX) {
-			this.petBag[storageType.getId() - StorageType.PET_BAG_MIN] = storage;
-		}
-		if (storageType.getId() >= StorageType.HOUSE_WH_MIN && storageType.getId() <= StorageType.HOUSE_WH_MAX) {
-			this.cabinets[storageType.getId() - StorageType.HOUSE_WH_MIN] = storage;
-		}
-		if (storageType == StorageType.REGULAR_WAREHOUSE) {
-			this.regularWarehouse = storage;
-		}
-		if (storageType == StorageType.ACCOUNT_WAREHOUSE) {
-			this.accountWarehouse = storage;
-		}
-		storage.setOwner(this);
+		PlayerStorageRegistry.setStorage(this, storage, storageType);
 	}
 
 	/**
@@ -812,137 +795,25 @@ public class Player extends Creature {
 	 * @return
 	 */
 	public IStorage getStorage(int storageType) {
-		if (storageType == StorageType.REGULAR_WAREHOUSE.getId()) {
-			return regularWarehouse;
-		}
-
-		if (storageType == StorageType.ACCOUNT_WAREHOUSE.getId()) {
-			return accountWarehouse;
-		}
-
-		if (storageType == StorageType.LEGION_WAREHOUSE.getId() && getLegion() != null) {
-			return new LegionStorageProxy(getLegion().getLegionWarehouse(), this);
-		}
-
-		if (storageType >= StorageType.PET_BAG_MIN && storageType <= StorageType.PET_BAG_MAX) {
-			return petBag[storageType - StorageType.PET_BAG_MIN];
-		}
-
-		if (storageType >= StorageType.HOUSE_WH_MIN && storageType <= StorageType.HOUSE_WH_MAX) {
-			return cabinets[storageType - StorageType.HOUSE_WH_MIN];
-		}
-
-		if (storageType == StorageType.CUBE.getId()) {
-			return inventory;
-		}
-		return null;
+		return PlayerStorageRegistry.getStorage(this, storageType);
 	}
 
 	/**
 	 * @return 来自 UPDATE_REQUIRED 仓库与装备的物品。 / Items from UPDATE_REQUIRED storages and equipment
 	 */
 	public List<Item> getDirtyItemsToUpdate() {
-		List<Item> dirtyItems = new ArrayList<Item>();
-
-		IStorage cubeStorage = getStorage(StorageType.CUBE.getId());
-		if (cubeStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-			dirtyItems.addAll(cubeStorage.getItemsWithKinah());
-			dirtyItems.addAll(cubeStorage.getDeletedItems());
-		}
-
-		IStorage regularWhStorage = getStorage(StorageType.REGULAR_WAREHOUSE.getId());
-		if (regularWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-			dirtyItems.addAll(regularWhStorage.getItemsWithKinah());
-			dirtyItems.addAll(regularWhStorage.getDeletedItems());
-		}
-
-		IStorage accountWhStorage = getStorage(StorageType.ACCOUNT_WAREHOUSE.getId());
-		if (accountWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-			dirtyItems.addAll(accountWhStorage.getItemsWithKinah());
-			dirtyItems.addAll(accountWhStorage.getDeletedItems());
-		}
-
-		IStorage legionWhStorage = getStorage(StorageType.LEGION_WAREHOUSE.getId());
-		if (legionWhStorage != null) {
-				if (legionWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-					dirtyItems.addAll(legionWhStorage.getItemsWithKinah());
-					dirtyItems.addAll(legionWhStorage.getDeletedItems());
-				}
-		}
-
-		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
-			IStorage petBag = getStorage(petBagId);
-			if (petBag != null && petBag.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-				dirtyItems.addAll(petBag.getItemsWithKinah());
-				dirtyItems.addAll(petBag.getDeletedItems());
-			}
-		}
-
-		for (int houseWhId = StorageType.HOUSE_WH_MIN; houseWhId <= StorageType.HOUSE_WH_MAX; houseWhId++) {
-			IStorage cabinet = getStorage(houseWhId);
-			if (cabinet != null && cabinet.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-				dirtyItems.addAll(cabinet.getItemsWithKinah());
-				dirtyItems.addAll(cabinet.getDeletedItems());
-			}
-		}
-
-		Equipment equipment = getEquipment();
-		if (equipment.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-			dirtyItems.addAll(equipment.getEquippedItems());
-		}
-
-		return dirtyItems;
+		return PlayerStorageRegistry.getDirtyItemsToUpdate(this);
 	}
 
 	public void markDirtyItemContainersStored() {
-		for (int storageId : new int[] { StorageType.CUBE.getId(), StorageType.REGULAR_WAREHOUSE.getId(),
-				StorageType.ACCOUNT_WAREHOUSE.getId(), StorageType.LEGION_WAREHOUSE.getId() }) {
-			IStorage storage = getStorage(storageId);
-			if (storage != null) {
-				storage.setPersistentState(PersistentState.UPDATED);
-			}
-		}
-		for (int storageId = StorageType.PET_BAG_MIN; storageId <= StorageType.PET_BAG_MAX; storageId++) {
-			IStorage storage = getStorage(storageId);
-			if (storage != null) {
-				storage.setPersistentState(PersistentState.UPDATED);
-			}
-		}
-		for (int storageId = StorageType.HOUSE_WH_MIN; storageId <= StorageType.HOUSE_WH_MAX; storageId++) {
-			IStorage storage = getStorage(storageId);
-			if (storage != null) {
-				storage.setPersistentState(PersistentState.UPDATED);
-			}
-		}
-		getEquipment().setPersistentState(PersistentState.UPDATED);
+		PlayerStorageRegistry.markDirtyItemContainersStored(this);
 	}
 
 	/**
 	 * @return all items in player-owned storages and equipment
 	 */
 	public List<Item> getAllItems() {
-		List<Item> items = new ArrayList<Item>();
-		items.addAll(this.inventory.getItemsWithKinah());
-		if (this.regularWarehouse != null)
-			items.addAll(this.regularWarehouse.getItemsWithKinah());
-		if (this.accountWarehouse != null)
-			items.addAll(this.accountWarehouse.getItemsWithKinah());
-
-		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
-			IStorage petBag = getStorage(petBagId);
-			if (petBag != null) {
-				items.addAll(petBag.getItemsWithKinah());
-			}
-		}
-
-		for (int houseWhId = StorageType.HOUSE_WH_MIN; houseWhId <= StorageType.HOUSE_WH_MAX; houseWhId++) {
-			IStorage cabinet = getStorage(houseWhId);
-			if (cabinet != null) {
-				items.addAll(cabinet.getItemsWithKinah());
-			}
-		}
-		items.addAll(getEquipment().getEquippedItems());
-		return items;
+		return PlayerStorageRegistry.getAllItems(this);
 	}
 
 	public void setTitleList(TitleList titleList) {
