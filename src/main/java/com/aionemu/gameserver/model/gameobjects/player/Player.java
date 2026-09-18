@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -66,7 +65,6 @@ import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureVisualState;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseRegistry;
-import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.model.ingameshop.InGameShop;
 import com.aionemu.gameserver.model.items.ItemCooldown;
 import com.aionemu.gameserver.model.items.storage.IStorage;
@@ -1823,59 +1821,41 @@ public class Player extends Creature {
 	}
 
 	public List<House> getHouses() {
-		if (houses == null) {
-			List<House> found = GameHousingServices.housingService().searchPlayerHouses(this.getObjectId());
-			if (found.size() > 0) {
-				houses = found;
-			} else {
-				return found;
-			}
-		}
+		return PlayerHouses.getHouses(this);
+	}
+
+	/**
+	 * 返回原始房屋缓存，不触发惰性加载（仅同包房屋域使用）。
+	 * Returns the raw house cache without lazy loading (same-package housing domain only).
+	 *
+	 * @return 原始房屋缓存 / raw house cache
+	 */
+	List<House> getHousesOrNull() {
 		return houses;
 	}
 
 	public void resetHouses() {
-		if (houses != null) {
-			houses.clear();
-			houses = null;
-		}
+		PlayerHouses.resetHouses(this);
 	}
 
 	public House getActiveHouse() {
-		for (House house : getHouses()) {
-			if (house.getStatus() == HouseStatus.ACTIVE || house.getStatus() == HouseStatus.SELL_WAIT) {
-				return house;
-			}
-		}
-		return null;
+		return PlayerHouses.getActiveHouse(this);
 	}
 
 	public int getHouseOwnerId() {
-		House house = getActiveHouse();
-		if (house != null) {
-			return house.getAddress().getId();
-		}
-		return 0;
+		return PlayerHouses.getHouseOwnerId(this);
 	}
 
 	public boolean isBuildingInState(PlayerHouseOwnerFlags state) {
-		return (buildingOwnerStates & state.getId()) != 0;
+		return PlayerHouses.isBuildingInState(this, state);
 	}
 
 	public void setBuildingOwnerState(byte state) {
-		buildingOwnerStates |= state;
-		House house = getActiveHouse();
-		if (house != null) {
-			house.fixBuildingStates();
-		}
+		PlayerHouses.setBuildingOwnerState(this, state);
 	}
 
 	public void unsetBuildingOwnerState(byte state) {
-		buildingOwnerStates &= ~state;
-		House house = getActiveHouse();
-		if (house != null) {
-			house.fixBuildingStates();
-		}
+		PlayerHouses.unsetBuildingOwnerState(this, state);
 	}
 
 	public void setBattleReturnCoords(int mapId, float[] coords) {
