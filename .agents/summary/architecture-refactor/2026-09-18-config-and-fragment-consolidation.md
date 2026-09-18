@@ -256,3 +256,68 @@
   6 个错误全部是并行会话正在删除/改写的 quest audit 类造成的 `NoClassDefFound`，与本轮无关
   （clean 构建后 `EffectControllerTest`、`NpcMoveControllerPathTest`、`AbstractCollisionObserverTest`
   等匿名内部类加载错误随 `target` 清理一并消失，确认此前是脏增量构建的假失败）。
+
+## 测试侧配置污染治理：ConfigSnapshot（2026-09-18，优先级 2）
+
+### 背景与量化
+
+全库测试里有 **215 处**对 `XxxConfig` 静态字段的直接赋值（分布在 **49** 个测试类）。其中真正属于
+"字段备份 + `@AfterEach` 还原"样板的是 **14 个类**，典型形态：
+
+```java
+private final int originalA = XxxConfig.A;
+@AfterEach void restore() { XxxConfig.A = originalA; }
+```
+
+这类样板有三个问题：① 漏还原会把状态泄漏给后续测试；② 新增字段时容易忘记同步；③ 个别测试干脆
+**硬编码"基线值"**（如 `SkillConfig.CONSUME_DP = true`），一旦生产默认值变化就会静默失真。
+
+### 新增工具
+
+`src/test/java/com/aionemu/testutil/ConfigSnapshot`：
+
+```java
+private final ConfigSnapshot snapshot = ConfigSnapshot.of(MembershipConfig.class,
+    "STORE_WH_ALL", "TRADE_ALL");
+
+@AfterEach
+void restore() {
+    snapshot.restore();
+}
+```
+
+- `of(Class, String...)` 要求字段**存在且为 static**，拼写错误立刻抛 `IllegalArgumentException`（含可用字段清单），
+  不会静默跳过；
+- 快照在**测试实例构造时**捕获（JUnit 每方法一个新实例），比"节流为类级常量"更准确；
+- `restore()` 逐字段还原并复位可访问性。
+
+### 迁移范围（本轮 17 个测试类）
+
+| 测试类 | 原样板 | 迁移收益 |
+|---|---|---|
+| `VipServiceTest` | 2 字段 + 手写还原 | 快照 |
+| `ItemRestrictionsTest` | 6 字段 + `@BeforeEach` 备份 + `@AfterEach` 还原 | 快照（去掉 12 行样板） |
+| `PlayerTagsTest` | 2 字段备份 | 快照 |
+| `EnchantServiceTest` | 2 字段备份 | 快照 |
+| `ThreadConfigTest` | 5 个类级常量 + 手写还原 | 快照（并去掉"类加载时捕获"的陈旧基线隐患） |
+| `GameThreadPoolManagerBoundsTest` | 方法内 3 字段 try/finally | 快照 |
+| `VipConfigPathTest` | 2 字段备份 | 快照（字段扩到 5 个 VIP 键） |
+| `IPConfigTest` | 手工置空 `PUBLIC_ADDRESS` | 快照 |
+| `StatFunctionsTest` | **硬编码基线** `1f / 3400` | 快照（还原真实原值） |
+| `StaticDataTest` | 硬编码 `false` | 快照 |
+| `DpUseActionTest` / `DpUsePeriodicActionTest` | 硬编码 `true` | 快照 |
+| `GeoServiceGroundSearchTest` / `GeoServiceSkillObstacleTest` | 字段备份 | 快照 |
+| `ShutdownHookTest` | 字段备份 + `@BeforeEach` | 快照（去掉一个 `@BeforeEach`） |
+| `ConsoleStaticDataProgressReporterTest` | 硬编码 `true / false` | 快照 |
+| `PingPongThreadTest` | 方法内 `restore()`（**顺序相关**） | 快照 + 测试内直接置 false（顺序无关） |
+
+### 验证
+
+- `mvn -B -Dstyle.color=never -Dtest='com.aionemu.gameserver.**,com.aionemu.loginserver.**,com.aionemu.testutil.**' test`
+  → **3245 例，Failures 0，Errors 0，Skipped 2**。
+
+### 尚未迁移（登记）
+
+仍在使用"方法内 try/finally 保存单个配置字段"的测试（如 `PathDataTest`、`PathServiceConcurrencyTest`、
+`NpcMoveControllerPathTest`、`TargetRangePropertyTest` 等，约 150 处）：这些是**用例级**局部开关，
+语义清晰、无跨用例泄漏风险，暂不强制迁移；新增或修改此类用例时可顺手改用 `ConfigSnapshot`。

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.Race;
@@ -21,11 +22,17 @@ import org.objenesis.ObjenesisStd;
 
 class StatFunctionsTest {
 	private final ObjenesisStd objenesis = new ObjenesisStd();
+	private final ConfigSnapshot statConfigSnapshot =
+		ConfigSnapshot.of(RateConfig.class, "DAMAGE_MULTIPLIER");
+	private final ConfigSnapshot skillConfigSnapshot =
+		ConfigSnapshot.of(SkillConfig.class, "MAGICBOOST_CAP");
 
 	@AfterEach
 	void resetConfig() {
-		RateConfig.DAMAGE_MULTIPLIER = 1f;
-		SkillConfig.MAGICBOOST_CAP = 3400;
+		// 还原测试开始前的真实值，而不是硬编码基线。
+		// Restore the real pre-test values instead of a hard-coded baseline.
+		statConfigSnapshot.restore();
+		skillConfigSnapshot.restore();
 	}
 
 	@Test

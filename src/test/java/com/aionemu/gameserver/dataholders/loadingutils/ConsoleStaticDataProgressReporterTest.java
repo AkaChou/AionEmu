@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Test;
 class ConsoleStaticDataProgressReporterTest {
 
 	private final PrintStream originalOut = System.out;
+	private final ConfigSnapshot gsConfigSnapshot = ConfigSnapshot.of(GSConfig.class,
+		"STARTUP_PROGRESS_ENABLE", "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE");
 
 	@BeforeEach
 	void enableProgressEntryCounts() {
@@ -27,8 +30,7 @@ class ConsoleStaticDataProgressReporterTest {
 	@AfterEach
 	void restoreOutputAndProperties() {
 		System.setOut(originalOut);
-		GSConfig.STARTUP_PROGRESS_ENABLE = true;
-		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
+		gsConfigSnapshot.restore();
 	}
 
 	@Test

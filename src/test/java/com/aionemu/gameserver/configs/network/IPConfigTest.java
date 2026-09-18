@@ -3,6 +3,7 @@ package com.aionemu.gameserver.configs.network;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.Config;
 import java.net.InetSocketAddress;
 import java.net.InetAddress;
@@ -17,11 +18,14 @@ class IPConfigTest {
     @TempDir
     Path tempDir;
 
+    private final ConfigSnapshot networkConfigSnapshot =
+        ConfigSnapshot.of(NetworkConfig.class, "PUBLIC_ADDRESS");
+
     @AfterEach
     void tearDown() {
         System.clearProperty("aion.config.dir");
         Config.setBootOverrides(null);
-        NetworkConfig.PUBLIC_ADDRESS = null;
+        networkConfigSnapshot.restore();
     }
 
     @Test

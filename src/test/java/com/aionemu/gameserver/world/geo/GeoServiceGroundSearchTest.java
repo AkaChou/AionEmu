@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.lang.reflect.Field;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Node;
@@ -14,11 +15,11 @@ import org.junit.jupiter.api.Test;
 
 class GeoServiceGroundSearchTest {
 
-	private final boolean oldGeoEnable = GeoDataConfig.GEO_ENABLE;
+	private final ConfigSnapshot geoConfigSnapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE");
 
 	@AfterEach
 	void tearDown() {
-		GeoDataConfig.GEO_ENABLE = oldGeoEnable;
+		geoConfigSnapshot.restore();
 	}
 
 	@Test

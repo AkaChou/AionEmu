@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.commons.configuration.Property;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -15,13 +16,12 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 class EnchantServiceTest {
 
-	private final int originalUnifiedEnchantKinah = EnchantsConfig.ENCHANT_ITEM_KINAH;
-	private final int originalMaxEquipmentEnchantLevel = EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL;
+	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
+		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL");
 
 	@AfterEach
 	void restoreConfig() {
-		EnchantsConfig.ENCHANT_ITEM_KINAH = originalUnifiedEnchantKinah;
-		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = originalMaxEquipmentEnchantLevel;
+		enchantConfigSnapshot.restore();
 	}
 
 	@Test

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.model.account.Account;
@@ -18,21 +19,20 @@ import com.aionemu.gameserver.network.aion.AionConnection;
  */
 class PlayerTagsTest {
 
-	private String originalAdminTag3;
-	private String originalPlayerTag30;
+	private final ConfigSnapshot adminTagSnapshot = ConfigSnapshot.of(AdminConfig.class, "ADMIN_TAG_3");
+	private final ConfigSnapshot membershipTagSnapshot =
+		ConfigSnapshot.of(MembershipConfig.class, "PLAYER_TAG_30");
 
 	@BeforeEach
 	void setUp() {
-		originalAdminTag3 = AdminConfig.ADMIN_TAG_3;
-		originalPlayerTag30 = MembershipConfig.PLAYER_TAG_30;
 		AdminConfig.ADMIN_TAG_3 = "[ADMIN]%s";
 		MembershipConfig.PLAYER_TAG_30 = "[AION]%s";
 	}
 
 	@AfterEach
 	void tearDown() {
-		AdminConfig.ADMIN_TAG_3 = originalAdminTag3;
-		MembershipConfig.PLAYER_TAG_30 = originalPlayerTag30;
+		adminTagSnapshot.restore();
+		membershipTagSnapshot.restore();
 	}
 
 	@Test

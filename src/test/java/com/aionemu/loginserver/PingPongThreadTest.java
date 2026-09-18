@@ -7,14 +7,17 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
+import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class PingPongThreadTest {
 
+	private final ConfigSnapshot svStatsSnapshot = ConfigSnapshot.of(SvStatsConfig.class, "SVSTATS_ENABLE");
+
 	@AfterEach
 	void resetStatsConfig() {
-		SvStatsConfig.SVSTATS_ENABLE = false;
+		svStatsSnapshot.restore();
 	}
 
 	@Test
@@ -39,6 +42,8 @@ class PingPongThreadTest {
 
 	@Test
 	void svStatsUpdatesAreSkippedWhenTheFeatureIsDisabled() {
+		// 直接关闭开关，保证用例与执行顺序无关。
+		// Disable the switch directly so the case does not depend on execution order.
 		SvStatsConfig.SVSTATS_ENABLE = false;
 
 		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOffline(1));

@@ -5,25 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.testutil.ConfigSnapshot;
+
 /**
  * {@link ThreadConfig} 的派生状态与 Spring 绑定契约。
  * Derived-state and Spring-binding contract for {@link ThreadConfig}.
  */
 class ThreadConfigTest {
 
-	private static final int SAVED_BASE = ThreadConfig.BASE_THREAD_POOL_SIZE;
-	private static final int SAVED_EXTRA = ThreadConfig.EXTRA_THREAD_PER_CORE;
-	private static final long SAVED_RUNTIME = ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING;
-	private static final boolean SAVED_PRIORITIES = ThreadConfig.USE_PRIORITIES;
-	private static final int SAVED_POOL = ThreadConfig.THREAD_POOL_SIZE;
+	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(ThreadConfig.class,
+		"BASE_THREAD_POOL_SIZE", "EXTRA_THREAD_PER_CORE", "MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING",
+		"USE_PRIORITIES", "THREAD_POOL_SIZE");
 
 	@AfterEach
 	void restore() {
-		ThreadConfig.BASE_THREAD_POOL_SIZE = SAVED_BASE;
-		ThreadConfig.EXTRA_THREAD_PER_CORE = SAVED_EXTRA;
-		ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = SAVED_RUNTIME;
-		ThreadConfig.USE_PRIORITIES = SAVED_PRIORITIES;
-		ThreadConfig.THREAD_POOL_SIZE = SAVED_POOL;
+		configSnapshot.restore();
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -16,9 +17,11 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 class DpUseActionTest {
 
+	private final ConfigSnapshot skillConfigSnapshot = ConfigSnapshot.of(SkillConfig.class, "CONSUME_DP");
+
 	@AfterEach
 	void resetConfig() {
-		SkillConfig.CONSUME_DP = true;
+		skillConfigSnapshot.restore();
 	}
 
 	@Test

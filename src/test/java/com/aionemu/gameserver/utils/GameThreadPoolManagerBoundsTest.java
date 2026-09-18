@@ -11,6 +11,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,9 +50,8 @@ class GameThreadPoolManagerBoundsTest {
 	 */
 	@Test
 	void injectedThreadConfigDecidesPoolSizes() throws Exception {
-		int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
-		int savedExtra = ThreadConfig.EXTRA_THREAD_PER_CORE;
-		int savedSize = ThreadConfig.THREAD_POOL_SIZE;
+		ConfigSnapshot snapshot = ConfigSnapshot.of(ThreadConfig.class,
+			"BASE_THREAD_POOL_SIZE", "EXTRA_THREAD_PER_CORE", "THREAD_POOL_SIZE");
 		ThreadConfig config = new ThreadConfig();
 		try {
 			config.setBasepoolsize(7);
@@ -66,9 +66,7 @@ class GameThreadPoolManagerBoundsTest {
 				manager.shutdown();
 			}
 		} finally {
-			ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
-			ThreadConfig.EXTRA_THREAD_PER_CORE = savedExtra;
-			ThreadConfig.THREAD_POOL_SIZE = savedSize;
+			snapshot.restore();
 		}
 	}
 

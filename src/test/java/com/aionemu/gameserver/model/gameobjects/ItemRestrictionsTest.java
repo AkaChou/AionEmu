@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.configs.main.MembershipConfig;
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ItemMask;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
@@ -23,12 +24,8 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 class ItemRestrictionsTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private byte originalStoreWhAll;
-	private byte originalStoreAwhAll;
-	private byte originalStoreLwhAll;
-	private byte originalTradeAll;
-	private byte originalRemodelAll;
-	private byte originalDisableSoulbind;
+	private final ConfigSnapshot membershipSnapshot = ConfigSnapshot.of(MembershipConfig.class,
+		"STORE_WH_ALL", "STORE_AWH_ALL", "STORE_LWH_ALL", "TRADE_ALL", "REMODEL_ALL", "DISABLE_SOULBIND");
 
 	/**
 	 * 为权限判定设置互不相同的会员等级，避免未配置默认值 0 使全部权限同时命中。
@@ -36,12 +33,6 @@ class ItemRestrictionsTest {
 	 */
 	@BeforeEach
 	void setUpMembershipLevels() {
-		originalStoreWhAll = MembershipConfig.STORE_WH_ALL;
-		originalStoreAwhAll = MembershipConfig.STORE_AWH_ALL;
-		originalStoreLwhAll = MembershipConfig.STORE_LWH_ALL;
-		originalTradeAll = MembershipConfig.TRADE_ALL;
-		originalRemodelAll = MembershipConfig.REMODEL_ALL;
-		originalDisableSoulbind = MembershipConfig.DISABLE_SOULBIND;
 		MembershipConfig.STORE_WH_ALL = 5;
 		MembershipConfig.STORE_AWH_ALL = 6;
 		MembershipConfig.STORE_LWH_ALL = 7;
@@ -56,12 +47,7 @@ class ItemRestrictionsTest {
 	 */
 	@AfterEach
 	void restoreMembershipLevels() {
-		MembershipConfig.STORE_WH_ALL = originalStoreWhAll;
-		MembershipConfig.STORE_AWH_ALL = originalStoreAwhAll;
-		MembershipConfig.STORE_LWH_ALL = originalStoreLwhAll;
-		MembershipConfig.TRADE_ALL = originalTradeAll;
-		MembershipConfig.REMODEL_ALL = originalRemodelAll;
-		MembershipConfig.DISABLE_SOULBIND = originalDisableSoulbind;
+		membershipSnapshot.restore();
 	}
 
 	@Test

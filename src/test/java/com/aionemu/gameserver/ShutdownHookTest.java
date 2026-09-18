@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
@@ -37,18 +38,14 @@ class ShutdownHookTest {
 
     private final ObjenesisStd objenesis = new ObjenesisStd();
     private GameWorldBootstrapServices worldBootstrapServices;
-    private boolean oldDespawnNpcs;
-
-    @BeforeEach
-    void rememberShutdownConfig() {
-        oldDespawnNpcs = ShutdownConfig.DESPAWN_NPCS;
-    }
+    private final ConfigSnapshot shutdownConfigSnapshot =
+        ConfigSnapshot.of(ShutdownConfig.class, "DESPAWN_NPCS");
 
     @AfterEach
     void resetEmbeddedMode() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         AionEmbeddedShutdownHandler.clear();
-        ShutdownConfig.DESPAWN_NPCS = oldDespawnNpcs;
+        shutdownConfigSnapshot.restore();
         if (worldBootstrapServices != null) {
             worldBootstrapServices.destroy();
         }

@@ -10,19 +10,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.aionemu.testutil.ConfigSnapshot;
+
 class VipConfigPathTest {
 
     @TempDir
     Path tempDir;
-    private final boolean originalAutoEnable = VipConfig.AUTO_ENABLE;
-    private final int originalAutoEnableLevel = VipConfig.AUTO_ENABLE_LEVEL;
+    private final ConfigSnapshot vipSnapshot = ConfigSnapshot.of(VipConfig.class,
+        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL", "STS_ENABLE", "STS_HOST", "STS_PORT");
 
     @AfterEach
     void resetConfig() {
         System.clearProperty("aion.config.dir");
         Config.setBootOverrides(null);
-        VipConfig.AUTO_ENABLE = originalAutoEnable;
-        VipConfig.AUTO_ENABLE_LEVEL = originalAutoEnableLevel;
+        vipSnapshot.restore();
     }
 
     @Test

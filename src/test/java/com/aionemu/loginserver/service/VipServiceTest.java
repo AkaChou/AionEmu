@@ -8,19 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.loginserver.configs.VipConfig;
 import com.aionemu.loginserver.dao.VipDAO;
 import com.aionemu.loginserver.model.Vip;
 
 class VipServiceTest {
 
-    private final boolean originalAutoEnable = VipConfig.AUTO_ENABLE;
-    private final int originalLevel = VipConfig.AUTO_ENABLE_LEVEL;
+    private final ConfigSnapshot vipConfigSnapshot = ConfigSnapshot.of(VipConfig.class,
+        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL");
 
     @AfterEach
     void restoreConfig() {
-        VipConfig.AUTO_ENABLE = originalAutoEnable;
-        VipConfig.AUTO_ENABLE_LEVEL = originalLevel;
+        vipConfigSnapshot.restore();
     }
 
     @Test

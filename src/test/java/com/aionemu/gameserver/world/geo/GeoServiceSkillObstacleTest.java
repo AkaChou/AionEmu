@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 
+import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 class GeoServiceSkillObstacleTest {
 
-	private final boolean oldCanSeeEnable = GeoDataConfig.CANSEE_ENABLE;
+	private final ConfigSnapshot geoConfigSnapshot = ConfigSnapshot.of(GeoDataConfig.class, "CANSEE_ENABLE");
 	private final MaterialData oldMaterialData = DataManager.MATERIAL_DATA;
 
 	@BeforeEach
@@ -41,7 +42,7 @@ class GeoServiceSkillObstacleTest {
 
 	@AfterEach
 	void tearDown() {
-		GeoDataConfig.CANSEE_ENABLE = oldCanSeeEnable;
+		geoConfigSnapshot.restore();
 		DataManager.MATERIAL_DATA = oldMaterialData;
 	}
 
