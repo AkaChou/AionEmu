@@ -19,11 +19,27 @@
 | `dbb2725d7` | Ladder 身份外观域 | `LadderService`（1474→1235 行）战场身份/外观展示域（getBgCloak 披风查表、getName 名称脱敏、getNameByIndex 队伍名、getCapeEmblemByIndex 徽章查表，约 280 行）→ package-private `BattlegroundIdentity` 静态类；门面签名不变。测试 `Ladder*` 通过。 |
 | `152b99522` | Attack 控制效果域 | `AttackUtil`（1459→1156 行）暴击控制效果域（isSkillEffect 控制系技能查表约 260 行 + applyEffectOnCritical 武器暴击踉跄/摔倒规则）→ package-private `AttackControlEffects`；门面保留（当前全库零外部调用方，API 兼容优先）。测试 `AttackUtilTest` 通过。 |
 | `69ac7b2ba` | 审计汇总扩充 | rounds 2–4 + Spring Bean 边界扫描结论。 |
+| `9832bddd9` | Legion 申请流域 | `LegionRestrictions`（810→703 行）入团申请流域（搜索、招募设置、申请提交/取消/批复、仓库历史，11 方法约 250 行）→ package-private `LegionJoinRequests`（持 service + permissions 双引用）；原方法一行委托，`LegionService` 调用链不变。测试 `LegionServiceTest` 等三件套通过。 |
+| `a399dff9d` | 击杀奖励公式域 | `StatFunctions`（1224→1095 行）奖励公式（solo/group XP/DP、PVP AP/GP/XP/DP 共 11 方法约 265 行）→ package-private `KillRewardFormulas`：奖励数值调整与战斗公式变化原因不同；跨域调用（ApNpcRating/calculateRatingMultipler）显式宿主前缀。测试 `StatFunctionsTest` 通过。 |
+| `e83b9287e` | 审计汇总 round 5 | BattlegroundIdentity/AttackControlEffects + Equipment 保留审计。 |
 
 ## 追加审计结论（round 5）
 
 - **Equipment（1377 行）**：装备容器 + 校验规则深度耦合私有 `equipment` TreeMap 与 `owner` 字段（validateEquippedWeapon/validateEquippedArmor 直读私有容器）；同包拆出需扩字段可见性，风险大于收益。soulBindItem（75 行）独立过小。**保留**。
-- **EffectController（1366 行）/ MinionService（1317 行）/ BrokerService（1255 行）/ PlayerController（1453 行）/ StatFunctions（1223 行）**：控制器/容器/公式集合，方法间共享内部状态密集；本轮未逐域展开，列入 backlog 待按同一标准审计。
+- **EffectController（1366 行）/ MinionService（1317 行）/ BrokerService（1255 行）/ PlayerController（1453 行）**：控制器/容器，方法间共享内部状态密集；列入 backlog 待按同一标准审计。
+
+## 追加审计结论（round 6）
+
+- **LegionRestrictions（拆分后 703 行）**：剩余为纯权限校验（can* 判定 + is/isValid 辅助），职责已单一，**保留**。
+- **StatFunctions（拆分后 1095 行）**：剩余为战斗命中/伤害/防御公式（单一变化原因：战斗平衡），**保留**。
+- **全量测试事故记录**：首次全量 `mvn test`（后台）运行期间并发执行了聚焦 `mvn compile`，两个 Maven 进程写同一 `target/` 导致产物混乱（NoClassDefFound 等 297 Errors 无效）；已整改——重跑期间不执行任何并发 Maven 操作，以重跑结果为准。教训：后台全量测试与任何 mvn 命令严格串行。
+
+## 全量测试回归结论（已授权执行，基线对照）
+
+- **当前 HEAD 全量**：3401 例，70 Failures + 21 Errors（80 失败用例 / 41 类），其中 39 类在 questEngine 包（并行 quest 任务 P1–P5 契约对齐活跃域）。
+- **基线对照（临时 worktree @ b2361c2cf，用后已 remove --force + prune）**：42 个失败类。用例级 diff：HEAD 新增 2 类失败（SilenteraSpawnedDialogFamilyTest 断言 NPC ID 143620≠71810、QuestDispatchToVerteronFamilyProductionFlowTest 断言 quest 11237≠14046），均为 **quest 静态数据断言**；基线失败消失 3 类（并行任务期间已修复）。
+- **归因**：时间窗内并行 quest 任务持续提交 XML 修复/回滚（如 `928e01067`、`32b59d6d6`），这两个数据断言失败随其 XML 演进波动；本轮 8 个拆分域（Item/Player/Legion/Enchant/Teleport/Ladder/Attack/Stats）**零新增失败**，全部聚焦测试通过。
+-quest 域失败为并行任务中间状态欠账，应随其 P5 收敛，不在本 goal 修复范围。
 
 ## Spring Bean 边界整理（扫描结论：已达标）
 
