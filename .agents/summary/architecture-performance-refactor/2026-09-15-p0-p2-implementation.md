@@ -94,7 +94,7 @@
 ## Notes
 
 - 计划中提到的 `FortressSiegeTest`、`PlayerGroupServiceTest`、`PlayerDAOTest` 当前仓库不存在；不得将其表述为已运行。
-- `startup-20260824.jfr` 是任务前已有 untracked 文件，未纳入本次改动范围。
+- 工作区中任务前已有的启动期 JFR 采样文件（临时产物，未跟踪、不入库）未纳入本次改动范围。
 
 ### 全量测试与基线对照 (2026-09-15)
 

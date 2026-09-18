@@ -1,7 +1,8 @@
 # P0–P2 改造后 JFR 量化记录 / JFR after the P0–P2 refactor
 
 日期 / Date: 2026-09-15 · 提交 / Commit: `de4a66e20` · 分支 / Branch: `quest`
-采集来源 / Source: IDEA 运行配置 `-XX:StartFlightRecording=name=AionStartup,settings=profile,duration=45s,filename=startup-20260824.jfr`
+采集来源 / Source: IDEA 运行配置 `-XX:StartFlightRecording=name=AionStartup,settings=profile,duration=45s,filename=<临时文件>.jfr`
+（JFR 为一次性采样产物：文件名由本地运行配置指定，每次启动覆盖，不长期保留、不入库，因此本文不记录具体文件名与路径。）
 窗口 / Window: 19:13:35 – 19:14:20（45s，覆盖启动 + 静态数据 + 刷怪；客户端 19:14:22 登录，**不在窗口内**）
 
 ## 启动阶段耗时 / Startup phases
@@ -33,16 +34,17 @@
 
 ```bash
 JFR=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/jfr
-$JFR summary startup-20260824.jfr
-$JFR view --width 130 hot-methods startup-20260824.jfr
-$JFR view contention-by-site startup-20260824.jfr
-$JFR view --width 120 allocation-by-class startup-20260824.jfr
-$JFR view gc startup-20260824.jfr
+JFR_FILE=/tmp/startup.jfr   # 本地临时采样文件：按运行配置的 filename 指定，每次启动覆盖，不入库
+$JFR summary "$JFR_FILE"
+$JFR view --width 130 hot-methods "$JFR_FILE"
+$JFR view contention-by-site "$JFR_FILE"
+$JFR view --width 120 allocation-by-class "$JFR_FILE"
+$JFR view gc "$JFR_FILE"
 grep "GameStartupSequenceLifecycle" log/console.log | tail -30
 ```
 
 ## 下一步 / Next
 
-在游戏内另录一段 JFR（建议 5 分钟，`jcmd <pid> JFR.start duration=300s filename=play.jfr`），再按同样四个视图分析 `KnownList.doOnAll*`、`MapRegion`、`PacketProcessor`、`AConnection.writeData` 与 Spring 门面在**真实玩法**下的热点/分配/竞争。注意 `startup-20260824.jfr` 每次启动都会被覆盖，需要留档时应另存文件名。
+在游戏内另录一段 JFR（建议 5 分钟，`jcmd <pid> JFR.start duration=300s filename=play.jfr`），再按同样四个视图分析 `KnownList.doOnAll*`、`MapRegion`、`PacketProcessor`、`AConnection.writeData` 与 Spring 门面在**真实玩法**下的热点/分配/竞争。注意启动期 JFR 是临时产物，每次启动都会被覆盖，需要留档时应另存文件名。
 
 > 后续进展 / Follow-up：游戏内窗口已完成，见 [2026-09-15-gameplay-jfr-hotspots.md](2026-09-15-gameplay-jfr-hotspots.md) —— 结论是热路径锁竞争为 0、本次改造的类全部不在热点，真正的瓶颈是 geo 寻路的装箱分配；该文档同时记录了已实施的 `RealGeoData` / `PathData` 优化与 `NODE_LIMIT` 诊断。

@@ -4,7 +4,7 @@ quest: 3926「The Sorcerer Preceptor's Task / 魔道星老师的考验」
 user acceptance confirmation: 用户原话“验证通过”；2026-09-09；结合当前任务上下文，未限定职业分支或步骤，按规则视为整个任务客户端流程验收完成。
 server launch mode: not captured（服务端由用户管理）
 repository commit: 880af62b7
-working tree: dirty；3926 修复 XML 与专项测试已在上述提交中；当前无暂存改动，工作区仅保留未跟踪的 `.agents/summary/quest/__pycache__/` 与 `../../../startup-20260824.jfr`；其间已有并发提交 `adc5cbc0b`，未改写。
+working tree: dirty；3926 修复 XML 与专项测试已在上述提交中；当前无暂存改动，工作区仅保留未跟踪的 `.agents/summary/quest/__pycache__/` 与仓库根目录下的临时 JFR 采样文件（由 `*.jfr` 忽略规则排除）；其间已有并发提交 `adc5cbc0b`，未改写。
 Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据见 `../../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-dialog-action-details.csv`、`quest-order-audit.csv`；newly collected SHA-256: not captured
 npc template/object: NPC template 203706；runtime object ID: not captured；interaction object provenance: not captured
 map/instance: world/instance not captured；entry/reentry context: not captured
