@@ -271,7 +271,7 @@ root_cause: EnvironmentPostProcessor 对**每一个** `SpringApplication` 实例
 fix_or_guardrail: 全局解析器只由单例 Bean 在上下文装配期发布一次（`BootConfigSourceResolver` 的 `@PostConstruct`）；post-processor 只注册 property source，并以 `addLast` 的最低优先级注册（命令行/系统属性/环境变量/application.yml 仍覆盖文件值）；Bean 的构造器、字段初始化器、`@PostConstruct` 一律不得读 `XxxConfig` 静态字段，需要就在构造期注入
 evidence: src/main/java/com/aionemu/boot/config/BootConfigSourceResolver.java:42; src/main/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessor.java:45; src/main/java/com/aionemu/gameserver/lifecycle/GameUtilityServicesRuntimeBridge.java:54; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:61; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:80; .agents/summary/architecture-refactor/2026-09-18-config-and-fragment-consolidation.md
 validation: mvn -B clean test 3456 例 / 0 失败 / 0 错误 / 2 跳过；com.aionemu.boot.** 85 例全绿（含本轮 3 个新用例）；审计确认 Bean 内静态配置读取 30 处全部位于 Config.load() 之后的方法体内
-boundaries: 静态配置类保持静态的前提是"没有构造期读取"；一旦某 Bean 需要构造期取值，就必须像 ThreadConfig / SvStatsConfig 那样注入化，不能靠清理顺序兜底。提交信息不等于代码事实——"已移除某全局写入"必须在源码里复核
+boundaries: `configs/**` 的归类以落盘位置为准——凡由 `aion/config/**` 载入的类（含 `configs/schedule`、`configs/ingameshop` 这类 JAXB 类型）都是配置，不得当成静态数据搬去 dataholders；静态配置类保持静态的前提是"没有构造期读取"；一旦某 Bean 需要构造期取值，就必须像 ThreadConfig / SvStatsConfig 那样注入化，不能靠清理顺序兜底。提交信息不等于代码事实——"已移除某全局写入"必须在源码里复核
 superseded_by: none
 first_check: EnvironmentPostProcessor 或静态初始化块里是否写了全局状态；Bean 构造器 / @PostConstruct 里是否读了 XxxConfig 字段
 -->
