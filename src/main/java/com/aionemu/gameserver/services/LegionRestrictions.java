@@ -7,27 +7,20 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
 import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.IStorage;
-import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionHistoryType;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
-import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team.legion.LegionPermissionsMask;
 import com.aionemu.gameserver.model.team.legion.LegionWarehouse;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_EDIT;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_PLAYER;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_SEARCH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -60,6 +53,22 @@ final class LegionRestrictions {
 	 */
 	LegionRestrictions(LegionService service) {
 		this.service = service;
+	}
+
+	/** 申请流域实现，按需构造 / join-request flow implementation, built on demand. */
+	private LegionJoinRequests joinRequestsImpl;
+
+	/**
+	 * 惰性获取申请流域实现。
+	 * Lazily resolves the join-request flow implementation.
+	 */
+	private LegionJoinRequests joinRequests() {
+		LegionJoinRequests current = joinRequestsImpl;
+		if (current == null) {
+			current = new LegionJoinRequests(service, this);
+			joinRequestsImpl = current;
+		}
+		return current;
 	}
 
 	/**
@@ -553,17 +562,7 @@ final class LegionRestrictions {
 	 * Destination storage
 	 */
 	void addWHItemHistory(Player player, int itemId, long count, IStorage sourceStorage, IStorage destStorage) {
-		Legion legion = player.getLegion();
-		if (legion != null) {
-			String description = itemId + ":" + count;
-			if (sourceStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				service.addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
-						description);
-			} else if (destStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				service.addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
-						description);
-			}
-		}
+		joinRequests().addWHItemHistory(player, itemId, count, sourceStorage, destStorage);
 	}
 
 	/**
@@ -575,20 +574,7 @@ final class LegionRestrictions {
 	 * @param legionName 名称关键字 / Name keyword
 	 */
 	void handleLegionSearch(Player player, int type, String legionName) {
-		List<Legion> matchingLegions = new ArrayList<>();
-		switch (type) {
-		case 0:
-			matchingLegions = service.getAllCachedLegions();
-			break;
-		case 1:
-			for (Legion legion : service.getAllCachedLegions()) {
-				if (legion.getLegionName().toLowerCase().contains(legionName.toLowerCase())) {
-					matchingLegions.add(legion);
-				}
-			}
-			break;
-		}
-		PacketSendUtility.sendPacket(player, new SM_LEGION_SEARCH(matchingLegions));
+		joinRequests().handleLegionSearch(player, type, legionName);
 	}
 
 	/**
@@ -599,15 +585,7 @@ final class LegionRestrictions {
 	 * Join description
 	 */
 	void setJoinDescription(Player player, String description) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (canChangeLegionJoinSetting(player)) {
-			legion.setDescription(description);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0C, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		joinRequests().setJoinDescription(player, description);
 	}
 
 	/**
@@ -618,15 +596,7 @@ final class LegionRestrictions {
 	 * Join type
 	 */
 	void setJoinType(Player player, int joinType) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (canChangeLegionJoinSetting(player)) {
-			legion.setJoinType(joinType);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0D, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		joinRequests().setJoinType(player, joinType);
 	}
 
 	/**
@@ -637,15 +607,7 @@ final class LegionRestrictions {
 	 * Minimum level
 	 */
 	void setJoinMinLevel(Player player, int minLevel) {
-		Legion legion = player.getLegion();
-		if (legion == null) {
-			return;
-		}
-		if (canChangeLegionJoinSetting(player)) {
-			legion.setMinJoinLevel(minLevel);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0E, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
-		}
+		joinRequests().setJoinMinLevel(player, minLevel);
 	}
 
 	/**
@@ -656,13 +618,7 @@ final class LegionRestrictions {
 	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
 	 */
 	void sendLegionJoinRequestPacket(Player player, int legionId) {
-		if (legionId <= 0) {
-			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
-		} else {
-			Legion legion = service.getLegion(legionId);
-			PacketSendUtility.sendPacket(player,
-					new SM_LEGION_REQUEST_INFO(legion.getLegionId(), legion.getLegionName()));
-		}
+		joinRequests().sendLegionJoinRequestPacket(player, legionId);
 	}
 
 	/**
@@ -672,14 +628,7 @@ final class LegionRestrictions {
 	 * Target player
 	 */
 	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
-		int legionId = player.getCommonData().getJoinRequestLegionId();
-		if (legionId <= 0) {
-			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
-		} else {
-			Legion legion = service.getLegion(legionId);
-			PacketSendUtility.sendPacket(player,
-					new SM_LEGION_REQUEST_INFO(legion.getLegionId(), legion.getLegionName()));
-		}
+		joinRequests().sendLegionJoinRequestPacketonEnterWorld(player);
 	}
 
 	/**
@@ -692,30 +641,7 @@ final class LegionRestrictions {
 	 * Application message
 	 */
 	void handleLegionJoinRequest(Player player, int legionId, int joinType, String joinRequestMsg) {
-		Legion legion = service.getLegion(legionId);
-		if (legion == null) {
-			return;
-		}
-		switch (joinType) {
-		case 0:
-			player.getCommonData().setJoinRequestLegionId(legionId);
-			sendLegionJoinRequestPacket(player, legionId);
-			LegionJoinRequest ljr = new LegionJoinRequest(legionId, player, joinRequestMsg);
-			legion.addJoinRequest(ljr);
-			DAOManager.getDAO(LegionDAO.class).storeLegionJoinRequest(ljr);
-			player.getCommonData().setJoinRequestLegionId(legionId);
-			Player brigadeGeneral = service.getBrigadeGeneral(legion);
-			if (brigadeGeneral != null) {
-				PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST_PLAYER(ljr));
-			}
-			break;
-		case 1:
-			service.directAddPlayer(legion, player);
-			break;
-		default:
-			PacketSendUtility.sendMessage(player, "This Legion isn't recruiting new members..");
-			break;
-		}
+		joinRequests().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
 	}
 
 	/**
@@ -726,14 +652,7 @@ final class LegionRestrictions {
 	 * Legion id
 	 */
 	void handleJoinRequestCancel(Player player, int legionId) {
-		Legion legion = service.getLegion(legionId);
-		player.clearJoinRequest();
-		sendLegionJoinRequestPacket(player, 0);
-		legion.getJoinRequestMap().remove(player.getObjectId());
-		Player bg = service.getBrigadeGeneral(legion);
-		if (bg != null) {
-			PacketSendUtility.sendPacket(bg, new SM_LEGION_REQUEST(player.getObjectId(), false));
-		}
+		joinRequests().handleJoinRequestCancel(player, legionId);
 	}
 
 	/**
@@ -743,24 +662,7 @@ final class LegionRestrictions {
 	 * Applying player
 	 */
 	void handleJoinRequestGetAnswer(Player player) {
-		PlayerCommonData pcd = player.getCommonData();
-		switch (pcd.getJoinRequestState()) {
-		case ACCEPTED:
-			if (!player.isOnAStation()) {
-				service.directAddPlayer(pcd.getJoinRequestLegionId(), player);
-				handleJoinRequestCancel(player, player.getCommonData().getJoinRequestLegionId());
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_APPLICATION_ACCEPTED);
-			} else {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_JOIN_SERVER_CHANGE);
-			}
-			break;
-		case DENIED:
-			handleJoinRequestCancel(player, player.getCommonData().getJoinRequestLegionId());
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LEGION_APPLICATION_DENIED);
-			break;
-		default:
-			break;
-		}
+		joinRequests().handleJoinRequestGetAnswer(player);
 	}
 
 	/**
@@ -772,23 +674,7 @@ final class LegionRestrictions {
 	 * Whether accepted
 	 */
 	void handleJoinRequestGiveAnswer(Player brigadeGeneral, int playerId, boolean accept) {
-		boolean playerOnline = true;
-		LegionJoinRequestState state = accept ? LegionJoinRequestState.ACCEPTED : LegionJoinRequestState.DENIED;
-		Legion legion = brigadeGeneral.getLegion();
-		if (legion == null) {
-			return;
-		}
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
-		if (player == null) {
-			playerOnline = false;
-			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);
-			legion.getJoinRequestMap().remove(playerId);
-		}
-		PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST(playerId, accept));
-		if (playerOnline) {
-			player.getCommonData().setJoinRequestState(state);
-			handleJoinRequestGetAnswer(player);
-		}
+		joinRequests().handleJoinRequestGiveAnswer(brigadeGeneral, playerId, accept);
 	}
 
 	/**
