@@ -58,7 +58,7 @@
 52 个含 `@Property` 的类全部出现在 `ConfigurableProcessor.process(Xxx.class, ...)` 调用里，不存在
 "新增了配置类但忘了挂进加载器"的情况。
 
-### 死字段：14 个（登记，暂不删除）
+### 死字段：14 个（登记；见文末裁决，已按客户端证据处理）
 
 `AdvCustomConfig.CRAFT_DELAYTIME_RATE`、`AutoGroupConfig.IDTM_LOBBY_E01_*` / `_P02_*`（6 个）、
 `BrokerConfig.SAVE_MANAGER_INTERVAL`、`loginserver Config.ACCOUNT_CHARSET`、`EventsConfig.EVENT_GIVE_JUICE`、
@@ -86,3 +86,43 @@
 
 出现下列情况时才重新评估：某个配置类开始被 Bean **在构造期**读取（本次审计脚本可直接复用），或需要
 `@ConfigurationProperties` 的校验 / 刷新语义。
+
+## 追加裁决（2026-09-18 晚）：按客户端证据逐个定性
+
+判定方法：对一个零引用旋钮，先在客户端与随包数据里找它的对应物——
+客户端目录 `/Users/mc/IdeaProjects/5.8客户端`（`Levels/` 地图、`data/` 表、`docs/data/*ID和名字.txt`
+抽取表）以及服务端 `aion/data/static_data/**`。**找得到对应内容⇒保留（属预留旋钮）；找不到⇒删除。**
+
+### 保留：8 个（客户端确认存在）
+
+| 字段 | 客户端/数据证据 |
+|---|---|
+| `EventsConfig.EVENT_GIVE_JUICE` | 物品 `160009017` = 苹果汁（`STR_EVENT_FOOD_DRINK_01`）；NPC 雷琳(799702)、箩雅(799703) |
+| `EventsConfig.EVENT_GIVE_CAKE` | 物品 `160010073` = [扎库隆]蛋糕块（`STR_EVENT_FOOD_CAKE_01`）；NPC 布里奥斯(798414)、宝丹(798416) |
+| `AutoGroupConfig.IDTM_LOBBY_E01_*`（3） | 客户端地图 `Levels/IDTM_LobbyE_01`；服务端 `auto_group.xml`(id=129/302370000)、`AutoGroupType.IDTM_LOBBY_E_01`、`WorldMapType`、`instance_cooltimes.xml` |
+| `AutoGroupConfig.IDTM_LOBBY_P02_*`（3） | 客户端地图 `Levels/IDTM_LobbyP_02`（另有 `data/Dialogs/idtm_arena`）；服务端 `auto_group.xml`(id=128/302420000)、`AutoGroupType.IDTM_LOBBY_P_02` |
+
+> IDTM 家族里 `IDTM_LOBBY_P_01`(127/302390000) 已由 `GrandArenaTrainingCampService` 用
+> `GRAND_ARENA_TRAINING_CAMP_*` 三件套接线（`isGrandArenaTrainingCamp()` 只对 P_01 返回 true）。
+> 即 E_01 / P_02 的大厅调度尚未实现，配置旋钮保留待实现；接线时注意数据侧写法是
+> `IDTM_LobbyE_01` / `IDTM_LobbyP_02`，与当前键名 `IDTM_Lobby_E01` / `IDTM_Lobby_P02` 不一致。
+
+### 删除：6 个（客户端、数据、历史实现三处都无对应物）
+
+| 字段 | 判定依据 |
+|---|---|
+| `BrokerConfig.SAVE_MANAGER_INTERVAL` | 旧"交易行存盘管理器"间隔；`BrokerService` 现用 `CHECK_EXPIRED_ITEMS_INTERVAL`，属被替代的残留；服务端持久化细节，客户端无对应物。同时删除 `main/broker.properties` 的键与注释 |
+| `AdvCustomConfig.CRAFT_DELAYTIME_RATE` | 键 `gameserver.craft.delaytime,rate` 自带逗号（疑似两个键拼错），无配置行、无实现；制作延迟由 `recipeTemplate.getCraftDelayTime()` 数据驱动 |
+| `loginserver Config.ACCOUNT_CHARSET` | `accounts.charset`，账号库字符集；现代代码按 Java String/UTF-8 处理，无配置行、无实现 |
+| `GroupConfig.TEAM2_ENABLE` | "启用 Team2 系统"——`model.team2.*` 已是唯一实现（无旧/新双轨可切），开关没有语义，客户端也没有这个开关。无配置行 |
+| `SecurityConfig.CAPTCHA_EXTRACTION_BAN_ADD_TIME` | 历史实现见 `9639ce717`：`+ CAPTCHA_EXTRACTION_BAN_ADD_TIME * count` 已被该"清理死代码"提交删除，只剩字段。同时删除 `main/security.properties` 的键与注释 |
+| `SecurityConfig.CAPTCHA_BONUS_FP_TIME` | 同上：`9639ce717` 删除了 `increaseFp(TYPE.FP, CAPTCHA_BONUS_FP_TIME)`。同时删除 `main/security.properties` 的键与注释 |
+
+注：验证码功能本身仍在（客户端字符串表有 `STR_MSG_CAPTCHA_*`，服务端有 `SM_CAPTCHA` /
+`CAPTCHAUtil`），被删的只是"通过验证码奖励 FP""失败追加封禁"这两条已移除行为的旋钮。
+
+### 验证
+
+- `python3 .agents/summary/architecture-refactor/audit_dead_config_fields.py`：死字段从 14 降到 8，
+  即剩余的正是上表"保留"的 IDTM(6) + 活动赠品(2)；
+- `mvn -B clean test` → **3456 例，0 失败 0 错误，2 跳过，BUILD SUCCESS**。

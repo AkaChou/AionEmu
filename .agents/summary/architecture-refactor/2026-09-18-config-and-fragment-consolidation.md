@@ -410,5 +410,5 @@ ConfigSourceResolverHolder.publish(environment::getProperty);
   `Config.load()` 之后由 `AionServiceLauncher` 按相位调用的方法体内）；
 - 3 个重复键是游戏服/聊天服各自加载同一份 `network/network.properties` 的镜像声明，取值必然一致；
 - 52 个配置类全部被 `ConfigurableProcessor.process(...)` 覆盖，不存在漏挂加载器的类；
-- 14 个字段全库零引用（其中 5 个在随包配置里保留着对应键），登记为"预留旋钮"，本轮不删除；
+- 14 个零引用字段按"客户端是否有对应物"逐个定性（2026-09-18 晚）：8 个保留、6 个删除，详见 static-config-classes-decision.md 的追加裁决；
 - 结论：**其余 50 个静态配置类保持静态**，不迁移为 Spring Bean。

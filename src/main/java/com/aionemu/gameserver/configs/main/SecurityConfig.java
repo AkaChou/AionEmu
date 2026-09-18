@@ -115,18 +115,6 @@ public class SecurityConfig {
 	@Property(key = "gameserver.security.captcha.extraction.ban.time", defaultValue = "3000")
 	public static int CAPTCHA_EXTRACTION_BAN_TIME;
 	/**
-	 * 验证码失败额外增加的封禁时长。
-	 * Additional extraction ban time after captcha failure.
-	 */
-	@Property(key = "gameserver.security.captcha.extraction.ban.add.time", defaultValue = "600")
-	public static int CAPTCHA_EXTRACTION_BAN_ADD_TIME;
-	/**
-	 * 验证码成功奖励的飞行点时间。
-	 * Bonus flight point time for successful captcha.
-	 */
-	@Property(key = "gameserver.security.captcha.bonus.fp.time", defaultValue = "5")
-	public static int CAPTCHA_BONUS_FP_TIME;
-	/**
 	 * 是否启用二级密码。
 	 * Whether passkey is enabled.
 	 */

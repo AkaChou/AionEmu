@@ -8,12 +8,6 @@ import com.aionemu.commons.configuration.Property;
  */
 public class BrokerConfig {
 	/**
-	 * 交易行存盘管理器执行间隔。
-	 * Broker save manager interval.
-	 */
-	@Property(key = "gameserver.broker.save.manager.interval", defaultValue = "6")
-	public static int SAVE_MANAGER_INTERVAL;
-	/**
 	 * 过期物品检查间隔。
 	 * Interval for checking expired broker items.
 	 */
