@@ -161,6 +161,9 @@ def main():
             if t not in retail_tiers:
                 continue
             numeric, items, unmapped = retail_tiers[t]
+            # 全 0 数值且无道具的档位 = 真端空档（无实质奖励），生产单档表达合理
+            if not any(v != 0 for v in numeric.values()) and not items:
+                continue
             if unmapped:
                 note(f"TIER{t}_UNMAPPED", qid, "names unmappable")
                 continue
