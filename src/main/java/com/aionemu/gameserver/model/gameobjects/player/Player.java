@@ -1875,45 +1875,7 @@ public class Player extends Creature {
 	}
 
 	public String getCustomTag(boolean isForChatCommands) {
-		String customTag = getAcountTag() != "%s" ? getAcountTag() : getAccessTag();
-		String customTagForChatCommands = customTag != "%s" ? customTag.substring(0, customTag.indexOf("%")) : "";
-		return isForChatCommands ? customTagForChatCommands : customTag;
-	}
-
-	private String getAccessTag() {
-		String accessTag = "%s";
-		switch (getClientConnection().getAccount().getAccessLevel()) {
-		case 1:
-			accessTag = AdminConfig.ADMIN_TAG_1;
-			break;
-		case 2:
-			accessTag = AdminConfig.ADMIN_TAG_2;
-			break;
-		case 3:
-			accessTag = AdminConfig.ADMIN_TAG_3;
-			break;
-		case 4:
-			accessTag = AdminConfig.ADMIN_TAG_4;
-			break;
-		case 5:
-			accessTag = AdminConfig.ADMIN_TAG_5;
-			break;
-		default:
-			accessTag = "%s";
-		}
-		return accessTag;
-	}
-
-	private String getAcountTag() {
-		String accountName = getClientConnection().getAccount().getName();
-		String accountTag = "%s";
-		if (accountName.equalsIgnoreCase("Aion")) {
-			accountTag = MembershipConfig.PLAYER_TAG_30;
-		}
-		if (accountName.equalsIgnoreCase("5.8")) {
-			accountTag = MembershipConfig.PLAYER_TAG_34;
-		}
-		return accountTag;
+		return PlayerTags.getCustomTag(this, isForChatCommands);
 	}
 
 	public int getRawKillCount() {
