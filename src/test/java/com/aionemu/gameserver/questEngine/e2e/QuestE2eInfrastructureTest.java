@@ -21,6 +21,7 @@ import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQue
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -620,13 +621,18 @@ class QuestE2eInfrastructureTest {
 			.filter(candidate -> candidate.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc talk
 				&& talk.dialogId() != null && talk.dialogId() == 31 && !candidate.afterCommit().isEmpty())
 			.findFirst().orElseThrow();
-		com.aionemu.gameserver.questEngine.QuestEngine previous =
-			com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine();
+		ObjectProvider<com.aionemu.gameserver.questEngine.QuestEngine> previousProvider = engineProvider();
+		com.aionemu.gameserver.questEngine.QuestEngine previouslyResolved = resolvableEngine();
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
 			runtime.prepare(transition);
 			int objectId = runtime.state().currentObjectId();
 			int npcId = ((com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc) transition.event()).npcId();
 			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
+				// 换装 provider 后解析缓存必须失效：访问器要返回夹具引擎，而不是换装前解析的那一套。
+				// Swapping the provider must invalidate the resolved-engine cache, so the accessor serves the
+				// fixture engine instead of the instance resolved before the swap.
+				assertNotSame(previouslyResolved,
+					com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine());
 				QuestHeadlessClient.DispatchOutcome outcome = protocol.dispatch(
 					ClientActionRequest.dialog(definition.id(), npcId, objectId, 31));
 				assertTrue(outcome.handled(), outcome::toString);
@@ -638,7 +644,30 @@ class QuestE2eInfrastructureTest {
 				assertEquals(definition.id(), dialog.questId());
 			}
 		}
-		assertSame(previous, com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine());
+		assertSame(previousProvider, engineProvider());
+	}
+
+	/**
+	 * 反射读取当前任务引擎 provider；与夹具一样按字段比较，避免在无 provider 时触发已退役兜底的 fail-fast。
+	 * Reads the installed quest-engine provider reflectively, so the assertion compares providers instead of forcing
+	 * the retired fallback to fail fast when no provider is installed.
+	 */
+	@SuppressWarnings("unchecked")
+	private static ObjectProvider<com.aionemu.gameserver.questEngine.QuestEngine> engineProvider()
+			throws ReflectiveOperationException {
+		var field = com.aionemu.gameserver.lifecycle.GameEngineServices.class
+			.getDeclaredField("questEngineProvider");
+		field.setAccessible(true);
+		return (ObjectProvider<com.aionemu.gameserver.questEngine.QuestEngine>) field.get(null);
+	}
+
+	/** 解析当前可用的任务引擎；未安装 provider 时返回 null，不把退役兜底的异常当作故障。 / Resolves the currently available quest engine, or null when no provider is installed. */
+	private static com.aionemu.gameserver.questEngine.QuestEngine resolvableEngine() {
+		try {
+			return com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine();
+		} catch (IllegalStateException retiredFallback) {
+			return null;
+		}
 	}
 
 	@Test
