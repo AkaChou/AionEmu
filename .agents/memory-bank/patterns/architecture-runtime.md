@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-010`
+> Pattern IDs: `AR-001`–`AR-011`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
-> last_reviewed: 2026-09-17
+> last_reviewed: 2026-09-18
 
 ---
 
@@ -259,3 +259,24 @@ first_check: 构造函数里 `new` 的集合/锁；改造前先确认该容器�
 3. **绝不把字段写回占位符**：重置路径只 `clear()` 内容——其他线程可能仍持有已物化的引用，回写会让它们的写入凭空消失。
 4. **锁与表一起懒物化时，先发布锁、再发布表**（两个字段都 `volatile`）：读路径才能做到"看到占位符 ⇒ 免锁（本来就没有内容）；看到表 ⇒ 必然也能看到锁"。并且**保持原有锁类型**：把 `ReentrantReadWriteLock` 顺手换成互斥锁/`synchronized` 会改变跨对象嵌套的死锁面（属性函数存在"子 stats 持读锁 → 读主 stats"的固定方向嵌套，读写锁下恒为读-读，互斥锁下就变成锁序依赖）。
 5. **验收标准是"物化后容器类型与改动前一致"**：单线程语义逐字相同、并发语义与改动前等价，唯一新增要求是首写收敛。按需创建（只在写入分支里 `new`）的容器没有懒物化空间，别为了凑数硬改。
+
+## [AR-011] 十一、全局配置来源的发布时机（EnvironmentPostProcessor 不得写全局持有者）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 启动层配置来源发布（BootConfigSourceResolver / ConfigSourceResolverHolder）与静态配置字段的读取时机
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: 全量套件里出现"只在整套跑时才失败"的配置读取错误（VipConfigPathTest 读到上一个用例的 StandardEnvironment）；或命令行/环境变量覆盖看起来只在部分场景生效
+root_cause: EnvironmentPostProcessor 对**每一个** `SpringApplication` 实例化都会执行，在里面 `ConfigSourceResolverHolder.publish(environment::getProperty)` 会把全局持有者指向那个临时 Environment（测试与并行上下文互相污染）；同时所有 Bean 都在 ApplicationRunner 的 `Config.load()` 之前完成构造，Bean 在构造期读静态配置字段只能拿到占位值
+fix_or_guardrail: 全局解析器只由单例 Bean 在上下文装配期发布一次（`BootConfigSourceResolver` 的 `@PostConstruct`）；post-processor 只注册 property source，并以 `addLast` 的最低优先级注册（命令行/系统属性/环境变量/application.yml 仍覆盖文件值）；Bean 的构造器、字段初始化器、`@PostConstruct` 一律不得读 `XxxConfig` 静态字段，需要就在构造期注入
+evidence: src/main/java/com/aionemu/boot/config/BootConfigSourceResolver.java:42; src/main/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessor.java:45; src/main/java/com/aionemu/gameserver/lifecycle/GameUtilityServicesRuntimeBridge.java:54; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:61; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:80; .agents/summary/architecture-refactor/2026-09-18-config-and-fragment-consolidation.md
+validation: mvn -B clean test 3456 例 / 0 失败 / 0 错误 / 2 跳过；com.aionemu.boot.** 85 例全绿（含本轮 3 个新用例）；审计确认 Bean 内静态配置读取 30 处全部位于 Config.load() 之后的方法体内
+boundaries: 静态配置类保持静态的前提是"没有构造期读取"；一旦某 Bean 需要构造期取值，就必须像 ThreadConfig / SvStatsConfig 那样注入化，不能靠清理顺序兜底。提交信息不等于代码事实——"已移除某全局写入"必须在源码里复核
+superseded_by: none
+first_check: EnvironmentPostProcessor 或静态初始化块里是否写了全局状态；Bean 构造器 / @PostConstruct 里是否读了 XxxConfig 字段
+-->
+
+1. **`EnvironmentPostProcessor` 是"每次都跑"，不是"启动只跑一次"**：任何测试只要 `new SpringApplication()` 触发它，它就会执行一遍。因此它只允许改传入的 `ConfigurableEnvironment`，不允许写进程级静态状态；一旦写了，失败会表现为"单跑通过、整套失败"，极难定位。
+2. **全局解析器只保留一个发布点**：`ConfigSourceResolverHolder.publish(...)` 只应出现在 `BootConfigSourceResolver` 这一处，保证"发布时机 = 上下文装配期，且早于任何 `ApplicationRunner` 的配置装载"。
+3. **遗留文件必须以最低优先级进 Environment**：`addLast` 让文件值排在命令行、系统属性、OS 环境变量、application.yml 之后；该契约由 `LegacyPropertySourcePrecedenceTest` 固定（环境变量 `GAMESERVER_THREAD_BASEPOOLSIZE` 必须压过 `main.properties` 里的同键）。
+4. **静态配置字段的读取时机是硬约束**：`Config.load()` 在 `GameUtilityServicesLifecycle`（ApplicationRunner 相位）里执行，所以 Bean 构造期读静态字段拿到的是 0/null。判断"某配置类要不要迁移成 Bean"，看的是**是否存在构造期读取**，不是行数或字段数。
