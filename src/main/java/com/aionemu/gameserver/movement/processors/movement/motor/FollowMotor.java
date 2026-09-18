@@ -13,7 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
-import com.aionemu.gameserver.movement.processors.movement.PathfindHelper;
+import com.aionemu.gameserver.movement.processors.movement.PathfindSectorSampler;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
 
 /**
@@ -118,7 +118,7 @@ public class FollowMotor extends AMovementMotor {
 		this._lastMovePoint = new Vector3f(this._owner.getX(), this._owner.getY(), this._owner.getZ());
 		boolean canPass = GameWorldServices.geoService().canPass(this._owner, target);
 		if (this.canMove() && !canPass && pathfindRevalidationTime < System.currentTimeMillis()) {
-			this._targetPosition = PathfindHelper.selectFollowStep(this._owner, target);
+			this._targetPosition = PathfindSectorSampler.selectFollowStep(this._owner, target);
 		} else if (this.canMove() && canPass) {
 			float newZ = GameWorldServices.geoService().getZ(this._owner.getWorldId(), target.getX(), target.getY(),
 					target.getZ(), 100.0f, this._owner.getInstanceId());

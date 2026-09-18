@@ -11,10 +11,10 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
 
 /**
- * 寻路辅助：在可见扇形内采样可通行点，用于跟随与步进路径选择。
- * Pathfinding helper: samples walkable points in a visible sector for follow and step selection.
+ * 扇形采样寻路器：在可见扇形内采样可通行点，用于跟随与步进路径选择。
+ * Sector-sampling pathfinder: samples walkable points in a visible sector for follow and step selection.
  */
-public class PathfindHelper {
+public class PathfindSectorSampler {
 
 	/**
 	 * 可见扇形总角度（度）。
@@ -58,7 +58,7 @@ public class PathfindHelper {
 		double minimalDistance = Short.MAX_VALUE;
 
 		for (int i = 0; i < rounds; ++i) {
-			Vector3f rotated = PathfindHelper.Rotate(source, sourcePoint.x, sourcePoint.y, targetPoint.x, targetPoint.y,
+			Vector3f rotated = PathfindSectorSampler.Rotate(source, sourcePoint.x, sourcePoint.y, targetPoint.x, targetPoint.y,
 					futureDistance, i * PATHFIND_ANGLE_STEP - offset, targetPoint.z);
 			if (targetPoint.z - rotated.z > source.getObjectTemplate().getBoundRadius().getUpper() || rotated.z == 0.0f)
 				continue;
@@ -97,7 +97,7 @@ public class PathfindHelper {
 		}
 		Vector3f point = new Vector3f(target.getX(), target.getY(), target.getZ());
 		assert (point.x != 0.0f && point.y != 0.0f);
-		return PathfindHelper.selectStep(source, point);
+		return PathfindSectorSampler.selectStep(source, point);
 	}
 
 	/**
