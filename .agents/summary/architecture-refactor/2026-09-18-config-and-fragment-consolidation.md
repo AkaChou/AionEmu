@@ -159,7 +159,7 @@
 |---|---|
 | `commons.configuration.ConfigSourceResolver` | 函数式接口：`String resolve(String key)` |
 | `commons.configuration.ConfigSourceResolverHolder` | 全局持有者，启动层发布一次；`publish(null)` 可清除 |
-| `AionLegacyPropertySourceEnvironmentPostProcessor` | 注册遗留 PropertySource 后 `publish(environment::getProperty)` |
+| `boot.config.BootConfigSourceResolver`（新增单例） | 在 Spring 上下文装配阶段 `publish(environment::getProperty)`；**不**放在 `EnvironmentPostProcessor` 里，因为后者在任何 `SpringApplication` 实例化时都会触发，测试反复调用会污染全局持有者（实测会让 `VipConfigPathTest` 在整包运行时读到别的测试环境） |
 | `ConfigurableProcessor.getFieldValue` | 查值顺序变为：**已发布解析器 → `Properties[]` → 默认值** |
 
 - 解析器未发布时（单测、非 Boot 启动）行为与原来**完全一致**，即 `bootOverrides → 文件 → 默认值`。
@@ -178,3 +178,12 @@
 ### 验证
 
 `mvn -q -Dtest=ConfigurableProcessorSourceResolverTest,LegacyConfigOverridePrecedenceTest,AionLegacyPropertySourceEnvironmentPostProcessorTest,LegacyConfigOverridesTest,LegacyServerConfigOverridesTest,ThreadConfigTest,IPConfigTest,GameUtilityServicesLifecycleTest,GameServiceLifecycleTest,LoginServiceLifecycleTest,ChatServiceLifecycleTest,VipConfigPathTest test` → 全部通过。
+
+### 全量回归（2026-09-18）
+
+`mvn -B test`：**3444 例，非 quest 失败 0**。
+- 首轮全量暴露一处**测试隔离缺陷**：把发布逻辑放在 `EnvironmentPostProcessor` 里，导致整包运行时
+  `VipConfigPathTest` 读到前一个测试实例化的 `StandardEnvironment`（单测单独跑通过）。改为
+  `BootConfigSourceResolver` 单例发布后，`VipConfigPathTest` 在全量运行中恢复通过。
+- 剩余失败/错误全部集中在 `questEngine`（并行会话在途：部分测试引用了正在改动的 audit 类，
+  报 `NoClassDefFound`），与本轮配置改造无关。

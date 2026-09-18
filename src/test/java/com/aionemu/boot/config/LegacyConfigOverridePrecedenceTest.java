@@ -58,6 +58,8 @@ class LegacyConfigOverridePrecedenceTest {
 		));
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
+		// 解析器由启动层单例发布（生产启动路径）。 / Published by the bootstrap singleton, as in production.
+		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
 
 		assertEquals("9", ConfigSourceResolverHolder.resolve("gameserver.thread.basepoolsize"),
 			"the published resolver must expose the highest-precedence source");
