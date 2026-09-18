@@ -97,3 +97,50 @@
 
 - `mvn -q -Dtest=ThreadConfigTest,IPConfigTest,GameUtilityServicesLifecycleTest,GameThreadPoolManagerBoundsTest,PingPongThreadTest test`：全部通过。
 - 全库扫描确认无其它 static `@PostConstruct` 残留。
+
+## 配置路径冻结与绑定验证（2026-09-18，用户约束：配置文件保持当前路径）
+
+### 结论先行
+
+**不引入 `application.yml` 配置项、不移动任何 properties 文件、不改动任何配置键名。**
+四个配置目录（`aion/config/administration|main|network|login|chat`）与 `mygs/mycs/myls.properties`
+仍是唯一配置来源，Spring 侧通过既有 `AionLegacyPropertySourceEnvironmentPostProcessor`
+（`EnvironmentPostProcessor`，已注册于 `META-INF/spring.factories`）读取同一批文件。
+
+### 关键验证：点号长键可直接绑定到 `@ConfigurationProperties`
+
+此前无法确定「遗留 properties 的点号长键（`gameserver.thread.basepoolsize`）能否被 Spring
+`@ConfigurationProperties` 直接绑定」。本轮用真实配置类做了绑定探针，结论是 **可以**：
+
+- 绑定经过 setter，`ThreadConfig.getBasepoolsize()` 返回 7；
+- 同一次绑定把静态门面 `ThreadConfig.BASE_THREAD_POOL_SIZE` 也写成 7（非 Bean 调用方仍可读）。
+
+因此**不需要**新建 `application.yml` 键，也**不需要**改键名；Bean 与静态门面从同一份文件收敛到同一值。
+
+### 新增回归测试
+
+`AionLegacyPropertySourceEnvironmentPostProcessorTest#legacyDottedKeysBindOntoConfigurationPropertiesFromUnchangedPaths`：
+
+1. 在临时目录按**原路径结构**写入 `config/main/main.properties` 与 `config/login/loginserver.properties`；
+2. 经真实 `EnvironmentPostProcessor` 注入 Spring `Environment`；
+3. 断言 `gameserver.thread.basepoolsize=7` 同时写入 `ThreadConfig` 实例属性与静态门面；
+4. 断言 `svstats.enable_svstats=true` 同时写入 `SvStatsConfig` 实例属性与静态门面；
+5. `finally` 还原静态字段，避免污染其它测试。
+
+### 时序确认（双写路径已收敛，不再有分裂风险）
+
+| 阶段 | 动作 | 结果 |
+|---|---|---|
+| Spring 上下文刷新 | `@ConfigurationProperties` 从 Environment（含遗留文件映射）绑定 | setter 写静态字段 |
+| Bean 初始化 | `ThreadConfig @PostConstruct recomputeAfterBinding()` | 派生 `THREAD_POOL_SIZE` 按绑定值重算 |
+| 服务生命周期 | `GameUtilityServicesRuntimeBridge.loadConfig()` → `Config.load()` | `ConfigurableProcessor` 用同一文件同一键写同一静态字段；随后 `ThreadConfig.load()` 重算 |
+
+三条路径读写同一组静态字段、同一批文件、同一键名，值一致；不存在"Bean 与静态字段各自读不同来源"的分裂。
+
+### 仍未完成的配置工作（如实登记，未做）
+
+1. 其余 **51 个** `@Property` 配置类仍是纯静态形态（**这是当前唯一权威来源，功能正常**）；是否逐个迁移到
+   可绑定形态属可选项，需按业务域分批评估。
+2. `SecurityConfig` 注册为 `@Component` 但**无实例字段、无 `@ConfigurationProperties`**，Spring 不绑定任何值；
+   其 30 个静态字段仍由 `Config.load()` 写入。当前是无副作用的空壳注册。
+3. `IPConfig` 同样只有静态权威；实例访问器 `getPublicAddress()`/`ipRanges()` 目前无调用方。

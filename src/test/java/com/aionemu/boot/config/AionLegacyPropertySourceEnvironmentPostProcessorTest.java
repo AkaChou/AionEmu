@@ -15,6 +15,9 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
+import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.loginserver.configs.SvStatsConfig;
+
 class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
     @TempDir
@@ -107,6 +110,62 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
             .postProcessEnvironment(environment, new SpringApplication());
 
         assertEquals("5", environment.getProperty("gameserver.country.code"));
+    }
+
+
+    /**
+     * 配置路径保持现状：{@code aion/config/main/main.properties} 里的点号长键必须既能进入 Spring
+     * Environment，又能被 {@code @ConfigurationProperties} 配置类直接绑定（无需新建 application.yml 键，
+     * 也无需移动任何配置文件）。
+     *
+     * Configuration paths stay as they are: dotted keys in
+     * {@code aion/config/main/main.properties} must both reach the Spring Environment and bind straight
+     * onto {@code @ConfigurationProperties} beans, without new application.yml keys or moved files.
+     */
+    @Test
+    void legacyDottedKeysBindOntoConfigurationPropertiesFromUnchangedPaths() throws Exception {
+        Path configDir = tempDir.resolve("config");
+        Files.createDirectories(configDir.resolve("main"));
+        Files.createDirectories(configDir.resolve("network"));
+        Files.createDirectories(configDir.resolve("login"));
+        Files.writeString(configDir.resolve("main/main.properties"), """
+            gameserver.thread.basepoolsize=7
+            gameserver.thread.threadpercore=2
+            """);
+        Files.writeString(configDir.resolve("login/loginserver.properties"), """
+            svstats.enable_svstats=true
+            """);
+
+        int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
+        int savedExtra = ThreadConfig.EXTRA_THREAD_PER_CORE;
+        boolean savedSvStats = SvStatsConfig.SVSTATS_ENABLE;
+        try {
+            StandardEnvironment environment = new StandardEnvironment();
+            environment.getPropertySources().addFirst(new MapPropertySource(
+                "commandLine",
+                Map.of("aion.config.dir", configDir.toString())
+            ));
+            new AionLegacyPropertySourceEnvironmentPostProcessor()
+                .postProcessEnvironment(environment, new SpringApplication());
+
+            ThreadConfig threadConfig = new ThreadConfig();
+            Binder.get(environment).bind("gameserver.thread", Bindable.ofInstance(threadConfig));
+
+            assertEquals(7, threadConfig.getBasepoolsize(),
+                "dotted legacy key must bind through the configuration-properties setter");
+            assertEquals(7, ThreadConfig.BASE_THREAD_POOL_SIZE,
+                "binding must keep the static facade readable by non-bean callers");
+
+            SvStatsConfig svStatsConfig = new SvStatsConfig();
+            Binder.get(environment).bind("svstats", Bindable.ofInstance(svStatsConfig));
+
+            assertEquals(true, svStatsConfig.isEnableSvstats());
+            assertEquals(true, SvStatsConfig.SVSTATS_ENABLE);
+        } finally {
+            ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
+            ThreadConfig.EXTRA_THREAD_PER_CORE = savedExtra;
+            SvStatsConfig.SVSTATS_ENABLE = savedSvStats;
+        }
     }
 
     private LegacyGameProperties bindLegacyGameProperties(StandardEnvironment environment) {
