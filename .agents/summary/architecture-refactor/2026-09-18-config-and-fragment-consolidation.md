@@ -344,3 +344,26 @@ void restore() {
 2. `legacyConstructorUsesTheStaticFacadeThreshold`：无参构造器仍等于静态门面值（回退路径兼容）。
 
 验证：`AGameProcessorTest`、`NpcMoveControllerPathTest`、`PathDataTest` 全绿。
+
+## 优先级 4：清理空壳 Bean 注册（2026-09-18）
+
+### 判定
+
+| 配置类 | 是否保留 `@Component` | 依据 |
+|---|---|---|
+| `ThreadConfig` | **保留** | 有真实实例绑定（setter 写字段并重算派生值）+ 实例 `@PostConstruct` 兜底 |
+| `SvStatsConfig` | **保留** | 有实例字段，setter 同步静态门面，Spring 绑定真实生效 |
+| `SecurityConfig` | **移除** | 只有 30 个静态字段，无实例字段、无实例 setter、无生命周期行为；注册成 Bean 不会带来任何绑定能力，却让人误以为它走 Spring 配置 |
+| `IPConfig` | **移除** | 实例访问器已无调用方（`getPublicAddress()` / `ipRanges()` 全库零引用，已删除）；对外地址必须由遗留 `Config.load()` 在上下文刷新后解析，Bean 生命周期只会把回环兜底地址固化 |
+
+### 变更
+
+- `SecurityConfig`：移除 `@Component` 与相关 import，类注释写明"刻意不注册为 Spring Bean"的原因与取值路径；
+- `IPConfig`：移除 `@Component`、`import org.springframework.stereotype.Component`，删除两个零调用方的实例访问器；
+- 两者的取值路径不变：仍由遗留 `Config.load()` 写入静态字段，命令行/环境变量覆盖经
+  `BootConfigSourceResolver` + `ConfigSourceResolver` 生效（与其它 50 个静态配置类一致）。
+
+### 验证
+
+`mvn -q -Dtest='IPConfigTest,PacketFloodFilterTest,AionBootApplicationTest,ConfigurableProcessorSourceResolverTest,ThreadConfigTest' test`
+→ 全部通过；`AionBootApplicationTest` 实际启动 Spring 上下文并关闭，说明移除两个 Bean 注册不影响容器装配。

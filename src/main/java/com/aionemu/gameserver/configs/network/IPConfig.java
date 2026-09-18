@@ -5,22 +5,22 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import com.aionemu.commons.network.IPRange;
-import org.springframework.stereotype.Component;
 
 /**
- * 加载游戏服对外地址，提供静态门面与 Spring Bean 两种访问方式。
- * Loads the game-server public address, exposing both a static facade and a Spring bean accessor.
+ * 加载游戏服对外地址，作为静态门面供网络包使用。
  *
- * <p>对外地址由遗留 {@code Config.load()} 在 Spring 上下文刷新之后解析写入
- * {@link NetworkConfig#PUBLIC_ADDRESS}；本类刻意不注册 Spring 生命周期回调，避免在遗留配置装载前
- * 提前解析并把回环兜底地址固化下来。</p>
- * The public address is resolved by the legacy {@code Config.load()} flow after the Spring context
- * has refreshed, so this class deliberately registers no Spring lifecycle callback: resolving early
- * would freeze the loopback fallback before the legacy configuration was applied.
+ * <p>刻意**不**注册为 Spring Bean：对外地址由遗留 {@code Config.load()} 在 Spring 上下文刷新之后
+ * 解析写入 {@link NetworkConfig#PUBLIC_ADDRESS}；在本类上挂 Bean 生命周期只会在遗留配置装载前
+ * 提前解析，把回环兜底地址固化下来，而不会带来任何绑定能力。</p>
+ *
+ * Loads the game-server public address as a static facade for the network packets.
+ *
+ * <p>Deliberately not a Spring bean: the address is resolved by the legacy {@code Config.load()} flow
+ * after the Spring context has refreshed, so a bean lifecycle here would only resolve early and freeze
+ * the loopback fallback without adding binding capability.</p>
  *
  * @author Taran, SoulKeeper
  */
-@Component
 public class IPConfig {
 	/**
 	 * 默认对外地址字节。
@@ -75,23 +75,5 @@ public class IPConfig {
 	 */
 	public static byte[] getDefaultAddress() {
 		return defaultAddress;
-	}
-
-	/**
-	 * 实例方法：获取对外地址字节。
-	 * Instance method: returns public address bytes.
-	 *
-	 * @return 默认地址字节 / Default address bytes
-	 */
-	public byte[] getPublicAddress() {
-		return getDefaultAddress();
-	}
-
-	/**
-	 * 实例方法：获取 IP 段列表。
-	 * Instance method: returns IP ranges.
-	 */
-	public List<IPRange> ipRanges() {
-		return getRanges();
 	}
 }

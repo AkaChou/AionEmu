@@ -1,13 +1,22 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
-import org.springframework.stereotype.Component;
 
 /**
- * 安全防护、反外挂与验证相关配置，纳入 Spring Bean 托管。
- * Security, anti-hack and validation related configuration managed as a Spring Bean.
+ * 安全防护、反外挂与验证相关配置。
+ *
+ * <p>刻意**不**注册为 Spring Bean：本类只提供静态字段门面，没有任何实例状态或生命周期行为，
+ * 注册成空壳 Bean 不会带来绑定能力，反而会让读者误以为它走 Spring 配置。取值仍由遗留
+ * {@code Config.load()} 写入，命令行/环境变量覆盖经 {@code ConfigSourceResolver} 生效。</p>
+ *
+ * Security, anti-hack and validation related configuration.
+ *
+ * <p>Deliberately not a Spring bean: the class is a static field facade with no instance state or
+ * lifecycle behaviour, so registering it would add an empty bean without adding binding and would
+ * mislead readers into thinking it is Spring-configured. Values are still written by the legacy
+ * {@code Config.load()}, with command-line and environment overrides applied through
+ * {@code ConfigSourceResolver}.</p>
  */
-@Component
 public class SecurityConfig {
 	/**
 	 * 是否广播 GM 审计消息。
