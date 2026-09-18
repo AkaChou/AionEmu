@@ -103,19 +103,26 @@ class QuestA03ShardRetailAlignmentTest {
 			}
 			assertEquals(expectedNpcs, killNpcs, "kill-npc targets of " + questId);
 
-			// each hunt step is a source->target kill transition; count distinct source nodes of kill transitions
-			Set<String> killSources = new HashSet<>();
-			boolean killSeen = false;
-			for (QuestTransition transition : transitions) {
-				if (transition.event() instanceof QuestEvent.KillNpc
-					|| transition.event() instanceof QuestEvent.KillNpcSet) {
-					killSeen = true;
-					killSources.add(transition.sourceNode());
-				}
+			// 计数器合同：击杀路线把 var1 累加到零售要求次数，完成后进入 reward。
+			int required = HUNT_STEPS.get(questId);
+			assertEquals(required, load(questId).definition().progressLayout().field("var1").maxValue(),
+				"kill counter ceiling of " + questId);
+			List<QuestTransition> killRoutes = transitions.stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
+					|| transition.event() instanceof QuestEvent.KillNpcSet)
+				.toList();
+			assertFalse(killRoutes.isEmpty(), "quest " + questId + " must have kill transitions");
+			for (QuestTransition killRoute : killRoutes) {
+				assertEquals("started", killRoute.sourceNode(), "kill source of " + questId);
 			}
-			assertTrue(killSeen, "quest " + questId + " must have kill transitions");
-			assertEquals(HUNT_STEPS.get(questId), killSources.size(),
-				"hunt step count of " + questId);
+			QuestTransition completion = killRoutes.stream()
+				.filter(killRoute -> "reward".equals(killRoute.targetNode()))
+				.findFirst().orElseThrow();
+			assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", required - 1)),
+				completion.conditions(), "completion gate of " + questId);
+			assertEquals(List.of(new QuestAction.SetVariable("var0", 1),
+				new QuestAction.SetVariable("var1", required)), completion.actions(),
+				"completion counters of " + questId);
 		}
 	}
 

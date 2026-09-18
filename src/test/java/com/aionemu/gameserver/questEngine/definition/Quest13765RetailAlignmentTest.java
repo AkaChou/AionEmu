@@ -31,16 +31,32 @@ class Quest13765RetailAlignmentTest {
 		assertEquals(255, metadata.repeatPolicy().maxRepeatCount());
 		assertEquals(List.of(new QuestReward("EXP", 0, 3618881), new QuestReward("ITEM", 186000236, 5)),
 			metadata.rewards());
-		// 客户端证据:quest.xml 13765 块的 8 个击杀序列,metadata 需与之对齐。
-		assertEquals(java.util.stream.IntStream.rangeClosed(1, 8)
-				.mapToObj(sequence -> new QuestKill(sequence, List.of(235357))).toList(),
-			metadata.kills());
+		// 客户端 quest_monster.csv SECTION_1<5、data_driven value0_progress_=5 与
+		// 911440146 legacy handler(var1<5) 三份证据一致：单条狩猎步骤击杀 235357 共 5 次。
+		assertEquals(List.of(new QuestKill(1, List.of(235357))), metadata.kills(),
+			"13765 hunts one npc family in a single hunt step");
+		assertEquals(5, definition.progressLayout().field("var1").maxValue(),
+			"13765 kill counter ceiling");
 
 		List<QuestTransition> transitions = definition.transitions();
-		assertEquals(8, transitions.stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
-				&& npcId == 235357)
-			.count());
+		List<QuestTransition> killRoutes = transitions.stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+				&& npcIds.equals(Set.of(235357)))
+			.toList();
+		assertEquals(2, killRoutes.size(),
+			"13765 accumulates and then closes its counter in npc-set kill routes");
+		QuestTransition accumulate = killRoutes.stream()
+			.filter(route -> "started".equals(route.sourceNode()) && "started".equals(route.targetNode()))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestCondition.VariableBelow("var1", 4)), accumulate.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0),
+			new QuestAction.IncrementVariable("var1", 1)), accumulate.actions());
+		QuestTransition finish = killRoutes.stream()
+			.filter(route -> "reward".equals(route.targetNode()))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 4)), finish.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1),
+			new QuestAction.SetVariable("var1", 5)), finish.actions());
 		Set<Integer> reportNpcs = transitions.stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.dialogId() != null && talk.dialogId() == 1009)

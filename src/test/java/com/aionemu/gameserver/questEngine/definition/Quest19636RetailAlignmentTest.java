@@ -35,12 +35,20 @@ class Quest19636RetailAlignmentTest {
 		assertEquals(List.of(new QuestKill(1, List.of(214263, 214264, 214265, 214266))), metadata.kills());
 
 		List<QuestTransition> transitions = definition.transitions();
-		for (int mob : new int[] {214263, 214264, 214265, 214266}) {
-			assertEquals(10, transitions.stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc(int npcId)
-					&& npcId == mob)
-				.count());
-		}
+		// 计数器合同：一条 npc-set 击杀路线累加，第二条在满计数后进入 reward 收口 10 杀。
+		List<QuestTransition> killRoutes = transitions.stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)
+				&& npcIds.equals(Set.of(214263, 214264, 214265, 214266)))
+			.toList();
+		assertEquals(2, killRoutes.size(), "19636 must accumulate and close one npc-set counter");
+		assertEquals(10, definition.progressLayout().field("var1").maxValue(),
+			"19636 kill counter ceiling");
+		QuestTransition finish = killRoutes.stream()
+			.filter(route -> "reward".equals(route.targetNode()))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 9)), finish.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1),
+			new QuestAction.SetVariable("var1", 10)), finish.actions());
 		assertEquals(13, transitions.stream()
 			.filter(transition -> "reward".equals(transition.sourceNode())
 				&& "complete".equals(transition.targetNode()))

@@ -14,55 +14,11 @@
         <npc id="235362"/>
         <npc id="235363"/>
       </kill>
-      <kill sequence="2">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="3">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="4">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="5">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="6">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="7">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="8">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="9">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="10">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="11">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
-      <kill sequence="12">
-        <npc id="235362"/>
-        <npc id="235363"/>
-      </kill>
     </kills>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="6" min="0" max="12" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -72,7 +28,7 @@
     <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
-      <var name="var1" value="12"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -83,13 +39,13 @@
     <dialog type="NPC_START" npc-id="805278" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <dialog type="NPC_START" npc-id="805279" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <dialog type="NPC_START" npc-id="805280" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
-    <!-- 击杀 0..10 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
+    <!-- 击杀 0..3 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="235362 235363"/>
       </event>
       <conditions>
-        <variable-below field="var1" value="11"/>
+        <variable-below field="var1" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -99,17 +55,17 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 第 12 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
+    <!-- 第 5 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
     <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="235362 235363"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="11"/>
+        <variable-at-least field="var1" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
-        <set-variable field="var1" value="12"/>
+        <set-variable field="var1" value="5"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -121,7 +77,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805278" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -136,7 +92,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805278" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -161,7 +117,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805279" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -176,7 +132,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805279" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -201,7 +157,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805280" action="QUEST_SELECT"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -216,7 +172,7 @@
         <dialog type="TALK_TO_NPC" npc-id="805280" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="12"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>

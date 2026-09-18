@@ -431,7 +431,7 @@
       <var name="var1" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <dialog type="NPC_START" npc-id="263597" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <!-- 击杀 0..38 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">

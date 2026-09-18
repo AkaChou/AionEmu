@@ -787,3 +787,69 @@ first_check: 先用 audit 脚本做全库只读扫描归类（real defect / inte
 
 - **判定规则**：接取元数据与档位 1 数值奖励的对齐必须以真端解包数据为唯一权威，但机械逐值替换是错的——先归一 sentinel（0/998/999/2147483647 均为无上限；999 同时用作占位任务）、等价表达（PC_ALL=双阵营；base 死条目）与系统性设定（整族一致封顶 82、AP ×4 倍率族），剩余零散差异才是缺陷。
 - **代表案例**：min-level 9 条（1648=42、2641=41、19000~19003=50、25407/25408=68，镜像互证但 2641 与镜像 1641 真端本就不同）；max-level 28 条（19 条补真端上限、80621 族 82→65、27525/50074/80945/80946/80878 族内不对称残留 cap）；class 58 条（导师任务族漏声明、Kaliga 武器收集族/Dark Poeta 分组按真端写入、19074 镜像互证删 AETHERTECH、14031/24031 机甲星使命收窄）；奖励数值 78 处（2641/2724 多档任务档位 1 对齐、80993/80996 补 AP 50000）。道具旧名（956 条）与 title 名称映射（173 条）因缺真端模板表记 EVIDENCE_BLOCKED。
+
+---
+
+## [QE-035] 三十三、多杀任务的 `<kills>` 声明与 var1 计数器双口径 (KILL_COUNTER_VS_KILLS_METADATA)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务 `<metadata><kills>` 击杀声明与 `<progress>` var1 击杀计数器；批量改写多杀任务（counter-grid / 自环累加 + 收口）时
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: 玩家报告“要杀的比任务说明多”（13758 族实为 5 杀却要杀 15/12）；结构门禁报 expected <N> but was <0>（断言 KillNpc 条数），或家族内 var1 目标与客户端条目互不一致
+root_cause: `<kills>` 序列数被当作运行时击杀合同，但生产代码从不消费 QuestMetadata.kills()，真正的计数合同是转换里的 var1；b771eef59 按错误读数把 13758-13769 延长到 15/8/20/12/6/20，3b4e7fc4c 改成计数器时沿用这些错值（并把 transitions 开标签属性重写丢失，见 QE-037）
+fix_or_guardrail: 1. 击杀数只认三份互相独立的真端证据：客户端 quest_monster.csv 的 SECTION_1<N 门控、data_driven_quest.xml 的 value0_progress_ 数量、911440146 旧 handler 的 var1 < N 阈值；2. `<kills>` 必须与计数器同口径（单条狩猎步骤列出怪物集合），禁止仅凭序列数反推击杀数；3. 计数器收口值 = 客户端门控值（below N-1 累加，at-least N-1 收口为 set N）；4. 批量改写只允许改结构，禁止顺带改计数目标
+evidence: commits b771eef59, commit 3b4e7fc4c, commit f00d6e538; src/main/resources/aion/data/static_data/quest_definition/quests/13758.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13761.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13764.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13765.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13767.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13769.xml; .agents/summary/quest-counter-audit/audit_counters.py; .agents/summary/quest-counter-audit/census_counters.py; .agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md
+validation: production-gate | focused-test：mvn -o test -Dtest='com.aionemu.gameserver.questEngine.**.*Test' 1440 run / 0 failures / 0 errors
+boundaries: 只覆盖单段击杀计数；SECTION_1 出现多行/多段的复合任务必须逐段确认；set 值 = 门控 + 1 与 = 门控 都是合法记账形态，不能按差值判缺陷；真端 UI 计数显示仍需实机确认
+superseded_by: none
+see_also: [QE-006], [QE-007], [QE-037]
+first_check: 先跑 .agents/summary/quest-counter-audit/audit_counters.py 对比客户端门控与 var1 目标，再用 git show 911440146:<quest/*/_<id>*.java> 核旧 handler 阈值；断言 KillNpc 条数的测试是旧链式形状的残留，不是运行时合同
+-->
+
+- **判定规则**：`<kills>` 是声明、var1 才是合同。两者不一致时以客户端表与旧 handler 的三方一致结果为准，并把 `<kills>` 修正到同一口径，而不是让门禁去数序列。
+- **代表案例**：13758/13761/13764/13767 因误读被延长到 15/12 杀（客户端与旧 handler 均为 5），玩家需多杀 7-10 只；13765/13769 的 `<kills>` 声明为 8/20 条而同族计数器是 5，属同一漂移的两面。
+
+---
+
+## [QE-036] 三十四、可重复任务的 COMPLETE 重开局对话必须显式 start-eligible (REPEAT_COMPLETE_START_DIALOG_GATE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务开局对话路由；max-repeat-count > 1 的可重复任务；NPC_START 生成块与手写 complete→complete 路由
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: 生产目录门禁报 missing repeat dialog route: quest=<id> source=complete npc=<npc> dialog=<page>；或重复任务完成后无法重新打开开始页、或在不合格状态下仍显示开始页
+root_cause: `<dialog type="NPC_START">` 只为 source（unaccepted）生成开局路由，selection-sources 只影响 FINISH_DIALOG；COMPLETE 状态重开局必须手写 complete → complete 镜像。f00d6e538 用生成块替换手写块时补了镜像却漏掉 <start-eligible/>
+fix_or_guardrail: 1. 可重复任务的每个 NONE→NONE 开局路由（含页面自环）都必须在 COMPLETE 节点上有同 event + 同 after-commit 的镜像，且镜像必须带 <start-eligible/>；2. unaccepted 侧镜像保持无条件下发页面；3. 运行期依据：QuestMutationPlanner.matchesSourceStatus 只允许带 StartEligible 的转换把 COMPLETE/LOCKED 快照跨越到 NONE 起点
+evidence: src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCatalogManifestTest.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java; commit f00d6e538; src/main/resources/aion/data/static_data/quest_definition/quests/2677.xml, src/main/resources/aion/data/static_data/quest_definition/quests/1742.xml, src/main/resources/aion/data/static_data/quest_definition/quests/2317.xml, src/main/resources/aion/data/static_data/quest_definition/quests/11202.xml
+validation: production-gate：全库 2735 条重复开局检查本次仅 2677 缺失 1 条，补齐后 QuestDefinitionCatalogManifestTest 与 questEngine 全包全绿
+boundaries: 仅适用于 max-repeat-count > 1 的任务；单次任务不得为通过门禁硬加 StartEligible 镜像；页面自环只负责下发页面，不得携带状态推进动作
+superseded_by: none
+see_also: [QE-006], [QE-011]
+first_check: 门禁失败时先确认失败路由是否属于 NPC_START 生成集合，再对比同族已对齐任务（如 1742/2317）的 complete 镜像写法，不要改门禁放宽
+-->
+
+- **判定规则**：开局页由 NONE 起点声明，重开局页由 COMPLETE 起点声明；两条镜像的差别就是后者必须带 `start-eligible`。
+- **代表案例**：2677 的 `complete → complete SELECT1_1(1012)` 缺条件，是 f00d6e538 结构化重写时的手工遗漏（同批 44 个任务都带条件）。
+
+---
+
+## [QE-037] 三十五、重写 transitions 开标签必须保留块级属性 (REPORTED_REWARD_MODE_ATTR_LOSS)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 生产 quest XML 的块级属性（当前为 transitions reported-reward-mode="FIXED|CHOICE|CLASS"）；批量脚本或手工重写 transitions 容器时
+first_seen: 2026-09-18
+last_verified: 2026-09-18
+symptom: QuestReportedRewardCoverageTest 报 quest=<id> action=108 expected 1 but was 0（客户端“无目标自动领奖”路线消失）；游戏内只能走选定目标领奖
+root_cause: 3b4e7fc4c 批量重写多杀任务的 transitions 块时把三个任务的 transitions reported-reward-mode="FIXED" 写成裸 transitions，expandReportedRewards 不再派生 SELECTED_QUEST_AUTO_REWARD(108) 路由；同批 13947 属性保留，构成可见对照
+fix_or_guardrail: 1. 任何重写 transitions 开标签的批处理都必须整行读取并保留属性（禁止按字面 <transitions> 匹配替换）；2. 该属性是客户端实时报告合同的开关，删掉等于静默关闭一条领奖路径；3. 门禁 QuestReportedRewardCoverageTest 覆盖 182 个客户端可实时报告任务（FIXED/CHOICE/CLASS 三类）
+evidence: commit 3b4e7fc4c, commit f00d6e538; src/main/resources/aion/data/static_data/quest_definition/quests/13841.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13845.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13849.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13947.xml; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java
+validation: production-gate：QuestReportedRewardCoverageTest 182 任务全部通过；questEngine 全包 1440 run / 0 failures
+boundaries: 只适用于声明该属性的任务族；属性值必须与奖励结构匹配（FIXED 要求无 selectable/class 奖励，否则编译期 fail-closed 报 REPORTED_REWARD_METADATA_MISMATCH）
+superseded_by: none
+see_also: [QE-021], [QE-035]
+first_check: 自动领奖路线缺失时先看 transitions 是否还有 reported-reward-mode，再看奖励结构是否满足对应模式的编译前置
+-->
+
+- **判定规则**：块级属性是行为开关，重写容器行等于改行为；批量编辑按「结构不动属性、属性不动结构」分离。
+- **代表案例**：13841/13845/13849 因属性丢失少了 FIXED 派生的无目标领奖路线，13947 保留属性可作对照。

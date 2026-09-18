@@ -68,6 +68,9 @@
 | 收集任务只要点交付按钮就直接进奖励窗，背包里一个任务道具都没有也能领奖；掉落出来的收集道具永远不被消耗、堆在背包里 | `QE-032` | 检查任务是否只用 <dialog type="NPC_REPORT"> 简写交付；是则确认它是否声明并掉落 <items> 收集道具，并检查是否有同 (source, npc, SELECT_QUEST_REWARD) 的显式 has-item 路由 |
 | 服务端启动报 Can't initialize typed quest engine，原因是 quest <id> quest_use_item catalog drop npc <npc> item <item> collecting step <step> has no matching START ACTION_ITEM_USE eligibility route；或交互物在任务中无法使用、掉落永不触发 | `QE-033` | 遇到启动校验失败时，先查 drop npc 的 AI；若为 quest_use_item，检查是否存在同 template-id 的 START ACTION_ITEM_USE，且 source var0 与 collecting-step 匹配 |
 | 等级/职业/阵营资格与真端不一致（过宽被低等级或非目标职业接取、过窄漏接）；多档任务误把档位 N 值当档位 1；npc-complete 索引越界启动失败 | `QE-034` | 先用 audit 脚本做全库只读扫描归类（real defect / intentional variant / EVIDENCE_BLOCKED），确认 sentinel 与死条目归一后再逐条修复；有 npc-complete 索引合同的任务禁止头部插入与盲目删除奖励行 |
+| 玩家报告“要杀的比任务说明多”（13758 族实为 5 杀却要杀 15/12）；结构门禁报 expected <N> but was <0>（断言 KillNpc 条数），或家族内 var1 目标与客户端条目互不一致 | `QE-035` | 先跑 .agents/summary/quest-counter-audit/audit_counters.py 对比客户端门控与 var1 目标，再用 git show 911440146:<quest/*/_<id>*.java> 核旧 handler 阈值；断言 KillNpc 条数的测试是旧链式形状的残留，不是运行时合同 |
+| 生产目录门禁报 missing repeat dialog route: quest=<id> source=complete npc=<npc> dialog=<page>；或重复任务完成后无法重新打开开始页、或在不合格状态下仍显示开始页 | `QE-036` | 门禁失败时先确认失败路由是否属于 NPC_START 生成集合，再对比同族已对齐任务（如 1742/2317）的 complete 镜像写法，不要改门禁放宽 |
+| QuestReportedRewardCoverageTest 报 quest=<id> action=108 expected 1 but was 0（客户端“无目标自动领奖”路线消失）；游戏内只能走选定目标领奖 | `QE-037` | 自动领奖路线缺失时先看 transitions 是否还有 reported-reward-mode，再看奖励结构是否满足对应模式的编译前置 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

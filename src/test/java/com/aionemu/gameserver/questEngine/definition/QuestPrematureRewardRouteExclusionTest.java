@@ -48,7 +48,11 @@ class QuestPrematureRewardRouteExclusionTest {
 			stage(28952, 4, -1, 4, "k4", 209743, 804738),
 			counter(28972, 6, 804924, 805216),
 			counter(28973, 6, 804924, 805217),
-			counter(28974, 6, 804924, 805218));
+			counter(28974, 6, 804924, 805218),
+			// 25640/25698 为“满计数恢复报告”形态的 A03 碎片任务，与 Quest25640/25698ClientDialogAlignmentTest 配对。
+			// The 25640/25698 pair are full-count recovery-report owners; paired with their dialog alignment gates.
+			counter(25640, 30, 806101),
+			counter(25698, 5, 806804));
 	}
 
 	@ParameterizedTest

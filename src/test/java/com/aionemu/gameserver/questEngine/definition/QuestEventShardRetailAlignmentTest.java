@@ -82,15 +82,20 @@ class QuestEventShardRetailAlignmentTest {
 			}
 		}
 		for (int questId : new int[] {50073, 50074}) {
-			List<QuestEvent> kills = load(questId).definition().transitions().stream()
+			CompiledQuestDefinition compiled = load(questId);
+			List<QuestEvent> kills = compiled.definition().transitions().stream()
 				.map(QuestTransition::event)
-				.filter(event -> event instanceof QuestEvent.KillNpc)
+				.filter(event -> event instanceof QuestEvent.KillNpcSet)
 				.toList();
-			assertEquals(KILL_STEPS.get(questId), kills.size(), "kill-npc steps of " + questId);
+			assertEquals(2, kills.size(), "kill counter routes of " + questId);
 			for (QuestEvent kill : kills) {
-				assertEquals(246293, ((QuestEvent.KillNpc) kill).npcId(),
+				assertEquals(Set.of(246293), ((QuestEvent.KillNpcSet) kill).npcIds(),
 					"quest " + questId + " must hunt IDEvent_Solo_Saam_65_N");
 			}
+			// 客户端 progress_info 要求 15 杀，计数器终值必须与之一致。
+			assertEquals(KILL_STEPS.get(questId),
+				compiled.definition().progressLayout().field("var1").maxValue(),
+				"kill counter ceiling of " + questId);
 		}
 	}
 

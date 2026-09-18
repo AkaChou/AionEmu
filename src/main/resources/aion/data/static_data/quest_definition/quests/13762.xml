@@ -13,21 +13,6 @@
       <kill sequence="1">
         <npc id="235373"/>
       </kill>
-      <kill sequence="2">
-        <npc id="235373"/>
-      </kill>
-      <kill sequence="3">
-        <npc id="235373"/>
-      </kill>
-      <kill sequence="4">
-        <npc id="235373"/>
-      </kill>
-      <kill sequence="5">
-        <npc id="235373"/>
-      </kill>
-      <kill sequence="6">
-        <npc id="235373"/>
-      </kill>
     </kills>
   </metadata>
   <progress>

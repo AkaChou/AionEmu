@@ -1,0 +1,97 @@
+# 2026-09-18 剩余 10 项 questEngine 失败收口：计数器真端合同与门禁口径
+
+## 范围
+
+`com.aionemu.gameserver.questEngine.**.*Test` 在 `e57e63c5c` 之后仍有 10 项失败，按性质分三类：
+
+| 类 | 数量 | 任务 | 性质 |
+|---|---|---|---|
+| A | 5 | 13765、19636、19640、23920、50073 | 陈旧断言形状（旧「每次击杀一条 KillNpc 转换」链式结构） |
+| B | 2 | 25640、25698 | 门禁口径与「满计数恢复路线」既有决策冲突 |
+| C | 3 | 2677、26930、13841（连带 13845/13849） | 需真端/客户端证据裁决，其中 2 项是代码回归 |
+
+## A 类：断言形状对齐「KillNpcSet + var1 计数器」
+
+`3b4e7fc4c` 起，多杀任务统一为 **单条 npc-set 击杀转换累加 `var1`，第二条满计数后进入 reward**。
+`metadata.kills()` 只被测试消费（`QuestMetadata.kills()` 在生产代码中无调用点），真正的运行时合同是
+转换里的 `var1` 阈值。
+
+- **19636 / 19640（10 杀）**、**23920（10 杀）**、**50073 / 50074（15 杀）**、**13765（5 杀）**：
+  测试改为断言 `KillNpcSet` 覆盖的怪物集合 + 计数器上限/收口动作（`set-variable var1 = N`），
+  并保留 reward 分支数、报告 NPC、领奖页等原有保护点；不再以「每个怪物各 10 条 KillNpc」这种
+  已不存在的链式形状作为门禁。
+
+## A 类附带的真端偏差修正：13758–13769 家族应为 **5 杀**
+
+三份互相独立的证据一致指向「一条狩猎步骤、5 次击杀」：
+
+1. 客户端 `quest_monster.csv`：**12 个任务全部** `Progress(SECTION_0==0; SECTION_1<5)`；
+2. 客户端 `data_driven_quest.xml`：`value0_progress_ = LDF4_Advance_*_65_* 5;`；
+3. `911440146:src/main/java/quest/levinshor/_1375x_*.java`：全部为 `var1 < 5` → `var1 >= 5` 转 REWARD。
+
+`b771eef59`（"13758-13769 击杀链延长至客户端数量(15/8/20/12/6/20)"）按错误读数把
+13758/13761/13764/13767 的 `var1` 目标延长到 15/12/15/12，`3b4e7fc4c` 把结构改成计数器时沿用了这些错值，
+于是玩家需要多杀 7–10 只。本次：
+
+- 13758/13761/13764/13767：`var1` 位域上限、`below/at-least` 门槛、收口 `set-variable`、reward 节点值、
+  三条满计数恢复路线全部回落到 **5**；
+- 12 个任务的 `<kills>` 声明统一为 **单条狩猎步骤**（列出怪物集合），与计数器、客户端表一致
+  （原 8/15/20/12/6/20 条与任何计数证据都不符）。
+
+## B 类：门禁口径对齐「满计数恢复路线」
+
+25640/25698 的 `QuestPrematureRewardRouteExclusionTest` 既有决策是：**未满计数不得报告/领奖，满计数必须能从 START 恢复报告**。
+两个客户端对齐门禁却断言「START 态不得存在 `QUEST_SELECT` 路由」，与恢复路线直接冲突
+（且引用的 `h30`/`h5` 中间节点已随计数器改造消失）。改为正反双向：
+
+- 正向：START 态进入 REWARD 的对话路由**只有** `QUEST_SELECT(31)` 与 `SELECT_QUEST_REWARD(1009)`，
+  且两条都必须带 `variable-at-least var1 = N`、仅置 `var0=1`，并分别下发 `DEFAULT_SUCCESS` /
+  `SHOW_SELECT_QUEST_REWARD_WINDOW1`；
+- 反向：除这两条满计数路线外，任何 START 态路由都不得打开领奖窗口；
+- 逐计数早领检测并入 `QuestPrematureRewardRouteExclusionTest` 的 `counter(25640, 30, 806101)` /
+  `counter(25698, 5, 806804)` 用例（0..N-1 全部不得进入 REWARD）。
+
+> 注：NPC_START 块会额外生成 START 态的 `FINISH_DIALOG(1008)` 选择窗口路由，其目标是 START 且只显示选择页，
+> 不属于报告/领奖路径，门禁按「进入 REWARD」而不是「存在任意对话路由」判定。
+
+## C 类：三项证据裁决
+
+### 1) 2677：`complete → complete` 重复开局缺 `start-eligible`（代码回归）
+
+`f00d6e538` 用生成的 `<dialog type="NPC_START">` 替换手写开局路由时，新增的
+`complete → complete SELECT1_1(1012)` 漏掉了 `<start-eligible/>`。运行期
+`QuestMutationPlanner.matchesSourceStatus` 明确要求：COMPLETE 状态下只有带 `StartEligible` 的
+转换才能跨过「未接取」边界；生产惯例（1742/2317/11202 等 44 个任务）也是
+`unaccepted` 镜像路由无条件下发页面、`complete` 路由带 `start-eligible`。
+
+- 全库 2735 条「可重复任务开局对话」门禁检查中，**仅此 1 条**缺失（临时审计用例实测），故按惯例补条件。
+
+### 2) 13841 / 13845 / 13849：丢失 `reported-reward-mode="FIXED"`（代码回归）
+
+`3b4e7fc4c` 重写 `<transitions>` 开标签时把这三个任务的 `reported-reward-mode="FIXED"` 擦掉
+（同批的 13947 保留可见对照），导致客户端「无目标自动领奖」`SELECTED_QUEST_AUTO_REWARD(108)`
+落地路由消失，`QuestReportedRewardCoverageTest` 断言的 182 个可实时报告任务缺 1 组。已恢复该属性。
+
+### 3) 26930：断言过期（数据侧已按真端修正）
+
+`f00d6e538` 已把 `<npc-item-report>` 从 `remove-count="ALL"` 改为 `remove-count="10"`，证据为
+客户端 `quest.xml` 的 `<collect_item1> item_idruneweapon_quest_01 10`，以及旧 handler
+`checkQuestItems(env, 0, 0, true, 5, 2716)` → `QuestService.collectItemCheck(env, true)` 精确
+`decreaseByItemId(itemId, collectItem.getCount())`（并不清空全部同名道具）。测试断言仍停留在旧值，改为
+断言扣除 **10** 并显式否决 `ALL`。
+
+## 验证证据（本机 2026-09-18）
+
+| 范围 | 命令 | 结果 |
+|---|---|---|
+| 聚焦 10 项 + 相邻门禁 | `mvn -o test -Dtest='Quest13765RetailAlignmentTest,Quest19636RetailAlignmentTest,Quest19640RetailAlignmentTest,Quest25640ClientDialogAlignmentTest,Quest25698ClientDialogAlignmentTest,QuestA03ShardRetailAlignmentTest,QuestDefinitionCatalogManifestTest,QuestEventShardRetailAlignmentTest,QuestReportedRewardCoverageTest,QuestPrematureRewardRouteExclusionTest'` | 通过 |
+| questEngine 全包 | `mvn -o test -Dtest='com.aionemu.gameserver.questEngine.**.*Test'` | **1440 run / 0 failures / 0 errors / 1 skipped** |
+
+计数普查脚本 `audit_counters.py`、`census_counters.py`（本目录）为只读审计工具，
+用于对比 `quest_monster.csv` 的 `SECTION_1<N` 与 XML `set-variable var1` 目标值。
+
+## 未验证边界
+
+- 未做真机/真客户端验收；本次 XML 修改仅经静态编译（生产目录编译门禁）与结构门禁验证。
+- 13758–13769 家族的客户端 `SECTION_1<5` 与旧 handler 一致，但真端 UI 的击杀计数显示仍需实机确认。
+- 本次未运行服务端进程，也未做全仓库（非 questEngine）测试。

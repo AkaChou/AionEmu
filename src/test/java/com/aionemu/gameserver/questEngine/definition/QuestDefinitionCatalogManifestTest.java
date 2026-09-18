@@ -157,7 +157,11 @@ class QuestDefinitionCatalogManifestTest {
 			.findFirst().orElseThrow();
 
 		assertTrue(success.conditions().contains(new QuestCondition.HasItem(186000257, 10)));
-		assertTrue(success.actions().contains(new QuestAction.RemoveItem(186000257, QuestAction.RemoveItem.ALL)));
+		// 扣除量 = 客户端 collect_item1 声明的 10；旧 handler 的 checkQuestItems(...,true,...) 经
+		// QuestService.collectItemCheck 精确扣除该数量，并不清空背包内的全部同名道具。
+		// Deduction is the client-declared 10; the legacy checkQuestItems path removes exactly that count.
+		assertTrue(success.actions().contains(new QuestAction.RemoveItem(186000257, 10)));
+		assertFalse(success.actions().contains(new QuestAction.RemoveItem(186000257, QuestAction.RemoveItem.ALL)));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)), success.afterCommit());

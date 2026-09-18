@@ -13,63 +13,6 @@
       <kill sequence="1">
         <npc id="235364"/>
       </kill>
-      <kill sequence="2">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="3">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="4">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="5">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="6">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="7">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="8">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="9">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="10">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="11">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="12">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="13">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="14">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="15">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="16">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="17">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="18">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="19">
-        <npc id="235364"/>
-      </kill>
-      <kill sequence="20">
-        <npc id="235364"/>
-      </kill>
     </kills>
   </metadata>
   <progress>
