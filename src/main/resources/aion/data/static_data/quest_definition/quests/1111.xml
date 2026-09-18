@@ -7,10 +7,16 @@
     <items>
       <item id="182200223" count="3"/>
     </items>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="960"/>
-      <reward kind="EXP" id="0" amount="1595"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="960"/>
+        <reward kind="EXP" id="0" amount="1595"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="450"/>
+        <reward kind="EXP" id="0" amount="1150"/>
+      </group>
+    </reward-groups>
     <drops>
       <drop npc-id="210261" item-id="182200223" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="210674" item-id="182200223" chance="100" each-member="true" collecting-step="0"/>
@@ -169,29 +175,9 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
-    <transition source="reward3" target="reward3">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
-      </after-commit>
-    </transition>
-    <transition source="reward3" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="450" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="1150" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="1"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="203075" source="reward3" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="CLOSE_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203061" action="FINISH_DIALOG"/>
