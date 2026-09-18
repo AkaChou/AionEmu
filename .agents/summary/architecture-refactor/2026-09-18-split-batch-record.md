@@ -27,13 +27,15 @@
 | `b2b0a8d30` | Player 储物注册表 | `Player`（2542→2413 行）CUBE/宠物背包/房屋仓库/普通/账号/军团仓库注册与查询、脏物品收集、已存储标记、全物品收集 → package-private 静态 `PlayerStorageRegistry`；字段和 Lombok 访问器保留，公开门面签名不变，零分配。`PlayerStorageRegistryTest` 固化 CUBE/普通/账号/未知类型路由；`PlayerQuestCurrencyPortTest` 覆盖宠物背包/房屋仓库与持久化链路。 |
 | `a2b5717d6` | Player 房屋域 | `Player`（2413→2393 行）房屋列表惰性加载、活动房屋、houseOwnerId、建筑 owner 状态位 → package-private 静态 `PlayerHouses`；新增同包 `getHousesOrNull()` 仅供房屋域读取原始缓存，公开门面签名不变。`PlayerHousesTest` 固化状态位增删、空缓存活动房屋与 reset 语义。 |
 | `b7e2a284b` | Player 展示标签域 | `Player`（2393→2355 行）账号会员标签、特殊账号名标签、管理员访问等级标签与聊天命令前缀 → package-private 静态 `PlayerTags`；公开 `getCustomTag(boolean)` 签名不变。`PlayerTagsTest` 固化默认占位、管理员标签与会员标签语义。 |
+| `db6ff8d19` | Player PvP 规则域 | `Player`（2355→2290 行）世界 PvP 开关、PvP 禁区、同族区域判定与同队排除 → package-private 静态 `PlayerPvpRules`；公开关系入口与多态方法保留，私有判定直接从 `isEnemyFrom(Player)` 调用规则类。新增 `PlayerPvpRulesTest`（4 例，伪造 World/WorldMap/Zone/Position 覆盖异族开关、禁区、同族区域与同队分支）。 |
 
 ## 追加审计结论（round 8，Player 储物域）
 
 - **Player 储物注册表已拆出**：`setStorage/getStorage/getDirtyItemsToUpdate/markDirtyItemContainersStored/getAllItems` 现由无状态 `PlayerStorageRegistry` 承担；存储字段、Lombok 访问器与公开签名保持不变。
 - **Player 房屋域已拆出**：`getHouses/resetHouses/getActiveHouse/getHouseOwnerId/isBuildingInState/setBuildingOwnerState/unsetBuildingOwnerState` 现由 `PlayerHouses` 承担；`getHousesOrNull()` 为同包只读原始缓存入口。
 - **Player 展示标签域已拆出**：`getCustomTag/getAccessTag/getAcountTag` 现由 `PlayerTags` 承担；公开门面签名不变。
-- **Player 仍约 2355 行**：PvP/关系判定域（canPvP/zone/siege relations）暂缺聚焦测试面，暂不盲拆；`Battleground`、`ItemTemplate`、`LegionService` 的既有保留结论不变。
+- **Player PvP 规则域已拆出**：`canPvP`、`isInDisablePvPZone`、`isInPvPZone` 现由 `PlayerPvpRules` 承担；`isEnemyFrom(Player)` 保留多态入口，私有判定改为规则类调用。测试已用伪造 World/WorldMap/Zone/Position 覆盖主要分支。
+- **Player 仍约 2290 行**：后续如继续拆分需重新审计，`Battleground`、`ItemTemplate`、`LegionService` 的既有保留结论不变。
 
 ## 追加审计结论（round 5）
 
