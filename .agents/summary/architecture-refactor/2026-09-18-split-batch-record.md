@@ -134,3 +134,32 @@
    - JAXB/JPA 实体严格规避类级无脑 `@Data`，严格保护反序列化与双向引用边界。
 3. **架构重构正式收口**：
    - 至此，目标内的大类重构、坏味道治理、Spring Bean 依赖注入规范化以及非 quest 测试闭环已全部圆满完成，本阶段正式宣布收口！
+
+## 第三批碎片类收拢（2026-09-18，阶段一收尾）
+
+- `services/item/ItemInfoService`（47 行，纯 static 查询包装，仅被 `DropService` 使用）：
+  三处 `DataManager.ITEM_DATA` 直查语义被内联回 `DropService`（保持 `getItemTemplate` 直查语义，未下钻
+  `DropTemplate` 的 itemTemplate 缓存，避免行为漂移）；删除独立类。
+- `services/RecipeService`（79 行，纯 static 校验/学习逻辑，仅被 `CraftLearnAction` 使用）：
+  收拢为 `CraftLearnAction` 的 `private static validateNewRecipe/addRecipe`；JAXB 字段与 XML 契约不变；
+  删除独立类。
+- 至此阶段一（结构重构）候选清零。剩余单调用小类经逐一复核均属**真实多态子类**（`DanuarHero`/`CircusBound`/
+  `SPLanding` 为模板方法族唯一实现）或**真实领域类型**（`ThievesType` 为盗贼等级枚举，
+  `ConquerorBuffs`/`TerritoryBuff` 为独立 `StatOwner` 状态载体，`BerserkAnoha`/`Iu` 为模板基类扩展点），
+  按"不为合并而合并"原则保留。
+- 验证：`mvn -q -Dtest=DropServiceTest,DropDistributionServiceTest,DropRegistrationServiceTest,DropModifiersTest,DropConfigTest,NpcDropDataTest,GlobalDropDataTest test` 通过。
+
+## 阶段一收尾：待办清单（跨阶段纪律）
+
+依据"先结构、后命名、最后 package"的分阶段纪律，以下问题**不在阶段一修改**，登记为后续独立阶段候选：
+
+### 后续命名优化候选（阶段三，仅 rename，不动 package）
+- `services/item/ItemInfoService` —— 已在本批结构收拢中删除（原职责为物品模板字段直查包装）。
+- `services/RecipeService` —— 已在本批结构收拢中删除（原职责为配方校验/学习规则）。
+- `services/drop/DropService` 中新增的 `DataManager.ITEM_DATA.getItemTemplate(...)` 直查若后续需要复用，
+  再评估是否抽出具名方法（当前阶段不新增抽象）。
+
+### 后续 package 优化候选（阶段五，小批量业务域迁移）
+- `services/conquestservice/`、`services/svsservice/`、`services/agentservice/`、`services/zorshivdredgionservice/`：
+  内部 Runnable 收拢后子包仅剩 1~2 个强耦合类，可在阶段五并入对应领域包。
+- `services/item/` 与 `services/drop/` 的边界划分（物品模板查询 vs 掉落分发）需在阶段五统一评估。

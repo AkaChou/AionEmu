@@ -44,7 +44,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.RespawnService;
-import com.aionemu.gameserver.services.item.ItemInfoService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -275,7 +274,7 @@ public class DropService {
 			return false;
 		}
 		int itemId = requestedItem.getDropTemplate().getItemId();
-		ItemQuality quality = ItemInfoService.getQuality(itemId);
+		ItemQuality quality = DataManager.ITEM_DATA.getItemTemplate(itemId).getItemQuality();
 		LootGroupRules lootGrouRules = dropNpc.getLootGroupRules();
 		if (lootGrouRules == null) {
 			return true;
@@ -314,7 +313,7 @@ public class DropService {
 					return false;
 				} else {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_ALREADY_DISTRIBUTING_ITEM(
-							new DescriptionId(ItemInfoService.getNameId(itemId))));
+							new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(itemId).getNameId())));
 					if (!containDropItem) {
 						lootGrouRules.addItemToBeDistributed(requestedItem);
 					}
@@ -347,7 +346,7 @@ public class DropService {
 		}
 
 		int itemId = requestedItem.getDropTemplate().getItemId();
-		ItemQuality quality = ItemInfoService.getQuality(itemId);
+		ItemQuality quality = DataManager.ITEM_DATA.getItemTemplate(itemId).getItemQuality();
 		if (itemId == 182400001) {
 			return true;
 		}
@@ -430,7 +429,7 @@ public class DropService {
 		}
 
 		long currentDropItemCount = requestedItem.getCount();
-		ItemQuality quality = ItemInfoService.getQuality(itemId);
+		ItemQuality quality = DataManager.ITEM_DATA.getItemTemplate(itemId).getItemQuality();
 		LootGroupRules lootGrouRules = dropNpc.getLootGroupRules();
 		if (lootGrouRules != null && !requestedItem.isDistributeItem() && !requestedItem.isFreeForAll()) {
 			if (lootGrouRules.containDropItem(requestedItem)) {
@@ -598,14 +597,14 @@ public class DropService {
 	 */
 	private void winningRollActions(Player player, int itemId, int npcId) {
 		PacketSendUtility.sendPacket(player,
-				SM_SYSTEM_MESSAGE.STR_MSG_LOOT_GET_ITEM_ME(new DescriptionId(ItemInfoService.getNameId(itemId))));
+				SM_SYSTEM_MESSAGE.STR_MSG_LOOT_GET_ITEM_ME(new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(itemId).getNameId())));
 
 		if (player.isInGroup2() || player.isInAlliance2()) {
 			for (Player member : dropRegistrationService().getDropRegistrationMap().get(npcId)
 					.getInRangePlayers()) {
 				if (member != null && !player.equals(member) && member.isOnline()) {
 					PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_GET_ITEM_OTHER(player.getName(),
-							new DescriptionId(ItemInfoService.getNameId(itemId))));
+							new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(itemId).getNameId())));
 				}
 			}
 		}
@@ -646,7 +645,7 @@ public class DropService {
 				if (member != null && !requestedItem.getWinningPlayer().equals(member) && member.isOnline()) {
 					PacketSendUtility.sendPacket(member,
 							SM_SYSTEM_MESSAGE.STR_MSG_GET_ITEM_PARTYNOTICE(requestedItem.getWinningPlayer().getName(),
-									new DescriptionId(ItemInfoService.getNameId(itemId))));
+									new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(itemId).getNameId())));
 				}
 			}
 		}
@@ -674,7 +673,7 @@ public class DropService {
 	private void uniqueDropAnnounce(final Player player, final DropItem requestedItem) {
 		if (DropConfig.ENABLE_UNIQUE_DROP_ANNOUNCE && !player.getInventory()
 				.isFull(requestedItem.getDropTemplate().getItemTemplate().getExtraInventoryId())) {
-			final ItemTemplate itemTemplate = ItemInfoService
+			final ItemTemplate itemTemplate = DataManager.ITEM_DATA
 					.getItemTemplate(requestedItem.getDropTemplate().getItemId());
 			if (itemTemplate.getItemQuality() == ItemQuality.RARE || itemTemplate.getItemQuality() == ItemQuality.LEGEND
 					|| itemTemplate.getItemQuality() == ItemQuality.UNIQUE
