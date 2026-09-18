@@ -22,18 +22,17 @@ import org.objenesis.ObjenesisStd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class PlayerLimitServiceTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private boolean originalLimitsEnabled;
-	private int originalLimitsRate;
+	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(CustomConfig.class,
+		"LIMITS_ENABLED", "LIMITS_RATE");
 	private Map<Integer, Long> originalSellLimit;
 
 	@BeforeEach
 	void rememberStaticState() throws Exception {
-		originalLimitsEnabled = CustomConfig.LIMITS_ENABLED;
-		originalLimitsRate = CustomConfig.LIMITS_RATE;
 		originalSellLimit = sellLimit();
 		CustomConfig.LIMITS_ENABLED = true;
 		CustomConfig.LIMITS_RATE = 1;
@@ -41,8 +40,7 @@ class PlayerLimitServiceTest {
 
 	@AfterEach
 	void restoreStaticState() throws Exception {
-		CustomConfig.LIMITS_ENABLED = originalLimitsEnabled;
-		CustomConfig.LIMITS_RATE = originalLimitsRate;
+		configSnapshot.restore();
 		setSellLimit(originalSellLimit);
 	}
 

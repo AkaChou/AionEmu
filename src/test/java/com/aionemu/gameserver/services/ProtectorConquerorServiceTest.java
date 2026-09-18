@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.services.conquerors.Conqueror;
 import com.aionemu.gameserver.services.protectors.Protector;
 import com.aionemu.gameserver.world.WorldPosition;
+import com.aionemu.testutil.ConfigSnapshot;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,14 +24,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProtectorConquerorServiceTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private boolean oldEnabled;
-	private int oldDecrease;
+	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(CustomConfig.class,
+		"PROTECTOR_CONQUEROR_ENABLE", "PROTECTOR_CONQUEROR_DECREASE");
 	private Map<Integer, ProtectorConquerorService.WorldType> oldHandledWorlds;
 
 	@BeforeEach
 	void setUp() throws ReflectiveOperationException {
-		oldEnabled = CustomConfig.PROTECTOR_CONQUEROR_ENABLE;
-		oldDecrease = CustomConfig.PROTECTOR_CONQUEROR_DECREASE;
 		oldHandledWorlds = new LinkedHashMap<Integer, ProtectorConquerorService.WorldType>(handledWorlds());
 		CustomConfig.PROTECTOR_CONQUEROR_ENABLE = true;
 		CustomConfig.PROTECTOR_CONQUEROR_DECREASE = 2;
@@ -40,8 +39,7 @@ class ProtectorConquerorServiceTest {
 
 	@AfterEach
 	void tearDown() throws ReflectiveOperationException {
-		CustomConfig.PROTECTOR_CONQUEROR_ENABLE = oldEnabled;
-		CustomConfig.PROTECTOR_CONQUEROR_DECREASE = oldDecrease;
+		configSnapshot.restore();
 		handledWorlds().clear();
 		handledWorlds().putAll(oldHandledWorlds);
 	}

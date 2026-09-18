@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.configs.Config;
+import com.aionemu.testutil.ConfigSnapshot;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,21 +17,18 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class ChatRestartServicesTest {
 
-    private String restartFrequency;
-    private String restartTime;
+    private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(Config.class,
+        "CHATSERVER_RESTART_FREQUENCY", "CHATSERVER_RESTART_TIME");
 
     @BeforeEach
     void forceRestartDisabled() {
-        restartFrequency = Config.CHATSERVER_RESTART_FREQUENCY;
-        restartTime = Config.CHATSERVER_RESTART_TIME;
         Config.CHATSERVER_RESTART_FREQUENCY = "NEVER";
         Config.CHATSERVER_RESTART_TIME = "5:00";
     }
 
     @AfterEach
     void restoreConfig() {
-        Config.CHATSERVER_RESTART_FREQUENCY = restartFrequency;
-        Config.CHATSERVER_RESTART_TIME = restartTime;
+        configSnapshot.restore();
     }
 
     @Test

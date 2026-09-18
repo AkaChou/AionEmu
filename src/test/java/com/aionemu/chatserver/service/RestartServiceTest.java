@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.configs.Config;
+import com.aionemu.testutil.ConfigSnapshot;
 import java.lang.reflect.Modifier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,21 +12,18 @@ import org.junit.jupiter.api.Test;
 
 class RestartServiceTest {
 
-    private String restartFrequency;
-    private String restartTime;
+    private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(Config.class,
+        "CHATSERVER_RESTART_FREQUENCY", "CHATSERVER_RESTART_TIME");
 
     @BeforeEach
     void forceRestartDisabled() {
-        restartFrequency = Config.CHATSERVER_RESTART_FREQUENCY;
-        restartTime = Config.CHATSERVER_RESTART_TIME;
         Config.CHATSERVER_RESTART_FREQUENCY = "NEVER";
         Config.CHATSERVER_RESTART_TIME = "5:00";
     }
 
     @AfterEach
     void restoreConfig() {
-        Config.CHATSERVER_RESTART_FREQUENCY = restartFrequency;
-        Config.CHATSERVER_RESTART_TIME = restartTime;
+        configSnapshot.restore();
     }
 
     @Test

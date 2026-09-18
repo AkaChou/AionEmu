@@ -18,18 +18,18 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.testutil.ConfigSnapshot;
 
 class PlayerAggroLevelTest {
 
 	private static final int TEST_INSTANCE_MAP = 300000001;
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private int originalAggroLevelImmune;
+	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(AIConfig.class, "AGGRO_LEVEL_IMMUNE");
 	private List<Integer> originalInstanceAggro;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		originalAggroLevelImmune = AIConfig.AGGRO_LEVEL_IMMUNE;
 		originalInstanceAggro = new ArrayList<>(instanceAggro());
 		instanceAggro().clear();
 		AIConfig.AGGRO_LEVEL_IMMUNE = 10;
@@ -37,7 +37,7 @@ class PlayerAggroLevelTest {
 
 	@AfterEach
 	void tearDown() throws Exception {
-		AIConfig.AGGRO_LEVEL_IMMUNE = originalAggroLevelImmune;
+		configSnapshot.restore();
 		instanceAggro().clear();
 		instanceAggro().addAll(originalInstanceAggro);
 	}
