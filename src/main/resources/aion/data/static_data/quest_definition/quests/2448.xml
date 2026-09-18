@@ -7,10 +7,17 @@
     <work-items>
       <item id="182204210" count="1"/>
     </work-items>
-    <rewards>
-      <reward kind="EXP" id="0" amount="1301093"/>
-      <reward kind="ITEM" id="186000009" amount="3"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="1301093"/>
+        <reward kind="ITEM" id="186000009" amount="3"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="12800"/>
+        <reward kind="EXP" id="0" amount="1301093"/>
+        <reward kind="ITEM" id="186000009" amount="3"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -22,8 +29,11 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="reward1" status="REWARD">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="20"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -47,7 +57,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798115" action="SETPRO10"/>
       </event>
@@ -59,7 +69,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798115" action="SETPRO20"/>
       </event>
@@ -71,20 +81,29 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="798115" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798115" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798115" source="reward1" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <npc-complete npc-id="798115" source="reward2" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+
     <dialog type="NPC_START" npc-id="798080" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="798080" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798080" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798080" source="reward1" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <npc-complete npc-id="798080" source="reward2" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+
     <dialog type="NPC_START" npc-id="798079" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="798079" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="798079" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="798079" source="reward1" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <npc-complete npc-id="798079" source="reward2" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798079" action="SELECT1_1"/>
@@ -117,7 +136,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798079" action="SETPRO10"/>
       </event>
@@ -129,7 +148,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798079" action="SETPRO20"/>
       </event>
@@ -141,7 +160,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798080" action="SETPRO10"/>
       </event>
@@ -153,7 +172,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="reward2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798080" action="SETPRO20"/>
       </event>

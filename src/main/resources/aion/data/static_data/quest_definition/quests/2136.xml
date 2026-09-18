@@ -4,12 +4,18 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <rewards>
-      <reward kind="EXP" id="0" amount="913"/>
-      <reward kind="ITEM" id="100100494" amount="1"/>
-      <reward kind="ITEM" id="182000559" amount="1"/>
-      <reward kind="ITEM" id="182000558" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="913"/>
+        <reward kind="ITEM" id="100100494" amount="1"/>
+        <reward kind="ITEM" id="182000559" amount="1"/>
+        <reward kind="ITEM" id="182000558" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="550"/>
+        <reward kind="ITEM" id="182000558" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -24,8 +30,11 @@
     <node label="v1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="reward1" status="REWARD">
       <var name="var0" value="1"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -133,7 +142,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="reward">
+    <transition source="v1" target="reward1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790009" action="SETPRO1"/>
       </event>
@@ -145,7 +154,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="reward">
+    <transition source="v1" target="reward2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790009" action="SETPRO2"/>
       </event>
@@ -157,7 +166,10 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="790009" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="790009" source="reward1" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="790009" source="reward2" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">
