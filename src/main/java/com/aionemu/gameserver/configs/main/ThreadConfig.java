@@ -53,12 +53,9 @@ public class ThreadConfig {
 	}
 
 	/**
-	 * Spring 绑定完成后重算线程池大小；绑定期间每个 setter 都会写入静态字段，
-	 * 因此在 {@code @PostConstruct} 统一重算一次即可，避免逐字段重算。
-	 *
-	 * Recomputes the thread-pool size after Spring binding completes. Each setter already
-	 * writes the static field, so one recomputation in {@code @PostConstruct} is enough and
-	 * avoids recomputing per field.
+	 * Spring 绑定完成后兜底重算一次派生值，保证没有任何 setter 被调用时派生值仍然正确。
+	 * Safety-net recomputation after Spring binding, so the derived value is correct even when
+	 * no setter ran.
 	 */
 	@PostConstruct
 	void recomputeAfterBinding() {
@@ -67,6 +64,7 @@ public class ThreadConfig {
 
 	public void setBasepoolsize(int basepoolsize) {
 		BASE_THREAD_POOL_SIZE = basepoolsize;
+		load();
 	}
 
 	public int getBasepoolsize() {
@@ -75,6 +73,7 @@ public class ThreadConfig {
 
 	public void setThreadpercore(int threadpercore) {
 		EXTRA_THREAD_PER_CORE = threadpercore;
+		load();
 	}
 
 	public int getThreadpercore() {

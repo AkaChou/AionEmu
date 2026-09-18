@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
@@ -29,10 +30,17 @@ import org.springframework.context.annotation.Lazy;
 @Configuration(proxyBeanMethods = false)
 public class EngineBeans {
 
+    /**
+     * 线程池管理器桥接 Bean，注入线程配置而不是读取静态门面。
+     * Thread-pool manager bridge bean, wired with the thread configuration instead of the static facade.
+     *
+     * @param threadConfig 线程配置 / thread configuration
+     * @return 线程池管理器 / thread-pool manager
+     */
     @Bean
     @Lazy
-    public ThreadPoolManager threadPoolManager() {
-        return new ThreadPoolManager();
+    public ThreadPoolManager threadPoolManager(ThreadConfig threadConfig) {
+        return new ThreadPoolManager(threadConfig);
     }
 
     @Bean

@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.aionemu.gameserver.configs.main.ThreadConfig;
+
 import org.junit.jupiter.api.Test;
 
 class GameThreadPoolManagerBoundsTest {
@@ -39,6 +41,43 @@ class GameThreadPoolManagerBoundsTest {
 
 		assertFalse(source.contains("new Thread(new Runnable()"));
 		assertTrue(source.contains("scheduleAtFixedRate(new Runnable()"));
+	}
+
+	/**
+	 * 注入的线程配置必须决定池大小，而不是构造时的静态门面。
+	 * The injected thread configuration must decide the pool sizes, not the static facade used at construction time.
+	 */
+	@Test
+	void injectedThreadConfigDecidesPoolSizes() throws Exception {
+		int savedBase = ThreadConfig.BASE_THREAD_POOL_SIZE;
+		int savedExtra = ThreadConfig.EXTRA_THREAD_PER_CORE;
+		int savedSize = ThreadConfig.THREAD_POOL_SIZE;
+		ThreadConfig config = new ThreadConfig();
+		try {
+			config.setBasepoolsize(7);
+			config.setThreadpercore(3);
+
+			ThreadPoolManager manager = new ThreadPoolManager(config);
+			try {
+				int processors = Runtime.getRuntime().availableProcessors();
+				assertEquals((7 + 3) * processors, instantPool(manager).getCorePoolSize());
+				assertEquals(3 * processors, scheduledPool(manager).getCorePoolSize());
+			} finally {
+				manager.shutdown();
+			}
+		} finally {
+			ThreadConfig.BASE_THREAD_POOL_SIZE = savedBase;
+			ThreadConfig.EXTRA_THREAD_PER_CORE = savedExtra;
+			ThreadConfig.THREAD_POOL_SIZE = savedSize;
+		}
+	}
+
+	private static ThreadPoolExecutor instantPool(ThreadPoolManager manager) throws Exception {
+		return threadPool(manager, "instantPool");
+	}
+
+	private static ThreadPoolExecutor scheduledPool(ThreadPoolManager manager) throws Exception {
+		return (ThreadPoolExecutor) threadPool(manager, "scheduledPool");
 	}
 
 	private static ThreadPoolExecutor threadPool(ThreadPoolManager manager, String fieldName) throws Exception {

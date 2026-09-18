@@ -42,29 +42,36 @@ class ThreadConfigTest {
 	}
 
 	/**
-	 * Spring 绑定走 setter 写静态字段，绑定结束由 {@code @PostConstruct} 重算派生值；
-	 * 该测试固化「setter 只写入、不重算」的约定，避免逐字段重算。
-	 * Spring binding writes static fields through setters and recomputes once after binding;
-	 * this locks the "setter writes only" contract so recomputation stays a single step.
+	 * setter 写入字段后必须立即把派生池大小收敛到新值，避免 Bean 与静态字段短暂不一致。
+	 * A setter must converge the derived pool size immediately, so the bean and the static field
+	 * never disagree.
 	 */
 	@Test
-	void bindingSettersWriteFieldsWithoutRecomputingPoolSize() {
-		ThreadConfig.BASE_THREAD_POOL_SIZE = 1;
-		ThreadConfig.EXTRA_THREAD_PER_CORE = 4;
-		ThreadConfig.load();
-		int derived = ThreadConfig.THREAD_POOL_SIZE;
-
+	void bindingSettersRecomputeTheDerivedPoolSize() {
 		ThreadConfig config = new ThreadConfig();
 		config.setBasepoolsize(9);
-
-		assertEquals(9, ThreadConfig.BASE_THREAD_POOL_SIZE);
-		assertEquals(derived, ThreadConfig.THREAD_POOL_SIZE,
-			"setter must not recompute the derived pool size");
-
-		config.recomputeAfterBinding();
+		config.setThreadpercore(4);
 
 		int processors = Runtime.getRuntime().availableProcessors();
 		assertEquals((9 + 4) * processors, ThreadConfig.THREAD_POOL_SIZE,
-			"binding recompute must use the bound base value");
+			"setters must keep the derived pool size in sync with the bound values");
+		assertEquals(ThreadConfig.THREAD_POOL_SIZE, config.getThreadPoolSize());
+	}
+
+	/**
+	 * {@code @PostConstruct} 兜底重算保证没有任何 setter 被调用时派生值依然正确。
+	 * The {@code @PostConstruct} safety-net recomputation keeps the derived value correct even when
+	 * no setter ran.
+	 */
+	@Test
+	void postConstructRecomputesTheDerivedPoolSize() {
+		ThreadConfig.BASE_THREAD_POOL_SIZE = 2;
+		ThreadConfig.EXTRA_THREAD_PER_CORE = 5;
+		ThreadConfig.THREAD_POOL_SIZE = 0;
+
+		new ThreadConfig().recomputeAfterBinding();
+
+		int processors = Runtime.getRuntime().availableProcessors();
+		assertEquals((2 + 5) * processors, ThreadConfig.THREAD_POOL_SIZE);
 	}
 }

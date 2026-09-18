@@ -30,9 +30,6 @@ import com.aionemu.gameserver.configs.main.ThreadConfig;
 @Slf4j
 public final class ThreadPoolManager {
 
-	/** 无警告的最大运行时长（毫秒，常量备份） / Max runtime without warning (ms, constant backup) */
-	public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
-
 	/** 可调度延迟上限（毫秒） / Maximum schedulable delay in milliseconds */
 	private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
 
@@ -55,19 +52,33 @@ public final class ThreadPoolManager {
 	/** 工作窃取（ForkJoin）线程池 / Work-stealing (ForkJoin) pool */
 	private final ForkJoinPool workStealingPool;
 
+	/** 无警告的最大运行时长（毫秒） / Max runtime without warning (ms) */
+	private final long maxRuntimeInMillisWithoutWarning;
+
 	/**
-	 * 初始化各线程池并启动周期性 purge。
-	 * Initialize all pools and start periodic purge.
+	 * 以遗留静态门面初始化各线程池（非 Bean 回退路径与既有测试使用）。
+	 * Initialize the pools from the legacy static facade (non-bean fallback path and existing tests).
 	 */
 	public ThreadPoolManager() {
-		final int instantPoolSize = instantPoolSize(ThreadConfig.THREAD_POOL_SIZE);
+		this(new ThreadConfig());
+	}
+
+	/**
+	 * 以注入的线程配置初始化各线程池并启动周期性 purge。
+	 * Initialize pools from an injected thread configuration and start periodic purge.
+	 *
+	 * @param config 线程配置 / thread configuration
+	 */
+	public ThreadPoolManager(ThreadConfig config) {
+		this.maxRuntimeInMillisWithoutWarning = config.getRuntime();
+		final int instantPoolSize = instantPoolSize(config.getThreadPoolSize());
 		instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<Runnable>(100000),
-				new PriorityThreadFactory("InstantPool", ThreadConfig.USE_PRIORITIES ? 7 : Thread.NORM_PRIORITY));
+				new PriorityThreadFactory("InstantPool", config.isUsepriority() ? 7 : Thread.NORM_PRIORITY));
 		instantPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		instantPool.prestartAllCoreThreads();
 		scheduledPool = new ScheduledThreadPoolExecutor(
-				Math.max(1, ThreadConfig.EXTRA_THREAD_PER_CORE) * Runtime.getRuntime().availableProcessors());
+				Math.max(1, config.getThreadpercore()) * Runtime.getRuntime().availableProcessors());
 		scheduledPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		scheduledPool.prestartAllCoreThreads();
 		int longRunningPoolSize = longRunningPoolSize();
@@ -117,9 +128,9 @@ public final class ThreadPoolManager {
 	 * 使用线程配置超时阈值的 Runnable 包装器。
 	 * Runnable wrapper using thread-config warning threshold.
 	 */
-	private static final class ThreadPoolRunnableWrapper extends RunnableWrapper {
+	private final class ThreadPoolRunnableWrapper extends RunnableWrapper {
 		private ThreadPoolRunnableWrapper(Runnable runnable) {
-			super(runnable, ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING);
+			super(runnable, maxRuntimeInMillisWithoutWarning);
 		}
 	}
 
