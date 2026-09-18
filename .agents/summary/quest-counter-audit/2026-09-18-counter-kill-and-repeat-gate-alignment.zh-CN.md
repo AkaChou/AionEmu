@@ -95,3 +95,38 @@
 - 未做真机/真客户端验收；本次 XML 修改仅经静态编译（生产目录编译门禁）与结构门禁验证。
 - 13758–13769 家族的客户端 `SECTION_1<5` 与旧 handler 一致，但真端 UI 的击杀计数显示仍需实机确认。
 - 本次未运行服务端进程，也未做全仓库（非 questEngine）测试。
+
+---
+
+## 追加（第 1/2/4 项优化）：击杀数门禁、声明收口与批量改写守卫
+
+### 1) 击杀数真端门禁：`QuestKillCounterRetailGateTest` + planner 模拟器
+
+不再从 XML 形状反推击杀数，而是用 `QuestKillCounterSimulator` 走**真实 `QuestMutationPlanner`** 连续模拟击杀，
+得到"引擎口径下完成所需击杀数"，再与客户端 `SECTION_1<N` 门控比对：
+
+- `src/test/resources/quest/quest-kill-counter-retail-contract.tsv`：414 个单计数器任务的客户端门控快照
+  （source：`Quest_unpacked/quest_monster.csv`）。
+- `src/test/resources/quest/quest-kill-counter-overkill-pending.tsv`：**34 个"引擎要求 N+1 只"的待裁任务**
+  （13955/23955、35052、35058-35065、36532-36536、45052/45058/45060-45064、46531-46548）。
+  证据：同形态 514 个任务均为"正好 N 杀完成"（`below N-1` 累加 + `at-least N-1` 收口），
+  且客户端只给 N。门禁强制该账本**精确等于**模拟结果，修复后必须同步清空。
+- 反向对照 `simulatorReproducesTheFixedOverkillDrift`：把 13765 还原为漂移形态后模拟器报 6 杀（原 5），证明门禁非空转。
+
+### 2) `<kills>` 声明收口
+
+`QuestKillCounterRetailGateTest.killDeclarationsStayInsideKillTransitions`：声明中的 npc 必须真实出现在击杀转换里，
+声明仅作展示、计数一律以 `var1` 计数器为准（`QuestMetadata.kills()` 在生产代码无消费点，100/1302 的任务声明它）。
+
+### 4) 批量改写守卫：`check_quest_xml_block_attributes.py`
+
+`.agents/summary/quest-counter-audit/check_quest_xml_block_attributes.py`：对比两个 revision 上被改动任务 XML 的
+**块级属性集合**，任何"基线有、新版本丢"的属性都会失败退出（可用 `--allow path:tag:attr` 显式留证）。
+自检：`--base 3b4e7fc4c^ --head 3b4e7fc4c` 精确报出 13841/13845/13849 的 `transitions:reported-reward-mode` 丢失。
+
+### 验证
+
+| 范围 | 命令 | 结果 |
+|---|---|---|
+| 新门禁（隔离 worktree，含工作区新文件） | `mvn -o test -Dtest='QuestKillCounterRetailGateTest'` | 5/5 通过 |
+| 守卫脚本历史自检 | `check_quest_xml_block_attributes.py --base 3b4e7fc4c^ --head 3b4e7fc4c` | 精确报出 3 处属性丢失 |

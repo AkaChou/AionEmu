@@ -800,11 +800,11 @@ symptom: 玩家报告“要杀的比任务说明多”（13758 族实为 5 杀�
 root_cause: `<kills>` 序列数被当作运行时击杀合同，但生产代码从不消费 QuestMetadata.kills()，真正的计数合同是转换里的 var1；b771eef59 按错误读数把 13758-13769 延长到 15/8/20/12/6/20，3b4e7fc4c 改成计数器时沿用这些错值（并把 transitions 开标签属性重写丢失，见 QE-037）
 fix_or_guardrail: 1. 击杀数只认三份互相独立的真端证据：客户端 quest_monster.csv 的 SECTION_1<N 门控、data_driven_quest.xml 的 value0_progress_ 数量、911440146 旧 handler 的 var1 < N 阈值；2. `<kills>` 必须与计数器同口径（单条狩猎步骤列出怪物集合），禁止仅凭序列数反推击杀数；3. 计数器收口值 = 客户端门控值（below N-1 累加，at-least N-1 收口为 set N）；4. 批量改写只允许改结构，禁止顺带改计数目标
 evidence: commits b771eef59, commit 3b4e7fc4c, commit f00d6e538; src/main/resources/aion/data/static_data/quest_definition/quests/13758.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13761.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13764.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13765.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13767.xml, src/main/resources/aion/data/static_data/quest_definition/quests/13769.xml; .agents/summary/quest-counter-audit/audit_counters.py; .agents/summary/quest-counter-audit/census_counters.py; .agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md
-validation: production-gate | focused-test：mvn -o test -Dtest='com.aionemu.gameserver.questEngine.**.*Test' 1440 run / 0 failures / 0 errors
+validation: production-gate | focused-test：QuestKillCounterRetailGateTest 5/5（414 个单计数器任务与客户端门控逐条比对，34 个引擎要求 N+1 的任务记入 quest-kill-counter-overkill-pending.tsv 待裁）；mvn -o test -Dtest='com.aionemu.gameserver.questEngine.**.*Test' 1440 run / 0 failures / 0 errors
 boundaries: 只覆盖单段击杀计数；SECTION_1 出现多行/多段的复合任务必须逐段确认；set 值 = 门控 + 1 与 = 门控 都是合法记账形态，不能按差值判缺陷；真端 UI 计数显示仍需实机确认
 superseded_by: none
 see_also: [QE-006], [QE-007], [QE-037]
-first_check: 先跑 .agents/summary/quest-counter-audit/audit_counters.py 对比客户端门控与 var1 目标，再用 git show 911440146:<quest/*/_<id>*.java> 核旧 handler 阈值；断言 KillNpc 条数的测试是旧链式形状的残留，不是运行时合同
+first_check: 先跑 mvn -o test -Dtest='QuestKillCounterRetailGateTest'（planner 模拟出引擎要求的击杀数并与客户端门控比对），仍存疑时用 .agents/summary/quest-counter-audit/audit_counters.py 对比客户端门控与 var1 目标，再用 git show 911440146:<quest/*/_<id>*.java> 核旧 handler 阈值；断言 KillNpc 条数的测试是旧链式形状的残留，不是运行时合同
 -->
 
 - **判定规则**：`<kills>` 是声明、var1 才是合同。两者不一致时以客户端表与旧 handler 的三方一致结果为准，并把 `<kills>` 修正到同一口径，而不是让门禁去数序列。
