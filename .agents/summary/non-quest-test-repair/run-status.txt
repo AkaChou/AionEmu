@@ -1,0 +1,27 @@
+ M .agents/rules/lombok.md
+ M docs/QUEST_CATALOG.zh-CN.md
+ M src/main/java/com/aionemu/gameserver/model/templates/npc/NpcTemplate.java
+ M src/main/resources/aion/data/static_data/quest_definition/quests/1648.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18250.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18251.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18975.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18976.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18977.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/18978.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28250.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28251.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28975.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28976.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28977.xml
+ M src/main/resources/aion/data/static_data/quest_definition/quests/28978.xml
+ M src/test/java/com/aionemu/gameserver/model/templates/npc/NpcAbnormalImmunityTest.java
+ M src/test/java/com/aionemu/gameserver/network/aion/serverpackets/SMPlayerSpawnTest.java
+ M src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStartEligibilityPortTest.java
+?? .agents/summary/architecture-performance-refactor/retire_all_fallbacks_v2.py
+?? .agents/summary/architecture-performance-refactor/retire_singleton_fallback.py
+?? .agents/summary/architecture-performance-refactor/split_legacy_bridge_config.py
+?? .agents/summary/architecture-performance-refactor/thin_retired_fallbacks.py
+?? .agents/summary/architecture-performance-refactor/thin_retired_fallbacks_v2.py
+?? .agents/summary/non-quest-test-repair/
+?? .agents/summary/quest-systemic-goal/audit_prerequisite_axis.py
+?? .agents/summary/quest-systemic-goal/prerequisite-axis-audit.tsv

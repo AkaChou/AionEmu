@@ -1,0 +1,3266 @@
+{
+  "commit": "e483c7ef3b95adafea745bba055ce89a4b19b813",
+  "totals": {
+    "tests": 1379,
+    "failures": 60,
+    "errors": 16,
+    "skipped": 1
+  },
+  "reports": [
+    {
+      "name": "com.aionemu.gameserver.questEngine.ProductionCatalogWhitelistVerificationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.QuestEngineEscortAndProximityRegistrationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.QuestEngineNpcDialogDispatchTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.QuestEngineRuntimeCompositionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.QuestSkillDispatchBoundaryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.AcceptAndConfirmationEntryContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.BroadcastZoneMissionEndDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ClassicTalkChainQuestFamilyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ClientQuestSectionAlignmentTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.CompletedQuestPrerequisiteRegressionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.CoreCapabilityRepresentativeDefinitionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.CraftRepresentativeQuestDefinitionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.CraftingPotentialQuestFamilyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.DaevanionSageDialogFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.DisabledClientQuestPlaceholderCatalogTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.EarlyElyosQuestRegressionTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.FountainRewardQuestFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.GelkmarosSelect8SymbolContractTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.GrowthQuestDialogPageAlignmentTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.IncrementVariableDefinitionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ItemCollectingDialogProtocolAlignmentTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.JavaHandlerFamilyDefinitionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.KillNpcSetDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.LegacyDialogChainFamilyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.LegacyKillFlowRepairDefinitionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.LegacyRewardStepProjectionRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.LegionTaskWorldWildcardDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MigratedQuestRepairDefinitionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MiragentQuestFamilyProgressionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MissionFamilyDefinitionTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MissionItemConsumptionBatchRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MonsterHunt1102DefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MonsterHuntFamilyDefinitionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MovieContinuationResponseFamilyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.MultiRewardBranchQuestFamilyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.PandaemoniumSequentialQuestFamilyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ProximityRepresentativeQuestDefinitionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.PvpRepresentativeQuestDefinitionTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest10031And20031ZoneMissionBroadcastTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1006ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1006InventoryGuardTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1007MovieDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest10506ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest10520ClientDialogAlignmentTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest10522AutoStartDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest11031And11032RetailFlowTest",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "protocolLoopCompletesBothQuestsFromTheClientDialogContract",
+          "error": "quest 11031: Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=32, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=798959, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:798959:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={182206723=10}, page=10, npcId=798959, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=798959, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=798959, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=32, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=798959, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest11110And1548PostKillReportDialogTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest11216DefinitionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1141ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest11467ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest11468And21468SkillCompletionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1149ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1152RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1157EscortRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1163ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1192ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1220ClientDialogAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1309ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1311ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13305ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1336ScoutingForDemokritosRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1346ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1347ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1354ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13704ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneyUsesTheFonaReportPageBeforeCompleting",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=27, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=802331, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:802331:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=802331, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=802331, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=802331, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=27, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=802331, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13708ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneyUsesTheFeleusReportPageBeforeCompleting",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=27, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=802332, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:802332:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=802332, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=802332, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=802332, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=27, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=802332, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1373ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13765RetailAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "preservesWeeklyMetadataKillTargetAndThreeGuardNpcs",
+          "error": "expected: &lt;8&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1376ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13830To13834TargetlessRewardTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1385ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13902ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13944RetailAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "preservesUnionMetadataThreeKillsAndDianTurnIn",
+          "error": "expected: &lt;3&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest13951And23951RewardOwnerTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneysReachTheRetailRewardOwners",
+          "error": "13951 Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=10, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=731784, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:731784:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=731784, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=731784, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=731784, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=10, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=731784, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14010EnterZoneProtocolTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14013ProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14015ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14023ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14024ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14025ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14026ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14042RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14045And14046MoviePageTurnContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14047ClientDialogAlignmentTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14051ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14053LevelUpDialogTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14112LogoutPersistenceTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14114ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14120ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14123ZoneSpawnTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest14150ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1466ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "completesTheProductionHeadlessJourneyThroughTheItemPlayProtocol",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=10, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=212649, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:212649:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=212649, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=212649, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=212649, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=10, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=212649, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1470ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest15334And25334And30800ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneysUseTheReportPageBeforeCompleting",
+          "error": "15334 Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=35, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=805330, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:805330:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=805330, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=805330, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=805330, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=35, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=805330, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1553ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1607MappingTheRevolutionariesRegressionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1661TheKrallScoutingMissionRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest16922ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18501InteractionObjectTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18600ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18602ClientDialogAlignmentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18800ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18802ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18808ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest18950ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19001ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19003ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19004RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19048And23704And23708And29048ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneysUseTheReportPageBeforeCompleting",
+          "error": "19048 Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=27, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=798303, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:798303:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=798303, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=798303, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=798303, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=27, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=798303, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19055ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1913ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1919ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1920And2945ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1922RewardTurnInTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1922WorldCleanupTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1926And2938ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1929RetailAlignmentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1936ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1940LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19636RetailAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "preservesMetadataTenKillsAndThirteenSelectableBranches",
+          "error": "expected: &lt;10&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19637ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest19640RetailAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "preservesMetadataTenKillsAndSixSelectableBranches",
+          "error": "expected: &lt;10&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1987ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest1989And2722And19008ClientDialogAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2008RetailAlignmentTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2009MovieDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest20522AutoStartDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2110WorkItemRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest21114PoisonedFungiRetailFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest21320ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2150ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2151ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2223ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2284ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest23830To23834TargetlessRewardTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest23902ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2392BeautifulFeatherTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2393And3722ItemPlayRewardOwnerTest",
+      "tests": 4,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneysCompleteOnlyAfterTheItemPlayProtocolAndRewardOwner",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=28, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=204343, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:204343:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=204343, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=204343, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=204343, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=28, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=204343, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest24026RetailAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest24043RetailFlowAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest24053PrerequisiteTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest25050RetailFlowAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest25512ClientDialogAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest25640ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "gatesTheClientReportPageOnCompletedKillProgress",
+          "error": "expected: &lt;false&gt; but was: &lt;true&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest25670ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneyCompletesFromTheProductionOwner",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=29, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=806116, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:806116:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=806116, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=806116, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=806116, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=29, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=806116, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest25698ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "gatesTheClientReportPageOnCompletedKillProgress",
+          "error": "expected: &lt;false&gt; but was: &lt;true&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2634RetailAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2669RetailAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest26800ClientDialogAlignmentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest26802ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest26803ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest26804ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest26922ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2841RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28510ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28625And28626ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2877To2887UrgentOrdersFlowTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28800ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28802ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28808ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28821DialogRouteRegressionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28931ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "completesThroughTheProductionHeadlessJourney",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=10, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=806261, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:806261:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=806261, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=806261, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=806261, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=4762]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=10, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=806261, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest28950ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest29001ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest29003ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2900RetailFlowAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2929ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2947RewardTurnInTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2948LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2953RetailFlowAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2985ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest2989CeremonyOfTheWiseTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30310RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30311RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30312RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30313RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30314RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30315RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30317RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30318To30321RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest30515ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3057RetailFlowAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3100ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "completesThroughTheProductionHeadlessJourney",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=9, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203792, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203792:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203792, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203792, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203792, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=9, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203792, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3103ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3502RetailFlowAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3732InstanceObjectiveTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3732TrainingSiegeWeaponTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3734DragonArmsChestTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest38000LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest38001LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest38002LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3926ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3934ClientDialogAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3935ClientDialogAlignmentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest3961To3964RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest39707RetailFlowAlignmentTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest48000LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest48001LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest48002LevelUpDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest4913ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest4914ClientDialogAlignmentTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "productionJourneyReachesTheFinalRewardOwnerBeforeCompleting",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=1, expected=PlannedStep[kind=TARGETLESS_ACTION, transition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=targetless-action:1002, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=0, npcId=0, objectId=0, committedActions=[], expectedDialogTargetObjectId=0, matchedTransition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=1, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:QuestDialog[dialogId=1002]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest49713RetailFlowAlignmentTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest49715RetailFlowAlignmentTest",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "completesThroughTheProductionHeadlessJourney",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=1, expected=PlannedStep[kind=TARGETLESS_ACTION, transition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=targetless-action:1002, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=0, npcId=0, objectId=0, committedActions=[], expectedDialogTargetObjectId=0, matchedTransition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=1, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:QuestDialog[dialogId=1002]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest50009ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest50019RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest51009ClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest51019RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest80312RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest80318RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest80787To80794RetailAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.Quest80875RetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestA03ShardRetailAlignmentTest",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "huntTargetsAndStepsMatchRetailProgressInfo",
+          "error": "hunt step count of 23920 ==&gt; expected: &lt;10&gt; but was: &lt;1&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestAdditionalCapabilityDefinitionTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestArchDaevaPromotionDefinitionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestAutoStartDialogAuditTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestBatchReportNpcAlignmentTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestCharmedEventDefinitionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestClientContractGateTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestCompletionDialogTerminationTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDataDrivenRetailFlowAlignmentTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifestTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDefinitionCompilerTest",
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoaderTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDefinitionForbiddenPatternTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDialog31RegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDialogMigrationEquivalenceTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAuditTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDialogSequenceAuditTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDialogXmlSyntaxTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestDraupnirNpcVariantContractTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestEquipmentExchangeDefinitionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestEventQuestBatchDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestEventShardRetailAlignmentTest",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "huntStepsUseAnyWorldWildcardOrTheRetailKumukiMob",
+          "error": "kill-npc steps of 50073 ==&gt; expected: &lt;15&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestHaramelItemCollectingRegressionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestInstanceExitRecoveryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestKaligaCollectionClientDialogAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestLunarEventDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMetadataFieldMappingTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMetadataXmlTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMinionTutorialRetailAlignmentTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMovieContinuationGateTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestMovieEventDefinitionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestNoHandlerShard3DefinitionTest",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "scaredSkurvsCarriesRetailHuntChainAndSharedTenKillCount",
+          "error": "expected: &lt;VariableBelow[field=var0, value=9]&gt; but was: &lt;VariableBelow[field=var1, value=9]&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestPacketOrderRegressionTest",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "protocolLoopSendsCommittedStateBeforeEveryRepairedPage",
+          "error": "DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestPageTurnResponseGateTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestPrematureRewardRouteAuditTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestPrematureRewardRouteExclusionTest",
+      "tests": 17,
+      "failures": 10,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[5]",
+          "error": "quest 19631 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[6]",
+          "error": "quest 19633 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[7]",
+          "error": "quest 19638 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[8]",
+          "error": "quest 19642 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[11]",
+          "error": "quest 28743 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[12]",
+          "error": "quest 28932 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[13]",
+          "error": "quest 28951 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[15]",
+          "error": "quest 28972 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[16]",
+          "error": "quest 28973 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        },
+        {
+          "name": "noPrematureRewardRouteFromInitialOrProgressState(int)[17]",
+          "error": "quest 28974 must not have started -&gt; reward turn-in route ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestReportedRewardCoverageTest",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "all182ReportedQuestOwnersHaveTargetlessCompletionContracts",
+          "error": "quest=13841 action=108 ==&gt; expected: &lt;1&gt; but was: &lt;0&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestRetailCollectionRoleAlignmentTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestRewardPreviewDialogTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestRewardTitlePrerequisiteAuditTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestSoloriusEventDefinitionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestStartEligibilityContractTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestStartItemDefinitionRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestStepDialogResponseRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestStepDialogTerminationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestSystemMessageDefinitionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestTitleRewardCoverageTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestWorkItemMigrationCoverageTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.QuestXmlDomainBlocksTest",
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.RelicQuestNpcMappingTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.RemainingCapabilityDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ReportTo1101DefinitionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ReportToManyDialogRouteRegressionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ReportToManyLegacyFlowRegressionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ReportToManyMirrorQuestFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ReportToManySetSucceedAlignmentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.RepresentativeQuestAbilityTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.RetailDataDrivenTalkChainFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.RetailSequentialQuestFamilyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.SequentialItemCheckQuestFamilyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.SilenteraSpawnedDialogFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.SimpleQuestFamilyDefinitionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.SimpleTalk1115DefinitionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.StoneToFleshDialogBranchFamilyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.ThreeStageReportClientPathTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.VeryOldLetter1644DefinitionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.definition.XmlQuestFamilyDefinitionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.ClientTaskScopeAuditTest",
+      "tests": 4,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "missingQuestPageBehindReachableActionIsFlagged",
+          "error": "CM_DIALOG_SELECT confirmed INVALID_DIALOG_PACKET ==&gt; expected: &lt;PAGE_NOT_IN_TASK_HTML&gt; but was: &lt;INVALID_DIALOG_PACKET&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestDialogLoopBreakerProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestE2eInfrastructureTest",
+      "tests": 41,
+      "failures": 6,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "protocolLoopExecutesRealDialogPacketAndRestoresEngineProvider",
+          "error": "DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "batchAuditEscalatesItemPlayThroughTheRealUseAndCompletionProtocol",
+          "error": "QuestE2eAuditRow[questId=1466, eventType=ITEM_PLAY, sourceNode=started, targetNode=reward, matchedSourceNode=started, matchedTargetNode=reward, transitionMatch=EXPECTED_TRANSITION_MATCHED, validationMode=CM_USE_ITEM+ITEM_PLAY_COMPLETED, targetStatus=REWARD, observedStatus=START, observedPackedVariables=0, npcId=0, objectId=183001385, dialogId=0, shownPage=0, status=INVALID_DIALOG_PACKET, reason=CM_USE_ITEM+ITEM_PLAY_COMPLETED confirmed INVALID_DIALOG_PACKET, evidence=CURRENT_IR, trace=[]] ==&gt; expected: &lt;PASS&gt; but was: &lt;INVALID_DIALOG_PACKET&gt;"
+        },
+        {
+          "name": "protocolUpgradeClearsUseItemClickFailureWhenInventoryChanges",
+          "error": "QuestE2eAuditRow[questId=2333, eventType=USE_ITEM, sourceNode=started, targetNode=started, matchedSourceNode=started, matchedTargetNode=started, transitionMatch=EXPECTED_TRANSITION_MATCHED, validationMode=CM_USE_ITEM, targetStatus=START, observedStatus=START, observedPackedVariables=0, npcId=0, objectId=183004130, dialogId=0, shownPage=0, status=INVALID_DIALOG_PACKET, reason=CM_USE_ITEM confirmed INVALID_DIALOG_PACKET, evidence=CURRENT_IR, trace=[]] ==&gt; expected: &lt;PASS&gt; but was: &lt;INVALID_DIALOG_PACKET&gt;"
+        },
+        {
+          "name": "blockDefaultItemUseIsAConclusiveResponse",
+          "error": "QuestE2eAuditRow[questId=11036, eventType=USE_ITEM, sourceNode=started, targetNode=started, matchedSourceNode=started, matchedTargetNode=started, transitionMatch=EXPECTED_TRANSITION_MATCHED, validationMode=CM_USE_ITEM, targetStatus=START, observedStatus=START, observedPackedVariables=0, npcId=0, objectId=183006731, dialogId=0, shownPage=0, status=INVALID_DIALOG_PACKET, reason=CM_USE_ITEM confirmed INVALID_DIALOG_PACKET, evidence=CURRENT_IR, trace=[]] ==&gt; expected: &lt;PASS&gt; but was: &lt;INVALID_DIALOG_PACKET&gt;"
+        },
+        {
+          "name": "protocolLoopCompletesItemPlayOnlyAfterItsVirtualAnimationDuration",
+          "error": "DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "protocolLoopExecutesRealUseItemPacket",
+          "error": "DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestEquippedStartProductionFlowTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "soloriusQuestsRequireTheClientVisibleEquippedItemBeforeAcceptance",
+          "error": "DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestExclusiveSiblingAttributionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestGoldenJourneyTest",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "quest14047RelogRecoveryRebuildsBothFlightStagesAndStillCompletes",
+          "error": "Step[label=npc:203704:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=START, packedVariables=0, inventory={}, page=10, npcId=203704, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started]], matchedRouteResult=UNKNOWN, routeCandidateCount=3, auditEvents=[], trace=[Entry[sequence=8, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=1900000]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "quest1913CompletesThroughOneContinuousClientJourney",
+          "error": "Step[label=npc:203758:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203758, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=10, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=1900000]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "quest14047CompletesThroughOneContinuousClientJourney",
+          "error": "Step[label=npc:203704:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=START, packedVariables=0, inventory={}, page=10, npcId=203704, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started]], matchedRouteResult=UNKNOWN, routeCandidateCount=3, auditEvents=[], trace=[Entry[sequence=8, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=1900000]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestPageButtonAuditTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestProductionJourneyTest",
+      "tests": 10,
+      "failures": 9,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "movieEndIsPlannedOnlyAfterTheMatchingMovieStarts",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=12, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=730000, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:730000:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=730000, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=730000, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=730000, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=12, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=730000, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "executesFinishDialogAndDeterministicObjectDropsFromProductionXml",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=33, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203057, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203057:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203057, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203057, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203057, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=33, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203057, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "executesTargetlessItemStartAndNormalizedTransactions",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=9, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203050, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203050:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203050, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203050, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203050, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=9, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203050, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "plansAndExecutesQuest14047FromProductionXml",
+          "error": "Failure[stepIndex=1, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=3, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started], metadataDrop=null], observed=Step[label=npc:203704:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=START, packedVariables=0, inventory={}, page=10, npcId=203704, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=0], conditions=[QuestVariableIs[field=var0, value=0]], actions=[], targetNode=started, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=started]], matchedRouteResult=UNKNOWN, routeCandidateCount=3, auditEvents=[], trace=[Entry[sequence=8, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "auditRowsReportBothAcceptedProductionJourneysAsComplete",
+          "error": "[Row[questId=1913, status=FAILED, steps=1, failedStep=0, failureStatus=NO_MATCH, sourceNode=unaccepted, targetNode=unaccepted, page=10, npcId=203758, objectId=1900000, expectedObjectId=1900000, dialogId=31, observedStatus=NONE, observedPackedVariables=0, reason=request did not produce a conclusive handled route; candidates=10, packets=[], committedActions=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=1900000]]]], Row[questId=14047, status=FAILED, steps=2, failedStep=1, failureStatus=NO_MATCH, sourceNode=started, targetNode=started, page=10, npcId=203704, objectId=1900000, expectedObjectId=1900000, dialogId=31, observedStatus=START, observedPackedVariables=0, reason=request did not produce a conclusive handled route; candidates=3, packets=[], committedActions=[], trace=[Entry[sequence=8, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203704, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "plansAndExecutesQuest2223ThroughItsRewardOwnerFromProductionXml",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=13, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203616, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203616:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203616, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203616, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203616, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=13, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203616, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "plansAndExecutesQuest1913FromProductionXml",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=10, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203758:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203758, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=10, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203758, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "plansAndExecutesSecretDeliveryBoxChainFromProductionXml",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=9, expected=PlannedStep[kind=INTERACT, transition=QuestTransition[event=TalkToNpc[npcId=203172, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=npc:203172:31, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=10, npcId=203172, objectId=1900000, committedActions=[], expectedDialogTargetObjectId=1900000, matchedTransition=QuestTransition[event=TalkToNpc[npcId=203172, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=TalkToNpc[npcId=203172, dialogId=31, interactionObjectId=0], conditions=[], actions=[], targetNode=unaccepted, afterCommit=[ShowQuestDialog[dialogId=1011]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=9, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:TalkToNpc[npcId=203172, dialogId=31, interactionObjectId=1900000]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        },
+        {
+          "name": "plansAndExecutesTargetlessNpcFactionAcquisitionFromProductionXml",
+          "error": "Failure[stepIndex=0, status=NO_MATCH, reason=request did not produce a conclusive handled route; candidates=1, expected=PlannedStep[kind=TARGETLESS_ACTION, transition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], metadataDrop=null], observed=Step[label=targetless-action:1002, outcome=DispatchOutcome[handled=false, failed=false, stateChanged=false, failure=null, packets=[]], status=NONE, packedVariables=0, inventory={}, page=0, npcId=0, objectId=0, committedActions=[], expectedDialogTargetObjectId=0, matchedTransition=QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted], matchedTransitionCandidates=[QuestTransition[event=QuestDialog[dialogId=1002], conditions=[StartEligible[]], actions=[], targetNode=started, afterCommit=[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]], priority=null, sourceNode=unaccepted]], matchedRouteResult=UNKNOWN, routeCandidateCount=1, auditEvents=[], trace=[Entry[sequence=0, phase=CLIENT, detail=DIALOG_SELECT:QuestDialog[dialogId=1002]]]]] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.e2e.QuestWorldReachabilityOracleTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.model.RetailQuestStateTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.CompositeQuestActionPortTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.NpcFactionQuestMutationPlannerTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestAiPortTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPortTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestCraftPortTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestCurrencyPortTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestDialogPortTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestEffectPortTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestEventPortTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestInventoryPortTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestMoviePortTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestProgressionPortTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestProximityEventPortTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestPvpEventPortTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestRewardPortTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestSpawnPortRaceTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestSpawnPortTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPortTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestStatePortTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestStateSyncPortTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestSystemMessagePortTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestTeleportPortTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestTimerPortTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.PlayerQuestWorldNpcFollowTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest10032ItemPlayClientCounterProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest1112ProductionFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest1118ProductionFlowTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest15042ProductionFlowTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest1842RepeatLifecycleTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest1913ProductionFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.Quest80487ProductionFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestArchivesDualCounterProductionFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestArchivesMissionCounterProductionFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCorridorAndDestinyCounterProductionFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCounterProjectionLockFollowUpTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCounterSourceProjectionProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCradleCounterProductionFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCradleReunionProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestCurrencyPortFailClosedTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDaevanionLeggingsProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDataDrivenHuntProductionFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDependencyIndexTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDialogProjectionLockFollowUpTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDispatchToAltgardFamilyProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDispatchToVerteronFamilyProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestDredgionCounterProductionFlowTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestEventConditionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestExecutionCoordinatorTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestFactRequirementsTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestGenderConditionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectCatalogTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestLegacyMonsterHuntProductionFlowTest",
+      "tests": 40,
+      "failures": 6,
+      "errors": 16,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[1]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[2]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[3]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[4]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[5]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[6]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[7]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[8]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[9]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[10]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[11]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[12]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[13]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[14]",
+          "error": "No value present"
+        },
+        {
+          "name": "reportedMonsterHuntsRequireTheRetailKillCountBeforeTurnIn()[15]",
+          "error": "No value present"
+        },
+        {
+          "name": "quest29691RequiresThreeKillsBeforeTheRetailReport",
+          "error": "No value present"
+        },
+        {
+          "name": "challengeMonsterHuntsUseTheRetailClientAcceptAndReportPages",
+          "error": "started -&gt; ready KillNpcSet[npcIds=[219788, 219777, 219700]] 0 ==&gt; expected: &lt;1&gt; but was: &lt;0&gt;"
+        },
+        {
+          "name": "simpleMonsterHuntsReachRewardOnTheRetailFinalKill()[1]",
+          "error": "expected: &lt;{var0=7}&gt; but was: &lt;{var0=1, var1=7}&gt;"
+        },
+        {
+          "name": "simpleMonsterHuntsReachRewardOnTheRetailFinalKill()[2]",
+          "error": "expected: &lt;{var0=25}&gt; but was: &lt;{var0=1, var1=25}&gt;"
+        },
+        {
+          "name": "simpleMonsterHuntsReachRewardOnTheRetailFinalKill()[3]",
+          "error": "expected: &lt;{var0=6}&gt; but was: &lt;{var0=1, var1=6}&gt;"
+        },
+        {
+          "name": "simpleMonsterHuntsReachRewardOnTheRetailFinalKill()[4]",
+          "error": "expected: &lt;{var0=6}&gt; but was: &lt;{var0=1, var1=6}&gt;"
+        },
+        {
+          "name": "simpleMonsterHuntsReachRewardOnTheRetailFinalKill()[5]",
+          "error": "expected: &lt;{var0=6}&gt; but was: &lt;{var0=1, var1=6}&gt;"
+        }
+      ]
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestMinionTutorialProductionFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestMovieRandomDispatchTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestMutationPlannerTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestPlayerFactsConditionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestProductionAcceptProtocolRegressionTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcherTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestRawDialogAfterCommitTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestRepeatLifecycleTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestResidualCounterLocksTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestRuntimeCompositionCatalogSnapshotTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestRuntimeInfrastructureTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestSkillUseProductionFlowTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestSnapshotCurrencyCaptureTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestSnapshotValidationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestSteelRakeCounterProductionFlowTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestStepNpcSkipGuardTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestUnitOfWorkTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.QuestWorldConditionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.RemainingCapabilityPortTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.runtime.TypedQuestAfterCommitPortTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    },
+    {
+      "name": "com.aionemu.gameserver.questEngine.task.LuredNpcCheckTaskTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": []
+    }
+  ]
+}

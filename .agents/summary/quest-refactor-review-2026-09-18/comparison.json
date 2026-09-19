@@ -1,0 +1,33 @@
+{
+  "baselineTotals": {
+    "tests": 1379,
+    "failures": 60,
+    "errors": 16,
+    "skipped": 1
+  },
+  "baselineFailedClasses": 31,
+  "newFailed": [
+    "com.aionemu.gameserver.questEngine.definition.AcceptAndConfirmationEntryContractTest#checkHandOverShowsTheClientConfirmationPageThenClosesOrClaims",
+    "com.aionemu.gameserver.questEngine.definition.JavaHandlerFamilyDefinitionTest#nymphsGownStartsByUsingTheDiaryAndBranchesIntoTwoRewardPaths",
+    "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest#handlerProvenFollowUpDialogsUseTheirPageTargetState",
+    "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest#legacyTemplateCloseControlsDoNotChangeQuestState",
+    "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest#quest2920RewardChoicesUseTheHandlerProvenRewardWindows",
+    "com.aionemu.gameserver.questEngine.definition.Quest14112LogoutPersistenceTest#keepsPoisonousBubblegutKillProgressAcrossLogout",
+    "com.aionemu.gameserver.questEngine.definition.Quest1466ClientDialogAlignmentTest#preservesTheRetailItemPlayRouteAndSoleRewardOwner",
+    "com.aionemu.gameserver.questEngine.definition.Quest24026RetailAlignmentTest#preservesMetadataPrerequisitesAndRewards",
+    "com.aionemu.gameserver.questEngine.definition.QuestClientContractGateTest#productionQuestDialogsDoNotIntroduceFatalClientContractRegressions",
+    "com.aionemu.gameserver.questEngine.definition.QuestMovieAndDialogLoopRegressionTest#multiTierQuestsNeverDeclareDeadRewardGroups",
+    "com.aionemu.gameserver.questEngine.definition.QuestMovieAndDialogLoopRegressionTest#multiTierHandInWindowsMatchTheirGrantedTier",
+    "com.aionemu.gameserver.questEngine.definition.QuestTitleRewardCoverageTest#catalogMatchesEveryKnownServerTitleQuest",
+    "com.aionemu.gameserver.questEngine.definition.QuestTitleRewardCoverageTest#everyExecutableCompletionGrantsExactlyItsConfiguredRegularTitles",
+    "com.aionemu.gameserver.questEngine.definition.SilenteraSpawnedDialogFamilyTest#statueSpawnedNpcChainsMatchTheLegacyContracts",
+    "com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPortTest#quest10521RejectsLevelTenAndRequiresQuest10520AtLevelSixtyFive",
+    "com.aionemu.gameserver.questEngine.runtime.QuestDispatchToVerteronFamilyProductionFlowTest#preservesRetailMetadataForTechnistDispatchBranches",
+    "com.aionemu.gameserver.questEngine.runtime.QuestLegacyMonsterHuntProductionFlowTest#independentGroupedCountedMonsterHuntsAcceptEitherRetailKillOrder()[1]",
+    "com.aionemu.gameserver.questEngine.runtime.QuestLegacyMonsterHuntProductionFlowTest#independentCountedMonsterHuntsAcceptEitherRetailKillOrder()[1]",
+    "com.aionemu.gameserver.questEngine.runtime.QuestLegacyMonsterHuntProductionFlowTest#independentCountedMonsterHuntsAcceptEitherRetailKillOrder()[2]",
+    "com.aionemu.gameserver.questEngine.runtime.QuestLegacyMonsterHuntProductionFlowTest#independentCountedMonsterHuntsAcceptEitherRetailKillOrder()[3]"
+  ],
+  "resolved": [],
+  "persisting": 76
+}
