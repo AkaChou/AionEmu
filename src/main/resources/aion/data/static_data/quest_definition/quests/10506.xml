@@ -138,22 +138,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="s2" target="s2">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="702666" action="USE_OBJECT"/>
-      </event>
-      <after-commit>
-        <teleport-player-current-or-default world-id="210070000" x="2837.0" y="2991.0" z="680.0" heading="67"/>
-      </after-commit>
-    </transition>
-    <transition source="s2" target="s2">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="702667" action="USE_OBJECT"/>
-      </event>
-      <after-commit>
-        <teleport-player-current-or-default world-id="210070000" x="1894.7863" y="2455.1982" z="336.875" heading="109"/>
-      </after-commit>
-    </transition>
     <transition source="s2" target="s3">
       <event>
         <enter-zone zone="LF5_SENSORYAREA_Q10506_210070000"/>
@@ -214,6 +198,22 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702666" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210070000" x="2837.0" y="2991.0" z="680.0" heading="67"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702667" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210070000" x="1894.7863" y="2455.1982" z="336.875" heading="109"/>
+      </after-commit>
+    </transition>
     <transition source="s4" target="s5">
       <event>
         <enter-zone zone="LF5_SENSORYAREA_Q10506_2_210070000"/>
@@ -226,6 +226,22 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702666" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210070000" x="2837.0" y="2991.0" z="680.0" heading="67"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702667" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210070000" x="1894.7863" y="2455.1982" z="336.875" heading="109"/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">
@@ -317,12 +333,22 @@
       <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="s2" target="s2">
+    <transition source="s4" target="s4">
       <event>
         <can-act template-id="702666" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-    <transition source="s2" target="s2">
+    <transition source="s4" target="s4">
+      <event>
+        <can-act template-id="702667" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <can-act template-id="702666" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s5" target="s5">
       <event>
         <can-act template-id="702667" action-type="ACTION_ITEM_USE"/>
       </event>
