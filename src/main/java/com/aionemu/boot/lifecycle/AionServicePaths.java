@@ -15,6 +15,17 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 /**
  * 内嵌 login/chat/game 运行时路径与默认资源落盘工具。
  * Utility for embedded login/chat/game runtime paths and default resource materialization.
+ *
+ * <p>目录来源按启动方式分派：本地 IDE/检出运行（未设置 {@code aion.home}）时配置目录与数据目录
+ * 都优先使用 {@code src/main/resources/aion/**} 源码树；打包启动器（{@code -Daion.home=<部署目录>}）
+ * 时配置目录固定为 {@code <aion.home>/config}（缺失时从 classpath 物化默认文件）。同一条判定保证
+ * 一个进程不会出现"配置读部署目录、数据读源码树"的混搭。</p>
+ *
+ * <p>Directory sources follow the launch mode: an IDE/checkout run (no {@code aion.home}) prefers the
+ * {@code src/main/resources/aion/**} source tree for configuration as well as data, while the packaged
+ * launcher ({@code -Daion.home=<deploy dir>}) keeps configuration at {@code <aion.home>/config}
+ * (materializing defaults from the classpath when missing). Sharing that decision keeps one process
+ * from reading configuration out of a deploy directory while reading data out of the source tree.</p>
  */
 @UtilityClass
 class AionServicePaths {
@@ -84,15 +95,18 @@ class AionServicePaths {
     }
 
     /**
-     * 配置配置目录：未显式设置时从 classpath 资源物化默认文件。
-     * Configures a config directory; materializes classpath defaults when not explicit.
+     * 配置配置目录：显式路径优先；本地 IDE/检出运行（未设置 {@code aion.home}）时优先源码树；
+     * 其余情况使用 {@code aion.home/config} 并在缺失时从 classpath 物化默认文件。
+     * Configures the configuration directory: an explicit path wins, an IDE/checkout run (no
+     * {@code aion.home}) prefers the source tree, and everything else uses {@code aion.home/config},
+     * materializing classpath defaults when missing.
      *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
      * @param resourcePath classpath 资源根路径 / classpath resource root
      */
     private void configureConfig(String property, String defaultPath, String resourcePath) {
-        if (RUNTIME_PROPERTIES.has(property)) {
+        if (configureCheckoutSourceDirectory(property, resourcePath)) {
             return;
         }
         configureResourceDirectory(property, defaultPath, resourcePath);
@@ -145,6 +159,29 @@ class AionServicePaths {
     }
 
     /**
+     * 未设置 {@code aion.home}（本地 IDE/检出运行）且源码树存在时，把属性直接指向源码树目录。
+     * Points the property at the checkout source tree when {@code aion.home} is unset and the
+     * directory exists.
+     *
+     * @param property 系统属性名 / system property name
+     * @param resourcePath 资源相对路径 / resource-relative path
+     * @return 已指向源码树则为 true / true when the source tree was selected
+     */
+    private boolean configureCheckoutSourceDirectory(String property, String resourcePath) {
+        if (RUNTIME_PROPERTIES.has(property) || RUNTIME_PROPERTIES.hasHome()) {
+            return false;
+        }
+
+        Path checkoutSourceDirectory = Path.of("src/main/resources").resolve(resourcePath).normalize();
+        if (!Files.isDirectory(checkoutSourceDirectory)) {
+            return false;
+        }
+
+        RUNTIME_PROPERTIES.set(property, checkoutSourceDirectory);
+        return true;
+    }
+
+    /**
      * 若存在源码 resources 下的目录，则直接指向该路径。
      * Points the property at a source-tree resources directory when present.
      *
@@ -157,12 +194,8 @@ class AionServicePaths {
             return true;
         }
 
-        if (!RUNTIME_PROPERTIES.hasHome()) {
-            Path checkoutSourceDirectory = Path.of("src/main/resources").resolve(resourcePath).normalize();
-            if (Files.isDirectory(checkoutSourceDirectory)) {
-                RUNTIME_PROPERTIES.set(property, checkoutSourceDirectory);
-                return true;
-            }
+        if (configureCheckoutSourceDirectory(property, resourcePath)) {
+            return true;
         }
 
         Path sourceDirectory = RUNTIME_PROPERTIES.resolveHome("src/main/resources").resolve(resourcePath).normalize();

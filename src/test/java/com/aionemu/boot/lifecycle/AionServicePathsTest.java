@@ -83,6 +83,45 @@ class AionServicePathsTest {
         assertEquals(Path.of("src/main/resources/aion/data").normalize().toString(), System.getProperty("aion.game.data.dir"));
     }
 
+    /**
+     * 本地 IDE/检出运行（未设置 {@code aion.home}）时，配置目录必须和 data/definitions/geo 一样取源码树。
+     * An IDE/checkout run (no {@code aion.home}) must resolve configuration from the checkout source
+     * tree, exactly like data, definitions and geo, so one process never mixes the two trees.
+     */
+    @Test
+    void prefersCheckoutSourceConfigDirectoryWhenAionHomeIsDefault() {
+        System.setProperty("aion.logging.config", aionHome.resolve("log/logback-spring.xml").toString());
+
+        AionServicePaths.configureGame();
+
+        assertEquals(Path.of("src/main/resources/aion/config").normalize().toString(),
+            System.getProperty("aion.config.dir"));
+        assertEquals(Path.of("src/main/resources/aion/data").normalize().toString(),
+            System.getProperty("aion.game.data.dir"));
+        assertEquals(Path.of("src/main/resources/aion/geo").normalize().toString(),
+            System.getProperty("aion.game.geo.dir"));
+    }
+
+    /**
+     * 显式路径永远优先：即使 {@code aion.home} 与源码树都存在，也不得被源码树覆盖。
+     * An explicit path always wins: neither the home directory nor the source tree may override it.
+     */
+    @Test
+    void keepsExplicitDirectoriesEvenWhenHomeAndSourceTreeExist() throws Exception {
+        java.nio.file.Files.createDirectories(aionHome.resolve("src/main/resources/aion/data"));
+        Path explicitConfig = aionHome.resolve("custom/config");
+        Path explicitGameData = aionHome.resolve("custom/game-data");
+        System.setProperty("aion.home", aionHome.toString());
+        System.setProperty("aion.logging.config", aionHome.resolve("custom/logback-spring.xml").toString());
+        System.setProperty("aion.config.dir", explicitConfig.toString());
+        System.setProperty("aion.game.data.dir", explicitGameData.toString());
+
+        AionServicePaths.configureGame();
+
+        assertEquals(explicitConfig.toString(), System.getProperty("aion.config.dir"));
+        assertEquals(explicitGameData.toString(), System.getProperty("aion.game.data.dir"));
+    }
+
     @Test
     void prefersRuntimeGameConfigDirectoryOverProjectResources() throws Exception {
         Path sourceGameConfig = aionHome.resolve("src/main/resources/aion/config");

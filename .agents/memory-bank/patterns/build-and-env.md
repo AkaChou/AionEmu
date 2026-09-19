@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 本地开发环境、IDE 运行机制及编译器特定行为的实战经验。
 
-> Pattern IDs: `ENV-001`–`ENV-004`
+> Pattern IDs: `ENV-001`–`ENV-005`
 > card_status: ACTIVE; host-specific observations must retain their environment scope
 > scope: IDEA/package runtime artifacts, Maven/JDK/Lombok behavior, and safe bulk text editing
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-19
 
 ---
 
@@ -121,3 +121,25 @@ first_check: git diff added/removed code lines, anchor uniqueness and lexical st
      - 包含 `case/if` 块的大段替换，必须在锚定串中包含边界行（如 `}` 或 `break;`），严防括号多写或漏写。
 2. **词法解析的单遍状态机原则**：
    - 源码中存在装饰性注释（如 `//\\//\\//***...`）内嵌 `/*` 字符的情况。两阶段正则剥离会导致语法解析错乱，批量处理必须使用单遍词法状态机。
+
+---
+
+## [ENV-005] 五、配置与数据目录来源按启动方式判定（IDE 源码树 / 打包 aion.home）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: AionServicePaths 的 aion.config.dir / aion.game.data.dir / aion.game.definitions.dir / aion.game.geo.dir 解析，以及启动层遗留配置镜像的目录选择
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: IDEA 运行时读不到刚改的配置、同一个进程里配置来自部署目录而静态数据来自源码树、或打包启动意外读到检出的 src/main/resources 配置
+root_cause: 配置目录（aion.config.dir）此前不参与源码树判定：IDE（未设置 aion.home）与打包（启动器设置 aion.home）两种模式的目录来源不一致，而 post-processor 镜像又按源码树读取，于是同一份配置可能来自两棵树
+fix_or_guardrail: 以 aion.home 是否设置作为模式判别——未设置（IDE/检出）时配置目录与数据目录都取 src/main/resources/aion/**；设置时（scripts/start-silent.sh 的 -Daion.home=<部署目录>）配置固定为 <aion.home>/config，缺失时从 classpath 物化默认文件；显式系统属性始终最高优先
+evidence: src/main/java/com/aionemu/boot/lifecycle/AionServicePaths.java; scripts/start-silent.sh:79; src/test/java/com/aionemu/boot/lifecycle/AionServicePathsTest.java; .agents/summary/legacy-config-mirror-fix/README.md; .agents/summary/legacy-config-mirror-fix/ProbeIdeConfigTree.java
+validation: AionServicePathsTest 9 例全绿（含 IDE 源码树与显式路径 2 个新用例）；IDE 模式探针输出 aion.config.dir=src/main/resources/aion/config、login=al_server_ls、game=al_server_gs；聚焦套件 51 例全绿；全量 mvn -B test 3469 例中与本改动相关的套件 0 失败（残留 2 例 quest-engine sourceNode 空指针属并行会话未提交改动）
+boundaries: 判别条件是 aion.home，不是"是否用 IDEA"——从仓库根直接 java -jar 且未设置 aion.home 时同样会走源码树（启动脚本必须带上 -Daion.home）；IDEA 模式下 aion/config 里的本地覆盖文件不再生效，本地覆盖请放 src/main/resources/aion/config 或显式 -Daion.config.dir；home 设置时数据目录仍额外优先 <aion.home>/src/main/resources/aion/**，配置目录不做该回退（由 AionServicePathsTest 固定）
+superseded_by: none
+first_check: 进程是否带 -Daion.home；aion.config.dir 与 aion.game.data.dir 是否指向同一棵树
+-->
+
+1. **模式判别只有一个信号**：`aion.home` 是否设置。`scripts/start-silent.sh` 设置它（打包模式），IDEA 默认不设置（检出模式）；不要再引入第三套"是否 IDE"的判断。
+2. **配置目录在检出模式取源码树**：`configureConfig` 通过 `configureCheckoutSourceDirectory` 命中 `src/main/resources/aion/config`，与 data/definitions/geo 走同一棵树；`aion.config.dir` 由此与启动层遗留镜像（`AionLegacyPropertySourceEnvironmentPostProcessor`）读取的目录一致，避免"镜像读源码树、加载器读部署目录"造成的隐蔽覆盖（参见 AR-012）。
+3. **打包模式不被检出树污染**：`aion.home` 设置后配置目录固定 `<aion.home>/config`，即使部署目录里存在检出的 `src/main/resources/aion/config` 也不会被采用；显式 `-Daion.config.dir` 仍最高优先。

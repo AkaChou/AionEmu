@@ -90,14 +90,41 @@ login DatabaseConfig.DATABASE_URL = jdbc:mysql://127.0.0.1:3306/al_server_ls?...
 - `GAMECONNECTION_LOG`：`09-19 08:55:55 玩家 Ww（账号 cc）进入世界，MAC 地址=6C-0B-5E-A4-1D-57`；`log/cm_login.log` 同日 `cc got authed state`。
 - 08:5x 之后残留的 ERROR 共 6 条：4 条 `ChatCommand`（GM 命令文本为空，09:26/09:28/09:47）与 2 条 `KnownList - 对所有 NPC 运行访问器时异常`（09:32/09:43），与数据库连接无关。
 
-## 6. 遗留风险（未纳入本次修复）
+## 6. 后续修复：配置目录来源按启动方式对齐（2026-09-19）
 
-- 未做长时间运行观察；上述验收覆盖启动 + 登录 + 世界加载，未覆盖全部玩家系统。
-- **镜像目录与运行时目录可能不是同一棵树**：`AionServicePaths.configureConfig("aion.config.dir", ...)`
-  在服务生命周期 Bean（ApplicationRunner 相位）里才写入系统属性，而 post-processor 更早执行；在 IDEA
-  工作目录下它回退到 `src/main/resources/aion/config`，运行中的遗留加载器则读 `aion/config`。本次冲突键
-  已被移出镜像，所以 `database.*` 不受影响；但**取值一致**的镜像键仍会由解析器压过运行时目录里的同键文件
-  （例：只改 `aion/config/network/database.properties` 的密码，会被源树镜像的旧值覆盖）。若要彻底消除，
-  需让解析器只承载外部覆盖（命令行/环境变量/application.yml），或让 `aion.config.dir` 在环境准备前就定好。
+用户确认的约定：**本地 IDE 启动读取 `src/main/resources/aion/**`；打包启动
+（`scripts/start-silent.sh`）读取 `<aion.home>/**`（即 `aion/config`）**。判别条件就是
+`aion.home` 是否被设置——启动脚本第 79 行写入 `-Daion.home=$AION_HOME -Daion.log.dir=$LOG_DIR`。
+
+- 修复前 `AionServicePaths.configureConfig` 不参与源码树判定：IDE 模式下 `aion.config.dir` 落到
+  `aion/config`（部署目录），而 data/definitions/geo 早就走 `src/main/resources/aion/**`，同一个进程里
+  出现"配置读部署目录、数据读源码树"的混搭；镜像（post-processor）则按源码树读取，于是同一份配置在
+  同一个进程里可能来自两棵树。
+- 修复：抽出 `configureCheckoutSourceDirectory`（仅在 `aion.home` 未设置且源码树存在时命中），
+  `configureConfig` 与 `configureSourceResourceDirectory` 共用它；`aion.home` 已设置时配置目录仍是
+  `<aion.home>/config`（由既有用例 `prefersRuntimeGameConfigDirectoryOverProjectResources` 继续守护），
+  显式路径依然最高优先。
+- 实测（`ProbeIdeConfigTree`，cwd=仓库根，无 `aion.home`/`aion.config.dir`）：
+
+```
+[PROBE] aion.home            = null
+[PROBE] aion.config.dir      = src/main/resources/aion/config
+[PROBE] aion.game.data.dir   = src/main/resources/aion/data
+[PROBE] login DatabaseConfig.DATABASE_URL = jdbc:mysql://127.0.0.1:3306/al_server_ls?...
+[PROBE] game DatabaseConfig.DATABASE_URL  = jdbc:mysql://127.0.0.1:3306/al_server_gs?...
+```
+
+- 测试：`AionServicePathsTest` 新增 `prefersCheckoutSourceConfigDirectoryWhenAionHomeIsDefault`（IDE 取源码树）
+  与 `keepsExplicitDirectoriesEvenWhenHomeAndSourceTreeExist`（显式路径不被源码树覆盖）；boot/lifecycle 与配置
+  聚焦套件 51 例全绿。
+- 全量 `mvn -B test`：共 3469 例，仅 2 例 quest-engine 错误（`QuestTransition.sourceNode()` 为 null，属**并行
+  会话**未提交的 quest 改动）与 1 例 `CreatureTest$TestCreature$1` NoClassDefFound（并发编译写入
+  `target/test-classes` 造成的假失败，单独重跑 2/2 通过）；与本次路径改动相关的套件 0 失败。
+
+## 7. 遗留风险（未纳入本次修复）
+
+- 未做长时间运行观察；验收覆盖启动 + 登录 + 世界加载，未覆盖全部玩家系统。
+- `src/main/resources/aion/config` 与部署目录 `aion/config` 的文件清单当前完全一致（84 个文件，无本地
+  额外覆盖文件）；IDE 模式改读源码树后，若在 `aion/config` 放本地覆盖文件将不再被 IDE 运行读取。
 - `HousingBidService.executeTask`（`HousingBidService.java:324`）对 `house` 无判空，住宅数据没加载成功时
   必然 NPE；本次 DB 修复后不再触发，但该判空属独立健壮性问题。

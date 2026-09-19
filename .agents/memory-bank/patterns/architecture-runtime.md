@@ -294,7 +294,7 @@ root_cause: 三个服务的遗留 properties 被拍平进同一个 PropertySourc
 fix_or_guardrail: 镜像按服务前缀（= 归属服务身份）跟踪每个原始键：单服务内后加载文件覆盖先前值；两个服务为同一原始键给出**不同**值时该键永久移出镜像，改由各服务自己的遗留加载器读本地文件；跨服务取值一致的键（`gameserver.thread.*`、`svstats.*` 等 Bean 绑定路径）继续镜像
 evidence: src/main/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessor.java （LegacyPropertyCollector）; src/test/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessorTest.java （keepsEachServicesOwnDatabaseUrlWhenLoginAndGameFilesDisagree）; .agents/summary/legacy-config-mirror-fix/README.md; .agents/summary/legacy-config-mirror-fix/raw_key_conflicts.py
 validation: mvn -B test 3457 例 / 0 失败 / 0 错误 / 2 跳过（基线 3456，新增本卡回归用例）；聚焦套件 13 例全绿（AionLegacyPropertySourceEnvironmentPostProcessorTest / LegacyPropertySourcePrecedenceTest / LegacyConfigOverridePrecedenceTest / ConfigBindingTest / ConfigurableProcessorSourceResolverTest）；真实配置目录探针 ProbeServiceDatabaseUrl 显示 game=al_server_gs、login=al_server_ls、镜像原始键 database.url=null；2026-09-19 08:5x 运行时验收：修复后启动 0 条表缺失错误、住宅/城镇/竞拍恢复正常、玩家 Ww 进入世界（对照 00:05 启动的 al_server_ls 表缺失级联）
-boundaries: 冲突判定只在"同一原始键 + 不同服务 + 取值不同"时触发，且一次冲突即永久不发布（该服务后续覆盖也不会复活）；镜像目录与运行时目录可能不是同一棵树（post-processor 早于 AionServicePaths 写 `aion.config.dir`，IDEA 工作目录下回退到 `src/main/resources/aion/config`，加载器读 `aion/config`），取值一致的镜像键仍会压过运行时目录里的同键文件；不改变"命令行/环境变量/application.yml 对所有服务同值生效"的外部覆盖语义
+boundaries: 冲突判定只在"同一原始键 + 不同服务 + 取值不同"时触发，且一次冲突即永久不发布（该服务后续覆盖也不会复活）；镜像与遗留加载器使用同一条目录判定（IDE 未设置 aion.home → `src/main/resources/aion/config`，打包 `-Daion.home` → `<aion.home>/config`，见 ENV-005），不再出现同一进程配置读两棵树；不改变"命令行/环境变量/application.yml 对所有服务同值生效"的外部覆盖语义
 superseded_by: none
 first_check: 新增服务专属原始键时先跑 raw_key_conflicts.py 确认是否跨服务同名不同值；确认解析器路径上是否还有文件派生值在覆盖本服务文件
 -->

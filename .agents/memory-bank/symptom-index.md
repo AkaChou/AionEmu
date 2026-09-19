@@ -25,6 +25,7 @@
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |
 | 批量注释后代码行丢失、括号错位、词法状态被破坏 | `ENV-004` | git diff added/removed code lines, anchor uniqueness and lexical state transitions |
+| IDEA 运行时读不到刚改的配置、同一个进程里配置来自部署目录而静态数据来自源码树、或打包启动意外读到检出的 src/main/resources 配置 | `ENV-005` | 进程是否带 -Daion.home；aion.config.dir 与 aion.game.data.dir 是否指向同一棵树 |
 | 副本钥匙或特殊物品实际掉落两份，且点击任意掉落行都提示同一限持物品已拥有 | `IR-001` | DropRegistrationService.registerDrop/normalizeDropIndices, NPC base drop XML, quest XML drops and instance onDropRegistered |
 | 技能 XML 配置百万级即时伤害，但角色处于特定被动修饰状态时最终伤害骤降到约数万 | `IR-002` | CreatureGameStats.getStat, StatCapUtil.getUpperCap, registered BOOST_SPELL_ATTACK modifiers and the final magic-damage chain |
 | 源码和 target/classes 中已有 GM 命令，但客户端输入 //command 后被当作普通聊天文本 | `IR-003` | launch classpath, target/classes, aion/config/administration/commands.properties, ChatProcessor registration and //reload commands |
