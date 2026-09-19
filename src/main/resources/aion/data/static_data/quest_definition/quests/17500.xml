@@ -27,28 +27,6 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="IDLDF5_FORTRESS_WAR_Q17500_A_301680000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="IDLDF5_FORTRESS_WAR_Q17500_B_301680000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806262" action="FINISH_DIALOG"/>

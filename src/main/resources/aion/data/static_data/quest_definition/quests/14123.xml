@@ -39,19 +39,6 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="ELTNEN_OBSERVATORY_210020000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <spawn-npc-current-or-default slot="peddler-hippola" template-id="206360" world-id="210020000" x="1768.16" y="924.47" z="422.02" heading="0"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203933" action="QUEST_SELECT"/>

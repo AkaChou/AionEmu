@@ -51,8 +51,11 @@
   <transitions>
     <transition source="unaccepted" target="started">
       <event>
-        <enter-zone zone="WASHRUN_STRETCH_220080000"/>
+        <at-distance npc-id="805330"/>
       </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>

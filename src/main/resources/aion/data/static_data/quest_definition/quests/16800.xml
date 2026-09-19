@@ -30,28 +30,6 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="IDETERNITY_01_Q16800_301540000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="LF_TOWER_SENSORY_AREA_Q16800_210110000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
       <event>
         <at-distance npc-id="206535"/>

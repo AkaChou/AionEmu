@@ -68,28 +68,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="IDLDF5_FORTRESS_WAR_Q27500_A_301680000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-zone zone="IDLDF5_FORTRESS_WAR_Q17500_B_301680000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
     <!-- 到达感知区 SensoryArea_Q17500a (206546) 推进目标。 Entering the SensoryArea_Q17500a (206546) advances the objective. -->
     <transition source="started" target="started">
       <event>

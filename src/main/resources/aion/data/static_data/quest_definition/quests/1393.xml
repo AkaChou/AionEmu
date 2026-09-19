@@ -27,23 +27,13 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started">
+    <dialog type="NPC_START" npc-id="204041" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <transition source="unaccepted" target="unaccepted">
       <event>
-        <enter-zone zone="LEPHARIST_BASTION_210020000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204041" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="204041" action="SELECT1_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -51,31 +41,53 @@
         <dialog type="TALK_TO_NPC" npc-id="204041" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204041" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
+    <!-- 1013 页只有“已经平静下来了”(1002) 按钮：已接取后重复确认会回到接取确认页，避免可见按钮无路由。 / Page 1013 only offers accept (1002); re-confirming after acceptance returns to the accept page so no visible button is left unrouted. -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204041" action="QUEST_ACCEPT_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204041" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <flight-teleport flight-teleport-id="17001"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204041" action="SELECT_QUEST_REWARD"/>
+        <enter-zone zone="LEPHARIST_BASTION_210020000"/>
       </event>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204041" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="204041" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204041" actions="QUEST_REFUSE_1"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
   </transitions>
 </quest-definition>

@@ -19,15 +19,8 @@ class Quest14123ZoneSpawnTest {
 			1768.16f, 924.47f, 422.02f, (byte) 0));
 
 	@Test
-	void spawnsPeddlerOnBothAcceptanceRoutes() throws Exception {
+	void spawnsPeddlerOnDialogAcceptance() throws Exception {
 		QuestDefinition definition = load().definition();
-
-		QuestTransition zoneAccept = transition(definition, "unaccepted", "started",
-			new QuestEvent.EnterZone("ELTNEN_OBSERVATORY_210020000"));
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			SPAWN,
-			new AfterCommitAction.CloseDialog()), zoneAccept.afterCommit());
 
 		QuestTransition dialogAccept = transition(definition, "unaccepted", "started",
 			new QuestEvent.TalkToNpc(203933, QuestDialogAction.QUEST_ACCEPT_1.id()));
@@ -36,6 +29,16 @@ class Quest14123ZoneSpawnTest {
 			SPAWN,
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())),
 			dialogAccept.afterCommit());
+	}
+
+	@Test
+	void doesNotAutoAcceptOnEnterZone() throws Exception {
+		QuestDefinition definition = load().definition();
+
+		assertEquals(List.of(), definition.transitions().stream()
+			.filter(candidate -> "unaccepted".equals(candidate.sourceNode()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.EnterZone)
+			.toList());
 	}
 
 	@Test

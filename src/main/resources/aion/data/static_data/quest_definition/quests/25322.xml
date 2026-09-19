@@ -55,8 +55,11 @@
   <transitions>
     <transition source="unaccepted" target="started">
       <event>
-        <enter-zone zone="CRIMSON_HILLS_210070000"/>
+        <at-distance npc-id="805342"/>
       </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
