@@ -79,4 +79,25 @@ class AI2EngineRetailSelectionTest {
 		assertEquals("following", AI2Engine.selectNpcAi("following", 253623, null));
 		assertEquals("following", AI2Engine.selectNpcAi("following", 253626, null));
 	}
+
+	@Test
+	void keepsUseitemFallbackWhenRetailPatternHasNoRules() {
+		var previous = DataManager.RETAIL_AI_DATA;
+		try {
+			Pattern empty = new Pattern("empty", Map.of("on_wake_up", List.of()));
+			Map<Integer, RetailAiData.Npc> retailNpcs = new HashMap<>();
+			retailNpcs.put(200001, new RetailAiData.Npc(200001, "empty", "empty", 100, 0, 0, 360, 0,
+				null, RetailAiData.PathfindFailReaction.RETURN_TO_SP, "walk", 150, 50));
+			DataManager.RETAIL_AI_DATA = new RetailAiData(Map.of("empty", empty),
+				retailNpcs,
+				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
+				Map.of(), Map.of(), Map.of(), Map.of(), Map.of());
+
+			// 空 retail 模式不能抢走 useitem 的乘坐协议。
+			// An empty retail pattern must not steal the useitem mount protocol.
+			assertEquals("useitem", AI2Engine.selectNpcAi("useitem", 200001, null));
+		} finally {
+			DataManager.RETAIL_AI_DATA = previous;
+		}
+	}
 }

@@ -145,7 +145,15 @@ public class AI2Engine implements GameEngine {
 			return fallback;
 		}
 		var pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(npcId);
-		return RetailPatternAI2.supports(pattern, npc) ? "retail_pattern" : fallback;
+		if (!RetailPatternAI2.supports(pattern, npc)) {
+			return fallback;
+		}
+		// 空模式不能抢走 useitem 的乘坐/宝箱等原生交互协议。
+		// Empty patterns must not steal native useitem interaction protocols such as mounts or chests.
+		if (RetailPatternAI2.hasNoRules(pattern) && "useitem".equals(fallback)) {
+			return fallback;
+		}
+		return "retail_pattern";
 	}
 
 	/**

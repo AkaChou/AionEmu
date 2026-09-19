@@ -481,6 +481,55 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void treatsSiegeWeaponTalkAsDirectInteraction() {
+		Pattern direct = new Pattern("IDYun_SiezeWeapon_Li_03", Map.of("on_talked_by_user", List.of(
+			new Rule(7, "DIRECT",
+				List.of(new Operation("is_race",
+					Map.of("from", "OBJI_TALKER", "race_type", "pc_light"))),
+				List.of(
+					new Operation("use_skill", Map.of(
+						"target", "OBJI_TALKER", "skill", "SKILLI_INDEX_0", "skill_level", "0")),
+					new Operation("teleport_target_alias", Map.of(
+						"target", "OBJI_TALKER", "alias", "LocationsIDYun_siezeweapon3", "showfx", "FALSE")),
+					new Operation("despawn_self", Map.of()))))));
+		Pattern dialog = new Pattern("dialog_talk", Map.of("on_talked_by_user", List.of(
+			new Rule(1, "DIRECT", List.of(),
+				List.of(new Operation("display_system_message", Map.of("string_id", "STR_TEST")))))));
+		Pattern extraSideEffect = new Pattern("siege_turret_talk", Map.of("on_talked_by_user", List.of(
+			new Rule(1, "DIRECT", List.of(),
+				List.of(
+					new Operation("set_condition_spawn_variable", Map.of(
+						"string", "siege_turret", "set", "1", "modify", "0")),
+					new Operation("use_skill", Map.of(
+						"target", "OBJI_TALKER", "skill", "SKILLI_INDEX_0", "skill_level", "0")),
+					new Operation("despawn_self", Map.of()))))));
+		Pattern hyperlink = new Pattern("hyperlink_talk", Map.of(
+			"on_talked_by_user", List.of(new Rule(1, "DIRECT", List.of(),
+				List.of(new Operation("do_nothing", Map.of())))),
+			"on_hyperlink_clicked", List.of(new Rule(1, "DIRECT", List.of(),
+				List.of(new Operation("do_nothing", Map.of()))))));
+
+		assertTrue(RetailPatternAI2.isDirectTalkInteraction(direct));
+		assertTrue(RetailPatternAI2.isDirectTalkInteraction(extraSideEffect));
+		assertFalse(RetailPatternAI2.isDirectTalkInteraction(dialog));
+		assertFalse(RetailPatternAI2.isDirectTalkInteraction(hyperlink));
+	}
+
+	@Test
+	void detectsGaugeDrivenTalkPatterns() {
+		Pattern gauge = new Pattern("gauge_talk", Map.of(
+			"on_gauge_begin", List.of(new Rule(1, "DIRECT", List.of(),
+				List.of(new Operation("do_nothing", Map.of())))),
+			"on_gauge_end", List.of(new Rule(1, "DIRECT", List.of(),
+				List.of(new Operation("close_dialog", Map.of("target", "USERI_TALKER")))))));
+
+		assertTrue(RetailPatternAI2.hasGaugeEvent(gauge));
+		assertFalse(RetailPatternAI2.hasGaugeEvent(new Pattern("plain", Map.of())));
+		assertTrue(RetailPatternAI2.hasNoRules(new Pattern("empty_stub", Map.of("on_wake_up", List.of()))));
+		assertFalse(RetailPatternAI2.hasNoRules(gauge));
+	}
+
+	@Test
 	void acceptsOnlyDirectRetailNpcScores() {
 		assertTrue(RetailPatternAI2.supportsNpcScore(0, 0));
 		assertFalse(RetailPatternAI2.supportsNpcScore(1, 0));

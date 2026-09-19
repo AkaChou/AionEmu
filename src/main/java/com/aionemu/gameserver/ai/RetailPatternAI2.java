@@ -1029,8 +1029,71 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void handleTalkedByUser(Player player) {
-		super.handleDialogStart(player);
+		// 真端直接交互优先于模板 is_dialog 标记，且不下发不存在的默认 HTML 页。
+		// Retail direct interactions take precedence over the template is_dialog flag and skip absent default HTML.
+		if (!isDirectTalkInteraction(pattern) && !hasGaugeEvent(pattern)) {
+			super.handleDialogStart(player);
+		}
 		runEvent("on_talked_by_user", null, player);
+	}
+
+	/**
+	 * 判断是否为直接交互对话模式，避免向客户端发送不存在的默认 HTML 页。
+	 * Whether this is a direct-interaction talk pattern, so no default HTML page is sent.
+	 *
+	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
+	 * @return 是否直接交互 / whether direct interaction
+	 */
+	static boolean isDirectTalkInteraction(Pattern pattern) {
+		if (pattern == null || !pattern.event("on_hyperlink_clicked").isEmpty()) {
+			return false;
+		}
+		for (Rule rule : pattern.event("on_talked_by_user")) {
+			for (Operation action : rule.actions()) {
+				if (isDirectTalkAction(action)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean isDirectTalkAction(Operation action) {
+		return switch (action.type()) {
+			case "use_skill", "teleport_target", "teleport_target_alias" -> true;
+			default -> false;
+		};
+	}
+
+	static boolean hasGaugeEvent(Pattern pattern) {
+		if (pattern == null) {
+			return false;
+		}
+		for (String event : pattern.events().keySet()) {
+			if (event.startsWith("on_gauge_")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断模式是否没有任何可执行规则。
+	 * Whether the pattern contains no executable rules.
+	 *
+	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
+	 * @return 是否无规则 / whether no rules exist
+	 */
+	public static boolean hasNoRules(Pattern pattern) {
+		if (pattern == null) {
+			return false;
+		}
+		for (List<Rule> rules : pattern.events().values()) {
+			if (!rules.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
