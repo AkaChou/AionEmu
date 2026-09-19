@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-023`
+> Pattern IDs: `QE-001`–`QE-042`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-16
+> last_reviewed: 2026-09-19
 
 ---
 
@@ -919,7 +919,7 @@ first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 
 
 - **判定规则**：击杀任务的“杀满即报告”由两个字段共同完成——计数（`SECTION_1+`）与任务说明行索引（`SECTION_0`）。最后一条击杀路线必须把行索引写成报告行，并且 `reward` 节点投影要与之一致；否则服务端进入 `REWARD` 而客户端任务说明停在击杀行，出现空分子与“下一步不出现”的玩家可见症状。
 - **代表案例**：15001（绿雾湿地双计数）修前追踪 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），修后 `20801`；同批 15020/15073/15100/15104/15203/15406/15407/15408/15580/15671/25671/25060/18952 同型；代表测试 `QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep`。
-- **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），其中 246 个已按同一合同修复；15101 缺 0->1 对话推进行、24153 缺击杀路线，需要额外证据；另有 24 行旧 handler 证据需支持 `setQuestVar(1)` 与 `setQuestVarById(0, var+1)` 形态的二次分类。
+- **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），两轮共修复 **268 个合同行**（246 + 22；第二轮把旧 handler 证据扩展到 `setQuestVar(N)`/`changeQuestStep(env, cur, next, bool)`，并把 5 个链式阶段任务的 var0 扩为 6-bit）。残余 4 个（15101 缺 0->1 对话推进行、24153 缺击杀路线、25304 缺中间行推进、25604 缺计数事件与推进）与 7 行组合节点任务（`SECTION_0` 非单纯行索引，需要客户端 VarTable 证据）均标为 EVIDENCE_REQUIRED。
 
 ---
 
@@ -942,3 +942,25 @@ first_check: 先看该任务客户端 HTML 里 check_user_item_ok 页的按钮�
 
 - **判定规则**：`HACTION_FINISH_DIALOG(1008)` 不产生服务端任务动作；凡客户端把上交确认页渲染成纯 1008 按钮，服务端必须在状态提交的同一次 after-commit 里直接下发续接页，而不是等待 1008 回包。
 - **代表案例**：10501（被毁的遗迹）上交龙族证物后停在页 10000、重新对话才进 10002；同批 41 个任务/42 条分支按同一合同把成功分支改到奖励窗 5 或 10002（10504 与 10501 同形）。
+
+---
+
+## [QE-042] 四十、inventory-items 是接取携带门禁，只能来自真端 inventory_item_name (INVENTORY_ITEMS_ACCEPT_GATE_SOURCE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务 metadata <inventory-items> 与真端 Quest_unpacked/quest.xml 的 inventory_item_name*/check_item*/collect_item* 字段角色
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 在 NPC 任务列表点任务行后对话框立刻关闭（SM_DIALOG_WINDOW page=0）或任务行点不动、永远接不到；客户端动作是 QUEST_ACCEPT_SIMPLE(20000)，服务端无异常堆栈，容易误判成接取路由缺失
+root_cause: metadata/inventory-items 在 typed engine 中被 PlayerQuestStartEligibilityPort 当作接取前置；私有 quest_data.xml 迁移把真端 check_item（任务中段交付/使用道具）写进 inventory_items（该字段的真端来源是 inventory_item_name），玩家接取时尚未持有该道具 → REQUIRED_INVENTORY_ITEM_MISSING，unaccepted→s0 转换不提交，DialogService 按“未处理的任务动作不得回显成对话页”关窗
+fix_or_guardrail: 1. metadata/inventory-items 只允许来自真端 quest.xml 的 inventory_item_name*；check_item/collect_item 分别属于交付校验与收集合同（QE-031/QE-032），不得充当接取门禁；2. 任务中段的 give-item/item-play/remove-item 合同不得跟着删；3. 改 XML 时必须同步删 quest_data.xml 的对应 inventory_items 行，保持迁移来源一致
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/30721.xml; src/main/resources/aion/data/static_data/quest_data/quest_data.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestInventoryStartItemGateTest.java; src/test/resources/quest/quest-inventory-start-item-retail-contract.tsv; .agents/summary/quest-30721/2026-09-19-quest-30721-inventory-start-gate.zh-CN.md; .agents/summary/quest-inventory-start-item/audit_inventory_start_items.py; .agents/summary/quest-inventory-start-item/inventory-start-item-gaps.tsv
+validation: focused-test（QuestInventoryStartItemGateTest 2/2；相邻回归 32/32：QuestItemSourceContractGateTest、QuestRetailStartMetadataGateTest、QuestStartEligibilityContractTest、PlayerQuestStartEligibilityPortTest、QuestEnterZoneStartOwnerRegressionTest）；production-gate（QuestDefinitionCatalogManifestTest、ProductionCatalogWhitelistVerificationTest、QuestClientContractGateTest、QuestDialogOrderAuditTest、QuestPageButtonAuditTest 31/31，PRODUCTION_COMPILE_OK=6189 / FAILURES=0）；runtime 与 client 未复验，需用户重建资源并重启服务端后实测
+boundaries: 全库审计反向违规（生产声明、真端无 inventory_item_name）为 0；仅剩“真端有、生产 XML 未声明”的 78 条缺口（inventory-start-item-gaps.tsv 标 XML_MISSING_GATE）与 223 条无生产 XML 的任务（NO_QUEST_XML），均未批量补——未证明这些任务要求接取前携带；30721 与 18300 不是同一根因（18300 属 QE-039 的 legacy 接取 owner 丢失），两者症状相似但判定路径不同
+superseded_by: none
+see_also: [QE-039], [QE-031], [QE-032]
+first_check: 见到“点任务后直接关窗/接不到、动作 20000 后 page=0”时，先查该任务 metadata/inventory-items 是否来自真端 inventory_item_name，再看 PlayerQuestStartEligibilityPort 的 REQUIRED_INVENTORY_ITEM_MISSING 分支
+-->
+
+- **判定规则**：`inventory-items` 声明的是“玩家接取前必须携带”的道具，语义来源只有真端 `inventory_item_name*`；把 `check_item`/`collect_item` 当接取前置会把任务变成不可接取，症状与“接取路由缺失”高度相似，必须用真端字段名区分。
+- **代表案例**：30721（真端只有 `check_item1_1 = quest_30721a 1`；玩家在 s1→s2 才从 804868 拿到 182215698，s2→s3 由 ITEM_PLAY 消耗）；按真端 inventory_item_name 反向核对生产 199 条声明后异常声明归零。

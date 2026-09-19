@@ -153,6 +153,12 @@ def analyze(quest: int, stage: int):
 
 
 def legacy_writes(quest: int, legacy_root: Path | None):
+    """旧 handler 中对 var0（任务说明行索引）的写入。
+
+    覆盖 `setQuestVarById(0, X)`、`setQuestVar(X)`（单参数即 var0）、
+    `setQuestVar(0, X)` 与 `changeQuestStep(env, current, next, reward)`；
+    后者仅当 next 与 current 不同（或表达式动态）时才算推进行。
+    """
     if legacy_root is None:
         return None, []
     hits = sorted(legacy_root.rglob(f"_{quest}*.java"))
@@ -161,7 +167,21 @@ def legacy_writes(quest: int, legacy_root: Path | None):
     text = "\n".join(path.read_text(encoding="utf-8", errors="ignore") for path in hits)
     writes = re.findall(r"setQuestVarById\(\s*0\s*,\s*([^)]+)\)", text)
     writes += re.findall(r"setQuestVar\(\s*0\s*,\s*([^)]+)\)", text)
+    writes += re.findall(r"setQuestVar\(\s*([^,()]+)\s*\)", text)
+    for current, following in re.findall(r"changeQuestStep\(\s*[^,]+,\s*([^,()]+),\s*([^,()]+)", text):
+        current, following = current.strip(), following.strip()
+        if current == following and current.isdigit():
+            continue
+        writes.append(following)
     return hits[0].name, writes
+
+
+def is_report_row_write(value: str) -> bool:
+    """判断旧 handler 写入是否把 var0 推到非零/动态（报告行）值。"""
+    digits = re.sub(r"\D", "", value)
+    if digits and int(digits) != 0:
+        return True
+    return bool(re.search(r"[A-Za-z_]", value))
 
 
 def main() -> int:
@@ -191,7 +211,7 @@ def main() -> int:
             closed = info["best"] is not None and info["best"] >= stage + 1
             if closed:
                 continue
-            if legacy_name and any(re.sub(r"\D", "", w) not in ("", "0") for w in writes):
+            if legacy_name and any(is_report_row_write(w) for w in writes):
                 verdict = "SAME_CLASS_CONFIRMED"
             elif legacy_name:
                 verdict = "REVIEW_LEGACY_NO_VAR0"

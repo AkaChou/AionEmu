@@ -40,6 +40,20 @@ def node_block(text: str, label: str):
     return None
 
 
+def stage_node_label(text: str, stage: int):
+    """承载客户端计数阶段的行节点：优先 started，其次任意投影 var0==stage 的 START 节点。"""
+    candidates = []
+    for match in re.finditer(r'<node label="(\w+)"[^>]*>(.*?)</node>', text, re.S):
+        label, body = match.group(1), match.group(2)
+        status = re.search(r'status="(\w+)"', match.group(0))
+        variables = node_vars(match.group(0))
+        if status and status.group(1) == "START" and variables.get("var0") == stage:
+            candidates.append(label)
+    if "started" in candidates:
+        return "started"
+    return candidates[0] if candidates else None
+
+
 def node_vars(block: str):
     return {m.group(1): int(m.group(2))
             for m in re.finditer(r'<var name="(\w+)" value="(\d+)"', block)}
@@ -91,9 +105,9 @@ def check_preconditions(text: str, stage: int, quest: int):
     started = node_block(text, "started")
     if reward is None or started is None:
         return "missing started/reward node"
-    started_vars = node_vars(started)
-    if started_vars.get("var0") != stage:
-        return f"started projects var0={started_vars.get('var0')} but client stage is {stage}"
+    stage_label = stage_node_label(text, stage)
+    if stage_label is None:
+        return f"no START node projects SECTION_0={stage}"
     if MIGRATION_MARKER in text:
         return "migration route already present"
     completing = []
@@ -101,7 +115,7 @@ def check_preconditions(text: str, stage: int, quest: int):
         block = match.group(0)
         head = transition_head(block)
         source, target = attr(head, "source"), attr(head, "target")
-        if source != "started":
+        if source != stage_label:
             continue
         if "<kill-npc" not in block:
             continue
@@ -121,6 +135,7 @@ def check_preconditions(text: str, stage: int, quest: int):
 
 def patch_quest(quest: int, stage: int, text: str):
     report = stage + 1
+    node_label = stage_node_label(text, stage)
     reward = node_block(text, "reward")
     if re.search(r'<var name="var0" value="\d+"\s*/>', reward):
         new_reward = re.sub(r'(<var name="var0" value=")\d+(")', rf"\g<1>{report}\g<2>", reward, count=1)
@@ -136,10 +151,10 @@ def patch_quest(quest: int, stage: int, text: str):
     def patch_transition(match: re.Match[str]):
         block = match.group(0)
         head = transition_head(block)
-        if attr(head, "source") != "started" or "<kill-npc" not in block:
+        if attr(head, "source") != node_label or "<kill-npc" not in block:
             return block
         target = attr(head, "target")
-        if target == "started":
+        if target == node_label:
             return insert_first_action(block, f'<set-variable field="var0" value="{stage}"/>', quest)
         if target == "reward":
             block = insert_first_action(block, f'<set-variable field="var0" value="{report}"/>', quest)
@@ -178,10 +193,13 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", required=True, type=Path)
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--verdicts", default="SAME_CLASS_CONFIRMED",
+                        help="参与 sweep 的审计判定，逗号分隔（默认仅 SAME_CLASS_CONFIRMED）")
     args = parser.parse_args()
 
+    verdicts = {value.strip() for value in args.verdicts.split(",") if value.strip()}
     rows = [row for row in csv.DictReader(args.candidates.open(encoding="utf-8"))
-            if row["verdict"] == "SAME_CLASS_CONFIRMED"]
+            if row["verdict"] in verdicts]
     applied, skipped = [], []
     for row in sorted(rows, key=lambda r: int(r["quest"])):
         quest, stage = int(row["quest"]), int(row["stage"])

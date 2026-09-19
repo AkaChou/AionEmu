@@ -56,3 +56,24 @@
   → PASS：`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`（5 个测试类 26 个用例）。
 - 首轮失败与修正：新测试最初假设「终击路线来源节点一定是 `started`」，18994/28994 的计数阶段在 `step2` 节点，断言失败；已改为按 `SECTION_0==客户端阶段` 解析实际承载节点（`started`/`step2`/`k1`），修正后全绿（commit `265c63493`）。
 - 未启动/重启服务端；未做客户端验收。建议代表任务：15041（单计数）、15471（周常）、15500（守护）、18994（副本多阶段）；`15101`、`24153` 修复后再验。
+
+## 6. 第二轮：审计二次分类 + 残余处理（2026-09-19 追加）
+
+- 旧 handler 证据提取扩展到 `setQuestVar(N)`（单参数即 var0）、`setQuestVarById(0, expr)` 与 `changeQuestStep(env, current, next, reward)`（next≠current 才算推进行）。
+- 二次分类结果：原 24 行 `REVIEW_LEGACY_NO_VAR0` 中 20 行转为 `SAME_CLASS_CONFIRMED`，4 行确认为旧 handler 不写 var0（13945/23840/23945/25518）。
+- 第二轮修复 **22 个任务**（合同同型，脚本 + 手工）：
+  - 13 个 step-0 单计数：15060/15065/15074/15326/25090/25093/25325/25326/26837/26974/50076/50077/50078；
+  - 5 个链式阶段（`s1..sN` 节点）：15601/15605/15608/25601/25605，同时把 `var0` 位段从 width=4 扩为 6-bit（客户端 SECTION_0 槽位，且报告行 6/7 原本超出 max）；
+  - 4 个 legacy 不写 var0 但客户端合同要求报告行的任务：13945/23840/23945/25518（按客户端 `quest_summary` 报告步骤判定，属契约决策而非 legacy 复制）。
+- 合同快照扩展到 **268 行**；`QuestSection0ReportRowContractTest` 三个用例全绿；生产门禁复跑 PASS（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）。
+- 复跑审计后的**残余**（`section0-report-row-closure-residual.csv`）：
+
+| 任务 | 阶段 | 缺口 | 状态 |
+|---|---|---|---|
+| 15101 | 1 | XML 从未写 var0；需要 0->1 的 NPC 对话推进行 + 终击写 2 + reward 投影 2（旧 handler 用 `STEP_TO_1` 分支，客户端页面动作需重映射到当前词汇） | EVIDENCE_REQUIRED |
+| 24153 | 0 | XML 无任何击杀路线；需按旧 handler 的 5 个 NPC（213730/213788-213791 -> var0..var4）重建击杀计数链 | EVIDENCE_REQUIRED |
+| 25304 | 2 | 只有 started(0) 与 reward(0)，缺 0->1->2 的中间行推进路线（旧 handler 无 var0 写入） | EVIDENCE_REQUIRED |
+| 25604 | 2 | 有 s1..s4 节点但无击杀路线，reward 投影 var0=0；需要重建计数事件与 s4->reward 推进 | EVIDENCE_REQUIRED |
+| 14252/18911/23918/24252/28911（7 行） | 0-2 | 组合节点（`a0b0c0` 类）任务，`SECTION_0` 在这些任务里不是单纯的说明行索引，客户端摘要的行选择语义需要 VarTable 证据 | EVIDENCE_REQUIRED |
+
+- 至此：15001 家族 14 + 第一轮 246 + 第二轮 22 = **282 个任务** 已按报告行合同闭环；残余 4 + 7 行已明确标注所需证据。
