@@ -65,7 +65,7 @@
       <var name="var0" value="13"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="14"/>
+      <var name="var0" value="13"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -79,6 +79,18 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="14"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -587,7 +599,6 @@
       </conditions>
       <actions>
         <give-item item-id="182215903" count="1"/>
-        <set-variable field="var0" value="14"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

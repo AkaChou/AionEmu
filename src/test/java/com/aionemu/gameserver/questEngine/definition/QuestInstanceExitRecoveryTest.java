@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,7 +25,7 @@ class QuestInstanceExitRecoveryTest {
 			CompiledQuestDefinition definition = load(scenario.questId());
 			for (String sourceNode : scenario.transientNodes()) {
 				assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
-					transition.sourceNode().equals(sourceNode)
+					Objects.equals(transition.sourceNode(), sourceNode)
 						&& transition.targetNode().equals(scenario.rollbackNode())
 						&& transition.event() instanceof QuestEvent.EnterWorld
 						&& transition.conditions().contains(
@@ -32,7 +33,7 @@ class QuestInstanceExitRecoveryTest {
 					() -> "quest " + scenario.questId() + " missing outside recovery from " + sourceNode);
 			}
 			assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-				transition.sourceNode().equals(scenario.completedNode())
+				Objects.equals(transition.sourceNode(), scenario.completedNode())
 					&& transition.targetNode().equals(scenario.rollbackNode())
 					&& transition.event() instanceof QuestEvent.EnterWorld
 					&& transition.conditions().contains(
@@ -42,12 +43,12 @@ class QuestInstanceExitRecoveryTest {
 
 			QuestEvent.EnterWorld enterWorld = new QuestEvent.EnterWorld();
 			QuestTransition recovery = definition.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode().equals(scenario.runtimeSourceNode())
+				.filter(transition -> Objects.equals(transition.sourceNode(), scenario.runtimeSourceNode())
 					&& transition.targetNode().equals(scenario.rollbackNode())
-					&& QuestEvent.matches(transition.event(), enterWorld)
-					&& transition.conditions().contains(
-						new QuestCondition.WorldIs(scenario.instanceWorldId(), false)))
-				.findFirst().orElseThrow();
+				&& QuestEvent.matches(transition.event(), enterWorld)
+				&& transition.conditions().contains(
+					new QuestCondition.WorldIs(scenario.instanceWorldId(), false)))
+			.findFirst().orElseThrow();
 			QuestSnapshot outside = snapshot(definition, scenario.runtimeSourceVariables(),
 				scenario.entryInventory(), 100000000);
 			QuestMutationPlan recovered = QuestMutationPlanner.plan(definition, outside, enterWorld, recovery)
@@ -63,7 +64,7 @@ class QuestInstanceExitRecoveryTest {
 				recovered.nextPackedVariables(), scenario.entryInventory(), Map.of(), true, true,
 				0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 			QuestMutationPlan reentry = definition.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode().equals(scenario.rollbackNode())
+				.filter(transition -> Objects.equals(transition.sourceNode(), scenario.rollbackNode())
 					&& QuestEvent.matches(transition.event(), scenario.reentryEvent())
 					&& transition.afterCommit().stream().anyMatch(action ->
 						action instanceof AfterCommitAction.TeleportPlayer teleport
@@ -98,7 +99,7 @@ class QuestInstanceExitRecoveryTest {
 	private static void assertFailureRoute(CompiledQuestDefinition definition,
 			FailureRecoveryScenario scenario, String sourceNode, QuestEvent event) {
 		QuestTransition transition = definition.definition().transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(sourceNode)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), sourceNode)
 				&& candidate.targetNode().equals(scenario.rollbackNode())
 				&& QuestEvent.matches(candidate.event(), event))
 			.findFirst().orElseThrow();
