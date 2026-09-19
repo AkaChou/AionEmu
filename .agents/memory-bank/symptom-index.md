@@ -83,7 +83,7 @@
 | 玩家上交证物/收集物后服务端已推进到 REWARD 并下发 check_user_item_ok，但对话停在原地、点按钮没有下一步；必须重新与同一 NPC 对话才收到 DEFAULT_SUCCESS(10002) 并打开奖励窗 | `QE-041` | 先看该任务客户端 HTML 里 check_user_item_ok 页的按钮动作；若是 HACTION_FINISH_DIALOG(1008)，再看目标节点是否存在同 NPC 的 USE_OBJECT(-1) 续接页 |
 | 在 NPC 任务列表点任务行后对话框立刻关闭（SM_DIALOG_WINDOW page=0）或任务行点不动、永远接不到；客户端动作是 QUEST_ACCEPT_SIMPLE(20000)，服务端无异常堆栈，容易误判成接取路由缺失 | `QE-042` | 见到“点任务后直接关窗/接不到、动作 20000 后 page=0”时，先查该任务 metadata/inventory-items 是否来自真端 inventory_item_name，再看 PlayerQuestStartEligibilityPort 的 REQUIRED_INVENTORY_ITEM_MISSING 分支 |
 | 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成 | `QE-043` | 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT |
-| 玩家完成收集且背包持有足量任务道具，但找到交付 NPC 时，NPC 头顶无任务对白标记，点击交互时下发 questId=0 通用第 10 页 (SM_DIALOG_WINDOW 玩家=xx targetObj=xx questId=0 下发页=10)，任务卡在收集步无法推进交付 | `QE-044` | 交付 NPC 下发 page 10 时，优先对比客户端 quest.xml 的 collect_progress 与玩家当前 quest_vars 的 var0 阶段值 |
+| 玩家完成收集且背包持有足量任务道具，但找到交付 NPC 时，NPC 头顶无任务对白标记，点击交互时下发 questId=0 通用第 10 页 (SM_DIALOG_WINDOW 玩家=xx targetObj=xx questId=0 下发页=10)，任务卡在收集步无法推进交付；计数残留臂还表现为感应区/影片/步骤门控不触发（进入非计数阶段时整型步数被 var1/var2 高位污染，如 10507 s7 影片 993 不触发） | `QE-044` | 交付 NPC 下发 page 10 时，优先对比客户端 quest.xml 的 collect_progress 与玩家当前 quest_vars 的 var0 阶段值 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |
