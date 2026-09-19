@@ -49,7 +49,8 @@ public class Quest extends AdminCommand {
             return;
         }
 
-        if (params[0].equals("log")) {
+        String subcommand = params[0].toLowerCase(java.util.Locale.ROOT);
+        if (subcommand.equals("log")) {
             handleLog(admin, params);
             return;
         }
@@ -65,16 +66,16 @@ public class Quest extends AdminCommand {
             return;
         }
 
-        if (params[0].equals("start")) {
+        if (subcommand.equals("start")) {
             handleStart(admin, target, params);
         }
-        else if (params[0].equals("set")) {
+        else if (subcommand.equals("set")) {
             handleSet(admin, target, params);
         }
-        else if (params[0].equals("delete")) {
+        else if (subcommand.equals("delete")) {
             handleDelete(admin, target, params);
         }
-        else if (params[0].equals("show")) {
+        else if (subcommand.equals("show")) {
             handleShow(admin, target, params);
         }
         else {
@@ -174,21 +175,10 @@ public class Quest extends AdminCommand {
 			else
 				questId = Integer.parseInt(params[1]);
 
-			String statusValue = params[2];
-			if ("START".equals(statusValue)) {
-				questStatus = QuestStatus.START;
-			}
-			else if ("NONE".equals(statusValue)) {
-				questStatus = QuestStatus.NONE;
-			}
-			else if ("COMPLETE".equals(statusValue)) {
-				questStatus = QuestStatus.COMPLETE;
-			}
-			else if ("REWARD".equals(statusValue)) {
-				questStatus = QuestStatus.REWARD;
-			}
-			else {
-				PacketSendUtility.sendMessage(admin, "<status is one of START, NONE, REWARD, COMPLETE>");
+			questStatus = parseStatus(params[2]);
+			if (questStatus == null) {
+				PacketSendUtility.sendMessage(admin,
+					"<status is one of START, NONE, REWARD, COMPLETE; got '" + params[2] + "'>");
 				return;
 			}
 			var = Integer.valueOf(params[3]);
@@ -234,6 +224,27 @@ public class Quest extends AdminCommand {
 		target.getController().updateNearbyQuests();
 
 		PacketSendUtility.sendMessage(admin, "Quest status updated successfully.");
+	}
+
+	/**
+	 * 解析状态参数：允许大小写混用与首尾空白，无法识别时返回 null。
+	 * Parses the status argument case-insensitively, tolerating surrounding whitespace.
+	 *
+	 * @param raw 原始状态词 / Raw status token
+	 * @return 解析后的状态，未知则 null / Parsed status, or null when unknown
+	 */
+	static QuestStatus parseStatus(String raw) {
+		if (raw == null) {
+			return null;
+		}
+		String value = raw.trim().toUpperCase(java.util.Locale.ROOT);
+		for (QuestStatus status : new QuestStatus[] {QuestStatus.START, QuestStatus.NONE,
+				QuestStatus.REWARD, QuestStatus.COMPLETE}) {
+			if (status.name().equals(value)) {
+				return status;
+			}
+		}
+		return null;
 	}
 
 	/**

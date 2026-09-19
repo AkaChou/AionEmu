@@ -216,3 +216,24 @@
 - 补上归属后这些日常恢复零售门禁：需要先加入对应势力（Alabaster Order：Cygnea 的 Mirtis 805145、Heiron 的 typhon 799803），
   且由每日轮换随机命中；未加入势力的角色不能再直接接取。
 - `//quest start` 仍受 legacy `maxlevel_permitted` 限制；GM 强制起手请用 `//quest set <id> START 0`（直接写状态、绕过 start 检查）。
+
+---
+
+## 追加（GM 命令体验）：`//quest set` 状态词大小写/空白容错
+
+`//quest set 35059 START 0` 在客户端侧出现的报错是 `<status is one of START, NONE, REWARD, COMPLETE>`：
+该提示只说明状态词没被识别，而旧实现是**大小写敏感**（`"START".equals(params[2])`）且
+`AdminCommand` 用 `split(" ")` 拆参数——小写 `start` 或连续空格都会让参数错位/失配，GM 无从判断。
+
+修复：
+- `Quest.parseStatus(String)`：状态词统一 `trim().toUpperCase()` 后匹配四种状态，未知则返回 null（可单测）；
+- 报错回显收到的原始 token：`<status is one of START, NONE, REWARD, COMPLETE; got 'xxx'>`；
+- `//quest` 子命令（start/set/delete/show/log）改为大小写不敏感；
+- `AdminCommand.process`：参数按 `\\s+` 拆分并先 trim，连续/首尾空格不再产生空参数导致整体错位。
+
+验证：`QuestCommandArgumentTest`(2) + `QuestClientListSyncTest`(4) + `QuestStatePersistenceSafetyTest`(1)
++ `QuestReloadAtomicityTest`(1) = 8/8 通过。
+
+边界：等级超过 `max-level` 的任务即便用 `//quest set ... START` 强开，客户端仍按自己的
+`maxlevel_permitted` 渲染（59 级看 35059 属预期不可接），真实玩法验证请用 56–57 级角色，
+或改测同族 58–60 段的 35060/35061。

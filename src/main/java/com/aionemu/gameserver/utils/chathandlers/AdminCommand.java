@@ -63,10 +63,14 @@ public abstract class AdminCommand extends ChatCommand {
 		}
 
 		boolean success = false;
-		if (text.length() == getAlias().length()) {
+		String arguments = text.length() > getAlias().length()
+			? text.substring(getAlias().length() + 1).trim() : "";
+		if (arguments.isEmpty()) {
 			success = this.run(player, EMPTY_PARAMS);
 		} else {
-			success = this.run(player, text.substring(getAlias().length() + 1).split(" "));
+			// 连续/首尾空白不得产生空参数，否则命令参数会整体错位。
+			// Consecutive or surrounding whitespace must not create empty arguments that shift the parameter list.
+			success = this.run(player, arguments.split("\\s+"));
 		}
 
 		if (LoggingConfig.LOG_GMAUDIT) {
