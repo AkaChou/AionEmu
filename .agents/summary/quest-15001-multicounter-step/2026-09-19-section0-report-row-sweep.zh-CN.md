@@ -98,3 +98,72 @@
 - 门禁：244 个 XML 通过解析；`QuestSection0ReportRowContractTest`、`QuestMonsterProgressContractAuditTest`、
   `ClientQuestSectionAlignmentTest`、`ProductionCatalogWhitelistVerificationTest`、`QuestDefinitionCatalogManifestTest`
   复跑 PASS（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）。
+
+## 8. 第三轮：残余 4 任务 + 7 行组合节点（2026-09-19 追加）
+
+第二轮末把 4 个残余 + 7 行组合节点标成 `EVIDENCE_REQUIRED`。第三轮用同一三源（Aion 5.8 客户端 `quest_monster.csv` / `quest_dialogs quest_q*.html`、静态 NPC 表、`origin/history` 旧 handler）把它们全部判定完毕，结论如下。
+
+### 8.1 `SECTION_0` 的双语义判定规则（关键结论）
+
+`SECTION_0` 在 5.8 客户端里有两种互斥语义，必须用 `quest_monster.csv` 的**计数条件写法**区分，不能只看任务名或奖励格：
+
+| 判别式 | 语义 | 家族 |
+|---|---|---|
+| `SECTION_0` 出现在 `<N` 计数条件里（如 `SECTION_0<1`） | 该槽位**本身就是计数器**（链式或单行狩猎），`SECTION_0==S` 是链式门控 | 1102、18911/28911、23918、24153、24155、17106 等 |
+| `SECTION_0` 从不出现在 `<N` 里，且出现 `SECTION_0==S` 门控 | 该槽位是**任务说明行索引**，报告行 = HTML `<step>` 数 - 1 | 15001、15101、25304、25604、14252/24252 等 |
+
+因此原报告里「7 行组合节点任务需要客户端 VarTable」是**审计器缺陷**造成的误判：14252/24252 的行索引语义已由客户端 `<N` 写法给出，18911/28911 的 `counter-grid` 形状本来就正确，23918 只是怪物 ID 配错且少一维。三者都不需要 VarTable。
+
+### 8.2 本轮修复
+
+| 任务 | 缺口 | 本轮改动 |
+|---|---|---|
+| 15101 | 缺 `0->1` 对话推进行、无任何 `var0` 写入 | 新增 `hunt`（`var0=1`）节点、804715 `SETPRO1` 推进行、`hunt->hunt` / `hunt->reward` 击杀路线（终击 `var0=2`）、reward 投影 `var0=2,var1=10`、ENTER_WORLD 迁移 + 804715 报告行自愈 |
+| 24153 | XML 完全没有击杀路线 | 重建为 `var0..var4` 五位 0/1 计数器（offset 0/6/12/18/24）+ `var5`（offset 30，SECTION_5 门控）；`started`(`var5=1`) --204784 SETPRO2--> `hunted`(`var5=0`)；5 只怪 213730/213788/213789/213790/213791 各写自己的 `var0..4`；204787 `SELECT_QUEST_REWARD` 进 reward（五段=1、`var5=0`） |
+| 25304 | 缺 `0->1->2` 中间行推进与计数事件 | 重建 `started->s1->s2->s3->reward`；805340 `SETPRO1`/`SELECT2_1`/`SETPRO2` 三页对话、`CHECK_USER_HAS_QUEST_ITEM` 交出 182215850 进 `s2`、`counter var1 required=60`（7 只 233902-233908）+ 已满补给路线、`s3` 三段对话 + `SET_SUCCEED` 给 182215874 收 182215850 进 `reward`、805339 领奖 + 报告行自愈（`var0=4`）+ ENTER_WORLD 迁移 |
+| 25604 | 缺计数事件与行推进 | reward 投影改 `var0=5,var1=3`、complete 加 `var1=0`、新增 806115 报告行自愈 + ENTER_WORLD 迁移 |
+| 14252 / 24252 | 旧 grid 把行号与每行计数混在同一组 var 里 | 重建为 `r0/r1/r2/r3` 行节点（`var0=0/1/2/3`）+ `var1` 每行计数；三行击杀路线（213775/236924 → 213780/236929/237263 → 237275）；`r3 -> reward`（`var0=3,var1=1`）；报告 NPC 832824/832820 后在 `r3` 领奖；保留旧 grid 存档迁移（ENTER_WORLD） |
+| 23918 | 怪物 ID 全错（用了 EvGuard 234756/234759/234762/234765）且只有 4 维 | 改为 5 维 `counter-grid`（235559/235560/235561/235326/235327）+ 32 个 `a?b?c?d?e?` 组合 START 节点 + NPC_REPORT 802347 + ENTER_WORLD 迁移 + 报告行自愈 |
+
+无需改动（判定为审计器误报）：**18911 / 28911**（`counter-grid` 形状本就正确，`SECTION_0<1;SECTION_5==0` 是链式计数）。
+
+### 8.3 两个编译器口径修正（本轮踩坑）
+
+1. **`reward -> reward` 的 `SELECT_QUEST_REWARD(1009)` 不能手写**：`QuestDefinitionCompiler.restoreRewardPreviewContract` 会为 `reward` 源追加一条 dialogId 通配（-1）的奖励预览路线；手写的 1009 路线与它同源同事件，编译期直接 `AMBIGUOUS_TRANSITION`。14252/24153/24252 已删除手写路线，交回编译器派生，`PRODUCTION_COMPILE_OK` 恢复 6189。
+2. **报告 NPC 上的无 source TALK 自愈与既有 `reward -> reward` 路线同事件**：同样触发 `AMBIGUOUS_TRANSITION`。因此 14252/24153/24252 只保留 ENTER_WORLD 迁移（重登/换图即自愈）；15101/25304/25604/23918 的报告 NPC 没有既有同事件路线，TALK 自愈保留。
+
+### 8.4 审计器收敛（脚本重写）
+
+`audit_section0_report_row_closure.py` 本轮修掉三处口径缺陷，然后重跑全量 6189 个 EXECUTABLE：
+
+1. **自闭合节点漏解析**：`<node .../>` 之前被跨节点正则把下一个节点的 `<var>` 张冠李戴，导致 13758/19631 家族的 `reward` 投影读空、误报 `SAME_CLASS_CONFIRMED`；已改为显式识别自闭合节点。
+2. **行索引闭环判定过严**：原判定要求 `reward` 投影写 `var0`；现在接受两种等价写法——`reward` 投影写报告行，或 `reward` 投影不写而进入 reward 的转换事务动作显式写报告行（`QuestMutationPlanner` 不覆盖动作已触及的字段）。
+3. **怪物归属判定过严**：XML 一条路线可覆盖客户端多条计数记录（13758/15546 家族），改为按 npc 集合相交做覆盖判定。
+
+重跑结果（`section0-report-row-closure-residual.csv`）：
+
+| 判定 | 数量 | 说明 |
+|---|---|---|
+| `ROW_INDEX_CLOSED` | 635 | 报告行合同已闭环（含本轮 15101/25304/25604/14252/24252） |
+| `COUNTER_CHAIN_OK` | 797 | 链式/单行计数器家族（含 24153、23918、18911/28911） |
+| `COUNTER_CHAIN_GAP` | 32 | 长尾：非本轮范围的链式计数缺口（1842-1844、2842-2845、13910、16962/17016、23703、23905-23917、24112、24201、28030-28033、28313、28915、30600/30610、39001/39002、49002） |
+| `SAME_CLASS_CONFIRMED` | 46 | 旧 handler 写了 `var0` 但当前 XML 未闭环：其中 26 行是「reward 投影 0/偏一」、11 行是怪物无击杀路线、其余为多阶段偏移，需下一轮单独 sweep |
+| `REVIEW_LEGACY_NO_VAR0` | 5 | 16974、23934、23935、23938、28952 |
+| `REVIEW_NO_LEGACY` | 2 | 25082、25608 |
+
+### 8.5 门禁
+
+用户 2026-09-19 授权的命令复跑 **PASS**：
+
+```
+mvn -q -Dtest='QuestSection0ReportRowContractTest,QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test
+```
+
+→ 5 个测试类 32 个用例全绿；`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
+
+新增回归：
+- `QuestMonsterProgressContractAuditTest` 增加 6 个用例（15101、24153、25304、25604、14252/24252、23918）+ `unpack` 辅助；
+- `QuestPacketOrderRegressionTest` 的 24153 断言从旧 `started -> reward` 改为 `started -> hunted` 门控 + `hunted -> reward` 领奖；
+- `quest-section0-report-row-contract.tsv` 增加 `15101 1 2`（269 行），`QuestSection0ReportRowContractTest` 期望行数 268 -> 269。
+
+未执行：客户端实机验收、服务端启动。`PRODUCTION_COMPILE_OK=6189` 只证明 XML 可编译，不等于运行时行为已验证。

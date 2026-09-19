@@ -170,6 +170,7 @@ scope: Optional branch work-item cleanup and reward transitions
 first_seen: unknown
 last_verified: 2026-09-14
 symptom: 多选一交付后领奖或奖励预览卡死，removalFeasible 为 BLOCKED
+keywords: 可选工作物品; 可选收集物清理; 交任务阻断; 领奖卡死; 奖励预览卡死; removalFeasible BLOCKED; quest 2392; quest 1922; quest 2947
 root_cause: Branch selection removed one item early while later routes required all alternatives with count=1
 fix_or_guardrail: Use count=ALL for reward-stage cleanup and preview routes after branch selection
 evidence: commit fb26a0d49; .agents/summary/quest-2392/2026-09-14-optional-work-item-audit.md:19
@@ -198,6 +199,7 @@ scope: Production quest catalog prerequisites and NPC start eligibility
 first_seen: unknown
 last_verified: 2026-09-14
 symptom: 等级满足但无任务标记、接受动作无响应、前置任务为 999 级或不存在
+keywords: 不可达接取前置; finished quest-id; 999 级前置; 接取动作无响应; QUEST_ACCEPT_1 无页面; quest 19055; quest 19054; NPC 798450
 root_cause: Production metadata referenced an unavailable, obsolete or unreachable prerequisite
 fix_or_guardrail: Prove the prerequisite against the production catalog before removing the invalid reference
 evidence: commit adc5cbc0b; .agents/summary/quest-19055/2026-09-09-unreachable-start-prerequisite-audit.md:7; quest_data.xml
@@ -920,6 +922,14 @@ first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 
 - **判定规则**：击杀任务的“杀满即报告”由两个字段共同完成——计数（`SECTION_1+`）与任务说明行索引（`SECTION_0`）。最后一条击杀路线必须把行索引写成报告行，并且 `reward` 节点投影要与之一致；否则服务端进入 `REWARD` 而客户端任务说明停在击杀行，出现空分子与“下一步不出现”的玩家可见症状。
 - **代表案例**：15001（绿雾湿地双计数）修前追踪 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），修后 `20801`；同批 15020/15073/15100/15104/15203/15406/15407/15408/15580/15671/25671/25060/18952 同型；代表测试 `QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep`。
 - **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），两轮共修复 **268 个合同行**（246 + 22；第二轮把旧 handler 证据扩展到 `setQuestVar(N)`/`changeQuestStep(env, cur, next, bool)`，并把 5 个链式阶段任务的 var0 扩为 6-bit）。残余 4 个（15101 缺 0->1 对话推进行、24153 缺击杀路线、25304 缺中间行推进、25604 缺计数事件与推进）与 7 行组合节点任务（`SECTION_0` 非单纯行索引，需要客户端 VarTable 证据）均标为 EVIDENCE_REQUIRED。；该持久化迁移不能只依赖 ENTER_WORLD：跨部署在线或在同一会话进入 REWARD/计数行的存档会因 reward 源节点投影匹配失败而点 NPC 无响应 → 已为 244 个任务补 source-less 的领奖对话框自愈路线（复制自身 reward 响应页），24 个无对话响应的任务仍只依赖 ENTER_WORLD。
+- **`SECTION_0` 双语义判定（2026-09-19 第三轮，必须先判语义再套合同）**：`SECTION_0` 有两种互斥语义，只由客户端 `quest_monster.csv` 的条件写法决定，不能用任务名/阵营/等级/奖励格数/有没有 `counter-grid` 块来猜。
+  1. `SECTION_0` 出现在 `<N` 计数条件里（如 `SECTION_0<1;SECTION_5==0`）→ 该槽位**就是计数器本身**（链式或单行狩猎，`SECTION_0==S` 是链式门控），落盘按 `counter`/`counter-grid`/`kill-chain` 合同核对每维计数与 START 节点笛卡尔积；代表 1102、18911/28911、23918、24153、24155、17106。
+  2. `SECTION_0` 从不出现在 `<N` 里、只出现 `SECTION_0==S` 门控 → 该槽位是**任务说明行索引**，报告行 = HTML `<step>` 数 - 1，落盘按本 Pattern 的报告行合同核对；代表 15001、15101、25304、25604、14252/24252。
+  判定顺序错了会把整个链式家族误判成「缺报告行」或反过来把行索引任务当成计数器，2026-09-19 的 7 行「组合节点任务需要 VarTable」结论即由此误判产生（已撤销：18911/28911 无需改动，14252/24252 是行索引，23918 只是怪物 ID 错且少一维）。
+- **第三轮残余清零（2026-09-19）**：15101（补 `0->1` 对话推进行与击杀路线）、24153（重建 5 个 0/1 计数器与 5 条击杀路线）、25304（补 `0->1->2` 中间行与 60 计数事件）、25604（补计数事件与行推进）、14252/24252（重建 `r0..r3` 行索引）、23918（改 5 维 `counter-grid` 与正确怪物 ID）全部修复；合同快照 269 行；门禁 32 用例全绿、`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`。
+- **两个编译器口径（同批踩坑，追加禁用项）**：`reward -> reward` 的 `SELECT_QUEST_REWARD(1009)` 不要手写——`restoreRewardPreviewContract` 会为 `reward` 源派生 dialogId 通配（-1）的奖励预览路线，手写 1009 与它同源同事件会编译期 `AMBIGUOUS_TRANSITION`；报告 NPC 上的无 source TALK 自愈若与既有 `reward -> reward` 路线同事件同样触发该错误，此时只保留 `ENTER_WORLD` 迁移。
+- **残余长尾（下一轮候选，非本轮范围）**：审计重跑后 `SAME_CLASS_CONFIRMED` 46 行（26 行 reward 投影 0/偏一、11 行怪物无击杀路线、其余多阶段偏移）、`COUNTER_CHAIN_GAP` 32 行、`REVIEW_LEGACY_NO_VAR0` 5 行（16974/23934/23935/23938/28952）、`REVIEW_NO_LEGACY` 2 行（25082/25608）；清单见 `.agents/summary/quest-15001-multicounter-step/section0-report-row-closure-residual.csv`。
+
 
 ---
 

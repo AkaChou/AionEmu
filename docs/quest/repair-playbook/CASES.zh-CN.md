@@ -588,7 +588,7 @@
 - 第一检查点：先用 `quest_monster.csv` 找出「同一个 `SECTION_0==S` 上并行门控多个 `SECTION_n<N`」的任务，再看最终击杀 transition 是否写 `var0`、`reward` 节点投影的 `var0` 是否为报告行；不要只看计数是否累加或状态是否进入 REWARD。`reward` 源节点的既有路由会按同一投影匹配，改动投影时必须同时确认它们仍可命中。
 - 代表测试：`QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep` 锁定 14 个任务的 reward 投影、终击写入、自环钉住与迁移路由；`#quest15001SaturatesBothSectionsAndEntersRewardWithSectionZeroOne` 用 runtime planner 断言两次 5 杀后的 packed step 为 `1 + 5*64 + 5*4096 = 20801`。
 - 验证命令和结果：`mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` 通过，`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证完成，已修复”，确认 15001 终击后进入报告步骤。未捕获 startup、协议与截图附件。
-- 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。同型 sweep：2026-09-19 按本案例合同批量修复 244 个结构同型任务，另有 18994/28994 的多阶段报告行单独修复；残余 15101（缺 0->1 对话推进行）与 24153（缺击杀路线）需要额外路线重建，24 行旧 handler 证据需用支持 `setQuestVar(1)` / `setQuestVarById(0, var+1)` 形态的二次分类复核。合同快照与回归测试见 `src/test/resources/quest/quest-section0-report-row-contract.tsv` 与 `QuestSection0ReportRowContractTest`。
+- 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。同型 sweep：2026-09-19 共三轮——第一轮 246 个结构同型任务（244 批量 + 18994/28994 多阶段），第二轮 22 个（证据扩展到 `setQuestVar(N)` / `changeQuestStep(env, cur, next, bool)`，并把 5 个链式阶段任务的 var0 扩为 6-bit），第三轮单独重建 15101（补 `0->1` 对话推进行 + 击杀路线）、24153（重建 5 计数器与击杀路线）、25304（补 `0->1->2` 中间行与 60 计数事件）、25604（补计数事件与行推进）、14252/24252（按行索引重建 `r0..r3`）、23918（改 5 维 `counter-grid` 与正确怪物 ID）；18911/28911 经判定无需改动。合同快照与回归测试见 `src/test/resources/quest/quest-section0-report-row-contract.tsv` 与 `QuestSection0ReportRowContractTest`。
 - commit：`c34458083`。
 
 ## 8.39 上交确认页只有本地关闭按钮时成功分支必须直接续接
@@ -650,3 +650,24 @@
 - 验证命令和结果：`QuestNpcFactionRetailGateTest` + `NpcFactionsCanonicalCatalogTest` 4/4 通过；隔离 worktree 全量 `mvn -o test` 3460 run / 0 failures / 2 skipped，唯一 error 为环境相关的 `ScheduleHotReloadTest`（缺 gitignored `aion/config`，与本改动无关）。客户端实机：用户于 2026-09-19 回复「35059 验证成功」，56-57 级天族角色加入 Alabaster Order 后可接取并完成；未捕获抓包、截图或日志附件。
 - 复用边界：只适用于 legacy 有明确归属（`quest_data.xml` / `npc_factions_quest.xml`）的任务；归属不在双源内的先补证据，不得凭任务名或 NPC 猜阵营。恢复门禁后未加入对应势力的角色无法再接取这些日常，这是零售行为；GM 强制起手用 `//quest set <id> START 0`（`//quest start` 仍受 legacy `maxlevel_permitted` 限制且不打印真实原因）。若症状是「点了没反应 / 页面循环」而不是「根本不在候选池」，复用 8.40 `LEGACY_START_OWNER_LOSS`。
 - commit：`0f2f3145d`。
+
+## 8.43 `SECTION_0` 双语义：链式计数器与任务说明行索引必须先用客户端 `<N` 写法区分
+
+- Pattern ID：`SECTION_ZERO_COUNTER_VS_ROW_INDEX`。
+- 代表任务：链式计数家族 1102、18911/28911、23918、24153、24155、17106；行索引家族 15001、15101、25304、25604、14252/24252。
+- 搜索症状：同族任务的审计报告互相矛盾——一部分任务按「reward 投影 var0 必须等于报告行」判定为缺失，另一部分任务（链式计数）改动后反而把客户端计数读成行索引、任务说明整段不可见；批处理脚本对一大批任务机械套用同一条合同后出现 `AMBIGUOUS_TRANSITION` 或计数行不再推进。
+- 玩家可见症状：链式计数任务（如 24153 的五只冰冻独眼巨人）被误改成行索引后，任务说明只剩一行或整段不可见，杀掉其中一只也不显示 `1/1`；反之，说明行索引任务（如 15101、25304）被当成计数器处理时，击杀数已满、服务端已是 `状态=REWARD`，客户端仍停在击杀行并显示 `(/N)` 空分子。
+- 根因：Aion 5.8 客户端的 `SECTION_0` 有两种互斥语义，取决于 `Quest.pak` 的 `quest_monster.csv` 怎么写条件，而不是任务类别或奖励格：
+  1. `SECTION_0` 出现在 `<N` 计数条件里（如 `SECTION_0<1;SECTION_5==0`）→ 该槽位**就是计数器**，`SECTION_0==S` 是链式门控；
+  2. `SECTION_0` 从不参与 `<N`、只出现 `SECTION_0==S` 门控 → 该槽位是**任务说明行索引**，报告行 = HTML `<step>` 数 - 1。
+  审计器若只按「有没有 `SECTION_0==S`」分类（不检查 `<N`），会把整个链式家族误判成行索引家族，进而发出「需要 VarTable 证据」这种无法收敛的结论。
+- 修复层：分析方法（不是 XML 结构）。
+  1. 先读客户端 `quest_monster.csv` 的该任务记录，检查 `SECTION_0` 是否出现在任何 `<N` 条件里；
+  2. 出现在 `<N` → 按 `counter`/`counter-grid`/`kill-chain` 合同核对「每个 SECTION 的怪物组是否都有自己的计数推进」；
+  3. 不出现且只有 `==S` 门控 → 按报告行合同核对「reward 投影 var0（或进入 reward 的转换动作）= HTML `<step>` 数 - 1」。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{15101,24153,25304,25604,14252,24252,23918}.xml`；`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMonsterProgressContractAuditTest.java`、`QuestPacketOrderRegressionTest.java`、`QuestSection0ReportRowContractTest.java`；`src/test/resources/quest/quest-section0-report-row-contract.tsv`；审计器与证据 `.agents/summary/quest-15001-multicounter-step/audit_section0_report_row_closure.py`、`.agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-sweep.zh-CN.md`。
+- 第一检查点：不要用任务名、阵营、等级、奖励格数或「有没有 `counter-grid` 块」来判断语义；只认客户端条件写法。对 `counter-grid` 家族额外核对 A) 维度数是否等于客户端出现的 SECTION 槽位数、B) 每个维度的 npc-id 是否与客户端怪物名解析后一致、C) START 节点是否构成完整笛卡尔积（`(product of (required_i + 1))`，否则 `COUNTER_GRID_*` 编译失败或漏行）。
+- 代表测试：`ClientQuestSectionAlignmentTest#clientVisibleKillFieldsUseTheirFixedSixBitSections`（6-bit 固定槽位与家族形状）、`QuestMonsterProgressContractAuditTest#quest24153DeclaresFiveClientCountersBehindTheSectionFiveGate`（链式门控 `var5`）、`#quest23918ChainsFiveKillerCountersOnTheClientSections`（5 维 `counter-grid` + 正确怪物 ID）、`#quest14252And24252StepSectionZeroThroughEveryKillRow`（行索引 `r0..r3`）、`#quest15101DialogUnlocksTheKillRowAndTheLastKillReachesTheReportRow`（`0->1` 对话推进行 + 终击报告行）。
+- 验证命令和结果：`mvn -q -Dtest='QuestSection0ReportRowContractTest,QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test`（用户 2026-09-19 授权）→ 32 用例全绿，`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。未做客户端实机验收。
+- 复用边界：本模式只解决「如何读客户端语义」；两个家族的落盘合同分别复用 8.38（行索引）与 `COUNTER_SOURCE_PROJECTION_NO_LOCK` / `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`（计数）。另注意两个编译器口径：`reward -> reward` 的 `SELECT_QUEST_REWARD(1009)` 必须交回 `restoreRewardPreviewContract` 派生（手写会与 -1 通配预览路线撞 `AMBIGUOUS_TRANSITION`）；报告 NPC 上的无 source TALK 自愈若与既有 `reward -> reward` 同事件也会撞同一错误，此时只保留 ENTER_WORLD 迁移。
+- commit：`c44c50bd0`；证据文档 `.agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-sweep.zh-CN.md` 第 8 节。
