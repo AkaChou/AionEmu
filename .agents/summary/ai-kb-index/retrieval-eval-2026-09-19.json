@@ -1,0 +1,1451 @@
+[
+  {
+    "expected": [
+      "AR-007"
+    ],
+    "doc": ".agents/summary/architecture-performance-refactor/2026-09-15-allocation-and-null-gate.md",
+    "query": "分配热点第二轮 + getMostPlayerDamage 判空闸门 / Allocation round 2 and the getMostPlayerDamage null gate。日期 / Date: 2026-09-15 · 分支 / Branch: quest · HEAD: · 状态 / Status: 已实现并通过聚焦验证，未提交 关联模式 / Related patterns: （新增）、",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "IR-008",
+        "score": 1.3959,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "IR-001",
+        "score": 1.3354,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "IR-005",
+        "score": 1.2942,
+        "status": "PROVISIONAL"
+      },
+      {
+        "pattern_id": "IR-007",
+        "score": 1.2438,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "IR-002",
+        "score": 0.8899,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-006",
+      "AR-008"
+    ],
+    "doc": ".agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md",
+    "query": "游戏内 JFR 热点分析 / Gameplay JFR hotspots。- 发起者 ： NpcMoveController.collectPath() （异步寻路结果回收）→ requestTargetPath/requestLocationPath → PathService.navigateToLocationAsync ；JFR 线程名为 pathfinder 。即 NPC 移动寻路 ，不是玩家或 GM 命令。 - 预算来源 ： gameserver.geo.path.max.nodes = 50000 （ GeoDataConfig.GEO PATH MAX NODES ）；报文里的 51276 是 processed 计数，含层级搜索拆分后的计数。 - 节流现状 ：每个 NPC 失败后 pathRetryAt = now + 500ms （ PATH RETRY DELAY M",
+    "signal": "high",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-018",
+        "score": 1.3067,
+        "status": "PROVISIONAL"
+      },
+      {
+        "pattern_id": "QE-004",
+        "score": 1.2644,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-029",
+        "score": 1.1803,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.0558,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AIM-003",
+        "score": 1.0333,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-004",
+      "AR-005"
+    ],
+    "doc": ".agents/summary/architecture-performance-refactor/2026-09-15-p0-p2-implementation.md",
+    "query": "P0-P2 架构与性能改造实施记录。- P0: PlayerDAO 公共数据缓存切换为 ConcurrentHashMap ；核心玩法门面与 ThreadPoolManager 增加解析结果缓存，避免热路径穿透 Spring singleton registry。 - P1: KnownList / MapRegion 核心容器切换为 ConcurrentHashMap ； 广播/遍历路径仍走快照 （容器变更一度改成弱一致迭代，被仓库既有契约测试 KnownListIterationSafetyTest 与 KnownListTest 判定为回归，已还原为 synchronized(map) 快照语义，仅保留线程安全容器与 MapRegion 内部扫描的免拷贝遍历）。Netty 入站改为直接读取到 NIO buffer，避免中间 byte[] ； PacketProcessor 增加队首快",
+    "signal": "low",
+    "rank": 1,
+    "hit": "AR-005",
+    "top": [
+      {
+        "pattern_id": "AR-005",
+        "score": 5.4276,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-001",
+        "score": 2.142,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-010",
+        "score": 1.5787,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-007",
+        "score": 1.3954,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-019",
+        "score": 1.3724,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-001"
+    ],
+    "doc": ".agents/summary/architecture-performance-refactor/2026-09-15-runtime-jfr-after-refactor.md",
+    "query": "P0–P2 改造后 JFR 量化记录 / JFR after the P0–P2 refactor。日期 / Date: 2026-09-15 · 提交 / Commit: · 分支 / Branch: quest 采集来源 / Source: IDEA 运行配置 -XX:StartFlightRecording=name=AionStartup,settings=profile,duration=45s,filename=<临时文件 .jfr （JFR 为一次性采样产物：文件名由本地运行配置指定，每次启动覆盖，不长期保留、不入库，因此本文不记录具体文件名与路径。） 窗口 / Window: 19:13:35 – 19:14:20（45s，覆盖启动 + 静态数据 + 刷怪；客户端 19:14:22 登录， 不在窗口内 ）",
+    "signal": "high",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "ENV-005",
+        "score": 2.2514,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.6074,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-012",
+        "score": 1.6015,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-008",
+        "score": 1.5403,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-028",
+        "score": 1.5313,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-011"
+    ],
+    "doc": ".agents/summary/architecture-refactor/2026-09-18-config-and-fragment-consolidation.md",
+    "query": "Spring 配置层解耦与碎片调度任务收拢记录（2026-09-18）。根据 Spring 迁移遗留清单（ 2026-09-17-spring-migration-leftovers.md ）与项目高内聚重构标准，本次完成： 1. 配置层 Spring 解耦 ：将遗留的四大静态配置类纳入 Spring IoC 容器与 ConfigurationProperties 规范，消除硬编码静态耦合； 2. 过度拆分的碎片调度任务收拢 ：消除 6 个行数极小（30~40 行）且仅服务单一 Service 调度周期的孤立 StartRunnable ，合并为宿主类内部私有任务，消除 5 个碎片空包。",
+    "signal": "high",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-031",
+        "score": 1.9426,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-030",
+        "score": 1.5858,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 1.4919,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.4736,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-023",
+        "score": 1.4098,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-013"
+    ],
+    "doc": ".agents/summary/i18n-log-args/2026-09-19-i18n-log-argument-contract.zh-CN.md",
+    "query": "本地化日志参数契约：异常必须回到日志调用（2026-09-19）。批次把 583 处日志调用里被 I18n.get(...) 静默吞掉的异常参数搬回日志调用的最后一个参数位， 使 SLF4J 重新打印堆栈；同时修正 18 个无法消费参数的模板、给空模板补上文本，并用 LocalizedLogArgumentsTest 把「参数必须有占位符消费、异常不得进 I18n.get 」固化为闸门。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "AR-013",
+    "top": [
+      {
+        "pattern_id": "AR-013",
+        "score": 7.8026,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-008",
+        "score": 0.9224,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-010",
+        "score": 0.8746,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "IR-010",
+        "score": 0.8535,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-009",
+        "score": 0.7069,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-012",
+      "ENV-005"
+    ],
+    "doc": ".agents/summary/legacy-config-mirror-fix/README.md",
+    "query": "遗留配置镜像跨服务覆盖修复（database.url 泄漏到游戏服）。- 启动本身成功（login/chat/game 全部就绪），但 game 相位所有 DAO 查询都落在登录库上： - 09-18 23:48:28 ERROR [virtual-302] c.a.gameserver.dao.impl.PlayerDAO - 无法从 players 表获取 ID 列表 - MySQL 返回： Table 'al server ls.player minions' doesn't exist - 级联： InventoryDAO / PlayerRegisteredItemsDAO / LegionDAO / MailDAO / GuideDAO / HousesDAO 全部报\"无法从 … 表获取 ID 列表\"，随后 HouseScriptsDAO 加载失败、 HousesDAO / T",
+    "signal": "high",
+    "rank": 1,
+    "hit": "AR-012",
+    "top": [
+      {
+        "pattern_id": "AR-012",
+        "score": 5.5614,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AR-004",
+        "score": 1.6678,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "ENV-005",
+        "score": 1.5916,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-017",
+        "score": 1.232,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-033",
+        "score": 1.0358,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-015"
+    ],
+    "doc": ".agents/summary/quest-10031-zone-mission-broadcast/2026-09-15-zone-mission-end-broadcast-self-target.zh-CN.md",
+    "query": "任务 10031/20031 区域任务结束广播自目标导致 AFTER COMMIT 失败。- 时间：2026-09-15 - 玩家：Ww（objectId 153807） - 相关任务：10031「A Risk for the Obelisk」（天族）、20031「Go to Gelkmaros」（魔族镜像） - 相关代码： AfterCommitAction.BroadcastZoneMissionEnd 、 TypedQuestAfterCommitPort 、 PlayerQuestBroadcastPort 、 QuestProductionDispatcher.dispatchOwners",
+    "signal": "low",
+    "rank": 1,
+    "hit": "QE-015",
+    "top": [
+      {
+        "pattern_id": "QE-015",
+        "score": 2.8739,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-023",
+        "score": 1.7676,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 1.7232,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-020",
+        "score": 1.5545,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.3999,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-012",
+      "QE-016"
+    ],
+    "doc": ".agents/summary/quest-10032/2026-09-15-section0-stage-correction.zh-CN.md",
+    "query": "任务 10032/20032 真机修正：阶段必须留在 SECTION 0。服务端 步数=64 （当前交换布局： var1=1 → s1），但客户端任务说明仍显示第 0 行“前往卡斯帕调查营地，和克罗希亚对话”；再点 798952 无响应，798954 才会接。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-012",
+    "top": [
+      {
+        "pattern_id": "QE-012",
+        "score": 7.9444,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 3.2049,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 2.8707,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 2.83,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 2.4498,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "IR-011"
+    ],
+    "doc": ".agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md",
+    "query": "任务 10032：击杀 Celestius 后卡斯帕的幻影（799503）不出现。玩家在塔洛克空洞（ ）击杀 Celestius（215488）并拿到心脏 （ 10032.xml:24 ，Celestius 掉落）之后，任务要求与卡斯帕的幻影 799503 （ CaspaGhost 01 ， 10032.xml:279/290/306 ）对话交付，但该 NPC 在副本里 完全不出现 ，无法继续也无法完成。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "IR-011",
+    "top": [
+      {
+        "pattern_id": "IR-011",
+        "score": 4.0763,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 2.905,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-029",
+        "score": 2.4747,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-022",
+        "score": 2.3663,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 2.2845,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-041"
+    ],
+    "doc": ".agents/summary/quest-10501-handover-continuation/README.md",
+    "query": "任务 10501「被毁的遗迹」上交证物后必须重新对话（2026-09-19）。- 玩家侧: 接过龙族证物放置器（ 使用三次，var0 0→6）后与 NPC 804700 对话， 在「拿出证物」页（3057）点提交，服务端扣除龙族证物 、任务进入 REWARD（ 状态=4 步数=7 ）， 但对话停在「递过证物」页，点击后没有任何下一步；再次与 804700 对话才收到 下发页=10002 ， 再由 1009 打开奖励窗完成。用户原话：“点交出证物后没有进行下一步，重新对话才将任务完成”。 - 2026-09-19 09:45:01–09:45:12 实机 trace（用户提供）: - CM DIALOG SELECT 上一页=3057 动作=39 → SM QUEST ACTION 10501 状态=4 步数=7 → SM DIALOG WINDOW 下发页=10000 - 随后没有 CM ",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-041",
+    "top": [
+      {
+        "pattern_id": "QE-041",
+        "score": 8.9863,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 4.0345,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 3.7479,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 3.6388,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-020",
+        "score": 3.6118,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-012"
+    ],
+    "doc": ".agents/summary/quest-11468-taloc-item-sections/2026-09-14-client-section-mismatch.zh-CN.md",
+    "query": "任务 11468/21468 塔洛克物品计数客户端 SECTION 对齐。- 实测：使用 （Neith's Sleepstone，技能 9834）后任务 11468 变为 START step=256 ； 再使用 （Shishir's Powerstone，技能 9832）后变为 START step=257 。 - 客户端任务窗口只剩奖励， 任务说明 为空，看不出三种物品的 x/10 、 x/5 、 x/3 进度。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-012",
+    "top": [
+      {
+        "pattern_id": "QE-012",
+        "score": 6.4101,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 3.0194,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 2.9201,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-028",
+        "score": 2.8593,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-018",
+        "score": 2.6938,
+        "status": "PROVISIONAL"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-018"
+    ],
+    "doc": ".agents/summary/quest-11468-taloc-item-sections/2026-09-16-final-counter-reward.zh-CN.md",
+    "query": "任务 11468/21468 三维计数最后一击进入 REWARD。- 实机 GM 信息：任务 11468 为 Status: START ， Vars: 0 10 5 3 0 0 ， Complete count: 0 。 - 三种任务物品计数已经全部达到 10/5/3 ，但状态仍为 START ，客户端没有自动进入领奖阶段。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-018",
+    "top": [
+      {
+        "pattern_id": "QE-018",
+        "score": 8.0408,
+        "status": "PROVISIONAL"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 4.372,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 4.0697,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-020",
+        "score": 3.9459,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 3.7551,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-011"
+    ],
+    "doc": ".agents/summary/quest-1192/2026-09-14-work-item-migration-audit.zh-CN.md",
+    "query": "任务工作物品迁移缺口全量审计（2026-09-14）。任务 1192「Verteron Reinforcements / 贝尔特伦要塞的支援请求」：任务完成后，任务道具 「Reinforcement Request / 支援请求书」残留在背包。",
+    "signal": "low",
+    "rank": 1,
+    "hit": "QE-011",
+    "top": [
+      {
+        "pattern_id": "QE-011",
+        "score": 2.9342,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 2.7969,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-020",
+        "score": 1.9615,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-030",
+        "score": 1.6554,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-032",
+        "score": 1.5145,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-013"
+    ],
+    "doc": ".agents/summary/quest-14045-14046-movie-page-turn/README.md",
+    "query": "任务 14045/14046 影片翻页后目标页缺失导致 CM DIALOG SELECT 循环。- 状态: 客户端验收通过（ACCEPTED EXISTING PATTERN；2026-09-14 用户确认 14045/14046 验证通过） - 日期: 2026-09-14 - 修复提交: - 验收记录: ../quest-acceptance/14045-14046-2026-09-14-client-accepted.md - Pattern: MOVIE CONTINUATION RESPONSE （代表提交 ，代表测试 Quest14047ClientDialogAlignmentTest returnsFromMovie421ToTheStep11PageAndThenAdvancesToStep5 ） - 实时证据: - 14045: SM DIALOG WINDOW(10)",
+    "signal": "low",
+    "rank": 2,
+    "hit": "QE-013",
+    "top": [
+      {
+        "pattern_id": "QE-039",
+        "score": 3.0931,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-013",
+        "score": 2.6236,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 2.318,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 2.2376,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-022",
+        "score": 2.0063,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-040"
+    ],
+    "doc": ".agents/summary/quest-15001-multicounter-step/2026-09-19-15001-double-counter-step-closure.zh-CN.md",
+    "query": "任务 15001「Lending Both Hands」双计数未推进 SECTION 0 修复。- 玩家报告：任务 15001 完成两组各 5 只击杀后没有进入下一步「和努贝斯对话」；任务窗口的击杀计数出现 (/5) 类空分子显示。 - 服务端 SM QUEST ACTION 追踪： - 第一组计数：步数 64 → 128 → 192 → 256 → 320 （ var1=1..5 ， SECTION 1 ）。 - 第二组计数：步数 4416 → 8512 → 12608 → 16704 → 20800 （ var2=1..5 ， SECTION 2 ，同时保持 var1=5 ）。 - 最终： 状态=4 步数=20800 。 - 20800 按 6-bit 位段解码为 var0=0, var1=5, var2=5 ；服务端已进入 REWARD ，但客户端任务说明行索引读取的 SECTION",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-040",
+    "top": [
+      {
+        "pattern_id": "QE-040",
+        "score": 9.5181,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 8.6847,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 4.356,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-035",
+        "score": 3.9253,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-022",
+        "score": 3.9068,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-040"
+    ],
+    "doc": ".agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md",
+    "query": "SECTION 0 报告行闭环系统性审计（同类问题全量排查）。本次执行证据（客户端数据为机器本地解包目录，路径不入库）： - production catalog EXECUTABLE = 6189 ； - 旧 handler 基线： git archive ^ src/main/java/com/aionemu/gameserver/quest/handlers （2339 个 Java handler，未创建 worktree）； - 候选 283 行（quest+stage），分类见下表； - 逐行结果： 。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-040",
+    "top": [
+      {
+        "pattern_id": "QE-040",
+        "score": 2.7215,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 2.6384,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-013",
+        "score": 2.3495,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-035",
+        "score": 2.0968,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.9162,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-008"
+    ],
+    "doc": ".agents/summary/quest-19055/2026-09-09-unreachable-start-prerequisite-audit.md",
+    "query": "任务 19055 不可达接取前置审计。任务 19055 的 finished quest-id=\"19054\" 前置已在现有修复提交 中删除。当前 19055 的 metadata 不再有任务前置，NPC 798450 的 QUEST ACCEPT 1(1002) 仍然按 unaccepted - started 执行，提交后依次刷新可见性并显示客户端页面 QUEST ACCEPT 1(1003) 。 19054 不存在于当前任务定义目录、生产任务目录或旧版 quest data.xml 中；用户确认其为 999 级不可达任务。因此本次删除有明确的任务数据与用户侧证据，不改变任务 19055 的页面动作映射。",
+    "signal": "high",
+    "rank": 5,
+    "hit": "QE-008",
+    "top": [
+      {
+        "pattern_id": "QE-039",
+        "score": 4.1258,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-023",
+        "score": 3.5832,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-042",
+        "score": 3.4339,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 3.2807,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-008",
+        "score": 3.0875,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-007"
+    ],
+    "doc": ".agents/summary/quest-2392/2026-09-14-optional-work-item-audit.md",
+    "query": "任务 2392 可选收集物清理与领奖卡死修复审计。在任务 1922 与 2947 的可选工作物品阻断修复及后续 29 个同形候选排查中，发现任务 2392（ Beautiful Feather / 莫尔海姆「美丽的羽毛」）存在确定性的交任务阻断缺陷。",
+    "signal": "high",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-031",
+        "score": 2.093,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-020",
+        "score": 1.7795,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 1.5863,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-030",
+        "score": 1.5655,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-032",
+        "score": 1.4524,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-042"
+    ],
+    "doc": ".agents/summary/quest-30721/2026-09-19-quest-30721-inventory-start-gate.zh-CN.md",
+    "query": "Quest 30721 接取失败：check item 被误当成 inventory item name。玩家 Ww 在 NPC 804704 的任务列表页 10 点击任务 30721 后进入 SELECT NONE(4762) ，客户端随后发送： 20000 是 QUEST ACCEPT SIMPLE 。该动作被任务引擎拒绝后， DialogService 按“未处理的任务动作不得回显为页面”的规则关闭窗口：",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-042",
+    "top": [
+      {
+        "pattern_id": "QE-042",
+        "score": 5.1706,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 5.1014,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-017",
+        "score": 4.788,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 3.1056,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-028",
+        "score": 3.0025,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-006"
+    ],
+    "doc": ".agents/summary/quest-acceptance/1006-2026-09-10-client-accepted.md",
+    "query": "任务 1006 客户端验收记录。quest: 1006「Ascension / 重生为守护者」",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-012",
+        "score": 2.3553,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.8649,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 1.8622,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.8381,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 1.502,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-041"
+    ],
+    "doc": ".agents/summary/quest-acceptance/10501-2026-09-19-client-accepted.md",
+    "query": "任务 10501「Research the Ruins / 被毁的遗迹」交付续接修复：客户端验收记录（ACCEPTED）。- 报告与复现、客户端按钮证据、根因、修复与同形批处理判定： （第一、二、三、四、十节）。 - 验证日志： （聚焦 + 客户端契约门禁 47/47）、 mvn-production-catalog-family-2026-09-19.log （PRODUCTION COMPILE OK=6189 / FAILURES=0 / INTERACTION OBJECT FAILURES=0 / WHITELIST VIOLATIONS=0）。 - 代表测试： Quest10501HandoverContinuationTest handOverSuccessShowsTheReportPageInsteadOfTheClientClosedConfirmationPage 、",
+    "signal": "low",
+    "rank": 1,
+    "hit": "QE-041",
+    "top": [
+      {
+        "pattern_id": "QE-041",
+        "score": 3.8255,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 2.7861,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 2.6055,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 2.455,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 2.2265,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-018"
+    ],
+    "doc": ".agents/summary/quest-acceptance/11468-2026-09-16-final-counter-client-accepted.md",
+    "query": "11468-2026-09-16-final-counter-client-accepted。quest: 11468（同型 21468）；修复“10/5/3 计数完成后任务仍停在 START、下一步不出现” user acceptance confirmation: 2026-09-16 用户回复“2 个任务均正常完成，客户端验证成功”；确认 11468 与 21468 均为完整任务完成 server launch mode: not captured repository commit: （repair commit； 建立验收记录，本次 follow-up 更新为完整验收） working tree: dirty；存在其他并行任务改动；本次相关路径为 11468.xml、21468.xml、Quest11468And21468SkillCompletionTest.java Aion",
+    "signal": "low",
+    "rank": 2,
+    "hit": "QE-018",
+    "top": [
+      {
+        "pattern_id": "QE-040",
+        "score": 4.0437,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-018",
+        "score": 3.8588,
+        "status": "PROVISIONAL"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 3.2275,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 3.1809,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 2.8767,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-017"
+    ],
+    "doc": ".agents/summary/quest-acceptance/1220-2026-09-16-client-accepted.md",
+    "query": "任务 1220「A Secret Delivery / 秘密快递」客户端验收记录。quest: 1220「A Secret Delivery」（中文名「秘密快递」），天族，17 级可接，前置 1219 完成；NPC 乌内 203172 接取、努蒙 798004 中转、玛平恩恩 205240 交付领奖；覆盖整条任务（接取 → 换箱 → 交付 → 领奖完成），未限定单一分支或步骤。",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-039",
+        "score": 3.0999,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-021",
+        "score": 3.0422,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-023",
+        "score": 2.5896,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 2.2304,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-042",
+        "score": 2.1553,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-009"
+    ],
+    "doc": ".agents/summary/quest-acceptance/1370-2026-09-13-client-accepted.md",
+    "query": "任务 1370 与无任务上下文 NPC 对话客户端验收记录。quest: 1370「Betrayal Of Isson」为代表任务；本轮修复覆盖共享 NPC 对话入口的无任务上下文行为，同型 NPC 包括 730019（1320/1321/1322/1478）、203965/203966（1347 报告链）等。",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-039",
+        "score": 2.7326,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 2.2132,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 2.133,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 1.9898,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 1.8598,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-001"
+    ],
+    "doc": ".agents/summary/quest-acceptance/14023-2026-08-28-client-accepted.md",
+    "query": "任务 14023 客户端验收记录。quest: 14023「Playing Around at the Temple / 地下神殿之谜」",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-012",
+        "score": 2.2509,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.7527,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.7275,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 1.6695,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-035",
+        "score": 1.3582,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-013"
+    ],
+    "doc": ".agents/summary/quest-acceptance/14045-14046-2026-09-14-client-accepted.md",
+    "query": "任务 14045/14046 客户端验收记录。quest: 14045「Rumors on Wings / 翅膀的传闻」；14046「Piecing the Memory / 记忆的碎片2」",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-012",
+        "score": 2.157,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.784,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 1.676,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.6518,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 1.3755,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-040"
+    ],
+    "doc": ".agents/summary/quest-acceptance/15001-2026-09-19-section0-report-row-client-accepted.md",
+    "query": "任务 15001 SECTION 0 报告行闭环修复：客户端验收记录（ACCEPTED）。- 玩家报告：两组各 5 只击杀完成后没有进入下一步，任务窗口计数显示 (/5) 。 - 修前服务端追踪（用户提供，2026-09-19 09:41–09:42）： - 接取后 SM QUEST ACTION 任务=15001 状态=3 步数=0 ； - 第一组： 64 → 128 → 192 → 256 → 320 （ SECTION 1=1..5 ）； - 第二组： 4416 → 8512 → 12608 → 16704 → 20800 （ SECTION 2=1..5 ， SECTION 1 保持 5）； - 终态： 状态=4 步数=20800 ，即 var0=0, var1=5, var2=5 。 - 修复后用户回复“客户端验证完成，已修复”：最终击杀直接切到报告步骤（ SECTION 0=1",
+    "signal": "low",
+    "rank": 1,
+    "hit": "QE-040",
+    "top": [
+      {
+        "pattern_id": "QE-040",
+        "score": 6.9947,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 4.5211,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 3.9736,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 3.7722,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 3.7313,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-035",
+      "QE-038"
+    ],
+    "doc": ".agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md",
+    "query": "2026-09-18 剩余 10 项 questEngine 失败收口：计数器真端合同与门禁口径。 //quest start 35059 与 NPC 对话都无法接取；GM 只看到通用失败提示（ //quest start 用 dialogId=0 → warn=false ， 真实原因不显示）。逐条排查后有两个独立原因： 1. 角色等级 59 该任务 max-level=57 （客户端 maxlevel permitted=57 ）→ 属 正常 水平门禁， NPC 对话与新/旧引擎都会拒绝（不是缺陷）。 2. 35059 属 Alabaster Order（势力 id 2） 日常，但新 XML 未声明 npc-faction-id ： - NpcFactions.sendDailyQuest() → canonicalDailyQuestCandidates 只收 metadata.np",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-038",
+    "top": [
+      {
+        "pattern_id": "QE-038",
+        "score": 5.2619,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 4.7538,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-017",
+        "score": 4.4177,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-035",
+        "score": 3.8273,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 3.7394,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-001"
+    ],
+    "doc": ".agents/summary/quest-e2e/triage.md",
+    "query": "全量审计分诊。 396,787 是全量 production catalog 在不同状态、事件、条件分支和协议模式下生成的 transition 场景记录数 ，不是任务数量，也不是已确认正确的任务数量。",
+    "signal": "low",
+    "rank": null,
+    "hit": null,
+    "top": [
+      {
+        "pattern_id": "QE-031",
+        "score": 1.977,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-022",
+        "score": 1.8278,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.6477,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-021",
+        "score": 1.6358,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-036",
+        "score": 1.5388,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-014"
+    ],
+    "doc": ".agents/summary/quest-engine-startup-debug/README.md",
+    "query": "任务引擎启动编译冲突修复取证 (Quest Engine Startup Compilation Collision Fix)。- 状态: 修复完成，独立 Java Catalog 编译全量 6193 条 EXECUTABLE 任务通过（0 failures） - 日期: 2026-09-15 - 关联提交: - (fix(quest): guard SETPRO reward routes globally) - (fix(quest): align Taloc and Miragent progress flows)",
+    "signal": "low",
+    "rank": 1,
+    "hit": "QE-014",
+    "top": [
+      {
+        "pattern_id": "QE-014",
+        "score": 2.7357,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 2.4089,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 2.1307,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-022",
+        "score": 1.9877,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-011",
+        "score": 1.9541,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-039"
+    ],
+    "doc": ".agents/summary/quest-enter-zone-start-owner/README.md",
+    "query": "Enter-Zone 迁移接取 owner 回归修复。- 任务 18300 在 NPC 804699 处点击第 10 页任务行后持续出现： SM DIALOG WINDOW page=10 - CM DIALOG SELECT action=31 questId=18300 - SM DIALOG WINDOW page=10 。 - 服务端没有 unaccepted + 804699 + QUEST SELECT 路由， DialogService 对 action 31 的未处理回退再次下发第 10 页。 - 旧 handler 18300Floating Death.java 的 addOnQuestStart(804699) 是权威接取 owner； onEnterZoneEvent 只在 START + var0 == 1 时推进到 REWARD。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-039",
+    "top": [
+      {
+        "pattern_id": "QE-039",
+        "score": 12.0901,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-042",
+        "score": 4.0942,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 3.481,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 3.3777,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-024",
+        "score": 3.1483,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-019"
+    ],
+    "doc": ".agents/summary/quest-kill-contracts/2026-09-16-quest-19638-start-condition-prerequisite-fix.zh-CN.md",
+    "query": "任务 19638 重启后无法接取根因排查与修复报告。玩家 Ww （ID: 153807）在完成 19637 并提交奖励后，尝试找凯西内尔（NPC 798926）接取后续任务 19638（天族特别任务 2，Trouble with Twos），出现点击“接受任务”（动作 20000）后服务端未下发 SM QUEST ACTION 任务=19638 状态=3 步数=0 ，而是直接关闭对话窗口 SM DIALOG WINDOW 下发页=0 的异常。 - 实机抓包证据 ： - 数据库状态实测 ： - SELECT FROM player quests WHERE player id = 153807 AND quest id IN (19637, 19638); - 19637: status=COMPLETE, quest vars=0, complete count=1, reward=0 （",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-019",
+    "top": [
+      {
+        "pattern_id": "QE-019",
+        "score": 5.182,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 4.3845,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 4.1581,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-026",
+        "score": 4.0453,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-042",
+        "score": 3.9201,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-020",
+      "QE-021"
+    ],
+    "doc": ".agents/summary/quest-systemic-audit/2026-09-17-systemic-quest-family-audit.zh-CN.md",
+    "query": "全服任务存量缺陷与孤例修复系统性排查报告 (Systemic Quest Family Audit)。在过去版本迭代中，任务修复曾多次呈现「报一个修一个」的局部补丁模式： 1. 击杀计数与步骤混淆 ：曾单独修复了 19637（ ）和 10032（ ），但全服留存了 171 个多怪击杀与 16 个复杂/阶段击杀任务同样把计数写在 var0 ，直到本周才完成两轮全量治理； 2. 前置条件采集遗漏 ：19638 无法接取时，才发现 QuestFactRequirements 最小事实采集漏掉了元数据前置条件，修好后根治了 1,807 个带前置任务； 3. 领奖阶段物品扣除阻断 ：先后单独修了 1922（ ）、2947（ ）、2392（ ），将其改为 count=\"ALL\" ，但其他具有相似多分支或前序扣除的任务并未一同排查； 4. 电影播放后无翻页 ：修复 14045/14046（ ）后，仅修了",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-020",
+    "top": [
+      {
+        "pattern_id": "QE-020",
+        "score": 3.6558,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 3.5525,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-023",
+        "score": 3.3622,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-021",
+        "score": 3.3279,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-024",
+        "score": 2.8562,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-034"
+    ],
+    "doc": ".agents/summary/quest-systemic-goal/GOAL_PROGRESS.zh-CN.md",
+    "query": "Quest Systemic Goal 进度台账（GOAL PROGRESS）。 轴 audit 范围 差异数 real defect false positive / 等价表达 状态 --- --- --- --- --- --- min-level 真端可接任务（min≠999 占位）6,215 9 9（生产漂移） 0 P1 修复 max-level 全部 6,222 360 28（19 生产过宽无上限 + 4 生产 82→真端 65 + 5 族内不对称残留 cap） 332（329 整族一致 cap=82 有意封顶 + 3 生产 998 等效无上限） P2 修复+例外 faction 全部 6,222 1 0 1（15205 服务端按阵营拆分 15205/25205） 例外记录 gender 全部 6,222 0 0 0 基线锁定 max repeat count 全部 6,222 ",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-034",
+    "top": [
+      {
+        "pattern_id": "QE-034",
+        "score": 7.0587,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-031",
+        "score": 2.4438,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 2.3452,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 2.2004,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-030",
+        "score": 2.085,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "QE-033"
+    ],
+    "doc": ".agents/summary/quest/2026-09-18-quest-51022-cargobox-action-eligibility.md",
+    "query": "2026-09-18 任务 51022 商团货物箱子 ACTION ITEM USE 启动门禁修复。服务端启动时 QuestEngine.load 抛出：",
+    "signal": "high",
+    "rank": 1,
+    "hit": "QE-033",
+    "top": [
+      {
+        "pattern_id": "QE-033",
+        "score": 2.3685,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 1.8386,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.5122,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 1.5084,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-025",
+        "score": 1.3939,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AIM-006"
+    ],
+    "doc": ".agents/summary/retail-direct-interaction-dialog-guard/2026-09-19-retail-direct-interaction-dialog-guard.zh-CN.md",
+    "query": "固定乘坐交互 load fail 修复记录。- NPC 702685 （攻城炮 / Rentus Elyos Field Gun）点击乘坐时，客户端弹出： - load fail! - IDYun Siegeweapon Li 01.html - (HtmlPageId 10) - (QuestId 0)",
+    "signal": "high",
+    "rank": 1,
+    "hit": "AIM-006",
+    "top": [
+      {
+        "pattern_id": "AIM-006",
+        "score": 5.1275,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-039",
+        "score": 2.3303,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-017",
+        "score": 2.0871,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 1.8973,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.5684,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "AR-001"
+    ],
+    "doc": ".agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md",
+    "query": "启动加速：并行加载、刷怪并行与 Spring 锁消除 / Startup speedup: parallel loads, parallel spawning, Spring lock removal。- CPU 构成：46% Xerces/JAXB 解析、27% quest 编译、11% 刷怪、8% BIH 碰撞树、6% geo+BigInteger。 - GC 仅 726ms、无类加载热点 ——瓶颈是真实解析工作量，CPU 利用率 ~49%，墙钟由最大单线程块决定。 - 抓到 world-spawner 成片停在 DefaultSingletonBeanRegistry.getSingleton 全局锁 → P5 的修复依据。",
+    "signal": "high",
+    "rank": 1,
+    "hit": "AR-001",
+    "top": [
+      {
+        "pattern_id": "AR-001",
+        "score": 2.5152,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "SDJ-002",
+        "score": 0.8663,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AIM-005",
+        "score": 0.7458,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "IR-010",
+        "score": 0.7095,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-033",
+        "score": 0.6751,
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "expected": [
+      "IR-010"
+    ],
+    "doc": ".agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md",
+    "query": "Taloc's Hollow 2F 上升气流（地面喷出气流）修复证据。- 时间：2026-09-14 - 地图： （客户端 level 名 idelim ） - 报告：打碎虫卵后地面没有气流特效（可正常展开翅膀飞行，属表现缺失） - 验收：2026-09-16 用户实机确认通过（打破破裂巨虫卵后卵位置升起地面气流）",
+    "signal": "low",
+    "rank": 1,
+    "hit": "IR-010",
+    "top": [
+      {
+        "pattern_id": "IR-010",
+        "score": 5.2928,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-041",
+        "score": 1.4893,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-012",
+        "score": 1.3993,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "AIM-004",
+        "score": 1.3484,
+        "status": "CONFIRMED"
+      },
+      {
+        "pattern_id": "QE-040",
+        "score": 1.3428,
+        "status": "CONFIRMED"
+      }
+    ]
+  }
+]

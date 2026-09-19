@@ -27,9 +27,10 @@
 ├── systemPatterns.md              ← 顶级路由，只保留短摘要
 ├── activeContext.md               ← 当前工作区上下文，可过期
 ├── symptom-index.md               ← 由 Pattern 元数据生成的症状/关键词反向索引
+├── index.jsonl                    ← 由 Pattern 元数据生成的逐条机器可读索引（首行为 meta）
 ├── memory_bank.py                  ← Pattern 元数据共享解析器
-├── search_memory_bank.py           ← 症状/关键词/Pattern ID 快速检索
-├── sync_memory_bank.py             ← 生成派生索引并检查是否过期
+├── search_memory_bank.py           ← 症状/关键词/Pattern ID 快速检索（支持 --json / --id）
+├── sync_memory_bank.py             ← 生成 symptom-index.md 与 index.jsonl 并检查是否过期
 ├── check_memory_bank.py            ← 结构、链接和路由一致性校验器
 ├── patterns/                      ← 带 Pattern ID 的长期模式卡片
 │   ├── quest-engine.md
@@ -44,7 +45,7 @@
 排查疑难问题或修改核心模块时按以下顺序读取：
 
 1. 先检查 `git status` 和当前运行/工作区范围。
-2. 用 `python3 .agents/memory-bank/search_memory_bank.py "现象或关键词"` 检索 Pattern；必要时查看由元数据生成的 `symptom-index.md`，再读取 `systemPatterns.md` 确认路由。
+2. 用 `python3 .agents/memory-bank/search_memory_bank.py "现象或关键词"` 检索 Pattern；加 `--json` 得到机读结果，用 `--id <Pattern ID>` 只展开单条正文，避免整篇领域卡片进入上下文。必要时查看由元数据生成的 `symptom-index.md`，再读取 `systemPatterns.md` 确认路由。
 3. 读取对应的 `patterns/<module>.md`，核对适用范围、证据和边界。
 4. Quest 问题继续读取 `docs/quest/`；单次证据按需要读取 `.agents/summary/<topic>/`。
 5. 只有当前未完成事项才写入 `activeContext.md`。
@@ -67,9 +68,14 @@ validation: static | focused-test | production-gate | runtime | client；逐项�
 boundaries: 不适用场景、未验证分支和剩余风险
 superseded_by: 新 Pattern ID 或 none
 first_check: 首轮应检查的类、文件、日志或数据
+keywords: （可选）用户原话、日志关键词、客户端术语、别名
 -->
 ## [DOMAIN-NNN] 模式名称
 ```
+
+`keywords` 为可选字段：填写用户/Z 端原话、日志关键词、客户端术语或别名，用于提升
+`search_memory_bank.py` 的召回（该字段与 `symptom` 同级加权，并进入 `index.jsonl` 与
+`--json` 输出）。`check_memory_bank.py` 只校验非空值长度不超过 300 字，不强制每个 Pattern 都填。
 
 状态含义：
 
@@ -128,3 +134,18 @@ python3 .agents/memory-bank/check_memory_bank.py
 - **豁免**：`target/`、`aion/`、`log/` 等被 gitignore 的运行时产物不做存在性检查（全新 checkout 中本来就不存在）。
 
 纯描述性文字（如 `Maven/JDK baseline notes`、`DAOManager.init`）不含上述特征，不会被误判为引用。这条校验能拦住「证据指向已删除文件」「行号越界」「引用不存在的提交」三类腐化；它**不检查引用内容是否切题**——行号落在文件内但语义错配仍需人工判断。
+
+## 8. 机器可读检索入口 (Machine-readable Entry Points)
+
+面向 Agent 与脚本的检索按需取用，不要整篇读取领域卡片（`patterns/quest-engine.md` 单文件已超过 900 行）：
+
+| 入口 | 用途 | 命令 / 文件 |
+|---|---|---|
+| 关键词检索 | 由现象、日志关键词或代码信号定位 Pattern ID | `python3 .agents/memory-bank/search_memory_bank.py "现象 关键词" --json --limit 5` |
+| 单条展开 | 只取一个 Pattern 的元数据与正文 | `python3 .agents/memory-bank/search_memory_bank.py --id QE-013 --json` |
+| 状态过滤 | 只看已确认规则，排除 PROVISIONAL/SUPERSEDED | 追加 `--status CONFIRMED` |
+| 逐条索引 | 全库 Pattern 的机读清单，每行一条 | `.agents/memory-bank/index.jsonl` |
+
+`index.jsonl` 首行是 `record: meta`（schema、字段清单、条目数），其后每行是一个 `record: pattern` 对象：字段与 Pattern 元数据块一致，并补充 `card`、`line`、`end_line`、`section_bytes`、`section_sha256`、`related`。它用于过滤、排序与引用（例如按 `status` 或 `last_verified` 聚合），不要整体读入上下文；需要正文时用 `--id` 展开单条。
+
+派生文件规则：`symptom-index.md` 与 `index.jsonl` 均由 `sync_memory_bank.py` 生成，禁止手改；修改 Pattern 元数据后运行 `python3 .agents/memory-bank/sync_memory_bank.py`，提交前用 `--check` 确认未过期。

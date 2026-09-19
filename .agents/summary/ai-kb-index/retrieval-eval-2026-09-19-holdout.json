@@ -1,0 +1,906 @@
+{
+  "before": [
+    {
+      "expected": [
+        "QE-008"
+      ],
+      "query": "NPC 头顶没有任务标记，等级也够，点接受没反应，前置任务在世界里根本不存在",
+      "rank": 1,
+      "hit": "QE-008",
+      "top": [
+        {
+          "pattern_id": "QE-008",
+          "score": 2.6939
+        },
+        {
+          "pattern_id": "QE-023",
+          "score": 2.4603
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 2.4098
+        },
+        {
+          "pattern_id": "QE-039",
+          "score": 1.9818
+        },
+        {
+          "pattern_id": "QE-025",
+          "score": 1.6029
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-007"
+      ],
+      "query": "交任务前先扣了可选的工作物品，交付时提示物品不足，奖励窗口打不开",
+      "rank": null,
+      "hit": null,
+      "top": [
+        {
+          "pattern_id": "QE-031",
+          "score": 2.6254
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 2.326
+        },
+        {
+          "pattern_id": "QE-028",
+          "score": 2.2159
+        },
+        {
+          "pattern_id": "QE-032",
+          "score": 1.6933
+        },
+        {
+          "pattern_id": "QE-020",
+          "score": 1.2544
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-001"
+      ],
+      "query": "服务器启动很慢，可能是 Spring 单例初始化时的锁竞争和重复解析",
+      "rank": 1,
+      "hit": "AR-001",
+      "top": [
+        {
+          "pattern_id": "AR-001",
+          "score": 2.2303
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 1.4442
+        },
+        {
+          "pattern_id": "AR-004",
+          "score": 0.5688
+        },
+        {
+          "pattern_id": "ENV-005",
+          "score": 0.4867
+        },
+        {
+          "pattern_id": "QE-033",
+          "score": 0.4471
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-006"
+      ],
+      "query": "飞行记录里 int/long 键的容器在装箱，分配热点集中在 RealGeoData.getMap",
+      "rank": 1,
+      "hit": "AR-006",
+      "top": [
+        {
+          "pattern_id": "AR-006",
+          "score": 2.247
+        },
+        {
+          "pattern_id": "AR-010",
+          "score": 0.611
+        },
+        {
+          "pattern_id": "AR-008",
+          "score": 0.3016
+        },
+        {
+          "pattern_id": "AR-007",
+          "score": 0.2404
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 0.1248
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-008"
+      ],
+      "query": "热路径反复 split 解析 XML 注入的字符串模板，采样里 TemporarySpawn.getTime 占比很高",
+      "rank": 1,
+      "hit": "AR-008",
+      "top": [
+        {
+          "pattern_id": "AR-008",
+          "score": 3.6752
+        },
+        {
+          "pattern_id": "AR-001",
+          "score": 0.9571
+        },
+        {
+          "pattern_id": "AR-007",
+          "score": 0.4796
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 0.4511
+        },
+        {
+          "pattern_id": "IR-010",
+          "score": 0.4442
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-011"
+      ],
+      "query": "同一个测试单独跑通过，整套跑时读到上一个用例的环境，配置来源被静态字段记住了",
+      "rank": 1,
+      "hit": "AR-011",
+      "top": [
+        {
+          "pattern_id": "AR-011",
+          "score": 4.2606
+        },
+        {
+          "pattern_id": "ENV-005",
+          "score": 2.3168
+        },
+        {
+          "pattern_id": "QE-030",
+          "score": 0.917
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 0.7724
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 0.712
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-012"
+      ],
+      "query": "登录服的 database.url 覆盖到了游戏服的连库配置",
+      "rank": 1,
+      "hit": "AR-012",
+      "top": [
+        {
+          "pattern_id": "AR-012",
+          "score": 3.0357
+        },
+        {
+          "pattern_id": "ENV-005",
+          "score": 0.8611
+        },
+        {
+          "pattern_id": "AR-004",
+          "score": 0.7664
+        },
+        {
+          "pattern_id": "AR-011",
+          "score": 0.559
+        },
+        {
+          "pattern_id": "QE-022",
+          "score": 0.3218
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-013"
+      ],
+      "query": "ERROR 日志只有一行空文本，异常信息没有堆栈",
+      "rank": 1,
+      "hit": "AR-013",
+      "top": [
+        {
+          "pattern_id": "AR-013",
+          "score": 6.4848
+        },
+        {
+          "pattern_id": "QE-042",
+          "score": 0.2886
+        },
+        {
+          "pattern_id": "AIM-006",
+          "score": 0.2884
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 0.2668
+        },
+        {
+          "pattern_id": "QE-027",
+          "score": 0.2588
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-013"
+      ],
+      "query": "电影播放完还是停在原来的按钮，点继续听会重复播放",
+      "rank": 2,
+      "hit": "QE-013",
+      "top": [
+        {
+          "pattern_id": "QE-024",
+          "score": 1.897
+        },
+        {
+          "pattern_id": "QE-013",
+          "score": 0.9969
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 0.7756
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 0.5667
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 0.2938
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-016"
+      ],
+      "query": "出副本或者掉线以后，已经完成的计数被清空并回退到前面的步骤",
+      "rank": 1,
+      "hit": "QE-016",
+      "top": [
+        {
+          "pattern_id": "QE-016",
+          "score": 4.5761
+        },
+        {
+          "pattern_id": "QE-018",
+          "score": 1.2037
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 1.1171
+        },
+        {
+          "pattern_id": "QE-020",
+          "score": 0.7675
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 0.7309
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-022"
+      ],
+      "query": "杀怪数量已满但找 NPC 汇报没有反应，卡在领奖前",
+      "rank": 1,
+      "hit": "QE-022",
+      "top": [
+        {
+          "pattern_id": "QE-022",
+          "score": 1.7663
+        },
+        {
+          "pattern_id": "QE-020",
+          "score": 1.3253
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 0.9377
+        },
+        {
+          "pattern_id": "QE-039",
+          "score": 0.8597
+        },
+        {
+          "pattern_id": "QE-032",
+          "score": 0.697
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-039"
+      ],
+      "query": "任务列表第 10 页点任务行以后客户端一直回到同一页，任务接不到",
+      "rank": 1,
+      "hit": "QE-039",
+      "top": [
+        {
+          "pattern_id": "QE-039",
+          "score": 4.6781
+        },
+        {
+          "pattern_id": "QE-042",
+          "score": 2.7088
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 2.3632
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 1.6361
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 1.5485
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AIM-004"
+      ],
+      "query": "固定不动的蛋被打了每次都脱战，客户端反复播放脱战动作",
+      "rank": 1,
+      "hit": "AIM-004",
+      "top": [
+        {
+          "pattern_id": "AIM-004",
+          "score": 2.0864
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 1.4396
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 1.2854
+        },
+        {
+          "pattern_id": "QE-013",
+          "score": 1.0855
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 0.9673
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AIM-005"
+      ],
+      "query": "怪挂着仇恨不还手；加了受击重排攻击后线程栈溢出",
+      "rank": 1,
+      "hit": "AIM-005",
+      "top": [
+        {
+          "pattern_id": "AIM-005",
+          "score": 3.4691
+        },
+        {
+          "pattern_id": "AIM-004",
+          "score": 0.6236
+        },
+        {
+          "pattern_id": "AR-001",
+          "score": 0.1655
+        },
+        {
+          "pattern_id": "AR-010",
+          "score": 0.1492
+        },
+        {
+          "pattern_id": "QE-019",
+          "score": 0.1096
+        }
+      ]
+    },
+    {
+      "expected": [
+        "SDJ-003"
+      ],
+      "query": "任务或传送把玩家送到 210130000 而不是英吉斯温",
+      "rank": 1,
+      "hit": "SDJ-003",
+      "top": [
+        {
+          "pattern_id": "SDJ-003",
+          "score": 1.9694
+        },
+        {
+          "pattern_id": "QE-031",
+          "score": 1.3552
+        },
+        {
+          "pattern_id": "QE-025",
+          "score": 1.3539
+        },
+        {
+          "pattern_id": "QE-023",
+          "score": 1.2696
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 1.1956
+        }
+      ]
+    }
+  ],
+  "after": [
+    {
+      "expected": [
+        "QE-008"
+      ],
+      "query": "NPC 头顶没有任务标记，等级也够，点接受没反应，前置任务在世界里根本不存在",
+      "rank": 1,
+      "hit": "QE-008",
+      "top": [
+        {
+          "pattern_id": "QE-008",
+          "score": 3.1387
+        },
+        {
+          "pattern_id": "QE-023",
+          "score": 2.4603
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 2.4098
+        },
+        {
+          "pattern_id": "QE-039",
+          "score": 1.9818
+        },
+        {
+          "pattern_id": "QE-025",
+          "score": 1.6029
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-007"
+      ],
+      "query": "交任务前先扣了可选的工作物品，交付时提示物品不足，奖励窗口打不开",
+      "rank": 3,
+      "hit": "QE-007",
+      "top": [
+        {
+          "pattern_id": "QE-031",
+          "score": 2.6254
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 2.326
+        },
+        {
+          "pattern_id": "QE-007",
+          "score": 2.2313
+        },
+        {
+          "pattern_id": "QE-028",
+          "score": 2.2159
+        },
+        {
+          "pattern_id": "QE-032",
+          "score": 1.6933
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-001"
+      ],
+      "query": "服务器启动很慢，可能是 Spring 单例初始化时的锁竞争和重复解析",
+      "rank": 1,
+      "hit": "AR-001",
+      "top": [
+        {
+          "pattern_id": "AR-001",
+          "score": 3.4901
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 1.4442
+        },
+        {
+          "pattern_id": "AR-008",
+          "score": 0.6587
+        },
+        {
+          "pattern_id": "AR-004",
+          "score": 0.5688
+        },
+        {
+          "pattern_id": "AR-011",
+          "score": 0.5331
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-006"
+      ],
+      "query": "飞行记录里 int/long 键的容器在装箱，分配热点集中在 RealGeoData.getMap",
+      "rank": 1,
+      "hit": "AR-006",
+      "top": [
+        {
+          "pattern_id": "AR-006",
+          "score": 3.7294
+        },
+        {
+          "pattern_id": "AR-008",
+          "score": 0.9094
+        },
+        {
+          "pattern_id": "AR-010",
+          "score": 0.611
+        },
+        {
+          "pattern_id": "AR-007",
+          "score": 0.2404
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 0.1248
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-008"
+      ],
+      "query": "热路径反复 split 解析 XML 注入的字符串模板，采样里 TemporarySpawn.getTime 占比很高",
+      "rank": 1,
+      "hit": "AR-008",
+      "top": [
+        {
+          "pattern_id": "AR-008",
+          "score": 5.7282
+        },
+        {
+          "pattern_id": "AR-001",
+          "score": 1.0757
+        },
+        {
+          "pattern_id": "AR-007",
+          "score": 0.4796
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 0.4511
+        },
+        {
+          "pattern_id": "IR-010",
+          "score": 0.4442
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-011"
+      ],
+      "query": "同一个测试单独跑通过，整套跑时读到上一个用例的环境，配置来源被静态字段记住了",
+      "rank": 1,
+      "hit": "AR-011",
+      "top": [
+        {
+          "pattern_id": "AR-011",
+          "score": 5.4345
+        },
+        {
+          "pattern_id": "ENV-005",
+          "score": 2.3168
+        },
+        {
+          "pattern_id": "QE-030",
+          "score": 0.917
+        },
+        {
+          "pattern_id": "AR-012",
+          "score": 0.7724
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 0.712
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-012"
+      ],
+      "query": "登录服的 database.url 覆盖到了游戏服的连库配置",
+      "rank": 1,
+      "hit": "AR-012",
+      "top": [
+        {
+          "pattern_id": "AR-012",
+          "score": 3.0357
+        },
+        {
+          "pattern_id": "AR-011",
+          "score": 0.8786
+        },
+        {
+          "pattern_id": "ENV-005",
+          "score": 0.8611
+        },
+        {
+          "pattern_id": "AR-004",
+          "score": 0.7664
+        },
+        {
+          "pattern_id": "QE-022",
+          "score": 0.3218
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AR-013"
+      ],
+      "query": "ERROR 日志只有一行空文本，异常信息没有堆栈",
+      "rank": 1,
+      "hit": "AR-013",
+      "top": [
+        {
+          "pattern_id": "AR-013",
+          "score": 6.4848
+        },
+        {
+          "pattern_id": "QE-042",
+          "score": 0.2886
+        },
+        {
+          "pattern_id": "AIM-006",
+          "score": 0.2884
+        },
+        {
+          "pattern_id": "QE-026",
+          "score": 0.2668
+        },
+        {
+          "pattern_id": "QE-027",
+          "score": 0.2588
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-013"
+      ],
+      "query": "电影播放完还是停在原来的按钮，点继续听会重复播放",
+      "rank": 2,
+      "hit": "QE-013",
+      "top": [
+        {
+          "pattern_id": "QE-024",
+          "score": 1.897
+        },
+        {
+          "pattern_id": "QE-013",
+          "score": 0.9969
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 0.7756
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 0.5667
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 0.2938
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-016"
+      ],
+      "query": "出副本或者掉线以后，已经完成的计数被清空并回退到前面的步骤",
+      "rank": 1,
+      "hit": "QE-016",
+      "top": [
+        {
+          "pattern_id": "QE-016",
+          "score": 4.5761
+        },
+        {
+          "pattern_id": "QE-018",
+          "score": 1.2037
+        },
+        {
+          "pattern_id": "QE-040",
+          "score": 1.1171
+        },
+        {
+          "pattern_id": "QE-020",
+          "score": 0.7675
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 0.7309
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-022"
+      ],
+      "query": "杀怪数量已满但找 NPC 汇报没有反应，卡在领奖前",
+      "rank": 1,
+      "hit": "QE-022",
+      "top": [
+        {
+          "pattern_id": "QE-022",
+          "score": 1.7663
+        },
+        {
+          "pattern_id": "QE-020",
+          "score": 1.3253
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 0.9377
+        },
+        {
+          "pattern_id": "QE-039",
+          "score": 0.8597
+        },
+        {
+          "pattern_id": "QE-032",
+          "score": 0.697
+        }
+      ]
+    },
+    {
+      "expected": [
+        "QE-039"
+      ],
+      "query": "任务列表第 10 页点任务行以后客户端一直回到同一页，任务接不到",
+      "rank": 1,
+      "hit": "QE-039",
+      "top": [
+        {
+          "pattern_id": "QE-039",
+          "score": 4.6781
+        },
+        {
+          "pattern_id": "QE-042",
+          "score": 2.7088
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 2.3632
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 1.6361
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 1.5485
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AIM-004"
+      ],
+      "query": "固定不动的蛋被打了每次都脱战，客户端反复播放脱战动作",
+      "rank": 1,
+      "hit": "AIM-004",
+      "top": [
+        {
+          "pattern_id": "AIM-004",
+          "score": 2.0864
+        },
+        {
+          "pattern_id": "QE-012",
+          "score": 1.4396
+        },
+        {
+          "pattern_id": "QE-041",
+          "score": 1.2854
+        },
+        {
+          "pattern_id": "QE-013",
+          "score": 1.0855
+        },
+        {
+          "pattern_id": "QE-017",
+          "score": 0.9673
+        }
+      ]
+    },
+    {
+      "expected": [
+        "AIM-005"
+      ],
+      "query": "怪挂着仇恨不还手；加了受击重排攻击后线程栈溢出",
+      "rank": 1,
+      "hit": "AIM-005",
+      "top": [
+        {
+          "pattern_id": "AIM-005",
+          "score": 3.4691
+        },
+        {
+          "pattern_id": "AIM-004",
+          "score": 0.6236
+        },
+        {
+          "pattern_id": "AR-001",
+          "score": 0.1622
+        },
+        {
+          "pattern_id": "AR-010",
+          "score": 0.1492
+        },
+        {
+          "pattern_id": "AR-006",
+          "score": 0.1463
+        }
+      ]
+    },
+    {
+      "expected": [
+        "SDJ-003"
+      ],
+      "query": "任务或传送把玩家送到 210130000 而不是英吉斯温",
+      "rank": 1,
+      "hit": "SDJ-003",
+      "top": [
+        {
+          "pattern_id": "SDJ-003",
+          "score": 1.9694
+        },
+        {
+          "pattern_id": "QE-031",
+          "score": 1.3552
+        },
+        {
+          "pattern_id": "QE-025",
+          "score": 1.3539
+        },
+        {
+          "pattern_id": "QE-023",
+          "score": 1.2696
+        },
+        {
+          "pattern_id": "QE-029",
+          "score": 1.1956
+        }
+      ]
+    }
+  ]
+}

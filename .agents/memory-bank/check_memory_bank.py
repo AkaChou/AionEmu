@@ -15,6 +15,8 @@ from pathlib import Path
 
 from memory_bank import (
     ENTRY_FIELDS,
+    OPTIONAL_FIELDS,
+    OPTIONAL_FIELD_LIMIT,
     PATTERN_HEADING,
     REFERENCE_FIELDS,
     PatternEntry,
@@ -88,6 +90,13 @@ def validate_entry_metadata(
     for field in ENTRY_FIELDS:
         if not metadata.get(field):
             errors.append(f"{path}: Pattern {pattern_id} missing entry field {field}")
+    for field in OPTIONAL_FIELDS:
+        value = metadata.get(field, "")
+        if value and len(value) > OPTIONAL_FIELD_LIMIT:
+            errors.append(
+                f"{path}: Pattern {pattern_id} optional field {field} exceeds "
+                f"{OPTIONAL_FIELD_LIMIT} chars"
+            )
 
     status = metadata.get("status")
     if status and status not in {"CONFIRMED", "PROVISIONAL", "SUPERSEDED"}:

@@ -18,6 +18,7 @@ This file provides project-level guidance for AI coding agents working in this r
 Persistent architecture patterns and debugging insights are maintained in [.agents/memory-bank/](.agents/memory-bank/):
 - **Read before action**: When diagnosing bugs or touching core systems, read [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) first to avoid known pitfalls.
 - **Active focus**: Check [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) for current focus areas across sessions.
+- **机器可读检索入口 (Machine-readable entrypoint)**: `.agents/memory-bank/index.jsonl` 是每个 Pattern 一行的派生索引（由 `sync_memory_bank.py` 生成，禁止手改）。先用 `python3 .agents/memory-bank/search_memory_bank.py "<现象或关键词>" --json` 定位 Pattern ID，再用 `--id <PATTERN_ID>` 只展开单条正文，不要整篇读取领域卡片。
 - **Automatic Wrap-up Protocol (自动沉淀协议)**:
   After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. After updating Pattern metadata, run `python3 .agents/memory-bank/sync_memory_bank.py` and `python3 .agents/memory-bank/check_memory_bank.py`; when this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
 - **Document Co-Commit (沉淀文档随提交)**:

@@ -1,12 +1,22 @@
 #!/usr/bin/env python3
-"""Render derived memory-bank indexes from Pattern metadata blocks."""
+"""Render derived memory-bank indexes from Pattern metadata blocks.
+
+Two derived artifacts are produced and checked together:
+
+- ``symptom-index.md``: human-readable symptom/keyword routing table.
+- ``index.jsonl``: machine-readable per-Pattern index for agent retrieval.
+"""
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from memory_bank import ENTRY_FIELDS, iter_pattern_entries
+from memory_bank import ENTRY_FIELDS, iter_pattern_entries, render_index_jsonl
+
+
+SYMPTOM_INDEX_FILE = "symptom-index.md"
+PATTERN_INDEX_FILE = "index.jsonl"
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,7 +51,8 @@ def render_symptom_index(entries) -> str:
 
 def main() -> None:
     args = parse_args()
-    bank = args.root.resolve() / ".agents/memory-bank"
+    root = args.root.resolve()
+    bank = root / ".agents/memory-bank"
     entries = list(iter_pattern_entries(bank / "patterns"))
     errors: list[str] = []
     seen: set[str] = set()
@@ -58,18 +69,26 @@ def main() -> None:
             print(f"- {error}")
         raise SystemExit(1)
 
-    target = bank / "symptom-index.md"
-    rendered = render_symptom_index(entries)
-    current = target.read_text(encoding="utf-8") if target.is_file() else ""
-    if args.check:
-        if current != rendered:
-            print(f"MEMORY_BANK_INDEX_STALE {target}")
-            raise SystemExit(1)
-        print(f"MEMORY_BANK_SYNC_OK ENTRIES={len(entries)}")
-        return
+    derived = (
+        (bank / SYMPTOM_INDEX_FILE, render_symptom_index(entries)),
+        (bank / PATTERN_INDEX_FILE, render_index_jsonl(entries, root)),
+    )
+    stale: list[Path] = []
+    for target, rendered in derived:
+        current = target.read_text(encoding="utf-8") if target.is_file() else ""
+        if current == rendered:
+            continue
+        if args.check:
+            stale.append(target)
+            continue
+        target.write_text(rendered, encoding="utf-8")
+        print(f"MEMORY_BANK_SYNC_WROTE {target}")
 
-    target.write_text(rendered, encoding="utf-8")
-    print(f"MEMORY_BANK_SYNC_OK ENTRIES={len(entries)} FILE={target}")
+    if stale:
+        for target in stale:
+            print(f"MEMORY_BANK_INDEX_STALE {target}")
+        raise SystemExit(1)
+    print(f"MEMORY_BANK_SYNC_OK ENTRIES={len(entries)}")
 
 
 if __name__ == "__main__":

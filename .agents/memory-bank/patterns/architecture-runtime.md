@@ -16,6 +16,7 @@ scope: Spring startup, static-data loading pools and high-frequency service faca
 first_seen: 2026-08-23
 last_verified: 2026-09-15
 symptom: 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean
+keywords: 启动慢; 启动期 JFR; P0-P2 改造后 JFR 量化; P0–P2 改造后 JFR 量化; 单例锁竞争; 重复解析; 动态查 Bean
 root_cause: XML parsing and container singleton locks dominate startup while uncached lookups add hot-path contention
 fix_or_guardrail: Size pools for nested waits, share parsed resources and cache injected facade references
 evidence: .agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md:31; .agents/summary/architecture-performance-refactor/2026-09-15-runtime-jfr-after-refactor.md; startup JFR findings
@@ -155,6 +156,7 @@ scope: 所有运行期热路径上的 int/long 键容器选型
 first_seen: 2026-09-15
 last_verified: 2026-09-15
 symptom: 游戏内 JFR 显示 Integer/Long 装箱占分配 74%，单站点 RealGeoData.getMap 占 41.6% 分配 + 11.35% CPU
+keywords: 游戏内 JFR 热点; 分配热点; Integer/Long 装箱; 原始类型容器; IntObjectHashMap 装箱; RealGeoData.getMap; NpcMoveController.collectPath; pathfinder 线程
 root_cause: com.aionemu.commons.utils.collections.IntObjectHashMap 直接 extends LinkedHashMap<Integer,V>，每次 get(int)/put(int,V) 都自动装箱
 fix_or_guardrail: 热路径禁用 IntObjectHashMap（名字像 primitive map，实为装箱 LinkedHashMap）；改用 LongObjectHashMap（原始 long 键，int 自动宽化）或升序 int 数组 + 二分
 evidence: src/main/java/com/aionemu/commons/utils/collections/IntObjectHashMap.java:13; src/main/java/com/aionemu/commons/utils/collections/LongObjectHashMap.java; src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java:185; src/main/java/com/aionemu/gameserver/world/geo/path/PathData.java:1520; .agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md
@@ -201,6 +203,7 @@ scope: 由 XML/静态数据注入、随后在运行期被反复读取的字符�
 first_seen: 2026-09-15
 last_verified: 2026-09-15
 symptom: 游戏内 JFR（300s）：TemporarySpawn.getTime 单站点占采样分配 52.4MB / 17.2%（另见同源 String[] 2.83%）
+keywords: 游戏内 JFR 热点; 分配热点; 模板字符串重复解析; TemporarySpawn.getTime; split/正则热路径; 字符串字段缓存
 root_cause: TemporarySpawn 把 XML 注入的 "时.日.月" 字符串留到每次读取时用 String.split("\\.") 拆分；"." 不是 String.split 的单字符快路径，每次调用都会走正则匹配并分配 String[]，而 isInSpawnTime() 一次要调用 6 个取值器
 fix_or_guardrail: 加载期或首次使用时解析一次并缓存（TemporarySpawn 用 volatile Integer[3] 缓存，模板加载后不再变化）；热路径禁止对同一常量字符串重复 split/正则/格式化
 evidence: src/main/java/com/aionemu/gameserver/model/templates/spawns/TemporarySpawn.java:26; src/test/java/com/aionemu/gameserver/model/templates/spawns/TemporarySpawnTimeWindowTest.java; .agents/summary/architecture-performance-refactor/2026-09-15-gameplay-jfr-hotspots.md
@@ -267,6 +270,7 @@ scope: 启动层配置来源发布（BootConfigSourceResolver / ConfigSourceReso
 first_seen: 2026-09-18
 last_verified: 2026-09-18
 symptom: 全量套件里出现"只在整套跑时才失败"的配置读取错误（VipConfigPathTest 读到上一个用例的 StandardEnvironment）；或命令行/环境变量覆盖看起来只在部分场景生效
+keywords: Spring 配置层解耦; 碎片调度任务收拢; EnvironmentPostProcessor 全局状态; 只在整套跑时才失败; 配置读取残留; 静态配置字段读取时机
 root_cause: EnvironmentPostProcessor 对**每一个** `SpringApplication` 实例化都会执行，在里面 `ConfigSourceResolverHolder.publish(environment::getProperty)` 会把全局持有者指向那个临时 Environment（测试与并行上下文互相污染）；同时所有 Bean 都在 ApplicationRunner 的 `Config.load()` 之前完成构造，Bean 在构造期读静态配置字段只能拿到占位值
 fix_or_guardrail: 全局解析器只由单例 Bean 在上下文装配期发布一次（`BootConfigSourceResolver` 的 `@PostConstruct`）；post-processor 只注册 property source，并以 `addLast` 的最低优先级注册（命令行/系统属性/环境变量/application.yml 仍覆盖文件值）；Bean 的构造器、字段初始化器、`@PostConstruct` 一律不得读 `XxxConfig` 静态字段，需要就在构造期注入
 evidence: src/main/java/com/aionemu/boot/config/BootConfigSourceResolver.java:42; src/main/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessor.java:45; src/main/java/com/aionemu/gameserver/lifecycle/GameUtilityServicesRuntimeBridge.java:54; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:61; src/test/java/com/aionemu/boot/config/LegacyPropertySourcePrecedenceTest.java:80; .agents/summary/architecture-refactor/2026-09-18-config-and-fragment-consolidation.md
