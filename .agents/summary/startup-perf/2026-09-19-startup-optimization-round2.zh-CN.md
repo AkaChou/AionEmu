@@ -235,3 +235,46 @@ RetailOpenWorldSpawnDataTest,NpcDropDataTest test
   `-Daion.staticData.extraLoaders`、`-Daion.quest.catalogCompileThreads`。
 - 待跟进：`.agents/memory-bank/patterns/instance-runtime.md` 与 `.agents/summary/quest-15300-orissan/` 中
   以 `npc-ai-parts/...` 记录的证据路径需改回 `npc-ai.xml`（属他人并行编辑的文件，本轮未改动）。
+
+### 6.8 分片 vs 单体对照复测（2026-09-19 23:17–23:26）——§6.6 / §6.7 结论更正
+
+- 用户回滚到单体后实测仍是 8–9s，与分片期一致。用同期 6 次 IDE 启动 JFR 逐次核对静态数据窗口：
+
+| JFR | 源形态 | 静态数据窗口 | 采样数（仅相对占比可用，见下） |
+|---|---|---:|---:|
+| 23:17:51 | 分片 | 8.48s | 1063 |
+| 23:20:16 | 分片 | 9.40s | 1246 |
+| 23:21:47 | 分片 | 9.76s | 1090 |
+| 23:22:34 | 分片 | 9.59s | 949 |
+| 23:25:43 | 单体（回滚后） | 9.39s | 1069 |
+| 23:26:25 | 单体（回滚后） | 8.57s | 1065 |
+
+  分片中位 9.50s（n=4，极差 1.28s）vs 单体 8.98s（n=2，极差 0.82s）→ **组内波动大于组间差异，两者不可区分**。
+
+- 单次读数分辨率：这些启动期间同机还有 JFR 导出/编译，`machineTotal` 常为 100%，单次误差 ≥±0.5s；
+  两次读数不足以判定"分片更慢"。故 §6.6 / §6.7 的归因与"分片导致变慢"的结论**作废**；
+  回滚提交 `157dcefdc` 只是源形态选择，不代表性能结论。
+- 机制（同 6 次 JFR 的 `jdk.CPULoad`）：窗口内 JVM user 稳定在整机 0.62–0.69（10 核 ≈ 6.2–6.9 核），
+  `machineTotal = 1.00` → 该阶段是**CPU 饱和 + 总工作量受限**；分片只改变任务分布、不改变总工作量，墙钟自然相同。
+  ⇒ 缩短窗口只能**减少总 CPU 工作量**（分配 / GC / JIT）或减少需解析的数据量，继续调并行度与切分粒度没有空间。
+- 测量口径修正：`jdk.ExecutionSample` 在 profile 设置下被节流（本窗口 1246 个样本对应约 61 核·秒真实 CPU，
+  约 5× 低估），样本数只能看**相对占比**，不能当 CPU 秒数——§6.7 引用的"12.5 core-s"即属误用。
+- 选型依据因此只剩非性能因素（27MB 单体 vs 8 个按 NPC ID 区间命名的 3.4MB 分片，编辑/reload 体验），
+  用户据此决定恢复分片，见 §6.9。
+
+### 6.9 恢复分片（2026-09-19 23:3x，用户决定）
+
+- 复测确认分片与单体在噪声内无差异（§6.8）后，用户决定**恢复分片**：性能中性，但按 NPC ID 区间分片后
+  单个 3.4MB 文件更便于定位与临时修改，reload 工作流不变。
+- 执行（`157dcefdc` 的功能性反向，等价于回到 `9166213fd` 的代码/数据形态）：
+  - 恢复 `npc-ai-parts/` 8 个分片，删除单体 `npc-ai.xml`；
+  - 恢复 `RetailAiDefinitionLoader`（目录分片并行扫描 + patterns 逐文件并行）、
+    `XmlDataLoader`（`npc-ai-parts` 路径、`-Daion.staticData.extraLoaders`）、
+    `ItemData.assembleFromMerged` 增量合并、`QuestDefinitionCatalogManifest`
+    `-Daion.quest.catalogCompileThreads`、`Quest14026GeranaiaSpawnTest`、`RetailAiDefinitionLoaderTest`、
+    `scripts/split_npc_ai.py`（注释回到"分片为源"）。
+  - 校验：`git diff 9166213fd -- <上述路径>` 为空；分片 8 个、NPC 条目总数 87721。
+- §6.7 的"待跟进"随之消解：`.agents/memory-bank/patterns/instance-runtime.md` 与
+  `.agents/summary/quest-15300-orissan/` 里指向 `npc-ai-parts/...` 的证据路径重新有效。
+- 后续若要继续压缩窗口，方向是**减少总 CPU 工作量**（分配/GC/JIT）或减少需解析的数据量（见 §6.8 机制部分），
+  不再是切分粒度或并行度。

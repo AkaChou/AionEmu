@@ -206,6 +206,20 @@ public final class QuestDefinitionCatalogManifest {
 		return ImmutableQuestCatalog.fromEntries(definitions);
 	}
 
+	/**
+	 * 目录编译池线程数：默认最多 3（与静态数据加载错开 CPU），可用
+	 * {@code -Daion.quest.catalogCompileThreads=N} 覆盖以做并行度实验。
+	 * Catalog compile pool size: at most 3 by default (yields CPU to the static-data loaders); override with
+	 * {@code -Daion.quest.catalogCompileThreads=N} to run parallelism experiments.
+	 *
+	 * @param processors 可用处理器数 / available processor count
+	 * @return 编译池线程数 / compile pool thread count
+	 */
+	private static int catalogCompileThreads(int processors) {
+		int configured = Integer.getInteger("aion.quest.catalogCompileThreads", 3);
+		return Math.max(1, Math.min(processors, configured));
+	}
+
 	private static List<QuestCatalogEntry> compileEntries(List<Entry> entries, ResourceOpener resourceOpener,
 			Schema definitionSchema) {
 		// 编译池刻意保持小并发（3）：预加载与静态数据加载同窗口抢核，JFR 显示 8 线程编译
@@ -216,7 +230,7 @@ public final class QuestDefinitionCatalogManifest {
 		// Quest compilation has no deadline; yielding lets the remainder finish during the
 		// geo/world window, shortening overall startup.
 		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 3));
+		ExecutorService pool = Executors.newFixedThreadPool(catalogCompileThreads(processors));
 		try {
 			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(entries.size());
 			for (Entry entry : entries) {
@@ -309,7 +323,7 @@ public final class QuestDefinitionCatalogManifest {
 		// 与 compileEntries 同理：小并发避免与静态数据加载抢核（见其注释）。
 		// Same rationale as compileEntries: small concurrency avoids starving static-data loaders.
 		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 3));
+		ExecutorService pool = Executors.newFixedThreadPool(catalogCompileThreads(processors));
 		try {
 			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(resources.size());
 			for (String resource : resources) {
