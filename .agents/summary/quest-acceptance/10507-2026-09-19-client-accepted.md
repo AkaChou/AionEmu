@@ -2,10 +2,10 @@
 
 ```text
 quest: 10507「A Big Plot to Foil / 支援派遣队」（ELYOS，min-level 64，category MISSION，前置 10500/10501/10502/10503/10504/10506）
-user acceptance confirmation: 用户 2026-09-19 回复「15006 10507 验证完成」；其中 10507 未限定分支或步骤，按项目规则视为整任务游玩验收。
-  同一条消息中的「15006」在 Aion 5.8 客户端 `quest.xml` 里是 minlevel/maxlevel=999 的占位条目、生产目录无对应定义，
-  按上下文（与 10506→10507 相邻链、10506 已单独验收）判读为 10506 的笔误；10506 验收记录见
-  `.agents/summary/quest-acceptance/10506-2026-09-19-client-accepted.md`
+user acceptance confirmation: 用户 2026-09-19 先回复「15006 10507 验证完成」，随后明确回复「10507 验证成功」；
+  10507 未限定分支或步骤，按项目规则视为整任务游玩验收。前一条消息中的「15006」在 Aion 5.8 客户端 `quest.xml` 里是
+  minlevel/maxlevel=999 的占位条目、生产目录无对应定义，按上下文判读为 10506 的笔误
+  （10506 验收记录见 `.agents/summary/quest-acceptance/10506-2026-09-19-client-accepted.md`）；本次用户已单独明确 10507，本条不再依赖该判读
 server launch mode: 用户管理的服务端实例（本轮未启动、停止或重启服务端）
 repository commit: 7d5bb5317（修复提交：10507 s6->s7 两条击杀收口 transition 补 `var1=0`/`var2=0`，并新增 s7 两条 `enter-world` 自愈清零路由）；本验收记录在其后的文档提交中
 working tree: 记录时本任务源码路径已提交；工作区其余为并行任务产物（`.agents/summary/spawn-z-audit/` 等），不属本任务范围
@@ -27,7 +27,7 @@ steps:
 source state/status/vars: s6（var0=6，var1/var2 计数中）-> s7（var0=7，var1=0，var2=0）-> reward（var0=8）
 action/page/button: 804711/804712/804713/804714/804711/804715 的 SETPRO1..SETPRO6；kill 236264/236265 与 702668 的 s6 计数/收口；enter-zone 感应区 -> play-movie 993 -> movie-end；804711 SELECT_QUEST_REWARD
 expected response: 双计数收口后客户端整型步数保持纯净 7（无 var1/var2 高位残留），s7 感应区与影片 993 正常触发，随后进入 REWARD 并正常领奖完成
-actual response: 用户实机游玩确认「10507 验证完成」；未提供抓包、截图或日志，技术产物记为 not captured
+actual response: 用户实机游玩确认「10507 验证成功」（随后单独再次明确）；未提供抓包、截图或日志，技术产物记为 not captured
 
 startup health: not captured（服务端由用户管理；本轮未采集启动日志，用户亦未报告 typed quest engine 初始化失败、QuestCompilationException、AMBIGUOUS_TRANSITION 或 production catalog 编译失败）
 runtime logs: not captured
@@ -43,7 +43,7 @@ matched Pattern: QE-044 的「跨阶段计数残留污染打包整型步数」�
 remaining risks:
 - 同批 20504、10527/20527、10528/20528、10530/20530、1373 仍未逐任务实机验收（静态门禁与各自契约测试已锁定）。
 - 10507 的旧存档自愈（s7 带 var1/var2 残留）未单独构造脏存档实测，仅由契约测试与条件互斥证明。
-- 用户消息中的「15006」按上下文判读为 10506 笔误；若实际指其他任务，需要用户补正后另行记录。
+- 用户早前消息中的「15006」按上下文判读为 10506 笔误；10507 已由用户单独明确验收，若「15006」实际指其他任务仍需用户补正后另行记录。
 ```
 
 ## 证据引用
