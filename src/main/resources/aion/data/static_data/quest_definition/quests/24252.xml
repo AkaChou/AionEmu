@@ -47,6 +47,28 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 报告行自愈：跨部署保持在线的旧存档首次点击报告 NPC 即修复行索引。
+         与既有 reward->reward QUEST_SELECT 路线并存是安全的：本路线的条件在 reward 节点投影上
+         （var0=3）求值为假，编译期两条路线的可匹配来源节点互斥。
+         SECTION_0 report-row self-heal for stale saves that stayed online across a deployment. It is
+         safe next to the reward->reward QUEST_SELECT route because its conditions evaluate to false on
+         the reward node projection (var0=3), so the two routes have disjoint compatible source nodes. -->
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="832820" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <!-- 旧 grid 存档迁移（ENTER_WORLD）：旧 XML 用 var0/var1/var2 三维修 var0=A、var1=B、var2=C。 -->
     <!-- Legacy grid save migration on ENTER_WORLD: the previous XML used var0=A, var1=B, var2=C. -->
     <transition target="reward">

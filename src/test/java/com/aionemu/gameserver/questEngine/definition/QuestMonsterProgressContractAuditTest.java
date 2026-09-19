@@ -338,6 +338,17 @@ class QuestMonsterProgressContractAuditTest {
 			variables.get("var2"), variables.get("var3"), variables.get("var4")));
 		assertEquals(QuestStatus.START, state.status());
 
+		// 跨部署保持在线的旧存档靠报告 NPC 的无 source 自愈路线补齐五段计数；
+		// 该路线与既有 reward->reward QUEST_SELECT 路线在编译期来源节点互斥，因此可以并存。
+		assertTrue(definition.transitions().stream()
+				.filter(transition -> transition.sourceNode() == null)
+				.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(204787,
+					QuestDialogAction.QUEST_SELECT.id())))
+				.anyMatch(transition -> transition.conditions().stream()
+					.anyMatch(condition -> condition instanceof QuestCondition.VariableBelow(String field, int value)
+						&& field.equals("var0") && value == 1)),
+			"quest 24153 must keep the report-NPC talk self-heal for stale SECTION_0 rows");
+
 		state = apply(compiled, state, new QuestEvent.TalkToNpc(204787, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		assertEquals(QuestStatus.REWARD, state.status());
 		assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1, "var5", 0),
@@ -471,6 +482,21 @@ class QuestMonsterProgressContractAuditTest {
 				.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(testCase.reportNpc(),
 					QuestDialogAction.SELECT_QUEST_REWARD.id())));
 			assertTrue(reportRoute, () -> "quest " + testCase.questId() + " must report from the SECTION_0=3 row");
+
+			// 跨部署保持在线的旧存档靠报告 NPC 的无 source 自愈路线补齐行索引；该路线与既有
+			// reward->reward QUEST_SELECT 路线在编译期来源节点互斥，因此可以并存。
+			// Stale saves that stayed online self-heal on the report NPC; the route coexists with the
+			// reward->reward QUEST_SELECT route because their compatible source nodes are disjoint.
+			boolean talkSelfHeal = definition.transitions().stream()
+				.filter(transition -> transition.sourceNode() == null)
+				.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(testCase.reportNpc(),
+					QuestDialogAction.QUEST_SELECT.id())))
+				.anyMatch(transition -> transition.conditions().stream()
+					.anyMatch(condition -> condition instanceof QuestCondition.VariableBelow(String field, int value)
+						&& field.equals("var0") && value == 3)
+					&& transition.actions().contains(new QuestAction.SetVariable("var0", 3)));
+			assertTrue(talkSelfHeal, () -> "quest " + testCase.questId()
+				+ " must keep the report-NPC talk self-heal for stale SECTION_0 rows");
 
 			QuestSnapshot state = new QuestSnapshot(7, testCase.questId(), QuestStatus.START,
 				layout.pack(Map.of("var0", 0, "var1", 0)), Map.of());

@@ -60,6 +60,32 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 领奖行自愈：跨部署保持在线的旧存档首次点击报告 NPC 即修复五段计数。
+         与既有 reward->reward QUEST_SELECT 路线并存是安全的：本路线的条件在 reward 节点投影上
+         （五段计数器均为 1）求值为假，编译期两条路线的可匹配来源节点互斥。
+         Reward-row self-heal for stale saves that stayed online across a deployment. It is safe next
+         to the reward->reward QUEST_SELECT route because its conditions evaluate to false on the reward
+         node projection (all five counters are 1), giving the two routes disjoint compatible sources. -->
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+        <set-variable field="var5" value="0"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
     <!-- 迁移修复：旧存档 REWARD 但五段计数未落齐（旧 XML 的 reward 投影 var0=0）。
          报告 NPC 上的 TALK 自愈与既有 reward->reward QUEST_SELECT 路线同事件同来源，
          编译器判定为 AMBIGUOUS_TRANSITION，因此只保留 ENTER_WORLD 迁移（重登/换图即自愈）。
