@@ -116,3 +116,41 @@ python3 -B .agents/summary/ai-kb-index/holdout_eval.py
 ```
 
 结论：可选 `keywords` 字段在本仓库是低风险、可验证的召回手段；后续在触碰某条 Pattern 时按同一格式补别名即可，无需一次性重写全部卡片。
+
+## 第二批改造：证据索引 / 统一门禁（2026-09-19）
+
+### 1. 证据索引 `.agents/summary/index.jsonl`
+
+由 `sync_memory_bank.py` 作为第三个派生文件生成，`--check` 一并校验新鲜度。每行一个被 Pattern `evidence:` 引用且真实存在的文档：
+
+| 字段 | 说明 |
+|---|---|
+| `path` / `topic` | 仓库相对路径与主题目录 |
+| `kind` | `topic-readme` / `acceptance` / `audit` / `evidence` / `report` / `other`（按文件名判定） |
+| `date` / `title` / `lines` / `bytes` / `sha256` | 文件名日期前缀、首个 H1、规模与内容哈希 |
+| `referenced_by` | 引用该文档的 Pattern ID 列表 |
+
+当前：40 篇被引用文档，`missing` 为空；分布 `report` 20、`acceptance` 8、`audit` 5、`topic-readme` 5、`other` 2。
+设计取舍：只登记被 Pattern 引用的文档，索引随卡片变化，不会因为任务目录增加而要求重新生成；未被引用的 summary 不进入索引。
+
+### 2. 统一门禁 `verify_memory_bank.py`
+
+一条命令跑完全部校验：派生索引新鲜度（`sync_memory_bank.py --check`）→ 结构校验（`check_memory_bank.py`）→ 时效门禁（`memory_bank_stats.py --fail-over-days 90`）。
+新增统计工具 `memory_bank_stats.py`：`--json` 输出状态/领域/验证方式/证据引用/时效，`--fail-over-days N` 超期即退出码 1，
+`--today` 支持可复现运行。`AGENTS.md` 的自动沉淀协议已改为「先 sync，再 verify」。
+
+当前快照（2026-09-19，81 条）：CONFIRMED 78 / PROVISIONAL 3；领域 quest-engine 43、architecture-runtime 13、instance-runtime 11、ai-movement 6、build-and-env 5、static-data-jaxb 3；验证方式 static 30、focused-test 32、runtime 26、client 27、production-gate 9；证据引用 summary 42、commit 34、源码 81；`keywords` 6/81；时效 unknown 0 / fresh 81 / aging 0 / stale 0（最旧 5 天）。
+
+### 状态
+
+- 已提交（前一批）：`5bf141659 docs(memory-bank): add AI retrieval index and search entrypoints`。
+- 本批（证据索引 + 统计 + 门禁 + 文档）位于工作树，等待提交指令；未运行 Maven/服务器/客户端验证。
+- 工作树中 `quests/10503.xml`、`.agents/summary/quest-10503/`、`Quest10503ClientDialogAlignmentTest.java` 属于并行任务，未触碰。
+
+### 3. 未采用：MCP 服务（2026-09-19 决定不做）
+
+曾实现标准库版 stdio MCP 服务（`memory_bank_search` / `memory_bank_get` / `memory_bank_stats`）并通过冒烟测试，随后按用户决定删除，文件未进入提交。原因：
+
+- CLI 已覆盖同样能力，Agent 直接用 shell 调用即可，无需客户端配置、常驻进程或额外故障面；
+- MCP 只暴露 Pattern 层：summary 正文、`docs/` 与源码仍要另走路径，若 Agent 只依赖它会**缩小**可搜范围；
+- 仓库已有 `jbcontext search` / CodeGraph / grep 覆盖代码与文档层，不必再多一个需要同步维护的入口。

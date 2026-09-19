@@ -122,7 +122,15 @@ python3 .agents/memory-bank/sync_memory_bank.py
 python3 .agents/memory-bank/check_memory_bank.py
 ```
 
-提交前可使用 `python3 .agents/memory-bank/sync_memory_bank.py --check` 检查派生索引是否过期。校验器只负责结构性问题：Pattern ID 是否唯一且可路由、每个条目元数据是否齐全、症状索引是否覆盖全部模式、内部 Markdown 链接是否存在、active/archive 元数据是否齐全。它不替 Agent 判断根因，也不把静态检查结果当成运行时或客户端验收。
+提交前运行一条命令即可跑完全部门禁：
+
+```bash
+python3 -B .agents/memory-bank/verify_memory_bank.py
+```
+
+它依次执行派生索引新鲜度（`sync_memory_bank.py --check`）、结构校验（`check_memory_bank.py`）与时效门禁
+（`memory_bank_stats.py --fail-over-days 90`），任一失败即以退出码 1 结束并打印 `MEMORY_BANK_VERIFY_FAILED`。
+校验器只负责结构性问题：Pattern ID 是否唯一且可路由、每个条目元数据是否齐全、症状索引是否覆盖全部模式、内部 Markdown 链接是否存在、active/archive 元数据是否齐全。它不替 Agent 判断根因，也不把静态检查结果当成运行时或客户端验收。
 
 ### 7.1 证据引用校验 (Evidence Reference Check)
 
@@ -145,7 +153,18 @@ python3 .agents/memory-bank/check_memory_bank.py
 | 单条展开 | 只取一个 Pattern 的元数据与正文 | `python3 .agents/memory-bank/search_memory_bank.py --id QE-013 --json` |
 | 状态过滤 | 只看已确认规则，排除 PROVISIONAL/SUPERSEDED | 追加 `--status CONFIRMED` |
 | 逐条索引 | 全库 Pattern 的机读清单，每行一条 | `.agents/memory-bank/index.jsonl` |
+| 证据索引 | 每个被 Pattern 引用的 summary 文档一行（标题、类型、日期、行数、内容哈希、引用者） | `.agents/summary/index.jsonl` |
+| 统计与时效 | 状态/领域/验证方式/证据引用/时效汇总 | `python3 .agents/memory-bank/memory_bank_stats.py --json` |
 
 `index.jsonl` 首行是 `record: meta`（schema、字段清单、条目数），其后每行是一个 `record: pattern` 对象：字段与 Pattern 元数据块一致，并补充 `card`、`line`、`end_line`、`section_bytes`、`section_sha256`、`related`。它用于过滤、排序与引用（例如按 `status` 或 `last_verified` 聚合），不要整体读入上下文；需要正文时用 `--id` 展开单条。
 
-派生文件规则：`symptom-index.md` 与 `index.jsonl` 均由 `sync_memory_bank.py` 生成，禁止手改；修改 Pattern 元数据后运行 `python3 .agents/memory-bank/sync_memory_bank.py`，提交前用 `--check` 确认未过期。
+派生文件规则：`symptom-index.md`、`.agents/memory-bank/index.jsonl` 与 `.agents/summary/index.jsonl` 均由 `sync_memory_bank.py` 生成，禁止手改；修改 Pattern 元数据后运行 `python3 .agents/memory-bank/sync_memory_bank.py`。
+证据索引只登记**被 Pattern `evidence:` 引用且真实存在**的文档，因此它随卡片变化而不是随任务目录增长；未被引用的 summary 文档不会进入索引。
+
+`memory_bank_stats.py` 默认打印 `STATUS/DOMAINS/VALIDATION/EVIDENCE/KEYWORDS/FRESHNESS` 汇总行：
+`fresh` 为 30 天内的 `last_verified`，`aging` 为 30–90 天，`stale` 为超过 90 天。
+加 `--fail-over-days N` 时，只要存在超过 N 天未复验的 CONFIRMED 条目就以退出码 1 失败（可用于后续门禁，
+当前全库 `last_verified` 均在 30 天内，属于 fresh）。
+
+以上入口都是普通 CLI：Agent 直接用 shell 调用即可，不需要常驻服务或客户端配置。源码、`docs/`、
+summary 正文仍按仓库既有方式检索（grep / `jbcontext search` / CodeGraph）——本目录只负责 Pattern 层。

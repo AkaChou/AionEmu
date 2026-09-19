@@ -93,6 +93,34 @@ def parse_statuses(value: str | None) -> set[str]:
     return statuses
 
 
+def rank(
+    query: str,
+    entries,
+    statuses: set[str] | None = None,
+    require_all: bool = False,
+) -> list[tuple[float, float, object]]:
+    """Rank every matching Pattern entry for one query; used by the CLI and JSON output."""
+    terms = tokenize(query)
+    if not terms:
+        return []
+    matches = []
+    for entry in entries:
+        if statuses and entry.metadata.get("status", "") not in statuses:
+            continue
+        counts = build_index(entry.section, entry.pattern_id)
+        matched = [term for term in terms if term in counts]
+        if (require_all and len(matched) != len(terms)) or not matched:
+            continue
+        # Coverage: how much of the query the card explains, so a one-word overlap on a long
+        # card cannot outrank a card that matches most of the query.
+        coverage = len(set(matched)) / len(set(terms))
+        raw = sum(counts[term] for term in set(matched))
+        score = raw / (len(entry.section) ** LENGTH_NORMALIZATION) * (1 + coverage)
+        matches.append((round(score, 4), coverage, entry))
+    matches.sort(key=lambda item: (-item[0], -item[1], item[2].pattern_id))
+    return matches
+
+
 def print_entry(root: Path, entries, pattern_id: str, as_json: bool) -> None:
     """Print exactly one Pattern section, or fail when the ID is unknown or ambiguous."""
     wanted = pattern_id.strip().upper()
@@ -131,31 +159,16 @@ def main() -> None:
         raise SystemExit("provide a query or --id <PATTERN_ID>")
     if args.limit < 1:
         raise SystemExit("--limit must be positive")
-    terms = tokenize(" ".join(args.query))
-    if not terms:
+    query = " ".join(args.query)
+    if not tokenize(query):
         raise SystemExit("query must contain at least one searchable token")
 
-    matches = []
-    for entry in entries:
-        if statuses and entry.metadata.get("status", "") not in statuses:
-            continue
-        counts = build_index(entry.section, entry.pattern_id)
-        matched = [term for term in terms if term in counts]
-        if (args.all and len(matched) != len(terms)) or not matched:
-            continue
-        # Coverage: how much of the query the card explains, so a one-word overlap on a long
-        # card cannot outrank a card that matches most of the query.
-        coverage = len(set(matched)) / len(set(terms))
-        raw = sum(counts[term] for term in set(matched))
-        score = raw / (len(entry.section) ** LENGTH_NORMALIZATION) * (1 + coverage)
-        matches.append((round(score, 4), coverage, entry))
-
-    matches.sort(key=lambda item: (-item[0], -item[1], item[2].pattern_id))
+    matches = rank(query, entries, statuses, args.all)
     if not matches:
         if args.json:
             print(
                 json.dumps(
-                    {"query": " ".join(args.query), "count": 0, "total_matches": 0, "matches": []},
+                    {"query": query, "count": 0, "total_matches": 0, "matches": []},
                     ensure_ascii=False,
                 )
             )
@@ -166,7 +179,7 @@ def main() -> None:
     selected = matches[: args.limit]
     if args.json:
         payload = {
-            "query": " ".join(args.query),
+            "query": query,
             "count": len(selected),
             "total_matches": len(matches),
             "matches": [

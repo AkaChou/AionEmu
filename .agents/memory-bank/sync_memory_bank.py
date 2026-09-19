@@ -5,11 +5,15 @@ Two derived artifacts are produced and checked together:
 
 - ``symptom-index.md``: human-readable symptom/keyword routing table.
 - ``index.jsonl``: machine-readable per-Pattern index for agent retrieval.
+- ``.agents/summary/index.jsonl``: one record per evidence document referenced by a Pattern.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
+import re
 from pathlib import Path
 
 from memory_bank import ENTRY_FIELDS, iter_pattern_entries, render_index_jsonl
@@ -17,6 +21,15 @@ from memory_bank import ENTRY_FIELDS, iter_pattern_entries, render_index_jsonl
 
 SYMPTOM_INDEX_FILE = "symptom-index.md"
 PATTERN_INDEX_FILE = "index.jsonl"
+SUMMARY_INDEX_RELATIVE = ".agents/summary/index.jsonl"
+SUMMARY_DOC_REF = re.compile(r"\.agents/summary/[A-Za-z0-9._/-]+\.md")
+H1_TITLE = re.compile(r"^#\s+(?P<title>.+)$", re.MULTILINE)
+DATE_PREFIX = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})-")
+SUMMARY_KIND_PATTERNS = (
+    ("acceptance", re.compile(r"accept", re.IGNORECASE)),
+    ("audit", re.compile(r"audit", re.IGNORECASE)),
+    ("evidence", re.compile(r"evidence", re.IGNORECASE)),
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,6 +62,67 @@ def render_symptom_index(entries) -> str:
     return "\n".join(lines) + "\n"
 
 
+def summary_kind(name: str) -> str:
+    """Classify one summary document by its filename."""
+    if name.lower() == "readme.md":
+        return "topic-readme"
+    for kind, pattern in SUMMARY_KIND_PATTERNS:
+        if pattern.search(name):
+            return kind
+    return "report" if DATE_PREFIX.match(name) else "other"
+
+
+def render_summary_index(entries, root: Path) -> str:
+    """Render one record per evidence document that a Pattern cites.
+
+    Only referenced documents are indexed: the index exists to expand a Pattern into its
+    evidence, so it stays in lockstep with the Pattern cards and never needs a separate scan of
+    every task directory.
+    """
+    owners: dict[str, set[str]] = {}
+    for entry in entries:
+        for ref in SUMMARY_DOC_REF.findall(entry.metadata.get("evidence", "")):
+            owners.setdefault(ref, set()).add(entry.pattern_id)
+
+    records: list[dict[str, object]] = []
+    missing: list[str] = []
+    for ref, pattern_ids in sorted(owners.items()):
+        path = root / ref
+        if not path.is_file():
+            missing.append(ref)
+            continue
+        text = path.read_text(encoding="utf-8")
+        title = H1_TITLE.search(text)
+        records.append(
+            {
+                "record": "summary",
+                "path": ref,
+                "topic": path.parent.name,
+                "kind": summary_kind(path.name),
+                "date": (DATE_PREFIX.match(path.name).group("date") if DATE_PREFIX.match(path.name) else ""),
+                "title": title.group("title").strip() if title else "",
+                "lines": text.count("\n") + 1,
+                "bytes": len(text.encode("utf-8")),
+                "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                "referenced_by": sorted(pattern_ids),
+            }
+        )
+
+    meta = {
+        "record": "meta",
+        "schema": 1,
+        "generator": "sync_memory_bank.py",
+        "entry_count": len(records),
+        "missing": sorted(missing),
+        "fields": ["path", "topic", "kind", "date", "title", "lines", "bytes", "sha256", "referenced_by"],
+    }
+    lines = [
+        json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        for record in [meta, *records]
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def main() -> None:
     args = parse_args()
     root = args.root.resolve()
@@ -72,6 +146,7 @@ def main() -> None:
     derived = (
         (bank / SYMPTOM_INDEX_FILE, render_symptom_index(entries)),
         (bank / PATTERN_INDEX_FILE, render_index_jsonl(entries, root)),
+        (root / SUMMARY_INDEX_RELATIVE, render_summary_index(entries, root)),
     )
     stale: list[Path] = []
     for target, rendered in derived:
