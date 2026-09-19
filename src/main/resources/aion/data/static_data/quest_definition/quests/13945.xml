@@ -77,7 +77,7 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="2"/>
       <var name="var1" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
@@ -86,6 +86,22 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="835722" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <!-- 击杀 0..1 累积计数，同时将 var0 保持为 1 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">
@@ -112,7 +128,7 @@
         <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="2"/>
         <set-variable field="var1" value="2"/>
       </actions>
       <after-commit>

@@ -29,7 +29,7 @@
     </drops>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -57,11 +57,27 @@
       <var name="var0" value="6"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="6"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="7"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806170" action="QUEST_SELECT"/>
@@ -256,6 +272,9 @@
       <conditions>
         <variable-is field="var0" value="6"/>
       </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>

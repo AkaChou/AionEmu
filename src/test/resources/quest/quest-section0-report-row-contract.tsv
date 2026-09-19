@@ -2,11 +2,16 @@
 # source: Quest_unpacked/quest_monster.csv（SECTION_0==S; SECTION_n<N）+ Dialogs/quest_q*.html 的 quest_summary 报告步骤
 # 生成脚本: .agents/summary/quest-15001-multicounter-step/apply_section0_report_row_sweep.py（报告行合同由审计脚本核对）
 quest_id	client_stage	report_row
+13945	1	2
 15041	0	1
 15050	0	1
+15060	0	1
 15062	0	1
+15065	0	1
+15074	0	1
 15201	0	1
 15202	0	1
+15326	0	1
 15409	0	1
 15410	0	1
 15411	0	1
@@ -91,6 +96,9 @@ quest_id	client_stage	report_row
 15577	0	1
 15578	0	1
 15579	0	1
+15601	5	6
+15605	3	4
+15608	3	4
 15620	0	1
 15621	0	1
 15622	0	1
@@ -130,14 +138,20 @@ quest_id	client_stage	report_row
 23768	0	1
 23769	0	1
 23770	0	1
+23840	0	1
 23841	0	1
 23844	0	1
 23845	0	1
+23945	1	2
 25002	0	1
 25010	0	1
+25090	0	1
+25093	0	1
 25201	0	1
 25202	0	1
 25203	0	1
+25325	0	1
+25326	0	1
 25409	0	1
 25410	0	1
 25411	0	1
@@ -193,6 +207,7 @@ quest_id	client_stage	report_row
 25514	0	1
 25515	0	1
 25516	0	1
+25518	0	1
 25519	0	1
 25520	0	1
 25521	0	1
@@ -221,6 +236,8 @@ quest_id	client_stage	report_row
 25577	0	1
 25578	0	1
 25579	0	1
+25601	6	7
+25605	6	7
 25620	0	1
 25621	0	1
 25622	0	1
@@ -245,6 +262,11 @@ quest_id	client_stage	report_row
 25707	0	1
 25708	0	1
 25709	0	1
+26837	0	1
+26974	0	1
 26986	0	1
 27526	0	1
 28994	2	3
+50076	0	1
+50077	0	1
+50078	0	1
