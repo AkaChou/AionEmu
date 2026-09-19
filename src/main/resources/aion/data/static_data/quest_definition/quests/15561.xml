@@ -25,7 +25,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
       <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
@@ -34,6 +34,22 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="731684" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
@@ -86,6 +102,9 @@
       <event>
         <kill-npc npc-ids="240887 240888 240889 240890 240895 240896 240897 240898 240903 240904 240905 240906 240911 240912 240913 240914 240919 240920 240921 240922 240927 240928 240929 240930 240935 240936 240937 240938 240943 240944 240945 240946 240951 240952 240953 240954 240959 240960 240961 240962"/>
       </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>

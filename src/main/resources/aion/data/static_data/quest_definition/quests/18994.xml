@@ -38,7 +38,7 @@
       <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="3"/>
       <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
@@ -47,6 +47,22 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="806075" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <!-- 阶段 1: 击杀 0..1 个龙族增幅装置，累积 var1 -->
     <transition source="started" target="started" priority="1">
@@ -86,7 +102,7 @@
         <kill-npc npc-ids="220450 220518"/>
       </event>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="3"/>
         <set-variable field="var1" value="1"/>
       </actions>
       <after-commit>
