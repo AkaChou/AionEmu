@@ -910,8 +910,8 @@ symptom: 一组或多组击杀计数已经打满、服务端 SM_QUEST_ACTION 已
 root_cause: 任务说明行索引由 SECTION_0 承载、击杀计数在 SECTION_1+；reward 节点投影把 var0 固定成计数行，started->reward 的终击路线只写计数字段。QuestMutationPlanner 先应用 actions，再用目标节点投影补足未被动作触及的字段，于是终态 SECTION_0 停在计数行，客户端继续渲染击杀步骤；旧 handler 在同一刻写的是 setQuestVarById(0, 报告行)
 fix_or_guardrail: 终击必须在同一事务内写 SECTION_0=报告行（S+1）并保留 LEVEL_AND_VISIBILITY_REFRESH；reward 节点投影的 var0 必须与报告行一致（reward 源节点的既有路由按该投影匹配）；started->started 击杀自环显式 set var0=所在阶段以自愈脏数据；已持久化的 REWARD/SECTION_0=计数行 存档用无 source 的 ENTER_WORLD 迁移路线（status-is REWARD + var0==所在阶段 -> set var0=报告行）修复
 evidence: commit c34458083; src/main/resources/aion/data/static_data/quest_definition/quests/15001.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15203.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMonsterProgressContractAuditTest.java; .agents/summary/quest-15001-multicounter-step/2026-09-19-15001-double-counter-step-closure.zh-CN.md; .agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md; .agents/summary/quest-acceptance/15001-2026-09-19-section0-report-row-client-accepted.md
-validation: QuestMonsterProgressContractAuditTest（含 runtime planner 断言 20801）、ClientQuestSectionAlignmentTest、ProductionCatalogWhitelistVerificationTest、QuestDefinitionCatalogManifestTest 通过（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）；2026-09-19 用户确认 15001 客户端验证完成；同型审计（audit_section0_report_row_closure.py）仍命中 250 个旧 handler 写 setQuestVarById(0, …) 而当前 XML 未推进 SECTION_0 的任务，尚未修复
-boundaries: 行索引与计数字段是两个独立合同字段，只断言 status=REWARD 或计数饱和不算闭环；若缺的是计数自环/字段错位复用 QE-012 与 COUNTER_SOURCE_PROJECTION_NO_LOCK，若缺的是进入 REWARD 的路线本身复用 QE-018；迁移修复路线只在 ENTER_WORLD 触发，在线且不重登/不切图的旧存档不自动纠正
+validation: QuestMonsterProgressContractAuditTest（含 runtime planner 断言 20801）、ClientQuestSectionAlignmentTest、ProductionCatalogWhitelistVerificationTest、QuestDefinitionCatalogManifestTest 通过（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）；2026-09-19 用户确认 15001 客户端验证完成；同型 sweep 已修复 246 个任务（244 批量 + 18994/28994）并新增 QuestSection0ReportRowContractTest + quest-section0-report-row-contract.tsv（246 行合同快照），该测试的 Maven 门禁在 sweep 当时尚未授权执行，属 PENDING；残余 15101/24153 需额外路线重建
+boundaries: 行索引与计数字段是两个独立合同字段，只断言 status=REWARD 或计数饱和不算闭环；同型批量修复只对结构同型任务机械套用（reward 投影 + 自环钉行 + 终击写报告行 + ENTER_WORLD 迁移），多阶段/自定义节点/无击杀路线的任务必须逐个判定；若缺的是计数自环/字段错位复用 QE-012 与 COUNTER_SOURCE_PROJECTION_NO_LOCK，若缺的是进入 REWARD 的路线本身复用 QE-018；迁移修复路线只在 ENTER_WORLD 触发，在线且不重登/不切图的旧存档不自动纠正
 superseded_by: none
 see_also: [QE-012], [QE-018], .agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md
 first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 SECTION_n<N 的任务，再核对 reward 投影 var0、终击 actions 与 enter-world 迁移路线；旧 handler 是否在完成分支写 setQuestVarById(0, 报告行)
@@ -919,6 +919,7 @@ first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 
 
 - **判定规则**：击杀任务的“杀满即报告”由两个字段共同完成——计数（`SECTION_1+`）与任务说明行索引（`SECTION_0`）。最后一条击杀路线必须把行索引写成报告行，并且 `reward` 节点投影要与之一致；否则服务端进入 `REWARD` 而客户端任务说明停在击杀行，出现空分子与“下一步不出现”的玩家可见症状。
 - **代表案例**：15001（绿雾湿地双计数）修前追踪 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），修后 `20801`；同批 15020/15073/15100/15104/15203/15406/15407/15408/15580/15671/25671/25060/18952 同型；代表测试 `QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep`。
+- **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），其中 246 个已按同一合同修复；15101 缺 0->1 对话推进行、24153 缺击杀路线，需要额外证据；另有 24 行旧 handler 证据需支持 `setQuestVar(1)` 与 `setQuestVarById(0, var+1)` 形态的二次分类。
 
 ---
 

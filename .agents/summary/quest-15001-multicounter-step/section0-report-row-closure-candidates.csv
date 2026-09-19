@@ -125,10 +125,6 @@ quest,stage,counters,reward_projection_var0,kill_route_var0,kill_route_targets,m
 15707,0,SECTION_1<5,0,0,reward;started,False,2,quest_q15707.html,_15707.java,1,SAME_CLASS_CONFIRMED
 15708,0,SECTION_1<5,0,0,reward;started,False,2,quest_q15708.html,_15708.java,1,SAME_CLASS_CONFIRMED
 15709,0,SECTION_1<5,0,0,reward;started,False,2,quest_q15709.html,_15709.java,1,SAME_CLASS_CONFIRMED
-16837,0,SECTION_1<1,0,0,k1,False,2,quest_q16837.html,_16837Artifact_Protector_Ganesh.java,,REVIEW_LEGACY_NO_VAR0
-16974,0,SECTION_1<1,0,0,k1,False,2,quest_q16974.html,_16974Monster_Abridged.java,qs.getQuestVarById(0,REVIEW_LEGACY_NO_VAR0
-16986,0,SECTION_1<1,0,0,k1,False,2,quest_q16986.html,_16986No_Sanctuary_For_The_Commanders.java,1,SAME_CLASS_CONFIRMED
-17526,0,SECTION_1<1,0,0,k1,False,2,quest_q17526.html,_17526.java,1,SAME_CLASS_CONFIRMED
 18911,1,SECTION_1<1,1,,,False,6,quest_q18911.html,,,REVIEW_NO_LEGACY
 18994,2,SECTION_1<1,2,1;2,started;step2,False,4,quest_q18994.html,_18994Did_You_See_THAT_Coming.java,1,SAME_CLASS_CONFIRMED
 23759,0,SECTION_1<5,0,0,reward;started,False,2,quest_q23759.html,_23759Business_In_The_South.java,1,SAME_CLASS_CONFIRMED

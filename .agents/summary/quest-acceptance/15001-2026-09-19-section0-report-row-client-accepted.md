@@ -34,7 +34,7 @@ map/instance: 绿雾湿地野外任务；world ID 本轮未采集
 - startup health：本轮未采集服务端启动日志（用户管理进程）；如出现 `Can't initialize typed quest engine` / `QuestCompilationException`，本验收不成立。
 - runtime logs / protocol trace / screenshots：本任务记录引用用户提供的修前追踪（未落库）；附件 `not captured`（用户提供的临时图片缓存路径已失效）。
 - 同族任务：14 个任务是同型批量结构修复，本次实机验收覆盖代表任务 15001；其余 13 个按同合同静态与门禁覆盖，未逐个实机复验。
-- 同类排查：`SAME_CLASS_CONFIRMED` 的 250 个候选任务尚未修复，见 `.agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md`。
+- 同类排查：2026-09-19 后续 sweep 已修复 246 个同型任务（244 个批量 + 18994/28994），残余 15101/24153 需额外路线重建；见 `.agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-sweep.zh-CN.md` 与 `section0-report-row-closure-residual.csv`。
 
 acceptance status: ACCEPTED
 matched Pattern: `KILL_COUNTER_COMPLETION_ADVANCES_JOURNAL_ROW`（Playbook 新增，代表提交 c34458083）；相关跨域模式 `QE-012`（说明行索引固定读 SECTION_0）与 `QE-018`（最终计数事件进入 REWARD）

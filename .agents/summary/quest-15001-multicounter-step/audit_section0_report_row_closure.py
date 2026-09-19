@@ -107,8 +107,13 @@ def analyze(quest: int, stage: int):
     if not path.exists():
         return None
     text = path.read_text(encoding="utf-8")
-    nodes = {label: parse_node(text, label)
-             for label in ("unaccepted", "started", "ready", "reward", "complete")}
+    nodes = {}
+    for match in re.finditer(r'<node label="(\w+)"[^>]*>(.*?)</node>', text, re.S):
+        nodes[match.group(1)] = {
+            "status": (re.search(r'status="(\w+)"', match.group(0)) or [None, None])[1],
+            "vars": {mm.group(1): int(mm.group(2))
+                     for mm in re.finditer(r'<var name="(\w+)" value="(\d+)"', match.group(2))},
+        }
     transitions = parse_transitions(text)
 
     kill_var0 = []

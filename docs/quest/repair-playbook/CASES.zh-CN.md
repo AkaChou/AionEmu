@@ -588,7 +588,7 @@
 - 第一检查点：先用 `quest_monster.csv` 找出「同一个 `SECTION_0==S` 上并行门控多个 `SECTION_n<N`」的任务，再看最终击杀 transition 是否写 `var0`、`reward` 节点投影的 `var0` 是否为报告行；不要只看计数是否累加或状态是否进入 REWARD。`reward` 源节点的既有路由会按同一投影匹配，改动投影时必须同时确认它们仍可命中。
 - 代表测试：`QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep` 锁定 14 个任务的 reward 投影、终击写入、自环钉住与迁移路由；`#quest15001SaturatesBothSectionsAndEntersRewardWithSectionZeroOne` 用 runtime planner 断言两次 5 杀后的 packed step 为 `1 + 5*64 + 5*4096 = 20801`。
 - 验证命令和结果：`mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` 通过，`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证完成，已修复”，确认 15001 终击后进入报告步骤。未捕获 startup、协议与截图附件。
-- 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。注意存量：同型审计（`audit_section0_report_row_closure.py`）在 2026-09-19 命中 250 个旧 handler 写 `setQuestVarById(0, …)`、当前 XML 未推进 `SECTION_0` 的任务，以及 33 行待复核候选，尚未修复。
+- 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。同型 sweep：2026-09-19 按本案例合同批量修复 244 个结构同型任务，另有 18994/28994 的多阶段报告行单独修复；残余 15101（缺 0->1 对话推进行）与 24153（缺击杀路线）需要额外路线重建，24 行旧 handler 证据需用支持 `setQuestVar(1)` / `setQuestVarById(0, var+1)` 形态的二次分类复核。合同快照与回归测试见 `src/test/resources/quest/quest-section0-report-row-contract.tsv` 与 `QuestSection0ReportRowContractTest`。
 - commit：`c34458083`。
 
 ## 8.39 上交确认页只有本地关闭按钮时成功分支必须直接续接

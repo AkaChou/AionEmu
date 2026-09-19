@@ -89,3 +89,11 @@ if (qs.getQuestVarById(1) >= 1) { qs.setQuestVarById(0, 1); qs.setStatus(QuestSt
    `mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test`
 3. 先在代表性任务（15041 单计数、15471 周常、15500 守护、24153 多计数、18994 两段）做客户端验收，再全量合闸。
 4. `REVIEW_*` 两类先逐个判定，不与 sweep 混提。
+
+## 7. 2026-09-19 sweep 执行结果（本轮）
+
+- 审计脚本修正：`analyze()` 早期只解析 `unaccepted/started/ready/reward/complete` 五个固定节点名，导致 `k1`/`step2` 等自定义节点的投影 `var0` 被漏读，16986/17526 被误报。修正为解析全部 `<node>` 后可执行任务候选从 250 行降为 **248 行**。
+- 批量修复：`apply_section0_report_row_sweep.py` 对结构完全同型的 **244** 个任务应用四项合同；18994/28994（多阶段）单独修复为 `step2 -> reward` 与 reward 投影 = 报告行 3。
+- 修复后复跑审计：`SAME_CLASS_CONFIRMED` 仅剩 **15101、24153**；`REVIEW_LEGACY_NO_VAR0` 24 行、`REVIEW_NO_LEGACY` 7 行保持不变。
+- 残余清单：`section0-report-row-closure-residual.csv`；完整报告见 `2026-09-19-section0-report-row-sweep.zh-CN.md`。
+- 注意：旧 handler 证据的正则只匹配 `setQuestVarById(0, <literal>)` 与 `setQuestVar(0, <literal>)`，会漏掉 `setQuestVar(1)`（单参数即 var0）与 `setQuestVarById(0, var + 1)` 形态；`REVIEW_LEGACY_NO_VAR0` 中至少 15060、16974 属此类漏判，需二次分类。
