@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46544" version="1">
-  <metadata name="[Daily] Bounty on Smolderscale Alligate" display-name-id="1800693" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Bounty on Smolderscale Alligate" display-name-id="1800693" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

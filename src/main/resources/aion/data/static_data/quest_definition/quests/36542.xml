@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36542" version="1">
-  <metadata name="[Daily] Seascape Manta" display-name-id="1800651" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Seascape Manta" display-name-id="1800651" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

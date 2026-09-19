@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45513" version="1">
-  <metadata name="[Spy/Daily] Cygnea Invasion Operation" display-name-id="1800701" min-level="61" max-level="65" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Cygnea Invasion Operation" display-name-id="1800701" min-level="61" max-level="65" category="FACTION" cannot-share="true" npc-faction-id="6">
     <races>
       <race id="ASMODIANS"/>
     </races>

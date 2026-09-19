@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35064" version="1">
-  <metadata name="[Daily] No Room for Ghostshrooms" display-name-id="1800634" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] No Room for Ghostshrooms" display-name-id="1800634" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

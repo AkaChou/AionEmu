@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35049" version="1">
-  <metadata name="[Daily] Driven To Distraction" display-name-id="1126049" min-level="51" max-level="52" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Driven To Distraction" display-name-id="1126049" min-level="51" max-level="52" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

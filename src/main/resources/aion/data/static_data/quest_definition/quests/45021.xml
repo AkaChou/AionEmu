@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45021" version="1">
-  <metadata name="[Daily] Monitoring Gelkmaros" display-name-id="1128021" min-level="51" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Monitoring Gelkmaros" display-name-id="1128021" min-level="51" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

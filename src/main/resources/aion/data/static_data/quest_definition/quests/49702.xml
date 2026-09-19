@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="49702" version="1">
-  <metadata name="[Daily] Invasive Species" display-name-id="1129818" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Invasive Species" display-name-id="1129818" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="18">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36546" version="1">
-  <metadata name="[Spy/Daily] Zephyrwing Klare" display-name-id="1800655" min-level="56" max-level="60" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Zephyrwing Klare" display-name-id="1800655" min-level="56" max-level="60" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

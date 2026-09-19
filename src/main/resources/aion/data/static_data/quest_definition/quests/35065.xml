@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35065" version="1">
-  <metadata name="[Daily] Don't Forget the Frillnecks" display-name-id="1800635" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Don't Forget the Frillnecks" display-name-id="1800635" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

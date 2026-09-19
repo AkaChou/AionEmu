@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46543" version="1">
-  <metadata name="[Daily] Bounty on Steelhide Tocal" display-name-id="1800692" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Bounty on Steelhide Tocal" display-name-id="1800692" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

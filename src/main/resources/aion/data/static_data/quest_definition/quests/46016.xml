@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46016" version="1">
-  <metadata name="[Daily] Ancient Treasures" display-name-id="1128082" min-level="50" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Ancient Treasures" display-name-id="1128082" min-level="50" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

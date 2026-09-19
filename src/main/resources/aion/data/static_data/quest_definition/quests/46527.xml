@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46527" version="1">
-  <metadata name="[Daily] An Officer And A Drakan" display-name-id="1128120" min-level="55" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] An Officer And A Drakan" display-name-id="1128120" min-level="55" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

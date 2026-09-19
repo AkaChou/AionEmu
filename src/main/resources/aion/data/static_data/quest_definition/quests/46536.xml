@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46536" version="1">
-  <metadata name="[Daily] Bounty on Scotch Bonnet Bartul" display-name-id="1800685" min-level="58" max-level="60" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Bounty on Scotch Bonnet Bartul" display-name-id="1800685" min-level="58" max-level="60" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

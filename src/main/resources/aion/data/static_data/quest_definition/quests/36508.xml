@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36508" version="1">
-  <metadata name="[Daily] No Time For Tricks" display-name-id="1126094" min-level="53" max-level="54" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] No Time For Tricks" display-name-id="1126094" min-level="53" max-level="54" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36540" version="1">
-  <metadata name="[Daily] Voracious Votarient" display-name-id="1800649" min-level="61" max-level="63" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Voracious Votarient" display-name-id="1800649" min-level="61" max-level="63" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

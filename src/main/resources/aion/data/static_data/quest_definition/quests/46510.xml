@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46510" version="1">
-  <metadata name="[Daily] Snuffler Saboteur" display-name-id="1128096" min-level="53" max-level="54" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Snuffler Saboteur" display-name-id="1128096" min-level="53" max-level="54" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

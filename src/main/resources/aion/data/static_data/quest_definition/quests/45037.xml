@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45037" version="1">
-  <metadata name="[Daily] Gone Gone Gorgons!" display-name-id="1128037" min-level="37" max-level="39" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Gone Gone Gorgons!" display-name-id="1128037" min-level="37" max-level="39" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

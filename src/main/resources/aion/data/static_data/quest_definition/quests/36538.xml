@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36538" version="1">
-  <metadata name="[Daily] Hybrid Plant Seeds" display-name-id="1800647" min-level="61" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Hybrid Plant Seeds" display-name-id="1800647" min-level="61" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

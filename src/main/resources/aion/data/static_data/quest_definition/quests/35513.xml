@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35513" version="1">
-  <metadata name="[Spy/Daily] Enshar Invasion Operation" display-name-id="1800661" min-level="61" max-level="65" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Enshar Invasion Operation" display-name-id="1800661" min-level="61" max-level="65" category="FACTION" cannot-share="true" npc-faction-id="3">
     <races>
       <race id="ELYOS"/>
     </races>

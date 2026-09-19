@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46540" version="1">
-  <metadata name="[Daily] Bounty on Slothstep Marg" display-name-id="1800689" min-level="61" max-level="63" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Bounty on Slothstep Marg" display-name-id="1800689" min-level="61" max-level="63" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

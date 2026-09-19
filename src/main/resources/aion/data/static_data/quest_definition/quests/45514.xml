@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45514" version="1">
-  <metadata name="[Daily] Destroy the faith in their arms" display-name-id="1802745" min-level="66" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Destroy the faith in their arms" display-name-id="1802745" min-level="66" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="6">
     <races>
       <race id="ASMODIANS"/>
     </races>

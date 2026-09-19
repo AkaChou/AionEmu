@@ -170,3 +170,49 @@
 | `com.aionemu.gameserver.questEngine.**.*Test` | 1444 run / 0 failures / 0 errors / 1 skipped |
 
 门禁的待裁账本 `quest-kill-counter-overkill-pending.tsv` 已清空删除，门禁改为无条件断言“完成所需击杀数 == 客户端门控”。
+
+---
+
+## 追加（阵营日常归属）：`npc-faction-id` 缺失与星期位全 0
+
+### 症状
+
+`//quest start 35059` 与 NPC 对话都无法接取；GM 只看到通用失败提示（`//quest start` 用 `dialogId=0` → `warn=false`，
+真实原因不显示）。逐条排查后有两个独立原因：
+
+1. 角色等级 59 > 该任务 `max-level=57`（客户端 `maxlevel_permitted=57`）→ 属**正常**水平门禁，
+   NPC 对话与新/旧引擎都会拒绝（不是缺陷）。
+2. 35059 属 **Alabaster Order（势力 id 2）** 日常，但新 XML 未声明 `npc-faction-id`：
+   - `NpcFactions.sendDailyQuest()` → `canonicalDailyQuestCandidates` 只收 `metadata.npcFactionId() == 势力id` 的任务，
+     缺声明 → **永远不进日常候选池**，服务端不会推送 `SM_QUEST_ACTION`；
+   - `PlayerQuestStartEligibilityPort` 在 `npcFactionId==0` 时**跳过阵营成员/轮换校验** → 门禁更宽松（零售行为丢失）；
+   - 旧路径 `QuestService.startQuest()`（`//quest start` 走这里）用 legacy `quest_data.xml`：35059 有 `npcfaction_id="2"`，
+     于是又要求势力已激活且当日轮换 `faction.getQuestId()==35059` → 新旧两侧要求不一致，形成死锁。
+
+### 数据修复（本批）
+
+- **归属补全**：`quest_data.xml` 的 `npcfaction_id` 与 `npc_factions_quest.xml` 的 `faction_id` 两源一致（253 条一致、0 冲突），
+  据此为 **218 个缺声明的生产任务**补 `metadata npc-faction-id`（Alabaster Order 29、Guardian of Tower 47、Bounty Hunter 等）。
+- **星期位修复**：44 个任务的轮换行星期位全 0（`isActiveOn` 永远为假，等于永远轮不到）。其中 Elyos 侧 396xx/397xx（22 个）
+  legacy 明确 `repeat_cycle="ALL"`，Asmodian 侧 496xx/497xx 为镜像 → 44 行全部改为 7 天全开。
+
+### 新增门禁 `QuestNpcFactionRetailGateTest`（npcFaction 包）
+
+| 断言 | 作用 |
+|---|---|
+| 生产 XML 的 `npcFactionId` == 评审基线 `quest-npc-faction-retail-contract.tsv`（253 行） | 归属不得漂移或静默新增 |
+| `NpcFactions.canonicalDailyQuestCandidates` 的每个势力池 == 该势力基线集合 | 任务真的能进日常池（而非只是"声明了属性"） |
+| 轮换表行存在时阵营一致、且星期位不得全 0 | 不允许再出现"永不轮换" |
+
+### 验证
+
+| 范围 | 结果 |
+|---|---|
+| `QuestNpcFactionRetailGateTest` + `NpcFactionsCanonicalCatalogTest` | 4/4 通过 |
+| 全量 `mvn -o test`（隔离 worktree） | 见提交信息（0 failures） |
+
+### 边界
+
+- 补上归属后这些日常恢复零售门禁：需要先加入对应势力（Alabaster Order：Cygnea 的 Mirtis 805145、Heiron 的 typhon 799803），
+  且由每日轮换随机命中；未加入势力的角色不能再直接接取。
+- `//quest start` 仍受 legacy `maxlevel_permitted` 限制；GM 强制起手请用 `//quest set <id> START 0`（直接写状态、绕过 start 检查）。

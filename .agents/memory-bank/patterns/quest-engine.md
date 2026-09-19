@@ -853,3 +853,25 @@ first_check: 自动领奖路线缺失时先看 transitions 是否还有 reported
 
 - **判定规则**：块级属性是行为开关，重写容器行等于改行为；批量编辑按「结构不动属性、属性不动结构」分离。
 - **代表案例**：13841/13845/13849 因属性丢失少了 FIXED 派生的无目标领奖路线，13947 保留属性可作对照。
+
+---
+
+## [QE-038] 三十六、阵营日常必须声明 npc-faction-id 且轮换星期位不得全 0 (NPC_FACTION_DAILY_OWNERSHIP)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: category=FACTION 的每日/每周势力任务；quest_data.xml 的 npcfaction_id、npc_factions_quest.xml 的星期位与生产 XML metadata.npc-faction-id
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 势力日常“怎么接都接不到”；GM `//quest start` 只给通用失败提示；或某任务永远不会出现在每日轮换里
+root_cause: NpcFactions.sendDailyQuest 的候选池按 metadata.npcFactionId() 过滤，缺声明等于永不入池（同时 PlayerQuestStartEligibilityPort 会跳过阵营校验，门禁反而更松）；轮换表星期位全 0 时 isActiveOn 恒假，任务同样永不轮换。旧路径 QuestService.startQuest 反而用 legacy npcfaction_id，导致新旧要求不一致形成死锁
+fix_or_guardrail: 1. 归属取值以 quest_data.xml 的 npcfaction_id 与 npc_factions_quest.xml 的 faction_id 两源一致为准，逐任务写入 metadata npc-faction-id；2. 轮换行要么缺省（isActiveOn 视为每天可发）要么至少一个星期位为 1，禁止全 0；Elyos/Asmodian 镜像与 legacy repeat_cycle=ALL 可作补掩码证据；3. 门禁 QuestNpcFactionRetailGateTest 同时校验归属基线、日常池组成与星期位；4. GM 调试用 `//quest set <id> START 0`（绕过 start 检查），`//quest start` 受 legacy maxlevel_permitted 限制且 dialogId=0 时不打印真实原因
+evidence: src/main/resources/aion/data/static_data/quest_data/quest_data.xml; src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml; src/main/resources/aion/data/static_data/quest_definition/quests/35059.xml; src/main/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/NpcFactions.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStartEligibilityPort.java; src/test/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/QuestNpcFactionRetailGateTest.java; src/test/resources/quest/quest-npc-faction-retail-contract.tsv; .agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md
+validation: focused-test：QuestNpcFactionRetailGateTest + NpcFactionsCanonicalCatalogTest 4/4；全量 mvn -o test 见提交信息
+boundaries: 只覆盖能被玩家接取的阵营日常；缺轮换行按“每天可发”处理（isActiveOn 语义），不得据此删行；等级/阵营成员等水平门禁属正常拒绝，不算缺陷
+superseded_by: none
+see_also: [QE-021], [QE-035]
+first_check: 先用 quest_data.xml + npc_factions_quest.xml 两源比对生产 XML 的 npc-faction-id 与星期位；再看角色等级是否超过 max-level（属正常拒绝）
+-->
+
+- **判定规则**：势力日常要“接得到”，必须同时满足归属声明、星期位、势力成员与等级门禁；缺任何一项都不是玩家能自己解决的操作问题。
+- **代表案例**：35059（Alabaster Order 日常）缺 `npc-faction-id="2"` 导致永不入池；同批 218 个任务缺归属、44 个任务星期位全 0。

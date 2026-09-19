@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35023" version="1">
-  <metadata name="[Daily] Destroy The Meteorite" display-name-id="1126023" min-level="51" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Destroy The Meteorite" display-name-id="1126023" min-level="51" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

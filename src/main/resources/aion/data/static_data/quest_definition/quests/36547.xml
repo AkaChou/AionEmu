@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36547" version="1">
-  <metadata name="[Spy/Daily] Octena Meduza" display-name-id="1800656" min-level="61" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Octena Meduza" display-name-id="1800656" min-level="61" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

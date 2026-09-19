@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="39708" version="1">
-  <metadata name="[Daily] This Task Stinks" display-name-id="1129784" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] This Task Stinks" display-name-id="1129784" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="17">
     <races>
       <race id="ELYOS"/>
     </races>

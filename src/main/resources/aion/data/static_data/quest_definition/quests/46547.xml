@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46547" version="1">
-  <metadata name="[Spy/Daily] Bounty on Slimepaw Gerger" display-name-id="1800696" min-level="61" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Bounty on Slimepaw Gerger" display-name-id="1800696" min-level="61" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>

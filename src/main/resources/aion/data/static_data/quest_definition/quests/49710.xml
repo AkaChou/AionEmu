@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="49710" version="1">
-  <metadata name="[Daily] He Slimed Me, Daeva" display-name-id="1129826" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] He Slimed Me, Daeva" display-name-id="1129826" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="18">
     <races>
       <race id="ASMODIANS"/>
     </races>

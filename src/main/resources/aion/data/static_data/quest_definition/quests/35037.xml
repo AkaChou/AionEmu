@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35037" version="1">
-  <metadata name="[Daily] Damn Dirty Troll Looters" display-name-id="1126037" min-level="37" max-level="39" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Damn Dirty Troll Looters" display-name-id="1126037" min-level="37" max-level="39" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

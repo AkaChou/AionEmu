@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45064" version="1">
-  <metadata name="[Daily] Petrahulk Bulk" display-name-id="1800674" min-level="64" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Petrahulk Bulk" display-name-id="1800674" min-level="64" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

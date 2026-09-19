@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45508" version="1">
-  <metadata name="[Daily] Elyos Extermination Operation" display-name-id="1128127" min-level="45" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Elyos Extermination Operation" display-name-id="1128127" min-level="45" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="6">
     <races>
       <race id="ASMODIANS"/>
     </races>

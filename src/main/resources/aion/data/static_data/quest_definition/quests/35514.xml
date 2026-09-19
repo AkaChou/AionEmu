@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35514" version="1">
-  <metadata name="[Daily] Their blood for blood" display-name-id="1802743" min-level="66" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Their blood for blood" display-name-id="1802743" min-level="66" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="3">
     <races>
       <race id="ELYOS"/>
     </races>

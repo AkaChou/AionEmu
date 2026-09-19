@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35052" version="1">
-  <metadata name="[Daily] Alabaster Orders" display-name-id="1800622" min-level="56" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Alabaster Orders" display-name-id="1800622" min-level="56" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

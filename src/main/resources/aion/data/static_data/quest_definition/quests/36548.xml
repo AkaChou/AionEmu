@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36548" version="1">
-  <metadata name="[Spy/Daily] Desert King Durianne" display-name-id="1800657" min-level="61" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Desert King Durianne" display-name-id="1800657" min-level="61" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

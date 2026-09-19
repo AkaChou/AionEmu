@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45063" version="1">
-  <metadata name="[Daily] Corask Task" display-name-id="1800673" min-level="61" max-level="63" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Corask Task" display-name-id="1800673" min-level="61" max-level="63" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45059" version="1">
-  <metadata name="[Daily] Petalsprite Fight" display-name-id="1800669" min-level="56" max-level="57" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Petalsprite Fight" display-name-id="1800669" min-level="56" max-level="57" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

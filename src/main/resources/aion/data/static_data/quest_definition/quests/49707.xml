@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="49707" version="1">
-  <metadata name="[Daily] You're the Early Bird" display-name-id="1129823" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] You're the Early Bird" display-name-id="1129823" min-level="60" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="18">
     <races>
       <race id="ASMODIANS"/>
     </races>

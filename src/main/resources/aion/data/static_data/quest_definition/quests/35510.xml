@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35510" version="1">
-  <metadata name="[Daily] Going Guerrilla on the Asmodians" display-name-id="1800658" min-level="56" max-level="60" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Going Guerrilla on the Asmodians" display-name-id="1800658" min-level="56" max-level="60" category="FACTION" cannot-share="true" npc-faction-id="3">
     <races>
       <race id="ELYOS"/>
     </races>

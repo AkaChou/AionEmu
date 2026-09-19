@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45008" version="1">
-  <metadata name="[Daily] Scanning Beluslan" display-name-id="1128008" min-level="30" max-level="39" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Scanning Beluslan" display-name-id="1128008" min-level="30" max-level="39" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

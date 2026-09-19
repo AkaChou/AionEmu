@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="49709" version="1">
-  <metadata name="[Daily] Stones from the Lowest Bidder" display-name-id="1129825" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Stones from the Lowest Bidder" display-name-id="1129825" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="18">
     <races>
       <race id="ASMODIANS"/>
     </races>

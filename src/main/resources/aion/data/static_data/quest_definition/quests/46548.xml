@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="46548" version="1">
-  <metadata name="[Spy/Daily] Bounty on Spry Taki" display-name-id="1800697" min-level="61" max-level="82" category="FACTION" cannot-share="true">
+  <metadata name="[Spy/Daily] Bounty on Spry Taki" display-name-id="1800697" min-level="61" max-level="82" category="FACTION" cannot-share="true" npc-faction-id="7">
     <races>
       <race id="ASMODIANS"/>
     </races>
