@@ -620,3 +620,33 @@
 - 验证命令和结果：`mvn -q -Dtest=QuestEnterZoneStartOwnerRegressionTest,Quest14123ZoneSpawnTest,MigratedQuestRepairDefinitionTest,QuestResidualCounterLocksTest,Quest26800ClientDialogAlignmentTest,LegacyTemplateMirrorRouteRegressionTest test` 6 类/38 用例通过；`mvn -q -Dquest.client.contract.failOnStaleBaseline=true -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestPageButtonAuditTest test` 5 类/31 用例通过（`PAGE_NOT_IN_TASK_HTML=0`、`BUTTON_WITHOUT_ROUTE=0`、`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_WHITELIST_VIOLATIONS=0`）；用户 Aion 5.8 客户端实机确认 18300 已可接取。
 - 复用边界：只适用于旧 handler 同时注册 `addOnQuestStart` 的任务。若旧 handler 在 NONE 态直接 `return false`、接取由 level-up/use-item/enter-zone 完成，则按 8.26 `AUTO_START_KEEPS_NONE_DIALOG_FREE` 保持 NONE 无对话路由，不得补接取链；本轮审计命中的 7 个事件任务（80000/80001/80034-80037/80230）正属该例外的待确认清单。
 - commit：`227cefc06`。
+
+## 8.41 单计数器任务把击杀门控写成了 N+1
+
+- Pattern ID：`SINGLE_COUNTER_KILL_GATE_OVERSHOOT`。
+- 代表任务：35059「[Daily] Silence the Shardjaws」（Cygnea world 210070000，Alabaster Order 日常，击杀 235817/235818 共 10 只）；同批 34 个同型任务：13955/23955、35052、35058-35065、36532-36536、45052、45058、45060-45064、46531/46535/46536/46539-46548。
+- 搜索症状：击杀计数早已打满但任务仍是 START、第 N+1 只怪才进 REWARD、任务说明行显示已满但不再推进、日常任务「多打一只」。
+- 玩家可见症状：客户端 `quest_monster.csv` 只要求 `SECTION_1<10`，实际却要在第 11 次击杀后才转 REWARD；同族的 45059/45065 与 45058/45060-45064 同门控、同报告 NPC，后者正好 10 杀完成，形成同族自相矛盾。
+- 根因：单计数器任务的收口形态被写成 `below 10` 累加 + `at-least 10` 收口 `set var1=11`，`bit-field max`、`reward` 节点投影与两条满计数恢复路线也一并按 N+1 记账。客户端门控三源一致为 N（`quest_monster.csv` 的 `SECTION_1<N`、`data_driven_quest.xml` 的 `value0_progress_`、`911440146` legacy handler 的 `var1 < N`），服务端因此多要一只才满足收口条件；514 个同形态任务中只有这 34 个漂移。
+- 修复层：任务 XML（34 个任务统一处理，改动范围严格限定在形态断言命中的字段）。累加 `below N -> N-1`、收口 `at-least N -> N-1`、收口 `set-variable N+1 -> N`、`bit-field max N+1 -> N`、`reward` 节点投影 `var1 N+1 -> N`，注释同步为「第 N 次击杀达成」；遇到未预期的 `var1` 引用即失败而不是静默跳过。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/`（34 个任务 XML，含 `35059.xml`）、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestKillCounterRetailGateTest.java`、`src/test/resources/quest/quest-kill-counter-retail-contract.tsv`、`.agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md`。
+- 第一检查点：先用客户端三源取 N，再用 `QuestKillCounterSimulator.requiredKills` 求服务端「完成所需击杀数」，两者必须相等；同族 canonical 任务对照 `below / at-least / set` 三个数即可判定漂移方向与修复形态。
+- 代表测试：`QuestKillCounterRetailGateTest#singleCounterQuestsRequireExactlyTheClientGate`（414 个单计数器任务无条件断言 `requiredKills == 客户端门控`）、`#simulatorReproducesTheFixedOverkillDrift`（反向对照，把 13765 恢复成漂移形态后模拟器必须复现多杀，证明门禁不是空转）。
+- 验证命令和结果：`QuestKillCounterRetailGateTest` 4/4 通过（414 个单计数器任务全部正好等于门控）；`questEngine` 全包 1444 run / 0 failures / 0 errors / 1 skipped；全量 3449 run / 0 failures / 2 skipped，唯一 error 是与环境相关的 `ScheduleHotReloadTest`（缺 gitignored `aion/config` 部署目录，已单独复现确认与本改动无关）。客户端实机：用户于 2026-09-19 回复「35059 验证成功」，确认接取 → 10 杀转 REWARD → 回报领奖闭环；未捕获抓包、截图或日志附件。
+- 复用边界：只适用于「单计数器 + 客户端给固定门控」的击杀型任务。多计数器任务（两组以上 `SECTION_1+` 并行）不适用，其收口要按 8.38 `KILL_COUNTER_COMPLETION_ADVANCES_JOURNAL_ROW` 检查行索引；`set 值 = 门控 + 1` 本身不是缺陷证据（法定的 `below N-1` + `at-least N-1` + `set N` 记账形态同样成立），必须用完整门控证据链判定，禁止只按「差一」直接改值。
+- commit：`30d2daff9`。
+
+## 8.42 阵营日常缺少 npc-faction-id 导致永不入池
+
+- Pattern ID：`NPC_FACTION_DAILY_OWNERSHIP`。
+- 代表任务：35059「[Daily] Silence the Shardjaws」（Alabaster Order / faction 2，报告 NPC Laysean 804942）；同批 218 个生产任务（Alabaster Order 29、Guardian of Tower 47、Bounty Hunter 38/45 等）。
+- 搜索症状：阵营日常在客户端任务列表里根本没有、NPC 对话无可接任务、GM `//quest start <id>` 只给通用失败提示；同一任务旧端能接、新引擎接不到；轮换任务永远不出现。
+- 玩家可见症状：35059 在 804942「Laysean」处不出现任务行，服务端从不推送该任务的 `SM_QUEST_ACTION`；除 GM `//quest set 35059 START 0` 外无法起手。
+- 根因：任务 XML `metadata` 没有声明 `npc-faction-id`。`NpcFactions.sendDailyQuest()` 的候选池按 `metadata.npcFactionId()` 过滤，缺声明就永不入池；`PlayerQuestStartEligibilityPort` 在 `npcFactionId==0` 时跳过阵营成员与轮换校验，使新门禁反而比旧路径更松；而 `//quest start` 走的 `QuestService.startQuest()` 仍用 legacy `quest_data.xml` 的 `npcfaction_id=2`，要求势力已激活且当日轮换命中 → 新旧不一致形成死锁。另有 44 个轮换行星期位全 0（`isActiveOn` 恒假、永不轮换）。
+- 修复层：静态数据（生产 XML + 轮换表）。以 legacy 双源为基线（`quest_data.xml` 的 `npcfaction_id` 与 `npc_factions_quest.xml` 的 `faction_id`，253 一致 / 0 冲突）为 218 个任务补 `metadata npc-faction-id`（Alabaster Order 29、Guardian of Tower 47、Bounty Hunter 38/45 等）；44 个星期位全 0 的轮换行按 legacy `repeat_cycle="ALL"` 及魔族镜像改为 7 天全开。测试层新增 `QuestNpcFactionRetailGateTest` 与评审基线 TSV。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/`（218 个任务 XML，含 `35059.xml`）、`src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml`、`src/test/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/QuestNpcFactionRetailGateTest.java`、`src/test/resources/quest/quest-npc-faction-retail-contract.tsv`。
+- 第一检查点：用 legacy 双源确认该任务的势力归属，再看生产 XML 的 `metadata/npc-faction-id` 是否缺失、轮换行星期位是否全 0；同时把「接不到」拆成独立原因分别判定——等级门禁（35059 的 `maxlevel_permitted=57` 对 59 级角色）是正常水平限制，不是缺陷。
+- 代表测试：`QuestNpcFactionRetailGateTest#factionDailiesDeclareExactlyTheirReviewedFaction`、`#everyContractQuestLandsInItsFactionDailyPool`、`#everyContractQuestCanBeRotatedIn`。
+- 验证命令和结果：`QuestNpcFactionRetailGateTest` + `NpcFactionsCanonicalCatalogTest` 4/4 通过；隔离 worktree 全量 `mvn -o test` 3460 run / 0 failures / 2 skipped，唯一 error 为环境相关的 `ScheduleHotReloadTest`（缺 gitignored `aion/config`，与本改动无关）。客户端实机：用户于 2026-09-19 回复「35059 验证成功」，56-57 级天族角色加入 Alabaster Order 后可接取并完成；未捕获抓包、截图或日志附件。
+- 复用边界：只适用于 legacy 有明确归属（`quest_data.xml` / `npc_factions_quest.xml`）的任务；归属不在双源内的先补证据，不得凭任务名或 NPC 猜阵营。恢复门禁后未加入对应势力的角色无法再接取这些日常，这是零售行为；GM 强制起手用 `//quest set <id> START 0`（`//quest start` 仍受 legacy `maxlevel_permitted` 限制且不打印真实原因）。若症状是「点了没反应 / 页面循环」而不是「根本不在候选池」，复用 8.40 `LEGACY_START_OWNER_LOSS`。
+- commit：`0f2f3145d`。
