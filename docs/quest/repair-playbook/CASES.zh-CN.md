@@ -605,3 +605,18 @@
 - 验证命令和结果：`mvn -B -Dquest.client.contract.failOnStaleBaseline=true -Dtest='Quest10501HandoverContinuationTest,QuestHandoverContinuationAuditTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestPageButtonAuditTest,QuestItemSourceContractGateTest,AcceptAndConfirmationEntryContractTest,ItemCollectingDialogProtocolAlignmentTest,QuestRetailCollectionRoleAlignmentTest' test` 47/47 通过；生产目录 `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证成功”，确认 10501 交付后同一次对话直接进入报告页与奖励窗。未捕获 startup、协议与截图附件。
 - 复用边界：仅适用于客户端 HTML 中 `check_user_item_ok` 页只有 `HACTION_FINISH_DIALOG(1008)`、且目标节点存在同 NPC `USE_OBJECT(-1)` 续接页的任务。ok 页按钮是会回传任务动作的可见按钮（1009 等）时复用 8.25 `CHECK_CONFIRMATION_PAGE_CONTRACT`，不得用本模式绕开确认页；ok 页按钮指向故事翻页链（SELECT3/SETPRO2 等）时先补链根；无同 NPC 续接页的 55 个任务保持确认页终端形态。判定必须读任务自身 HTML 的按钮动作，不能按任务名或任务族猜测；若日后观察到客户端会回传 1008，本模式与 8.25 的取舍都要重评。
 - commit：`75312dcdc`。
+
+## 8.40 迁移把 legacy NPC 接取 owner 丢成 enter-zone 自动接取
+
+- Pattern ID：`LEGACY_START_OWNER_LOSS`。
+- 代表任务：18300「Floating Death | 副本：攻陷阿图拉姆空中要塞作战」（阿图拉姆空中要塞，ELYOS，IMPORTANT）；同批 28300、1393、14123、15322、16800、17500、21080、25322、27500。
+- 搜索症状：`SM_DIALOG_WINDOW page=10` → `CM_DIALOG_SELECT action=31 questId=<id>` → `SM_DIALOG_WINDOW page=10` 循环；`quest-order-audit.csv` 把该任务的任务列表页/接取页记成 `CLIENT_PAGE_UNREACHED / EVIDENCE_REQUIRED`。
+- 玩家可见症状：在 804699 的任务列表里点「Floating Death」这一行，窗口刷新回列表，任务永远接不到。
+- 根因：`51b4cb971` 迁移把 `registerOnEnterZone` 统一概括成「进区域自动接取」，只写出 `unaccepted -> started` 的 enter-zone 路由；旧 handler `_18300Floating_Death` 的 `addOnQuestStart(804699)` 才是权威接取 owner（`onEnterZoneEvent` 只在 `START + var0 == 1` 时推进到 `REWARD`）。客户端点任务行发 `QUEST_SELECT(31)`，编译后 IR 没有 `(NONE, NPC, 31)` 路由，`DialogService` 未处理回退再次下发第 10 页形成循环。
+- 修复层：任务 XML。18300/28300 恢复 `NPC_START` + `advanced(var0=1)` 节点、804820/804821 以 `SELECT1 -> SELECT1_1 -> SETPRO1` 推进、进入 300240000 转 `REWARD`；1393 恢复 `NPC_START`、补 `SELECT1_1/QUEST_ACCEPT_1` 页面链与 `flight-teleport 17001`、补齐 1013 页 `QUEST_ACCEPT_1(1002)` 按钮路由；15322/25322 按旧 handler `onAtDistanceEvent` 改 `at-distance` 接取；14123/16800/17500/27500 删除错误的 unaccepted enter-zone 自动接取；21080 恢复 `NPC_START` 并在接取时授予 182207939。测试层新增 `QuestEnterZoneStartOwnerRegressionTest`。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{1393,14123,15322,16800,17500,18300,21080,25322,27500,28300}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestEnterZoneStartOwnerRegressionTest.java`、`Quest14123ZoneSpawnTest.java`、`.agents/summary/quest-enter-zone-start-owner/`（含 4 个审计脚本）。
+- 第一检查点：该 NPC 在 NONE 态是否存在 `QUEST_SELECT(31)`/`FINISH_DIALOG(1008)` 路由或 `NPC_START` 块；再 `git show <迁移提交>^:<handler>.java` 看 `addOnQuestStart` 与 `registerOnEnterZone` 是否被混为一谈。
+- 代表测试：`QuestEnterZoneStartOwnerRegressionTest#affectedQuestsExposeTheLegacyStartOwnerRoute`、`#affectedQuestsDoNotAutoStartOnEnterZone`。
+- 验证命令和结果：`mvn -q -Dtest=QuestEnterZoneStartOwnerRegressionTest,Quest14123ZoneSpawnTest,MigratedQuestRepairDefinitionTest,QuestResidualCounterLocksTest,Quest26800ClientDialogAlignmentTest,LegacyTemplateMirrorRouteRegressionTest test` 6 类/38 用例通过；`mvn -q -Dquest.client.contract.failOnStaleBaseline=true -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestPageButtonAuditTest test` 5 类/31 用例通过（`PAGE_NOT_IN_TASK_HTML=0`、`BUTTON_WITHOUT_ROUTE=0`、`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_WHITELIST_VIOLATIONS=0`）；用户 Aion 5.8 客户端实机确认 18300 已可接取。
+- 复用边界：只适用于旧 handler 同时注册 `addOnQuestStart` 的任务。若旧 handler 在 NONE 态直接 `return false`、接取由 level-up/use-item/enter-zone 完成，则按 8.26 `AUTO_START_KEEPS_NONE_DIALOG_FREE` 保持 NONE 无对话路由，不得补接取链；本轮审计命中的 7 个事件任务（80000/80001/80034-80037/80230）正属该例外的待确认清单。
+- commit：`227cefc06`。
