@@ -130,7 +130,7 @@
 ### 8.3 两个编译器口径修正（本轮踩坑）
 
 1. **`reward -> reward` 的 `SELECT_QUEST_REWARD(1009)` 不能手写**：`QuestDefinitionCompiler.restoreRewardPreviewContract` 会为 `reward` 源追加一条 dialogId 通配（-1）的奖励预览路线；手写的 1009 路线与它同源同事件，编译期直接 `AMBIGUOUS_TRANSITION`。14252/24153/24252 已删除手写路线，交回编译器派生，`PRODUCTION_COMPILE_OK` 恢复 6189。
-2. **报告 NPC 上的无 source TALK 自愈与既有 `reward -> reward` 路线同事件**：同样触发 `AMBIGUOUS_TRANSITION`。因此 14252/24153/24252 只保留 ENTER_WORLD 迁移（重登/换图即自愈）；15101/25304/25604/23918 的报告 NPC 没有既有同事件路线，TALK 自愈保留。
+2. **报告 NPC 上的无 source TALK 自愈与既有 `reward -> reward` 路线并存是安全的（2026-09-19 更正）**：本节初稿曾据首次 Maven 失败把 `AMBIGUOUS_TRANSITION` 归因给 TALK 自愈，随后用编译探针证伪——把自愈路线重新插回 14252/24252/24153（此时手写 1009 已删除）后三份 XML 全部编译通过（14252/24252 transitions=39、24153 transitions=38）。原因是 `compatibleSourceNodes` 用节点投影求值条件：自愈条件 `variable-below var0 <报告行` 在 `reward` 投影（`var0` 已等于报告行）上为假，两条路线的可匹配来源节点集合互斥，因此不构成冲突。三条自愈路线已恢复（更正提交 `76277748b`），并由 `QuestMonsterProgressContractAuditTest` 的两个用例锁定。该错误归因在同批的 sweep/case/memory-bank 文档中一并更正。
 
 ### 8.4 审计器收敛（脚本重写）
 
@@ -166,4 +166,9 @@ mvn -q -Dtest='QuestSection0ReportRowContractTest,QuestMonsterProgressContractAu
 - `QuestPacketOrderRegressionTest` 的 24153 断言从旧 `started -> reward` 改为 `started -> hunted` 门控 + `hunted -> reward` 领奖；
 - `quest-section0-report-row-contract.tsv` 增加 `15101 1 2`（269 行），`QuestSection0ReportRowContractTest` 期望行数 268 -> 269。
 
-未执行：客户端实机验收、服务端启动。`PRODUCTION_COMPILE_OK=6189` 只证明 XML 可编译，不等于运行时行为已验证。
+客户端验收（用户 2026-09-19 授权门禁之外的实机点验）：
+
+- **15101：ACCEPTED**。用户回复「15101 验收完成」，未限定分支或步骤，按项目规则视为整任务验收。证据记录：`.agents/summary/quest-acceptance/15101-2026-09-19-section0-report-row-client-accepted.md`。
+- 同批其余 6 个任务（24153、25304、25604、14252、24252、23918）尚未实机验收，仍为 `PENDING`。
+
+未执行：服务端启动日志采集。`PRODUCTION_COMPILE_OK=6189` 只证明 XML 可编译，不等于运行时行为已验证。
