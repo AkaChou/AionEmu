@@ -68,9 +68,31 @@ login DatabaseConfig.DATABASE_URL = jdbc:mysql://127.0.0.1:3306/al_server_ls?...
 同时断言「镜像不发布冲突原始键」「两个服务的静态 `DatabaseConfig.DATABASE_URL` 各自落回本服务文件值」。
 修复前该用例必然失败（`database.url` 原始键=登录服 URL）。
 
-## 5. 验证边界与遗留风险
+## 5. 运行时验收（2026-09-19，用户启动服务端 + 客户端）
 
-- 未启动/重启服务器，未做真实客户端验收；运行时结论来自配置解析探针 + 单元测试。
+修复前的失败启动（对照，`log/console.log:63016-63174`）：
+
+```
+09-19 00:05:20 ERROR [virtual-294] PlayerDAO - 无法从 players 表获取 ID 列表
+09-19 00:05:20 ERROR [virtual-294] HousesDAO - 无法从 houses 表获取 ID 列表
+09-19 00:05:20 java.sql.SQLSyntaxErrorException: Table 'al_server_ls.player_minions' doesn't exist
+09-19 00:05:22 ERROR [world-spawner] HousesDAO - 无法从数据库恢复住宅数据
+09-19 00:05:2x ERROR [main] HousesDAO - 无法保存住宅数据，住宅 ID：…
+09-19 00:05:2x ERROR [main] TownDAO - 加载种族 ELYOS/ASMODIANS 的城镇失败 / 插入城镇失败：1003…
+```
+
+修复后的启动与客户端验证（`log/console.log` 08:53 / 08:55 两轮启动，08:55:55 客户端进入世界）：
+
+- `doesn't exist` 计数：**0 条**（08:5x 之后）；8 个 ID 表错误、住宅/城镇/竞拍/服务器时间错误全部消失。
+- `HousingService`：`正在加载住宅数据` → `住宅服务已加载` → 各图住宅生成计数（210050000:6 / 210040000:9 / 220040000:9 / 220070000:6 / 700010000:500 / 710010000:500）。
+- `HOUSE_AUCTION_LOG`：`已添加 1 条新住宅竞拍`（修复前为 1030 条 + 逐条 `添加住宅竞拍失败` + `HousingBidService:324` NPE，本次未再出现 NPE）。
+- `TownService`：`已加载 25 个天族城镇` / `已加载 25 个魔族城镇`（修复前为两组加载失败 + 50 条插入失败）。
+- `GAMECONNECTION_LOG`：`09-19 08:55:55 玩家 Ww（账号 cc）进入世界，MAC 地址=6C-0B-5E-A4-1D-57`；`log/cm_login.log` 同日 `cc got authed state`。
+- 08:5x 之后残留的 ERROR 共 6 条：4 条 `ChatCommand`（GM 命令文本为空，09:26/09:28/09:47）与 2 条 `KnownList - 对所有 NPC 运行访问器时异常`（09:32/09:43），与数据库连接无关。
+
+## 6. 遗留风险（未纳入本次修复）
+
+- 未做长时间运行观察；上述验收覆盖启动 + 登录 + 世界加载，未覆盖全部玩家系统。
 - **镜像目录与运行时目录可能不是同一棵树**：`AionServicePaths.configureConfig("aion.config.dir", ...)`
   在服务生命周期 Bean（ApplicationRunner 相位）里才写入系统属性，而 post-processor 更早执行；在 IDEA
   工作目录下它回退到 `src/main/resources/aion/config`，运行中的遗留加载器则读 `aion/config`。本次冲突键
