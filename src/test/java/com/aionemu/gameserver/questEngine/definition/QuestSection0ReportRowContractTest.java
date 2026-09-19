@@ -62,25 +62,29 @@ class QuestSection0ReportRowContractTest {
 			assertEquals(reportRow, reward.projection().variables().get("var0"),
 				() -> "quest " + questId + " reward must project SECTION_0=" + reportRow);
 
-			QuestNode started = definition.nodes().stream()
-				.filter(node -> node.label().equals("started"))
-				.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " must define a started node"));
-			Integer startedRow = started.projection().variables().get("var0");
+			// 计数阶段所在节点：多阶段任务由 step2/k1 等节点承载，单阶段任务就是 started。
+			// Stage owning node: multi-stage quests carry the counter row on step2/k1 nodes.
+			String stageNode = definition.nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.START)
+				.filter(node -> Integer.valueOf(stage).equals(node.projection().variables().get("var0")))
+				.sorted(Comparator.comparing(node -> node.label().equals("started") ? 0 : 1))
+				.map(QuestNode::label)
+				.findFirst().orElseThrow(() -> new AssertionError(
+					"quest " + questId + " must project SECTION_0=" + stage + " on a START node"));
 
 			List<QuestTransition> continuing = definition.transitions().stream()
-				.filter(transition -> "started".equals(transition.sourceNode()))
-				.filter(transition -> "started".equals(transition.targetNode()))
+				.filter(transition -> stageNode.equals(transition.sourceNode()))
+				.filter(transition -> stageNode.equals(transition.targetNode()))
 				.filter(transition -> isKillEvent(transition.event()))
 				.toList();
 			for (QuestTransition transition : continuing) {
 				assertTrue(transition.actions().stream().anyMatch(action ->
 						action instanceof QuestAction.SetVariable(String field, int value)
-							&& field.equals("var0") && value == startedRow),
-					() -> "quest " + questId + " continuing self-loop must pin SECTION_0=" + startedRow);
+							&& field.equals("var0") && value == stage),
+					() -> "quest " + questId + " continuing self-loop must pin SECTION_0=" + stage);
 			}
 
 			List<QuestTransition> completing = definition.transitions().stream()
-				.filter(transition -> "started".equals(transition.sourceNode()))
 				.filter(transition -> "reward".equals(transition.targetNode()))
 				.filter(transition -> isKillEvent(transition.event()))
 				.toList();
