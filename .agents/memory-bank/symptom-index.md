@@ -10,6 +10,7 @@
 | 拐角与门廊卡墙、贴墙无法脱困、NPC 切墙穿模、护送任务因模型死角超时失败、145885 onTargetTooFar 刷屏 | `AIM-003` | followTrail preservation, stopForPath fallback, stuckShadowConfirmed teleport, and MoveEventHandler onMoveValidate |
 | 卵/固定怪每次被攻击都“脱离战斗”，客户端反复播放脱战表现（Taloc's Hollow 的 mosqua egg 282006 一波多只时连续响） | `AIM-004` | AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARGET_GIVEUP |
 | NPC 停在 FIGHT 挂着仇恨不还手；为该症状加的“受击即重排攻击”修复上线后，线程池线程反复抛 java.lang.StackOverflowError（ExecuteWrapper 记录，栈循环 AttackEventHandler#onAttack → AttackManager#scheduleNextAttack → SimpleAttackManager#attackAction → CreatureController#attackTarget → 对方 AggroList#addDamageInternal） | `AIM-005` | AttackEventHandler#onAttack 的受击分支是否直接调用 AttackManager#scheduleNextAttack（应为 resumeInterruptedAttack + 线程池去重） |
+| 点击乘坐/操作固定炮台、坦克、攻城炮、宝箱等对象就弹 load fail!（HtmlPageId 10 / QuestId 0，客户端找不到 IDYun_Siegeweapon_* 一类 HTML 页），可骑乘对象上不去；空规则 retail pattern 还会让原生 useitem 乘坐/宝箱交互整体失效 | `AIM-006` | 遇到 load fail / HtmlPageId 10 时，先看该 NPC 的 retail pattern 在 on_talked_by_user 是否为 use_skill / teleport_target(_alias)，再看 AI2Engine.selectNpcAi 是否被空 pattern 抢走 useitem |
 | 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
 | ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件 | `AR-002` | DAOManager provider parameter and startup bridge construction |
 | 封包无响应、opcode 已实现但 handler 未触发、收发链路失败 | `AR-003` | opcode map, handler registration and client protocol version |

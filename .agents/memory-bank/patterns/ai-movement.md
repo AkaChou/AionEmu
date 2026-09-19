@@ -2,7 +2,7 @@
 
 本文档记录脚本 AI 选型、跟随/护送行为与移动控制器在非凸几何下的实战避坑经验。
 
-> Pattern IDs: `AIM-001`–`AIM-005`
+> Pattern IDs: `AIM-001`–`AIM-006`
 > card_status: ACTIVE; movement conclusions are tied to the observed geometry and path-data availability
 > scope: AI2Engine selection, follow/escort handlers, NpcMoveController pathing, and AI2 attack-event re-entry
 > last_reviewed: 2026-09-19
@@ -149,3 +149,29 @@ first_check: AttackEventHandler#onAttack 的受击分支是否直接调用 Attac
 - **为什么原版不爆栈**：原实现在“已在 FIGHT”时把这次还手直接吞掉（`setStateIfNot(FIGHT)` 返回 false 就什么都不做）——那正是“不还手”bug 的成因，因此不能用同步重排去修。
 - **修复与后续**：复位统一走 `AttackManager#resumeInterruptedAttack`（受击，延迟 0）/ `scheduleImmobileRetry`（够不着目标，按攻击间隔、最小 500ms），二者共用 `scheduleAttackRetry` + `PENDING_ATTACK_RETRIES` 去重（`shouldQueueAttackRetry(Future)`）；线程池任务体先撤销自身占位再校验 FIGHT/存活/有目标，然后 `scheduleNextAttack`（`isNextAttackScheduled()` 自带时间幂等）。
 - **验证边界**：静态闸门只保证“受击栈内没有同步重排”；其它会回打调用方的同步路径（技能、强制移动等）需在实际复现时按同一条递归链核对，而不是只盯 `AttackEventHandler`。
+
+---
+
+## [AIM-006] 六、真端直接交互模式不得下发默认 HTML 对话 (DIRECT_INTERACTION_SKIPS_DEFAULT_DIALOG)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: RetailPatternAI2.handleTalkedByUser 的 talk 入口，以及 AI2Engine.selectNpcAi 对 useitem 回退的选择
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 点击乘坐/操作固定炮台、坦克、攻城炮、宝箱等对象就弹 load fail!（HtmlPageId 10 / QuestId 0，客户端找不到 IDYun_Siegeweapon_* 一类 HTML 页），可骑乘对象上不去；空规则 retail pattern 还会让原生 useitem 乘坐/宝箱交互整体失效
+root_cause: handleTalkedByUser 无条件调用 super.handleDialogStart，TalkEventHandler 默认分支下发 SM_DIALOG_WINDOW(objectId, 10)；真端模式的 on_talked_by_user 本就只有 use_skill / teleport_target(_alias) 直接动作，没有可加载的 HTML 页（模板 is_dialog 标记不可靠，大量直接交互 NPC 仍为 true）；另有空规则 retail pattern 在 selectNpcAi 中抢走 useitem fallback
+fix_or_guardrail: on_talked_by_user 含 use_skill / teleport_target / teleport_target_alias 且无 on_hyperlink_clicked 的模式，以及带 on_gauge_* 事件的模式，都跳过默认 HTML 对话；retail pattern 没有任何可执行规则时不覆盖 useitem fallback
+evidence: commit 5f7df6599; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1031; src/main/java/com/aionemu/gameserver/ai2/AI2Engine.java:153; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:484; src/test/java/com/aionemu/gameserver/ai2/AI2EngineRetailSelectionTest.java:84; .agents/summary/retail-direct-interaction-dialog-guard/2026-09-19-retail-direct-interaction-dialog-guard.zh-CN.md
+validation: static（compact pattern 扫描：直接交互模式约 393 个、覆盖约 997 条 NPC 映射；gauge 驱动约 20 条；空规则 useitem 约 25 条含 702648/702649）；focused-test（RetailPatternAI2Test + AI2EngineRetailSelectionTest 共 89 例 0 失败，2026-09-19）；client/production 复验 PENDING（需部署后复验 702685 与代表性炮台/坦克）
+boundaries: 只看模式事件名与动作类型，不校验客户端 HTML 资源是否存在；带 on_hyperlink_clicked 的模式仍按 HTML 对话处理；只约束 talk 入口，其它事件链未改动
+superseded_by: none
+first_check: 遇到 load fail / HtmlPageId 10 时，先看该 NPC 的 retail pattern 在 on_talked_by_user 是否为 use_skill / teleport_target(_alias)，再看 AI2Engine.selectNpcAi 是否被空 pattern 抢走 useitem
+-->
+- **现象**：`702685`（Rentus 攻城炮）点击乘坐时客户端弹 `load fail!` / `IDYun_Siegeweapon_Li_01.html` / `(HtmlPageId 10)` / `(QuestId 0)`，乘坐动作完全不生效。
+- **根因链**：
+  1. `702685` 在 `npc-ai.xml` 绑定模式 `IDYun_SiezeWeapon_Li_03`，其 `on_talked_by_user` 只有 `use_skill SKILLI_INDEX_0` → `teleport_target_alias LocationsIDYun_siezeweapon3` → `despawn_self`（真端直接动作链，没有对应的 HTML 页）；
+  2. `RetailPatternAI2.handleTalkedByUser` 无条件调用 `super.handleDialogStart(player)`，进入 `TalkEventHandler` 默认分支，向客户端下发 `SM_DIALOG_WINDOW(objectId, 10)`；
+  3. 客户端按该包加载默认 HTML 第 10 页失败 → `load fail!`；真端乘坐动作被这个多余的前置对话包干扰。
+- **为什么不能靠模板 `is_dialog` 判断**：静态扫描 `on_talked_by_user` 含直接动作且无 `on_hyperlink_clicked` 的模式约 393 个（覆盖约 997 条 NPC 映射），其中大量 NPC 模板带 `is_dialog="true"`；另有约 20 条 gauge 驱动交互与约 25 条空规则 `useitem` 映射（含 `702648` / `702649`）属于同类真实交互协议。
+- **修复契约**：判断依据是模式自身的动作/事件形状，而不是模板标记——直接交互（`use_skill`、`teleport_target`、`teleport_target_alias`）与 `on_gauge_*` 模式一律不下发默认 HTML 页；`selectNpcAi` 里空规则 retail pattern 不得覆盖 `useitem`。
+- **验证边界**：本轮只有静态审计和 focused-test 证明；客户端复验需部署后对 `702685` 及代表性炮台/坦克（`832075`、`832273`、`702346` 等）实测乘坐。
