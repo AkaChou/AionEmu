@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
+import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
+import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,9 @@ class QuestMonsterProgressContractAuditTest {
 	private static final List<Integer> SPECIAL_MISSIONS_1_TO_24 = List.of(
 		19631, 19632, 19633, 19634, 19635, 19636, 19637, 19638, 19639, 19640, 19641, 19642,
 		29631, 29632, 29633, 29634, 29635, 29636, 29637, 29638, 29639, 29640, 29641, 29642);
+	private static final List<Integer> STEP_ZERO_MULTI_COUNTER_REPORT_QUESTS = List.of(
+		15001, 15020, 15073, 15100, 15104, 15203, 15406, 15407, 15408,
+		15580, 15671, 25671, 25060, 18952);
 
 	@Test
 	void specialMissionsElyosAndAsmodiansStrictlyAlignWithClientStepAndKillCounterSeparation() throws Exception {
@@ -143,6 +150,85 @@ class QuestMonsterProgressContractAuditTest {
 	}
 
 	@Test
+	void stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep() throws Exception {
+		for (int questId : STEP_ZERO_MULTI_COUNTER_REPORT_QUESTS) {
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+
+			QuestNode reward = definition.nodes().stream()
+				.filter(node -> node.label().equals("reward"))
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("quest " + questId + " must define a reward node"));
+			assertEquals(1, reward.projection().variables().get("var0"),
+				() -> "quest " + questId + " reward must project SECTION_0=1");
+
+			boolean hasMigrationRepair = definition.transitions().stream()
+				.filter(transition -> transition.sourceNode() == null)
+				.filter(transition -> transition.targetNode().equals("reward"))
+				.filter(transition -> transition.event() instanceof QuestEvent.EnterWorld)
+				.anyMatch(transition -> transition.conditions().stream()
+						.anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
+							&& status.status() == QuestStatus.REWARD)
+					&& transition.conditions().stream()
+						.anyMatch(condition -> condition instanceof QuestCondition.QuestVariableIs variable
+							&& variable.field().equals("var0") && variable.value() == 0)
+					&& transition.actions().stream()
+						.anyMatch(action -> action instanceof QuestAction.SetVariable(String field, int value)
+							&& field.equals("var0") && value == 1)
+					&& transition.afterCommit().contains(new AfterCommitAction.SyncQuestState(
+						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)));
+			assertTrue(hasMigrationRepair,
+				() -> "quest " + questId + " must repair legacy REWARD SECTION_0=0 saves");
+
+			List<QuestTransition> completing = definition.transitions().stream()
+				.filter(transition -> "started".equals(transition.sourceNode()))
+				.filter(transition -> "reward".equals(transition.targetNode()))
+				.filter(transition -> isKillEvent(transition.event()))
+				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+				.toList();
+			assertFalse(completing.isEmpty(),
+				() -> "quest " + questId + " must have a completing kill route");
+			for (QuestTransition transition : completing) {
+				assertTrue(transition.actions().stream().anyMatch(action ->
+						action instanceof QuestAction.SetVariable(String field, int value)
+							&& field.equals("var0") && value == 1),
+					() -> "quest " + questId + " completing kill route must set SECTION_0=1");
+				assertTrue(transition.afterCommit().contains(
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+					() -> "quest " + questId + " completing kill route must refresh visibility");
+			}
+
+			List<QuestTransition> continuing = definition.transitions().stream()
+				.filter(transition -> "started".equals(transition.sourceNode()))
+				.filter(transition -> "started".equals(transition.targetNode()))
+				.filter(transition -> isKillEvent(transition.event()))
+				.toList();
+			assertFalse(continuing.isEmpty(),
+				() -> "quest " + questId + " must have a continuing kill route");
+			for (QuestTransition transition : continuing) {
+				assertTrue(transition.actions().stream().anyMatch(action ->
+						action instanceof QuestAction.SetVariable(String field, int value)
+							&& field.equals("var0") && value == 0),
+					() -> "quest " + questId + " continuing kill route must pin SECTION_0=0");
+			}
+		}
+	}
+
+	@Test
+	void quest15001SaturatesBothSectionsAndEntersRewardWithSectionZeroOne() throws Exception {
+		CompiledQuestDefinition definition = load(15001);
+		QuestSnapshot state = new QuestSnapshot(7, 15001, QuestStatus.START, 0, Map.of());
+		for (int count = 0; count < 5; count++) {
+			state = apply(definition, state, new QuestEvent.KillNpc(235790));
+		}
+		for (int count = 0; count < 5; count++) {
+			state = apply(definition, state, new QuestEvent.KillNpc(235799));
+		}
+		assertEquals(QuestStatus.REWARD, state.status());
+		assertEquals(1 + (5 << 6) + (5 << 12), state.packedVariables());
+	}
+
+	@Test
 	void clientMonsterProgressContractsCsvExistsAndHasExpectedShape() throws Exception {
 		assertTrue(Files.exists(CONTRACTS_CSV), "contracts CSV must exist in docs/quest/client-dialog-mapping/");
 		try (BufferedReader reader = Files.newBufferedReader(CONTRACTS_CSV, StandardCharsets.UTF_8)) {
@@ -167,6 +253,24 @@ class QuestMonsterProgressContractAuditTest {
 
 	private static boolean isKillEvent(QuestEvent event) {
 		return event instanceof QuestEvent.KillNpc || event instanceof QuestEvent.KillNpcSet;
+	}
+
+	private static QuestSnapshot apply(CompiledQuestDefinition definition, QuestSnapshot snapshot,
+			QuestEvent event) {
+		List<QuestTransition> candidates = definition.transitionsFor(event.type()).stream()
+			.filter(transition -> QuestEvent.matches(transition.event(), event))
+			.sorted(Comparator.comparingInt(transition -> transition.priority() == null
+				? Integer.MAX_VALUE : transition.priority()))
+			.toList();
+		for (QuestTransition transition : candidates) {
+			var plan = QuestMutationPlanner.plan(definition, snapshot, event, transition);
+			if (plan.isPresent()) {
+				QuestMutationPlan mutation = plan.orElseThrow();
+				return new QuestSnapshot(7, definition.id(), mutation.nextStatus(),
+					mutation.nextPackedVariables(), Map.of());
+			}
+		}
+		throw new AssertionError("no route for quest " + definition.id() + " event " + event);
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,

@@ -25,6 +25,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="1"/>
       <var name="var3" value="1"/>
@@ -35,6 +36,22 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="236225 236226 236227 236228"/>
@@ -43,6 +60,7 @@
         <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
@@ -59,6 +77,7 @@
         <variable-at-least field="var4" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
@@ -73,6 +92,7 @@
         <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <increment-variable field="var2" delta="1"/>
       </actions>
       <after-commit>
@@ -89,6 +109,7 @@
         <variable-at-least field="var4" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <increment-variable field="var2" delta="1"/>
       </actions>
       <after-commit>
@@ -103,6 +124,7 @@
         <variable-below field="var3" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <increment-variable field="var3" delta="1"/>
       </actions>
       <after-commit>
@@ -119,6 +141,7 @@
         <variable-at-least field="var4" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <increment-variable field="var3" delta="1"/>
       </actions>
       <after-commit>
@@ -133,6 +156,7 @@
         <variable-below field="var4" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <increment-variable field="var4" delta="1"/>
       </actions>
       <after-commit>
@@ -149,6 +173,7 @@
         <variable-at-least field="var3" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <increment-variable field="var4" delta="1"/>
       </actions>
       <after-commit>

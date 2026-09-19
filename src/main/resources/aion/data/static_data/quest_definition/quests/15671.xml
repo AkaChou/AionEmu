@@ -25,7 +25,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="6"/>
     </node>
@@ -36,6 +36,22 @@
     </node>
   </nodes>
   <transitions reported-reward-mode="FIXED">
+    <!-- SECTION_0 migration repair: legacy REWARD saves -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="806114" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
@@ -70,6 +86,7 @@
         <variable-at-least field="var2" value="6"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <set-variable field="var1" value="1"/>
       </actions>
       <after-commit>
@@ -84,6 +101,7 @@
         <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <set-variable field="var1" value="1"/>
       </actions>
       <after-commit>
@@ -98,6 +116,7 @@
         <variable-below field="var2" value="6"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="0"/>
         <increment-variable field="var2" delta="1"/>
       </actions>
       <after-commit>
@@ -113,6 +132,7 @@
         <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <set-variable field="var2" value="6"/>
       </actions>
       <after-commit>
