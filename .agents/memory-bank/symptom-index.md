@@ -11,6 +11,7 @@
 | 卵/固定怪每次被攻击都“脱离战斗”，客户端反复播放脱战表现（Taloc's Hollow 的 mosqua egg 282006 一波多只时连续响） | `AIM-004` | AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARGET_GIVEUP |
 | NPC 停在 FIGHT 挂着仇恨不还手；为该症状加的“受击即重排攻击”修复上线后，线程池线程反复抛 java.lang.StackOverflowError（ExecuteWrapper 记录，栈循环 AttackEventHandler#onAttack → AttackManager#scheduleNextAttack → SimpleAttackManager#attackAction → CreatureController#attackTarget → 对方 AggroList#addDamageInternal） | `AIM-005` | AttackEventHandler#onAttack 的受击分支是否直接调用 AttackManager#scheduleNextAttack（应为 resumeInterruptedAttack + 线程池去重） |
 | 点击乘坐/操作固定炮台、坦克、攻城炮、宝箱等对象就弹 load fail!（HtmlPageId 10 / QuestId 0，客户端找不到 IDYun_Siegeweapon_* 一类 HTML 页），可骑乘对象上不去；空规则 retail pattern 还会让原生 useitem 乘坐/宝箱交互整体失效 | `AIM-006` | 遇到 load fail / HtmlPageId 10 时，先看该 NPC 的 retail pattern 在 on_talked_by_user 是否为 use_skill / teleport_target(_alias)，再看 AI2Engine.selectNpcAi 是否被空 pattern 抢走 useitem |
+| 击杀本该“变身/换形态”的 Boss 后任务或场景不推进；爆发、一击、技能连招把人形从阈值以上直接打死时，替代形态完全不出现（例：任务 15300/25300 步骤 7「消灭盘龙巢穴的奥里萨」击杀 237230 不生成 237231，永远停在步骤 7） | `AIM-007` | 该 AI 是否在 handleAttack/checkPercentage 里 spawn 替代形态；handleDied 是否调用同一个 *Once() 生成闸门（只看次数，不重复判断 HP） |
 | 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
 | ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件 | `AR-002` | DAOManager provider parameter and startup bridge construction |
 | 封包无响应、opcode 已实现但 handler 未触发、收发链路失败 | `AR-003` | opcode map, handler registration and client protocol version |
@@ -35,11 +36,12 @@
 | rows 配置正确却出现 WalkerGroup Invalid row sizes，编队成员被拆成多个刷怪组 | `IR-004` | InstanceWalkerFormations.organizeAndSpawn, POSITION_GROUP_DISTANCE, WalkerGroupShift.DISTANCE, rows/member count and actual spawn logs |
 | 活动日志后紧接客户端断线或被报告为崩溃 | `IR-005` | startChoose branch conditions, running PID/classpath, selected-player logs, teleport packets and client dump/log |
 | 两个 NPC 在相近坐标重复出现，疑似同一训练/生产点被刷出两次 | `IR-006` | static spawn loader, RetailConditionSpawnEngine, condition-spawns producer pages and legacy/client NPC evidence |
-| 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交 | `IR-007` | spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML |
+| 同一 NPC 重复刷出；排查时按“该点是否为新引入”筛选候选数量远少于实际，且把重复归因给错误的提交。残留也可能是**另一条独立 `<spawn>` 块**且与真端点相距十几米（例：任务版盘龙巢穴 237228 / 237229 各刷 2 个），同块重合点判据扫不到 | `IR-007` | spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML |
 | NPC 死亡时 NPE "Cannot invoke Player.getClientConnection() because \"player\" is null"（如 DarkPoetaInstance.sendMovie → PacketSendUtility） | `IR-008` | getMostPlayerDamage 调用点、实例脚本 sendMovie/sendPacket(player,…)、PacketSendUtility 的 null 容忍度 |
 | 卵孵化出的召唤物只短暂出现就消失（真端数据写的是 live_time=18）；同类“带 live_time 的临时召唤物”都如此 | `IR-009` | resetPatternState/releaseTrackedSpawns 是否按 live_time 区分释放 |
 | 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去） | `IR-010` | 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径 |
 | 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付） | `IR-011` | resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开 |
+| 副本销毁后日志持续刷“生成 NPC 209679/237219/237232/237217 时出错”，异常是 InstanceScaler.onBeforeSpawn → WorldPosition.getWorldMapInstance 的 NullPointerException（部分只记录裸 NPE） | `IR-012` | 副本销毁后仍在排队的延迟任务入口是否检查 isInstanceDestroyed，spawn 返回值与 getNpcs 列表返回值是否判空 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
@@ -84,6 +86,7 @@
 | 在 NPC 任务列表点任务行后对话框立刻关闭（SM_DIALOG_WINDOW page=0）或任务行点不动、永远接不到；客户端动作是 QUEST_ACCEPT_SIMPLE(20000)，服务端无异常堆栈，容易误判成接取路由缺失 | `QE-042` | 见到“点任务后直接关窗/接不到、动作 20000 后 page=0”时，先查该任务 metadata/inventory-items 是否来自真端 inventory_item_name，再看 PlayerQuestStartEligibilityPort 的 REQUIRED_INVENTORY_ITEM_MISSING 分支 |
 | 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成 | `QE-043` | 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT |
 | 玩家完成收集且背包持有足量任务道具，但找到交付 NPC 时，NPC 头顶无任务对白标记，点击交互时下发 questId=0 通用第 10 页 (SM_DIALOG_WINDOW 玩家=xx targetObj=xx questId=0 下发页=10)，任务卡在收集步无法推进交付；计数残留臂还表现为感应区/影片/步骤门控不触发（进入非计数阶段时整型步数被 var1/var2 高位污染，如 10507 s7 影片 993 不触发） | `QE-044` | 交付 NPC 下发 page 10 时，优先对比客户端 quest.xml 的 collect_progress 与玩家当前 quest_vars 的 var0 阶段值 |
+| 领奖阶段任务书空白、任务信息消失、背包已有任务道具但下一 NPC 不显示、无法领奖；SM_QUEST_ACTION 状态=REWARD 的步数比报告行大 1（15300 为 状态=4 步数=14） | `QE-045` | 先比旧 handler 进入 REWARD 的调用参数（from/to）与当前 reward 节点投影；再看 START -> REWARD transition 是否 set-variable 该字段；最后确认是否存在 status-is REWARD + 变量==to 的无 source enter-world 恢复边 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

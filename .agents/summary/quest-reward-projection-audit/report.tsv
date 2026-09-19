@@ -1,0 +1,491 @@
+quest_id	handler_path	expected_from	expected_to	xml_var0	recovery_vars	handover_writes	verdict
+1006	src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_1006Ascension.java	5	5	5			SELF_REWARD_NO_STEP
+1141	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1141BelbuasTreasure.java	0	0	0			SELF_REWARD_NO_STEP
+1146	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1146Delicate_Mandrake.java	0	0	0			SELF_REWARD_NO_STEP
+1156	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1156StolenVillageSeal.java	1	1	1			SELF_REWARD_NO_STEP
+1162	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1162AltenosWeddingRing.java	1	1	MULTI_REWARD_NODE(2)			SELF_REWARD_NO_STEP
+1170	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1170Headless_Stone_Statue.java	0	0	0			SELF_REWARD_NO_STEP
+1230	src/main/java/com/aionemu/gameserver/quest/handlers/poeta/_1230Message_To_Madeline.java	0	0	0			SELF_REWARD_NO_STEP
+1231	src/main/java/com/aionemu/gameserver/quest/handlers/poeta/_1231A_House_Guest.java	0	0	0			SELF_REWARD_NO_STEP
+1393	src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1393NewFlightPath.java	0	0	1			SELF_REWARD_NO_STEP
+1607	src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1607Mapping_The_Revolutionaries.java	1	1	1			SELF_REWARD_NO_STEP
+1670	src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1670Invisible_Bridges.java	48	48	48			SELF_REWARD_NO_STEP
+1919	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_1919Welcome_To_The_Artisant_Hall.java	0	0	0			SELF_REWARD_NO_STEP
+1987	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_1987ABiggerWarehouse.java	0	0	0			SELF_REWARD_NO_STEP
+1990	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_1990A_Sages_Gift.java	3	3	NONE			SELF_REWARD_NO_STEP
+1993	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_1993Another_Beginning.java	0	0	NONE			SELF_REWARD_NO_STEP
+1994	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_1994A_New_Choice.java	0	0	NONE			SELF_REWARD_NO_STEP
+2008	src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_2008Ascension.java	6	7	7			MISMATCH_PROJECTION
+2106	src/main/java/com/aionemu/gameserver/quest/handlers/ishalgen/_2106VanarsFlattery.java	0	1	1			MISMATCH_PROJECTION
+2150	src/main/java/com/aionemu/gameserver/quest/handlers/ishalgen/_2150Brotherly_Love.java	0	0	0			SELF_REWARD_NO_STEP
+2151	src/main/java/com/aionemu/gameserver/quest/handlers/ishalgen/_2151Swallowing_Pride.java	0	0	0			SELF_REWARD_NO_STEP
+2221	src/main/java/com/aionemu/gameserver/quest/handlers/altgard/_2221ManirsUncle.java	2	2	2			SELF_REWARD_NO_STEP
+2493	src/main/java/com/aionemu/gameserver/quest/handlers/morheim/_2493BringingUpTayga.java	0	0	0			SELF_REWARD_NO_STEP
+2651	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2651SpyAFriendsWhereabouts.java	1	1	1			SELF_REWARD_NO_STEP
+2920	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2920ElementaryMyDearDaeva.java	0	0	MULTI_REWARD_NODE(2)			SELF_REWARD_NO_STEP
+2925	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2925AHeartfeltConfession.java	5	5	5			SELF_REWARD_NO_STEP
+2929	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2929Welcome_To_The_Temple_Of_Artisans.java	0	0	0			SELF_REWARD_NO_STEP
+2953	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2953DeliveringSupplyRequest.java	1	1	1			SELF_REWARD_NO_STEP
+2954	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2954DeliveringOdellaJuice.java	1	1	0			SELF_REWARD_NO_STEP
+2985	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2985AnExpertsReward.java	0	0	0			SELF_REWARD_NO_STEP
+2990	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_2990Making_The_Daevanion_Weapon.java	3	3	NONE			SELF_REWARD_NO_STEP
+2993	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_2993Another_Beginning.java	0	0	NONE			SELF_REWARD_NO_STEP
+2994	src/main/java/com/aionemu/gameserver/quest/handlers/daevanion/_2994A_New_Choice.java	0	0	NONE			SELF_REWARD_NO_STEP
+3057	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3057Cursed_Zirius.java	0	1	0			MISSING_RECOVERY_EDGE
+3074	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3074Dangerous_Probability.java	0	0	0			SELF_REWARD_NO_STEP
+3076	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3076Bolstering_The_Aetheric_Field.java	2	3	3			MISMATCH_PROJECTION
+3547	src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_3547Enemy_Harassing_The_Elim.java	1	1	0			SELF_REWARD_NO_STEP
+3921	src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_3921Shoshinerk_Reward.java	0	0	0			SELF_REWARD_NO_STEP
+3936	src/main/java/com/aionemu/gameserver/quest/handlers/miragent_holy_templar/_3936Decorations_Of_Sanctum.java	1	1	1			SELF_REWARD_NO_STEP
+3937	src/main/java/com/aionemu/gameserver/quest/handlers/miragent_holy_templar/_3937Group_The_Decorations_Of_Sanctum.java	1	1	1			SELF_REWARD_NO_STEP
+3961	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3961GrowthFlorasFirstCharm.java	1	1	2			SELF_REWARD_NO_STEP
+3962	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3962GrowthFlorasSecondCharm.java	1	1	2			SELF_REWARD_NO_STEP
+3963	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3963GrowthFlorasThirdCharm.java	1	1	2			SELF_REWARD_NO_STEP
+3964	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3964GrowthFlorasFourthCharm.java	1	1	2			SELF_REWARD_NO_STEP
+3965	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3965TotheGalleriaofGrandeur.java	1	1	0			SELF_REWARD_NO_STEP
+4038	src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4038Alas_Poor_Groznak.java	2	3	0			MISMATCH_PROJECTION
+4074	src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4074Gain_Or_Lose.java	0	0	0			SELF_REWARD_NO_STEP
+4542	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_4542The_Secret_Of_The_Seiren_Treasure.java	5	6	0			MISMATCH_PROJECTION
+4913	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_4913A_Future_Threat.java	0	0	0			SELF_REWARD_NO_STEP
+4921	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_4921Chocorunerk_Reward.java	0	0	0			SELF_REWARD_NO_STEP
+4940	src/main/java/com/aionemu/gameserver/quest/handlers/fenris_fang/_4940Decorations_Of_Pandaemonium.java	1	1	0			SELF_REWARD_NO_STEP
+4941	src/main/java/com/aionemu/gameserver/quest/handlers/fenris_fang/_4941Group_Pandaemonium_Honors.java	1	1	0			SELF_REWARD_NO_STEP
+4966	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4966GrowthNinissFirstCharm.java	1	1	2			SELF_REWARD_NO_STEP
+4967	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4967GrowthNinissSecondCharm.java	1	1	2			SELF_REWARD_NO_STEP
+4968	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4968GrowthNinissThirdCharm.java	1	1	2			SELF_REWARD_NO_STEP
+4969	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4969GrowthNinissFourthCharm.java	1	1	2			SELF_REWARD_NO_STEP
+10528	src/main/java/com/aionemu/gameserver/quest/handlers/archdaeva/_10528Protection_Artifact_1.java	11	12	11		11	MISSING_RECOVERY_EDGE
+11051	src/main/java/com/aionemu/gameserver/quest/handlers/inggison_armor/_11051Paris_I_Love_You.java	0	0	0			SELF_REWARD_NO_STEP
+11052	src/main/java/com/aionemu/gameserver/quest/handlers/inggison_armor/_11052Gloves_And_Glossy_Beads.java	0	0	0			SELF_REWARD_NO_STEP
+11053	src/main/java/com/aionemu/gameserver/quest/handlers/inggison_armor/_11053These_Shoes_Are_Made_For_Stalking.java	0	0	0			SELF_REWARD_NO_STEP
+11054	src/main/java/com/aionemu/gameserver/quest/handlers/inggison_armor/_11054Accounts_About_The_Armor.java	0	0	0			SELF_REWARD_NO_STEP
+11055	src/main/java/com/aionemu/gameserver/quest/handlers/inggison_armor/_11055Another_Piece.java	0	0	0			SELF_REWARD_NO_STEP
+11077	src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11077AWeaponOfWorth.java	2	3	0			MISMATCH_PROJECTION
+11147	src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11147Cute_Beady_Eyes.java	4	4	4			SELF_REWARD_NO_STEP
+11319	src/main/java/com/aionemu/gameserver/quest/handlers/cygnea/_11319Tour_De_Cygnea.java	0	0	0			SELF_REWARD_NO_STEP
+11340	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11340.java	5	6	NO_XML			NO_XML
+11341	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11341.java	5	6	NO_XML			NO_XML
+11342	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11342.java	5	6	NO_XML			NO_XML
+11343	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11343.java	5	6	NO_XML			NO_XML
+11344	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11344.java	5	6	NO_XML			NO_XML
+11345	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11345.java	5	6	NO_XML			NO_XML
+11346	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11346.java	5	6	NO_XML			NO_XML
+11347	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11347.java	5	6	NO_XML			NO_XML
+11348	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11348.java	5	6	NO_XML			NO_XML
+11349	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11349.java	5	6	NO_XML			NO_XML
+11350	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11350.java	5	6	NO_XML			NO_XML
+11351	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11351.java	5	6	NO_XML			NO_XML
+11352	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11352.java	5	6	NO_XML			NO_XML
+11353	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11353.java	5	6	NO_XML			NO_XML
+11370	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11370.java	5	6	NO_XML			NO_XML
+11371	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11371.java	5	6	NO_XML			NO_XML
+11372	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11372.java	5	6	NO_XML			NO_XML
+11373	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11373.java	5	6	NO_XML			NO_XML
+11374	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11374.java	5	6	NO_XML			NO_XML
+11375	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11375.java	5	6	NO_XML			NO_XML
+11376	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11376.java	5	6	NO_XML			NO_XML
+11377	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11377.java	5	6	NO_XML			NO_XML
+11378	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11378.java	5	6	NO_XML			NO_XML
+11379	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11379.java	5	6	NO_XML			NO_XML
+11380	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11380.java	5	6	NO_XML			NO_XML
+11381	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11381.java	5	6	NO_XML			NO_XML
+11382	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11382.java	5	6	NO_XML			NO_XML
+11383	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_11383.java	5	6	NO_XML			NO_XML
+11460	src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11460TheShulackofTaloc.java	1	1	0			SELF_REWARD_NO_STEP
+11465	src/main/java/com/aionemu/gameserver/quest/handlers/taloc_hollow/_11465MysteriousSeed.java	0	0	1			SELF_REWARD_NO_STEP
+11466	src/main/java/com/aionemu/gameserver/quest/handlers/taloc_hollow/_11466AHardSeedtoCrack.java	0	0	0			SELF_REWARD_NO_STEP
+13305	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_13305Meet_Stifas_The_Stiff.java	0	0	0			SELF_REWARD_NO_STEP
+13700	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13700The_Unknown_Balaurea.java	0	0	0			SELF_REWARD_NO_STEP
+13701	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13701A_New_Land_A_New_War.java	0	0	0			SELF_REWARD_NO_STEP
+13702	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13702Tomul_Tap.java	4	5	4			MISSING_RECOVERY_EDGE
+13703	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13703Igniting_The_Conflict.java	1	2	1			MISSING_RECOVERY_EDGE
+13704	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13704Fona_Quick_Fix.java	1	1	1		1	SELF_REWARD_NO_STEP
+13705	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13705Coastal_Bypass_Operation.java	3	4	3		3,3	MISSING_RECOVERY_EDGE
+13708	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13708Proximity_Protect.java	1	1	1		1	SELF_REWARD_NO_STEP
+13809	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_13809Tree_Is_Company.java	3	4	0			MISMATCH_PROJECTION
+13812	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_13812An_Unlikely_Alliance.java	0	0	1		1	SELF_REWARD_NO_STEP
+13830	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_13830Stigma_101.java	1	1	1		1	SELF_REWARD_NO_STEP
+13831	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_13831Pelias_Aid.java	1	1	1		1	SELF_REWARD_NO_STEP
+13832	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_13832StiGreat.java	1	1	1			SELF_REWARD_NO_STEP
+13833	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_13833Stigmore.java	1	1	1			SELF_REWARD_NO_STEP
+13834	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_13834StigMajor.java	1	1	1			SELF_REWARD_NO_STEP
+13880	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_13880Secure_Wealhtheow_Keep.java	1	2	1		1,1,1	MISSING_RECOVERY_EDGE
+13902	src/main/java/com/aionemu/gameserver/quest/handlers/hero_alliance/_13902Bracing_For_Balaurea.java	0	0	0			SELF_REWARD_NO_STEP
+13950	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13950Location_Of_The_Missing_Daevas.java	2	4	4			MISMATCH_PROJECTION
+13951	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13951An_Undelivered_Letter.java	1	1	1		1	SELF_REWARD_NO_STEP
+13952	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13952Logion_Journal.java	0	0	1		1	SELF_REWARD_NO_STEP
+13953	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13953Ownerless_Balaur_Sword.java	1	2	2		2	MISMATCH_PROJECTION
+13956	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13956Attack_On_Bastion_Of_Souls.java	4	5	5		5	MISMATCH_PROJECTION
+13967	src/main/java/com/aionemu/gameserver/quest/handlers/evergale_canyon/_13967A_Fragment_Fallen_At_The_Cave.java	0	1	1		1,1	MISMATCH_PROJECTION
+14022	src/main/java/com/aionemu/gameserver/quest/handlers/mission/_14022The_Test_Of_The_Heart.java	7	7	7			SELF_REWARD_NO_STEP
+14024	src/main/java/com/aionemu/gameserver/quest/handlers/mission/_14024A_Kralling_Suspicion.java	3	3	3			SELF_REWARD_NO_STEP
+14201	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_14201Weapon_Of_Past_Destruction.java	2	2	0			SELF_REWARD_NO_STEP
+14211	src/main/java/com/aionemu/gameserver/quest/handlers/transidium_annex/_14211Empyrean_Scribe.java	0	0	NONE		1	SELF_REWARD_NO_STEP
+14220	src/main/java/com/aionemu/gameserver/quest/handlers/panesterra/_14220New_Zone_New_Rules.java	1	1	0			SELF_REWARD_NO_STEP
+15300	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15300Taking_Arms.java	13	14	13	14		OK
+15301	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15301Two_Steps_Closer.java	2	3	0			MISMATCH_PROJECTION
+15302	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15302Hand_In_Glove.java	2	3	0			MISMATCH_PROJECTION
+15303	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15303Souled_Shoulder.java	2	3	0			MISMATCH_PROJECTION
+15304	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15304Last_Leg_And_Wit_End.java	3	4	4		4	MISMATCH_PROJECTION
+15305	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15305Buffed_Shirt.java	2	3	0			MISMATCH_PROJECTION
+15306	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15306Wielding_Power.java	9	10	10		10	MISMATCH_PROJECTION
+15334	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_15334Devoted_Prayers.java	1	1	1		1	SELF_REWARD_NO_STEP
+15406	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15406Defeat_The_Ereshkigal_Legion.java	4	5	1	0	1,1	MISMATCH_PROJECTION
+15407	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15407Defeat_The_Beritra_Legion_In_The_Ruins_Of_Roah.java	4	5	1	0	1,1	MISMATCH_PROJECTION
+15408	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15408Defeat_The_Beritra_Legion_In_Asteria.java	4	5	1	0	1,1	MISMATCH_PROJECTION
+15409	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15409Defeat_Terracrusher.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15410	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15410Defeat_Wurg_The_Glacier.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15411	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15411Protect_The_Ruins_Of_Roah.java	2	3	1		1	MISMATCH_PROJECTION
+15412	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15412Protect_Bloodburn_Reach.java	2	3	1		1	MISMATCH_PROJECTION
+15413	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15413Protect_Lake_Asteria.java	2	3	1		1	MISMATCH_PROJECTION
+15414	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15414Protect_Rattlefrost_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15415	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15415Protect_Sliversleet_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15416	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15416Protect_Coldforge_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15417	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15417Protect_Shimmerfrost_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15418	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15418Protect_Icehowl_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15419	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15419Protect_Chillhaunt_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15420	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15420Protect_Wildersage_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15421	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15421Protect_Dauntless_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15422	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15422Protect_Anchorbrak_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15423	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15423Protect_Brokenblade_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15424	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15424Protect_Sootguzzle_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15425	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15425Protect_Flameruin_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15426	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15426Protect_Stokebellow_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15427	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15427Protect_Blazerack_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15428	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15428Protect_Smoldergeist_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15429	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15429Protect_Moltenspike_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15430	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15430Shield_Rattlefrost_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15431	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15431Shield_Silversleet_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15432	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15432Shield_Coldforge_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15433	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15433Shield_Shimmerfrost_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15434	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15434Shield_Icehowl_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15435	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15435Shield_Chillhaunt_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15436	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15436Shield_Wildersage_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15437	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15437Shield_Dauntless_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15438	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15438Shield_Anchorbrak_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15439	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15439Shield_Brokenblade_Artifact_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15440	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15440Shield_Sootguzzle_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15441	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15441Shield_Flameruin_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15442	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15442Shield_Stokebellow_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15443	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15443Shield_Blazerack_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15444	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15444Shield_Smoldergeist_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15445	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15445Shield_Moltenspike_Outpost.java	5	6	1		1	MISMATCH_PROJECTION
+15472	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15472Scaling_Up_For_The_Outposts.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15473	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15473Artifact_Base_Foundations.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15474	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15474Ruins_Of_Roah_Occupation.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15475	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15475Occupiers_Groundwork.java	1	2	1		1	MISSING_RECOVERY_EDGE
+15476	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15476Enhance_Base_Accessibility.java	8	9	1		1	MISMATCH_PROJECTION
+15477	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15477Improve_Base_Accessibility.java	8	9	1		1	MISMATCH_PROJECTION
+15480	src/main/java/com/aionemu/gameserver/quest/handlers/redemption_landing/_15480Clearing_A_Path.java	1	2	1			MISSING_RECOVERY_EDGE
+15563	src/main/java/com/aionemu/gameserver/quest/handlers/iluma/_15563Broken_Archon_Medals.java	0	0	1		1	SELF_REWARD_NO_STEP
+15602	src/main/java/com/aionemu/gameserver/quest/handlers/iluma/_15602Gurgan_The_Great.java	3	4	5		5	MISMATCH_PROJECTION
+15606	src/main/java/com/aionemu/gameserver/quest/handlers/iluma/_15606The_Hall_Of_Zephyr.java	4	5	5		5	MISMATCH_PROJECTION
+15680	src/main/java/com/aionemu/gameserver/quest/handlers/iluma/_15680Shuket_Of_The_Iron_Star_Pirates.java	7	8	8		8	MISMATCH_PROJECTION
+16800	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_16800Into_The_Archives.java	2	3	1		1,1,1	MISMATCH_PROJECTION
+16809	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_16809Completed_History_Of_Atreia.java	0	0	1		1	SELF_REWARD_NO_STEP
+16810	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_16810Completed_Record_Of_The_Humans.java	0	0	1		1	SELF_REWARD_NO_STEP
+16811	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_16811Completed_History_Of_The_Empyrean_Lords.java	0	0	1		1	SELF_REWARD_NO_STEP
+16839	src/main/java/com/aionemu/gameserver/quest/handlers/trials_of_eternity/_16839Dimensional_Monster_Bullion.java	1	2	2		2	MISMATCH_PROJECTION
+16922	src/main/java/com/aionemu/gameserver/quest/handlers/danuar_reliquary/_16922Shugo_Checkup.java	0	0	0			SELF_REWARD_NO_STEP
+16979	src/main/java/com/aionemu/gameserver/quest/handlers/engulfed_ophidan_bridge/_16979Engulfed_Bridge.java	0	0	0			SELF_REWARD_NO_STEP
+16990	src/main/java/com/aionemu/gameserver/quest/handlers/illuminary_obelisk/_16990Strengthen_The_Defense.java	0	0	0			SELF_REWARD_NO_STEP
+17526	src/main/java/com/aionemu/gameserver/quest/handlers/IDAbRe_Core_03/_17526.java	1	2	0			MISMATCH_PROJECTION
+17550	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_17550.java	0	0	0			SELF_REWARD_NO_STEP
+17551	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_17551.java	4	5	5			MISMATCH_PROJECTION
+17552	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_17552.java	1	2	2			MISMATCH_PROJECTION
+18035	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_18035DRAKINT.java	1	1	0			SELF_REWARD_NO_STEP
+18036	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_18036Bastions_Are_Eternal_Positions_Are_Not.java	0	1	0			MISSING_RECOVERY_EDGE
+18250	src/main/java/com/aionemu/gameserver/quest/handlers/crucible_spire/_18250To_Crucible_Spire.java	0	0	0			SELF_REWARD_NO_STEP
+18251	src/main/java/com/aionemu/gameserver/quest/handlers/crucible_spire/_18251To_Crucible_Spire.java	0	0	0			SELF_REWARD_NO_STEP
+18300	src/main/java/com/aionemu/gameserver/quest/handlers/aturam_sky_fortress/_18300Floating_Death.java	1	1	1			SELF_REWARD_NO_STEP
+18314	src/main/java/com/aionemu/gameserver/quest/handlers/aturam_sky_fortress/_18314What_Not_To_Forget_During_A_Mission.java	7	8	1		1,1,1	MISMATCH_PROJECTION
+18500	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_18500Illegal_Odium.java	3	3	3			SELF_REWARD_NO_STEP
+18510	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_18510Fire_And_Flame.java	5	5	5			SELF_REWARD_NO_STEP
+18511	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_18511Souperior_Love.java	1	1	1		1	SELF_REWARD_NO_STEP
+18737	src/main/java/com/aionemu/gameserver/quest/handlers/raksang_ruins/_18737Where_Did_Abiso_Go.java	0	0	0			SELF_REWARD_NO_STEP
+18800	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18800The_Living_Is_Easy.java	0	0	0			SELF_REWARD_NO_STEP
+18802	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18802And_A_Home_For_Every_Daeva.java	0	0	0			SELF_REWARD_NO_STEP
+18805	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18805Going_Thrifting.java	2	2	1		1	SELF_REWARD_NO_STEP
+18806	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18806HeartofRock.java	1	1	0			SELF_REWARD_NO_STEP
+18807	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18807Blessed_Be_Thy_Hame.java	1	1	0			SELF_REWARD_NO_STEP
+18808	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18808FoolproofPackaging.java	0	0	0			SELF_REWARD_NO_STEP
+18809	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18809DaevaontheRide.java	2	2	0			SELF_REWARD_NO_STEP
+18821	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18821Almost_Forgot_My_Blessings.java	0	0	0			SELF_REWARD_NO_STEP
+18826	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18826Todays_Find.java	0	0	0			SELF_REWARD_NO_STEP
+18830	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18830MovingIn.java	1	1	1			SELF_REWARD_NO_STEP
+18832	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18832Imagining_A_Quiet_Life.java	0	0	0			SELF_REWARD_NO_STEP
+18833	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18833LeafyCutting.java	0	0	1		1	SELF_REWARD_NO_STEP
+18835	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18835StemCutting.java	0	0	1		1	SELF_REWARD_NO_STEP
+18837	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18837EyeCutting.java	0	0	1		1	SELF_REWARD_NO_STEP
+18847	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18847Housewarming.java	0	0	0			SELF_REWARD_NO_STEP
+18932	src/main/java/com/aionemu/gameserver/quest/handlers/ashunatal_dredgion/_18932All_Out_Dredgion_Attack.java	1	2	1		1	MISSING_RECOVERY_EDGE
+18940	src/main/java/com/aionemu/gameserver/quest/handlers/idgel_dome/_18940Into_The_Dome.java	0	0	0			SELF_REWARD_NO_STEP
+18950	src/main/java/com/aionemu/gameserver/quest/handlers/drakenspire_depths/_18950Detachment_In_The_Depths.java	0	0	0			SELF_REWARD_NO_STEP
+19004	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_19004PeriklessInsight.java	2	2	1			SELF_REWARD_NO_STEP
+19048	src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_19048Andreas_Teachings.java	1	1	1		1	SELF_REWARD_NO_STEP
+19600	src/main/java/com/aionemu/gameserver/quest/handlers/wisplight_abbey/_19600Welcome_Daeva.java	0	1	NO_XML			NO_XML
+19665	src/main/java/com/aionemu/gameserver/quest/handlers/wisplight_abbey/_19665Getting_Settled.java	0	0	NO_XML			NO_XML
+20528	src/main/java/com/aionemu/gameserver/quest/handlers/archdaeva/_20528Building_A_Protection_Artifact_1.java	11	12	12		12	MISMATCH_PROJECTION
+21051	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros_armor/_21051TroubleinStone.java	0	0	0			SELF_REWARD_NO_STEP
+21052	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros_armor/_21052DragonHuntin.java	0	0	0			SELF_REWARD_NO_STEP
+21053	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros_armor/_21053DramataDrama.java	0	0	0			SELF_REWARD_NO_STEP
+21054	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros_armor/_21054MissionofDestiny.java	0	0	0			SELF_REWARD_NO_STEP
+21055	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros_armor/_21055OrtizsPlan.java	0	0	0			SELF_REWARD_NO_STEP
+21073	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21073ListentoMySongStrigiks.java	1	1	0			SELF_REWARD_NO_STEP
+21080	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21080MessageInAWindstream.java	4	4	1		1,1	SELF_REWARD_NO_STEP
+21081	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21081A_Helping_Hand.java	2	3	0			MISMATCH_PROJECTION
+21320	src/main/java/com/aionemu/gameserver/quest/handlers/enshar/_21320Excited_For_Enshar.java	0	0	0			SELF_REWARD_NO_STEP
+21340	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21340.java	5	6	NO_XML			NO_XML
+21341	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21341.java	5	6	NO_XML			NO_XML
+21342	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21342.java	5	6	NO_XML			NO_XML
+21343	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21343.java	5	6	NO_XML			NO_XML
+21344	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21344.java	5	6	NO_XML			NO_XML
+21345	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21345.java	5	6	NO_XML			NO_XML
+21346	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21346.java	5	6	NO_XML			NO_XML
+21347	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21347.java	5	6	NO_XML			NO_XML
+21348	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21348.java	5	6	NO_XML			NO_XML
+21349	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21349.java	5	6	NO_XML			NO_XML
+21350	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21350.java	5	6	NO_XML			NO_XML
+21351	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21351.java	5	6	NO_XML			NO_XML
+21352	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21352.java	5	6	NO_XML			NO_XML
+21353	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21353.java	5	6	NO_XML			NO_XML
+21370	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21370.java	5	6	NO_XML			NO_XML
+21371	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21371.java	5	6	NO_XML			NO_XML
+21372	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21372.java	5	6	NO_XML			NO_XML
+21373	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21373.java	5	6	NO_XML			NO_XML
+21374	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21374.java	5	6	NO_XML			NO_XML
+21375	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21375.java	5	6	NO_XML			NO_XML
+21376	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21376.java	5	6	NO_XML			NO_XML
+21377	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21377.java	5	6	NO_XML			NO_XML
+21378	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21378.java	5	6	NO_XML			NO_XML
+21379	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21379.java	5	6	NO_XML			NO_XML
+21380	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21380.java	5	6	NO_XML			NO_XML
+21381	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21381.java	5	6	NO_XML			NO_XML
+21382	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21382.java	5	6	NO_XML			NO_XML
+21383	src/main/java/com/aionemu/gameserver/quest/handlers/master_server/_21383.java	5	6	NO_XML			NO_XML
+21460	src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21460AShulacksStory.java	1	1	0			SELF_REWARD_NO_STEP
+21465	src/main/java/com/aionemu/gameserver/quest/handlers/taloc_hollow/_21465MysteriousSeed.java	0	0	0			SELF_REWARD_NO_STEP
+23305	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_23305A_Fierce_Struggle.java	0	0	0			SELF_REWARD_NO_STEP
+23700	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23700Advancement_In_Levinshor.java	0	0	0			SELF_REWARD_NO_STEP
+23701	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23701Levinshor_Chagrin.java	0	0	0			SELF_REWARD_NO_STEP
+23702	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23702Blood_For_Blood_Literally.java	4	5	5		5	MISMATCH_PROJECTION
+23703	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23703Secure_The_Shrine.java	1	2	2		2	MISMATCH_PROJECTION
+23704	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23704Loud_Noises.java	1	1	1		1	SELF_REWARD_NO_STEP
+23705	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23705We_Dont_Need_No_Stinking_Road.java	3	4	4		4	MISMATCH_PROJECTION
+23708	src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23708Sound_The_Alarm.java	1	1	1		1	SELF_REWARD_NO_STEP
+23809	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23809Scar_Of_The_Past.java	3	4	0			MISMATCH_PROJECTION
+23812	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23812They_Got_A_Plot.java	0	0	1		1	SELF_REWARD_NO_STEP
+23830	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_23830A_Bundle_To_Enjoy.java	1	1	1		1	SELF_REWARD_NO_STEP
+23831	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_23831Stigma_Stones_May_Break_Your_Bones.java	1	1	1		1	SELF_REWARD_NO_STEP
+23832	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_23832Better_Than_Great.java	1	1	1		1	SELF_REWARD_NO_STEP
+23833	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_23833You_Aud_A_Know.java	1	1	1		1	SELF_REWARD_NO_STEP
+23834	src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_23834Major_Sixth.java	1	1	1			SELF_REWARD_NO_STEP
+23880	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23880The_Guardian_General.java	1	2	1		1	MISSING_RECOVERY_EDGE
+23882	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23882The_Enraged_Wealhtheow_Guardian.java	1	2	0			MISMATCH_PROJECTION
+23902	src/main/java/com/aionemu/gameserver/quest/handlers/hero_alliance/_23902Prepare_To_Prevail.java	0	0	0			SELF_REWARD_NO_STEP
+23940	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23940Eliminate_The_Protectors_At_Wealhtheow_Keep.java	10	11	1			MISMATCH_PROJECTION
+23941	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23941Eliminate_The_Commanders_Of_Wealhtheow_Keep.java	1	2	1			MISSING_RECOVERY_EDGE
+23942	src/main/java/com/aionemu/gameserver/quest/handlers/kaldor/_23942Destroy_The_Castle_Gate_At_Wealhtheow_Keep.java	1	2	1			MISSING_RECOVERY_EDGE
+23950	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23950Find_The_Missing_Daevas.java	2	4	4			MISMATCH_PROJECTION
+23951	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23951A_Letter_Not_Passed_On.java	1	1	1		1	SELF_REWARD_NO_STEP
+23952	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23952Harogen_Journal.java	0	0	1		1	SELF_REWARD_NO_STEP
+23953	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23953Unclaimed_Balaur_Weapon.java	1	2	2			MISMATCH_PROJECTION
+23956	src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23956Bastion_Of_Souls_Operation.java	4	5	5		5	MISMATCH_PROJECTION
+23967	src/main/java/com/aionemu/gameserver/quest/handlers/evergale_canyon/_23967A_Fragment_That_Appeared_At_The_Cave.java	0	1	1		1,1	MISMATCH_PROJECTION
+24011	src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24011Funny_Floating_Fungus.java	6	6	6			SELF_REWARD_NO_STEP
+24051	src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24051Investigate_The_Disappearance.java	5	5	5			SELF_REWARD_NO_STEP
+24211	src/main/java/com/aionemu/gameserver/quest/handlers/transidium_annex/_24211Agent_Appreciation.java	0	0	NONE		1	SELF_REWARD_NO_STEP
+24220	src/main/java/com/aionemu/gameserver/quest/handlers/panesterra/_24220Welcome_To_Panesterra.java	1	1	0			SELF_REWARD_NO_STEP
+25300	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25300A_Bloody_Battle_With_Beritra.java	13	14	13	14		OK
+25301	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25301First_Steps_As_A_Protector.java	2	3	0			MISMATCH_PROJECTION
+25302	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25302A_Tenacious_Spirit.java	2	3	0			MISMATCH_PROJECTION
+25303	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25303A_Dedicated_Protector.java	2	3	0			MISMATCH_PROJECTION
+25304	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25304Walk_The_Walk.java	3	4	4			MISMATCH_PROJECTION
+25305	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25305Guardian_Of_Life.java	2	3	0			MISMATCH_PROJECTION
+25306	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25306Wielding_Strength.java	9	10	10		10	MISMATCH_PROJECTION
+25334	src/main/java/com/aionemu/gameserver/quest/handlers/high_daevanion/_25334A_Prayer_Of_Devotion.java	1	1	1		1	SELF_REWARD_NO_STEP
+25563	src/main/java/com/aionemu/gameserver/quest/handlers/norsvold/_25563Broken_Guardian_Accomodations.java	0	0	1		1	SELF_REWARD_NO_STEP
+25604	src/main/java/com/aionemu/gameserver/quest/handlers/norsvold/_25604Prison_Of_Silence.java	4	5	5			MISMATCH_PROJECTION
+26800	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_26800A_Call_For_Champions.java	2	3	3		3	MISMATCH_PROJECTION
+26809	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_26809Collecting_The_Histories_Of_Atreia.java	0	0	1		1	SELF_REWARD_NO_STEP
+26810	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_26810Collecting_The_Records_From_The_Era_Of_Men.java	0	0	1		1	SELF_REWARD_NO_STEP
+26811	src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_26811Collecting_The_Empyrean_Records.java	0	0	1		1	SELF_REWARD_NO_STEP
+26839	src/main/java/com/aionemu/gameserver/quest/handlers/trials_of_eternity/_26839Rift_Monster_Bullion.java	1	2	2		2,2	MISMATCH_PROJECTION
+26922	src/main/java/com/aionemu/gameserver/quest/handlers/danuar_reliquary/_26922Another_Passage.java	0	0	0			SELF_REWARD_NO_STEP
+26979	src/main/java/com/aionemu/gameserver/quest/handlers/engulfed_ophidan_bridge/_26979Defend_The_Advance_Route_To_The_Last_Soldier.java	0	0	0			SELF_REWARD_NO_STEP
+26990	src/main/java/com/aionemu/gameserver/quest/handlers/illuminary_obelisk/_26990Protection_Tower_Researcher_Kamaz.java	0	0	0			SELF_REWARD_NO_STEP
+27526	src/main/java/com/aionemu/gameserver/quest/handlers/IDAbRe_Core_03/_27526.java	1	2	1		1	MISSING_RECOVERY_EDGE
+27550	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_27550.java	0	0	0			SELF_REWARD_NO_STEP
+27551	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_27551.java	4	5	5			MISMATCH_PROJECTION
+27552	src/main/java/com/aionemu/gameserver/quest/handlers/IDAb1_Heroes/_27552.java	1	2	2			MISMATCH_PROJECTION
+28035	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_28035Trust_In_None_But_Verify.java	1	1	1			SELF_REWARD_NO_STEP
+28036	src/main/java/com/aionemu/gameserver/quest/handlers/eternal_bastion/_28036Interrogate_Kvash.java	0	1	0			MISSING_RECOVERY_EDGE
+28250	src/main/java/com/aionemu/gameserver/quest/handlers/crucible_spire/_28250Opening_Of_Crucible_Spire.java	0	0	0			SELF_REWARD_NO_STEP
+28251	src/main/java/com/aionemu/gameserver/quest/handlers/crucible_spire/_28251Opening_Of_Crucible_Spire.java	0	0	0			SELF_REWARD_NO_STEP
+28300	src/main/java/com/aionemu/gameserver/quest/handlers/aturam_sky_fortress/_28300Floating_Doom.java	1	1	1			SELF_REWARD_NO_STEP
+28314	src/main/java/com/aionemu/gameserver/quest/handlers/aturam_sky_fortress/_28314What_Not_To_Forget_During_A_Mission.java	7	8	1		1,1,1	MISMATCH_PROJECTION
+28500	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_28500The_Secret_Of_The_Odella.java	3	3	3			SELF_REWARD_NO_STEP
+28510	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_28510End_Of_The_Shift_In_Haramel.java	5	5	5			SELF_REWARD_NO_STEP
+28511	src/main/java/com/aionemu/gameserver/quest/handlers/haramel/_28511Souper_Passion.java	1	1	1			SELF_REWARD_NO_STEP
+28737	src/main/java/com/aionemu/gameserver/quest/handlers/raksang_ruins/_28737Suspicious_Minds.java	0	0	0			SELF_REWARD_NO_STEP
+28800	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28800Give_My_Regards_To_Pernon.java	0	0	0			SELF_REWARD_NO_STEP
+28802	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28802Be_It_Ever_So_Humble.java	0	0	0			SELF_REWARD_NO_STEP
+28805	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28805SomethingOld_SomethingNew.java	2	2	1		1	SELF_REWARD_NO_STEP
+28806	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28806WiltingFlowersFallingTears.java	1	1	0			SELF_REWARD_NO_STEP
+28807	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28807Blessings_Of_A_Green_Thumb.java	1	1	0			SELF_REWARD_NO_STEP
+28808	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28808OpenSaysMe.java	0	0	0			SELF_REWARD_NO_STEP
+28821	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28821Your_Butler_Gift.java	0	0	0			SELF_REWARD_NO_STEP
+28826	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28826Free_To_A_Good_Home.java	0	0	0			SELF_REWARD_NO_STEP
+28830	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28830InteriorDecorator.java	1	1	1			SELF_REWARD_NO_STEP
+28831	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28831justaSteptotheLeft.java	0	0	0			SELF_REWARD_NO_STEP
+28832	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28832Taking_The_Tour.java	0	0	0			SELF_REWARD_NO_STEP
+28837	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28837Sprout_Of_Joy.java	0	0	1		1	SELF_REWARD_NO_STEP
+28847	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28847AHomeThatsYourOwn.java	0	0	0			SELF_REWARD_NO_STEP
+28932	src/main/java/com/aionemu/gameserver/quest/handlers/ashunatal_dredgion/_28932All_Out_Dredgion_Assault.java	1	2	1		1,1,1,1,1	MISSING_RECOVERY_EDGE
+28940	src/main/java/com/aionemu/gameserver/quest/handlers/idgel_dome/_28940All_For_One.java	0	0	0			SELF_REWARD_NO_STEP
+28950	src/main/java/com/aionemu/gameserver/quest/handlers/drakenspire_depths/_28950Kismeti_Detachment_Attachment.java	0	0	0			SELF_REWARD_NO_STEP
+29048	src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_29048SeriphimTeachings.java	1	1	1		1	SELF_REWARD_NO_STEP
+29600	src/main/java/com/aionemu/gameserver/quest/handlers/fatebound_abbey/_29600Daeva_Welcome.java	0	1	NO_XML			NO_XML
+29665	src/main/java/com/aionemu/gameserver/quest/handlers/fatebound_abbey/_29665A_Letter_Of_Support.java	0	0	NO_XML			NO_XML
+30003	src/main/java/com/aionemu/gameserver/quest/handlers/udas_temple/_30003SecretOfTheUdasTemple.java	1	1	1			SELF_REWARD_NO_STEP
+30061	src/main/java/com/aionemu/gameserver/quest/handlers/the_hexway/_30061Cache_Ing_In_On_Turmoil.java	1	1	1			SELF_REWARD_NO_STEP
+30103	src/main/java/com/aionemu/gameserver/quest/handlers/udas_temple/_30103LairOfTheDragonbound.java	1	1	1			SELF_REWARD_NO_STEP
+30161	src/main/java/com/aionemu/gameserver/quest/handlers/the_hexway/_30161Hexway_Hideout.java	1	1	1			SELF_REWARD_NO_STEP
+30222	src/main/java/com/aionemu/gameserver/quest/handlers/beshmundir/_30222AGuardsCurse.java	1	1	1			SELF_REWARD_NO_STEP
+30235	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30235New_Sword.java	0	0	1			SELF_REWARD_NO_STEP
+30236	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30236New_Greatsword.java	0	0	1			SELF_REWARD_NO_STEP
+30237	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30237New_Polearm.java	0	0	1			SELF_REWARD_NO_STEP
+30238	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30238New_Staff.java	0	0	1			SELF_REWARD_NO_STEP
+30239	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30239New_Spellbook.java	0	0	1			SELF_REWARD_NO_STEP
+30240	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30240New_Orb.java	0	0	1			SELF_REWARD_NO_STEP
+30241	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30241New_Bow.java	0	0	1			SELF_REWARD_NO_STEP
+30242	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30242New_Dagger.java	0	0	1			SELF_REWARD_NO_STEP
+30243	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30243New_Mace.java	0	0	1			SELF_REWARD_NO_STEP
+30247	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30247New_Gun.java	0	0	1			SELF_REWARD_NO_STEP
+30248	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30248New_Aethercannon.java	0	0	1			SELF_REWARD_NO_STEP
+30249	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30249New_Harp.java	0	0	1			SELF_REWARD_NO_STEP
+30250	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30250New_Cipher_Blade.java	0	0	1			SELF_REWARD_NO_STEP
+30335	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30335Improved_Sword.java	0	0	1			SELF_REWARD_NO_STEP
+30336	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30336Improved_Greatsword.java	0	0	1			SELF_REWARD_NO_STEP
+30337	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30337Improved_Polearm.java	0	0	1			SELF_REWARD_NO_STEP
+30338	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30338Improved_Staff.java	0	0	1			SELF_REWARD_NO_STEP
+30339	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30339Improved_Spellbook.java	0	0	1			SELF_REWARD_NO_STEP
+30340	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30340Improved_Orb.java	0	0	1			SELF_REWARD_NO_STEP
+30341	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30341Improved_Bow.java	0	0	1			SELF_REWARD_NO_STEP
+30342	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30342Improved_Dagger.java	0	0	1			SELF_REWARD_NO_STEP
+30343	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30343Improved_Mace.java	0	0	1			SELF_REWARD_NO_STEP
+30347	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30347Improve_Gun.java	0	0	1			SELF_REWARD_NO_STEP
+30348	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30348Improve_Aethercannon.java	0	0	1			SELF_REWARD_NO_STEP
+30349	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30349Improve_Harp.java	0	0	1			SELF_REWARD_NO_STEP
+30350	src/main/java/com/aionemu/gameserver/quest/handlers/noble_siel_supreme/_30350Improve_Cipher_Blade.java	0	0	1			SELF_REWARD_NO_STEP
+30515	src/main/java/com/aionemu/gameserver/quest/handlers/rentus_base/_30515Reian_Whereabouts.java	0	1	0			MISSING_RECOVERY_EDGE
+30565	src/main/java/com/aionemu/gameserver/quest/handlers/rentus_base/_30565Reuniting_The_Reians.java	0	1	2		2	MISMATCH_PROJECTION
+30709	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30709Soul_Searching.java	0	1	1		1	MISMATCH_PROJECTION
+30715	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30715Anuhart_Less.java	1	2	1			MISSING_RECOVERY_EDGE
+30717	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30717The_Finer_Things.java	0	0	0			SELF_REWARD_NO_STEP
+30759	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30759Find_The_Dragon_Lord_Garden.java	0	1	1		1	MISMATCH_PROJECTION
+30765	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30765Dark_Poeta_Prevention.java	1	2	1			MISSING_RECOVERY_EDGE
+30767	src/main/java/com/aionemu/gameserver/quest/handlers/tiamat_stronghold/_30767An_Asmodian_Hero.java	0	0	0			SELF_REWARD_NO_STEP
+30800	src/main/java/com/aionemu/gameserver/quest/handlers/hall_of_tenacity/_30800The_Hall_Of_Tenacity.java	1	1	1		1	SELF_REWARD_NO_STEP
+38000	src/main/java/com/aionemu/gameserver/quest/handlers/alabaster_order/_38000CallOfTheAlabasterOrder.java	0	0	1		1	SELF_REWARD_NO_STEP
+38001	src/main/java/com/aionemu/gameserver/quest/handlers/radiant_ops/_38001RadiantOpsRecruitment.java	0	0	1		1	SELF_REWARD_NO_STEP
+38002	src/main/java/com/aionemu/gameserver/quest/handlers/fortuneers/_38002FortuneersCallToArms.java	0	0	1		1	SELF_REWARD_NO_STEP
+39600	src/main/java/com/aionemu/gameserver/quest/handlers/silverine_ltd/_39600Silvers_Cross_Your_Palm.java	0	0	0			SELF_REWARD_NO_STEP
+39700	src/main/java/com/aionemu/gameserver/quest/handlers/merry_and_green/_39700Introducing_The_Merry_And_Green.java	0	0	0			SELF_REWARD_NO_STEP
+48000	src/main/java/com/aionemu/gameserver/quest/handlers/field_wardens/_48000SummonsFromTheWardens.java	0	0	1		1	SELF_REWARD_NO_STEP
+48001	src/main/java/com/aionemu/gameserver/quest/handlers/blood_crusade/_48001CallOfTheCrusade.java	0	0	1		1	SELF_REWARD_NO_STEP
+48002	src/main/java/com/aionemu/gameserver/quest/handlers/charlirunerks_daemons/_48002CharlirunerksDaemonsWantYou.java	0	0	1		1	SELF_REWARD_NO_STEP
+49600	src/main/java/com/aionemu/gameserver/quest/handlers/silverine_ltd/_49600Silverine_Silver_Lining.java	0	0	0			SELF_REWARD_NO_STEP
+49700	src/main/java/com/aionemu/gameserver/quest/handlers/merry_and_green/_49700Meet_The_Merry_And_Green.java	0	0	0			SELF_REWARD_NO_STEP
+50009	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_50009Tis_The_Season.java	0	0	0			SELF_REWARD_NO_STEP
+50073	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_S3/_50073.java	1	2	1		1,1,1,1,1	MISSING_RECOVERY_EDGE
+50074	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_S3/_50074.java	1	2	1		1,1,1,1,1	MISSING_RECOVERY_EDGE
+50076	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/shugo_ranger/_50076.java	10	11	1		1	MISMATCH_PROJECTION
+50077	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/shugo_ranger/_50077.java	30	31	1		1	MISMATCH_PROJECTION
+50078	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/shugo_ranger/_50078.java	30	31	1		1	MISMATCH_PROJECTION
+50110	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_Def/_50110.java	5	6	0		1	MISMATCH_PROJECTION
+50111	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_Def/_50111.java	5	6	0		1	MISMATCH_PROJECTION
+50128	src/main/java/com/aionemu/gameserver/quest/handlers/tiamaranta_eye/_50128.java	0	1	1		1,1	MISMATCH_PROJECTION
+51009	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_51009The_Gift_Of_Charity.java	0	0	0			SELF_REWARD_NO_STEP
+51110	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_Def/_51110.java	5	6	0		5	MISMATCH_PROJECTION
+51111	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/IDEvent_Def/_51111.java	5	6	0		5	MISMATCH_PROJECTION
+51128	src/main/java/com/aionemu/gameserver/quest/handlers/tiamaranta_eye/_51128.java	0	1	1		1,1	MISMATCH_PROJECTION
+80275	src/main/java/com/aionemu/gameserver/quest/handlers/shugo_imperial_tomb/_80275Empires_Past.java	0	0	0			SELF_REWARD_NO_STEP
+80276	src/main/java/com/aionemu/gameserver/quest/handlers/shugo_imperial_tomb/_80276Important_Letter.java	0	0	NO_XML			NO_XML
+80277	src/main/java/com/aionemu/gameserver/quest/handlers/shugo_imperial_tomb/_80277The_Same_Thing_We_Do.java	0	0	NO_XML			NO_XML
+80330	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80330Transform_With_The_Magic_Cane.java	0	0	0			SELF_REWARD_NO_STEP
+80331	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80331Transform_With_The_Magic_Cane.java	0	0	0			SELF_REWARD_NO_STEP
+80333	src/main/java/com/aionemu/gameserver/quest/handlers/nightmare_circus/_80333Request_From_Pucas.java	0	0	0			SELF_REWARD_NO_STEP
+80341	src/main/java/com/aionemu/gameserver/quest/handlers/nightmare_circus/_80341A_Hallowed_Eve.java	0	0	0			SELF_REWARD_NO_STEP
+80487	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80487A_Higher_Calling_1st_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80488	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80488A_Higher_Calling_2nd_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80489	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80489A_Higher_Calling_3rd_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80490	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80490A_Higher_Calling_4th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80491	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80491A_Higher_Calling_5th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80492	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80492A_Higher_Calling_6th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80493	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80493A_Higher_Calling_7th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80494	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80494A_Higher_Calling_8th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80495	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80495A_Higher_Calling_9th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80496	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80496A_Higher_Calling_10th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80497	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80497A_Higher_Calling_11th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80498	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80498A_Higher_Calling_12th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80499	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80499A_Higher_Calling_13th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80500	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80500A_Higher_Calling_14th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80501	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80501A_Higher_Calling_15th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80502	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80502A_Higher_Calling_16th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80503	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80503A_Higher_Calling_17th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80504	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80504A_Higher_Calling_18th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80505	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80505A_Higher_Calling_19th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80506	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80506A_Higher_Calling_20th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80507	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80507A_Higher_Calling_21th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80508	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80508A_Higher_Calling_22th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80509	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80509A_Higher_Calling_23th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80510	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80510A_Higher_Calling_24th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80511	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80511A_Higher_Calling_25th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80512	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/a_higher_calling/_80512A_Higher_Calling_26th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80513	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80513Be_A_Better_Daeva_1st_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80514	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80514Be_A_Better_Daeva_2nd_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80515	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80515Be_A_Better_Daeva_3rd_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80516	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80516Be_A_Better_Daeva_4th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80517	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80517Be_A_Better_Daeva_5th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80518	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80518Be_A_Better_Daeva_6th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80519	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80519Be_A_Better_Daeva_7th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80520	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80520Be_A_Better_Daeva_8th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80521	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80521Be_A_Better_Daeva_9th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80522	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80522Be_A_Better_Daeva_10th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80523	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80523Be_A_Better_Daeva_11th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80524	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80524Be_A_Better_Daeva_12th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80525	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80525Be_A_Better_Daeva_13th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80526	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80526Be_A_Better_Daeva_14th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80527	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80527Be_A_Better_Daeva_15th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80528	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80528Be_A_Better_Daeva_16th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80529	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80529Be_A_Better_Daeva_17th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80530	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80530Be_A_Better_Daeva_18th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80531	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80531Be_A_Better_Daeva_19th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80532	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80532Be_A_Better_Daeva_20th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80533	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80533Be_A_Better_Daeva_21th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80534	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80534Be_A_Better_Daeva_22th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80535	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80535Be_A_Better_Daeva_23th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80536	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80536Be_A_Better_Daeva_24th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80537	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80537Be_A_Better_Daeva_25th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80538	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/be_a_better_daeva/_80538Be_A_Better_Daeva_26th_Edition.java	0	0	1		1	SELF_REWARD_NO_STEP
+80545	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80545A_Gracious_Thought.java	0	0	0			SELF_REWARD_NO_STEP
+80547	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80547Spread_The_Joy.java	0	0	0			SELF_REWARD_NO_STEP
+80548	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80548Flower_Power.java	0	0	0			SELF_REWARD_NO_STEP
+80549	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80549A_Gracious_Hand.java	0	0	0			SELF_REWARD_NO_STEP
+80551	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80551Bundle_The_Joy.java	0	0	0			SELF_REWARD_NO_STEP
+80552	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80552A_Little_Surprise.java	0	0	0			SELF_REWARD_NO_STEP
+80588	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80588Enter_With_Luck.java	0	0	0			SELF_REWARD_NO_STEP
+80593	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80593Into_The_Reliquary.java	0	0	0			SELF_REWARD_NO_STEP
+80615	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80615Coming_Up_Heart.java	0	0	1		1	SELF_REWARD_NO_STEP
+80616	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80616Lucky_Break.java	0	0	1		1	SELF_REWARD_NO_STEP
+80731	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/black_star_event/_80731Black_Star_Zetaring_Member.java	3	4	5			MISMATCH_PROJECTION
+80732	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/black_star_event/_80732Black_Star_Zetaring_Member.java	3	4	5			MISMATCH_PROJECTION
+80733	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/black_star_event/_80733Black_Star_Megaring_Member.java	7	8	6			MISMATCH_PROJECTION
+80734	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/black_star_event/_80734Black_Star_Megaring_Member.java	7	8	6			MISMATCH_PROJECTION
+80927	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80927Protect_The_Illumined_Pergolas_2.java	27	28	27			MISSING_RECOVERY_EDGE
+80928	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80928Protect_The_Ellosim_Garden_2.java	27	28	27			MISSING_RECOVERY_EDGE
+80929	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80929Protect_The_Ellosim_Garden_3.java	27	28	27			MISSING_RECOVERY_EDGE
+80930	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80930Protect_The_Morninglight_Plains_2.java	27	28	27			MISSING_RECOVERY_EDGE
+80931	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80931Protect_The_Tranquil_Fens_2.java	27	28	27			MISSING_RECOVERY_EDGE
+80932	src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/enemy_land/_80932Protect_The_Tranquil_Fens_3.java	27	28	27			MISSING_RECOVERY_EDGE

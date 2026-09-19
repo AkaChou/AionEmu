@@ -263,6 +263,20 @@
 - 复用边界：仅适用于 legacy 明确进入 `REWARD` 但没有改 packed var、而当前 typed XML 将该次迁移投影成不同变量的任务。若旧 handler 有 `setQuestVar`、`changeQuestStep(..., false)`，或客户端/legacy 明确要求非零 reward var（例如 1336、1920），不得套用；11031/11032 的旧流程是 `var0=2 -> 3`，而现 XML 还缺少前置阶段，需另建完整阶段链案例。
 - commit：`f6aff952a`。
 
+**第二轮（2026-09-19/20，15300/25300）：同一合同为什么还能漏掉**
+
+- 玩家可见症状：15300「Taking Arms」在赛格尼亚与 805362 交接后下发 `SM_QUEST_ACTION 任务=15300 状态=4 步数=14`，任务书立刻空白，背包已有 `182215903` 却看不到前往 805327 领奖的下一步；魔族镜像 25300 同型。
+- 根因（与首轮完全一致）：旧 handler `_15300Taking_Arms` 用 `changeQuestStep(env, 13, 14, true)` 进入 `REWARD`，packed var0 停在 13；迁移 XML（`cfc2fa048`，2026-08-21）把 `reward` 节点投影和 `s13 -> reward` 交接动作都写成 `var0=14`，客户端按下发 step 取任务书行取不到内容。
+- **为什么会漏**：首轮修复对象是人工上报并逐个定位的 22 个任务，落地成硬编码 ID 的回归锁，不是"扫描全部旧 handler 的领奖入口"的规则门禁；迁移工具链没有这一项检查，因此 2026-08-04 的 1500 任务迁移、2026-08-05 的 evergale/high-daevanion 迁移（15300/25300 就在其中）与 redemption_landing 批次都可以重复引入同一错位；而症状只在单个任务的领奖阶段出现，引擎侧静态门禁全绿，只有玩家跑到该任务才会暴露。
+- 修复层：`reward` 投影回到 `var0=13`；删除交接 transition 的冗余 `set-variable`（保留物品发放）；补无 source 的 `ENTER_WORLD` 恢复边（`REWARD && var0=14 -> reward`，仅 `LEVEL_AND_VISIBILITY_REFRESH`）纠正已落盘错位存档。同次提交还收口了龙脊深渊副本销毁后延迟开门 `doors.get(...)` NPE（`DrakenspireDepthsQInstance#openDoor` / `DrakenspireDepthsInstance#openDoor`）。
+- 全库审计（新门禁）：`.agents/summary/quest-reward-projection-audit/audit_legacy_reward_projection.py` 扫描历史上被删除的全部 `quest/handlers/**`（2358 个文件），对 490 个带领奖入口的任务比对 reward 投影，输出 `report.tsv`：106 个 `MISMATCH_PROJECTION`、32 个 `MISSING_RECOVERY_EDGE`、62 个 `NO_XML`、288 个 `SELF_REWARD_NO_STEP`。审计同时给出客户端行号读数（`Dialogs/*/quest_q<id>.html` 的 `<steps>`）作为第二条信号；两条读数在 15304/26800 上结论不同，因此本轮只修客户端已验收的 15300/25300，其余分批处置，禁止机械套用。
+- 修改文件：`quests/15300.xml`、`quests/25300.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest15300And25300RewardProjectionTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestInstanceExitRecoveryTest.java`（null-safe 比较，允许无 source 恢复边）。
+- 第一检查点：同首轮；补一条——如果任务在 `REWARD` 前后的 `SM_QUEST_ACTION` step 与客户端 `quest_summary` 行数不吻合，先跑全库审计脚本确认是否为本模式，不要只改单个任务。
+- 验证命令和结果：`mvn -B test -Dtest='Quest15300And25300RewardProjectionTest,QuestInstanceExitRecoveryTest,DrakenspireDepthsInstanceTeardownGuardTest,DrakenspireDepthsQOrissanSceneTest,DrakenspireDepthsQTwinSceneTest,DrakenspireDepthsQTwinSpawnSurfaceTest,ImmortalOrissanAI2Test,ThresholdTransformDeathFallbackGateTest,Betrayer_IcaronixAI2Test'` → 22 例全绿；`mvn -B test -Dtest='ProductionCatalogWhitelistVerificationTest,QuestDefinitionDirectoryLoaderTest,QuestDefinitionCatalogManifestTest'` → 13 例全绿；用户 2026-09-19/20 客户端确认 15300 全程完成（含领奖）。
+- 复用边界：同首轮；新增——`SELF_REWARD_NO_STEP`（旧 handler `changeQuestStep(env, X, X, true)`）与把步骤链折叠到 `var0=0` 的家族（15301/15302/15303/15305、25301/25302/25303/25305）不在本案例的直接适用范围内，需另建判定。
+- 关联沉淀：memory-bank `QE-045`；`.agents/summary/quest-reward-projection-audit/2026-09-20-legacy-reward-projection-audit.zh-CN.md`。
+- 第二轮 commit：`075464ebd`（同批的龙脊深渊场景/变身/销毁收口见 `e718118c5`，memory-bank `AIM-007`/`IR-012`）。
+
 ## 8.19 奖励预览可选工作物品缺失导致 1009 页面失败
 
 - Pattern ID：`REWARD_PREVIEW_OPTIONAL_WORK_ITEM`；关联已有模式 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`、`MULTI_NPC_HANDOFF_REWARD_OWNER`。

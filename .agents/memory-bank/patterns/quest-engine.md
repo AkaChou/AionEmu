@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-042`
+> Pattern IDs: `QE-001`–`QE-045`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
 > last_reviewed: 2026-09-19
@@ -1013,3 +1013,24 @@ superseded_by: none
 see_also: [QE-025], [QE-041]
 first_check: 交付 NPC 下发 page 10 时，优先对比客户端 quest.xml 的 collect_progress 与玩家当前 quest_vars 的 var0 阶段值
 -->
+
+## [QE-045] 四十三、旧 handler 领奖投影必须等于进入 REWARD 前的 packed step (LEGACY_REWARD_ENTRY_KEEPS_PACKED_STEP)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 由 Java handler 迁移而来的 typed 任务定义：旧 handler 以 changeQuestStep(env, from, to, true)、SET_REWARD/setStatus(REWARD)、useQuestItem(..., true) 进入 REWARD 的领奖投影与旧存档恢复
+first_seen: 2026-09-09
+last_verified: 2026-09-20
+symptom: 领奖阶段任务书空白、任务信息消失、背包已有任务道具但下一 NPC 不显示、无法领奖；SM_QUEST_ACTION 状态=REWARD 的步数比报告行大 1（15300 为 状态=4 步数=14）
+root_cause: 旧 QuestHandler.changeQuestStep(..., reward=true) 只写 QuestStatus.REWARD、不写 nextStep，旧存档在 REWARD 的 packed var0 仍是进入前的 from；迁移却把 reward 节点投影与 START -> REWARD 交接动作写成 to(=from+1)。QuestMutationPlanner 先应用 actions 再用目标投影补足未触及字段，最终 packed step 与客户端任务书行索引错位
+fix_or_guardrail: 1. reward 节点投影必须等于旧 handler 进入 REWARD 前的 packed step；2. START -> REWARD 交接 transition 不得再 set-variable 该字段，只保留物品扣除/发放；3. 必须补无 source 的 ENTER_WORLD 恢复边（status-is REWARD + 变量 == to -> reward，仅 LEVEL_AND_VISIBILITY_REFRESH）纠正已落盘错位存档；4. 迁移或新增任务后必须运行 .agents/summary/quest-reward-projection-audit/audit_legacy_reward_projection.py，偏差要么修要么在 summary 显式记录"有意重定基线"的客户端证据
+evidence: commit f6aff952a; commit 075464ebd; src/main/resources/aion/data/static_data/quest_definition/quests/15300.xml; src/main/resources/aion/data/static_data/quest_definition/quests/25300.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest15300And25300RewardProjectionTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/LegacyRewardStepProjectionRegressionTest.java; .agents/summary/quest-15300-reward/2026-09-19-reward-projection.zh-CN.md; .agents/summary/quest-reward-projection-audit/2026-09-20-legacy-reward-projection-audit.zh-CN.md; docs/quest/repair-playbook/CASES.zh-CN.md 案例 8.18
+validation: focused-test (Quest15300And25300RewardProjectionTest 2/2、QuestInstanceExitRecoveryTest 2/2，2026-09-20 聚焦批 22 例全绿); production-gate (ProductionCatalogWhitelistVerificationTest + QuestDefinitionDirectoryLoaderTest + QuestDefinitionCatalogManifestTest 13/13 PASS); client (用户 2026-09-19/20 确认 15300 全程顺利完成、奖励可领取); 全库审计 2026-09-20：490 个旧 handler 领奖入口，106 MISMATCH / 32 MISSING_RECOVERY_EDGE 待处置
+boundaries: 只适用于旧 handler 确实没有在进入 REWARD 时改写 packed var 的任务；若旧 handler 有 setQuestVar/changeQuestStep(..., false)/checkQuestItems，或迁移有意重定基线，必须先按客户端 quest_summary 行清单（Dialogs/*/quest_q<id>.html 的 <steps>/<step>）核对再动，不得机械批量套用；同型 106 个 MISMATCH 尚未批量修复，15301/25302 等折叠步骤链的家族需要单独设计；恢复边只在 ENTER_WORLD 触发，在线且不重登/不切图的旧存档不会自动纠正
+superseded_by: none
+see_also: [QE-002], [QE-040], [QE-041]
+first_check: 先比旧 handler 进入 REWARD 的调用参数（from/to）与当前 reward 节点投影；再看 START -> REWARD transition 是否 set-variable 该字段；最后确认是否存在 status-is REWARD + 变量==to 的无 source enter-world 恢复边
+-->
+
+- **判定规则**：`reward` 节点投影 = 旧 handler 进入 `REWARD` 前的 packed step（`from`），交接 transition 不改写该字段，并存在 `REWARD && 变量 == to` 的无 source `enter-world` 恢复边；三者缺一都会让已落盘的错位存档继续空白。
+- **为什么反复出现**：`f6aff952a` 的修复对象是人工上报的 22 个任务，落地形式是硬编码 ID 的回归锁而不是"扫描全部旧 handler"的规则门禁；迁移工具链没有这一项检查，于是 2026-08-04 的 1500 任务迁移、2026-08-05 的 evergale/high-daevanion 迁移（15300/25300 就在其中，`cfc2fa048` 时已是 `var0=14`）与 redemption_landing 批次都可以重复引入。
+- **代表案例**：15300/25300（高等大天使线，旧 handler `changeQuestStep(env, 13, 14, true)`；修复后 `reward var0=13` + `REWARD var0=14 -> reward` 恢复边；2026-09-19/20 客户端验收通过）。
