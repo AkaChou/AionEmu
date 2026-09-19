@@ -23,18 +23,18 @@ class Quest1373ClientDialogAlignmentTest {
 		QuestDefinition definition = definition().definition();
 
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "v2", QuestStatus.START, Map.of("var0", 2));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3));
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 3));
+		assertNode(definition, "v1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
-		QuestTransition entry = transition(definition, "v2", "v2",
+		QuestTransition entry = transition(definition, "v1", "v1",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
 			entry.afterCommit());
 
 		// 交付成功必须在提交后的状态同步之后打开奖励窗口。
 		// A successful turn-in must open the reward window after the committed state sync.
-		QuestTransition success = transition(definition, "v2", "reward",
+		QuestTransition success = transition(definition, "v1", "reward",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
 		assertEquals(Integer.valueOf(0), success.priority());
 		assertEquals(List.of(new QuestCondition.HasItem(HOT_SPRING_WATER_ID, 1)), success.conditions());
@@ -48,7 +48,7 @@ class Quest1373ClientDialogAlignmentTest {
 
 		// 未满足物品条件时回落到客户端实际存在的 SELECT6(2716) 页面。
 		// When the item condition is not met, fall back to the client-owned SELECT6(2716) page.
-		QuestTransition failure = transition(definition, "v2", "v2",
+		QuestTransition failure = transition(definition, "v1", "v1",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()), 1);
 		assertEquals(List.of(), failure.conditions());
 		assertEquals(List.of(), failure.actions());

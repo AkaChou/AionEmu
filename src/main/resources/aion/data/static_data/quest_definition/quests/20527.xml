@@ -363,6 +363,7 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="12"/>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <spawn-npc-at-player slot="boss" template-id="244124" heading="0"/>
@@ -523,5 +524,20 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT14"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="s12" target="s12">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="12"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

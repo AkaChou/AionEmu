@@ -22,7 +22,7 @@
       <reward kind="ITEM" id="186000237" amount="60"/>
     </rewards>
     <drops>
-      <drop npc-id="702671" item-id="182215607" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="702671" item-id="182215607" chance="100" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="10503"/>
@@ -130,6 +130,37 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -154,6 +185,16 @@
         <dialog type="TALK_TO_NPC" npc-id="702671" action="USE_OBJECT"/>
       </event>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702671" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -228,6 +269,11 @@
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="s2" target="s2">
+      <event>
+        <can-act template-id="702671" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s3" target="s3">
       <event>
         <can-act template-id="702671" action-type="ACTION_ITEM_USE"/>
       </event>

@@ -27,14 +27,14 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="v2" status="START">
-      <var name="var0" value="2"/>
+    <node label="v1" status="START">
+      <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="3"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -77,7 +77,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="v2">
+    <transition source="started" target="v1">
       <event>
         <item-play item-id="182201372" animation-millis="3000"/>
       </event>
@@ -90,7 +90,22 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2">
+    <transition source="v1" target="v1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <has-item item-id="182201373" count="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203949" action="QUEST_SELECT"/>
       </event>
@@ -98,7 +113,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <transition source="v2" target="reward" priority="0">
+    <transition source="v1" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203949" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -114,7 +129,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2" priority="1">
+    <transition source="v1" target="v1" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203949" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -122,7 +137,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
-    <transition source="v2" target="unaccepted">
+    <transition source="v1" target="unaccepted">
       <event>
         <quest-timer-end/>
       </event>
@@ -169,7 +184,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2">
+    <transition source="v1" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203949" action="FINISH_DIALOG"/>
       </event>

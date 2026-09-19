@@ -267,7 +267,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="s7" target="s8">
+    <transition source="s7" target="s7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="703387" action="USE_OBJECT"/>
       </event>
@@ -275,7 +275,6 @@
         <variable-is field="var0" value="7"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="8"/>
         <give-item item-id="182216167" count="1"/>
       </actions>
       <after-commit>
@@ -283,7 +282,22 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="s8" target="s8">
+    <transition source="s8" target="s7">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+        <has-item item-id="182216167" count="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
       </event>
@@ -291,7 +305,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
       </after-commit>
     </transition>
-    <transition source="s8" target="s8">
+    <transition source="s7" target="s7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT8_1"/>
       </event>
@@ -299,11 +313,12 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
       </after-commit>
     </transition>
-    <transition source="s8" target="reward" priority="0">
+    <transition source="s7" target="s8" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
+        <variable-is field="var0" value="7"/>
         <has-item item-id="182216164" count="1"/>
         <has-item item-id="182216167" count="1"/>
       </conditions>
@@ -313,16 +328,85 @@
         <set-variable field="var0" value="8"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="s8" target="s8" priority="1">
+    <transition source="s7" target="s7" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="7"/>
+      </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="118"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="s8" target="s8">
@@ -331,33 +415,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <!-- SELECT_REWARD：校验收集物、播放动画并移除收集物后进入奖励结算。 SELECT_REWARD: verify collectibles, play movie and remove collectibles before reward settlement. -->
-    <transition source="s8" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182216164" count="1"/>
-        <has-item item-id="182216167" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182216164" count="1"/>
-        <remove-item item-id="182216167" count="1"/>
-      </actions>
-      <after-commit>
-        <play-movie movie-id="118"/>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="s8" target="s8" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
@@ -438,45 +495,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT9_1_1_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1_1_1"/>
-      </after-commit>
-    </transition>
+
 </transitions>
 </quest-definition>

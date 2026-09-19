@@ -206,6 +206,8 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="5"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -235,6 +237,8 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="5"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -567,5 +571,37 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_3"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="s5" target="s5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+        <variable-at-least field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>
