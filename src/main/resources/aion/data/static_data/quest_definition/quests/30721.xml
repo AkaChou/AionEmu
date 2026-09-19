@@ -4,9 +4,6 @@
     <races>
       <race id="ELYOS" />
     </races>
-    <inventory-items>
-      <item id="182215698" count="1" />
-    </inventory-items>
     <reward-groups>
       <group>
         <reward kind="GOLD" id="0" amount="99720" />

@@ -1,0 +1,36 @@
+quest files: 6222
+granted by other quests' start-quest action: 0
+no modelled accept path from NONE: 33
+  - 11279 other_statuses=COMPLETE,REWARD,START
+  - 11280 other_statuses=COMPLETE,REWARD,START
+  - 11281 other_statuses=COMPLETE,REWARD,START
+  - 11282 other_statuses=COMPLETE,REWARD,START
+  - 11283 other_statuses=COMPLETE,REWARD,START
+  - 11284 other_statuses=COMPLETE,REWARD,START
+  - 11285 other_statuses=COMPLETE,REWARD,START
+  - 11286 other_statuses=COMPLETE,REWARD,START
+  - 1561 other_statuses=COMPLETE,REWARD,START
+  - 18849 other_statuses=COMPLETE,REWARD,START
+  - 18850 other_statuses=COMPLETE,REWARD,START
+  - 1993 other_statuses=COMPLETE,REWARD,START
+  - 1994 other_statuses=COMPLETE,REWARD,START
+  - 21281 other_statuses=COMPLETE,REWARD,START
+  - 21282 other_statuses=COMPLETE,REWARD,START
+  - 21283 other_statuses=COMPLETE,REWARD,START
+  - 21284 other_statuses=COMPLETE,REWARD,START
+  - 21285 other_statuses=COMPLETE,REWARD,START
+  - 21286 other_statuses=COMPLETE,REWARD,START
+  - 21287 other_statuses=COMPLETE,REWARD,START
+  - 21288 other_statuses=COMPLETE,REWARD,START
+  - 28849 other_statuses=COMPLETE,REWARD,START
+  - 28850 other_statuses=COMPLETE,REWARD,START
+  - 2993 other_statuses=COMPLETE,REWARD,START
+  - 2994 other_statuses=COMPLETE,REWARD,START
+  - 39707 other_statuses=COMPLETE,REWARD,START
+  - 49713 other_statuses=COMPLETE,REWARD,START
+  - 49715 other_statuses=COMPLETE,REWARD,START
+  - 80292 other_statuses=COMPLETE,REWARD,START
+  - 80293 other_statuses=COMPLETE,REWARD,START
+  - 80296 other_statuses=COMPLETE,REWARD,START
+  - 80297 other_statuses=COMPLETE,REWARD,START
+  - 89999 other_statuses=

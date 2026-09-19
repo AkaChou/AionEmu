@@ -1,0 +1,20 @@
+legacy handlers with addOnQuestStart: 205
+A_QUEST_SELECT_UNHANDLED (硬缺陷/无法接取): 2
+  - 2841: owners=[271068] handler=_2841CleansingtheAsteriaChamber.java
+  - 26820: owners=[806075] handler=_26820Urgent_Call.java
+B_ACCEPT_ACTION_MISSING (可查看不可接取): 1
+  - 25672: owners=[806116] handler=_25672Eliminating_The_Ancient_Guardian_Weapon_Tetranon.java
+C_AUTO_START_ONLY (被自动接取绕过): 12
+  - 15322: owners=[805330] handler=_15322Scouting_Enshar.java
+  - 25322: owners=[805342] handler=_25322Through_The_Rift.java
+  - 80030: owners=[799766] handler=_80030EventAnUnwelcomeGaze.java
+  - 80033: owners=[799781] handler=_80033EventAvertingTheGaze.java
+  - 80034: owners=[799765] handler=_80034EventGeaterGlories.java
+  - 80035: owners=[799765] handler=_80035EventOnlyTheBest.java
+  - 80036: owners=[799765] handler=_80036EventGamblingWithGrace.java
+  - 80037: owners=[799780] handler=_80037EventFromTheGutter.java
+  - 80038: owners=[799780] handler=_80038EventMightyAspirations.java
+  - 80039: owners=[799780] handler=_80039EventTheChosenFew.java
+  - 80945: owners=[835303] handler=_80945Misfortune_Abolishment.java
+  - 80946: owners=[835303] handler=_80946Misfortune_Extermination.java
+remaining_suspicious=15
