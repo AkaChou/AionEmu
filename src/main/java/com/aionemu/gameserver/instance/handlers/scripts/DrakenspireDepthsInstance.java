@@ -722,7 +722,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal1();
-									doors.get(271).setOpen(true);
+									openDoor(271);
 									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.PC_ALL, 0);
 								}
@@ -757,7 +757,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal3();
-									doors.get(267).setOpen(true);
+									openDoor(267);
 									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.PC_ALL, 0);
 								}
@@ -834,7 +834,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal1();
-									doors.get(271).setOpen(true);
+									openDoor(271);
 									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.PC_ALL, 0);
 								}
@@ -869,7 +869,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal3();
-									doors.get(267).setOpen(true);
+									openDoor(267);
 									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.PC_ALL, 0);
 								}
@@ -892,8 +892,8 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
-									doors.get(7).setOpen(true);
-									doors.get(310).setOpen(true);
+									openDoor(7);
+									openDoor(310);
 									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.PC_ALL, 0);
 								}
@@ -909,8 +909,8 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
-									doors.get(7).setOpen(true);
-									doors.get(310).setOpen(true);
+									openDoor(7);
+									openDoor(310);
 									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.PC_ALL, 0);
 								}
@@ -932,8 +932,8 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal6();
-									doors.get(210).setOpen(true);
-									doors.get(312).setOpen(true);
+									openDoor(210);
+									openDoor(312);
 									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
 									sendMsgByRace(1402712, Race.PC_ALL, 0);
 								}
@@ -948,8 +948,8 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal6();
-									doors.get(210).setOpen(true);
-									doors.get(312).setOpen(true);
+									openDoor(210);
+									openDoor(312);
 									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
 									sendMsgByRace(1402712, Race.PC_ALL, 0);
 								}
@@ -1396,18 +1396,27 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
     }
 
 	private void spawnEternalAltarOfTormentEntrance() {
+		if (isInstanceDestroyed) {
+			return;
+		}
 		SpawnTemplate EnvSkyBoxObject = SpawnEngine.addNewSingleTimeSpawn(301390000, 804697, 635.69067f, 959.46039f, 1615.0714f, (byte) 0);
 		EnvSkyBoxObject.setEntityId(50);
 		objects.put(804697, SpawnEngine.spawnObject(EnvSkyBoxObject, instanceId));
     }
 
 	private void spawnWaveDoor() {
+		if (isInstanceDestroyed) {
+			return;
+		}
 	    SpawnTemplate AionFXPostGlow = SpawnEngine.addNewSingleTimeSpawn(301390000, 731581, 635.3889f, 784.05261f, 1596.7184f, (byte) 0);
 		AionFXPostGlow.setEntityId(548);
 		objects.put(731581, SpawnEngine.spawnObject(AionFXPostGlow, instanceId));
 	}
 
 	private void moveToSealForward(final Npc npc, float x, float y, float z, boolean despawn) {
+		if (npc == null) {
+			return;
+		}
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
@@ -1429,6 +1438,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	}
 
 	private void raidSeal(final Npc npc) {
+		if (npc == null) {
+			return;
+		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
@@ -1595,6 +1607,31 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 副本销毁后不再补刷对象。
+	 * Suppresses spawns once the instance is destroyed.
+	 *
+	 * <p>场景延迟任务在副本销毁后仍会执行，此时世界实例已经拆除，底层生成必然 NPE
+	 * （见 {@code 生成 NPC 209679 时出错 ... mapRegion is null}）。返回 null 由调用方的判空兜住。
+	 * Delayed scene tasks still fire after teardown, when the world instance is gone and the underlying spawn NPEs
+	 * (see {@code 生成 NPC 209679 时出错 ... mapRegion is null}). The {@code null} result is absorbed by the
+	 * callers' null checks.</p>
+	 *
+	 * @param npcId NPC 模板 ID / NPC template id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * @param heading 朝向 / heading
+	 * @return 生成的对象；副本已销毁时返回 {@code null} / spawned object, or {@code null} when the instance is gone
+	 */
+	@Override
+	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
+		if (isInstanceDestroyed) {
+			return null;
+		}
+		return super.spawn(npcId, x, y, z, heading);
+	}
+
 	protected Npc getNpc(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpc(npcId);
@@ -1603,6 +1640,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	}
 
 	protected void killNpc(List<Npc> npcs) {
+		if (npcs == null) {
+			return;
+		}
         for (Npc npc: npcs) {
             npc.getController().die();
         }
@@ -1625,9 +1665,28 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 */
 	@Override
 	public void onInstanceDestroy() {
-		doors.clear();
+		if (doors != null) {
+			doors.clear();
+		}
 		isInstanceDestroyed = true;
 	}
+
+	/**
+	 * 安全开门；副本销毁或门未加载时忽略延迟任务请求。
+	 * Opens a door safely; delayed tasks are ignored after teardown or when the door is absent.
+	 *
+	 * @param doorId 门 ID / door id
+	 */
+	private void openDoor(int doorId) {
+		if (isInstanceDestroyed || doors == null) {
+			return;
+		}
+		StaticDoor door = doors.get(doorId);
+		if (door != null) {
+			door.setOpen(true);
+		}
+	}
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.

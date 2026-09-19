@@ -2,7 +2,7 @@
 
 本文档记录脚本 AI 选型、跟随/护送行为与移动控制器在非凸几何下的实战避坑经验。
 
-> Pattern IDs: `AIM-001`–`AIM-006`
+> Pattern IDs: `AIM-001`–`AIM-007`
 > card_status: ACTIVE; movement conclusions are tied to the observed geometry and path-data availability
 > scope: AI2Engine selection, follow/escort handlers, NpcMoveController pathing, and AI2 attack-event re-entry
 > last_reviewed: 2026-09-19
@@ -175,3 +175,32 @@ first_check: 遇到 load fail / HtmlPageId 10 时，先看该 NPC 的 retail pat
 - **为什么不能靠模板 `is_dialog` 判断**：静态扫描 `on_talked_by_user` 含直接动作且无 `on_hyperlink_clicked` 的模式约 393 个（覆盖约 997 条 NPC 映射），其中大量 NPC 模板带 `is_dialog="true"`；另有约 20 条 gauge 驱动交互与约 25 条空规则 `useitem` 映射（含 `702648` / `702649`）属于同类真实交互协议。
 - **修复契约**：判断依据是模式自身的动作/事件形状，而不是模板标记——直接交互（`use_skill`、`teleport_target`、`teleport_target_alias`）与 `on_gauge_*` 模式一律不下发默认 HTML 页；`selectNpcAi` 里空规则 retail pattern 不得覆盖 `useitem`。
 - **验证边界**：本轮只有静态审计和 focused-test 证明；客户端复验需部署后对 `702685` 及代表性炮台/坦克（`832075`、`832273`、`702346` 等）实测乘坐。
+
+---
+
+## [AIM-007] 七、阈值变身必须共用一次性生成闸门并在死亡路径兜底 (THRESHOLD_TRANSFORM_NEEDS_DEATH_FALLBACK)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: AI2 脚本的阈值变身（handleAttack/checkPercentage 的阈值分支 → spawn 替代形态 + AI2Actions.deleteOwner）及其死亡兜底，覆盖副本 AI 与世界 AI
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 击杀本该“变身/换形态”的 Boss 后任务或场景不推进；爆发、一击、技能连招把人形从阈值以上直接打死时，替代形态完全不出现（例：任务 15300/25300 步骤 7「消灭盘龙巢穴的奥里萨」击杀 237230 不生成 237231，永远停在步骤 7）
+root_cause: CreatureController#onAttack 先 getAggroList().addDamage(...)（内部经 ai.onAttacked → handleAttack 触发 AI 回调）再 getLifeStats().reduceHp(...)，因此 checkPercentage(getLifeStats().getHpPercentage()) 读到的是本次伤害结算前的 HP；从阈值以上一击/爆发致死时阈值分支永远不执行，替代形态从未生成，而任务只对替代形态记账
+fix_or_guardrail: 每个阈值变身 AI 必须同时覆写 handleDied() → 复用与阈值路径完全相同的 *Once() 生成闸门（AtomicBoolean compareAndSet 幂等）；阈值路径保持先生成替代形态再 AI2Actions.deleteOwner，死亡路径只补生成；新增成员由 ThresholdTransformDeathFallbackGateTest 逐文件门禁（handleDied + compareAndSet + 同一 *Once() + deleteOwner + 目标 NPC id）
+evidence: src/main/java/com/aionemu/gameserver/controllers/CreatureController.java; src/main/java/com/aionemu/gameserver/ai/instance/drakenspireDepths/immortalOrissanAI2.java; src/main/java/com/aionemu/gameserver/ai/instance/azoturanFortress/Betrayer_IcaronixAI2.java; src/test/java/com/aionemu/gameserver/ai/ThresholdTransformDeathFallbackGateTest.java; src/test/java/com/aionemu/gameserver/ai/instance/drakenspireDepths/ImmortalOrissanAI2Test.java; src/main/resources/aion/data/static_data/quest_definition/quests/15300.xml; src/main/resources/aion/definitions/compact/ai/npcaipatterns_idseal_q_yjh.xml; .agents/summary/quest-15300-orissan/2026-09-19-immortal-orissan-death-fallback.zh-CN.md
+validation: static（CreatureController#onAttack 调用顺序 + 全仓约 136 个 checkPercentage/getHpPercentage 站点审计 + 10 文件同族清单）；focused-test（mvn -B test -Dtest='ImmortalOrissanAI2Test,Betrayer_IcaronixAI2Test,ThresholdTransformDeathFallbackGateTest,DrakenspireDepthsQOrissanSceneTest,DrakenspireDepthsQTwinSceneTest'，2026-09-19 22:17:58 11 例 0 失败 0 错误 BUILD SUCCESS）；runtime（同任务的上一段双子/米西奥内步骤已在 21:44 会话确认；奥里萨步骤本身未复测）；client/production 复验 PENDING（需重建重启新字节码后复测 15300/25300 步骤 7→8）
+boundaries: 只覆盖“阈值触发的替代形态生成”，普通掉宝/宝箱/事件任务型 handleDied 不受约束；替代形态的存活、重生与清理仍由各自场景决定（如 Fountless_* 保留 scheduleRespawn）；阈值判读基于“上一击结算后的 HP”，因此阈值语义是上一击越过阈值才变身，不改变既有数值合同
+superseded_by: none
+first_check: 该 AI 是否在 handleAttack/checkPercentage 里 spawn 替代形态；handleDied 是否调用同一个 *Once() 生成闸门（只看次数，不重复判断 HP）
+keywords: 阈值变身, 变身, 不灭之奥里萨, 虚脱的奥里萨, 237230, 237231, 15300, 25300, Immortal Orissan, Exhausted Orissan, checkPercentage, deleteOwner, 一击致死, 爆发致死, HP 读取顺序
+-->
+
+- **症状**：任务 15300（天族）/ 25300（魔族）推进到步骤 7「消灭盘龙巢穴的奥里萨」后击杀不推进；玩家观感是“杀死了奥里萨但任务不更新，而且刷出来的不是任务专属 NPC”。
+- **根因链**：
+  1. `15300.xml` 的 `s7 -> s8` 是 `<kill-npc npc-id="237231"/>`，任务只认**虚脱的奥里萨 237231**；
+  2. 地图只刷 **237230 不灭之奥里萨**（AI `immortal_orissan_quest`），237231 必须由该 AI 在 ≤80% HP 时变生产生（真端 `IDSeal_Q_Oritsa_01` 在 `on_die` / `on_enter_abnormal_state` 都执行 `spawn(IDSeal_Q_Oritsa_65_Al_02)` + `despawn_self`）；
+  3. `CreatureController#onAttack` 先在 `addDamage` 里触发受击回调（`handleAttack` → `checkPercentage`），之后才 `reduceHp`，所以**读到的是本次伤害前的 HP**；从 80% 以上一击致死时阈值分支整段跳过，237231 从未生成 → 任务永久停在步骤 7。
+- **同族批量补齐**：同形状（阈值 → 生成替代形态 + `deleteOwner`）共 10 个 AI，统一补 `handleDied()` + 同一 `*Once()` 生成闸门：`immortalOrissanAI2`（80%，237231）、`Betrayer_IcaronixAI2`（原本已有死亡兜底，作为参考实现）、`Crazy_ScarAI2`（75%，281116）、`Fountless_Lava_ProtectorAI2`（30%，236227）、`Fountless_Heatvent_ProtectorAI2`（30%，236228）、`Unfaithful_NtuamuAI2`（50%，214583）与 tiamaranta_eye 的 `Aide_IranatiAI2`（218555）、`Master_At_Arms_RaniganAI2`（218558）、`TDown_M_Drakan_Pagati_Named_60_AeAI2`（249099）、`TDown_M_Drakan_Sikara_Named_60_AeAI2`（249102）。
+- **不是同族**：`Lava_ProtectorAI2`（236227）与 `Heatvent_ProtectorAI2`（236228）的 `checkPercentage` 只启动 5 分钟牺牲/事件任务，不生成替代形态，其 `handleDied` 只掉宝箱，因此不进闸门名单——**同族判定看“阈值分支是否 spawn 替代形态”，不要按 NPC 名或目录聚类**。
+- **验证边界**：静态闸门只能证明“阈值路径与死亡路径共用同一个生成闸门”，不能证明阈值数值与真端一致；替代形态被击杀后的任务记账仍走 questEngine，任务侧复测必须打到 237231 死亡才能闭环。
+- **教训**：凡是“打到 X% 变形态/换阶段”的脚本 AI，都要问一句“如果这一击直接打死会怎样”；受击回调读到的 HP 永远滞后一次伤害，阈值分支不能作为唯一入口。

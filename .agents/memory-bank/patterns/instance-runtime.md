@@ -2,10 +2,10 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-010`
+> Pattern IDs: `IR-001`–`IR-012`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
-> last_reviewed: 2026-09-16
+> last_reviewed: 2026-09-19
 
 ---
 
@@ -129,13 +129,13 @@ first_check: static spawn loader, RetailConditionSpawnEngine, condition-spawns p
 status: CONFIRMED
 scope: static spawn XML auditing and de-duplication under src/main/resources/aion/data/static_data/spawns
 first_seen: 2026-09-14
-last_verified: 2026-09-14
-symptom: 排查同一 NPC 重复刷出时，按“该点是否为新引入”筛选候选，数量远少于实际，且把重复归因给错误的提交
-root_cause: Retail synchronisation re-projects z from terrain, so an existing spot's z changes while x/y stay; a coordinate hash that includes z reports the re-projected spot as newly added and hides the real leftover
-fix_or_guardrail: Compare spots by planar x/y only; decide “newly introduced” via block-level history (which commit introduced the retail spot, and whether the parent revision already had a coincident legacy spot in the same npc_id block) instead of hashing (x, y, z)
-evidence: commit 3fc71b693; SpawnGroup2.java:104; SpawnSurfaceResolver.java:24; NormalBalaureaSpawnDataTest.java:26; spawns/Npcs/400010000_Reshanta.xml:886
-validation: static; focused-test (dataholders and spawnengine suites passed except a pre-existing unrelated failure); runtime/client verification pending
-boundaries: The exclusion of z applies to identity and de-duplication decisions only; z still matters for spawn height and resolve_z behaviour. Legacy and retail spots with differing entity_id are different objects and must not be merged on coincidence alone
+last_verified: 2026-09-19
+symptom: 同一 NPC 重复刷出；排查时按“该点是否为新引入”筛选候选数量远少于实际，且把重复归因给错误的提交。残留也可能是**另一条独立 `<spawn>` 块**且与真端点相距十几米（例：任务版盘龙巢穴 237228 / 237229 各刷 2 个），同块重合点判据扫不到
+root_cause: Retail synchronisation re-projects z from terrain, so an existing spot's z changes while x/y stay; a coordinate hash that includes z reports the re-projected spot as newly added and hides the real leftover. 该同步还会**叠加**真端出生面而不同步删除 legacy 块，于是同一 npc_id 出现两条独立块
+fix_or_guardrail: Compare spots by planar x/y only; decide “newly introduced” via block-level history (which commit introduced the retail spot, and whether the parent revision already had a coincident legacy spot in the same npc_id block) instead of hashing (x, y, z). 追加判据：按 npc_id 统计本地块数/点数与真端出生文件（58Server Map/Worlds 下的地图出生数据）对比，真端条数少于本地时，多出的那条即非真端残留，与距离无关
+evidence: commit 3fc71b693; SpawnGroup2.java:104; SpawnSurfaceResolver.java:24; NormalBalaureaSpawnDataTest.java:26; spawns/Npcs/400010000_Reshanta.xml:886; src/main/resources/aion/data/static_data/spawns/Instances/301520000_Drakenspire_Depths.xml; src/test/java/com/aionemu/gameserver/dataholders/DrakenspireDepthsQTwinSpawnSurfaceTest.java; .agents/summary/spawn-duplicate-spots/2026-09-19-drakenspire-q-twin-duplicate.zh-CN.md
+validation: static（真端 IDSeal_Q 出生面 count=1 取证 + 本地 XML 解析确认 237228/237229 各 1 块 1 点）；focused-test PENDING（DrakenspireDepthsQTwinSpawnSurfaceTest 待授权运行）；既有 2026-09-14 focused-test 记录（dataholders and spawnengine suites passed except a pre-existing unrelated failure）；runtime/client verification pending
+boundaries: The exclusion of z applies to identity and de-duplication decisions only; z still matters for spawn height and resolve_z behaviour. Legacy and retail spots with differing entity_id are different objects and must not be merged on coincidence alone. 条数比较只能判“本地多于真端”；真端静态条数为 0 的 NPC 可能是运行期事件生成（如由失败/重生链刷出的形态），不能仅凭条数删除
 superseded_by: none
 first_check: spot identity comparison code, resolve_z handling in SpawnSurfaceResolver, and per-block git history of the spawn XML
 -->
@@ -144,6 +144,7 @@ first_check: spot identity comparison code, resolve_z handling in SpawnSurfaceRe
 - 用块级历史取证代替坐标哈希：找到引入真端点 `R` 的提交，检查其父版本中同一 `npc_id` 块内是否已存在与 `L` 平面重合的 legacy 点。是则该提交在 `L` 旁新增了重合的 `R`，属制造重复。
 - 该判据在同一批数据上把候选从 68 修正到 138，并推翻了对引入提交的误判（`a5e274fd0` 并未新增点，只是补 `resolve_z`；重复源自更早的提交）。
 - 与 `IR-006` 的关系：IR-006 要求先证明加载归属再删；本条给出可执行的归属判据。两者都禁止仅凭坐标接近直接删除——`entity_id` 不同的重合点是不同对象，必须保留待人工判断。
+- **2026-09-19 修订**：残留形态不止“同块内重合点”。`301520000_Drakenspire_Depths.xml` 中 237228/237229 各有一条真端块（531.088501 / 530.858398，`resolve_z="true"`）和一条手写 legacy 块（545.58734 / 545.7349，无属性），两块相距约 15 米，同块判据扫不到，客户端表现为“各刷 2 个”。真端 IDSeal_Q 出生数据里同名 NPC 都只有 1 条 count=1 记录（位置等于保留块），因此新增判据：**按 npc_id 对比本地与真端条数**，本地多出的块即残留（`trigger=客户端实测重复刷出`；`change=删除 2 条 legacy 块 + 新增 DrakenspireDepthsQTwinSpawnSurfaceTest 闸门`；`evidence=上述 301520000 出生表与本条 summary`）。
 
 ---
 
@@ -202,9 +203,9 @@ last_verified: 2026-09-16
 symptom: 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去）
 root_cause: 实例脚本里原先把副作用写死的兜底（直接 spawn 特效 NPC、广播系统消息）被删除，改为完全依赖真端 pattern；该 NPC 的模板 AI 名不是真端 pattern 名，AI2Engine.selectNpcAi 在 RetailPatternAI2.supports 门禁不通过时会静默回落到模板 AI，副作用整块不执行且日志无报错
 fix_or_guardrail: 迁移时在实例生命周期事件里保留幂等适配器，直接驱动真端执行器（RetailConditionSpawnEngine.setVariable 设条件变量、RetailDynamicAreaEngine.setEnabled 开地面移动碰撞），坐标与实体 ID 仍取真端数据；对象类副作用可用 RetailPatternAI2#spawnRetailActionNpc 按同一份真端 spawn 动作补刷（同实例已存在同模板 NPC 即跳过）；条件已激活/对象已存在时不重复刷怪，因此 pattern 正常接管时不会产生第二份实体
-evidence: commit 5830ece07; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java:220; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:31056; src/main/resources/aion/definitions/compact/ai/dynamic-areas.xml:218; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:59884; .agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md
+evidence: commit 5830ece07; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java:220; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:31056; src/main/resources/aion/definitions/compact/ai/dynamic-areas.xml:218; src/main/resources/aion/definitions/compact/ai/npc-ai-parts/npc-ai_270907_286549.xml:6491; .agents/summary/taloc-hollow-updraft/2026-09-14-2f-updraft-restore.zh-CN.md
 validation: 实机验收通过（用户 2026-09-16 确认打破卵后地面升起气流）；全量 Maven 测试 3282 例、0 失败、2 跳过（2026-09-16 mvn -B test，含当时工作区并行改动）；未按 A/B 隔离 pattern 是否接管；追加：Celestius 死亡后卡斯帕的幻影 799503 的同类适配器（spawnRetailActionNpc）同日实机验收通过
-boundaries: 适配器只允许驱动真端执行器，禁止把真端刷怪坐标复制进实例脚本；同一条件变量/动态区域重复开启必须保持幂等；不改变真端 pattern 自身的动作顺序与清理语义
+boundaries: 适配器只允许驱动真端执行器，禁止把真端刷怪坐标复制进实例脚本；同一条件变量/动态区域重复开启必须保持幂等；不改变真端 pattern 自身的动作顺序与清理语义；`RetailPatternAI2#spawnRetailActionNpc` 只按动作里的绝对坐标解析（owner 坐标按 0,0,0 传入），`SPAWN_LOCATION_MY_POINT` 的动作（例：`IDSeal_Q_Oritsa_01.on_die` 刷 237231）无法用它补刷，实例层必须改用生成者/死亡者的实际坐标直接 spawn
 superseded_by: none
 first_check: 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径
 -->
@@ -223,7 +224,7 @@ last_verified: 2026-09-16
 symptom: 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付）
 root_cause: NpcController 先抛 DIED 触发 on_killed_by_user（spawn 登记进 spawned[SPAWN_ID_n]），再抛 DIED 触发 handleDied → resetPatternState → releaseTrackedSpawns；live_time=0 的子对象不属于 selfManagedSpawns，被 despawnForLifecycle 在同一调用栈内 onDelete，客户端看不到实体
 fix_or_guardrail: 新增 SPAWNER_END_EVENTS(on_die/on_killed_by_user/on_killed_by_npc/on_despawn) 与 spawnerEndEventInProgress 标记，spawnAt 用 hasIndependentLifetime(liveTime, spawnerEndEventInProgress) 判断；这类子对象与 live_time 对象一样只保留登记、不随生成者状态重置删除
-evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:176; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1040; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2271; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2315; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2343; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1127; src/main/java/com/aionemu/gameserver/controllers/NpcController.java:244; src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelim_osy.xml:11; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:10453; src/main/resources/aion/definitions/compact/ai/npc-ai.xml:65623; src/main/resources/aion/data/static_data/quest_definition/quests/10032.xml:279; commit 5ccb10261; .agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md
+evidence: src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:176; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:1040; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2271; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2315; src/main/java/com/aionemu/gameserver/ai/RetailPatternAI2.java:2343; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java:1127; src/main/java/com/aionemu/gameserver/controllers/NpcController.java:244; src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelim_osy.xml:11; src/main/resources/aion/definitions/compact/ai/npc-ai-parts/npc-ai_200000_216003.xml:10453; src/main/resources/aion/definitions/compact/ai/npc-ai-parts/npc-ai_286550_799680.xml:10793; src/main/resources/aion/data/static_data/quest_definition/quests/10032.xml:279; commit 5ccb10261; .agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md
 validation: 静态取证（死亡事件链顺序、登记与释放判定、799503 无其它生成入口）已完成；聚焦测试 mvn -B test -Dtest='RetailPatternAI2Test' 通过（2026-09-16，79 例 0 失败 0 错误），补刷适配器与 i18n 改动后 mvn -B test -Dtest='RetailPatternAI2Test,LocalizedLogCallsTest' 再次通过（2026-09-16 17:53:26，80 例 0 失败 0 错误，BUILD SUCCESS，工作区含并行改动、非 A/B 隔离）；客户端实机验收通过（2026-09-16 用户报告击杀 Celestius 后幻影现身、10032 正常完成）；另有实例层幂等补刷适配器（spawnRetailActionNpc）兜底 pattern 未接管的情况
 boundaries: 显式 <despawn spawn_id> 与 live_time 到期任务语义不变；可逆的 on_leave_attack_state（脱战，90 处 spawn 动作）仍随回位重置释放；这类子对象不再随生成者回位/重生自动回收，清理交给真端显式动作或副本销毁；异步延迟链（技能后接 spawn）在死亡处理中本就会被 resetPatternState 取消，不在本护栏范围内；护栏只影响此前“生成后立刻被同一调用栈删除”的无效 spawn，不会改变已在生效的交互对象
 superseded_by: none
@@ -240,3 +241,25 @@ first_check: resetPatternState/releaseTrackedSpawns 是否把“生成者生命�
 - **安全性论证**：这四类事件之后紧跟着 `resetPatternState()`，被标记的子对象此前一定是“生成后立即删除”的无效 spawn；护栏只让它们按真端意图可见，不会改变本已生效的对象。
 - **实机闭环**：2026-09-16 击杀 Celestius 后幻影 799503 正常现身、10032 正常完成；由于“终端事件是否送达”仍不可静态判定，实例层同时保留 `RetailPatternAI2#spawnRetailActionNpc` 幂等补刷（见 IR-010），pattern 与适配器不会产生第二份实体。
 - **教训**：真端对齐把“实例脚本兜底 spawn”删掉时，必须同时确认真端动作的产物能活过引擎自己的状态重置；`live_time>0` 与 `live_time=0` 两条路径要分开核对。
+
+## [IR-012] 十二、副本销毁后残留的延迟任务必须自行收口 (INSTANCE_DELAYED_TASKS_SELF_TERMINATE_AFTER_TEARDOWN)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 实例处理器用 GameThreadPoolServices 排定的延迟场景任务（spawn / killNpc / 移动指令），尤其 DrakenspireDepths 301390000 与 301520000
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 副本销毁后日志持续刷“生成 NPC 209679/237219/237232/237217 时出错”，异常是 InstanceScaler.onBeforeSpawn → WorldPosition.getWorldMapInstance 的 NullPointerException（部分只记录裸 NPE）
+root_cause: 场景延迟任务排期最长 87 秒，远超副本存活时间；任务体只检查玩家与坐标，不检查实例是否已销毁。副本销毁后 WorldMapInstance/mapRegion 已拆除，SpawnEngine.spawnObject 在 InstanceScaler.onBeforeSpawn 处 NPE；getNpcs() 返回的 null 列表还会让 killNpc 迭代时二次 NPE
+fix_or_guardrail: 实例处理器覆写 spawn(int,float,float,float,byte)，isInstanceDestroyed 时直接返回 null；所有延迟任务入口（raidSeal / moveToSealForward / killNpc 与直接调用 SpawnEngine 的特效方法）对 null 返回值与 null 列表判空；守护写在统一入口而不是逐个延迟毫秒
+evidence: src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsQInstance.java; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsInstance.java; log/error.log:11267; log/error.log:11355; log/error.log:11379; src/test/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsInstanceTeardownGuardTest.java; .agents/summary/quest-15300-orissan/2026-09-19-immortal-orissan-death-fallback.zh-CN.md
+validation: focused-test（2026-09-19 mvn -B test -Dtest='DrakenspireDepthsQOrissanSceneTest,DrakenspireDepthsQTwinSceneTest,DrakenspireDepthsQTwinSpawnSurfaceTest,DrakenspireDepthsInstanceTeardownGuardTest,ImmortalOrissanAI2Test,ThresholdTransformDeathFallbackGateTest,Betrayer_IcaronixAI2Test'：17 例 0 失败 0 错误，BUILD SUCCESS）；运行期日志证据来自 2026-09-19 22:37:13/22:39:13/22:39:35；修复后客户端复测待执行
+boundaries: 只覆盖实例处理器自身排定的延迟 spawn；AI 定时器、任务线程与引擎内部延时不在本护栏内；判空仅在 isInstanceDestroyed 为真时生效，不影响副本内的正常补刷
+superseded_by: none
+first_check: 副本销毁后仍在排队的延迟任务入口是否检查 isInstanceDestroyed，spawn 返回值与 getNpcs 列表返回值是否判空
+keywords: 生成 NPC 时出错, NullPointerException, mapRegion is null, 副本销毁, instance teardown, isInstanceDestroyed, killNpc null
+-->
+
+- **症状**：龙脊深渊剧情副本（301390000）与任务副本（301520000）销毁后仍刷 NPE：`生成 NPC 209679 时出错，世界 301390000`（`Cannot invoke "MapRegion.getParent()" because "this.mapRegion" is null`）与 `生成 NPC 237219/237232/237217 时出错，世界 301520000`；后者只记录裸 `NullPointerException`。
+- **根因链**：`237216`（Grave Cavity Rendclaw）等场景在死亡回调里排 25–87 秒后的 spawn 任务；副本超时/重置先执行 `onInstanceDestroy()` 拆掉世界实例，延迟任务随后仍在同一实例 ID 上调用 `SpawnEngine.addNewSingleTimeSpawn` + `spawnObject`，`InstanceScaler.onBeforeSpawn` 读 `position.getWorldMapInstance()` 时拿到 null。
+- **护栏**：把守护放进统一入口——覆写 `GeneralInstanceHandler#spawn`，`isInstanceDestroyed` 为真直接返回 null；`raidSeal`/`moveToSealForward`/`killNpc`/直接 `SpawnEngine.spawnObject` 的特效方法全部对 null 判空，`getNpcs()` 的 null 列表不再被迭代。
+- **边界**：这不是“副本销毁要取消所有任务”的通用实现，只是让延迟任务在实例拆除后不再触碰世界；如果后续把延迟任务改成可取消的 `Future` 集合，也应保留这层判空。

@@ -116,14 +116,6 @@
 		<spawn npc_id="237224">
 			<spot x="772.6448" y="263.3362" z="1701.4059" h="75"/>
 		</spawn>
-		<!-- Fountless Lava Protector -->
-		<spawn npc_id="237228">
-			<spot x="545.58734" y="212.11098" z="1681.8224" h="59"/>
-		</spawn>
-		<!-- Fountless Heatvent Protector -->
-		<spawn npc_id="237229">
-			<spot x="545.7349" y="152.29825" z="1681.8224" h="60"/>
-		</spawn>
 		<!-- Source FX -->
 		<spawn npc_id="855708">
 			<spot x="531.4583" y="152.00694" z="1681.8224" h="60"/>

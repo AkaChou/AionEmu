@@ -60,6 +60,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
+	/** 不灭之奥里萨（变身前形态）/ Immortal Orissan (pre-transform form). */
+	private static final int IMMORTAL_ORISSAN_NPC_ID = 237230;
+	/** 虚脱的奥里萨（任务 15300/25300 唯一认可的击杀目标）/ Exhausted Orissan (the only accepted quest kill target). */
+	private static final int EXHAUSTED_ORISSAN_NPC_ID = 237231;
 	/** 已播放动画集合 / played-movie set */
 	private final List<Integer> movies = new ArrayList<Integer>();
 		/** 对象 / objects */
@@ -194,8 +198,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			case 237207: //Deathchar Slayer.
 				deathCharQ++;
 				if (deathCharQ == 4) {
-					if (player != null) {
-				        switch (player.getRace()) {
+					if (sealSceneRaceQ != null || player != null) {
+				        switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					        case ELYOS:
 							    // 摧毁熔岩守护者或热风口守护者之一。 / Destroy either the Lava Protector or the Heatvent Protector.
 								sendMsgByRace(1402993, Race.ELYOS, 2000);
@@ -217,8 +221,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				}
 			break;
 			case 237222: //Fetid Deathchar Patroler.
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -255,8 +259,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				}
 			break;
 			case 237223: //Fetid Deathchar Necromancer.
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -303,8 +307,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				deleteNpc(702404); //Twin's Firewall.
 				deleteNpc(702695); //Breakwall Twin's Boss.
 				deleteNpc(702696); //Breakwall Twin's Boss.
-				    if (player != null) {
-				        switch (player.getRace()) {
+				    if (sealSceneRaceQ != null || player != null) {
+				        switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					        case ELYOS:
 							    deleteNpc(237228);
 							    deleteNpc(237229);
@@ -408,8 +412,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			    Npc elitePhantomscorchChimera = instance.getNpc(237214); //Frantic Phantomscorch Chimera.
 			    if (isDead(phantomscorchBonerival) &&
 				    isDead(elitePhantomscorchChimera)) {
-					if (player != null) {
-				        switch (player.getRace()) {
+					if (sealSceneRaceQ != null || player != null) {
+				        switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					        case ELYOS:
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							        /**
@@ -452,9 +456,18 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 					}
 			    }
 			break;
+			case IMMORTAL_ORISSAN_NPC_ID: //Immortal Orissan.
+				// 不灭之奥里萨（237230）死亡后必须出现任务击杀目标 237231：真端 pattern 的 on_die / 异常状态分支
+				// 与模板 AI 都会生成它，但 pattern 未接管或子对象被提前清掉时目标会缺失，任务 15300/25300 就会
+				// 永久停在「消灭盘龙巢穴的奥里萨(0/1)」。这里做一次延迟幂等兜底，真端生成成功时不会多刷。
+				// The quest kill target 237231 must exist after the immortal form dies: the retail pattern's
+				// on_die / abnormal-state branches and the template AI all spawn it, but when the pattern did not take
+				// over the quest stays stuck at (0/1). This delayed idempotent fallback never duplicates a working spawn.
+				ensureExhaustedOrissanSpawned(npc);
+			break;
 			case 237231: //Exhausted Orissan.
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 						    sendMovie(player, 920);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -479,6 +492,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209710, 815.84827f, 579.7431f, 1701.0446f, (byte) 30);
 									spawn(209711, 814.1693f, 588.4347f, 1701.0449f, (byte) 34);
 									spawn(209711, 806.99536f, 587.9815f, 1701.0448f, (byte) 30);
+									// 爆破手喊话与生成同批执行，避免 0ms 并发任务取用时拿不到 NPC。 / Speak in the spawning task so the 0ms tasks cannot race.
+									Npc bomber = getNpc(209711); // 分遣队爆破手 / Detachment Demolisher.
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
+									// 让我炸开一条路…… / Just let me blast us a path...
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -504,34 +525,19 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								 */
 								@Override
 								public void run() {
-									Npc Masionel = getNpc(209712);
-									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
-									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
-									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
-								}
-							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-								/**
-								 * 处理 run。
-								 * Handle run.
-								 */
-								@Override
-								public void run() {
 									killNpc(getNpcs(700546));
-									Npc Masionel = getNpc(209712);
 									// 分遣队继续推进。 / The detachment continues to advance.
 									sendMsgByRace(1403000, Race.ELYOS, 0);
 									// 在魂消迷宫滑翔以使用风道。 / Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.ELYOS, 5000);
+									// 10 秒后爆破手补完收尾喊话，节奏与双子场景一致。 / The demolisher closes 10s later, matching the twin scene.
+									Npc bomber = getNpc(209711);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
 								}
-							}, 0);
+							}, 10000);
 						break;
 						case ASMODIANS:
 						    sendMovie(player, 917);
@@ -557,6 +563,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209775, 815.84827f, 579.7431f, 1701.0446f, (byte) 30);
 									spawn(209776, 814.1693f, 588.4347f, 1701.0449f, (byte) 34);
 									spawn(209776, 806.99536f, 587.9815f, 1701.0448f, (byte) 30);
+									// 爆破手喊话与生成同批执行，避免 0ms 并发任务取用时拿不到 NPC。 / Speak in the spawning task so the 0ms tasks cannot race.
+									Npc bomber = getNpc(209776); // 分遣队爆破手 / Detachment Demolisher.
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
+									// 让我炸开一条路…… / Just let me blast us a path...
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -582,41 +596,26 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								 */
 								@Override
 								public void run() {
-									Npc Parsia = getNpc(209777);
-									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
-									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
-									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
-								}
-							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-								/**
-								 * 处理 run。
-								 * Handle run.
-								 */
-								@Override
-								public void run() {
 									killNpc(getNpcs(700546));
-									Npc Parsia = getNpc(209777);
 									// 分遣队继续推进。 / The detachment continues to advance.
 									sendMsgByRace(1403000, Race.ASMODIANS, 0);
 									// 在魂消迷宫滑翔以使用风道。 / Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.ASMODIANS, 5000);
+									// 10 秒后爆破手补完收尾喊话，节奏与双子场景一致。 / The demolisher closes 10s later, matching the twin scene.
+									Npc bomber = getNpc(209776);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
 								}
-							}, 0);
+							}, 10000);
 						break;
 				    }
 				}
 			break;
 			case 237216: //Grave Cavity Rendclaw.
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -690,7 +689,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal1();
-									doors.get(271).setOpen(true);
+									openDoor(271);
 									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.ELYOS, 0);
 								}
@@ -725,7 +724,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal3();
-									doors.get(267).setOpen(true);
+									openDoor(267);
 									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.ELYOS, 0);
 								}
@@ -804,7 +803,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal1();
-									doors.get(271).setOpen(true);
+									openDoor(271);
 									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.ASMODIANS, 0);
 								}
@@ -839,7 +838,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal3();
-									doors.get(267).setOpen(true);
+									openDoor(267);
 									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.ASMODIANS, 0);
 								}
@@ -850,8 +849,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			break;
 			case 237232: //Flamesquelch Command Destroyer.
 				despawnNpc(npc);
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -862,8 +861,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
-									doors.get(7).setOpen(true);
-									doors.get(310).setOpen(true);
+									openDoor(7);
+									openDoor(310);
 									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.ELYOS, 0);
 								}
@@ -879,8 +878,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
-									doors.get(7).setOpen(true);
-									doors.get(310).setOpen(true);
+									openDoor(7);
+									openDoor(310);
 									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.ASMODIANS, 0);
 								}
@@ -891,8 +890,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			break;
 			case 237233: //Flamesquelch Command Sorcerer.
 				despawnNpc(npc);
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -902,8 +901,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal6();
-									doors.get(210).setOpen(true);
-									doors.get(312).setOpen(true);
+									openDoor(210);
+									openDoor(312);
 									// 指挥官维尔沙已出现。消灭维尔沙后灭焰军团将溃散。 / Commander Virtsha appeared. Eliminate Virtsha and the Flamesquelch Legion will scatter.
 									sendMsgByRace(1403035, Race.ELYOS, 0);
 									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
@@ -920,8 +919,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    @Override
 								public void run() {
 									startRaidSeal6();
-									doors.get(210).setOpen(true);
-									doors.get(312).setOpen(true);
+									openDoor(210);
+									openDoor(312);
 									// 指挥官维尔沙已出现。消灭维尔沙后灭焰军团将溃散。 / Commander Virtsha appeared. Eliminate Virtsha and the Flamesquelch Legion will scatter.
 									sendMsgByRace(1403035, Race.ASMODIANS, 0);
 									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
@@ -934,8 +933,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			break;
 			case 237234: //Flamesquelch Command Burnsmark.
 				despawnNpc(npc);
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    /**
@@ -971,8 +970,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			break;
 			case 237236: //Commander Virtsha.
 			    despawnNpc(npc);
-				if (player != null) {
-				    switch (player.getRace()) {
+				if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 				        case ELYOS:
 						    // 灭焰军团因指挥官阵亡而陷入混乱。 / The Flamesquelch Legion is in disaray from the loss of its commanders.
 							sendMsgByRace(1403007, Race.PC_ALL, 0);
@@ -1103,8 +1102,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			break;
 			case 237238: //Beritra [Dragon Form]
 				despawnNpc(npc);
-			    if (player != null) {
-				    switch (player.getRace()) {
+			    if (sealSceneRaceQ != null || player != null) {
+				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 				        case ELYOS:
 						    sendMovie(player, 919);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1304,6 +1303,45 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		sendMsgByRace(1402992, Race.PC_ALL, 60000);
     }
 
+	/**
+	 * 幂等补生成任务击杀目标「虚脱的奥里萨」。
+	 * Idempotently spawns the quest kill target, the Exhausted Orissan.
+	 *
+	 * <p>237230 的死亡处理链由真端 pattern（{@code IDSeal_Q_Oritsa_01} 的 {@code on_die}）或模板 AI 负责生成
+	 * 237231，两者都在本实例 {@code onDie} 之后才执行；因此这里延迟一拍再检查，只有目标仍缺失时才补刷，
+	 * 保证任务 15300/25300 的击杀步骤不会被卡住，同时不会与正常生成叠加出第二只。
+	 * The death chain of 237230 (retail {@code on_die} or the template AI) spawns 237231 after this instance
+	 * {@code onDie} runs, so the check is delayed by one beat and only fires while the target is still missing: the kill
+	 * step of quests 15300/25300 can no longer stall and a working spawn is never duplicated.</p>
+	 *
+	 * @param immortal 死亡的不灭之奥里萨 / the dead Immortal Orissan
+	 */
+	private void ensureExhaustedOrissanSpawned(Npc immortal) {
+		final float x = immortal.getX();
+		final float y = immortal.getY();
+		final float z = immortal.getZ();
+		final byte heading = immortal.getHeading();
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (isInstanceDestroyed) {
+					return;
+				}
+				Npc questTarget = getNpc(EXHAUSTED_ORISSAN_NPC_ID);
+				// 已死亡但未消退的残骸不算「目标存在」，否则击杀步骤会继续卡在 0/1。
+				// A corpse that has not decayed yet is not a living target, otherwise the kill step stays at 0/1.
+				if (questTarget != null && !questTarget.getLifeStats().isAlreadyDead()) {
+					return;
+				}
+				spawn(EXHAUSTED_ORISSAN_NPC_ID, x, y, z, heading);
+			}
+		}, 1500);
+	}
+
 	private void spawnIDSealSceneEnding() {
         final int IDSealSceneEndingQuestNPC = sealSceneRaceQ == Race.ASMODIANS ? 209804 : 209739; //Parsia/Masionel.
 		final int IDSealSceneEndingPCGuard1 = sealSceneRaceQ == Race.ASMODIANS ? 209807 : 209742;
@@ -1323,18 +1361,27 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
     }
 
 	private void spawnAgonyWell() {
+		if (isInstanceDestroyed) {
+			return;
+		}
 		SpawnTemplate EnvSkyBoxObject = SpawnEngine.addNewSingleTimeSpawn(301520000, 805377, 635.69067f, 959.46039f, 1615.0714f, (byte) 0);
 		EnvSkyBoxObject.setEntityId(50);
 		objects.put(805377, SpawnEngine.spawnObject(EnvSkyBoxObject, instanceId));
     }
 
 	private void spawnWaveDoor() {
+		if (isInstanceDestroyed) {
+			return;
+		}
 	    SpawnTemplate AionFXPostGlow = SpawnEngine.addNewSingleTimeSpawn(301520000, 731581, 635.3889f, 784.05261f, 1596.7184f, (byte) 0);
 		AionFXPostGlow.setEntityId(548);
 		objects.put(731581, SpawnEngine.spawnObject(AionFXPostGlow, instanceId));
 	}
 
 	private void moveToSealForward(final Npc npc, float x, float y, float z, boolean despawn) {
+		if (npc == null) {
+			return;
+		}
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
@@ -1356,6 +1403,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 
 	private void raidSeal(final Npc npc) {
+		if (npc == null) {
+			return;
+		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
@@ -1516,6 +1566,31 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 副本销毁后不再补刷对象。
+	 * Suppresses spawns once the instance is destroyed.
+	 *
+	 * <p>场景里的延迟任务最长排到 87 秒后，副本销毁后仍会执行；此时世界实例已经拆除，底层生成必然
+	 * NPE（见 {@code 生成 NPC 237219 时出错 ... NullPointerException}）。列表返回 null 由调用方的判空兜住。
+	 * The scene's delayed tasks run up to 87 seconds later and still fire after teardown, when the world instance is
+	 * already gone and the underlying spawn NPEs (see {@code 生成 NPC 237219 时出错 ... NullPointerException}). The
+	 * {@code null} result is absorbed by the callers' null checks.</p>
+	 *
+	 * @param npcId NPC 模板 ID / NPC template id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * @param heading 朝向 / heading
+	 * @return 生成的对象；副本已销毁时返回 {@code null} / spawned object, or {@code null} when the instance is gone
+	 */
+	@Override
+	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
+		if (isInstanceDestroyed) {
+			return null;
+		}
+		return super.spawn(npcId, x, y, z, heading);
+	}
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -1530,6 +1605,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 
 	protected void killNpc(List<Npc> npcs) {
+		if (npcs == null) {
+			return;
+		}
         for (Npc npc: npcs) {
             npc.getController().die();
         }
@@ -1552,9 +1630,28 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	 */
 	@Override
 	public void onInstanceDestroy() {
-		doors.clear();
+		if (doors != null) {
+			doors.clear();
+		}
 		isInstanceDestroyed = true;
 	}
+
+	/**
+	 * 安全开门；副本销毁或门未加载时忽略延迟任务请求。
+	 * Opens a door safely; delayed tasks are ignored after teardown or when the door is absent.
+	 *
+	 * @param doorId 门 ID / door id
+	 */
+	private void openDoor(int doorId) {
+		if (isInstanceDestroyed || doors == null) {
+			return;
+		}
+		StaticDoor door = doors.get(doorId);
+		if (door != null) {
+			door.setOpen(true);
+		}
+	}
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
