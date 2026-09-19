@@ -51,6 +51,25 @@ public class AttackEventHandler {
 			if (npcAI.poll(AIQuestion.CAN_SHOUT)) {
 				ShoutEventHandler.onAttackBegin(npcAI, (Creature) npcAI.getOwner().getTarget());
 			}
+		} else if (npcAI.isInState(AIState.FIGHT)) {
+			// 已在战斗中：setStateIfNot(FIGHT) 不会再次成功，但攻击链可能已经停摆（最典型的是 0 移速 NPC
+			// 在 AttackManager#targetTooFar 里既不能追击、也不会重排下一次攻击）。这次受击必须复位攻击链，
+			// 否则该 NPC 会一直“挂着仇恨却不还手”，而且每次受击都会刷新 lastAttackedTime，让它永远脱不了战。
+			// Already fighting: setStateIfNot(FIGHT) reports no transition, yet the attack chain may have stopped
+			// (typically a zero-speed NPC that can neither chase nor reschedule in AttackManager#targetTooFar).
+			// This hit must restart the chain; otherwise the NPC keeps hate without retaliating, and every further
+			// hit refreshes lastAttackedTime so it can never leave combat either.
+			if (npcAI.isLogging()) {
+				AI2Logger.info(npcAI, "onAttack() -> resumeInterruptedAttack");
+			}
+			TargetEventHandler.clearTargetLostState(npcAI);
+			// 必须异步复位：AggroList#addDamageInternal → AbstractAI#onAttacked → 本方法 → scheduleNextAttack
+			// → SimpleAttackManager#attackAction → CreatureController#attackTarget → 对方的
+			// AggroList#addDamageInternal 会再次回到本方法；普攻间隔为 0 时同步重排会无限递归直到 StackOverflowError。
+			// Must resume asynchronously: the hit stack comes straight from AggroList#addDamageInternal, and a
+			// synchronous reschedule attacks back through CreatureController#attackTarget, which re-enters this
+			// handler on the other creature; with a zero attack interval that recursion blows the stack.
+			AttackManager.resumeInterruptedAttack(npcAI);
 		}
 	}
 

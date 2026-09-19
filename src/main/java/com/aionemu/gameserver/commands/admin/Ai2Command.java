@@ -112,6 +112,11 @@ public class Ai2Command extends AdminCommand {
 		if (param0.equals("set")) {
 			String aiName = param1;
 			GameEngineServices.ai2Engine().setupAI(aiName, npc);
+			// 新装配的 AI 实例停留在 CREATED，只有 SPAWNED 事件会把它推进 IDLE；缺少这一步会让该 NPC
+			// 收不到 ATTACK / CREATURE_SEE 等事件，变成完全木桩（与 RetailDirectPortalEngine 的做法保持一致）。
+			// A freshly attached AI stays in CREATED until the SPAWNED event moves it to IDLE; without it the NPC
+			// stops receiving ATTACK / CREATURE_SEE and behaves like a statue (same as RetailDirectPortalEngine).
+			npc.getAi2().onGeneralEvent(AIEventType.SPAWNED);
 		}
 		else if (param0.equals("event")) {
 			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());

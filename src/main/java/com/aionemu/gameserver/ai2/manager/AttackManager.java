@@ -1,13 +1,19 @@
 package com.aionemu.gameserver.ai2.manager;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Logger;
+import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
@@ -18,6 +24,18 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
  * @modified Yon (Aion Reconstruction Project) -- 移除非真端式的超距脱战处理 / removed the non-retail-like leash handling.
  */
 public class AttackManager {
+
+	/**
+	 * 等待执行的攻击链复位任务，按对象 ID 去重：连续受击与连续重试都只保留一个待执行任务。
+	 * Pending attack-chain retry tasks keyed by object id: repeated hits and retries keep at most one queued task.
+	 */
+	private static final Map<Integer, Future<?>> PENDING_ATTACK_RETRIES = new ConcurrentHashMap<>();
+
+	/**
+	 * 不可移动 NPC 重试的最小延迟（毫秒）：够不着目标时避免空转式重排。
+	 * Minimum retry delay in milliseconds for immobile NPCs: avoids busy-loop rescheduling while out of reach.
+	 */
+	private static final int IMMOBILE_RETRY_MIN_DELAY = 500;
 
 	/**
 	 * 开始攻击目标：记录开战时间、播放攻击表情并调度下一次攻击。
@@ -153,6 +171,107 @@ public class AttackManager {
 		// driver (zero move speed cannot fail a path, max_chase_time=0 sets no chase timeout, and the pattern does
 		// nothing on entering the attack state). Giving up clears hate only to be re-added by the next hit or sight
 		// event, which makes the client replay the disengage animation over and over.
+		// 但“保留目标”不等于“放弃出手”：可移动 NPC 靠追击到达事件复位攻击链，0 移速 NPC 没有这条路径，
+		// 于是会停在 FIGHT 里既不移动也不还手（0 移速远程怪 Lurking Clamshell Oculis 235805 即为此例）。
+		// 这里按攻击间隔重排一次尝试，直到目标重新进入射程/视线，或真端 max_chase_time 规则结束战斗。
+		// Keeping the target must not mean dropping the attack chain: mobile NPCs resume through the chase-arrival
+		// event, immobile ones have no such path and would sit in FIGHT without moving or retaliating (the zero-speed
+		// ranged monster Lurking Clamshell Oculis 235805 is such a case). Retry once per attack interval until the
+		// target is back in range/sight or the retail max_chase_time rule ends the fight.
+		scheduleImmobileRetry(npcAI);
+	}
+
+	/**
+	 * 受击后复位可能已经停摆的攻击链：异步执行，且按对象 ID 去重。
+	 * Resumes a possibly stalled attack chain after a hit: asynchronous and deduplicated per object id.
+	 *
+	 * <p>严禁在受击调用栈内同步重排攻击。{@code AggroList#addDamageInternal} → {@code AbstractAI#onAttacked}
+	 * → {@code AttackEventHandler#onAttack} → {@code AttackManager#scheduleNextAttack}
+	 * → {@code SimpleAttackManager#attackAction} → {@code CreatureController#attackTarget}
+	 * → 对方的 {@code AggroList#addDamageInternal} 会再次回到本方法；双方普攻间隔为 0 时就会来回无限递归，
+	 * 直到 {@code StackOverflowError} 打爆线程池线程。
+	 * Never reschedule synchronously inside the hit stack: damage handling → {@code onAttacked} → this handler
+	 * → {@code scheduleNextAttack} → attack action → target's damage handling returns here, so two creatures with a
+	 * zero attack delay recurse until the worker thread dies with {@code StackOverflowError}.</p>
+	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 */
+	public static void resumeInterruptedAttack(NpcAI2 npcAI) {
+		scheduleAttackRetry(npcAI, 0);
+	}
+
+	/**
+	 * 为不可移动 NPC 按攻击间隔重排一次攻击尝试。
+	 * Reschedules one attack attempt for an immobile NPC after the regular attack interval.
+	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 */
+	private static void scheduleImmobileRetry(NpcAI2 npcAI) {
+		Npc npc = npcAI.getOwner();
+		if (npc == null) {
+			return;
+		}
+		scheduleAttackRetry(npcAI, Math.max(IMMOBILE_RETRY_MIN_DELAY, npc.getGameStats().getNextAttackInterval()));
+	}
+
+	/**
+	 * 在 AI 线程池上按延迟排入一次攻击链复位，按对象 ID 去重。
+	 * Queues one attack-chain retry on the AI thread pool after the given delay, deduplicated per object id.
+	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param delay 延迟毫秒 / delay in milliseconds
+	 */
+	private static void scheduleAttackRetry(NpcAI2 npcAI, int delay) {
+		Npc npc = npcAI.getOwner();
+		if (npc == null || !npc.isSpawned() || npc.getLifeStats().isAlreadyDead() || npc.getTarget() == null
+				|| !npcAI.isInState(AIState.FIGHT)) {
+			return;
+		}
+		int objectId = npc.getObjectId();
+		PENDING_ATTACK_RETRIES.compute(objectId, (ignored, pending) -> {
+			if (!shouldQueueAttackRetry(pending)) {
+				if (npcAI.isLogging()) {
+					AI2Logger.info(npcAI, "AttackManager: attack retry already queued");
+				}
+				return pending;
+			}
+			return GameThreadPoolServices.threadPoolManager().schedule(() -> runAttackRetry(npcAI, objectId), delay);
+		});
+	}
+
+	/**
+	 * 去重规则：只有在途任务为空或已结束时才允许排入新的重试。
+	 * Deduplication rule: queue a new retry only when no in-flight task exists or the in-flight one already finished.
+	 *
+	 * @param pending 在途任务 / in-flight task
+	 * @return 允许入队时为 {@code true} / {@code true} when a new retry may be queued
+	 */
+	static boolean shouldQueueAttackRetry(Future<?> pending) {
+		return pending == null || pending.isDone();
+	}
+
+	/**
+	 * 执行一次攻击链复位（始终运行在 AI 线程池线程上）。
+	 * Runs one attack-chain retry (always on an AI thread-pool thread).
+	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param objectId 排入任务时的对象 ID / object id captured when the task was queued
+	 */
+	private static void runAttackRetry(NpcAI2 npcAI, int objectId) {
+		// 先撤销自身占位，后续重排出的下一次重试才能重新入队。
+		// Drop the own slot first so the follow-up retry can queue again.
+		PENDING_ATTACK_RETRIES.remove(objectId);
+		Npc npc = npcAI.getOwner();
+		if (npc == null || !npc.isSpawned() || npc.getLifeStats().isAlreadyDead() || npc.getTarget() == null) {
+			return;
+		}
+		if (npcAI.isInState(AIState.FIGHT)) {
+			if (npcAI.isLogging()) {
+				AI2Logger.info(npcAI, "AttackManager: retrying stalled attack chain");
+			}
+			TargetEventHandler.clearTargetLostState(npcAI);
+			scheduleNextAttack(npcAI);
+		}
 	}
 
 	/**

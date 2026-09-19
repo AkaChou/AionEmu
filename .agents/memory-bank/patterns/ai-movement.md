@@ -2,10 +2,10 @@
 
 本文档记录脚本 AI 选型、跟随/护送行为与移动控制器在非凸几何下的实战避坑经验。
 
-> Pattern IDs: `AIM-001`–`AIM-004`
+> Pattern IDs: `AIM-001`–`AIM-005`
 > card_status: ACTIVE; movement conclusions are tied to the observed geometry and path-data availability
-> scope: AI2Engine selection, follow/escort handlers, and NpcMoveController pathing
-> last_reviewed: 2026-09-16
+> scope: AI2Engine selection, follow/escort handlers, NpcMoveController pathing, and AI2 attack-event re-entry
+> last_reviewed: 2026-09-19
 
 ---
 
@@ -125,3 +125,27 @@ first_check: AttackManager#targetTooFar 是否对 !isMoveSupported() 发送 TARG
   4. 卵是 aggressive、感知 20m，且每次受击都会重新加仇恨 → 立刻回到 FIGHT，循环往复。
 - **真端依据**：卵的 `max_chase_time=0`（不设追击超时）、0 移速不会产生寻路失败、pattern `Elim_NeutflyEgg` 在 `on_enter_attack_state` / `on_enter_idle_state` 都是 `do_nothing`——真端没有任何“够不着就清仇恨回位”的驱动。
 - **修复与后续**：删除该分支后，攻击管理器只在“目标离开已知列表”或真端 `max_chase_time` 规则生效时结束战斗，固定怪不再抖动。若将来要为某些固定怪恢复“脱战”，必须先从真端数据找到驱动字段（例如该 NPC 的 `max_chase_time` 取值）而不是在代码里按伤害大小判断。
+
+---
+
+## [AIM-005] 五、受击回调内严禁同步重排攻击（必须异步去重）(HIT_CALLBACK_MUST_NOT_RESCHEDULE_ATTACK_SYNC)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: AI2 受击事件回调（AggroList#addDamageInternal → AbstractAI#onAttacked → AttackEventHandler）内的攻击链复位
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: NPC 停在 FIGHT 挂着仇恨不还手；为该症状加的“受击即重排攻击”修复上线后，线程池线程反复抛 java.lang.StackOverflowError（ExecuteWrapper 记录，栈循环 AttackEventHandler#onAttack → AttackManager#scheduleNextAttack → SimpleAttackManager#attackAction → CreatureController#attackTarget → 对方 AggroList#addDamageInternal）
+root_cause: 受击回调直接同步调用 AttackManager#scheduleNextAttack；目标普攻间隔为 0（getNextAttackInterval 在攻击链停摆后返回 0）时立刻同步打回对方，对方的受击又进入同一回调，两生物来回递归直到爆栈
+fix_or_guardrail: 受击栈内只允许异步复位：AttackEventHandler#onAttack 走 AttackManager#resumeInterruptedAttack，统一经 scheduleAttackRetry → 线程池 schedule（按 objectId 在 PENDING_ATTACK_RETRIES 去重），只有线程池任务体 runAttackRetry 可调用 scheduleNextAttack
+evidence: src/main/java/com/aionemu/gameserver/ai2/handler/AttackEventHandler.java:54; src/main/java/com/aionemu/gameserver/ai2/manager/AttackManager.java:199; src/main/java/com/aionemu/gameserver/ai2/manager/AttackManager.java:224; src/main/java/com/aionemu/gameserver/ai2/manager/AttackManager.java:260; src/test/java/com/aionemu/gameserver/ai2/handler/AttackEventHandlerTest.java:70; src/test/java/com/aionemu/gameserver/ai2/manager/AttackManagerTest.java:59; src/test/java/com/aionemu/gameserver/ai2/manager/AttackManagerTest.java:88
+validation: static（受击分支禁同步 scheduleNextAttack、重排必须线程池 + 去重、git diff --check）；focused-test（AttackEventHandlerTest/AttackManagerTest 等 9 类 104 例 0 失败，2026-09-19）；runtime（首版同步实现在真端日志复现 StackOverflowError，证据见 ExecuteWrapper 记录）；client/production 复验 PENDING（需重新部署服务端）
+boundaries: 只约束会“回打调用方”的同步动作（攻击重排、强制移动等）；仅改自身状态、记日志、清 TARGET_LOST 子状态仍可同步。正常战斗链的重复重排由 isNextAttackScheduled 与去重表兜底
+superseded_by: none
+first_check: AttackEventHandler#onAttack 的受击分支是否直接调用 AttackManager#scheduleNextAttack（应为 resumeInterruptedAttack + 线程池去重）
+-->
+
+- **症状**：NPC 卡在 FIGHT 不还手（AIM-004 的“保留目标”语义不受影响）；修复上线后线程池日志出现成片 `java.lang.StackOverflowError`。
+- **递归链**（约 12 帧一轮）：`AggroList#addDamageInternal` → `AbstractAI#onAttacked` → `RetailPatternAI2#handleAttack` → `AggressiveNpcAI2#handleAttack` → `AttackEventHandler#onAttack` → `AttackManager#scheduleNextAttack` → `chooseAttack` → `SimpleAttackManager#performAttack` → `attackAction` → `CreatureController#attackTarget` → 对方的 `AggroList#addDamageInternal` → 回到起点。
+- **为什么原版不爆栈**：原实现在“已在 FIGHT”时把这次还手直接吞掉（`setStateIfNot(FIGHT)` 返回 false 就什么都不做）——那正是“不还手”bug 的成因，因此不能用同步重排去修。
+- **修复与后续**：复位统一走 `AttackManager#resumeInterruptedAttack`（受击，延迟 0）/ `scheduleImmobileRetry`（够不着目标，按攻击间隔、最小 500ms），二者共用 `scheduleAttackRetry` + `PENDING_ATTACK_RETRIES` 去重（`shouldQueueAttackRetry(Future)`）；线程池任务体先撤销自身占位再校验 FIGHT/存活/有目标，然后 `scheduleNextAttack`（`isNextAttackScheduled()` 自带时间幂等）。
+- **验证边界**：静态闸门只保证“受击栈内没有同步重排”；其它会回打调用方的同步路径（技能、强制移动等）需在实际复现时按同一条递归链核对，而不是只盯 `AttackEventHandler`。
