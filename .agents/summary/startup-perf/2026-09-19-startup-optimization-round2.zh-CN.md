@@ -215,3 +215,23 @@ RetailOpenWorldSpawnDataTest,NpcDropDataTest test
 - 回退后用户复测（IDE 启动，单实例）确认加载已恢复快：23:17:30 解析 5502ms、23:18:03 解析 8204ms；
   用户明确结论「加载又变快了，不用回退了」→ **本轮不做回退，保留分片 + patterns 并行**。
 - 结论：npc-ai 分片 + patterns 并行保留；后续再动并行度必须单实例、空闲机器、成对测量。
+
+### 6.7 回滚决定（2026-09-19 23:2x，用户实测）
+
+- 用户实测结论：静态数据阶段**比分片前慢**，先回滚到分片前再复测。
+- 最新 IDE 启动 JFR（`startup-33032-2026_09_19_23_20_16.jfr`）归因：静态数据窗口 9.40s、
+  `static-data-loader` 采样 1246（≈12.5 core-s），其中 `UTF8Reader.read` 占 8.05 core-s；
+  窗口内 GC 并行阶段 2562ms（ScanHR 1032ms / ObjCopy 694ms）、JIT 编译 75 次。
+  → 8 个 3.4MB 分片与 items/NPC/skill 分片共用同一线程池，解析与分配峰值叠加。
+- 回滚执行（`9166213fd` 的功能性反向，不含文档）：
+  - 恢复单体源 `definitions/compact/ai/npc-ai.xml`（27MB），删除 `npc-ai-parts/` 8 个分片；
+  - 恢复 `RetailAiDefinitionLoader`（单体单遍 `scanMappings` + 串行 patterns）、
+    `XmlDataLoader`（`npc-ai.xml` 路径、固定 `NESTED_PARENT_TASKS = 5`）、
+    `ItemData.assembleFrom`、`QuestDefinitionCatalogManifest` 固定编译线程数、
+    `Quest14026GeranaiaSpawnTest`、`RetailAiDefinitionLoaderTest`。
+- 保留（不回滚）：本轮 4 份分析文档、`jfr-attribute.py`、`xml-parser-probe/`、`scripts/split_npc_ai.py`
+  （重试分片时可直接复用，见 §6.1/§6.2；分片源目录需重新生成并接回加载器才生效）。
+- 随回滚一并消失的独立优化（如需可单独挑回）：`ItemData` 分片增量合并、
+  `-Daion.staticData.extraLoaders`、`-Daion.quest.catalogCompileThreads`。
+- 待跟进：`.agents/memory-bank/patterns/instance-runtime.md` 与 `.agents/summary/quest-15300-orissan/` 中
+  以 `npc-ai-parts/...` 记录的证据路径需改回 `npc-ai.xml`（属他人并行编辑的文件，本轮未改动）。

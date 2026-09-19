@@ -112,20 +112,6 @@ public class ItemData extends ReloadableData {
 		for (ItemData shard : shards) {
 			merged.putAll(shard.getItemData());
 		}
-		assembleFromMerged(merged, customOverrides);
-	}
-
-	/**
-	 * 以已合并的分片映射装配物品数据：自定义模板按 ID 覆盖或新增，最后一次性重建全部索引。
-	 * 调用方可在分片完成时增量 {@code putAll} 到同一映射，避免同时持有全部分片的索引（峰值内存）。
-	 * Assembles item data from an already merged shard mapping: custom templates override or append by id,
-	 * then all indexes are rebuilt in one pass. Callers may {@code putAll} incrementally as shards complete,
-	 * avoiding the need to hold every shard index at once (peak memory).
-	 *
-	 * @param merged 已按顺序合并的分片映射 / shard mappings merged in order
-	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
-	 */
-	public void assembleFromMerged(Map<Integer, ItemTemplate> merged, ItemData customOverrides) {
 		int replaced = 0;
 		int added = 0;
 		if (customOverrides != null) {

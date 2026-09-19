@@ -2,14 +2,15 @@
 """把单体 npc-ai.xml 按 npc 条数切成多个分片（源文件形态，供并行扫描）。
 Splits the monolithic npc-ai.xml into per-shard files so the scan can run in parallel.
 
-当前仓库以分片为源：单体 `npc-ai.xml` 已移除，`npc-ai-parts/` 直接被加载器并行扫描。
-The repository now treats the shards as the source: the monolithic `npc-ai.xml` has been removed and
-`npc-ai-parts/` is scanned in parallel by the loader.
+当前仓库已回滚到单体源：`npc-ai.xml` 是运行时唯一来源，加载器不再扫描分片目录；本脚本保留用于再次
+尝试分片（默认输出 `npc-ai-parts/`），只有把加载器重新指向该目录后才生效。
+The repository is back on the monolithic source: `npc-ai.xml` is the runtime source of truth and the loader
+no longer scans a shard directory. This script is kept for re-trying shards (default output
+`npc-ai-parts/`) and only takes effect once the loader points back at that directory.
 
-重新切分（例如调整分片数）时先从 git 历史取回单体文件 / To re-split (e.g. change the shard count),
-fetch the monolith from git history first:
-	git show HEAD:src/main/resources/aion/definitions/compact/ai/npc-ai.xml > /tmp/npc-ai.xml
-	python3 scripts/split_npc_ai.py --in /tmp/npc-ai.xml
+重新切分（例如换分片数）直接对当前单体文件执行 / To re-split (e.g. try another shard count), run it on
+the monolithic file in place:
+	python3 scripts/split_npc_ai.py --shards 16
 
 用法 / Usage:
 	python3 scripts/split_npc_ai.py [--shards N] [--in FILE] [--out DIR]

@@ -558,25 +558,10 @@ final class RetailAiDefinitionLoader {
 			throw new IllegalStateException("Retail AI pattern directory not found or empty: " + directory.getPath());
 		}
 		Arrays.sort(files, Comparator.comparing(File::getName));
-		// 242 个 npcaipatterns*.xml（约 41MB）原先由单个任务顺序解析，是 RetailAiData 组装的尾部长任务；
-		// 改为逐文件并行解析，再按文件名顺序合并，既缩短关键链又保持确定性输出（每个任务自建 StAX 工厂，
-		// compile 为无状态静态方法，无共享可变状态）。
-		// The 242 npcaipatterns*.xml files (~41MB) used to be parsed sequentially by a single task, forming the
-		// tail of RetailAiData assembly; parse each file in parallel and merge in file-name order to shorten the
-		// critical chain while keeping the output deterministic (each task builds its own StAX factory and
-		// compile() is a stateless static method, so there is no shared mutable state).
-		List<java.util.concurrent.CompletableFuture<Map<String, Pattern>>> futures =
-			new ArrayList<>(files.length);
-		for (File file : files) {
-			futures.add(java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-				Map<String, Pattern> parsed = new HashMap<>();
-				loadPatterns(file, xmlFactory(), parsed);
-				return parsed;
-			}, XmlDataLoader.staticDataExecutor()));
-		}
 		Map<String, Pattern> patterns = new HashMap<>();
-		for (java.util.concurrent.CompletableFuture<Map<String, Pattern>> future : futures) {
-			patterns.putAll(future.join());
+		XMLInputFactory factory = xmlFactory();
+		for (File file : files) {
+			loadPatterns(file, factory, patterns);
 		}
 		return patterns;
 	}
@@ -628,75 +613,7 @@ final class RetailAiDefinitionLoader {
 			Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> pathBehaviors) {
 	}
 
-	static NpcMappings loadMappings(File source) {
-		File[] shards = mappingShards(source);
-		if (shards == null) {
-			return scanMappings(source);
-		}
-		// 分片目录：并行扫描各分片，再按文件名顺序合并；两个产出（NPC 映射、寻路行为）语义与单体文件一致。
-		// Shard directory: scan shards in parallel, then merge in file-name order; both outputs (NPC mappings,
-		// path behaviors) match the monolithic file exactly.
-		List<java.util.concurrent.CompletableFuture<NpcMappings>> futures = new ArrayList<>(shards.length);
-		for (File shard : shards) {
-			futures.add(java.util.concurrent.CompletableFuture.supplyAsync(() -> scanMappings(shard),
-				XmlDataLoader.staticDataExecutor()));
-		}
-		Map<Integer, Npc> mergedNpcs = new HashMap<>();
-		Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> mergedBehaviors =
-			new HashMap<>();
-		for (java.util.concurrent.CompletableFuture<NpcMappings> future : futures) {
-			NpcMappings part = future.join();
-			mergedNpcs.putAll(part.npcs());
-			mergedBehaviors.putAll(part.pathBehaviors());
-		}
-		return new NpcMappings(mergedNpcs, mergedBehaviors);
-	}
-
-	/**
-	 * 解析映射源：目录返回按起始 NPC ID 升序的 {@code npc-ai_<起始ID>_<结束ID>.xml} 分片，单体文件返回 {@code null}。
-	 * Resolves the mapping source: a directory yields {@code npc-ai_<firstId>_<lastId>.xml} shards ordered by the
-	 * first id, while a single file yields {@code null}.
-	 *
-	 * @param source 映射源文件或分片目录 / mapping source file or shard directory
-	 * @return 分片数组或 null / shard array or {@code null}
-	 */
-	private static File[] mappingShards(File source) {
-		if (!source.isDirectory()) {
-			return null;
-		}
-		File[] shards = source.listFiles(file -> file.isFile()
-			&& java.util.regex.Pattern.matches("npc-ai_\\d+_\\d+\\.xml", file.getName()));
-		if (shards == null || shards.length == 0) {
-			throw new IllegalStateException("Retail NPC AI mapping shard directory is empty: " + source.getPath());
-		}
-		// 按起始 NPC ID 数值排序（字符串排序在 ID 位数不同时不可靠）。
-		// Sort by the numeric first NPC id; string ordering is unreliable across id widths.
-		Arrays.sort(shards, Comparator.comparingInt(RetailAiDefinitionLoader::shardFirstId)
-			.thenComparing(File::getName));
-		return shards;
-	}
-
-	/**
-	 * 分片文件名中的起始 NPC ID，用于合并排序；无法解析时排到最后。
-	 * The first NPC id encoded in a shard file name, used for merge ordering; unparsable names sort last.
-	 *
-	 * @param file 分片文件 / shard file
-	 * @return 起始 NPC ID / first NPC id
-	 */
-	private static int shardFirstId(File file) {
-		java.util.regex.Matcher matcher =
-			java.util.regex.Pattern.compile("npc-ai_(\\d+)_(\\d+)\\.xml").matcher(file.getName());
-		return matcher.matches() ? Integer.parseInt(matcher.group(1)) : Integer.MAX_VALUE;
-	}
-
-	/**
-	 * 扫描单个映射源文件，产出 NPC 映射与寻路行为。
-	 * Scans one mapping source file, producing NPC mappings and path behaviors.
-	 *
-	 * @param file 映射源文件 / mapping source file
-	 * @return 双产出 / dual result
-	 */
-	private static NpcMappings scanMappings(File file) {
+	static NpcMappings loadMappings(File file) {
 		Map<Integer, Npc> npcs = new HashMap<>();
 		Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> pathBehaviors =
 			new HashMap<>();

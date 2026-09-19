@@ -22,8 +22,7 @@ class Quest14026GeranaiaSpawnTest {
 		"src/main/resources/aion/data/static_data/spawns/Instances/310040000_Geranaia.xml");
 	private static final Path QUEST_14026 = Path.of(
 		"src/main/resources/aion/data/static_data/quest_definition/quests/14026.xml");
-	private static final Path NPC_AI_PARTS =
-		Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai-parts");
+	private static final Path NPC_AI = Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai.xml");
 	private static final String[][] DEFENSE_VARIANTS = {
 		{"213576", "254.74", "236.72", "217.48"},
 		{"213577", "257.92", "237.39", "217.48"},
@@ -74,24 +73,13 @@ class Quest14026GeranaiaSpawnTest {
 			assertEquals(expected[3], variant.getAttribute("z"));
 		}
 
-		// 映射源已拆分为分片目录：跨分片汇总目标 NPC 定义。
-		// The mapping source is now a shard directory: collect the target NPC definitions across the shards.
-		var aiDefinitions = new java.util.ArrayList<Element>();
-		var shardFiles = NPC_AI_PARTS.toFile()
-			.listFiles((directory, name) -> name.startsWith("npc-ai_") && name.endsWith(".xml"));
-		java.util.Arrays.sort(shardFiles, java.util.Comparator.comparing(java.io.File::getName));
-		for (java.io.File shard : shardFiles) {
-			var aiDocument = builder.parse(shard);
-			NodeList matches = (NodeList) xpath.evaluate(
-				"/npc_ai_mappings/npc[@id='213576' or @id='213577' or @id='213578' or @id='213579']",
-				aiDocument, XPathConstants.NODESET);
-			for (int index = 0; index < matches.getLength(); index++) {
-				aiDefinitions.add((Element) matches.item(index));
-			}
-		}
-		assertEquals(4, aiDefinitions.size());
-		for (Element definition : aiDefinitions) {
-			assertEquals("0", definition.getAttribute("max_chase_time"));
+		var aiDocument = builder.parse(NPC_AI.toFile());
+		NodeList aiDefinitions = (NodeList) xpath.evaluate(
+			"/npc_ai_mappings/npc[@id='213576' or @id='213577' or @id='213578' or @id='213579']",
+			aiDocument, XPathConstants.NODESET);
+		assertEquals(4, aiDefinitions.getLength());
+		for (int index = 0; index < aiDefinitions.getLength(); index++) {
+			assertEquals("0", ((Element) aiDefinitions.item(index)).getAttribute("max_chase_time"));
 		}
 	}
 }

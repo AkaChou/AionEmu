@@ -326,7 +326,7 @@ class RetailAiDefinitionLoaderTest {
 	void keepsStructurallySupportedRetailCoverageForLegacyGenericBossAi() throws Exception {
 		Path aiDirectory = Path.of("src/main/resources/aion/definitions/compact/ai");
 		RetailAiData data = RetailAiDefinitionLoader.load(
-			aiDirectory.toFile(), aiDirectory.resolve("npc-ai-parts").toFile(),
+			aiDirectory.toFile(), aiDirectory.resolve("npc-ai.xml").toFile(),
 			aiDirectory.resolve("ai-strings.xml").toFile(), aiDirectory.resolve("ai-areas.xml").toFile());
 		var templatePattern = java.util.regex.Pattern.compile(
 			"<npc_template\\b(?=[^>]*\\bai=\"(?:bomb|summoner)\")(?=[^>]*\\bnpc_id=\"(\\d+)\")[^>]*>");
