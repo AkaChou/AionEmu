@@ -875,3 +875,69 @@ first_check: 先用 quest_data.xml + npc_factions_quest.xml 两源比对生产 X
 
 - **判定规则**：势力日常要“接得到”，必须同时满足归属声明、星期位、势力成员与等级门禁；缺任何一项都不是玩家能自己解决的操作问题。
 - **代表案例**：35059（Alabaster Order 日常）缺 `npc-faction-id="2"` 导致永不入池；同批 218 个任务缺归属、44 个任务星期位全 0。
+
+---
+
+## [QE-039] 三十七、迁移不得用 enter-zone 自动接取替代 legacy NPC 接取 owner (LEGACY_START_OWNER_LOSS)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 从 origin/history Java handler 迁移到 quest-definition XML 的接取语义；NONE 状态接取路由与客户端任务列表入口
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 在 NPC 任务列表点第 10 页任务行后服务端反复下发同一页（SM_DIALOG_WINDOW page=10 -> CM_DIALOG_SELECT action=31 -> page=10 循环），表现为“任务怎么点都接不到”；查 XML 却发现存在 unaccepted->started 路由
+root_cause: 51b4cb971 迁移把 registerOnEnterZone 一律概括成“进区域自动接取”，于是同时注册了 addOnQuestStart(npc) 的任务丢掉了 NPC 接取 owner：客户端在第 10 页点任务行发 QUEST_SELECT(31)，服务端没有 unaccepted+NPC+31 路由，DialogService 回退再次下发第 10 页形成循环。共有 18300/28300/1393/14123/15322/16800/17500/21080/25322/27500 十个任务命中；15322/25322 的正确语义是 legacy onAtDistanceEvent（at-distance 接取），14123/16800/17500/27500/21080 的接取 owner 一直是对话 NPC，enter-zone 只是 START 阶段的推进或生成
+fix_or_guardrail: 1. legacy handler 的 addOnQuestStart(npc) 是权威接取 owner，迁移必须落成 NPC_START（或在 NONE 状态显式路由该 NPC 的 QUEST_SELECT/QUEST_ACCEPT_*），enter-zone 只能表达 START 阶段的推进，二者不得互相替代；2. 只有当 legacy 该 NPC 在 NONE 状态没有对话分支（或只有 onEnterZone/onEnterWorld/onAtDistanceEvent 建档）时，才允许 unaccepted 自动接取，与 AUTO_START_KEEPS_NONE_DIALOG_FREE 一致；3. 被下发的客户端任务页上每个可见按钮都必须在该状态有路由：1393 补完 1003->1013->1002 链后才满足 QuestClientContractGateTest
+evidence: commit 51b4cb971（错误迁移，同时退休 18300/28300/1393/21080 等 handler）；origin/history 下对应 quest/handlers 旧 handler（`git show 51b4cb971^:<path>`）；src/main/resources/aion/data/static_data/quest_definition/quests/18300.xml、28300.xml、1393.xml、14123.xml、15322.xml、25322.xml、21080.xml；src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java；src/test/java/com/aionemu/gameserver/questEngine/definition/QuestEnterZoneStartOwnerRegressionTest.java；.agents/summary/quest-enter-zone-start-owner/README.md
+validation: focused-test 6 类/38 用例 0 失败（QuestEnterZoneStartOwnerRegressionTest、Quest14123ZoneSpawnTest、MigratedQuestRepairDefinitionTest、QuestResidualCounterLocksTest、Quest26800ClientDialogAlignmentTest、LegacyTemplateMirrorRouteRegressionTest）；production-gate 5 类/31 用例 0 失败（QuestClientContractGateTest 于 -Dquest.client.contract.failOnStaleBaseline=true 下 PAGE_NOT_IN_TASK_HTML=0 / BUTTON_WITHOUT_ROUTE=0，PRODUCTION_COMPILE_OK=6189、WHITELIST_VIOLATIONS=0）；Aion 5.8 客户端实测未执行
+boundaries: 静态与 headless 门禁通过不等于客户端验收；audit_enter_zone_start_owner.py 只覆盖 51b4cb971^ 的 handler 集合，audit_unreachable_start.py 命中的 33 个任务由 RetailAreaEngine/NpcFactions/EVENT/物品等 XML 外机制接取，属观察清单
+superseded_by: none
+see_also: [QE-006], [QE-035]
+first_check: 任务点不动时先确认该 NPC 在 NONE 状态是否有 QUEST_SELECT(31) 应答；再把 origin/history handler 的 addOnQuestStart 与 XML 的 NPC_START/at-distance 逐任务对照
+-->
+
+- **判定规则**：接取 owner 只能有一个权威来源（legacy handler 的注册 + 客户端任务列表入口），迁移时用“进区域自动接取”顶替 NPC 接取会让客户端点击变成死循环。
+- **代表案例**：18300 在 804699 处点击任务行后 page=10 循环；同批 10 个任务按 legacy 语义分别恢复 NPC_START、at-distance 或删除多余自动接取。
+
+---
+
+## [QE-040] 三十八、击杀计数结束时必须把任务说明行索引推进到报告行 (KILL_COUNTER_COMPLETION_ADVANCES_JOURNAL_ROW)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 同一个 SECTION_0 说明行上并行门控多组击杀计数（SECTION_1..N<N）的击杀任务，最后一次击杀进入 REWARD 时的 packed step 合同与旧存档迁移
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 一组或多组击杀计数已经打满、服务端 SM_QUEST_ACTION 已下发 状态=REWARD，但客户端任务说明仍停在击杀行；计数行出现 (/N) 空分子，下一步「报告某 NPC」不出现
+root_cause: 任务说明行索引由 SECTION_0 承载、击杀计数在 SECTION_1+；reward 节点投影把 var0 固定成计数行，started->reward 的终击路线只写计数字段。QuestMutationPlanner 先应用 actions，再用目标节点投影补足未被动作触及的字段，于是终态 SECTION_0 停在计数行，客户端继续渲染击杀步骤；旧 handler 在同一刻写的是 setQuestVarById(0, 报告行)
+fix_or_guardrail: 终击必须在同一事务内写 SECTION_0=报告行（S+1）并保留 LEVEL_AND_VISIBILITY_REFRESH；reward 节点投影的 var0 必须与报告行一致（reward 源节点的既有路由按该投影匹配）；started->started 击杀自环显式 set var0=所在阶段以自愈脏数据；已持久化的 REWARD/SECTION_0=计数行 存档用无 source 的 ENTER_WORLD 迁移路线（status-is REWARD + var0==所在阶段 -> set var0=报告行）修复
+evidence: commit c34458083; src/main/resources/aion/data/static_data/quest_definition/quests/15001.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15203.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMonsterProgressContractAuditTest.java; .agents/summary/quest-15001-multicounter-step/2026-09-19-15001-double-counter-step-closure.zh-CN.md; .agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md; .agents/summary/quest-acceptance/15001-2026-09-19-section0-report-row-client-accepted.md
+validation: QuestMonsterProgressContractAuditTest（含 runtime planner 断言 20801）、ClientQuestSectionAlignmentTest、ProductionCatalogWhitelistVerificationTest、QuestDefinitionCatalogManifestTest 通过（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）；2026-09-19 用户确认 15001 客户端验证完成；同型审计（audit_section0_report_row_closure.py）仍命中 250 个旧 handler 写 setQuestVarById(0, …) 而当前 XML 未推进 SECTION_0 的任务，尚未修复
+boundaries: 行索引与计数字段是两个独立合同字段，只断言 status=REWARD 或计数饱和不算闭环；若缺的是计数自环/字段错位复用 QE-012 与 COUNTER_SOURCE_PROJECTION_NO_LOCK，若缺的是进入 REWARD 的路线本身复用 QE-018；迁移修复路线只在 ENTER_WORLD 触发，在线且不重登/不切图的旧存档不自动纠正
+superseded_by: none
+see_also: [QE-012], [QE-018], .agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md
+first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 SECTION_n<N 的任务，再核对 reward 投影 var0、终击 actions 与 enter-world 迁移路线；旧 handler 是否在完成分支写 setQuestVarById(0, 报告行)
+-->
+
+- **判定规则**：击杀任务的“杀满即报告”由两个字段共同完成——计数（`SECTION_1+`）与任务说明行索引（`SECTION_0`）。最后一条击杀路线必须把行索引写成报告行，并且 `reward` 节点投影要与之一致；否则服务端进入 `REWARD` 而客户端任务说明停在击杀行，出现空分子与“下一步不出现”的玩家可见症状。
+- **代表案例**：15001（绿雾湿地双计数）修前追踪 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），修后 `20801`；同批 15020/15073/15100/15104/15203/15406/15407/15408/15580/15671/25671/25060/18952 同型；代表测试 `QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep`。
+
+---
+
+## [QE-041] 三十九、本地关闭按钮不能作为服务端续接点 (HANDOVER_CHECK_PAGE_LOCAL_CLOSE_CONTINUATION)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: Aion 5.8 客户端 HACTION_FINISH_DIALOG(1008) 页面的下发语义；上交检查页（check_user_item_ok/check_user_item_fail）与成功分支续接页（奖励窗 5 / DEFAULT_SUCCESS 10002）
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 玩家上交证物/收集物后服务端已推进到 REWARD 并下发 check_user_item_ok，但对话停在原地、点按钮没有下一步；必须重新与同一 NPC 对话才收到 DEFAULT_SUCCESS(10002) 并打开奖励窗
+root_cause: Aion 5.8 客户端把 HACTION_FINISH_DIALOG(1008) 当成本地关闭动作，点击只发 CM_CLOSE_DIALOG、不回传任何任务 action；服务端若把“下发 check_user_item_ok(10000) 后等客户端回传 1008 续接”当作合同，该分支永远没有后继。10501 的 s6->reward 成功分支即为此形态，失败页 10001 的 1008 与成功页同名但带 SELECT_QUEST 落点，是唯一的服务端可见落点
+fix_or_guardrail: 1. 上交成功分支不得停在下发 check_user_item_ok(10000) 的对话上；应直接下发目标状态下同 NPC 的续接页（USE_OBJECT(-1) 入口页：奖励窗 SHOW_SELECT_QUEST_REWARD_WINDOW1(5) 或 DEFAULT_SUCCESS(10002)）；2. 只有客户端 HTML 中该 ok 页存在会回传任务 action 的可见按钮（1009/故事翻页等）时才保留确认页形态（Playbook 8.25 CHECK_CONFIRMATION_PAGE_CONTRACT）；3. 判定必须读任务自身 HTML 的按钮动作，不得按任务名或任务族猜测
+evidence: commit 75312dcdc; src/main/resources/aion/data/static_data/quest_definition/quests/10501.xml; docs/quest/client-dialog-mapping/quest-dialog-action-details.csv:645; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10501HandoverContinuationTest.java; src/test/java/com/aionemu/gameserver/questEngine/e2e/QuestHandoverContinuationAuditTest.java; src/test/java/com/aionemu/gameserver/questEngine/e2e/HandoverContinuationContract.java; .agents/summary/quest-10501-handover-continuation/README.md; .agents/summary/quest-acceptance/10501-2026-09-19-client-accepted.md
+validation: 聚焦与客户端契约门禁 47/47（含 Quest10501HandoverContinuationTest 2/2、QuestHandoverContinuationAuditTest 2/2）；production-catalog PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0；Aion 5.8 客户端实测已验收（2026-09-19 用户确认“客户端验证成功”）
+boundaries: “1008 为客户端本地关闭”来自实机 packet trace（下发 10000 后无 CM_DIALOG_SELECT 1008）与 10501 页面证据；同批 41 个任务/42 条分支按合同静态锁定，未逐个实机复验；无同 NPC 续接页的任务（122 候选中的 55 个）保持确认页终端形态，不得套用本卡
+superseded_by: none
+see_also: [QE-032], [QE-031]
+first_check: 先看该任务客户端 HTML 里 check_user_item_ok 页的按钮动作；若是 HACTION_FINISH_DIALOG(1008)，再看目标节点是否存在同 NPC 的 USE_OBJECT(-1) 续接页
+-->
+
+- **判定规则**：`HACTION_FINISH_DIALOG(1008)` 不产生服务端任务动作；凡客户端把上交确认页渲染成纯 1008 按钮，服务端必须在状态提交的同一次 after-commit 里直接下发续接页，而不是等待 1008 回包。
+- **代表案例**：10501（被毁的遗迹）上交龙族证物后停在页 10000、重新对话才进 10002；同批 41 个任务/42 条分支按同一合同把成功分支改到奖励窗 5 或 10002（10504 与 10501 同形）。

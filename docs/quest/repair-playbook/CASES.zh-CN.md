@@ -365,14 +365,14 @@
 ## 8.25 上交检查后的客户端确认页未接线
 
 - Pattern ID：`CHECK_CONFIRMATION_PAGE_CONTRACT`。
-- 代表任务：1636「Fungal Sight」；同批同型的 15010（显式检查对）与 2372/16942/18745（npc-item-report）不重复建案例。
+- 代表任务：1636「Fungal Sight」；同批同型的 15010（显式检查对）与 16942/18745（npc-item-report）不重复建案例。原列的 2372 因客户端 ok 页只有 1008 本地关闭按钮，已按 8.39 改为直接续接，不再属于本案例。
 - 搜索症状：审计 `CLIENT_PAGE_UNREACHED` 指向 check_user_item_ok/check_user_item_fail；玩家上交后没有确认页直接跳奖励窗，或不足时显示客户端不存在的 SELECT6。
 - 玩家可见症状：玩家上交收集物后看不到"任务完成"确认页直接跳奖励窗，或物品不足时点击无反馈/显示客户端不存在的页面；审计两处 check_user_item 页不可达。
 - 根因：Aion 5.8 客户端在上交检查后插入了确认页（ok 页与 fail 页各带可见按钮）；typed 修复只保留了"进 REWARD+奖励窗"的终端形状，既不显示确认页，也不给确认按钮接线。
 - 修复层：任务 XML。39/1009 成功分支在状态 sync 之后显示 CHECK_USER_ITEM_OK；确认按钮 FINISH_DIALOG 关闭（领奖经 REWARD 态 preview）、SELECT_QUEST_REWARD 由 preview 独占（不重复接线）；失败分支显示 CHECK_USER_ITEM_FAIL（npc-item-report 用 failure-page 属性）。
 - 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{1636,15010,2372,16942,18745,24203,50019...}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/AcceptAndConfirmationEntryContractTest.java`。
 - 验证命令和结果：`mvn -q -Dtest='AcceptAndConfirmationEntryContractTest,CollectTurnInClientActionAlignmentBatchTest,...' test` 通过；审计 CLIENT_PAGE_UNREACHED 相应行清零；包顺序符合 `STATE_SYNC_BEFORE_DEPENDENT_PAGE`。
-- 复用边界：仅适用于客户端 HTML 中 ok/fail 页带可见按钮的任务。ok 页按钮指向故事翻页链（SELECT3/SETPRO2 等）的任务需先补链根，不适用本模式；纯 NPC_REPORT 流且客户端无对应确认入口的任务保持例外。
+- 复用边界：仅适用于客户端 HTML 中 ok/fail 页带**会回传任务动作**的可见按钮（1009 等）的任务。ok 页按钮只有 `HACTION_FINISH_DIALOG(1008)`（本地关窗、不回传任务动作）时**不适用**本模式，改用 8.39 `HANDOVER_CHECK_PAGE_LOCAL_CLOSE_CONTINUATION` 直接续接；ok 页按钮指向故事翻页链（SELECT3/SETPRO2 等）的任务需先补链根，不适用本模式；纯 NPC_REPORT 流且客户端无对应确认入口的任务保持例外。
 - commit：`207e88649`、`a3a84d8d8`。
 
 ## 8.26 自动接取任务被批量补入对话接取入口
@@ -590,3 +590,18 @@
 - 验证命令和结果：`mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` 通过，`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证完成，已修复”，确认 15001 终击后进入报告步骤。未捕获 startup、协议与截图附件。
 - 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。注意存量：同型审计（`audit_section0_report_row_closure.py`）在 2026-09-19 命中 250 个旧 handler 写 `setQuestVarById(0, …)`、当前 XML 未推进 `SECTION_0` 的任务，以及 33 行待复核候选，尚未修复。
 - commit：`c34458083`。
+
+## 8.39 上交确认页只有本地关闭按钮时成功分支必须直接续接
+
+- Pattern ID：`HANDOVER_CHECK_PAGE_LOCAL_CLOSE_CONTINUATION`。
+- 代表任务：10501「Research the Ruins / 被毁的遗迹」（ELYOS，等级 56+）；同批同型的 41 个任务 / 42 条分支（2372、10504、13968、15689、15690、15691、16838、18742、18975、18976、18977、18978、19010、19016、19022、19028、19034、21027、23968、25689、25690、25691、26838、28742、28975、28976、28977、28978、29010、29016、29022、29028、29034、80723、80795、80849、80850、80851、80852、80886、80958）按同一合同修复，不重复建立案例。
+- 搜索症状：上交后必须重新对话才能领奖；下发 `check_user_item_ok(10000)` 之后没有任何 `CM_DIALOG_SELECT`（尤其没有 `1008`）；审计 `CLIENT_PAGE_UNREACHED` 指向 check_user_item_ok。
+- 玩家可见症状：10501 与 804700 对话在「拿出证物」页（3057）点提交后，服务端已经进入 REWARD（`状态=4 步数=7`），但对话停在原地、「递过证物」按钮点了没有下一步；重新与 804700 对话才收到 `下发页=10002`，再由 `1009` 打开奖励窗完成。
+- 根因：Aion 5.8 客户端把 `check_user_item_ok(10000)` 页的唯一按钮渲染成 `HACTION_FINISH_DIALOG(1008)`：点击只本地关窗并发 `CM_CLOSE_DIALOG`，服务端收不到 FINISH_DIALOG 任务动作（2026-09-19 实机 trace：下发 10000 后没有 `CM_DIALOG_SELECT 1008`）。把「下发 10000 后等客户端回传 1008 续接」当作合同的分支永远没有后继；旧 handler `checkQuestItems(env, 6, 7, true, 10000, 10001)` 同样是「确认页后重新对话」，而客户端已把该页做成纯本地关闭。
+- 修复层：任务 XML。成功分支在状态同步（`STATE_SYNC_BEFORE_DEPENDENT_PAGE`）之后直接下发目标状态下同一 NPC 的续接页——奖励窗 `SHOW_SELECT_QUEST_REWARD_WINDOW1(5)`（本批 40 个任务）或 `DEFAULT_SUCCESS(10002)`（10501、10504）；失败分支 `check_user_item_fail(10001)` 及其 `1008 -> SELECT_QUEST` 关闭落点保持不变。无同 NPC 续接页的任务不在本模式内。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{10501,2372,10504,13968,15689,15690,15691,16838,18742,18975,18976,18977,18978,19010,19016,19022,19028,19034,21027,23968,25689,25690,25691,26838,28742,28975,28976,28977,28978,29010,29016,29022,29028,29034,80723,80795,80849,80850,80851,80852,80886,80958}.xml`；`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10501HandoverContinuationTest.java`；`src/test/java/com/aionemu/gameserver/questEngine/e2e/QuestHandoverContinuationAuditTest.java`；`src/test/java/com/aionemu/gameserver/questEngine/e2e/HandoverContinuationContract.java`；`src/test/java/com/aionemu/gameserver/questEngine/definition/ItemCollectingDialogProtocolAlignmentTest.java`；`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestRetailCollectionRoleAlignmentTest.java`。
+- 第一检查点：在该任务自身的客户端 HTML 行（`docs/quest/client-dialog-mapping/quest-dialog-action-details.csv`）看 `check_user_item_ok(10000)` 页的按钮动作；是 `HACTION_FINISH_DIALOG(1008)` 就说明该页是本地关闭死端，再看目标状态是否存在同 NPC 的 `USE_OBJECT(-1)` 入口页可作为续接页。不要先在服务端找「为什么没收到 1008」。
+- 代表测试：`Quest10501HandoverContinuationTest#handOverSuccessShowsTheReportPageInsteadOfTheClientClosedConfirmationPage` 锁定 10501 成功分支的 conditions、actions、after-commit 顺序与续接页；`QuestHandoverContinuationAuditTest#clientLocalCloseConfirmationPagesContinueInTheSameDialogue` 全库正向锁定本批 42 条分支并守住家族下界。
+- 验证命令和结果：`mvn -B -Dquest.client.contract.failOnStaleBaseline=true -Dtest='Quest10501HandoverContinuationTest,QuestHandoverContinuationAuditTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestPageButtonAuditTest,QuestItemSourceContractGateTest,AcceptAndConfirmationEntryContractTest,ItemCollectingDialogProtocolAlignmentTest,QuestRetailCollectionRoleAlignmentTest' test` 47/47 通过；生产目录 `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证成功”，确认 10501 交付后同一次对话直接进入报告页与奖励窗。未捕获 startup、协议与截图附件。
+- 复用边界：仅适用于客户端 HTML 中 `check_user_item_ok` 页只有 `HACTION_FINISH_DIALOG(1008)`、且目标节点存在同 NPC `USE_OBJECT(-1)` 续接页的任务。ok 页按钮是会回传任务动作的可见按钮（1009 等）时复用 8.25 `CHECK_CONFIRMATION_PAGE_CONTRACT`，不得用本模式绕开确认页；ok 页按钮指向故事翻页链（SELECT3/SETPRO2 等）时先补链根；无同 NPC 续接页的 55 个任务保持确认页终端形态。判定必须读任务自身 HTML 的按钮动作，不能按任务名或任务族猜测；若日后观察到客户端会回传 1008，本模式与 8.25 的取舍都要重评。
+- commit：`75312dcdc`。

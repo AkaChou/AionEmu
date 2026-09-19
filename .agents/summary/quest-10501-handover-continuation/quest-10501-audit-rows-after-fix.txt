@@ -1,0 +1,22 @@
+CLIENT_PAGE_UNREACHED | EVIDENCE_REQUIRED | state= | npc= | trigger= | path=no compiled transition emits this active client page | page=10000 | action=1008 | candidates=-1 | reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s6 | npc=804700 | trigger=39 | path=s6 + NPC 804700 + 39 -> s6 + page 10001 | page=10001 | action=1008 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=reward | npc=804700 | trigger=-1 | path=reward + NPC 804700 + -1 -> reward + page 10002 | page=10002 | action=1009 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s6 | npc=804700 | trigger=39 | path=s6 + NPC 804700 + 39 -> reward + page 10002 | page=10002 | action=1009 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=started | npc=804700 | trigger=31 | path=started + NPC 804700 + 31 -> started + page 1011 | page=1011 | action=1012 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=started | npc=804700 | trigger=1012 | path=started + NPC 804700 + 1012 -> started + page 1012 | page=1012 | action=1013 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=started | npc=804700 | trigger=1013 | path=started + NPC 804700 + 1013 -> started + page 1013 | page=1013 | action=10000 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=-1 | path=s2 + NPC 731536 + -1 -> s2 + page 1693 | page=1693 | action=1694 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=-1 | path=s2 + NPC 731536 + -1 -> s2 + page 1693 | page=1693 | action=1779 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=-1 | path=s2 + NPC 731536 + -1 -> s2 + page 1693 | page=1693 | action=1864 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1694 | path=s2 + NPC 731536 + 1694 -> s2 + page 1694 | page=1694 | action=1779 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1694 | path=s2 + NPC 731536 + 1694 -> s2 + page 1694 | page=1694 | action=1864 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1695 | path=s2 + NPC 731536 + 1695 -> s2 + page 1695 | page=1695 | action=10002 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1779 | path=s2 + NPC 731536 + 1779 -> s2 + page 1779 | page=1779 | action=1694 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1779 | path=s2 + NPC 731536 + 1779 -> s2 + page 1779 | page=1779 | action=1864 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s2 | npc=731536 | trigger=1864 | path=s2 + NPC 731536 + 1864 -> s2 + page 1864 | page=1864 | action=1695 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s4 | npc=731535 | trigger=-1 | path=s4 + NPC 731535 + -1 -> s4 + page 2375 | page=2375 | action=2376 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s4 | npc=731535 | trigger=2376 | path=s4 + NPC 731535 + 2376 -> s4 + page 2376 | page=2376 | action=10004 | candidates=1 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s6 | npc=804700 | trigger=31 | path=s6 + NPC 804700 + 31 -> s6 + page 3057 | page=3057 | action=39 | candidates=2 | reason=
+PAGE_ACTION_MATCHED | NOT_NEEDED | state=s6 | npc=804700 | trigger=31 | path=s6 + NPC 804700 + 31 -> s6 + page 3057 | page=3057 | action=39 | candidates=2 | reason=
+TERMINAL_PAGE_REACHED | NOT_NEEDED | state=reward | npc=804700 | trigger=1009 | path=reward + NPC 804700 + 1009 -> reward + terminal page 5 | page=5 | action= | candidates=-1 | reason=
+ROWS=21

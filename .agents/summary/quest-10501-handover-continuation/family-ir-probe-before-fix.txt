@@ -1,0 +1,123 @@
+1464	REVIEW	1	started->reward(REWARD) npc=204424 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+1482	REVIEW	0
+1573	REVIEW	0
+1634	REVIEW	0
+1636	REVIEW	1	v1->v2(START) npc=203792 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+2333	REVIEW	0
+2372	AUTO	1	started->reward(REWARD) npc=798079 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+2423	REVIEW	1	started1->started2(START) npc=204375 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+2477	REVIEW	1	started->checked(START) npc=204355 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+3013	REVIEW	0
+3082	REVIEW	1	collect0->collected(START) npc=204030 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:暂时等待着。]
+3935	REVIEW	1	s3->s4(START) npc=203329 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+3938	REVIEW	1	s7->s8(START) npc=798316 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+3939	REVIEW	1	s2->s3(START) npc=203780 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+3940	REVIEW	1	started->hunt(START) npc=203701 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+4078	REVIEW	1	started->s1(START) npc=205157 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+4542	REVIEW	0
+4939	REVIEW	1	s3->s4(START) npc=204054 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+4942	REVIEW	1	s7->s8(START) npc=798317 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+4943	REVIEW	1	s2->s3(START) npc=204096 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+4944	REVIEW	1	started->s6(START) npc=204053 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+10032	REVIEW	1	s7->s7(START) npc=799503 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+10101	REVIEW	2	s1->s2(START) npc=731530 dialog=10001 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。] ; s7->s8(START) npc=802357 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。]
+10112	REVIEW	1	s4->reward(REWARD) npc=806779 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+10501	REVIEW	0
+10504	AUTO	1	s3->reward(REWARD) npc=804706 dialog=39 entryPages=[10002] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+10528	REVIEW	1	s5->s6(START) npc=806292 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+11031	REVIEW	1	started->v1(START) npc=798959 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。]
+11032	REVIEW	1	started->v1(START) npc=798959 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。]
+11033	REVIEW	1	started->v1(START) npc=798959 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。]
+11116	REVIEW	1	s1->s2(START) npc=203784 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+11118	REVIEW	1	s1->s2(START) npc=798963 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+11216	REVIEW	0
+13968	AUTO	1	started->reward(REWARD) npc=835217 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+14023	REVIEW	1	s2->reward(REWARD) npc=203967 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+14046	REVIEW	1	s2->s3(START) npc=203786 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+14051	REVIEW	1	s2->s3(START) npc=204549 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+14052	REVIEW	2	s2->s3(START) npc=204625 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话] ; s2->s3(START) npc=204629 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话]
+14053	REVIEW	0
+15304	REVIEW	1	s1->s2(START) npc=805328 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15306	REVIEW	1	s1->s2(START) npc=805328 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:继续听。]
+15314	REVIEW	1	s1->s2(START) npc=805328 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15316	REVIEW	1	s1->s2(START) npc=805328 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:继续听。]
+15400	REVIEW	1	s3->s4(START) npc=805354 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15602	REVIEW	1	s3->s4(START) npc=806194 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15608	REVIEW	1	s1->s2(START) npc=806165 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15670	REVIEW	0
+15680	REVIEW	1	s1->s2(START) npc=806691 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15689	AUTO	1	started->reward(REWARD) npc=806696 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15690	AUTO	1	started->reward(REWARD) npc=806696 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+15691	AUTO	1	started->reward(REWARD) npc=806696 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+16838	AUTO	2	started->reward(REWARD) npc=806566 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。] ; k1->reward(REWARD) npc=806566 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+18739	REVIEW	0
+18740	REVIEW	0
+18742	AUTO	1	started->reward(REWARD) npc=804707 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+18975	AUTO	1	started->reward(REWARD) npc=805215 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+18976	AUTO	1	started->reward(REWARD) npc=805215 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+18977	AUTO	1	started->reward(REWARD) npc=805215 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+18978	AUTO	1	started->reward(REWARD) npc=805215 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+19010	AUTO	1	started->reward(REWARD) npc=203788 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+19016	AUTO	1	started->reward(REWARD) npc=203790 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+19022	AUTO	1	started->reward(REWARD) npc=203793 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+19028	AUTO	1	started->reward(REWARD) npc=203792 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+19034	AUTO	1	started->reward(REWARD) npc=203786 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+20031	REVIEW	0
+20101	REVIEW	2	s1->s2(START) npc=731531 dialog=10001 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。] ; s7->s8(START) npc=802361 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:稍等一下。]
+20112	REVIEW	1	s4->reward(REWARD) npc=806780 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+20502	REVIEW	1	s3->s4(START) npc=804725 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:点头。]
+20503	REVIEW	1	s2->s3(START) npc=804729 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:回答说知道了。]
+20528	REVIEW	1	s5->s6(START) npc=806297 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+21027	AUTO	1	started->reward(REWARD) npc=799254 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+21114	REVIEW	1	s0->s1(START) npc=799282 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+23968	AUTO	1	started->reward(REWARD) npc=835220 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+24014	REVIEW	0
+24023	REVIEW	1	s3->reward(REWARD) npc=204408 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+24025	REVIEW	0
+24030	REVIEW	1	s3->s4(START) npc=203550 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:说准备好了。]
+25022	REVIEW	1	started->prepared(START) npc=804908 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25023	REVIEW	1	started->s1(START) npc=804909 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25062	REVIEW	1	started->reward(REWARD) npc=804917 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25084	REVIEW	1	started->s1(START) npc=804925 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25094	REVIEW	1	started->reward(REWARD) npc=804929 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25304	REVIEW	0
+25306	REVIEW	1	s1->s2(START) npc=805340 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:继续听。]
+25314	REVIEW	1	s1->s2(START) npc=805340 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25316	REVIEW	1	s1->s2(START) npc=805340 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:继续听。]
+25400	REVIEW	1	s3->s4(START) npc=805359 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25604	REVIEW	1	s4->reward(REWARD) npc=806173 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25670	REVIEW	1	s1->s2(START) npc=806105 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25689	AUTO	1	started->reward(REWARD) npc=806697 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25690	AUTO	1	started->reward(REWARD) npc=806697 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+25691	AUTO	1	started->reward(REWARD) npc=806697 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+26838	AUTO	1	started->reward(REWARD) npc=806575 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+28739	REVIEW	0
+28740	REVIEW	0
+28742	AUTO	1	started->reward(REWARD) npc=804732 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+28975	AUTO	1	started->reward(REWARD) npc=805218 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+28976	AUTO	1	started->reward(REWARD) npc=805218 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+28977	AUTO	1	started->reward(REWARD) npc=805218 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+28978	AUTO	1	started->reward(REWARD) npc=805218 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+29010	AUTO	1	started->reward(REWARD) npc=204104 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+29016	AUTO	1	started->reward(REWARD) npc=204106 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+29022	AUTO	1	started->reward(REWARD) npc=204110 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+29028	AUTO	1	started->reward(REWARD) npc=204108 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+29034	AUTO	1	started->reward(REWARD) npc=204102 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:结束对话。]
+30210	REVIEW	0
+30211	REVIEW	0
+30213	REVIEW	0
+30310	REVIEW	1	started->reward(REWARD) npc=204225 dialog=39 entryPages=[] buttons=[HACTION_FINISH_DIALOG:把复原的古书放进箱子。]
+30311	REVIEW	0
+30313	REVIEW	0
+80723	AUTO	1	started->reward(REWARD) npc=833543 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:报告结果。]
+80795	AUTO	1	started->reward(REWARD) npc=833543 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:报告结果。]
+80846	REVIEW	0
+80847	REVIEW	0
+80848	REVIEW	0
+80849	AUTO	1	started->reward(REWARD) npc=833788 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:说知道了。]
+80850	AUTO	1	started->reward(REWARD) npc=833788 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:说是的。]
+80851	AUTO	1	started->reward(REWARD) npc=833796 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:说知道了。]
+80852	AUTO	1	started->reward(REWARD) npc=833796 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:说是的。]
+80886	AUTO	1	started->reward(REWARD) npc=834242 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:转交感谢信。]
+80958	AUTO	1	s1->reward(REWARD) npc=222002 dialog=39 entryPages=[5] buttons=[HACTION_FINISH_DIALOG:汇报成果。]
+LOCALIZED_QUESTS=122 DISPLAYED_10000_TRANSITIONS=100 AUTO_FIXABLE_QUESTS=41

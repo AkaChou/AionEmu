@@ -76,6 +76,9 @@
 | 生产目录门禁报 missing repeat dialog route: quest=<id> source=complete npc=<npc> dialog=<page>；或重复任务完成后无法重新打开开始页、或在不合格状态下仍显示开始页 | `QE-036` | 门禁失败时先确认失败路由是否属于 NPC_START 生成集合，再对比同族已对齐任务（如 1742/2317）的 complete 镜像写法，不要改门禁放宽 |
 | QuestReportedRewardCoverageTest 报 quest=<id> action=108 expected 1 but was 0（客户端“无目标自动领奖”路线消失）；游戏内只能走选定目标领奖 | `QE-037` | 自动领奖路线缺失时先看 transitions 是否还有 reported-reward-mode，再看奖励结构是否满足对应模式的编译前置 |
 | 势力日常“怎么接都接不到”；GM `//quest start` 只给通用失败提示；或某任务永远不会出现在每日轮换里 | `QE-038` | 先用 quest_data.xml + npc_factions_quest.xml 两源比对生产 XML 的 npc-faction-id 与星期位；再看角色等级是否超过 max-level（属正常拒绝） |
+| 在 NPC 任务列表点第 10 页任务行后服务端反复下发同一页（SM_DIALOG_WINDOW page=10 -> CM_DIALOG_SELECT action=31 -> page=10 循环），表现为“任务怎么点都接不到”；查 XML 却发现存在 unaccepted->started 路由 | `QE-039` | 任务点不动时先确认该 NPC 在 NONE 状态是否有 QUEST_SELECT(31) 应答；再把 origin/history handler 的 addOnQuestStart 与 XML 的 NPC_START/at-distance 逐任务对照 |
+| 一组或多组击杀计数已经打满、服务端 SM_QUEST_ACTION 已下发 状态=REWARD，但客户端任务说明仍停在击杀行；计数行出现 (/N) 空分子，下一步「报告某 NPC」不出现 | `QE-040` | 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 SECTION_n<N 的任务，再核对 reward 投影 var0、终击 actions 与 enter-world 迁移路线；旧 handler 是否在完成分支写 setQuestVarById(0, 报告行) |
+| 玩家上交证物/收集物后服务端已推进到 REWARD 并下发 check_user_item_ok，但对话停在原地、点按钮没有下一步；必须重新与同一 NPC 对话才收到 DEFAULT_SUCCESS(10002) 并打开奖励窗 | `QE-041` | 先看该任务客户端 HTML 里 check_user_item_ok 页的按钮动作；若是 HACTION_FINISH_DIALOG(1008)，再看目标节点是否存在同 NPC 的 USE_OBJECT(-1) 续接页 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |
