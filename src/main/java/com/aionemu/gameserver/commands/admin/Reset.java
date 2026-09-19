@@ -6,8 +6,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * 管理员重置命令：通过 {@code //reset instance} 重置执行者自己的单人副本。
- * Admin reset command: {@code //reset instance} resets the executor's own solo instances.
+ * 管理员重置命令：通过 {@code //reset instance} 重置执行者自己的副本（包括个人副本、个人单独进入的组队副本及当前队伍副本）。
+ * Admin reset command: {@code //reset instance} resets the executor's instances (personal, solo-entered group, or current team instances).
  */
 public class Reset extends AdminCommand {
 
@@ -34,11 +34,11 @@ public class Reset extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Usage: //reset instance");
 			return;
 		}
-		int resetCount = InstanceService.resetPlayerSoloInstances(player);
+		int resetCount = InstanceService.resetPlayerInstances(player);
 		if (resetCount == 0) {
-			PacketSendUtility.sendMessage(player, "No active solo instances owned by you were found.");
+			PacketSendUtility.sendMessage(player, "No active instances owned by you or your team were found.");
 			return;
 		}
-		PacketSendUtility.sendMessage(player, "Reset " + resetCount + " solo instance(s) owned by you.");
+		PacketSendUtility.sendMessage(player, "Reset " + resetCount + " instance(s) owned by you or your team.");
 	}
 }

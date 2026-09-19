@@ -119,18 +119,23 @@ public class InstanceService {
 	}
 
 	/**
-	 * 重置指定玩家拥有的全部单人副本，并返回实际销毁数量。
-	 * Resets all solo instances owned by the given player and returns the number destroyed.
+	 * 重置指定玩家拥有或其队伍登记的全部副本实例，并返回实际销毁数量。
+	 * Resets all instances owned by the given player or registered to their team, and returns the number destroyed.
 	 *
-	 * <p>只处理个人实例，以及由该玩家单独注册的非个人单人实例。
-	 * 带队伍、联盟或军团注册的实例不会被重置。
-	 * Only personal instances and non-personal solo instances registered by the player are reset.
-	 * Instances registered to a group, alliance or league are not reset.</p>
+	 * <p>处理范围包括：
+	 * 1. 玩家拥有的个人实例（isPersonal 为 true，ownerId 匹配）；
+	 * 2. 玩家个人单独进入并登记的副本（无队伍/联盟/军团登记，且 soloPlayerObj 匹配），包括单人进入的组队副本；
+	 * 3. 玩家当前所在队伍、联盟或军团所注册的副本实例。
 	 *
-	 * @param player 拥有者 / owner
+	 * Scope covers:
+	 * 1. Personal instances owned by the player (isPersonal true, ownerId matches);
+	 * 2. Instances entered and registered by the player alone (no group/alliance/league, soloPlayerObj matches), including group instances entered solo;
+	 * 3. Instances registered to the player's current group, alliance, or league.</p>
+	 *
+	 * @param player 玩家 / player
 	 * @return 已销毁的副本数量 / number of destroyed instances
 	 */
-	public synchronized static int resetPlayerSoloInstances(Player player) {
+	public synchronized static int resetPlayerInstances(Player player) {
 		if (player == null) {
 			throw new IllegalArgumentException("player must not be null");
 		}
@@ -146,7 +151,7 @@ public class InstanceService {
 				continue;
 			}
 			for (WorldMapInstance instance : world.getWorldMap(worldTemplate.getMapId()).getInstances()) {
-				if (isPlayerSoloInstance(instance, playerObjectId)) {
+				if (isPlayerInstance(instance, player)) {
 					instancesToReset.add(instance);
 				}
 			}
@@ -163,19 +168,80 @@ public class InstanceService {
 	}
 
 	/**
-	 * 判断实例是否为指定玩家拥有的单人副本。
-	 * Whether the instance is a solo instance owned by the given player.
+	 * 重置指定玩家拥有的全部单人副本（兼容旧接口）。
+	 * Resets all solo instances owned by the given player (compatibility alias).
+	 *
+	 * @param player 拥有者 / owner
+	 * @return 已销毁的副本数量 / number of destroyed instances
+	 */
+	public synchronized static int resetPlayerSoloInstances(Player player) {
+		return resetPlayerInstances(player);
+	}
+
+	/**
+	 * 判断实例是否属于指定玩家个人或其当前所在的队伍/联盟。
+	 * Whether the instance belongs to the player personally or to their current group/alliance/league.
+	 *
+	 * @param instance 待检查副本 / instance to inspect
+	 * @param player 玩家 / player
+	 * @return 属于该玩家或其当前队伍则为 true / true if belongs to the player or their current team
+	 */
+	static boolean isPlayerInstance(WorldMapInstance instance, Player player) {
+		if (player == null) {
+			return false;
+		}
+		int playerObjectId = player.getObjectId();
+		if (playerObjectId == 0) {
+			return false;
+		}
+
+		// 1. 个人单人副本或个人单独进入的副本（无队伍/联盟/军团登记）
+		// Solo or solo-entered instances (no group/alliance/league registered)
+		if (isPlayerSoloInstance(instance, playerObjectId)) {
+			return true;
+		}
+
+		// 2. 玩家当前所在队伍登记的副本 / Instances registered to player's current group
+		if (player.isInGroup2() && instance.getRegisteredGroup() != null) {
+			PlayerGroup group = player.getPlayerGroup2();
+			if (group.equals(instance.getRegisteredGroup())
+					|| (group.getTeamId() != null && group.getTeamId().equals(instance.getRegisteredGroup().getTeamId()))) {
+				return true;
+			}
+		}
+
+		// 3. 玩家当前所在联盟登记的副本 / Instances registered to player's current alliance
+		if (player.isInAlliance2() && instance.getRegistredAlliance() != null) {
+			PlayerAlliance alliance = player.getPlayerAlliance2();
+			if (alliance.equals(instance.getRegistredAlliance())
+					|| (alliance.getObjectId() != null && alliance.getObjectId().equals(instance.getRegistredAlliance().getObjectId()))) {
+				return true;
+			}
+		}
+
+		// 4. 玩家当前所在军团联盟登记的副本 / Instances registered to player's current league
+		if (player.isInLeague() && instance.getRegistredLeague() != null) {
+			League league = player.getPlayerAlliance2().getLeague();
+			if (league != null && (league.equals(instance.getRegistredLeague())
+					|| (league.getObjectId() != null && league.getObjectId().equals(instance.getRegistredLeague().getObjectId())))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 判断实例是否为指定玩家拥有的单人副本（包括个人独立进入的组队副本）。
+	 * Whether the instance is a solo instance owned by the given player (including group instances entered solo).
 	 *
 	 * @param instance 待检查副本 / instance to inspect
 	 * @param playerObjectId 玩家对象 ID / player object id
-	 * @return 属于该玩家的单人副本则为 true / true when owned solo instance
+	 * @return 属于该玩家的单人/独立副本则为 true / true when owned solo/personal instance
 	 */
 	static boolean isPlayerSoloInstance(WorldMapInstance instance, int playerObjectId) {
 		if (instance.getRegisteredGroup() != null || instance.getRegistredAlliance() != null
 				|| instance.getRegistredLeague() != null) {
-			return false;
-		}
-		if (!isSoloInstance(instance)) {
 			return false;
 		}
 		if (instance.isPersonal()) {
@@ -653,7 +719,7 @@ public class InstanceService {
 	 * @param instance
 	 * @return 延迟毫秒数 / delay in ms
 	 */
-	private static long getScheduledDestroyDelayMillis(WorldMapInstance instance) {
+	static long getScheduledDestroyDelayMillis(WorldMapInstance instance) {
 		return getScheduledDestroyDelayMillis(isSoloInstance(instance));
 	}
 
@@ -666,8 +732,8 @@ public class InstanceService {
 	 */
 	private static boolean isSoloInstance(WorldMapInstance instance) {
 		int maxPlayers = getMaxPlayers(instance.getMapId());
-		return maxPlayers == 1 || maxPlayers == 0 && instance.getSoloPlayerObj() != null
-				&& instance.getRegisteredGroup() == null && instance.getRegistredAlliance() == null && instance.getRegistredLeague() == null;
+		return maxPlayers <= 1 || (instance.getSoloPlayerObj() != null
+				&& instance.getRegisteredGroup() == null && instance.getRegistredAlliance() == null && instance.getRegistredLeague() == null);
 	}
 
 	/**

@@ -53,13 +53,13 @@ first_check: CreatureGameStats.getStat, StatCapUtil.getUpperCap, registered BOOS
 status: CONFIRMED
 scope: ChatCommandsLoader, ChatProcessor and effective administration/commands.properties for admin commands
 first_seen: 2026-09-13
-last_verified: 2026-09-14
+last_verified: 2026-09-19
 symptom: 源码和 target/classes 中已有 GM 命令，但客户端输入 //command 后被当作普通聊天文本
 root_cause: ChatProcessor rejects the discovered command when the effective runtime commands.properties lacks its alias/access-level entry; source resources may differ from aion/config
-fix_or_guardrail: Keep the concise //reset instance interface, enforce self-owned solo-instance scope through InstanceService.destroyInstance, and verify/reload the effective runtime commands.properties before testing
+fix_or_guardrail: Keep the concise //reset instance interface, support self-owned solo/solo-entered group instances and current team (group/alliance/league) instances via InstanceService.resetPlayerInstances, and verify/reload the effective runtime commands.properties before testing
 evidence: commit 4d348038db6b036274205744d85f9ca34be1b985; ChatProcessor.java:132-154; CM_CHAT_MESSAGE_PUBLIC.java:40-44; effective aion/config/administration/commands.properties
-validation: static; focused unit tests added; source command path succeeded; live runtime registration after reload not confirmed
-boundaries: Reset must not destroy group/alliance/league instances or a multiplayer instance merely because the caller is currently alone; ignored local runtime config is not a source commit
+validation: static; focused unit tests in InstanceServiceTest passed (8 tests); source command path succeeded; live runtime registration after reload not confirmed
+boundaries: Reset covers player-owned solo instances, solo-entered group instances (no group registered), and instances registered to the player's current group/alliance/league; must never reset other teams' instances; ignored local runtime config is not a source commit
 superseded_by: none
 first_check: launch classpath, target/classes, aion/config/administration/commands.properties, ChatProcessor registration and //reload commands
 -->
