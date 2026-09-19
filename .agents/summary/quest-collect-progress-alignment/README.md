@@ -55,4 +55,4 @@
   `QuestDefinitionCatalogManifestTest` (10/10 PASS)
   `QuestItemSourceContractGateTest` (3/3 PASS)
   所有源码 `src/main/resources/...` 变更已 100% 同步至部署目录 `aion/data/static_data/...`。
-- **实机验收状态**：待客户端与实机登录复核（`PENDING_CLIENT_ACCEPTANCE`）。
+- **实机验收状态**：10503、10504 已实机验收（用户 2026-09-19 分别回复「10503 验证成功，提交」「10504 验证成功」，未限定分支或步骤 → `CLIENT_ACCEPTED`，记录见 `.agents/summary/quest-acceptance/10503-2026-09-19-client-accepted.md` 与 `.agents/summary/quest-acceptance/10504-2026-09-19-client-accepted.md`）；同批 20504、10506、10507、10527/20527、10528/20528、10530/20530、1373 仍待逐任务实机复核（`PENDING_CLIENT_ACCEPTANCE`）。
