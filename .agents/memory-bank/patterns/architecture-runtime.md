@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-011`
+> Pattern IDs: `AR-001`–`AR-012`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
-> last_reviewed: 2026-09-18
+> last_reviewed: 2026-09-19
 
 ---
 
@@ -280,3 +280,26 @@ first_check: EnvironmentPostProcessor 或静态初始化块里是否写了全局
 2. **全局解析器只保留一个发布点**：`ConfigSourceResolverHolder.publish(...)` 只应出现在 `BootConfigSourceResolver` 这一处，保证"发布时机 = 上下文装配期，且早于任何 `ApplicationRunner` 的配置装载"。
 3. **遗留文件必须以最低优先级进 Environment**：`addLast` 让文件值排在命令行、系统属性、OS 环境变量、application.yml 之后；该契约由 `LegacyPropertySourcePrecedenceTest` 固定（环境变量 `GAMESERVER_THREAD_BASEPOOLSIZE` 必须压过 `main.properties` 里的同键）。
 4. **静态配置字段的读取时机是硬约束**：`Config.load()` 在 `GameUtilityServicesLifecycle`（ApplicationRunner 相位）里执行，所以 Bean 构造期读静态字段拿到的是 0/null。判断"某配置类要不要迁移成 Bean"，看的是**是否存在构造期读取**，不是行数或字段数。
+
+---
+
+## [AR-012] 十二、遗留配置镜像不得发布跨服务不一致的原始键
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 启动层遗留配置镜像（AionLegacyPropertySourceEnvironmentPostProcessor）与 ConfigSourceResolver 的取值优先级
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 游戏服 DAO 全量报 `Table 'al_server_ls.xxx' doesn't exist`（玩家/背包/住宅/城镇表全灭），或任意服务读到另一个服务 config 目录里的同名键值（典型：登录与游戏的 `database.url` 互换）
+root_cause: 三个服务的遗留 properties 被拍平进同一个 PropertySource，未加前缀的原始键按加载顺序后者覆盖前者（game → login → chat）；发布的解析器是 `environment::getProperty`，而 `ConfigurableProcessor` 先问解析器再回退本地 `Properties[]`，于是登录服的 `database.url=al_server_ls` 直接覆盖游戏服自己文件里的 `al_server_gs`
+fix_or_guardrail: 镜像按服务前缀（= 归属服务身份）跟踪每个原始键：单服务内后加载文件覆盖先前值；两个服务为同一原始键给出**不同**值时该键永久移出镜像，改由各服务自己的遗留加载器读本地文件；跨服务取值一致的键（`gameserver.thread.*`、`svstats.*` 等 Bean 绑定路径）继续镜像
+evidence: src/main/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessor.java （LegacyPropertyCollector）; src/test/java/com/aionemu/boot/config/AionLegacyPropertySourceEnvironmentPostProcessorTest.java （keepsEachServicesOwnDatabaseUrlWhenLoginAndGameFilesDisagree）; .agents/summary/legacy-config-mirror-fix/README.md; .agents/summary/legacy-config-mirror-fix/raw_key_conflicts.py
+validation: mvn -B test 3457 例 / 0 失败 / 0 错误 / 2 跳过（基线 3456，新增本卡回归用例）；聚焦套件 13 例全绿（AionLegacyPropertySourceEnvironmentPostProcessorTest / LegacyPropertySourcePrecedenceTest / LegacyConfigOverridePrecedenceTest / ConfigBindingTest / ConfigurableProcessorSourceResolverTest）；真实配置目录探针 ProbeServiceDatabaseUrl 显示 game=al_server_gs、login=al_server_ls、镜像原始键 database.url=null；未启动服务器验收
+boundaries: 冲突判定只在"同一原始键 + 不同服务 + 取值不同"时触发，且一次冲突即永久不发布（该服务后续覆盖也不会复活）；镜像目录与运行时目录可能不是同一棵树（post-processor 早于 AionServicePaths 写 `aion.config.dir`，IDEA 工作目录下回退到 `src/main/resources/aion/config`，加载器读 `aion/config`），取值一致的镜像键仍会压过运行时目录里的同键文件；不改变"命令行/环境变量/application.yml 对所有服务同值生效"的外部覆盖语义
+superseded_by: none
+first_check: 新增服务专属原始键时先跑 raw_key_conflicts.py 确认是否跨服务同名不同值；确认解析器路径上是否还有文件派生值在覆盖本服务文件
+-->
+
+1. **现象与误判**：本次故障表现为"游戏服连错库、所有 game 表不存在"，很容易被误判成线程 `ServiceContext` 串了上下文。排除方法：`LoginDAOClassProvider` 只注册登录服 DAO，若上下文真是 `login`，`IDFactory` 的 `DAOManager.getDAO(PlayerMinionsDAO.class)` 会先抛 `DAONotFoundException` 而不是产生 SQL 错误；同时登录服自身查询毫无异常（它的 URL 本来就是登录库）。
+2. **故障链**：`AionLegacyPropertySourceEnvironmentPostProcessor`（扁平原始键，后加载者胜）→ `ConfigSourceResolverHolder`（`environment::getProperty`）→ `ConfigurableProcessor`（解析器优先于本地 `Properties[]`）→ `DatabaseConfig.DATABASE_URL` → `DatabaseFactory.init()` 建池。任何一环单独看都"正确"，组合起来就是把登录服的连接串灌进了游戏服。
+3. **修复规则**：镜像收集器按服务前缀记录原始键归属，跨服务取值不一致的键不发布。项目实际配置树里命中该规则的只有 `database.url` 一个键（`raw_key_conflicts.py` 可复算），`gameserver.thread.*` / `svstats.*` 等 Bean 绑定键不受影响。
+4. **新增服务专属配置时的检查动作**：新增或改动会被多个服务读取的原始键前，先运行 `python3 .agents/summary/legacy-config-mirror-fix/raw_key_conflicts.py <config-dir>` 判断是否落入"跨服务同名不同值"；若是，就必须让该键退出镜像并由各服务文件各自决定。
