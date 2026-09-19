@@ -33,6 +33,22 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 dialog repair: stale REWARD saves on first NPC interaction -->
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806109" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+<after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <!-- SECTION_0 migration repair: legacy REWARD saves -->
     <transition target="reward">
       <event>
