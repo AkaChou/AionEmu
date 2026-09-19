@@ -250,6 +250,9 @@ RetailOpenWorldSpawnDataTest,NpcDropDataTest test
 | 23:26:25 | 单体（回滚后） | 8.57s | 1065 |
 
   分片中位 9.50s（n=4，极差 1.28s）vs 单体 8.98s（n=2，极差 0.82s）→ **组内波动大于组间差异，两者不可区分**。
+  这 6 次均按**默认参数**运行（JFR `jvmArguments` 无 `-Daion.*`，static-data 池 15 条线程 = 默认 5），
+  即两侧同为默认配置，对照本身是干净的；不要把它与 22:25–22:29 带 `extraLoaders=3` /
+  `catalogCompileThreads=4` 的 7.3–7.8s 混比（那是另一组变量）。
 
 - 单次读数分辨率：这些启动期间同机还有 JFR 导出/编译，`machineTotal` 常为 100%，单次误差 ≥±0.5s；
   两次读数不足以判定"分片更慢"。故 §6.6 / §6.7 的归因与"分片导致变慢"的结论**作废**；
