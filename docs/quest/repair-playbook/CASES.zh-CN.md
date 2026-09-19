@@ -571,3 +571,22 @@
 - 验证命令和结果：静态 `xmllint --noout --schema .../quest_definition.xsd` 对两个 XML 通过，IDE 对 XML/测试无 error，`git diff --check` 通过；`mvn -q -Dtest='Quest11468And21468SkillCompletionTest,ClientQuestSectionAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test` 通过，`PRODUCTION_COMPILE_OK=6193`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`；用户于 2026-09-16 确认 11468 与 21468 均正常完成，客户端验收成功，最终计数 -> REWARD -> 报告领奖 -> COMPLETE 已闭环。未捕获 startup、协议、日志或截图附件。
 - 复用边界：适用于多个实时计数字段共用同一状态、旧 handler 在最后一个事件内同时完成计数与状态迁移的任务。最终路线必须保留 continuing priority 1 与 completing priority 0；若缺失的是 source node 投影锁，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK`；若完成条件是位掩码或多地点侦察，复用 `MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION`。
 - commit：`7f824dc78`。
+
+## 8.38 击杀计数打满后任务说明仍停在击杀行
+
+- Pattern ID：`KILL_COUNTER_COMPLETION_ADVANCES_JOURNAL_ROW`。
+- 代表任务：15001「Lending Both Hands / 伸出援手」（ELYOS）；同批 15020、15073、15100、15104、15203、15406、15407、15408、15580、15671、25671、25060、18952 为同型结构修复，不重复建立案例。
+- 搜索症状：一组或多组击杀计数已经打满、服务端 `SM_QUEST_ACTION` 已经下发 `状态=REWARD`，但客户端任务说明仍停在击杀行；计数行出现 `(/5)` 这类空分子；下一步「和某 NPC 对话」不出现。
+- 玩家可见症状：15001 击杀 5 只水晶鳞巴拉努斯与 5 只蓝鬃毛恐龟后，修前服务端追踪为 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），客户端仍显示击杀行并出现空分子；修复后同一路径直接切到「和努贝斯对话」的报告步骤。
+- 根因：任务说明行索引由 `SECTION_0` 承载，击杀计数在 `SECTION_1+`。15001 的 `reward` 节点投影 `var0=0`，两条 `started -> reward` 的最终击杀路线只写 `var1=5`/`var2=5`；`QuestMutationPlanner` 用目标节点投影补足未被动作触及的字段，于是终态 `var0` 停在 0，客户端按旧行索引继续渲染击杀步骤。
+- 修复层：任务 XML（14 个同族任务统一处理）。
+  1. `reward` 节点投影 `var0` 改为报告行索引（本族为 1，并保留计数上限投影）；
+  2. 每个 `started -> started` 击杀自环显式 `set var0=所在阶段`，自愈旧的脏行索引；
+  3. 每个 `started -> reward` 的 priority 0 最终击杀路线显式 `set var0=报告行`，保留 `LEVEL_AND_VISIBILITY_REFRESH`；
+  4. 新增无 source 的 `enter-world` 迁移修复路线（`status-is REWARD` + `var0==所在阶段` -> `set var0=报告行` + `LEVEL_AND_VISIBILITY_REFRESH`），修复已持久化的旧存档。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{15001,15020,15073,15100,15104,15203,15406,15407,15408,15580,15671,25671,25060,18952}.xml`；`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMonsterProgressContractAuditTest.java`。
+- 第一检查点：先用 `quest_monster.csv` 找出「同一个 `SECTION_0==S` 上并行门控多个 `SECTION_n<N`」的任务，再看最终击杀 transition 是否写 `var0`、`reward` 节点投影的 `var0` 是否为报告行；不要只看计数是否累加或状态是否进入 REWARD。`reward` 源节点的既有路由会按同一投影匹配，改动投影时必须同时确认它们仍可命中。
+- 代表测试：`QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep` 锁定 14 个任务的 reward 投影、终击写入、自环钉住与迁移路由；`#quest15001SaturatesBothSectionsAndEntersRewardWithSectionZeroOne` 用 runtime planner 断言两次 5 杀后的 packed step 为 `1 + 5*64 + 5*4096 = 20801`。
+- 验证命令和结果：`mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` 通过，`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`；用户于 2026-09-19 回复“客户端验证完成，已修复”，确认 15001 终击后进入报告步骤。未捕获 startup、协议与截图附件。
+- 复用边界：适用于「同一说明行并行门控多组击杀计数、终击直接进入 REWARD」的任务；行索引必须等于报告行 `S+1`，不能只断言最终 status。若缺的是计数自环/字段错位，复用 `COUNTER_SOURCE_PROJECTION_NO_LOCK` 或计数位段模式；若缺的是进入 REWARD 的路线本身，复用 `MULTI_COUNTER_FINAL_EVENT_ENTERS_REWARD`。注意存量：同型审计（`audit_section0_report_row_closure.py`）在 2026-09-19 命中 250 个旧 handler 写 `setQuestVarById(0, …)`、当前 XML 未推进 `SECTION_0` 的任务，以及 33 行待复核候选，尚未修复。
+- commit：`c34458083`。
