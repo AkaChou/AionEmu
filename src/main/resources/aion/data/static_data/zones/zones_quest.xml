@@ -167,6 +167,9 @@
 	<zone mapid="210070000" name="LF5_SENSORYAREA_Q30772_210070000" area_type="SPHERE" zone_type="SUB">
         <sphere x="94.091064" y="1458.316162" z="491.51483" r="10.0"/>
     </zone>
+	<zone mapid="210070000" name="LF5_ITEMUSEAREA_Q30721" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="152.65" y="1430.13" z="488.10" r="41.04"/>
+    </zone>
     <!-- Gelkmaros [Normal Server]
 	<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20033" area_type="SPHERE" zone_type="SUB">
 		<sphere x="278.7311" y="1535.613" z="356.4207" r="10.0"/>
@@ -195,6 +198,9 @@
     </zone>
 	<zone mapid="220080000" name="DF5_SENSORYAREA_Q30722_220080000" area_type="SPHERE" zone_type="SUB">
         <sphere x="2857.816650" y="1672.012451" z="306.58905" r="10.0"/>
+    </zone>
+	<zone mapid="220080000" name="DF5_ITEMUSEAREA_Q30771" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="2924.01" y="1672.71" z="322.26" r="58.71"/>
     </zone>
 	<!-- Archives Of Eternity 5.0 -->
 	<zone mapid="301540000" name="IDETERNITY_01_Q16800_301540000" area_type="SPHERE" zone_type="SUB">

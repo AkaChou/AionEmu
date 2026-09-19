@@ -974,3 +974,25 @@ first_check: 见到“点任务后直接关窗/接不到、动作 20000 后 page
 
 - **判定规则**：`inventory-items` 声明的是“玩家接取前必须携带”的道具，语义来源只有真端 `inventory_item_name*`；把 `check_item`/`collect_item` 当接取前置会把任务变成不可接取，症状与“接取路由缺失”高度相似，必须用真端字段名区分。
 - **代表案例**：30721（真端只有 `check_item1_1 = quest_30721a 1`；玩家在 s1→s2 才从 804868 拿到 182215698，s2→s3 由 ITEM_PLAY 消耗）；按真端 inventory_item_name 反向核对生产 199 条声明后异常声明归零。
+
+---
+
+## [QE-043] 四十一、任务道具使用区域定义与剧本怪物触发收口 (QUEST_ITEM_USE_ZONE_AND_AMBUSH_CONTRACT)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 任务道具使用区域判定（ItemTemplate usearea 与 zones_quest.xml）、data_driven_quest.xml 的 ItemPlay 袭击怪物机制与唯一领奖人路由
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成
+root_cause: 1. 道具模板声明了 usearea（如 LF5_ITEMUSEAREA_Q30721），但 zones_quest.xml 中缺失对应 zone 定义，PlayerRestrictions#canUseItem 校验失败拦截；2. data_driven_quest.xml 中声明了 Relative 怪物生成，XML 漏配 spawn-npc-at-player 与对话后的 despawn-npc；3. npc-complete 预览包含 USE_OBJECT(-1) 跳过了 QUEST_SELECT 触发的 DEFAULT_SUCCESS；接取 NPC 被误写进 npc-complete 导致提前截胡
+fix_or_guardrail: 1. 道具 usearea 必须在 zones_quest.xml 中补入，坐标与半径采信 5.8 客户端解包 source_sphere.csv；2. data_driven_quest.xml 的 ItemPlay 袭击怪使用 spawn-npc-at-player 挂载对应 slot，并在后续 talk 或 SET_SUCCEED 中通过 despawn-npc 清理；3. npc-complete 预览仅保留 SELECT_QUEST_REWARD，移除 USE_OBJECT；非交付 NPC 严禁配置 npc-complete
+evidence: src/main/resources/aion/data/static_data/zones/zones_quest.xml; src/main/resources/aion/data/static_data/quest_definition/quests/30721.xml; src/main/resources/aion/data/static_data/quest_definition/quests/30771.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest30721And30771RetailFlowTest.java; .agents/summary/quest-30721/2026-09-19-quest-30721-and-30771-retail-flow-and-ambush-repair.zh-CN.md
+validation: focused-test (Quest30721And30771RetailFlowTest 3/3); production-gate 36/36 (PRODUCTION_COMPILE_OK=6189 / FAILURES=0); XML schema valid
+boundaries: 仅适用于道具自身限制了使用区域（hasAreaRestriction）的任务；无袭击怪物的纯使用道具任务只配 ItemPlay 不需要配怪物槽位
+superseded_by: none
+see_also: [QE-042], [QE-031]
+first_check: 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT
+-->
+
+- **判定规则**：`item_template` 的 `usearea` 必须在 `zones_quest.xml` 中以 `zone_type="ITEM_USE"` 形式存在，否则 `PlayerRestrictions` 会返回 1300143 拦截；`data_driven_quest.xml` 中带 `Relative` 的剧情袭击怪需在道具使用时刷出并在后续交互中销毁；汇报故事页依赖 `QUEST_SELECT`，`npc-complete` 预览不得包含 `USE_OBJECT` 以免故事页被跳过。
+- **代表案例**：30721/30771（Cygnea/Enshar 提亚马特城堡残骸任务；真端 `source_sphere.csv` 分别定义 `LF5_ITEMUSEAREA_Q30721` 与 `DF5_ITEMUSEAREA_Q30771`；使用镇静剂/恢复剂后偷袭怪为 `236654` 德拉坎）。
