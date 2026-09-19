@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -42,6 +44,9 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * replays and restart the counter.
 	 */
 	static final long MIN_DIALOG_SELECT_RESEND_GAP_MILLIS = 800;
+
+	/** 任务追踪日志出口，路由到 logback 的 quest logger。 / Quest trace sink for logback quest logger. */
+	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
 
 	private int targetObjectId;
 	private int dialogId;
@@ -156,7 +161,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 					? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
 			int traceNpcId = targetObjectId > 0 && player != null && player.getKnownList().getObject(targetObjectId) instanceof Npc npc
 				? npc.getNpcId() : 0;
-			log.info(I18n.get("log.quest_trace.dialog_select",
+			QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.dialog_select",
 				player != null ? player.getName() : "unknown",
 				traceNpcId,
 				targetObjectId,

@@ -3,6 +3,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import com.aionemu.gameserver.model.DialogPage;
@@ -22,6 +24,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  */
 @Slf4j
 public class SM_DIALOG_WINDOW extends AionServerPacket {
+	/** 任务追踪日志出口，路由到 logback 的 quest logger。 / Quest trace sink for logback quest logger. */
+	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
+
 	private final int targetObjectId;
 	private final int dialogID;
 	private int questId = 0;
@@ -49,7 +54,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
 		if (LoggingConfig.LOG_QUEST_TRACE || (player != null && player.isQuestTraceEnabled())) {
-			log.info(I18n.get("log.quest_trace.dialog_window",
+			QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.dialog_window",
 				player != null ? player.getName() : "unknown",
 				targetObjectId,
 				questId,

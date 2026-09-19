@@ -3,6 +3,8 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class CM_USE_ITEM extends AionClientPacket {
+	/** 任务追踪日志出口，路由到 logback 的 quest logger。 / Quest trace sink for logback quest logger. */
+	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
+
 	public int uniqueItemId;
 	public int type, targetItemId, syncId, returnId, customDyeColor;
 
@@ -93,7 +98,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 		}
 		Item item = player.getInventory().getItemByObjId(uniqueItemId);
 		if ((LoggingConfig.LOG_QUEST_TRACE || player.isQuestTraceEnabled()) && item != null) {
-			log.info(I18n.get("log.quest_trace.use_item",
+			QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.use_item",
 				player.getName(),
 				item.getItemId(),
 				uniqueItemId));

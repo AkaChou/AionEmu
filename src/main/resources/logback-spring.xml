@@ -258,7 +258,7 @@
 	<logger name="instance" additivity="false">
 		<appender-ref ref="app_instance"/>
 	</logger>
-	<logger name="quest" additivity="false">
+	<logger name="quest" additivity="true">
 		<appender-ref ref="app_quest"/>
 	</logger>
 	<logger name="GMITEMRESTRICTION">

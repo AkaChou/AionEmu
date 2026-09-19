@@ -2,9 +2,12 @@ package com.aionemu.commons.logging.slf4j;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import com.aionemu.commons.logging.slf4j.filters.ExactLevelFilter;
@@ -75,6 +78,9 @@ class LogbackConfigurationTest {
 					Level.WARN);
 			assertLevelFilter(context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).getAppender("out_warn"), Level.WARN,
 					Level.ERROR);
+			Logger questLogger = context.getLogger("quest");
+			assertTrue(questLogger.isAdditive());
+			assertNotNull(questLogger.getAppender("app_quest"));
 		} finally {
 			context.stop();
 		}

@@ -1,6 +1,6 @@
 # 任务追踪日志开关（//quest log + 日志配置迁移）
 
-- 状态: 客户端验收通过（CLIENT_ACCEPTED）
+- 状态: 客户端验收通过（CLIENT_ACCEPTED，仅覆盖原开关功能；2026-09-19 路由修复已通过聚焦测试，游戏内运行时验收待做）
 - 日期: 2026-09-15
 
 ## 需求
@@ -51,3 +51,12 @@
 - 键名变更属破坏性迁移：外部 `mygs.properties` 若仍写旧键将不生效。
 - 全量套件的 12 项既有失败仍未处理，不属于本任务范围。
 - 该改动未形成跨域新不变量，未新增 Pattern，也未更新 memory-bank。
+
+## 2026-09-19 `quests.log` 路由修复
+
+- 现象: `//quest log` 已显示 ON，`log/console.log` 能看到 `[QUEST-TRACE]`，但 `log/quests.log` 始终为 0 字节。
+- 根因: 四处 trace 使用 Lombok `@Slf4j` 的类 logger，落到 root appenders；`log/quests.log` 只由 `<logger name="quest">` 的 `app_quest` 接收，而此前没有调用方使用 `quest` logger，FileAppender 只在启动时创建空文件。
+- 修复: `CM_USE_ITEM`、`CM_DIALOG_SELECT`、`SM_QUEST_ACTION`、`SM_DIALOG_WINDOW` 四处 trace 改用 `LoggerFactory.getLogger("quest")`；`CM_DIALOG_SELECT` 的对话重复 WARN 继续走类 logger。
+- 追加修复: 首次切换后 `quest` logger 的 `additivity="false"` 使控制台输出消失；改为 `additivity="true"`，让同一条 trace 同时进入 `quests.log`、`console.log` 和 stdout。
+- 生效: 需要重新编译、部署并重启服务；`//reload config` 不会替换已加载的类。`quest` logger 保持追加 `quests.log`，同时通过 `additivity="true"` 继续输出到控制台和 `console.log`。
+- 验证状态: IDE 静态检查四文件 0 errors，`git diff --check` 通过；聚焦 Maven 测试 13/13 通过（`LocalizedLogCallsTest`、`LocalizedLogArgumentsTest`、`LogbackConfigurationTest`、`QuestTraceLogRoutingTest`、`SM_QUEST_ACTIONTest`、`SMDialogWindowTest`，2026-09-19，BUILD SUCCESS）；游戏内 `log/quests.log` 与控制台同时输出的运行时验收待重启后执行。
