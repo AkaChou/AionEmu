@@ -13,7 +13,9 @@
     </rewards>
   </metadata>
   <progress>
+    <!-- var0：任务说明行索引（SECTION_0：0 寻找诺斯蒂巴斯、1 击杀塔乌拉克、2 报告）。 / var0: journal row index (SECTION_0). -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- var1：击杀计数（SECTION_1，客户端 ([%5]/10)）。 / var1: kill counter (SECTION_1). -->
     <bit-field name="var1" offset="6" width="6" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
@@ -23,8 +25,12 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <!-- 804715 点头（HACTION_SETPRO1）后进入击杀行：旧 handler 在 STEP_TO_1 写 setQuestVarById(0,1)。 -->
+    <node label="hunt" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
       <var name="var1" value="10"/>
     </node>
     <node label="complete" status="COMPLETE">
@@ -33,6 +39,39 @@
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 报告行自愈：跨部署在线旧存档首次点击领奖 NPC 即修复。 -->
+    <!-- SECTION_0 report-row self-heal for stale saves that stay online across a deployment. -->
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804715" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- SECTION_0 迁移修复：旧存档 REWARD/SECTION_0=计数行。 / SECTION_0 migration repair for legacy REWARD saves. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="804711" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
@@ -54,14 +93,28 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-
-
+    <!-- 804715（诺斯蒂巴斯）select1(1011)：点头即进入击杀行（0->1 对话推进行）。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804715" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="hunt">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804715" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
@@ -79,7 +132,7 @@
     <npc-complete npc-id="804715" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="started" target="started" priority="1">
+    <transition source="hunt" target="hunt" priority="1">
       <event>
         <kill-npc npc-ids="235939 235940"/>
       </event>
@@ -87,13 +140,14 @@
         <variable-below field="var1" value="10"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="hunt" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="235939 235940"/>
       </event>
@@ -101,13 +155,14 @@
         <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="2"/>
         <set-variable field="var1" value="10"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-        <transition source="reward" target="reward">
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804715" action="QUEST_SELECT"/>
       </event>

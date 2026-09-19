@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestSection0ReportRowContractTest {
 	private static final String CONTRACT_RESOURCE = "/quest/quest-section0-report-row-contract.tsv";
 	/** 合同快照规模：低于该值说明基线被误删或 sweep 漏了任务。 / Guard against silent baseline shrink. */
-	private static final int EXPECTED_CONTRACT_ROWS = 268;
+	private static final int EXPECTED_CONTRACT_ROWS = 269;
 	/** 至少需要这么多任务可以从全新 START 快照直接模拟到 REWARD（其余需要前置对话/物品）。 */
 	private static final int EXPECTED_SIMULATED_QUESTS = 200;
 

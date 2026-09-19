@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -249,6 +250,304 @@ class QuestMonsterProgressContractAuditTest {
 			final int totalCount = count;
 			assertTrue(totalCount >= 800, () -> "expected at least 800 client monster progress contracts, found " + totalCount);
 		}
+	}
+
+
+	/**
+	 * 15101：804715 的 SETPRO1 点头把 SECTION_0 推到击杀行（0->1），
+	 * 第 10 只击杀写报告行（2）并进入 REWARD。
+	 * 15101: the 804715 SETPRO1 nod pushes SECTION_0 onto the kill row and the tenth kill writes the report row.
+	 */
+	@Test
+	void quest15101DialogUnlocksTheKillRowAndTheLastKillReachesTheReportRow() throws Exception {
+		CompiledQuestDefinition compiled = load(15101);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
+		assertNode(definition, "hunt", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2, "var1", 10));
+
+		QuestSnapshot state = new QuestSnapshot(7, 15101, QuestStatus.START, 0, Map.of());
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(804715, QuestDialogAction.SETPRO1.id()));
+		assertEquals(1, unpack(state, layout).get("var0"),
+			"804715 SETPRO1 must push SECTION_0 onto the kill row");
+
+		for (int kill = 1; kill <= 10; kill++) {
+			final int killIndex = kill;
+			state = apply(compiled, state, new QuestEvent.KillNpc(235939));
+			final Map<String, Integer> variables = unpack(state, layout);
+			assertEquals(killIndex, variables.get("var1"), () -> "kill " + killIndex + " must advance SECTION_1");
+			assertEquals(killIndex == 10 ? 2 : 1, variables.get("var0"),
+				() -> "kill " + killIndex + " must keep the client journal on its row");
+		}
+		assertEquals(QuestStatus.REWARD, state.status());
+	}
+
+	/**
+	 * 24153：客户端 SECTION_0..4 是 5 只冰冻独眼巨人的独立计数，全部由 SECTION_5==0 门控，
+	 * 与旧 handler 的 setQuestVarById(0..4) / setQuestVarById(5,1->0) 同值。
+	 * 24153: client SECTION_0..4 are the five independent cyclops counters, all gated by SECTION_5==0.
+	 */
+	@Test
+	void quest24153DeclaresFiveClientCountersBehindTheSectionFiveGate() throws Exception {
+		CompiledQuestDefinition compiled = load(24153);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		for (int index = 0; index <= 5; index++) {
+			final int fieldIndex = index;
+			BitField field = layout.field("var" + fieldIndex);
+			assertNotNull(field, () -> "quest 24153 must declare var" + fieldIndex);
+			assertEquals(6 * fieldIndex, field.offset(), () -> "var" + fieldIndex + " must map its client SECTION");
+			assertEquals(1, field.maxValue(), () -> "var" + fieldIndex + " is a 0/1 counter");
+		}
+		assertNode(definition, "started", QuestStatus.START, Map.of("var5", 1));
+		assertNode(definition, "hunted", QuestStatus.START, Map.of("var5", 0));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of(
+			"var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1, "var5", 0));
+
+		Map<Integer, String> counters = new LinkedHashMap<>();
+		counters.put(213730, "var0");
+		counters.put(213788, "var1");
+		counters.put(213789, "var2");
+		counters.put(213790, "var3");
+		counters.put(213791, "var4");
+		for (Map.Entry<Integer, String> entry : counters.entrySet()) {
+			QuestTransition route = definition.transitions().stream()
+				.filter(transition -> "hunted".equals(transition.sourceNode()))
+				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
+					&& kill.npcId() == entry.getKey())
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("quest 24153 misses the kill route " + entry.getKey()));
+			assertTrue(route.actions().contains(new QuestAction.SetVariable(entry.getValue(), 1)),
+				() -> "kill route " + entry.getKey() + " must pin " + entry.getValue());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				route.afterCommit(), () -> "kill route " + entry.getKey() + " must stay PACKET_ONLY");
+		}
+
+		QuestSnapshot state = new QuestSnapshot(7, 24153, QuestStatus.START,
+			layout.pack(Map.of("var5", 1)), Map.of());
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(204784, QuestDialogAction.SETPRO2.id()));
+		assertEquals(0, unpack(state, layout).get("var5"),
+			"the Delris dialog must clear the SECTION_5 gate so the client counts the five cyclopes");
+
+		for (int npcId : List.of(213730, 213788, 213789, 213790, 213791)) {
+			state = apply(compiled, state, new QuestEvent.KillNpc(npcId));
+		}
+		Map<String, Integer> variables = unpack(state, layout);
+		assertEquals(List.of(1, 1, 1, 1, 1), List.of(variables.get("var0"), variables.get("var1"),
+			variables.get("var2"), variables.get("var3"), variables.get("var4")));
+		assertEquals(QuestStatus.START, state.status());
+
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(204787, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+		assertEquals(QuestStatus.REWARD, state.status());
+		assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1, "var5", 0),
+			unpack(state, layout));
+	}
+
+	/**
+	 * 25304：0 找帕赫曼 -> 1 交出雕花 -> 2 守护哥尔哈 60 点 -> 3 回报帕赫曼 -> 4 向斯库顿报告。
+	 * 25304: every journal row from the Fachmann dialog up to the Skuldun report must be reachable.
+	 */
+	@Test
+	void quest25304RebuildsEveryJournalRowUpToTheSkuldunReport() throws Exception {
+		CompiledQuestDefinition compiled = load(25304);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		assertEquals(0, layout.field("var0").offset());
+		assertEquals(6, layout.field("var1").offset());
+		assertEquals(60, layout.field("var1").maxValue());
+		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
+		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
+		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 4, "var1", 60));
+
+		QuestTransition patternCheck = definition.transitions().stream()
+			.filter(transition -> "s1".equals(transition.sourceNode()) && "s2".equals(transition.targetNode()))
+			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(805340,
+				QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestCondition.HasItem(182215850, 1)), patternCheck.conditions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_OK.id())), patternCheck.afterCommit());
+
+		QuestSnapshot state = new QuestSnapshot(7, 25304, QuestStatus.START, layout.pack(Map.of("var0", 0, "var1", 0)), Map.of());
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(805340, QuestDialogAction.SETPRO1.id()));
+		assertEquals(1, unpack(state, layout).get("var0"), "SETPRO1 must unlock the crafted-pattern row");
+
+		QuestSnapshot withoutPattern = apply(compiled, state, new QuestEvent.TalkToNpc(805340,
+			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+		assertEquals(1, unpack(withoutPattern, layout).get("var0"),
+			"a missing pattern must keep the journal on row 1");
+
+		QuestSnapshot withPattern = new QuestSnapshot(7, 25304, QuestStatus.START, state.packedVariables(),
+			Map.of(182215850, 1));
+		state = apply(compiled, withPattern, new QuestEvent.TalkToNpc(805340,
+			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+		assertEquals(2, unpack(state, layout).get("var0"), "handing the pattern over must open the Gorha row");
+
+		for (int kill = 1; kill <= 60; kill++) {
+			final int killIndex = kill;
+			state = apply(compiled, state, new QuestEvent.KillNpc(233902));
+			final Map<String, Integer> variables = unpack(state, layout);
+			assertEquals(killIndex, variables.get("var1"), () -> "kill " + killIndex + " must advance SECTION_1");
+			assertEquals(killIndex == 60 ? 3 : 2, variables.get("var0"),
+				() -> "kill " + killIndex + " must stay on the Gorha row until the sixtieth kill opens the report row");
+		}
+		assertEquals(3, unpack(state, layout).get("var0"), "60 Gorha kills must open the Fachmann-report row");
+
+		QuestSnapshot withPrototype = new QuestSnapshot(7, 25304, QuestStatus.START, state.packedVariables(),
+			Map.of(182215850, 1));
+		state = apply(compiled, withPrototype, new QuestEvent.TalkToNpc(805340, QuestDialogAction.SET_SUCCEED.id()));
+		assertEquals(QuestStatus.REWARD, state.status());
+		assertEquals(Map.of("var0", 4, "var1", 60), unpack(state, layout));
+	}
+
+	/**
+	 * 25604：s2 的 SECTION_1 计数事件（703125 x3）与 reward 的报告行（客户端第 5 行）。
+	 * 25604: the s2 SECTION_1 counting event (703125 x3) and the reward report row (client row 5).
+	 */
+	@Test
+	void quest25604KeepsTheKillCounterAndProjectsTheReportRow() throws Exception {
+		CompiledQuestDefinition compiled = load(25604);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		assertEquals(6, layout.field("var1").offset());
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 5, "var1", 3));
+
+		boolean countingEvent = definition.transitions().stream()
+			.filter(transition -> "s2".equals(transition.sourceNode()) && "s3".equals(transition.targetNode()))
+			.anyMatch(transition -> transition.event() instanceof QuestEvent.KillNpc kill
+				&& kill.npcId() == 703125);
+		assertTrue(countingEvent, "quest 25604 must keep the SECTION_1 counting event on the s2 kill row");
+
+		QuestSnapshot state = new QuestSnapshot(7, 25604, QuestStatus.START,
+			layout.pack(Map.of("var0", 2, "var1", 0)), Map.of());
+		for (int kill = 1; kill <= 3; kill++) {
+			final int killIndex = kill;
+			state = apply(compiled, state, new QuestEvent.KillNpc(703125));
+			final Map<String, Integer> variables = unpack(state, layout);
+			assertEquals(killIndex, variables.get("var1"), () -> "kill " + killIndex + " must advance SECTION_1");
+			assertEquals(killIndex == 3 ? 3 : 2, variables.get("var0"),
+				() -> "kill " + killIndex + " must keep the client journal on the expected row");
+		}
+
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(806173, QuestDialogAction.SETPRO4.id()));
+		assertEquals(4, unpack(state, layout).get("var0"), "SETPRO4 must open the clue row");
+
+		QuestSnapshot withClue = new QuestSnapshot(7, 25604, QuestStatus.START, state.packedVariables(),
+			Map.of(182216003, 5));
+		state = apply(compiled, withClue, new QuestEvent.TalkToNpc(806173,
+			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+		assertEquals(QuestStatus.REWARD, state.status());
+		assertEquals(Map.of("var0", 5, "var1", 3), unpack(state, layout));
+	}
+
+	/**
+	 * 14252/24252：SECTION_0 是任务说明行索引（0/1/2 三行击杀），SECTION_1 是当前行计数，
+	 * 三行打完后停在报告行，向报告 NPC 交付后才进入 REWARD。
+	 * 14252/24252: SECTION_0 steps through the three kill rows and the NPC report closes the quest.
+	 */
+	@Test
+	void quest14252And24252StepSectionZeroThroughEveryKillRow() throws Exception {
+		record Case(int questId, int startNpc, int reportNpc, int rowOneMob, int rowTwoMob, int rowThreeMob) {
+		}
+		for (Case testCase : List.of(
+			new Case(14252, 805736, 832824, 213775, 213780, 237275),
+			new Case(24252, 805737, 832820, 213775, 213780, 237275))) {
+			CompiledQuestDefinition compiled = load(testCase.questId());
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+			assertEquals(0, layout.field("var0").offset());
+			assertEquals(6, layout.field("var1").offset());
+			assertNode(definition, "r0", QuestStatus.START, Map.of("var0", 0, "var1", 0));
+			assertNode(definition, "r1", QuestStatus.START, Map.of("var0", 1, "var1", 0));
+			assertNode(definition, "r2", QuestStatus.START, Map.of("var0", 2, "var1", 0));
+			assertNode(definition, "r3", QuestStatus.START, Map.of("var0", 3, "var1", 1));
+			assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3, "var1", 1));
+
+			boolean reportRoute = definition.transitions().stream()
+				.filter(transition -> "r3".equals(transition.sourceNode()) && "reward".equals(transition.targetNode()))
+				.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(testCase.reportNpc(),
+					QuestDialogAction.SELECT_QUEST_REWARD.id())));
+			assertTrue(reportRoute, () -> "quest " + testCase.questId() + " must report from the SECTION_0=3 row");
+
+			QuestSnapshot state = new QuestSnapshot(7, testCase.questId(), QuestStatus.START,
+				layout.pack(Map.of("var0", 0, "var1", 0)), Map.of());
+			// r1/r2 投影仍保留旧 grid 的 var2 迁移标记，因此逐字段断言而不是整表相等。
+			// The r1/r2 projections still carry the legacy grid migration marker var2, so assert field by field.
+			state = apply(compiled, state, new QuestEvent.KillNpc(testCase.rowOneMob()));
+			final Map<String, Integer> rowOne = unpack(state, layout);
+			assertEquals(1, rowOne.get("var0"),
+				() -> "quest " + testCase.questId() + " must open row 1");
+			assertEquals(0, rowOne.get("var1"),
+				() -> "quest " + testCase.questId() + " must clear the row counter on row 1");
+			state = apply(compiled, state, new QuestEvent.KillNpc(testCase.rowTwoMob()));
+			final Map<String, Integer> rowTwo = unpack(state, layout);
+			assertEquals(2, rowTwo.get("var0"),
+				() -> "quest " + testCase.questId() + " must open row 2");
+			assertEquals(0, rowTwo.get("var1"),
+				() -> "quest " + testCase.questId() + " must clear the row counter on row 2");
+			state = apply(compiled, state, new QuestEvent.KillNpc(testCase.rowThreeMob()));
+			final Map<String, Integer> rowThree = unpack(state, layout);
+			assertEquals(3, rowThree.get("var0"),
+				() -> "quest " + testCase.questId() + " must stop on the report row");
+			assertEquals(1, rowThree.get("var1"),
+				() -> "quest " + testCase.questId() + " must mark the report row counter as complete");
+			assertEquals(QuestStatus.START, state.status());
+
+			state = apply(compiled, state, new QuestEvent.TalkToNpc(testCase.reportNpc(),
+				QuestDialogAction.SELECT_QUEST_REWARD.id()));
+			assertEquals(QuestStatus.REWARD, state.status());
+		}
+	}
+
+	/**
+	 * 23918：SECTION_0..4 链式门控 5 名精锐兵（旧 XML 误配 EvGuard 怪物与 4 维计数）。
+	 * 23918: SECTION_0..4 chain the five elite raiders (the previous XML used the wrong EvGuard mobs).
+	 */
+	@Test
+	void quest23918ChainsFiveKillerCountersOnTheClientSections() throws Exception {
+		CompiledQuestDefinition compiled = load(23918);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		Map<Integer, String> counters = new LinkedHashMap<>();
+		counters.put(235559, "var0");
+		counters.put(235560, "var1");
+		counters.put(235561, "var2");
+		counters.put(235326, "var3");
+		counters.put(235327, "var4");
+		int index = 0;
+		for (Map.Entry<Integer, String> entry : counters.entrySet()) {
+			BitField field = layout.field(entry.getValue());
+			assertNotNull(field, () -> "quest 23918 must declare " + entry.getValue());
+			assertEquals(6 * index, field.offset(), () -> entry.getValue() + " must map its client SECTION");
+			// counter-grid 逐维展开成单 npc 的 KillNpc 路线（不是 KillNpcSet），计数靠目标节点投影推进。
+			// The counter-grid expands one single-NPC KillNpc route per dimension and advances via the target projection.
+			assertTrue(definition.transitions().stream()
+					.filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
+						&& kill.npcId() == entry.getKey())
+					.anyMatch(transition -> definition.nodes().stream()
+						.filter(node -> node.label().equals(transition.targetNode()))
+						.anyMatch(node -> Integer.valueOf(1).equals(
+							node.projection().variables().get(entry.getValue())))),
+				() -> "quest 23918 must count " + entry.getKey() + " on " + entry.getValue());
+			index++;
+		}
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of(
+			"var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1));
+
+		QuestSnapshot state = new QuestSnapshot(7, 23918, QuestStatus.START, 0, Map.of());
+		for (int npcId : counters.keySet()) {
+			state = apply(compiled, state, new QuestEvent.KillNpc(npcId));
+		}
+		assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1), unpack(state, layout));
+		state = apply(compiled, state, new QuestEvent.TalkToNpc(802347, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+		assertEquals(QuestStatus.REWARD, state.status());
+	}
+
+	private static Map<String, Integer> unpack(QuestSnapshot snapshot, ProgressLayout layout) {
+		return layout.unpack(snapshot.packedVariables());
 	}
 
 	private static boolean isKillEvent(QuestEvent event) {

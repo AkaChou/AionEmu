@@ -63,8 +63,12 @@ class QuestPacketOrderRegressionTest {
 
 	@Test
 	void quest24153SynchronizesRewardStateBeforeRewardWindow() throws Exception {
-		assertRouteContract(24153, "started", projection(QuestStatus.START, 0), "reward",
-			projection(QuestStatus.REWARD, 0), 204787, QuestDialogAction.SELECT_QUEST_REWARD, null,
+		// 客户端 SECTION_0..4 是 5 只冰冻独眼巨人的独立计数（SECTION_5==0 门控），报告行由 hunted 承载。
+		// Client SECTION_0..4 are the five cyclops counters gated by SECTION_5==0; the report row lives on hunted.
+		assertRouteContract(24153, "hunted", new NodeProjection(QuestStatus.START, Map.of("var5", 0)), "reward",
+			new NodeProjection(QuestStatus.REWARD, Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1,
+				"var5", 0)),
+			204787, QuestDialogAction.SELECT_QUEST_REWARD, null,
 			List.of(), List.of(),
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
@@ -78,7 +82,7 @@ class QuestPacketOrderRegressionTest {
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO3.id(), 0);
 		assertProtocolPacketOrder(2533, "v1", QuestDialogAction.QUEST_SELECT.id(), null);
 		assertProtocolPacketOrder(10032, "s7", QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0);
-		assertProtocolPacketOrder(24153, "started", QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
+		assertProtocolPacketOrder(24153, "hunted", QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
 	}
 
 	private static void assertItemRewardRoute(QuestDialogAction action, int itemId, String target, int variable,

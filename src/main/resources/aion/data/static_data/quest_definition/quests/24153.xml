@@ -20,23 +20,72 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- 客户端 quest_monster.csv：SECTION_0..4 是 5 只冰冻独眼巨人的独立计数（各 1），
+         全部由 SECTION_5==0 门控；旧 handler 用 setQuestVarById(0..4) 与 setQuestVarById(5,1/0) 对齐。
+         Client quest_monster.csv: SECTION_0..4 are the five independent cyclops counters, all gated
+         by SECTION_5==0; the legacy handler wrote setQuestVarById(0..4) and setQuestVarById(5,1/0). -->
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="18" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var4" offset="24" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- var5（SECTION_5）：接取后置 1 锁住五只计数，戴尔里斯对话后置 0 解锁（旧 handler 同值语义）。 -->
+    <!-- var5 (SECTION_5): 1 right after accept locks the five counters, the Delris dialog clears it. -->
+    <bit-field name="var5" offset="30" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="unaccepted" status="NONE"/>
     <node label="started" status="START">
-      <var name="var0" value="0"/>
+      <var name="var5" value="1"/>
+    </node>
+    <!-- hunted：戴尔里斯对话后解锁的击杀阶段；只投影 var5，保留实时计数（同 13705 的 started）。 -->
+    <node label="hunted" status="START">
+      <var name="var5" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+      <var name="var4" value="1"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
+      <var name="var5" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 迁移修复：旧存档 REWARD 但五段计数未落齐（旧 XML 的 reward 投影 var0=0）。
+         报告 NPC 上的 TALK 自愈与既有 reward->reward QUEST_SELECT 路线同事件同来源，
+         编译器判定为 AMBIGUOUS_TRANSITION，因此只保留 ENTER_WORLD 迁移（重登/换图即自愈）。
+         Migration repair for legacy REWARD saves whose five counters were never projected. The
+         talk self-heal would collide with the existing reward->reward QUEST_SELECT route on the
+         same NPC and fail compilation as AMBIGUOUS_TRANSITION, so only the ENTER_WORLD route is kept. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+        <set-variable field="var5" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204787" action="QUEST_SELECT"/>
@@ -81,6 +130,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 204784 戴尔里斯：select2(1352) -> select2_1(1353) -> select2_1_1(1354) -> SETPRO2 领取爆裂之炎并解锁击杀行。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204784" action="QUEST_SELECT"/>
@@ -90,55 +140,6 @@
       </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204784" action="SETPRO2"/>
-      </event>
-      <actions>
-        <give-item item-id="182215462" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <kill-routes source="started" target="started" npc-ids="213730 213788 213789 213790 213791"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204787" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="204787" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT2_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
-      </after-commit>
-    </transition>
-      <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204784" action="SELECT2_1"/>
       </event>
@@ -154,5 +155,127 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="started" target="hunted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204784" action="SETPRO2"/>
+      </event>
+      <actions>
+        <give-item item-id="182215462" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 五只冰冻独眼巨人各写自己的 SECTION_n（旧 handler: 213730->var0, 213788->var1, 213789->var2,
+         213790->var3, 213791->var4）。 / Five cyclopes, each pinning its own SECTION_n counter. -->
+    <transition source="hunted" target="hunted">
+      <event>
+        <kill-npc npc-id="213730"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunted" target="hunted">
+      <event>
+        <kill-npc npc-id="213788"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunted" target="hunted">
+      <event>
+        <kill-npc npc-id="213789"/>
+      </event>
+      <conditions>
+        <variable-is field="var2" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunted" target="hunted">
+      <event>
+        <kill-npc npc-id="213790"/>
+      </event>
+      <conditions>
+        <variable-is field="var3" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var3" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunted" target="hunted">
+      <event>
+        <kill-npc npc-id="213791"/>
+      </event>
+      <conditions>
+        <variable-is field="var4" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 204787 阿吉卡坦：select5(2375) 报告结果进入 REWARD。 / Report to Akigatan opens the reward window. -->
+    <transition source="hunted" target="hunted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="hunted" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204787" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
+
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204787" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

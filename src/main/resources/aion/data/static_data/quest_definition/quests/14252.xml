@@ -9,60 +9,36 @@
     </rewards>
   </metadata>
   <progress>
+    <!-- 客户端 quest_monster.csv：SECTION_0 是任务说明行索引（==0/==1/==2 三行击杀），
+         SECTION_1 是当前行计数（每行 <1）；SECTION_2 仅保留旧 grid 存档的迁移标记。
+         Client quest_monster.csv: SECTION_0 is the journal row index (three kill rows), SECTION_1 is
+         the per-row counter (<1 each); SECTION_2 survives only as a legacy grid migration flag. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE">
+    <node label="unaccepted" status="NONE"/>
+    <node label="r0" status="START">
       <var name="var0" value="0"/>
       <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
     </node>
-    <node label="a0b0c0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-    </node>
-    <node label="a0b0c1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-    </node>
-    <node label="a0b1c0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-    </node>
-    <node label="a0b1c1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-    </node>
-    <node label="a1b0c0" status="START">
+    <node label="r1" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
     </node>
-    <node label="a1b0c1" status="START">
-      <var name="var0" value="1"/>
+    <node label="r2" status="START">
+      <var name="var0" value="2"/>
       <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
     </node>
-    <node label="a1b1c0" status="START">
-      <var name="var0" value="1"/>
+    <!-- r3：第 3 行报告行，等待向 阿纳克萨 报告。 / r3: report row awaiting the NPC report. -->
+    <node label="r3" status="START">
+      <var name="var0" value="3"/>
       <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-    </node>
-    <node label="a1b1c1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="3"/>
       <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -71,15 +47,157 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805736" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
-    <counter-grid>
-      <dimension field="var0" required="1" npc-ids="213775 236924"/>
-      <dimension field="var1" required="1" npc-ids="213780 236929"/>
-      <dimension field="var2" required="1" npc-ids="237275"/>
-    </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="832824" source="a1b1c1" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 旧 grid 存档迁移（ENTER_WORLD）：旧 XML 用 var0/var1/var2 三维修 var0=A、var1=B、var2=C。 -->
+    <!-- Legacy grid save migration on ENTER_WORLD: the previous XML used var0=A, var1=B, var2=C. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="r3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+        <variable-at-least field="var1" value="1"/>
+        <variable-at-least field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition target="r2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+        <variable-at-least field="var1" value="1"/>
+        <variable-below field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition target="r0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var1" value="1"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition target="r0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-below field="var0" value="1"/>
+        <variable-below field="var1" value="1"/>
+        <variable-at-least field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="805736" source="unaccepted" target="r0" selection-sources="unaccepted r0" start-page="SELECT_NONE"/>
+    <!-- 第 1 行：中央控制室的纳迦工程师（+ 洞穴加强版）。 / Row 1: the Naga engineer in the central control room. -->
+    <transition source="r0" target="r1">
+      <event>
+        <kill-npc npc-ids="213775 236924"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 2 行：破坏全部次元门增强装置后消灭巴卡尔马。 / Row 2: the Drakan fire boss. -->
+    <transition source="r1" target="r2">
+      <event>
+        <kill-npc npc-ids="213780 236929 237263"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 3 行：布里特拉的传令兵。 / Row 3: Beritra's messenger. -->
+    <transition source="r2" target="r3">
+      <event>
+        <kill-npc npc-id="237275"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="3"/>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="r3" target="r3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="832824" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="r3" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="832824" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="832824" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+
   </transitions>
 </quest-definition>

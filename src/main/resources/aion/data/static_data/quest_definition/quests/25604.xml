@@ -57,13 +57,50 @@
       <var name="var0" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <!-- 报告行：客户端第 5 行「向斯潘西特报告」，击杀计数 3 已满。 -->
+      <var name="var0" value="5"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- SECTION_0 报告行自愈：跨部署在线旧存档（旧 reward 投影 var0=0）第一次点击斯潘西特即修复。 -->
+    <!-- SECTION_0 report-row self-heal for stale saving rows that stayed online across a deployment. -->
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806115" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- SECTION_0 迁移修复：旧存档 REWARD/SECTION_0=0（旧 XML reward 投影 var0=0）。 -->
+    <!-- SECTION_0 migration repair for legacy REWARD/SECTION_0=0 saves. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 接取:806115 Svanhild,31 显示 4762,1002 接取。 -->
     <dialog type="NPC_START" npc-id="806115" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 806173 Groma:var0=0,31 显示 1011,SELECT_ACTION_1012(1012) 显示 1012,STEP_TO_1(10000) 播片 874+传送+var0=1。 -->
