@@ -30,7 +30,7 @@ map/instance: 绿雾湿地野外任务；world ID 本轮未采集
 
 ## 验证边界与门禁
 
-- 已执行（用户授权）：`mvn -q -Dtest='QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` → PASS；`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
+- 已执行（用户授权，2026-09-19 同型 sweep 后复跑）：`mvn -q -Dtest='QuestSection0ReportRowContractTest,QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test` → PASS；（15001 修复当轮执行的是不含新测试的同一组合，同样 PASS）`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
 - startup health：本轮未采集服务端启动日志（用户管理进程）；如出现 `Can't initialize typed quest engine` / `QuestCompilationException`，本验收不成立。
 - runtime logs / protocol trace / screenshots：本任务记录引用用户提供的修前追踪（未落库）；附件 `not captured`（用户提供的临时图片缓存路径已失效）。
 - 同族任务：14 个任务是同型批量结构修复，本次实机验收覆盖代表任务 15001；其余 13 个按同合同静态与门禁覆盖，未逐个实机复验。

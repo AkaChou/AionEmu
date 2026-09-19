@@ -48,9 +48,11 @@
 
 `QuestMonsterProgressContractAuditTest` 继续覆盖最初 14 个任务的合同。
 
-## 5. 验证边界（本轮未授权构建）
+## 5. 验证结果与边界
 
-- 已完成：246 个 XML 全部通过 XML 解析；IDE inspections 对新测试 0 error；审计脚本复跑后残余仅 `15101/24153`；Python 结构化复核（reward 投影、自环/终击 var0 写入、迁移路线）通过。
-- **未执行**（等待用户授权，禁止未授权构建）：
+- 静态：246 个 XML 全部通过 XML 解析；IDE inspections 对新测试 0 error；审计脚本复跑后残余仅 `15101/24153`；Python 结构化复核（reward 投影、自环/终击 var0 写入、迁移路线）通过。
+- 已执行（用户 2026-09-19 授权）：
   `mvn -q -Dtest='QuestSection0ReportRowContractTest,QuestMonsterProgressContractAuditTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest' test`
-- 未启动/重启服务端；未做客户端验收（建议代表任务：15041、15471、15500、24153 相关任务需先修，18994 需副本内验证）。
+  → PASS：`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`（5 个测试类 26 个用例）。
+- 首轮失败与修正：新测试最初假设「终击路线来源节点一定是 `started`」，18994/28994 的计数阶段在 `step2` 节点，断言失败；已改为按 `SECTION_0==客户端阶段` 解析实际承载节点（`started`/`step2`/`k1`），修正后全绿（commit `265c63493`）。
+- 未启动/重启服务端；未做客户端验收。建议代表任务：15041（单计数）、15471（周常）、15500（守护）、18994（副本多阶段）；`15101`、`24153` 修复后再验。
