@@ -919,7 +919,7 @@ first_check: 用 quest_monster.csv 找同一 SECTION_0==S 上并行门控多个 
 
 - **判定规则**：击杀任务的“杀满即报告”由两个字段共同完成——计数（`SECTION_1+`）与任务说明行索引（`SECTION_0`）。最后一条击杀路线必须把行索引写成报告行，并且 `reward` 节点投影要与之一致；否则服务端进入 `REWARD` 而客户端任务说明停在击杀行，出现空分子与“下一步不出现”的玩家可见症状。
 - **代表案例**：15001（绿雾湿地双计数）修前追踪 `状态=4 步数=20800`（`SECTION_0=0, SECTION_1=5, SECTION_2=5`），修后 `20801`；同批 15020/15073/15100/15104/15203/15406/15407/15408/15580/15671/25671/25060/18952 同型；代表测试 `QuestMonsterProgressContractAuditTest#stepZeroMultiCounterHuntsAdvanceSectionZeroToTheReportStep`。
-- **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），两轮共修复 **268 个合同行**（246 + 22；第二轮把旧 handler 证据扩展到 `setQuestVar(N)`/`changeQuestStep(env, cur, next, bool)`，并把 5 个链式阶段任务的 var0 扩为 6-bit）。残余 4 个（15101 缺 0->1 对话推进行、24153 缺击杀路线、25304 缺中间行推进、25604 缺计数事件与推进）与 7 行组合节点任务（`SECTION_0` 非单纯行索引，需要客户端 VarTable 证据）均标为 EVIDENCE_REQUIRED。
+- **同型存量**：2026-09-19 审计命中 248 个可执行任务（旧 handler 在完成分支写 var0/报告行索引、当前 XML 未推进），两轮共修复 **268 个合同行**（246 + 22；第二轮把旧 handler 证据扩展到 `setQuestVar(N)`/`changeQuestStep(env, cur, next, bool)`，并把 5 个链式阶段任务的 var0 扩为 6-bit）。残余 4 个（15101 缺 0->1 对话推进行、24153 缺击杀路线、25304 缺中间行推进、25604 缺计数事件与推进）与 7 行组合节点任务（`SECTION_0` 非单纯行索引，需要客户端 VarTable 证据）均标为 EVIDENCE_REQUIRED。；该持久化迁移不能只依赖 ENTER_WORLD：跨部署在线或在同一会话进入 REWARD/计数行的存档会因 reward 源节点投影匹配失败而点 NPC 无响应 → 已为 244 个任务补 source-less 的领奖对话框自愈路线（复制自身 reward 响应页），24 个无对话响应的任务仍只依赖 ENTER_WORLD。
 
 ---
 

@@ -77,3 +77,24 @@
 | 14252/18911/23918/24252/28911（7 行） | 0-2 | 组合节点（`a0b0c0` 类）任务，`SECTION_0` 在这些任务里不是单纯的说明行索引，客户端摘要的行选择语义需要 VarTable 证据 | EVIDENCE_REQUIRED |
 
 - 至此：15001 家族 14 + 第一轮 246 + 第二轮 22 = **282 个任务** 已按报告行合同闭环；残余 4 + 7 行已明确标注所需证据。
+
+## 7. 旧存档路径加固：领奖对话框自愈（2026-09-19 追加）
+
+- 为什么必须迁移：packed `var0` 已经持久化在存档里，XML 修复只影响之后的转换。旧存档停在 `REWARD/SECTION_0=计数行`，
+  不会重跑击杀路线；而 `reward` 源节点的路由（`reward->reward` 对话、`npc-complete` 领奖）会被
+  `QuestMutationPlanner.matchesSourceNode` 的投影匹配挡住 → 玩家点领奖 NPC 无响应。
+- ENTER_WORLD 路线为什么够用（大多数情况）：迁移路线在登录/换图/实例切换时触发，服务端部署本就伴随重启，
+  玩家重连即自愈。
+- 剩余暴露：**跨部署保持在线**（热更 XML、只 reload 定义而不重连）或在同一会话内已经进入 `REWARD/SECTION_0=计数行`
+  的玩家，不会触发 ENTER_WORLD，表现为「任务显示 REWARD、点 NPC 没反应」。
+- 加固（本次）：`apply_section0_dialog_repair.py` 为 **244** 个任务复制其自身的 `reward->reward` 对话框响应，
+  追加一条 source-less 修复路线（`status-is REWARD` + `variable-below var0 报告行` → `set var0=报告行` +
+  原响应页）：
+  1. 旧存档第一次点领奖 NPC 即自愈并直接看到原本的奖励页；
+  2. 正常存档条件不成立（var0 已是报告行），行为不变；
+  3. 迁移路线保留，幂等。
+- 剩余 24 个任务没有可复制的 `reward->reward` 对话框路线，仍只依赖 ENTER_WORLD 迁移（清单：23759-23770、
+  23840/23841/23844/23845、23945、24153 等；见 `apply_section0_dialog_repair.py` 的 SKIP 输出）。
+- 门禁：244 个 XML 通过解析；`QuestSection0ReportRowContractTest`、`QuestMonsterProgressContractAuditTest`、
+  `ClientQuestSectionAlignmentTest`、`ProductionCatalogWhitelistVerificationTest`、`QuestDefinitionCatalogManifestTest`
+  复跑 PASS（PRODUCTION_COMPILE_OK=6189、FAILURES=0、WHITELIST_VIOLATIONS=0）。
