@@ -150,11 +150,47 @@ public class RealGeoData implements GeoData {
 			collectMeshes(s, meshes);
 		}
 		List<Mesh> meshSnapshot = new ArrayList<>(meshes);
-		GameThreadPoolServices.threadPoolManager().submitLongRunning(() -> {
-			for (Mesh mesh : meshSnapshot) {
-				mesh.createCollisionData();
-			}
-		});
+		if (meshSnapshot.isEmpty()) {
+			return;
+		}
+		// 碰撞树只读取各自 Mesh 的只读缓冲，按长任务池容量轮转切片并行构建；仍走生命周期线程池，
+		// 避免在既有加载任务里嵌套 ForkJoin 池。
+		// Collision trees only read each mesh's own read-only buffers; distribute them round-robin
+		// across long-running pool slots instead of serializing the whole prebuild on one thread.
+		int partitionCount = Math.min(meshSnapshot.size(), Math.max(2, Runtime.getRuntime().availableProcessors()));
+		List<List<Mesh>> partitions = partitionRoundRobin(meshSnapshot, partitionCount);
+		for (List<Mesh> partition : partitions) {
+			GameThreadPoolServices.threadPoolManager().submitLongRunning(() -> {
+				for (Mesh mesh : partition) {
+					mesh.createCollisionData();
+				}
+			});
+		}
+	}
+
+	/**
+	 * 将待处理项按轮转法切成指定数量的分片，保证顺序稳定且每项只出现一次。
+	 * Splits items into the requested number of partitions in round-robin order, so every item appears
+	 * exactly once while keeping a deterministic distribution.
+	 *
+	 * @param items 待处理项 / items to split
+	 * @param partitionCount 分片数量（正数）/ number of partitions (positive)
+	 * @param <T> 元素类型 / element type
+	 * @return 分片列表 / partitions
+	 */
+	static <T> List<List<T>> partitionRoundRobin(List<T> items, int partitionCount) {
+		if (partitionCount <= 0) {
+			throw new IllegalArgumentException("partitionCount must be positive");
+		}
+		List<List<T>> partitions = new ArrayList<>(partitionCount);
+		for (int i = 0; i < partitionCount; i++) {
+			partitions.add(new ArrayList<>());
+		}
+		int index = 0;
+		for (T item : items) {
+			partitions.get(index++ % partitionCount).add(item);
+		}
+		return partitions;
 	}
 
 	/**

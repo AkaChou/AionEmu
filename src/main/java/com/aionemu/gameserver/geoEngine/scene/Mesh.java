@@ -65,7 +65,7 @@ public class Mesh {
 	 */
 	private BoundingVolume meshBound = new BoundingBox();
 	/** 碰撞加速结构（BIH 树）。 / Collision acceleration structure (BIH tree). */
-	private CollisionData collisionTree = null;
+	private volatile CollisionData collisionTree = null;
 	// private EnumMap<VertexBuffer.Type, VertexBuffer> buffers = new EnumMap<Type,
 	// VertexBuffer>(VertexBuffer.Type.class);
 	// private VertexBuffer[] buffers = new VertexBuffer[BUFFERS_SIZE];
@@ -497,9 +497,14 @@ public class Mesh {
 		if (collisionTree != null) {
 			return;
 		}
-		BIHTree tree = new BIHTree(this);
-		tree.construct();
-		collisionTree = tree;
+		synchronized (this) {
+			if (collisionTree != null) {
+				return;
+			}
+			BIHTree tree = new BIHTree(this);
+			tree.construct();
+			collisionTree = tree;
+		}
 	}
 
 	/**
@@ -515,10 +520,12 @@ public class Mesh {
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,
 			CollisionResults results) {
 
-		if (collisionTree == null) {
+		CollisionData tree = collisionTree;
+		if (tree == null) {
 			createCollisionData();
+			tree = collisionTree;
 		}
-		return collisionTree.collideWith(other, worldMatrix, worldBound, results);
+		return tree.collideWith(other, worldMatrix, worldBound, results);
 	}
 
 	/**
