@@ -94,7 +94,7 @@ public class InstanceEngine implements GameEngine {
 			try {
 				instanceHandler = instanceClass.getDeclaredConstructor().newInstance();
 			} catch (ReflectiveOperationException ex) {
-				log.warn(I18n.get("log.e64071d6fa05", worldId, ex));
+				log.warn(I18n.get("log.e64071d6fa05", worldId), ex);
 			}
 		}
 		if (instanceHandler == null) {

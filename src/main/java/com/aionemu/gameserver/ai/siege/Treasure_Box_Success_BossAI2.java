@@ -90,7 +90,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
             onDropRegistered(chest);
             return chest;
         } catch (Exception e) {
-            log.error(I18n.get("log.a2aee0eb2e44", e));
+            log.error(I18n.get("log.a2aee0eb2e44"), e);
             return null;
         }
     }

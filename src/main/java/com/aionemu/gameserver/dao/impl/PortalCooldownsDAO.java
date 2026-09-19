@@ -57,7 +57,7 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 
 			player.getPortalCooldownList().setPortalCoolDowns(portalCoolDowns);
 		} catch (SQLException e) {
-			log.error(I18n.get("log.bd26489b30c6", player.getObjectId(), e));
+			log.error(I18n.get("log.bd26489b30c6", player.getObjectId()), e);
 		}
 	}
 
@@ -101,7 +101,7 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 
 			con.commit();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.3f6c79bd16dd", player.getObjectId(), e));
+			log.error(I18n.get("log.3f6c79bd16dd", player.getObjectId()), e);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 			stmt.setInt(1, player.getObjectId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.4b9e8239bcf5", player.getObjectId(), e));
+			log.error(I18n.get("log.4b9e8239bcf5", player.getObjectId()), e);
 		}
 	}
 

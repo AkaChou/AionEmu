@@ -1077,7 +1077,7 @@ public class LegionService {
 	 */
 			DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
 		} catch (Exception ex) {
-			log.error(I18n.get("log.ea0f9e89569d", ex));
+			log.error(I18n.get("log.ea0f9e89569d"), ex);
 		}
 	}
 

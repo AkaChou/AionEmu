@@ -55,7 +55,7 @@ public class JAXBUtil {
 			return (T) unmarshaller.unmarshal(is);
 		}
 		catch (JAXBException e) {
-			log.error(I18n.get("log.b82c1d87c438", e));
+			log.error(I18n.get("log.b82c1d87c438"), e);
 		}
 		return null;
 	}
@@ -98,7 +98,7 @@ public class JAXBUtil {
 			return (T) unmarshaller.unmarshal(new StringReader(stream));
 		}
 		catch (JAXBException e) {
-			log.error(I18n.get("log.b82c1d87c438", e));
+			log.error(I18n.get("log.b82c1d87c438"), e);
 		}
 		return null;
 	}
@@ -122,7 +122,7 @@ public class JAXBUtil {
 			marshaller.marshal(object, new File(file));
 		}
 		catch (JAXBException e) {
-			log.error(I18n.get("log.adbf3f704f02", e));
+			log.error(I18n.get("log.adbf3f704f02"), e);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class JAXBUtil {
 			return sw.toString();
 		}
 		catch (JAXBException e) {
-			log.error(I18n.get("log.adbf3f704f02", e));
+			log.error(I18n.get("log.adbf3f704f02"), e);
 		}
 		return null;
 	}
@@ -172,7 +172,7 @@ public class JAXBUtil {
 			return true;
 		}
 		catch (JAXBException e) {
-			log.warn(I18n.get("log.33fe4a6282a7", e));
+			log.warn(I18n.get("log.33fe4a6282a7"), e);
 			return false;
 		}
 	}
@@ -197,7 +197,7 @@ public class JAXBUtil {
 			return true;
 		}
 		catch (JAXBException e) {
-			log.warn(I18n.get("log.33fe4a6282a7", e));
+			log.warn(I18n.get("log.33fe4a6282a7"), e);
 			return false;
 		}
 	}
@@ -221,7 +221,7 @@ public class JAXBUtil {
 				return sf.newSchema(new StreamSource(schemaStream));
 			}
 		} catch (JAXBException | SAXException | IOException e) {
-			log.error(I18n.get("log.d834008aca15", clazz.getName(), e));
+			log.error(I18n.get("log.d834008aca15", clazz.getName()), e);
 		}
 		return null;
 	}

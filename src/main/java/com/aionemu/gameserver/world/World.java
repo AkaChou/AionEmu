@@ -635,7 +635,7 @@ public class World {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.e15440de12ca", ex));
+			log.error(I18n.get("log.e15440de12ca"), ex);
 		}
 	}
 

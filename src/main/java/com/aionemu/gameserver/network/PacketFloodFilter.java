@@ -85,7 +85,7 @@ public class PacketFloodFilter {
 					cnt++;
 				}
 			} catch (IOException e) {
-				log.error(I18n.get("log.ee4945d40d71", e));
+				log.error(I18n.get("log.ee4945d40d71"), e);
 				return;
 			}
 			packets = reloadedPackets;

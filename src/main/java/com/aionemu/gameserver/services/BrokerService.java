@@ -1239,7 +1239,7 @@ public class BrokerService {
 				}
 			} catch (SQLException e) {
 				log.error(I18n.get("log.30a6c4139e12",
-						inventorySaves.stream().map(InventorySave::playerId).distinct().toList(), e));
+						inventorySaves.stream().map(InventorySave::playerId).distinct().toList()), e);
 				return false;
 			}
 

@@ -72,7 +72,7 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 				}
 			}
 		} catch (Exception e) {
-			log.warn(I18n.get("log.05d62bb9dc4d", e));
+			log.warn(I18n.get("log.05d62bb9dc4d"), e);
 		}
 		return list;
 	}
@@ -93,7 +93,7 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 			stmt.setInt(2, id);
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.4f720321ff23", e));
+			log.error(I18n.get("log.4f720321ff23"), e);
 			return false;
 		}
 	}

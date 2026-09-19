@@ -23,6 +23,7 @@
 | play-15 class histogram 常驻 2.95GB 里空容器占大头 —— CHM 1,194,676 / 76.5MB（其中约 88 万为空表）、ReentrantReadWriteLock 914,470 + NonfairSync 915,125 ≈44MB、COW 509,628 / 12.2MB、RetailPatternAI2 单类 5 个 HashMap/Set ≈28MB | `AR-010` | 构造函数里 `new` 的集合/锁；改造前先确认该容器上各变更方法在占位符上的实际行为，以及首次写入是否可能来自多个线程 |
 | 全量套件里出现"只在整套跑时才失败"的配置读取错误（VipConfigPathTest 读到上一个用例的 StandardEnvironment）；或命令行/环境变量覆盖看起来只在部分场景生效 | `AR-011` | EnvironmentPostProcessor 或静态初始化块里是否写了全局状态；Bean 构造器 / @PostConstruct 里是否读了 XxxConfig 字段 |
 | 游戏服 DAO 全量报 `Table 'al_server_ls.xxx' doesn't exist`（玩家/背包/住宅/城镇表全灭），或任意服务读到另一个服务 config 目录里的同名键值（典型：登录与游戏的 `database.url` 互换） | `AR-012` | 新增服务专属原始键时先跑 raw_key_conflicts.py 确认是否跨服务同名不同值；确认解析器路径上是否还有文件派生值在覆盖本服务文件 |
+| 日志只剩一行空文本，或出现「…时异常」这类**没有堆栈**的报错（典型：ChatCommand 的空 ERROR 行、KnownList「对所有 NPC 运行访问器时异常」），异常信息与调用栈全部丢失 | `AR-013` | 见到「有异常但没有堆栈」或「一行空日志」时，先回到该调用点确认异常是否还留在 `I18n.get` 参数里；新增或修改日志后跑 LocalizedLogArgumentsTest 与 verify_invariant.py |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |
 | Lombok 方法或构造器消失、重载 setter 冲突、子类 override 编译失败 | `ENV-003` | same-name methods, parameter count, final-field initialization and @Override sites |

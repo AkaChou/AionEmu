@@ -63,7 +63,7 @@ public class PlayerScripts {
 			}
 			script.setData(bytes, scriptXML.length() * 2);
 		} catch (Exception ex) {
-			log.error(I18n.get("log.3d086e850a89", ex));
+			log.error(I18n.get("log.3d086e850a89"), ex);
 			return false;
 		}
 		return script == null;
@@ -93,7 +93,7 @@ public class PlayerScripts {
 		try {
 			return decompress(bytes);
 		} catch (Exception ex) {
-			log.error(I18n.get("log.4c634fc1f594", ex));
+			log.error(I18n.get("log.4c634fc1f594"), ex);
 			return null;
 		}
 	}

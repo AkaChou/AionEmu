@@ -339,7 +339,7 @@ public class XmlDataLoader {
 			// 否则吞掉根因。
 			// Attach the throwable separately: the I18n placeholder only carries toString, the stack must be
 			// logged too or the root cause is swallowed.
-			log.error(I18n.get("log.a30b9e9db6fa", e.toString()), e);
+			log.error(I18n.get("log.a30b9e9db6fa"), e);
 			throw new IllegalStateException("Failed to load static data", e);
 		}
 	}

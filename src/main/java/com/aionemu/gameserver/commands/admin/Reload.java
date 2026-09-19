@@ -65,7 +65,7 @@ public class Reload extends AdminCommand {
 			}
 			catch (Exception | GameServerError e) {
 				PacketSendUtility.sendMessage(admin, "Quest reload failed!");
-				log.error(I18n.get("log.bc69156970fe", e));
+				log.error(I18n.get("log.bc69156970fe"), e);
 			}
 		}
 
@@ -76,7 +76,7 @@ public class Reload extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Skill reload failed!");
-				log.error(I18n.get("log.9229e36d9667", e));
+				log.error(I18n.get("log.9229e36d9667"), e);
 			}
 		}
 		else if (params[0].equals("portal")) {
@@ -91,7 +91,7 @@ public class Reload extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Portal reload failed!");
-				log.error(I18n.get("log.e210b296177e", e));
+				log.error(I18n.get("log.e210b296177e"), e);
 			}
 		}
 		else if (params[0].equals("commands")) {
@@ -125,7 +125,7 @@ public class Reload extends AdminCommand {
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Event reload failed! Keeping the last version ...");
-				log.error(I18n.get("log.e8459365ba32", e));
+				log.error(I18n.get("log.e8459365ba32"), e);
 				return;
 			}
 			if (data != null) {

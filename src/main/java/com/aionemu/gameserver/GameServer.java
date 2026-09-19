@@ -200,7 +200,7 @@ public class GameServer {
 
 						zos.closeEntry();
 					} catch (IOException e) {
-						log.error(I18n.get("log.c1a01a282f44", logFile.getName(), e));
+						log.error(I18n.get("log.c1a01a282f44", logFile.getName()), e);
 					}
 
 					if (!logFile.delete()) {
@@ -211,7 +211,7 @@ public class GameServer {
 				log.info(I18n.get("log.038919cb0a3e", logFiles.length, outFilename));
 
 			} catch (IOException e) {
-				log.error(I18n.get("log.6f01b0cf500e", outFilename, e));
+				log.error(I18n.get("log.6f01b0cf500e", outFilename), e);
 			}
 		}
 
@@ -1458,7 +1458,7 @@ public class GameServer {
 					log.debug("Database faction query took {} ms", dbTime);
 					computeRatios();
 				} catch (Exception e) {
-					log.error(I18n.get("log.a690a349a611", e));
+					log.error(I18n.get("log.a690a349a611"), e);
 				} finally {
 					lock.unlock();
 				}
@@ -1491,7 +1491,7 @@ public class GameServer {
 					long hookTime = System.currentTimeMillis() - hookStart;
 					log.debug("Startup hook executed in {} ms", hookTime);
 				} catch (Exception e) {
-					log.error(I18n.get("log.00fadfdcf59f", e));
+					log.error(I18n.get("log.00fadfdcf59f"), e);
 				}
 			}
 
@@ -1525,7 +1525,7 @@ public class GameServer {
 			computeRatios();
 
 		} catch (Exception e) {
-			log.error(I18n.get("log.d8cc88ecc91c", e));
+			log.error(I18n.get("log.d8cc88ecc91c"), e);
 		} finally {
 			lock.unlock();
 		}

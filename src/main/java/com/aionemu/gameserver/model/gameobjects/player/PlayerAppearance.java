@@ -401,7 +401,7 @@ public class PlayerAppearance implements Cloneable {
 		try {
 			newObject = super.clone();
 		} catch (CloneNotSupportedException e) {
-			log.error(I18n.get("log.3854e6534415", e));
+			log.error(I18n.get("log.3854e6534415"), e);
 		}
 		return newObject;
 	}

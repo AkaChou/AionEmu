@@ -607,7 +607,7 @@ public class ExchangeService {
 					throw e;
 				}
 			} catch (SQLException e) {
-				log.error(I18n.get("log.39a7be863899", player1Id, player2Id, e));
+				log.error(I18n.get("log.39a7be863899", player1Id, player2Id), e);
 				return false;
 			}
 			inventoryDAO.markStored(player1Items);

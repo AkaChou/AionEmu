@@ -75,7 +75,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
         try {
             chatService.registerPlayerConnection(playerId, token, identifier, clientChannelHandler, realName);
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.fccabf8023e0", playerId, e));
+            log.error(I18n.get("log.fccabf8023e0", playerId), e);
         }
     }
 }

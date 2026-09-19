@@ -243,7 +243,7 @@ public class Config {
 			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
 			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
 		} catch (Exception e) {
-			log.error(I18n.get("log.07e02900f548", e));
+			log.error(I18n.get("log.07e02900f548"), e);
 			throw new Error("Can't load gameserver configuration: ", e);
 		}
 		IPConfig.load();
@@ -381,7 +381,7 @@ public class Config {
 			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
 			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
 			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
-			log.error(I18n.get("log.4566dc07cb76", e));
+			log.error(I18n.get("log.4566dc07cb76"), e);
 			throw new Error("Can't reload configuration: ", e);
 		}
 	}

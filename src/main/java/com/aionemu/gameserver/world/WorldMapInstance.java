@@ -637,7 +637,7 @@ public abstract class WorldMapInstance {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.cc03391ccf0f", ex));
+			log.error(I18n.get("log.cc03391ccf0f"), ex);
 		}
 	}
 
@@ -655,7 +655,9 @@ public abstract class WorldMapInstance {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.cc03391ccf0f", ex));
+			// NPC 访问器单独用一条消息，避免与玩家访问器共用带「players」字样的文案。
+			// The NPC visitor keeps its own message instead of sharing the player-wording key.
+			log.error(I18n.get("log.d7a05858594b", getMapId(), getInstanceId()), ex);
 		}
 	}
 

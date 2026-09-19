@@ -2,7 +2,7 @@
 
 本文档记录 AionEmu 服务端生命周期、Spring 容器集成、启动性能与网络架构规范。
 
-> Pattern IDs: `AR-001`–`AR-012`
+> Pattern IDs: `AR-001`–`AR-013`
 > card_status: ACTIVE; performance claims require the referenced JFR or test evidence
 > scope: Spring lifecycle, runtime service lookup, DAO provider wiring, and packet registration
 > last_reviewed: 2026-09-19
@@ -303,3 +303,26 @@ first_check: 新增服务专属原始键时先跑 raw_key_conflicts.py 确认是
 2. **故障链**：`AionLegacyPropertySourceEnvironmentPostProcessor`（扁平原始键，后加载者胜）→ `ConfigSourceResolverHolder`（`environment::getProperty`）→ `ConfigurableProcessor`（解析器优先于本地 `Properties[]`）→ `DatabaseConfig.DATABASE_URL` → `DatabaseFactory.init()` 建池。任何一环单独看都"正确"，组合起来就是把登录服的连接串灌进了游戏服。
 3. **修复规则**：镜像收集器按服务前缀记录原始键归属，跨服务取值不一致的键不发布。项目实际配置树里命中该规则的只有 `database.url` 一个键（`raw_key_conflicts.py` 可复算），`gameserver.thread.*` / `svstats.*` 等 Bean 绑定键不受影响。
 4. **新增服务专属配置时的检查动作**：新增或改动会被多个服务读取的原始键前，先运行 `python3 .agents/summary/legacy-config-mirror-fix/raw_key_conflicts.py <config-dir>` 判断是否落入"跨服务同名不同值"；若是，就必须让该键退出镜像并由各服务文件各自决定。
+
+---
+
+## [AR-013] 十三、本地化日志参数契约：异常必须回到日志调用
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 全仓日志与 I18n 消息（I18n.get 调用点、messages*.properties、LocalizedLogArgumentsTest 闸门）
+first_seen: 2026-09-19
+last_verified: 2026-09-19
+symptom: 日志只剩一行空文本，或出现「…时异常」这类**没有堆栈**的报错（典型：ChatCommand 的空 ERROR 行、KnownList「对所有 NPC 运行访问器时异常」），异常信息与调用栈全部丢失
+root_cause: I18n 迁移把遗留 `log.error("msg", e)` 改写成 `log.error(I18n.get("log.xxx", e))`：模板没有对应占位符，MessageFormat 丢弃该参数；日志调用退化成 `String` 重载，SLF4J 不再打印堆栈
+fix_or_guardrail: 异常永远作为日志调用的**最后一个参数**传递；`I18n.get` 只接收模板占位符能消费的普通参数；模板占位符最大序号 + 1 必须等于传参个数，且两套语言包的键集合、非空值与占位符集合保持一致
+evidence: .agents/summary/i18n-log-args/2026-09-19-i18n-log-argument-contract.zh-CN.md; src/test/java/com/aionemu/boot/i18n/LocalizedLogArgumentsTest.java; 3e40f5116^:src/main/java/com/aionemu/commons/database/DB.java （`log.warn("Error executing select query: {}", query, var17)`）
+validation: focused-test（LocalizedLogArgumentsTest 2 例 + LocalizedLogCallsTest + I18nTest 共 10 例；叠加 KnownListTest/KnownListIterationSafetyTest/GameHousing* 的 34 例套件全绿）；static（verify_invariant.py 覆盖 1708 个调用点、0 违规；583 处改写、170 个文件、18 个模板修正）；runtime 未重启服务端，KnownList 根因仍待复现确认
+boundaries: 27 处非日志 `I18n.get` 用法（`String.format`/返回值）只做参数计数校验，不在闸门语义内；异常搬出 `I18n.get` 后消息不再内联异常 `toString()`，改由堆栈承载（这是恢复遗留 SLF4J 行为，不是新约定）；闸门的异常识别是命名启发式（e/ex/varN/new XxxException），不是类型分析
+superseded_by: none
+first_check: 见到「有异常但没有堆栈」或「一行空日志」时，先回到该调用点确认异常是否还留在 `I18n.get` 参数里；新增或修改日志后跑 LocalizedLogArgumentsTest 与 verify_invariant.py
+-->
+
+1. **规则**：`log.error(I18n.get("k", a, e))` → `log.error(I18n.get("k", a), e);`。`I18n.get` 返回普通 `String`，SLF4J 只有收到 Throwable 才打印堆栈。
+2. **遗留语义对照**：迁移前 `log.warn("Error executing select query: {}", query, var17)` 依赖「占位符少于参数 + 末参为 Throwable」打印堆栈；迁移把它变成纯文本，本次按遗留行为恢复。
+3. **闸门**：`LocalizedLogArgumentsTest` 静态扫描 `src/main/java` 校验参数计数、异常参数与双语一致性；`.agents/summary/i18n-log-args/verify_invariant.py` 是可复算的全量离线版本。
+4. **新增键命名**：`log.<sha1(英文模板)[:12]>`（例：`log.113eb26bcfad`），两套语言包必须同时新增。

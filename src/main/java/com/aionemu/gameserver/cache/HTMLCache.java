@@ -149,7 +149,7 @@ public final class HTMLCache {
 
 				entry.setValue(newHtml);
 			} catch (RuntimeException e) {
-				log.warn(I18n.get("log.948e032dffdf", entry.getKey(), e));
+				log.warn(I18n.get("log.948e032dffdf", entry.getKey()), e);
 			}
 		}
 
@@ -303,7 +303,7 @@ public final class HTMLCache {
 
 				return content;
 			} catch (Exception e) {
-				log.warn(I18n.get("log.c8b1dfe19197", e));
+				log.warn(I18n.get("log.c8b1dfe19197"), e);
 			} finally {
 				IOUtils.closeQuietly(bis);
 			}

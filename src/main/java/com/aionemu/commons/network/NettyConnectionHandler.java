@@ -292,7 +292,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
             buffer.position(buffer.position() + payloadSize);
             return connection.processData(packetBuffer);
         } catch (IllegalArgumentException e) {
-            log.warn(I18n.get("log.cd089b86f7e3", connection, size, buffer.remaining(), e));
+            log.warn(I18n.get("log.cd089b86f7e3", connection, size, buffer.remaining()), e);
             return false;
         }
     }

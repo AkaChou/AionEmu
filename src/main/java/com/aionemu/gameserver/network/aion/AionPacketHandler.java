@@ -154,7 +154,7 @@ public class AionPacketHandler {
 				PckBuffer.put(tmpBuffer.get());
 			} while (tmpBuffer.remaining() > 0);
 		} catch (Exception e) {
-			log.warn(I18n.get("log.142161450d0f", e));
+			log.warn(I18n.get("log.142161450d0f"), e);
 		}
 		PckBuffer.position(0);
 		return PckBuffer;

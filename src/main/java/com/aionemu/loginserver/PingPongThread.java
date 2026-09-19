@@ -55,7 +55,7 @@ public class PingPongThread implements Runnable {
             try {
                 Thread.sleep(Config.PINGPONG_DELAY);
             } catch (InterruptedException e) {
-                log.warn(I18n.get("log.28e4e10e61fd", e));
+                log.warn(I18n.get("log.28e4e10e61fd"), e);
                 Thread.currentThread().interrupt();
                 return;
             }
@@ -72,7 +72,7 @@ public class PingPongThread implements Runnable {
                     updateSvStatsOnline(info.getId(), info.getCurrentPlayers(), info.getMaxPlayers());
                 }
             } catch (Exception ex) {
-                log.error(I18n.get("log.2d2a3f2b47fe", connection.getGameServerInfo().getId(), ex));
+                log.error(I18n.get("log.2d2a3f2b47fe", connection.getGameServerInfo().getId()), ex);
             }
         }
     }
@@ -109,7 +109,7 @@ public class PingPongThread implements Runnable {
                     try {
                         new ProcessBuilder("taskkill", "/pid", String.valueOf(serverPID), "/f").start();
                     } catch (IOException e) {
-                        log.error(I18n.get("log.8ab4345d6c71", serverPID, e));
+                        log.error(I18n.get("log.8ab4345d6c71", serverPID), e);
                     }
                 }
             }

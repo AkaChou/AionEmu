@@ -322,9 +322,12 @@ public class KnownList {
 	 */
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
 		int counter = 0;
+		// 记录当前访问对象，异常时才能定位到具体 NPC。 / Track the current target so a failure names the exact NPC.
+		Npc current = null;
 		try {
 			for (VisibleObject newObject : knownObjectsSnapshot()) {
 				if (newObject instanceof Npc npc) {
+					current = npc;
 					if ((++counter) == iterationLimit) {
 						break;
 					}
@@ -332,7 +335,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.70e363d7c042", ex));
+			log.error(I18n.get("log.70e363d7c042", describe(owner), describe(current), counter), ex);
 		}
 		return counter;
 	}
@@ -357,9 +360,13 @@ public class KnownList {
 	 */
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
 		int counter = 0;
+		// 同上，带所有者的遍历单独使用一条消息，便于区分两条报错路径。
+		// As above; the owner variant keeps its own message so the two failure paths stay distinguishable.
+		Npc current = null;
 		try {
 			for (VisibleObject newObject : knownObjectsSnapshot()) {
 				if (newObject instanceof Npc npc) {
+					current = npc;
 					if ((++counter) == iterationLimit) {
 						break;
 					}
@@ -367,9 +374,32 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.70e363d7c042", ex));
+			log.error(I18n.get("log.113eb26bcfad", describe(owner), describe(current), counter), ex);
 		}
 		return counter;
+	}
+
+	/**
+	 * 生成诊断用的对象标识：类型、对象 ID、名称与所在地图。
+	 * Builds a diagnostic object identity: type, object id, name, and world id.
+	 *
+	 * <p>该方法只服务于异常兜底日志，自身不得再抛异常；名称不可用时降级为 ID。
+	 * It only serves the failure-path log and must not throw, degrading to the id when the name is unusable.</p>
+	 *
+	 * @param object 目标对象，可为 null / target object, may be null
+	 * @return 形如 {@code Npc#12345 Foo@210050000} 的标识 / identity such as {@code Npc#12345 Foo@210050000}
+	 */
+	private static String describe(VisibleObject object) {
+		if (object == null) {
+			return "null";
+		}
+		String identity = object.getClass().getSimpleName() + "#" + object.getObjectId();
+		try {
+			return identity + " " + object.getName() + "@" + object.getWorldId();
+		} catch (RuntimeException nameUnavailable) {
+			// 名字取不到时保留 ID，避免诊断日志再次失败。 / Keep the id when the name is unavailable.
+			return identity;
+		}
 	}
 
 	/**
@@ -389,7 +419,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.77c1d3d24013", ex));
+			log.error(I18n.get("log.77c1d3d24013"), ex);
 		}
 	}
 
@@ -407,7 +437,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.e15440de12ca", ex));
+			log.error(I18n.get("log.e15440de12ca"), ex);
 		}
 	}
 

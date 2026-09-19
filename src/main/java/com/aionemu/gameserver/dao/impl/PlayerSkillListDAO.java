@@ -100,7 +100,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.d0d2b39236dc", playerId, e));
+            log.error(I18n.get("log.d0d2b39236dc", playerId), e);
         }
 
         return new PlayerSkillList(skills);
@@ -152,7 +152,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
                 throw e;
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.6790b402b724", player.getObjectId(), e));
+            log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
             return false;
         }
 
@@ -304,7 +304,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.32a835694574", playerObjId, skillId, e));
+            log.error(I18n.get("log.32a835694574", playerObjId, skillId), e);
         }
 
         return null;
@@ -334,7 +334,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.c08c665f848c", playerObjId, skillId, e));
+            log.error(I18n.get("log.c08c665f848c", playerObjId, skillId), e);
         }
 
         return 0;

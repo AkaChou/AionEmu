@@ -191,14 +191,6 @@ public class HousingBidService extends AbstractCronTask {
 			if (!checkAutoFillingLimits(house.getPlayerRace(), house.getHouseType())) {
 				continue;
 			}
-	/**
-	 * 将房屋加入拍卖（可指定起拍价）。
-	 * Adds a house to the auction (optional initial price).
-	 *
-	 * house
-	 * initial price
-	 * whether successful
-	 */
 			addHouseToAuction(house, house.getDefaultAuctionPrice());
 			count++;
 		}
@@ -307,7 +299,16 @@ public class HousingBidService extends AbstractCronTask {
 		for (Entry<Integer, HouseBidEntry> playerBid : playerBids.entrySet()) {
 			int playerId = playerBid.getKey();
 			HouseBidEntry houseBid = getBidByEntryIndex(playerBid.getValue().getEntryIndex());
+			if (houseBid == null) {
+				continue;
+			}
 			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
+			// 住宅记录缺失时跳过该条竞拍，避免空指针中断整场拍卖结算。
+			// Skip the bid when its house record is missing instead of aborting the whole auction pass.
+			if (house == null) {
+				log.warn(I18n.get("log.15485b0c4e93", houseBid.getAddress()));
+				continue;
+			}
 			if (playerBid.getValue().getBidPrice() == houseBid.getBidPrice()) {
 				if (house.getOwnerId() == 0) {
 					winners.put(houseBid, playerId);
@@ -321,6 +322,12 @@ public class HousingBidService extends AbstractCronTask {
 			if (houseBid.getBidCount() > 0) {
 				continue;
 			}
+			// 同上：住宅记录缺失时无法判定归属，跳过该条竞拍。
+			// As above: without the house record the ownership check is impossible, so skip the bid.
+			if (house == null) {
+				log.warn(I18n.get("log.15485b0c4e93", houseBid.getAddress()));
+				continue;
+			}
 			if (house.getOwnerId() != 0) {
 				failedSell.put(houseBid, house.getOwnerId());
 			}
@@ -330,18 +337,15 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		for (Entry<HouseBidEntry, Integer> winData : winners.entrySet()) {
 			House wonHouse = GameHousingServices.housingService().getHouseByAddress(winData.getKey().getAddress());
+			// 成交前再次校验住宅记录，缺失时不能进入过户流程。 / Re-check the house record; a missing one must not enter the transfer flow.
+			if (wonHouse == null) {
+				log.warn(I18n.get("log.15485b0c4e93", winData.getKey().getAddress()));
+				continue;
+			}
 			if (getPlayerData(winData.getValue()) == null) {
 				log.warn(I18n.get("log.441ce3c83b43", winData.getValue(), winData.getKey().getAddress()));
 				continue;
 			}
-	/**
-	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
-	 * Completes a house auction sale for the winner and transfers ownership.
-	 *
-	 * @param winner 赢家公共数据 / winner common data
-	 * obtained house
-	 * auction result
-	 */
 			completeHouseSell(getPlayerData(winData.getValue()), wonHouse);
 		}
 		long time = System.currentTimeMillis();
@@ -383,20 +387,16 @@ public class HousingBidService extends AbstractCronTask {
 				MailFormatter.sendHouseAuctionMail(soldHouse, sellerPcd, AuctionResult.SUCCESS_SALE, time, returnKinah);
 				soldHouse.revokeOwner();
 			}
-	/**
-	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
-	 * Completes a house auction sale for the winner and transfers ownership.
-	 *
-	 * @param winner 赢家公共数据 / winner common data
-	 * obtained house
-	 * auction result
-	 */
 			completeHouseSell(buyerPcd, soldHouse);
 		}
 		for (Entry<HouseBidEntry, Integer> notSoldData : failedSell.entrySet()) {
 			HouseBidEntry bidEntry = notSoldData.getKey();
 			PlayerCommonData sellerPcd = getPlayerData(notSoldData.getValue());
 			House bidHouse = GameHousingServices.housingService().getHouseByAddress(bidEntry.getAddress());
+			if (bidHouse == null) {
+				log.warn(I18n.get("log.15485b0c4e93", bidEntry.getAddress()));
+				continue;
+			}
 			if (sellerPcd.isOnline()) {
 				PacketSendUtility.sendPacket(sellerPcd.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_AUCTION_FAIL(bidHouse.getAddress().getId()));
 			}
@@ -435,17 +435,13 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		for (HouseBidEntry houseBid : copy) {
 			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
+			if (house == null) {
+				log.warn(I18n.get("log.15485b0c4e93", houseBid.getAddress()));
+				continue;
+			}
 			DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
 			if (house.getOwnerId() == 0) {
 				house.setStatus(HouseStatus.NOSALE);
-	/**
-	 * 将房屋加入拍卖（可指定起拍价）。
-	 * Adds a house to the auction (optional initial price).
-	 *
-	 * house
-	 * initial price
-	 * whether successful
-	 */
 				addHouseToAuction(house);
 				house.save();
 			}
@@ -586,14 +582,6 @@ public class HousingBidService extends AbstractCronTask {
 	 * whether successful
 	 */
 	public boolean addHouseToAuction(House house) {
-	/**
-	 * 将房屋加入拍卖（可指定起拍价）。
-	 * Adds a house to the auction (optional initial price).
-	 *
-	 * house
-	 * initial price
-	 * whether successful
-	 */
 		return addHouseToAuction(house, house.getDefaultAuctionPrice());
 	}
 

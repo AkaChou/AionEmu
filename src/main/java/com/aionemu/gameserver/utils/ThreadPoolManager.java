@@ -262,7 +262,7 @@ public final class ThreadPoolManager {
 			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
 			success |= awaitTermination(10000);
 		} catch (InterruptedException e) {
-			log.warn(I18n.get("log.8f2ed10ffefe", e));
+			log.warn(I18n.get("log.8f2ed10ffefe"), e);
 			Thread.currentThread().interrupt();
 		}
 		log.info(I18n.get("log.e2793575e244", success, (System.currentTimeMillis() - begin)));
@@ -473,7 +473,7 @@ public final class ThreadPoolManager {
 		@Override
 		protected void onTermination(Throwable exception) {
 			if (exception != null) {
-				log.error(I18n.get("log.07f358910e11", this.getName(), exception));
+				log.error(I18n.get("log.07f358910e11", this.getName()), exception);
 			}
 			super.onTermination(exception);
 		}

@@ -53,7 +53,7 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.5a3357334006", playerId, e));
+			log.error(I18n.get("log.5a3357334006", playerId), e);
 		}
 		return new RecipeList(recipeList);
 	}
@@ -73,7 +73,7 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 			addRecipeInTransaction(con, playerId, recipeId);
 			return true;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.23c5276a9d26", playerId, recipeId, e));
+			log.error(I18n.get("log.23c5276a9d26", playerId, recipeId), e);
 			return false;
 		}
 	}
@@ -93,7 +93,7 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 			delRecipeInTransaction(con, playerId, recipeId);
 			return true;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.05178d165c29", playerId, recipeId, e));
+			log.error(I18n.get("log.05178d165c29", playerId, recipeId), e);
 			return false;
 		}
 	}

@@ -87,7 +87,7 @@ public class InvasionZoneInstance extends ZoneInstance {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.cc03391ccf0f", ex));
+			log.error(I18n.get("log.cc03391ccf0f"), ex);
 		}
 	}
 
