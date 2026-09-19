@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.e2e.HandoverContinuationContract;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -30,6 +32,9 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		80908, 80909, 80910, 80911, 80912, 80913, 80914, 80915, 80916, 80917, 80918,
 		80919, 80947, 80948, 80949, 80950, 80951, 80953
 	};
+	private static final Path CLIENT_MAPPING = Path.of("docs/quest/client-dialog-mapping");
+	private static ClientResourceOracle clientOracle;
+
 	private static final List<Integer> DROP_SOURCE_QUESTS = List.of(
 		15011, 15021, 15022, 15044, 15052, 15071, 15102, 15103, 15502, 15505, 15508,
 		15511, 15514, 15517, 15523, 15526, 15532, 15535, 15538, 25502, 25505, 25508,
@@ -157,7 +162,14 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		}
 	}
 
-	private static void assertItemCheck(QuestDefinition definition, int npcId) {
+	private static ClientResourceOracle oracle() throws Exception {
+		if (clientOracle == null) {
+			clientOracle = ClientResourceOracle.load(CLIENT_MAPPING);
+		}
+		return clientOracle;
+	}
+
+	private static void assertItemCheck(QuestDefinition definition, int npcId) throws Exception {
 		List<QuestTransition> checks = talkRoutes(definition, "started", npcId, 39);
 		assertEquals(2, checks.size(), "quest " + definition.id() + " item check branches");
 		QuestTransition success = checks.stream()
@@ -176,9 +188,14 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		assertEquals("reward", success.targetNode(), "quest " + definition.id() + " successful target");
 		assertEquals(expectedConditions, success.conditions(), "quest " + definition.id() + " item conditions");
 		assertEquals(expectedActions, success.actions(), "quest " + definition.id() + " item removals");
+		// 客户端确认页按钮是本地关闭（HACTION_FINISH_DIALOG）时不能作为续接点：同 NPC 有续接页的任务
+		// 交付成功后直接下发续接页，否则保留客户端确认页 10000。
+		// A client-local-close confirmation button cannot carry the continuation: quests whose same NPC has a
+		// continuation page show it directly after the hand-over, everyone else keeps confirmation page 10000.
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(10000)), success.afterCommit(),
+			new AfterCommitAction.ShowQuestDialog(HandoverContinuationContract.handOverSuccessPage(definition,
+				npcId, oracle()))), success.afterCommit(),
 			"quest " + definition.id() + " successful page");
 		assertEquals("started", failure.targetNode(), "quest " + definition.id() + " failed target");
 		assertTrue(failure.conditions().isEmpty(), "quest " + definition.id() + " failed fallback");

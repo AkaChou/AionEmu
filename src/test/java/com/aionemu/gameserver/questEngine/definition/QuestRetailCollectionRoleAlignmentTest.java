@@ -157,8 +157,11 @@ class QuestRetailCollectionRoleAlignmentTest {
 				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703085, false, false),
 			collection(25538, 806255, 806255, items(item(182216066, 10)),
 				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703295, false, false),
+			// 交付成功后直接进入奖励窗：该任务客户端确认页 10000 的按钮是本地关闭，不能承载服务端续接。
+			// Straight into the reward window: this quest's client confirmation page 10000 button is a local
+			// close and cannot carry a server continuation.
 			collection(25690, 806697, 806697, items(item(186000474, 1)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 0, false, true));
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id(), 0, false, true));
 	}
 
 	private static CollectionCase collection(int questId, int startNpcId, int rewardNpcId,

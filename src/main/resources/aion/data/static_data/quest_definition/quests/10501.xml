@@ -232,6 +232,20 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
       </after-commit>
     </transition>
+    <!-- 交付成功分支：Aion 5.8 客户端把 check_user_item_ok(10000) 页的唯一按钮渲染为 HACTION_FINISH_DIALOG
+         （中文按钮“递过证物”），点击只本地关闭窗口并发送 CM_CLOSE_DIALOG，服务端收不到 FINISH_DIALOG(1008)
+         任务动作（2026-09-19 实机 trace：下发 10000 后没有 CM_DIALOG_SELECT 1008，玩家重新对话才收到 10002），
+         因此该页无法承载服务端续接。这里直接下发本任务的 select_success(10002) 报告页——与 REWARD 态入口页
+         相同——由 SELECT_QUEST_REWARD(1009) 打开奖励窗口，玩家不需要再对话一次。物品不足分支保留
+         check_user_item_fail(10001) 及其关闭按钮的 SELECT_QUEST 落点。
+         Hand-over success branch: the Aion 5.8 client renders the only check_user_item_ok(10000) button as
+         HACTION_FINISH_DIALOG ("hand over the evidence"); clicking it only closes the window locally and sends
+         CM_CLOSE_DIALOG, so the server never receives a FINISH_DIALOG(1008) quest action (live trace 2026-09-19:
+         no CM_DIALOG_SELECT 1008 after page 10000, and the player had to re-open the dialogue to reach page
+         10002). That page therefore cannot carry a server continuation. This branch shows the quest's own
+         select_success(10002) report page - the same page the REWARD-state entry shows - whose
+         SELECT_QUEST_REWARD(1009) opens the reward window, so no second dialogue is needed. The item-missing
+         branch keeps check_user_item_fail(10001) and its close button's SELECT_QUEST landing. -->
     <transition source="s6" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804700" action="CHECK_USER_HAS_QUEST_ITEM"/>
@@ -246,7 +260,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s6">
