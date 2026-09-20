@@ -270,19 +270,20 @@ status: CONFIRMED
 scope: worlds with a terrain heightmap 下“可移动、非飞行”刷点的出生 Z 解析（SpawnEngine.projectedSpawnZ）与 geo/地形数据边界
 first_seen: 2026-09-20
 last_verified: 2026-09-20
-symptom: NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高
+symptom: NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m；Kaldor 600090000 / 804471、802432 作者 Z=200.89/201.00 是要塞地面 bu_ru_fortress_ground_01a.cgf 的站位，运行期被压到 197.77827/197.874，低约 2.0m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高
 root_cause: SpawnEngine.projectedSpawnZ 的兜底顺序是 PATH 可行走地面 → 地形高度 → 非攻击对象保留作者 Z → geo 面；地形高度图只描述地表、不含岩石/建筑等道具网格，PATH 又因 0.7m 垂直容差未命中，于是“作者 Z 落在碰撞网格上”的正确高度被地形高度覆盖
-fix_or_guardrail: PATH 失败后先取地形：地形与作者 Z 贴合（≤1m，AUTHORED_SURFACE_DELTA）时直接采用地形；否则查 geo 碰撞面，贴合作者 Z（≤1m）则采用碰撞面；两者都不贴合才退回地形。无地形 world 的既有 keepsAuthoredZ/geo 兜底分支与 resolve_z 的 SpawnSurfaceResolver（geo 优先）保持不变；不要用“只给报障点加 resolve_z/fly”之类的单点数据补丁替代该顺序修正
-evidence: commit 1bbfbc793（本次修复）；src/main/java/com/aionemu/gameserver/spawnengine/SpawnEngine.java:317-390；src/test/java/com/aionemu/gameserver/spawnengine/SpawnEnginePathProjectionTest.java（新增 prefersCollisionSurfaceMatchingAuthoredZOverTerrainFallback）；.agents/summary/inggison-somation-rock-z/2026-09-20-805334-somation-rock-top.zh-CN.md；离线复现 terrain float32=473.55777 等于运行期 curZ；geo 巨岩面 489.77418 等于作者 Z（岩石网格 na_l_dark_rockgnbig_02a）；真端 Inggison 出生表 npc_info 805334 z=491.812439；全量同族审计 47 world / 1342 候选 / 346 点；客户端实机验收（2026-09-20 用户确认）
-validation: static + 离线复现完成（含全量同族审计：1342 个“作者 Z 高于地形 >1m 且 PATH 未命中”的刷点中 346 点脚下存在贴合碰撞面，会被地形兜底压到下层地面）；focused-test 通过（2026-09-20 mvn -B -Dtest=SpawnEnginePathProjectionTest test：4 例 0 失败 0 错误，BUILD SUCCESS）；客户端实机验收通过（2026-09-20 用户确认重启后 805334 站在巨石上）
-boundaries: 贴合容差取 1m；地形与作者 Z 差 <1m 的分支不查 geo（启动性能），该区间内“网格面才是真站位面”的偏差不会被修正；不覆盖“作者 Z 低于下方网格面/位于网格内部”与 resolve_z 路线；TERRAIN_DISABLED_MAPS 或缺 PNG 的 world 行为不变；审计按 PHYSICAL 碰撞面与精确 XY 三角形包含复现，未覆盖 geo 其他碰撞意图
+fix_or_guardrail: PATH 失败后先取地形：地形与作者 Z 贴合（≤1m，AUTHORED_TERRAIN_DELTA）时直接采用地形；否则查 geo 碰撞面，贴合作者 Z（≤2m，AUTHORED_SURFACE_DELTA）则采用碰撞面；两者都不贴合才退回地形。无地形 world 的既有 keepsAuthoredZ/geo 兜底分支与 resolve_z 的 SpawnSurfaceResolver（geo 优先）保持不变；不要用“只给报障点加 resolve_z/fly”之类的单点数据补丁替代该顺序修正
+evidence: commit 1bbfbc793（1m 首版修复）；本次修复（2026-09-20 2m 容差）；src/main/java/com/aionemu/gameserver/spawnengine/SpawnEngine.java:82-94,357-370；src/test/java/com/aionemu/gameserver/spawnengine/SpawnEnginePathProjectionTest.java（prefersCollisionSurfaceMatchingAuthoredZOverTerrainFallback 增加 Kaldor 804471/802432）；.agents/summary/inggison-somation-rock-z/2026-09-20-805334-somation-rock-top.zh-CN.md；.agents/summary/spawn-z-audit/2026-09-20-kaldor-fortress-floor-tolerance.zh-CN.md；.agents/summary/spawn-z-audit/audit_surface_delta.py；离线复现 Kaldor geo 面 199.75025 与 199.75024，terrainZ 197.77827 与 197.874，作者 Z 200.89 与 201.00；全量 47 world 复核 674 个有物理面的候选中 ≤1m 333 点、1–2m 196 点、>2m 145 点；客户端实机验收 PENDING
+validation: static + 离线复核完成（Kaldor 804471/802432 的碰撞面偏差 1.14/1.25m，落在新 2m 容差内；全量 47 world 复核 674 个有物理面的候选中 196 点位于 1–2m 带，其中 194 点网格面高于地形、会改变运行期结果）；focused-test 通过（mvn -B -Dtest=SpawnEnginePathProjectionTest test：4 例 0 失败 0 错误）；同时修正 Quest10520ClientDialogAlignmentTest 的 BitField.max() 为 maxValue()，该测试 8 例 0 失败；客户端实机验收 PENDING（重启后确认 804471/802432 站在要塞地面）
+boundaries: 地形贴合容差 1m，碰撞面贴合容差 2m；地形与作者 Z 差 <1m 的分支不查 geo（启动性能）；碰撞面与作者 Z 差 >2m 的悬空/异常点仍回退地形，不覆盖 resolve_z 路线；TERRAIN_DISABLED_MAPS 或缺 PNG 的 world 行为不变；审计按 PHYSICAL 碰撞面与精确 XY 三角形包含复现，未覆盖 geo 其他碰撞意图
 superseded_by: none
 first_check: SpawnEngine.projectedSpawnZ 的兜底顺序，以及 //geo z 的 curZ / terrainZ / pathGround / spawnZ 四项对比
-keywords: NPC 在石头下面, 出生在下方地面, curZ 等于 terrainZ, pathGround=null, spawnZ 明显更高, 作者 Z 被压到地面, rock top, prop mesh collision, 刷点高度, 贴地兜底
+keywords: NPC 在石头下面, 出生在下方地面, curZ 等于 terrainZ, pathGround=null, spawnZ 明显更高, 作者 Z 被压到地面, rock top, prop mesh collision, 刷点高度, 贴地兜底, 要塞地面, 1-2m 容差, Kaldor, 600090000, 804471, 802432, bu_ru_fortress_ground_01a
 -->
 
 - **现象判据**：`//geo z` 同时满足 `curZ ≈ terrainZ`、`pathGround=null`、`spawnZ` 明显高于 `curZ`，基本可以判定“作者 Z 落在网格碰撞面，被地形兜底压到下层地面”。
 - **根因**：地形高度图（`geo/<world>.png`）只描述地表，岩石/建筑/桥面/机关等由 `geo/<world>.geo.gz` + `models.mesh` 提供；`PathData` 的 0.7m 垂直容差会判定“站在道具上的刷点”投影失败，随后的地形兜底与真实站位面相差可达十几米。
-- **修复契约**：地形与作者 Z 贴合才用地形；不贴合时用“与作者 Z 贴合（≤1m）的 geo 碰撞面”；两者都不贴合才退回地形。这样既修“站在道具上被压到地面”，也保留“作者 Z 悬空（真端数据错误）时压回地形”的既有修复。
-- **取证方法**：离线用 `models.mesh` + `geo/<world>.geo.gz` 复现 `GeoMap.getZ`（PHYSICAL 面 + 放置物 loc/rotation/scale），即可在不启动服务端的前提下给出该点全部碰撞面高度；见 `.agents/summary/inggison-somation-rock-z/geo_surface_probe.py`。
+- **Kaldor 复现**：600090000 同一要塞地面网格 `bu_ru_fortress_ground_01a.cgf` 上，802431/802358 的作者 Z 与网格面差 0.83m（旧 1m 容差已覆盖），804471/802432 差 1.14/1.25m（旧容差遗漏，被压到 197.778/197.874）。这证明是容差边界问题，不是单个 NPC 数据错误。
+- **修复契约**：地形与作者 Z 贴合（≤1m）才用地形；不贴合时用“与作者 Z 贴合（≤2m）的 geo 碰撞面”；两者都不贴合才退回地形。这样既修“站在道具上被压到地面”，也保留“作者 Z 悬空（真端数据错误）时压回地形”的既有修复。
+- **取证方法**：离线用 `models.mesh` + `geo/<world>.geo.gz` 复现 `GeoMap.getZ`（PHYSICAL 面 + 放置物 loc/rotation/scale），即可在不启动服务端的前提下给出该点全部碰撞面高度；见 `.agents/summary/inggison-somation-rock-z/geo_surface_probe.py` 与 `.agents/summary/spawn-z-audit/audit_surface_delta.py`（运行脚本后在本地生成全量审计输出）。
 - **教训**：任何“贴地/兜底”修复都要区分“地表高度”与“碰撞面高度”，并用同族审计（world 级全量刷点 × geo 面）给出影响面，而不是只修报障的那一个点。

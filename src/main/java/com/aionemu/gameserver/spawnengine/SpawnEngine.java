@@ -82,10 +82,16 @@ public class SpawnEngine {
 	private static final float GEO_FALLBACK_WARN_DELTA = 10.0f;
 
 	/**
-	 * 作者 Z 贴合容差（米）：判定出生点是否落在某个碰撞面/地形的站面上。
-	 * Tolerance (m) for accepting a collision surface or the terrain as the authored standing ground.
+	 * 地形贴合容差（米）：地形高度图与作者 Z 贴合时直接采用地形。
+	 * Tolerance (m) for accepting the terrain heightmap as the authored standing ground.
 	 */
-	private static final float AUTHORED_SURFACE_DELTA = 1.0f;
+	private static final float AUTHORED_TERRAIN_DELTA = 1.0f;
+
+	/**
+	 * 碰撞面贴合容差（米）：作者 Z 与物理碰撞面的最大允许偏差。
+	 * Tolerance (m) for accepting a physical collision surface as the authored standing ground.
+	 */
+	private static final float AUTHORED_SURFACE_DELTA = 2.0f;
 
 	/** 已告警的 (worldId, npcId) 与上限，避免同一模板在启动期刷屏。 / Warned (worldId, npcId) pairs and their cap, to avoid startup log flooding. */
 	private static final Set<Long> GEO_FALLBACK_WARNED = ConcurrentHashMap.newKeySet();
@@ -351,7 +357,7 @@ public class SpawnEngine {
 		// PATH 节点容差外的出生点（如出生 Z 悬空于树冠上方）：用地形高度兜底，避免出生即悬空
 		float terrainZ = terrainHeight.apply(npc);
 		if (!Float.isNaN(terrainZ)) {
-			if (Math.abs(terrainZ - authoredZ) <= AUTHORED_SURFACE_DELTA) {
+			if (Math.abs(terrainZ - authoredZ) <= AUTHORED_TERRAIN_DELTA) {
 				return terrainZ;
 			}
 			// 作者 Z 明显高于地形，如 geo 碰撞面与作者 Z 贴合，说明 NPC 站在地形高度图不含的

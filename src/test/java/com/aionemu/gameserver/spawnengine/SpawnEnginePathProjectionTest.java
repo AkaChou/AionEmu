@@ -81,6 +81,19 @@ class SpawnEnginePathProjectionTest {
 
 		assertEquals(489.77418f, SpawnEngine.projectedSpawnZ(npc, rock, ignored -> null,
 			ignored -> 473.55777f, ignored -> 489.77418f));
+		// 600090000 Kaldor 804471/802432：作者 Z 高于要塞地面 1.14~1.25m，仍在新的 2m 碰撞面容差内。
+		// World 600090000 Kaldor 804471/802432: the authored Z sits 1.14~1.25m above the fortress floor,
+		// inside the new 2m collision-surface tolerance.
+		SpawnTemplate fortressFloor = SpawnEngine.createSpawnTemplate(600090000, 804471, 1313.42f, 1318.52f,
+			200.89f, (byte) 61);
+		assertEquals(199.75026f, SpawnEngine.projectedSpawnZ(npc, fortressFloor, ignored -> null,
+			ignored -> 197.77827f, ignored -> 199.75026f));
+
+		SpawnTemplate fortressFloorNeighbor = SpawnEngine.createSpawnTemplate(600090000, 802432, 1311.22f, 1314.03f,
+			201.0f, (byte) 45);
+		assertEquals(199.75024f, SpawnEngine.projectedSpawnZ(npc, fortressFloorNeighbor, ignored -> null,
+			ignored -> 197.874f, ignored -> 199.75024f));
+
 		// 碰撞面与作者 Z 不贴合时仍按原语义用地形兜底。 / A non-matching surface still falls back to the terrain.
 		assertEquals(473.55777f, SpawnEngine.projectedSpawnZ(npc, rock, ignored -> null,
 			ignored -> 473.55777f, ignored -> 473.58194f));
