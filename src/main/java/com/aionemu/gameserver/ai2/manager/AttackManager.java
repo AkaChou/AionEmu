@@ -63,9 +63,14 @@ public class AttackManager {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "AttackManager: scheduleNextAttack");
 		}
-		if (stopRetailChase(npcAI)) {
-			return;
-		}
+		// 追击超时/出生点回家只能在“目标确实不可攻击”时判定。攻击调度本身可能已经进入近战射程，
+		// 在此时调用 stopRetailChase 会让 857784 这类 max_chase_time=sp 的怪物打一下就转身回家。
+		// 真正不可攻击时 SimpleAttackManager#performAttack 会发出 TARGET_TOOFAR，再由 targetTooFar
+		// 进入同一套追击判定，因此这里不能提前做脱战检查。
+		// Retail chase/return checks must run only when the target is actually unreachable. Attack scheduling can
+		// already be inside melee range, so checking stopRetailChase here makes max_chase_time=sp NPCs disengage
+		// after one hit. performAttack emits TARGET_TOOFAR when the target is unreachable and routes through
+		// targetTooFar, so the chase check must not run early here.
 
 		// 检查是否已经调度了攻击，防止重复调度
 		// Check whether an attack is already scheduled to prevent duplicate scheduling

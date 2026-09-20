@@ -92,6 +92,29 @@ class AttackManagerTest {
 	}
 
 	/**
+	 * 攻击调度不得提前执行脱战检查：目标进入近战射程后，{@code max_chase_time=sp} 的 NPC 不能在每次攻击前
+	 * 随机回出生点。只有 {@code performAttack} 判定目标不可攻击并发出 {@code TARGET_TOOFAR} 后，追击/回家判定
+	 * 才能通过 {@code targetTooFar} 执行。
+	 * Attack scheduling must not run the chase-stop check early: once a {@code max_chase_time=sp} NPC is inside melee
+	 * range, it must not randomly return to spawn before each attack. The chase/return decision may run only from
+	 * {@code targetTooFar}, after {@code performAttack} reports {@code TARGET_TOOFAR}.
+	 *
+	 * @throws IOException 读取源码失败 / when the source cannot be read
+	 */
+	@Test
+	void attackSchedulingDoesNotStopRetailChase() throws IOException {
+		String source = Files.readString(ATTACK_MANAGER);
+		String schedule = methodBody(source, "public static void scheduleNextAttack(NpcAI2 npcAI)");
+		assertFalse(schedule.contains("stopRetailChase("),
+				"攻击调度不得提前脱战；目标在近战射程内时 857784 这类 sp 怪物会打一次就回家。"
+						+ " / Attack scheduling must not stop retail chase early; sp NPCs such as 857784 disengage after one hit.");
+		String targetTooFar = methodBody(source, "public static void targetTooFar(NpcAI2 npcAI)");
+		assertTrue(targetTooFar.contains("stopRetailChase(npcAI)"),
+				"目标确实不可攻击时仍须保留追击/回家判定。"
+						+ " / The chase/return decision must remain on the unreachable-target path.");
+	}
+
+	/**
 	 * 按大括号配对提取指定方法体的源码片段。
 	 * Extracts a method body by brace matching.
 	 *
