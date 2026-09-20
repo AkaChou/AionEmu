@@ -393,20 +393,17 @@ public double getExpMultiplier() {
 				// 经验。 / EXP.
 				PacketSendUtility.sendPacket(this.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_DEVA);
 			}
-		} else if (this.getLevel() == 65 && !this.isArchDaeva()) {
-			boolean isCompleteQuest = false;
-			if (this.getPlayer().getRace() == Race.ELYOS) {
-				isCompleteQuest = this.getPlayer().isCompleteQuest(10520); // Covert Communiques.
-			} else {
-				isCompleteQuest = this.getPlayer().isCompleteQuest(20520); // Lost Destiny.
-			}
-			if (!isCompleteQuest) {
-				maxExp = 2066885620;
-				if (this.getExp() >= 2066885620) {
+		} else if (!this.isArchDaeva() && this.getLevel() < 66) {
+			long level66StartExp = DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(66);
+			if (Math.max(exp, this.getExp()) >= level66StartExp && isArchDaevaLevelCapped()) {
+				// 未完成高阶守护者入场任务前，经验最多停留在 66 级起始经验前一点。
+				// Before the ArchDaeva entry mission is complete, EXP stops just below the level-66 start.
+				maxExp = Math.min(maxExp, Math.max(0, level66StartExp - 1));
+				if (this.getExp() >= maxExp) {
 					// 可通过转职任务成为高阶守护者。 / You can become an Archdaeva through the class change mission.
 					// 完成任务后将达到 66 级，与当前经验无关。 / Once you complete the mission, you will reach level 66, regardless of your
 					// 经验。 / EXP.
-					PacketSendUtility.sendPacket(this.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_HIGHDEVA);
+					PacketSendUtility.sendPacket(getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_HIGHDEVA);
 				}
 			}
 		}
@@ -448,6 +445,23 @@ public double getExpMultiplier() {
 							this.getCurrentReposteEnergy(), this.getMaxReposteEnergy(), this.getBerdinStar(),
 							this.getAuraOfGrowth()));
 		}
+	}
+
+	/**
+	 * 判断在线角色是否仍受高阶守护者 65→66 经验门禁约束。
+	 * Whether the online character is still capped at the ArchDaeva 65→66 EXP boundary.
+	 * 离线加载返回 false，避免在任务状态恢复前改写已存经验值。
+	 * Returns false while offline so stored EXP reconstruction is not rewritten before quest state loading.
+	 *
+	 * @return 仍受门禁约束时为 true / true while the EXP cap still applies
+	 */
+	boolean isArchDaevaLevelCapped() {
+		Player player = getPlayer();
+		if (player == null) {
+			return false;
+		}
+		int questId = player.getRace() == Race.ELYOS ? 10520 : 20520;
+		return !player.isCompleteQuest(questId);
 	}
 
 	private void upgradePlayerData() {

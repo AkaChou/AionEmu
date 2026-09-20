@@ -154,6 +154,12 @@ public class CM_USE_ITEM extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
+		if (TeleportService2.isArchDaevaEntryWorld(item.getItemTemplate().getReturnWorldId())
+				&& !TeleportService2.meetsArchDaevaEntryRequirement(player,
+						item.getItemTemplate().getReturnWorldId())) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
 		HandlerResult result = GameEngineServices.questEngine().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
 		if (result == HandlerResult.FAILED) {
 			return;

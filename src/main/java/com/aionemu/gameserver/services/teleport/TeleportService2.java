@@ -103,6 +103,13 @@ public class TeleportService2 {
 	private static final int ELYOS_KAHRUN_ENTRY_QUEST_ID = 10100;
 	private static final int ASMODIAN_KAHRUN_ENTRY_QUEST_ID = 20100;
 	private static final int KAHRUN_ENTRY_QUEST_STEP = 1;
+	private static final int ELYOS_ILUMA_WORLD_ID = 210100000;
+	private static final int ASMODIAN_NORSVOLD_WORLD_ID = 220110000;
+	// 任务推进到传送到伊鲁玛/诺斯珀德的步骤后即开放本阵营新大陆交通。
+	// Reaching the teleport step of the level-65 ArchDaeva mission unlocks the racial continent.
+	private static final int ELYOS_ARCHDAEVA_ENTRY_QUEST_ID = 10520;
+	private static final int ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID = 20520;
+	private static final int ARCHDAEVA_ENTRY_QUEST_STEP = 4;
 	/**
 	 * 配置出口不在欧比斯、但副本内部传送 NPC 直达欧比斯的世界 ID。
 	 * Instance worlds whose configured exit points elsewhere while an in-instance portal NPC leads into the Abyss.
@@ -158,6 +165,12 @@ public class TeleportService2 {
 		}
 
 		if (isKahrunEntryWorld(locationTemplate.getMapId()) && !meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
+
+		if (isArchDaevaEntryWorld(locationTemplate.getMapId())
+				&& !meetsArchDaevaEntryRequirement(player, locationTemplate.getMapId())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
@@ -341,6 +354,47 @@ public class TeleportService2 {
 		return switch (race) {
 		case ELYOS -> ELYOS_KAHRUN_ENTRY_QUEST_ID;
 		case ASMODIANS -> ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
+		default -> 0;
+		};
+	}
+
+	/**
+	 * 判断目标世界是否为本阵营高阶守护者新大陆（伊鲁玛/诺斯珀德）。
+	 * Returns whether the target world is a racial ArchDaeva continent (Iluma/Norsvold).
+	 *
+	 * @param worldId 目标世界 ID / Target world id
+	 * @return 是否为高阶守护者新大陆 / whether it is an ArchDaeva continent
+	 */
+	public static boolean isArchDaevaEntryWorld(int worldId) {
+		return worldId == ELYOS_ILUMA_WORLD_ID || worldId == ASMODIAN_NORSVOLD_WORLD_ID;
+	}
+
+	/**
+	 * 检查玩家能否进入目标高阶守护者新大陆。
+	 * 本阵营世界必须由该阵营 10520/20520 的传送步骤解锁；敌对阵营沿用裂隙等既有规则。
+	 * Checks whether the player may enter the target ArchDaeva continent. A race's home world requires
+	 * that race's 10520/20520 teleport step; the opposite race keeps its existing rift rules.
+	 *
+	 * @param player 玩家 / Player
+	 * @param targetWorldId 目标世界 ID / Target world id
+	 * @return 是否允许进入 / whether entry is allowed
+	 */
+	public static boolean meetsArchDaevaEntryRequirement(Player player, int targetWorldId) {
+		int questId = getArchDaevaEntryQuestId(player.getRace(), targetWorldId);
+		return questId == 0 || meetsQuestRequirement(player.getQuestStateList().getQuestState(questId),
+				ARCHDAEVA_ENTRY_QUEST_STEP);
+	}
+
+	static boolean meetsArchDaevaEntryRequirement(Race race, int targetWorldId, QuestState questState) {
+		int questId = getArchDaevaEntryQuestId(race, targetWorldId);
+		return questId == 0 || (questState != null && questState.getQuestId() == questId
+				&& meetsQuestRequirement(questState, ARCHDAEVA_ENTRY_QUEST_STEP));
+	}
+
+	static int getArchDaevaEntryQuestId(Race race, int targetWorldId) {
+		return switch (race) {
+		case ELYOS -> targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+		case ASMODIANS -> targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
 		default -> 0;
 		};
 	}
@@ -631,6 +685,11 @@ public class TeleportService2 {
 		}
 		final int targetWorldId = resolveInggisonWorldId(worldId);
 		if (isKahrunEntryWorld(targetWorldId) && !player.isGM() && !meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return false;
+		}
+		if (isArchDaevaEntryWorld(targetWorldId) && !player.isGM()
+				&& !meetsArchDaevaEntryRequirement(player, targetWorldId)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return false;
 		}
@@ -1087,6 +1146,10 @@ public class TeleportService2 {
 			return;
 		}
 		if (isKahrunEntryWorld(worldId) && !meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
+		if (isArchDaevaEntryWorld(worldId) && !meetsArchDaevaEntryRequirement(player, worldId)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
