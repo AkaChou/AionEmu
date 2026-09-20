@@ -58,6 +58,11 @@ public class MultiReturnAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return false;
 		}
+		if (TeleportService2.isKahrunEntryWorld(returnData.getWorldId())
+				&& !TeleportService2.meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return false;
+		}
 		return true;
 	}
 

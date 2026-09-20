@@ -3861,7 +3861,9 @@
 	<!-- Levinshor Corridor -->
 	<portal_dialog npc_id="805608">
 	    <portal_path dialog="104" loc_id="6001001">
-		    <portal_req min_level="60" err_level="27"/>
+		    <portal_req min_level="60" err_level="27">
+				<quest_req quest_id="10100" quest_step="1"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Sanctum Corridor -->
@@ -3908,7 +3910,9 @@
 	<!-- Levinshor Corridor -->
 	<portal_dialog npc_id="805622">
 	    <portal_path dialog="104" loc_id="6001000">
-		    <portal_req min_level="60" err_level="27"/>
+		    <portal_req min_level="60" err_level="27">
+				<quest_req quest_id="20100" quest_step="1"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- Pandaemonium Corridor -->

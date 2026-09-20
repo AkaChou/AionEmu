@@ -72,6 +72,10 @@ public class PortalService {
 		int mapId = loc.getWorldId();
 		int playerSize = portalPath.getPlayerCount();
 		boolean isInstance = portalPath.isInstance();
+		if (TeleportService2.isKahrunEntryWorld(mapId) && !TeleportService2.meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
 		if (TeleportService2.isAbyssEntryWorld(mapId)
 				&& !isAbyssEntryAllowed(mapId, player.getWorldId(), player.isInInstance(),
 						TeleportService2.meetsAbyssEntryRequirement(player))) {

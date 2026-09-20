@@ -73,14 +73,14 @@
         <locations>
             <telelocation loc_id="2" price="32800" pricePvp="32800" type="REGULAR"/>
 			<telelocation loc_id="315" price="26000" pricePvp="26000" type="REGULAR"/>
-            <telelocation loc_id="376" price="10608" pricePvp="10608" type="REGULAR"/>
+            <telelocation loc_id="376" price="10608" pricePvp="10608" requiredQuest="10100" requiredQuestStep="1" type="REGULAR"/>
         </locations>
     </teleporter_template>
 	<teleporter_template npc_ids="801668" teleportId="62">
         <locations>
             <telelocation loc_id="7" price="32800" pricePvp="32800" type="REGULAR"/>
 			<telelocation loc_id="315" price="26000" pricePvp="26000" type="REGULAR"/>
-            <telelocation loc_id="377" price="10608" pricePvp="10608" type="REGULAR"/>
+            <telelocation loc_id="377" price="10608" pricePvp="10608" requiredQuest="20100" requiredQuestStep="1" type="REGULAR"/>
         </locations>
     </teleporter_template>  
     <teleporter_template npc_ids="801669" teleportId="14">
@@ -1693,7 +1693,7 @@
 			<telelocation loc_id="2" price="28800" pricePvp="28800" type="REGULAR"/>
 			<telelocation loc_id="313" price="8613" pricePvp="8613" requiredQuest="10031" requiredQuestStep="3" type="REGULAR"/>
 			<telelocation loc_id="329" price="19766" pricePvp="19766" type="REGULAR"/>
-			<telelocation loc_id="376" price="15970" pricePvp="15970" type="REGULAR"/>
+			<telelocation loc_id="376" price="15970" pricePvp="15970" requiredQuest="10100" requiredQuestStep="1" type="REGULAR"/>
 			<telelocation loc_id="599" price="33905" pricePvp="33905" type="REGULAR"/>
 		</locations>
 	</teleporter_template>
@@ -1756,7 +1756,7 @@
 			<telelocation loc_id="7" price="28800" pricePvp="28800" type="REGULAR"/>
 			<telelocation loc_id="314" price="8613" pricePvp="8613" requiredQuest="20031" requiredQuestStep="3" type="REGULAR"/>
 			<telelocation loc_id="328" price="19766" pricePvp="19766" type="REGULAR"/>
-			<telelocation loc_id="377" price="15970" pricePvp="15970" type="REGULAR"/>
+			<telelocation loc_id="377" price="15970" pricePvp="15970" requiredQuest="20100" requiredQuestStep="1" type="REGULAR"/>
 			<telelocation loc_id="600" price="33905" pricePvp="33905" type="REGULAR"/>
 		</locations>
 	</teleporter_template>
@@ -1854,7 +1854,7 @@
 		<locations>
 			<telelocation loc_id="7" price="46777" pricePvp="46777" type="REGULAR"/>
 			<telelocation loc_id="328" price="20385" pricePvp="20385" type="REGULAR"/>
-			<telelocation loc_id="377" price="22878" pricePvp="22878" type="REGULAR"/>
+			<telelocation loc_id="377" price="22878" pricePvp="22878" requiredQuest="20100" requiredQuestStep="1" type="REGULAR"/>
 		</locations>
 	</teleporter_template>
 	<teleporter_template npc_ids="805750" teleportId="1174">
@@ -1869,7 +1869,7 @@
 		<locations>
 			<telelocation loc_id="2" price="46777" pricePvp="46777" type="REGULAR"/>
 			<telelocation loc_id="329" price="20385" pricePvp="20385" type="REGULAR"/>
-			<telelocation loc_id="376" price="22878" pricePvp="22878" type="REGULAR"/>
+			<telelocation loc_id="376" price="22878" pricePvp="22878" requiredQuest="10100" requiredQuestStep="1" type="REGULAR"/>
 		</locations>
 	</teleporter_template>
 	<teleporter_template npc_ids="805775" teleportId="1176">

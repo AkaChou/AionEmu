@@ -97,6 +97,12 @@ public class TeleportService2 {
 	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_ID = 20031;
 	private static final int ELYOS_BALAUREA_ENTRY_QUEST_STEP = 3;
 	private static final int ASMODIAN_BALAUREA_ENTRY_QUEST_STEP = 3;
+	private static final int KAHRUN_WORLD_ID = 600100000;
+	// 任务推进到传送到哥尔哈的步骤后即永久开放常规交通。
+	// Reaching the quest step that teleports the player to Kahrun permanently unlocks regular travel there.
+	private static final int ELYOS_KAHRUN_ENTRY_QUEST_ID = 10100;
+	private static final int ASMODIAN_KAHRUN_ENTRY_QUEST_ID = 20100;
+	private static final int KAHRUN_ENTRY_QUEST_STEP = 1;
 	/**
 	 * 配置出口不在欧比斯、但副本内部传送 NPC 直达欧比斯的世界 ID。
 	 * Instance worlds whose configured exit points elsewhere while an in-instance portal NPC leads into the Abyss.
@@ -148,6 +154,11 @@ public class TeleportService2 {
 			if (player.isGM()) {
 				PacketSendUtility.sendMessage(player, "Missing info at teleport_location.xml with locId: " + locId);
 			}
+			return;
+		}
+
+		if (isKahrunEntryWorld(locationTemplate.getMapId()) && !meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
 
@@ -292,6 +303,44 @@ public class TeleportService2 {
 		return switch (race) {
 		case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_STEP;
 		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
+		default -> 0;
+		};
+	}
+
+	/**
+	 * 判断目标世界是否为哥尔哈。
+	 * Returns whether the target world is Kahrun.
+	 *
+	 * @param worldId 世界 ID / World id
+	 * @return 是否为哥尔哈 / whether it is Kahrun
+	 */
+	public static boolean isKahrunEntryWorld(int worldId) {
+		return worldId == KAHRUN_WORLD_ID;
+	}
+
+	/**
+	 * 检查玩家是否已通过本阵营 65 级使命抵达哥尔哈。
+	 * Checks whether the player has reached Kahrun through the racial level-65 mission.
+	 *
+	 * @param player 玩家 / Player
+	 * @return 是否允许前往哥尔哈 / whether Kahrun travel is allowed
+	 */
+	public static boolean meetsKahrunEntryRequirement(Player player) {
+		int questId = getKahrunEntryQuestId(player.getRace());
+		return questId != 0 && meetsQuestRequirement(player.getQuestStateList().getQuestState(questId),
+				KAHRUN_ENTRY_QUEST_STEP);
+	}
+
+	static boolean meetsKahrunEntryRequirement(Race race, QuestState questState) {
+		int questId = getKahrunEntryQuestId(race);
+		return questId != 0 && questState != null && questState.getQuestId() == questId
+				&& meetsQuestRequirement(questState, KAHRUN_ENTRY_QUEST_STEP);
+	}
+
+	static int getKahrunEntryQuestId(Race race) {
+		return switch (race) {
+		case ELYOS -> ELYOS_KAHRUN_ENTRY_QUEST_ID;
+		case ASMODIANS -> ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
 		default -> 0;
 		};
 	}
@@ -581,6 +630,10 @@ public class TeleportService2 {
 			return false;
 		}
 		final int targetWorldId = resolveInggisonWorldId(worldId);
+		if (isKahrunEntryWorld(targetWorldId) && !player.isGM() && !meetsKahrunEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return false;
+		}
 
 		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
 			GameGameplayServices.duelService().loseDuel(player);
@@ -1030,6 +1083,10 @@ public class TeleportService2 {
 			return;
 		}
 		if (isBalaureaEntryWorld(worldId) && !meetsBalaureaEntryRequirement(player, worldId)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
+		if (isKahrunEntryWorld(worldId) && !meetsKahrunEntryRequirement(player)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
