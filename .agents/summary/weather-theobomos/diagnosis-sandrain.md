@@ -409,4 +409,4 @@ MD5 `fb49f0c3f1fce43d798b453e1def6dcf`，即这次替换没有落到该副本；
   触发源在客户端本地 level 数据。
 
 完整证据链（Cry3DEngine 天气 CVar 清单、`sys_PakPriority` 散文件优先线索、客户端补丁包结构）
-见同目录 `server-control-boundary.md` 与 `patch/`。
+见同目录 `server-control-boundary.md`；补丁本体为仓库根 `patch/Levels/lf2a/Level.pak`（说明见 `patch/patch_documentation.md`）。
