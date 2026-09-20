@@ -228,6 +228,24 @@ public enum QuestDialogAction {
 		return value;
 	}
 
+	/**
+	 * 判断是否为客户端奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD）。
+	 * Returns whether the id is a client reward-window confirmation action
+	 * (SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD).
+	 *
+	 * <p>这些动作由全局奖励窗口发出，客户端可能携带上一个交互对象；服务端必须按
+	 * questId + action 解析，不能把该对象当作完成 NPC 绑定。</p>
+	 * <p>These actions come from the global reward window and may carry the previously
+	 * interacted object; the server must resolve them by questId + action instead of treating
+	 * that object as the completion NPC binding.</p>
+	 *
+	 * @param actionId 对话动作 ID / dialog action id
+	 * @return 是否为奖励窗口确认动作 / whether it is a reward-window confirmation action
+	 */
+	public static boolean isRewardWindowAction(int actionId) {
+		return actionId >= SELECTED_QUEST_REWARD1.id() && actionId <= SELECTED_QUEST_NOREWARD.id();
+	}
+
 	private static Map<Integer, QuestDialogAction> buildById() {
 		Map<Integer, QuestDialogAction> byId = new HashMap<>();
 		for (QuestDialogAction value : values()) {

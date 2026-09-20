@@ -43,6 +43,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManif
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
@@ -250,6 +251,20 @@ public class QuestEngine implements GameEngine {
 					QuestDispatchContract.EXCLUSIVE);
 				if (result.handled()) {
 					env.setQuestId(requestedOwner);
+					return true;
+				}
+				// 奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD）由全局 UI 发出，
+				// 客户端携带的交互对象可能不是完成路由绑定的报告 NPC；严格绑定未命中时按 questId + action
+				// 恢复 owner 内唯一的 REWARD -> COMPLETE 路由，避免动作 ID 被当作页面 ID 回显而 load fail。
+				// Reward-window confirmations come from global UI and may carry an interaction object that is
+				// not the completion route's report NPC; on a strict miss, recover the owner's unique
+				// REWARD -> COMPLETE route by questId + action instead of echoing the action id as a page id.
+				if (event instanceof QuestEvent.TalkToNpc talk
+						&& QuestDialogAction.isRewardWindowAction(env.getDialogId())
+						&& typed.dispatchRewardWindowAction(talk, player.getObjectId(), requestedOwner)) {
+					env.setQuestId(requestedOwner);
+					log.debug(I18n.get("log.quest_engine.reward_window_unpinned_recovery",
+						player.getName(), npc.getNpcId(), requestedOwner, env.getDialogId()));
 					return true;
 				}
 				// A failed typed owner still owns this exclusive route, but the interaction failed.

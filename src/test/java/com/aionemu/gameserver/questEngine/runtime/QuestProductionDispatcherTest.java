@@ -6,6 +6,7 @@ import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -338,6 +339,42 @@ class QuestProductionDispatcherTest {
 		assertEquals(List.of(new QuestEvent.QuestDialog(1002)), events);
 		assertEquals(List.of("setAutoCommit:false", "preflight", "apply", "state", "commit", "publish", "close"),
 			calls);
+	}
+
+	@Test
+	void rewardWindowConfirmationRecoversTheTurnInRouteWithoutTheReportNpc() {
+		// 复现 11323：奖励窗口确认动作带的是上一个交互对象(702745)，完成路由却绑定报告 NPC(798928)。
+		// Reproduces 11323: the reward-window confirmation carries the previously interacted object
+		// (702745) while the turn-in route is bound to the report NPC (798928).
+		CompiledQuestDefinition definition = QuestDsl.quest(11323)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 4)))
+			.node("complete", project(QuestStatus.COMPLETE, vars("var0", 4)))
+			.on(new QuestEvent.TalkToNpc(798928, 20000, 0)).from("unaccepted")
+			.then(QuestDsl.setVariable("var0", 0)).goTo("started")
+			.on(new QuestEvent.TalkToNpc(702745, 10255, 0)).from("started")
+			.then(QuestDsl.setVariable("var0", 4)).goTo("reward")
+			.on(new QuestEvent.TalkToNpc(798928, 23, 0)).from("reward")
+			.then(QuestDsl.completeQuest(0)).goTo("complete")
+			.afterCommit(QuestDsl.refreshPlayerStats())
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.COMPLETION))
+			.afterCommit(QuestDsl.showQuestSelectionDialog(10))
+			.compile();
+		List<String> calls = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.REWARD, 4, Map.of()));
+		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(702745, 23, 72989);
+
+		QuestEventRouter.DispatchResult strict = dispatcher.dispatch(event, 7, 11323,
+			QuestDispatchContract.EXCLUSIVE);
+		assertFalse(strict.consumed(), "strict NPC binding must miss before recovery");
+		assertTrue(calls.isEmpty());
+
+		assertTrue(dispatcher.dispatchRewardWindowAction(event, 7, 11323));
+		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
 	}
 
 	@Test

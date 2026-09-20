@@ -9,6 +9,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -157,6 +158,101 @@ public final class QuestProductionDispatcher {
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
 		return catalog.executables().stream().map(CompiledQuestDefinition::id).sorted().toList();
+	}
+
+	/**
+	 * 按 questId + action 恢复“奖励窗口确认动作”的唯一交付路由，并执行同一条事务/after-commit 管线。
+	 * Recovers the unique turn-in route of a reward-window confirmation action by questId + action and
+	 * executes it through the same transaction/after-commit pipeline.
+	 *
+	 * <p>奖励窗口由全局 UI 打开，客户端可能携带上一个交互对象，因此不能要求交互对象等于完成路由的 NPC。
+	 * 仅当 owner 内存在唯一的 REWARD -&gt; COMPLETE 且动作 ID 相同的路由时才执行；玩家状态与条件仍由
+	 * {@link QuestMutationPlanner} 按真实快照校验。</p>
+	 * <p>The reward window is opened by global UI, so the client may carry the previously interacted object
+	 * and the completion route's NPC binding cannot be required. The action only executes when the owner has
+	 * exactly one REWARD -&gt; COMPLETE route with the same action id; the player's real snapshot still gates
+	 * the planner.</p>
+	 *
+	 * @param event 权威运行时对话事件（交互对象 + 奖励窗口动作） /
+	 *              authoritative runtime talk event (interaction object + reward-window action)
+	 * @param playerId 玩家 / player
+	 * @param questId 任务 owner / quest owner
+	 * @return 是否已提交 / whether the action was executed
+	 */
+	public boolean dispatchRewardWindowAction(QuestEvent.TalkToNpc event, int playerId, int questId) {
+		Objects.requireNonNull(event, "event");
+		if (playerId <= 0 || questId <= 0) {
+			return false;
+		}
+		Integer dialogId = event.dialogId();
+		if (dialogId == null || !QuestDialogAction.isRewardWindowAction(dialogId)) {
+			return false;
+		}
+		CompiledQuestDefinition definition = catalog.findExecutable(questId).orElse(null);
+		if (definition == null) {
+			return false;
+		}
+		QuestTransition transition = selectRewardCompletionRoute(definition, dialogId);
+		if (transition == null) {
+			return false;
+		}
+		try (LazyConnection connection = new LazyConnection(connections)) {
+			QuestExecutionResult result = coordinator.executeRewardWindowAction(connection::get, playerId,
+				definition, event, transition, eventPort, actionPort, statePort, afterCommitPort);
+			if (result.status() == QuestExecutionStatus.COMMITTED) {
+				if (!result.afterCommitFailures().isEmpty()) {
+					log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
+						definition.id(), result.afterCommitFailures().size()));
+				}
+				return true;
+			}
+			return false;
+		} catch (Exception failure) {
+			throw new QuestProductionExecutionException(questId, failure);
+		}
+	}
+
+	/**
+	 * 选出 owner 内唯一的奖励窗口交付路由；条件/状态不满足由计划器判定，这里只做形状唯一性校验。
+	 * Selects the owner's unique reward-window turn-in route; the planner still decides whether conditions
+	 * and state hold, so this only enforces shape uniqueness.
+	 */
+	static QuestTransition selectRewardCompletionRoute(CompiledQuestDefinition definition, int dialogId) {
+		Objects.requireNonNull(definition, "definition");
+		QuestTransition selected = null;
+		for (QuestTransition transition : definition.definition().transitions()) {
+			if (!isRewardCompletionTransition(definition, transition, dialogId)) {
+				continue;
+			}
+			if (selected != null) {
+				// 同 owner 存在多条候选时 fail closed，避免把奖励发给未确认的分支。
+				// Fail closed when the owner declares several candidates instead of selecting an
+				// unconfirmed branch.
+				return null;
+			}
+			selected = transition;
+		}
+		return selected;
+	}
+
+	private static boolean isRewardCompletionTransition(CompiledQuestDefinition definition,
+			QuestTransition transition, int dialogId) {
+		if (!(transition.event() instanceof QuestEvent.TalkToNpc talk) || talk.dialogId() == null
+				|| talk.dialogId() != dialogId) {
+			return false;
+		}
+		return transition.sourceNode() != null && transition.targetNode() != null
+			&& nodeStatus(definition, transition.sourceNode()) == QuestStatus.REWARD
+			&& nodeStatus(definition, transition.targetNode()) == QuestStatus.COMPLETE;
+	}
+
+	private static QuestStatus nodeStatus(CompiledQuestDefinition definition, String label) {
+		for (QuestNode node : definition.definition().nodes()) {
+			if (node.label().equals(label)) {
+				return node.projection().status();
+			}
+		}
+		return null;
 	}
 
 	/**

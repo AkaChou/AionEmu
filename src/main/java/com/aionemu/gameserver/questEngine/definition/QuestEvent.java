@@ -753,7 +753,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	 * 将定义事件与一个权威运行时事件进行匹配。
 	 * Matches a definition event against one authoritative runtime event.
 	 */
-	static boolean matches(QuestEvent definition, QuestEvent actual) {
+	public static boolean matches(QuestEvent definition, QuestEvent actual) {
 		Objects.requireNonNull(definition, "definition");
 		Objects.requireNonNull(actual, "actual");
 		if (definition instanceof TalkToNpc expected && actual instanceof TalkToNpc observed) {

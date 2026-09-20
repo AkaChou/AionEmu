@@ -47,7 +47,28 @@ public final class QuestExecutionCoordinator {
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
 		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
-			statePort, afterCommitPort, QuestEvent.matches(transition.event(), event), false);
+			statePort, afterCommitPort, QuestEvent.matches(transition.event(), event), false, false);
+	}
+
+	/**
+	 * 执行奖励窗口确认动作的恢复路由：调用方已按 questId + action 选定转换，允许事件携带的交互对象
+	 * 不是完成路由绑定的 NPC。
+	 * Executes the recovery route of a reward-window confirmation action: the caller already selected the
+	 * transition by questId + action, so the event's interaction object is allowed to differ from the
+	 * completion route's NPC.
+	 *
+	 * <p>玩家状态、条件与动作可行性仍由 {@link QuestMutationPlanner} 按真实快照校验，
+	 * 未满足来源状态/条件时不会提交。</p>
+	 * <p>The player's state, conditions, and action feasibility are still validated against the real
+	 * snapshot by {@link QuestMutationPlanner}; nothing commits when the source state or conditions do
+	 * not hold.</p>
+	 */
+	QuestExecutionResult executeRewardWindowAction(Supplier<Connection> connections, int playerId,
+			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
+			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
+			QuestAfterCommitPort afterCommitPort) throws Exception {
+		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
+			statePort, afterCommitPort, false, false, true);
 	}
 
 	QuestExecutionResult executeSharedQuestAccept(Connection connection, int playerId,
@@ -66,13 +87,14 @@ public final class QuestExecutionCoordinator {
 		boolean matchesSharedAccept = transition.event() instanceof QuestEvent.TalkToNpc talk
 			&& talk.dialogId() != null && talk.dialogId() == event.dialogId();
 		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
-			statePort, afterCommitPort, matchesSharedAccept, true);
+			statePort, afterCommitPort, matchesSharedAccept, true, false);
 	}
 
 	private QuestExecutionResult executeValidated(Supplier<Connection> connections, int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort, boolean eventMatches, boolean sharedQuestAccept) throws Exception {
+			QuestAfterCommitPort afterCommitPort, boolean eventMatches, boolean sharedQuestAccept,
+			boolean unpinnedRewardWindow) throws Exception {
 		// 统一入口保证所有正式 owner 使用同一执行顺序。
 		// The single entry point guarantees one execution order for every production owner.
 		Objects.requireNonNull(connections, "connections");
@@ -85,7 +107,7 @@ public final class QuestExecutionCoordinator {
 		if (!definition.definition().transitions().contains(transition)) {
 			throw new IllegalArgumentException("transition does not belong to definition " + definition.id());
 		}
-		if (!eventMatches) {
+		if (!eventMatches && !unpinnedRewardWindow) {
 			throw new IllegalArgumentException("event does not match transition");
 		}
 		Objects.requireNonNull(eventPort, "eventPort");
@@ -93,13 +115,15 @@ public final class QuestExecutionCoordinator {
 		Objects.requireNonNull(statePort, "statePort");
 		Objects.requireNonNull(afterCommitPort, "afterCommitPort");
 		return serialExecutor.execute(playerId, () -> executeSerialized(connections, playerId, definition, event,
-				transition, eventPort, actionPort, statePort, afterCommitPort, sharedQuestAccept));
+				transition, eventPort, actionPort, statePort, afterCommitPort, sharedQuestAccept,
+				unpinnedRewardWindow));
 	}
 
 	private QuestExecutionResult executeSerialized(Supplier<Connection> connections, int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort, boolean sharedQuestAccept) throws Exception {
+			QuestAfterCommitPort afterCommitPort, boolean sharedQuestAccept,
+			boolean unpinnedRewardWindow) throws Exception {
 		QuestTransactionParticipant participant = QuestTransactionParticipant.none();
 		QuestMutationPlan appliedPlan = null;
 		boolean committed = false;
@@ -122,7 +146,9 @@ public final class QuestExecutionCoordinator {
 			Optional<QuestMutationPlan> plan = sharedQuestAccept
 				? QuestMutationPlanner.planSharedQuestAccept(definition, snapshot,
 					(QuestEvent.QuestDialog) event, transition)
-				: QuestMutationPlanner.plan(definition, snapshot, event, transition);
+				: unpinnedRewardWindow
+					? QuestMutationPlanner.planValidatedTransition(definition, snapshot, event, transition)
+					: QuestMutationPlanner.plan(definition, snapshot, event, transition);
 			if (plan.isEmpty()) {
 				return new QuestExecutionResult(QuestExecutionStatus.NO_MATCH, null, List.of());
 			}
