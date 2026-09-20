@@ -46,11 +46,18 @@
 		<table zone_id="2" att_ranking="1" code="5" name="Rain2_After" after="true"/>
         <table zone_id="2" att_ranking="1" code="6" name="Rain2_Before" before="true"/>
     </map>
-	<!-- Theobomos -->
-    <map id="210060000" zone_count="1" weather_count="2">
-		<table zone_id="1" att_ranking="2" code="1" name="Sand_Rain"/>
-        <table zone_id="1" att_ranking="2" code="2" name="Sand_Rain_Before" before="true"/>
-    </map>
+	<!--
+		Theobomos：客户端 SandRain / SandRain_Before 都指向 LF2A.Weather.LF2A_Rain，且没有 remain/after 档。
+		服务端下发 code 0 只能停止沙尘粒子，无法把天空从乌云恢复为 TimeEnv。故本图完全不注册天气表：
+		玩家加载地图时不会收到 SM_WEATHER，客户端保持 TimeEnv/Daylight 晴天。GM 命令会提示
+		"Region has no weather defined"。
+
+		Theobomos: both client-side SandRain / SandRain_Before options point to LF2A.Weather.LF2A_Rain and
+		have no remain/after state. Code 0 only stops the sand particles; it cannot restore the sky from the
+		dark-cloud weather layer back to TimeEnv. The map is therefore not registered in the weather table:
+		no SM_WEATHER is sent on map load, and the client stays on the TimeEnv/Daylight clear sky. The GM
+		command reports "Region has no weather defined".
+	-->
 	<!-- Iluma -->
     <map id="210100000" zone_count="1" weather_count="1">
 		<table zone_id="1" att_ranking="2" code="1" name="Rain"/>

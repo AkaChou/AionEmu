@@ -52,6 +52,29 @@
    - 全量 `mvn test`：`3247` 例，`13` 失败（全部经 HEAD `2f0752248` 干净副本基线复现，属既有 quest/AI 数据与审计闸门欠账），本次改造引入的 7 例已修复并沉淀 `AR-005`。
    - 收尾清理已完成：`MapRegion.getObjectsSnapshot()` 删除、`PacketProcessor` 去掉 `LinkedList` 强转。
    - **既有 13 例失败仍未处理**（quest 1722/1367/3935/80805/10032、SETPRO 领奖审计、Retail AI 定义计数 134/133、WorldScoped waypoint 3206/3207、windstream 兼容映射、Theobomos 编队），如需修复应另开任务。
+4. **泰奥博莫斯（210060000）红/黄天空：根因已收敛，待实机验收**：
+   - 结论：客户端 `lf2a` 的 `WeatherSystem` 只有 `SandRain` / `SandRain_Before`，二者 Sky 都指向
+     `LF2A.Weather.LF2A_Rain`，且没有 remain/after 档；服务端下发 code 0 只能停止沙尘粒子，
+     客户端不会把天空从乌云退回 `TimeEnv/Daylight`。Poeta/Inggison 有 after 档，所以能恢复。
+   - 已处置：`weather_table.xml` 中 210060000 **整条移除**（不再注册天气表、不再下发 `SM_WEATHER`），
+     客户端加载时保持 `TimeEnv/Daylight` 晴天；`//weather THEOBOMOS 1` 预期提示
+     `Region has no weather defined`。`WeatherTable.zoneData` 的空列表初始化继续保留（`SDJ-004`）。
+   - 已排除：贝里特拉入侵（`beritra.enable=false` 后 `Id 13 is invalid`）；`lf2a` 天气 SkySkyDome 为空，
+     当前触发路径不是客户端 skydome 库。
+   - 待验收：重启服务端 + 完全重启客户端进图。若仍红黄，再改客户端
+     `Levels/lf2a/Level.pak`（优先散文件 `Levels/lf2a/mission_mission0.xml`），不要先回封标准 zip。
+   - 2026-09-20 12:47 追加：服务端已确认无 210060000 天气表、无 `SM_WEATHER`，实机仍不晴，
+     触发点已定位到客户端。已生成待验证补丁
+     `.agents/summary/weather-theobomos/client-patch-20260920-1249/`（含标准 zip 回封 `Level.pak`
+     与散文件 `unpacked/mission_mission0.xml`）；实测时优先散文件，回封 pak 需客户端接受度验证。
+   - 2026-09-20 13:58 追加：用户替换第一版 pak 后天空已正常，但地面/雾仍像黄昏。原因是
+     `invade_direct_portal` / `WorldRaid` 两个 cutscene TimeEnv 选项仍以
+     `time_name="Daylight"/"Night"`、`zonename=""` 与正常时段竞争；已把两者改名为 `*_disabled`、
+     `time_name` 同名、`zonename="__disabled__"`，对应 TimeofDayGroup 同步改名。最新补丁
+     `Level.pak` MD5 `f72b44b54f0989b9235519a4f3d21571`，XML MD5
+     `53839e5962aea7df4e9f6357267dfcd5`，待实机确认地面/雾恢复晴天。
+   - 证据：`.agents/summary/weather-theobomos/diagnosis-sandrain.md`、
+     探针 `.agents/summary/weather-theobomos/probe/TheobomosWeatherProbe.jsh`。
 
 ## 交接规则 (Handoff Rules)
 

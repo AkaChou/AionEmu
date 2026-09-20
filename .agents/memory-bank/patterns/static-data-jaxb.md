@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 静态模板数据、XML 映射及动态反射加载的底层事实。
 
-> Pattern IDs: `SDJ-001`–`SDJ-003`
+> Pattern IDs: `SDJ-001`–`SDJ-004`
 > card_status: ACTIVE; verify source and runtime evidence before treating a claim as universal
 > scope: static data loaders, XML/JAXB entities, and dynamically loaded server classes
-> last_reviewed: 2026-09-14
+> last_reviewed: 2026-09-20
 
 ---
 
@@ -89,3 +89,29 @@ first_check: hotspot_location.xml mapid, portal_loc.xml world_id, TeleportServic
 1. **实际世界不变量**：玩家可见的英吉斯温世界 ID 固定为 `210050000`；`210130000` 只允许存在于旧镜像服地图定义、其 zone/spawn 资源和兼容性归一代码中。
 2. **迁移面**：热点、门户坐标、副本出口、回城物品、剧情传送、任务世界/区域条件、风轨、天气、活动、攻城和 AI 区域必须同时迁移；只改热点会把传送入口和任务判定拆到两个世界。
 3. **运行时护栏**：`TeleportService2` 和 `HotspotTeleportService` 对英吉斯温镜像服目标做最终归一；数据回退或漏改时仍应落到 `210050000`。
+
+---
+
+## [SDJ-004] 四、JAXB 集合属性缺省即 null（允许零子元素的表必须初始化列表）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: JAXB 绑定的模板实体集合字段，以及允许 0 个子元素的静态数据表（如 weather_table.xml 的 map/table）
+first_seen: 2026-09-20
+last_verified: 2026-09-20
+symptom: 某张静态数据表被改成"零子元素"后在启动期抛 NullPointerException；实体 getter 返回 null 而不是空集合
+root_cause: JAXB 只为实际出现的子元素写入集合字段，XML 中一个子元素都没有时不会创建空 List，字段保持声明时的值（未初始化即 null）
+fix_or_guardrail: 允许零子元素的 List/Collection 字段必须在声明处初始化为 new ArrayList<>()；不要把"XML 至少有一个元素"当契约，以 XSD 的 minOccurs 为准
+evidence: src/main/java/com/aionemu/gameserver/model/templates/world/WeatherTable.java:32; src/main/resources/aion/data/static_data/weather_table.xsd; .agents/summary/weather-theobomos/diagnosis-sandrain.md
+validation: focused-test；探针用真实 JAXB 反序列化 + 真实服务私有方法反射调用验证（有元素时照常填充，无元素时得到空列表而非 null）
+boundaries: 只适用于允许零子元素的集合字段；语义上必须非空的表应改数据或让校验器报错，而不是加静默兜底
+superseded_by: none
+first_check: 目标字段是否声明为 List/Collection、XSD 与数据是否允许 0 个子元素、getter 是否可能返回 null
+-->
+
+1. **JAXB 不会为缺省的元素集合创建空 List**：XML 里没有对应子元素时，`List` 字段保持声明时的值；未初始化的字段就是 `null`，随后
+   `for (X x : table.getXs())` 抛 NPE（实测栈：`Cannot invoke "java.util.List.iterator()" because the return value of
+   "...getZoneData()" is null`）。
+2. **契约以 XSD 为准**：`weather_table.xsd` 的 `table` 是 `minOccurs="0"`，`<map id="210060000" zone_count="1" weather_count="0"/>`
+   是合法数据，模型必须能承受空集合，否则"把某图天气表清空"这种纯数据操作会让服务端启动失败。
+3. **护栏**：允许零子元素的集合字段一律在声明处 `= new ArrayList<>()`；有子元素时 JAXB 会往这个列表追加
+   （已回归验证：Poeta 的 7 条 weather 条目照常解析），初始化不改变正常数据的语义。

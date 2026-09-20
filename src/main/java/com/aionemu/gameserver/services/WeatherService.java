@@ -161,13 +161,14 @@ public class WeatherService {
 	}
 
 	/**
-	 * 按属性等级与时段修正随机选取天气条目。
-	 * Randomly picks a weather entry by attribute ranking with daytime correction.
+	 * 按属性等级与时段修正随机选取天气条目；前兆（before）与残留（after）档不作为独立天气参与抽取。
+	 * Randomly picks a weather entry by attribute ranking with daytime correction; sign (before) and remain
+	 * (after) entries never roll as standalone weather.
 	 *
-	 * creation time
-	 * weather table
-	 * zone id
-	 * weather entry
+	 * @param createdTime 天气创建时间，用于时段修正 / creation time used for the daytime correction
+	 * @param table 该地图的天气表 / weather table of the map
+	 * @param zoneId 天气区序号 / weather-zone ordinal
+	 * @return 选中的天气条目；未选中时为该区域的放晴条目 / the chosen entry, or a clear-weather entry for the zone
 	 */
 	private WeatherEntry getRandomWeather(GameTime createdTime, WeatherTable table, int zoneId) {
 		List<WeatherEntry> weathers = table.getWeathersForZone(zoneId);
@@ -184,6 +185,11 @@ public class WeatherService {
 				if (entry.getAttRanking() == -1) {
 					return entry;
 				}
+				// 前兆/残留档只作为过渡态，不能被抽成当前天气。
+				// Sign and remain entries are transitional states and must never become the current weather.
+				if (entry.isBefore() || entry.isAfter()) {
+					continue;
+				}
 				if (entry.getAttRanking() == attRanking) {
 					chosenWeather.add(entry);
 				}
@@ -196,27 +202,9 @@ public class WeatherService {
 		}
 		WeatherEntry newWeather = null;
 		if (chosenWeather.size() == 0) {
-			newWeather = new WeatherEntry();
+			newWeather = clearWeather(zoneId);
 		} else {
 			newWeather = chosenWeather.get(Rnd.get(chosenWeather.size()));
-			// 天气之前。 / Weather Before.
-			if (!newWeather.isBefore()) {
-				for (WeatherEntry entry : weathers) {
-					if (newWeather.getWeatherName().equals(entry.getWeatherName()) && entry.isBefore()) {
-						newWeather = entry;
-						break;
-					}
-				}
-			}
-			// 天气之后。 / Weather After.
-			if (!newWeather.isAfter()) {
-				for (WeatherEntry entry : weathers) {
-					if (newWeather.getWeatherName().equals(entry.getWeatherName()) && entry.isAfter()) {
-						newWeather = entry;
-						break;
-					}
-				}
-			}
 			int dayTimeCorrection = 1;
 			if (createdTime.getDayTime() == DayTime.AFTERNOON) {
 				dayTimeCorrection *= 2;
@@ -225,10 +213,21 @@ public class WeatherService {
 			if ((newWeather.getAttRanking() == 0 && chance > 33 / dayTimeCorrection)
 					|| (newWeather.getAttRanking() == 1 && chance > 50 / dayTimeCorrection)
 					|| (newWeather.getAttRanking() == 2 && chance > 66 / dayTimeCorrection)) {
-				newWeather = new WeatherEntry();
+				newWeather = clearWeather(zoneId);
 			}
 		}
 		return newWeather;
+	}
+
+	/**
+	 * 生成某个天气区的放晴条目，并保留正确的天气区序号。
+	 * Creates a clear-weather entry for the given zone, keeping the correct weather-zone ordinal.
+	 *
+	 * @param zoneId 天气区序号 / weather-zone ordinal
+	 * @return 放晴条目（code=0） / clear-weather entry (code=0)
+	 */
+	private WeatherEntry clearWeather(int zoneId) {
+		return new WeatherEntry(zoneId, 0);
 	}
 
 	/**
@@ -288,12 +287,9 @@ public class WeatherService {
 			return;
 		}
 		for (int i = 0; i < weatherEntries.length; i++) {
-			WeatherEntry oldEntry = weatherEntries[i];
-			if (oldEntry == null) {
-				weatherEntries[i] = new WeatherEntry(0, weatherCode);
-			} else {
-				weatherEntries[i] = new WeatherEntry(oldEntry.getZoneId(), weatherCode);
-			}
+			// 天气区序号固定取 i + 1，避免旧条目 zoneId=0 污染后续查询。
+			// The zone ordinal is always i + 1 so a polluted zone id (0) can never leak into later lookups.
+			weatherEntries[i] = new WeatherEntry(i + 1, weatherCode);
 		}
 		onWeatherChange(mapId, null);
 	}
@@ -306,8 +302,11 @@ public class WeatherService {
 		Set<WeatherKey> loadedWeathers = new HashSet<WeatherKey>(worldZoneWeathers.keySet());
 		for (WeatherKey key : loadedWeathers) {
 			WeatherEntry[] oldEntries = worldZoneWeathers.get(key);
+			if (oldEntries == null) {
+				continue;
+			}
 			for (int i = 0; i < oldEntries.length; i++) {
-				oldEntries[i] = new WeatherEntry(oldEntries[i].getZoneId(), 0);
+				oldEntries[i] = clearWeather(i + 1);
 			}
 			onWeatherChange(key.getMapId(), null);
 		}
@@ -323,12 +322,27 @@ public class WeatherService {
 	 */
 	public int getWeatherCode(int mapId, int weatherZoneId) {
 		WeatherEntry[] weatherEntries = getWeatherEntries(mapId);
+		if (weatherEntries == null) {
+			return 0;
+		}
 		for (WeatherEntry entry : weatherEntries) {
 			if (entry != null && entry.getZoneId() == weatherZoneId) {
 				return entry.getCode();
 			}
 		}
 		return 0;
+	}
+
+	/**
+	 * 返回指定地图当前天气条目的只读快照，供管理命令排查展示。
+	 * Returns a read-only snapshot of the given map's current weather entries for admin diagnostics.
+	 *
+	 * @param mapId 地图 ID / map id
+	 * @return 天气条目快照；该地图没有天气表时为空数组 / weather-entry snapshot; empty when the map has no weather table
+	 */
+	public WeatherEntry[] getWeatherSnapshot(int mapId) {
+		WeatherEntry[] weatherEntries = getWeatherEntries(mapId);
+		return weatherEntries == null ? new WeatherEntry[0] : weatherEntries.clone();
 	}
 
 	/**

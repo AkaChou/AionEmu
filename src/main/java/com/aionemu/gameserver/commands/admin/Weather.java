@@ -4,9 +4,9 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.templates.world.WeatherEntry;
 import com.aionemu.gameserver.model.templates.world.WeatherTable;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
-import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapType;
@@ -40,10 +40,11 @@ public class Weather extends AdminCommand
 		String regionName = null;
 		if (params.length == 0) {
 			int weatherCode = -1;
+			int weatherZoneId = 0;
 			List<ZoneInstance> zones = admin.getActiveRegion().getZones(admin);
 			for (ZoneInstance regionZone : zones) {
 				if (regionZone.getZoneTemplate().getZoneType() == ZoneClassName.WEATHER) {
-					int weatherZoneId = DataManager.ZONE_DATA.getWeatherZoneId(regionZone.getZoneTemplate());
+					weatherZoneId = DataManager.ZONE_DATA.getWeatherZoneId(regionZone.getZoneTemplate());
 					weatherCode = GameRuntimeServices.weatherService().getWeatherCode(admin.getWorldId(), weatherZoneId);
 					regionName = regionZone.getZoneTemplate().getXmlName();
 					break;
@@ -51,8 +52,15 @@ public class Weather extends AdminCommand
 			} if (weatherCode == -1) {
 				PacketSendUtility.sendMessage(admin, "No weather.");
 			} else {
-				PacketSendUtility.sendMessage(admin, "Weather code for region " + regionName + " is " + weatherCode);
+				// 一并打印天气区序号：未登记的 zone id 与服务端晴天都会输出 0，只给代码无法区分。
+				// Also print the weather-zone ordinal: an unregistered zone id and a real clear state both read as 0.
+				PacketSendUtility.sendMessage(admin, "Weather code for region " + regionName + " (weather zone "
+					+ weatherZoneId + ") is " + weatherCode);
 			}
+			// 玩家可能站在天气区外，故无条件打印整图快照，便于排查客户端与服务器天气不一致。
+			// The player may stand outside every weather zone, so always print the whole-map snapshot.
+			PacketSendUtility.sendMessage(admin,
+				"Server weather of map " + admin.getWorldId() + ": " + describeWeather(admin.getWorldId()));
 			return;
 		} if (params.length > 2) {
 			onFail(admin, null);
@@ -91,6 +99,37 @@ public class Weather extends AdminCommand
 		} else {
 			PacketSendUtility.sendMessage(admin, "Region " + regionName + " not found");
 		}
+	}
+
+	/**
+	 * 汇总指定地图的服务端天气快照，形如 {@code zone 1=1(Sand_Rain)}。
+	 * Summarizes the server-side weather snapshot of a map, e.g. {@code zone 1=1(Sand_Rain)}.
+	 *
+	 * @param mapId 地图 ID / map id
+	 * @return 快照文本；无天气表时为 {@code no weather table} / snapshot text, or {@code no weather table}
+	 */
+	private String describeWeather(int mapId) {
+		WeatherEntry[] entries = GameRuntimeServices.weatherService().getWeatherSnapshot(mapId);
+		if (entries.length == 0) {
+			return "no weather table";
+		}
+		StringBuilder description = new StringBuilder();
+		for (int i = 0; i < entries.length; i++) {
+			if (i > 0) {
+				description.append(", ");
+			}
+			WeatherEntry entry = entries[i];
+			description.append("zone ").append(i + 1).append('=');
+			if (entry == null) {
+				description.append("unset");
+				continue;
+			}
+			description.append(entry.getCode());
+			if (entry.getWeatherName() != null) {
+				description.append('(').append(entry.getWeatherName()).append(')');
+			}
+		}
+		return description.toString();
 	}
 
 	/**

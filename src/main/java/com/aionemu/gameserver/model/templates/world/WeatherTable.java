@@ -21,9 +21,16 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherTable", propOrder = { "zoneData" })
 public class WeatherTable {
-	/** 获取区域数据。 / Returns the zone data. */
+	/**
+	 * 区域天气条目；天气表允许为空（{@code weather_count="0"} 且无 {@code <table>} 子节点）时
+	 * JAXB 不会写入该字段，故必须初始化为空列表，否则 {@link #getWeathersForZone(int)} 与
+	 * {@link #getWeatherAfter(WeatherEntry)} 会空指针。
+	 *
+	 * Zone weather entries; when a table is empty (no {@code <table>} child) JAXB leaves this field
+	 * untouched, so it must start as an empty list to keep the lookup methods null-safe.
+	 */
 	@XmlElement(name = "table", required = true)
-	protected List<WeatherEntry> zoneData;
+	protected List<WeatherEntry> zoneData = new ArrayList<WeatherEntry>();
 
 	/** 返回天气数量 / Returns the weather count */
 	@XmlAttribute(name = "weather_count", required = true)
