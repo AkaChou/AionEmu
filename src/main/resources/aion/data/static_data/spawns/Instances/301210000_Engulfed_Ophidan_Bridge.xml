@@ -81,10 +81,7 @@
 		<spawn npc_id="802044">
 			<spot x="492.81982" y="536.56732" z="598.24933" h="0"/>
 		</spawn>
-		<!-- Defense Post Magus -->
-		<spawn npc_id="233474">
-			<spot x="484.61765" y="531.6245" z="597.375" h="70"/>
-		</spawn>
+
 		<!-- Defense Post Combatant -->
 		<spawn npc_id="233475">
 			<spot x="483.3327" y="538.1493" z="597.5" h="58"/>
@@ -105,22 +102,11 @@
 		<spawn npc_id="233478">
 			<spot x="525.0882" y="436.3445" z="620.25" h="27"/>
 		</spawn>
-		<!-- Northern Approach Post Combatant -->
-		<spawn npc_id="233479">
-			<spot x="519.06854" y="434.295" z="620.125" h="45"/>
-		</spawn>
-		<!-- Northern Approach Post Magician -->
-		<spawn npc_id="233480">
-			<spot x="533.65063" y="428.35898" z="620.25" h="5"/>
-		</spawn>
 		<!-- Southern Approach Post Flag -->
 		<spawn npc_id="802041">
 			<spot x="602.73395" y="556.29407" z="591.52533" h="0"/>
 		</spawn>
-		<!-- Southern Approach Post Combatant -->
-		<spawn npc_id="233481">
-			<spot x="610.57794" y="559.381" z="590.625" h="5"/>
-		</spawn>
+
 		<!-- Southern Approach Post Scout -->
 		<spawn npc_id="233482">
 			<spot x="593.646" y="556.11426" z="590.5221" h="58"/>
@@ -132,18 +118,6 @@
 		<!-- Guard Post Flag -->
 		<spawn npc_id="802035">
 			<spot x="667.11389" y="474.22995" z="600.48346" h="0"/>
-		</spawn>
-		<!-- Guard Post Magus -->
-		<spawn npc_id="233484">
-			<spot x="674.94977" y="478.36877" z="599.5594" h="8"/>
-		</spawn>
-		<!-- Guard Post Combatant -->
-		<spawn npc_id="233485">
-			<spot x="672.62286" y="467.2902" z="599.53894" h="107"/>
-		</spawn>
-		<!-- Guard Post Scout -->
-		<spawn npc_id="233486">
-			<spot x="660.30194" y="466.5498" z="599.8218" h="77"/>
 		</spawn>
 		<!-- Guard Post Rearguard -->
 		<spawn npc_id="233487">

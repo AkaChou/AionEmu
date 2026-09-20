@@ -41,10 +41,6 @@
             <spot x="669.730652" y="431.983612" z="469.625000" h="0" resolve_z="true"/>
             <spot x="669.653564" y="428.010101" z="469.625000" h="0" resolve_z="true"/>
 		</spawn>
-		<!-- IDEternity_Q_Sado_Fi_N_65_An_01 -->
-		<spawn npc_id="857783">
-			<spot x="552.93384" y="351.93954" z="468.8791" h="21"/>
-		</spawn>
 		<!-- IDEternity_Q_Sado_Pr_N_65_An_01 -->
 		<spawn npc_id="857784">
 			<spot x="553.5677" y="512.37396" z="468.97675" h="61"/>

@@ -32,11 +32,7 @@
 		<spawn npc_id="236124">
 			<spot x="434.75275" y="182.36688" z="1682.2167" h="60"/>
 		</spawn>
-		<!-- Weakened Grotesque Deathchar Patroler -->
-		<spawn npc_id="236126">
-			<spot x="403.2626" y="238.516" z="1684.0736" h="90"/>
-            <spot x="404.62762" y="125.51749" z="1684.0736" h="30"/>
-		</spawn>
+
 		<!-- Weakened Grotesque Deathchar Slayer -->
 		<spawn npc_id="236128">
 			<spot x="458.43515" y="249.3523" z="1684.0737" h="61"/>
@@ -199,10 +195,7 @@
 		<spawn npc_id="236222">
 			<spot x="495.31705" y="152.06961" z="1688.2684" h="60"/>
 		</spawn>
-		<!-- Fetid Phantomscorch Chimera -->
-		<spawn npc_id="236223">
-			<spot x="772.6448" y="263.3362" z="1701.4059" h="75"/>
-		</spawn>
+
 		<!-- Fountless Lava Protector -->
 		<spawn npc_id="236225">
 			<spot x="545.58734" y="212.11098" z="1681.8224" h="59"/>
