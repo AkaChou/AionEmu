@@ -42,7 +42,7 @@
 | 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去） | `IR-010` | 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径 |
 | 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付） | `IR-011` | resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开 |
 | 副本销毁后日志持续刷“生成 NPC 209679/237219/237232/237217 时出错”，异常是 InstanceScaler.onBeforeSpawn → WorldPosition.getWorldMapInstance 的 NullPointerException（部分只记录裸 NPE） | `IR-012` | 副本销毁后仍在排队的延迟任务入口是否检查 isInstanceDestroyed，spawn 返回值与 getNpcs 列表返回值是否判空 |
-| NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高 | `IR-013` | SpawnEngine.projectedSpawnZ 的兜底顺序，以及 //geo z 的 curZ / terrainZ / pathGround / spawnZ 四项对比 |
+| NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m；Kaldor 600090000 / 804471、802432 作者 Z=200.89/201.00 是要塞地面 bu_ru_fortress_ground_01a.cgf 的站位，运行期被压到 197.77827/197.874，低约 2.0m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高 | `IR-013` | SpawnEngine.projectedSpawnZ 的兜底顺序，以及 //geo z 的 curZ / terrainZ / pathGround / spawnZ 四项对比 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
@@ -54,7 +54,7 @@
 | 关闭普通任务标记后 NPC 选择出现 load fail、隐藏任务 owner 截获或 action 被错误回显为 dialog page | `QE-009` | CM_DIALOG_SELECT.hasQuestDialogContext, resolveRoutedQuestId, DialogService.onSimpleDialogSelect and client packet sequence |
 | 未完成进入任务仍可从主城门户、固定回城或多目标回城路径进入欧比斯 | `QE-010` | PortalService.port, permission branch, portal_use quest_req, fixed return-item handlers and MultiReturnAction target index |
 | 任务完成后任务道具仍留在背包、工作物品不回收、任务书显示 COMPLETE 但道具未消失 | `QE-011` | quest_data.xml quest_work_items, compiled metadata.questWorkItems(), and every transition whose source is not REWARD and target is REWARD |
-| 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示；任务推进后客户端任务说明仍停留在上一行、不跟随服务端阶段 | `QE-012` | Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width、任务说明行索引是否仍读取 SECTION_0 |
+| 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示；任务推进后客户端任务说明仍停留在上一行、不跟随服务端阶段；或单变量阶段行走任务被写入高位 var 导致步数打包为 4099/8196 引起任务追踪 HTML 完全空白 | `QE-012` | Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width、任务说明行索引是否仍读取 SECTION_0 |
 | 继续听、电影重复播放、动画结束仍是原按钮、点击后无下一页 | `QE-013` | 客户端当前页 action、电影 transition 的完整 after-commit、后续页是否存在 |
 | 任务引擎启动崩溃、Can't initialize typed quest engine、AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK_TO_NPC、DUPLICATE_NODE_PROJECTION | `QE-014` | 冲突任务 XML 的 transitions 中同 NPC/同 action 的边、nodes 列表中的投影 (status + var)、counter 的 field 与 source/target 节点定义 |
 | 任务领奖/完成后刷 typed 任务已提交但有提交后动作失败、QUEST_AUDIT AFTER_COMMIT 失败、QuestAfterCommitException: after-commit action BroadcastZoneMissionEnd failed | `QE-015` | broadcast-zone-mission-end 的 quest-ids 是否包含自身或其他未声明 zone-mission-end 路由的 owner；目标 quest 的 transitions 是否存在 ZoneMissionEnd 事件 |

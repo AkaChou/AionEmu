@@ -153,6 +153,18 @@ class Quest10520ClientDialogAlignmentTest {
 			broadcastTargets(definition, 806080).questIds());
 	}
 
+	@Test
+	void advanceToRewardKeepsVar0AlignedWithClientStepCount() throws Exception {
+		for (int questId : List.of(10520, 20520)) {
+			QuestDefinition definition = load(questId).definition();
+			QuestNode rewardNode = node(definition, "reward");
+			assertEquals(5, rewardNode.projection().variables().get("var0"),
+				() -> "quest " + questId + " reward node must project var0=5 (client HTML step 5)");
+			assertEquals(5, definition.progressLayout().field("var0").max(),
+				() -> "quest " + questId + " var0 max must be 5");
+		}
+	}
+
 	private static AfterCommitAction.BroadcastZoneMissionEnd broadcastTargets(QuestDefinition definition,
 			int npcId) {
 		QuestTransition missionEnd = definition.transitions().stream()

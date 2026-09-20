@@ -5,7 +5,7 @@
       <race id="ASMODIANS"/>
     </races>
     <work-items>
-      <item id="164002348" count="1"/>
+      <item id="182216086" count="1"/>
     </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="138470688"/>
@@ -425,7 +425,6 @@
       </conditions>
       <actions>
         <remove-item item-id="182216086" count="1"/>
-        <remove-item item-id="164002348" count="1"/>
         <set-variable field="var0" value="12"/>
       </actions>
       <after-commit>

@@ -24,6 +24,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -570,6 +571,147 @@ class QuestMonsterProgressContractAuditTest {
 		assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1), unpack(state, layout));
 		state = apply(compiled, state, new QuestEvent.TalkToNpc(802347, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		assertEquals(QuestStatus.REWARD, state.status());
+	}
+
+	/**
+	 * 10101/20101：按客户端 Progress(2~!4) 仅通过单变量 var0 进行阶段行走（2->3->4）。
+	 * 严禁在高位声明或写入多余的 var2（SECTION_2），否则步数被打包为 4099/8196 导致客户端 HTML 渲染完全崩溃。
+	 * 10101/20101: walk phase steps only via the single variable var0 per client Progress(2~!4) (2->3->4).
+	 * Extra high-bit fields such as var2 (SECTION_2) are forbidden because packed steps like 4099/8196 break client HTML.
+	 */
+	@Test
+	void quest10101And20101WalkPhaseStepsWithoutCorruptingPackedStep() throws Exception {
+		for (int questId : List.of(10101, 20101)) {
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+			assertNotNull(layout.field("var0"), () -> "quest " + questId + " must declare var0");
+			assertNull(layout.field("var2"), () -> "quest " + questId + " must NOT declare var2");
+
+			QuestSnapshot state = new QuestSnapshot(7, questId, QuestStatus.START,
+				layout.pack(Map.of("var0", 2)), Map.of());
+			state = apply(compiled, state, new QuestEvent.KillNpc(234680));
+			assertEquals(Map.of("var0", 3), unpack(state, layout));
+			assertEquals(3, state.packedVariables(), () -> "quest " + questId + " step must be exactly 3, not corrupted by high bits");
+
+			state = apply(compiled, state, new QuestEvent.KillNpc(234680));
+			assertEquals(Map.of("var0", 4), unpack(state, layout));
+			assertEquals(4, state.packedVariables(), () -> "quest " + questId + " step must be exactly 4, not corrupted by high bits");
+		}
+	}
+
+	/**
+	 * 10101/20101：向波尔迪安 (802357) / 基西安 (802361) 交付计划书后处于 s8（var0=8），
+	 * 点击「移动到沙帕灵开拓地」(SET_SUCCEED 10255) 必须顺利切入 REWARD 态，无需不存在的幻象道具门禁。
+	 * 10101/20101: at s8 (var0=8) after submitting plans to Voltin (802357) / Kisian (802361),
+	 * clicking SET_SUCCEED (10255) must transition to REWARD status without phantom item gates.
+	 */
+	@Test
+	void quest10101And20101AdvanceToRewardWithoutPhantomItem() throws Exception {
+		Map<Integer, Integer> npcs = Map.of(10101, 802357, 20101, 802361);
+		for (var entry : npcs.entrySet()) {
+			int questId = entry.getKey();
+			int npcId = entry.getValue();
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+
+			QuestSnapshot state = new QuestSnapshot(7, questId, QuestStatus.START,
+				layout.pack(Map.of("var0", 8)), Map.of());
+			state = apply(compiled, state, new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SET_SUCCEED.id()));
+			assertEquals(QuestStatus.REWARD, state.status(),
+				() -> "quest " + questId + " should advance to REWARD status upon SET_SUCCEED with npc " + npcId);
+			assertEquals(Map.of("var0", 8), unpack(state, layout),
+				() -> "quest " + questId + " should retain var0 at 8 upon SET_SUCCEED with npc " + npcId);
+		}
+	}
+
+	/**
+	 * 10101/20101：向波尔迪安 (802357) / 基西安 (802361) 提交进攻计划书只需持有计划书本身 (182215452 / 182215453)，
+	 * 不得额外强求副本钥匙 (182215520 / 182215522)，钥匙在使用秘密回廊 (731532) 时即已消耗。
+	 * 10101/20101: submitting the invasion plan to Voltin (802357) / Kisian (802361) only requires the plan item,
+	 * not the dungeon key (182215520 / 182215522) which was already consumed upon using corridor portal 731532.
+	 */
+	@Test
+	void quest10101And20101SubmitInvasionPlanOnlyRequiresPlanItem() throws Exception {
+		Map<Integer, Integer> npcs = Map.of(10101, 802357, 20101, 802361);
+		Map<Integer, Integer> items = Map.of(10101, 182215452, 20101, 182215453);
+		for (var entry : npcs.entrySet()) {
+			int questId = entry.getKey();
+			int npcId = entry.getValue();
+			int planItemId = items.get(questId);
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+
+			QuestSnapshot state = new QuestSnapshot(7, questId, QuestStatus.START,
+				layout.pack(Map.of("var0", 7)), Map.of(planItemId, 1));
+			state = apply(compiled, state, new QuestEvent.TalkToNpc(npcId, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+			assertEquals(QuestStatus.START, state.status());
+			assertEquals(Map.of("var0", 8), unpack(state, layout),
+				() -> "quest " + questId + " should advance var0 to 8 upon presenting invasion plan");
+		}
+	}
+
+	/**
+	 * 任务说明行在半路推进时（击杀阶段结束、感应区/交付步切换），提交后同步必须带可见性刷新。
+	 * Mid-route journal-row advances must carry a visibility refresh when the row changes.
+	 */
+	/**
+	 * 10526/20526：在 s11 向觉醒的德贾博 (806292 / 806297) 结算切入 REWARD 态，
+	 * 仅需扣除真正持有的任务道具 (182216074 / 182216086)，严禁因未曾发放的幻象道具 (164002347 / 164002348) 阻断交付。
+	 * 10526/20526: settling with Awakened Dezabo (806292 / 806297) at s11 into REWARD status
+	 * only removes the actual quest item held, without being blocked by phantom items (164002347 / 164002348).
+	 */
+	@Test
+	void quest10526And20526AdvanceToRewardWithoutPhantomItem() throws Exception {
+		Map<Integer, Integer> npcs = Map.of(10526, 806292, 20526, 806297);
+		Map<Integer, Integer> items = Map.of(10526, 182216074, 20526, 182216086);
+		for (var entry : npcs.entrySet()) {
+			int questId = entry.getKey();
+			int npcId = entry.getValue();
+			int itemId = items.get(questId);
+			CompiledQuestDefinition compiled = load(questId);
+			QuestDefinition definition = compiled.definition();
+			ProgressLayout layout = definition.progressLayout();
+
+			QuestSnapshot state = new QuestSnapshot(7, questId, QuestStatus.START,
+				layout.pack(Map.of("var0", 11)), Map.of(itemId, 1));
+			state = apply(compiled, state, new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SET_SUCCEED.id()));
+			assertEquals(QuestStatus.REWARD, state.status(),
+				() -> "quest " + questId + " should advance to REWARD status upon SET_SUCCEED with npc " + npcId);
+			assertEquals(Map.of("var0", 12), unpack(state, layout),
+				() -> "quest " + questId + " should set var0 to 12 upon SET_SUCCEED with npc " + npcId);
+		}
+	}
+
+	@Test
+	void midRouteJournalRowAdvancesCarryAVisibilityRefresh() throws Exception {
+		record RowAdvance(int questId, String source, String target) {
+		}
+		List<RowAdvance> advances = List.of(
+			new RowAdvance(10101, "s3", "s4"), new RowAdvance(10101, "s4", "s5"),
+			new RowAdvance(10101, "s5", "s6"), new RowAdvance(10101, "s6", "s7"),
+			new RowAdvance(10101, "s7", "s8"),
+			new RowAdvance(20101, "s3", "s4"), new RowAdvance(20101, "s4", "s5"),
+			new RowAdvance(20101, "s5", "s6"), new RowAdvance(20101, "s6", "s7"),
+			new RowAdvance(20101, "s7", "s8"),
+			new RowAdvance(14021, "s6", "s7"), new RowAdvance(24014, "s4", "s5"));
+		for (RowAdvance advance : advances) {
+			CompiledQuestDefinition compiled = load(advance.questId());
+			QuestTransition transition = compiled.definition().transitions().stream()
+				.filter(candidate -> advance.source().equals(candidate.sourceNode())
+					&& advance.target().equals(candidate.targetNode()))
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("quest " + advance.questId() + " has no "
+					+ advance.source() + "->" + advance.target() + " route"));
+			boolean refreshed = transition.afterCommit().stream()
+				.filter(AfterCommitAction.SyncQuestState.class::isInstance)
+				.map(AfterCommitAction.SyncQuestState.class::cast)
+				.anyMatch(sync -> sync.mode().refreshVisibility());
+			assertTrue(refreshed, () -> "quest " + advance.questId() + " " + advance.source() + "->"
+				+ advance.target() + " advances the journal row and must refresh client visibility");
+		}
 	}
 
 	private static Map<String, Integer> unpack(QuestSnapshot snapshot, ProgressLayout layout) {

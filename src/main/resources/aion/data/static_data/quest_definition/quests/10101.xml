@@ -10,7 +10,6 @@
     <work-items>
       <item id="182215521" count="1"/>
       <item id="182215520" count="1"/>
-      <item id="182215577" count="1"/>
     </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="24617969"/>
@@ -24,7 +23,7 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -58,7 +57,7 @@
       <var name="var0" value="8"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="9"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -186,7 +185,7 @@
         <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s5">
@@ -201,7 +200,7 @@
       </actions>
       <after-commit>
         <play-movie movie-id="903"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">
@@ -229,7 +228,7 @@
         <set-variable field="var0" value="6"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -253,11 +252,12 @@
         <has-item item-id="182215520" count="1"/>
       </conditions>
       <actions>
+        <remove-item item-id="182215520" count="1"/>
         <set-variable field="var0" value="7"/>
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="600090000" x="1329.3481" y="928.4717" z="153.14037" heading="4"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -278,16 +278,14 @@
       </event>
       <conditions>
         <variable-is field="var0" value="7"/>
-        <has-item item-id="182215520" count="1"/>
         <has-item item-id="182215452" count="1"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215520" count="1"/>
         <remove-item item-id="182215452" count="1"/>
         <set-variable field="var0" value="8"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
@@ -319,11 +317,9 @@
       </event>
       <conditions>
         <variable-is field="var0" value="8"/>
-        <has-item item-id="182215577" count="1"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215577" count="1"/>
-        <set-variable field="var0" value="9"/>
+        <set-variable field="var0" value="8"/>
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="600090000" x="1299.16" y="1317.84" z="200.7" heading="100"/>

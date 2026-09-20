@@ -162,7 +162,7 @@
         <set-variable field="var0" value="5"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">

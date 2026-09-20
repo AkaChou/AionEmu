@@ -283,13 +283,13 @@ first_check: quest_data.xml quest_work_items, compiled metadata.questWorkItems()
 status: CONFIRMED
 scope: Quest progress bit-field layout for item/skill counters and Aion 5.8 client quest-summary SECTION placeholders
 first_seen: 2026-09-14
-last_verified: 2026-09-15
-symptom: 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示；任务推进后客户端任务说明仍停留在上一行、不跟随服务端阶段
-root_cause: 多段计数被紧凑放在 offset 0/4/8，而客户端脚本和旧 QuestVars 按 SECTION_n = 6*n 读取；或把任务说明行索引（阶段）从 SECTION_0 交换到 SECTION_1，使客户端行索引读到计数槽而停在固定行
-fix_or_guardrail: 当 Quest.pak 的 quest_script/HTML summary 引用 SECTION_N 时，varN 必须放在 offset=6*N 的 6-bit 位段，并用客户端脚本或旧 setQuestVarById(N) 对齐；阶段/任务说明行索引必须留在 SECTION_0，计数只能放 SECTION_1+，不得为了隔离计数而交换两者
-evidence: .agents/summary/quest-11468-taloc-item-sections/2026-09-14-client-section-mismatch.zh-CN.md; .agents/summary/quest-10032/2026-09-15-section0-stage-correction.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/definition/ClientQuestSectionAlignmentTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest10032ItemPlayClientCounterProductionFlowTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPacketOrderRegressionTest.java
-validation: focused regression ClientQuestSectionAlignmentTest, Quest10032ItemPlayClientCounterProductionFlowTest and QuestPacketOrderRegressionTest passed; production catalog 6193 definitions compiled with 0 failures and 0 whitelist violations; corrected 10032 layout still needs real-client re-verification
-boundaries: 有客户端证据证明的单字段紧凑布局可以保留；只有客户端脚本或旧 handler 明确寻址独立 SECTION 时才应用该规则
+last_verified: 2026-09-20
+symptom: 使用任务物品或技能后服务端进入 START，但客户端任务说明为空、只剩奖励或计数步骤不显示；任务推进后客户端任务说明仍停留在上一行、不跟随服务端阶段；或单变量阶段行走任务被写入高位 var 导致步数打包为 4099/8196 引起任务追踪 HTML 完全空白
+root_cause: 多段计数被紧凑放在 offset 0/4/8，而客户端脚本和旧 QuestVars 按 SECTION_n = 6*n 读取；或把任务说明行索引（阶段）从 SECTION_0 交换到 SECTION_1，使客户端行索引读到计数槽而停在固定行；或对客户端 Progress(min~!max) 纯阶段行走任务错误声明高位 varN（如 var2），打包后高位非零破坏客户端步骤校验
+fix_or_guardrail: 当 Quest.pak 的 quest_script/HTML summary 引用 SECTION_N 时，varN 必须放在 offset=6*N 的 6-bit 位段，并用客户端脚本或旧 setQuestVarById(N) 对齐；阶段/任务说明行索引必须留在 SECTION_0，计数只能放 SECTION_1+，不得为了隔离计数而交换两者；客户端声明为 Progress(min~!max) 的单变量阶段行走任务，严禁在高位声明或写入多余的 varN，必须保持纯 var0 推进
+evidence: .agents/summary/quest-11468-taloc-item-sections/2026-09-14-client-section-mismatch.zh-CN.md; .agents/summary/quest-10032/2026-09-15-section0-stage-correction.zh-CN.md; .agents/summary/quest-10101-door-and-counter/2026-09-20-10101-kill-counter-section2-and-door-evidence.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/definition/ClientQuestSectionAlignmentTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest10032ItemPlayClientCounterProductionFlowTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMonsterProgressContractAuditTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPacketOrderRegressionTest.java
+validation: focused regression ClientQuestSectionAlignmentTest, QuestMonsterProgressContractAuditTest, QuestDefinitionCatalogManifestTest and ProductionCatalogWhitelistVerificationTest passed (PRODUCTION_COMPILE_OK=6189, 0 failures, 0 violations); 10101 var2 high-bit pollution removed and verified clean step 3/4
+boundaries: 有客户端证据证明的单字段紧凑布局可以保留；只有客户端脚本或旧 handler 明确寻址独立 SECTION 时才应用该规则；对于客户端声明为 Progress(min~!max) 的单变量阶段行走任务，严禁在高位声明或写入多余的 varN，否则高位非零整型步数会导致客户端 HTML 渲染崩溃
 superseded_by: none
 first_check: Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width、任务说明行索引是否仍读取 SECTION_0
 -->
@@ -298,6 +298,7 @@ first_check: Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQ
 - **代表案例**：
   1. 11468/21468 需要 `SECTION_1<10`、`SECTION_2<5`、`SECTION_3<3`，且进行中要求 `SECTION_0==0`。旧 XML 把三个字段放在 `0/4/8`，第一次使用物品就把 `SECTION_0` 置 1，客户端摘要整体隐藏；修复为 `6/12/18` 后恢复计数段。
   2. 10032/20032：真机在服务端已到 s1（交换布局 wire=64，var1=1）时，客户端任务说明仍显示第 0 行；`//quest set 10032 START 65`（SECTION_0=1）后说明行立即前进，证明行索引读 SECTION_0。修正为 `var0=阶段(0..8, offset 0)`、`var1=眼泪次数(0..20, offset 6)`，掉落门禁恢复阶段 6；`Quest10032ItemPlayClientCounterProductionFlowTest` 锁定新合同，既有 `QuestPacketOrderRegressionTest` 的 `var0=7` 断言同时恢复通过。
+  3. 10101/20101：客户端在 `quest_script_monster.csv` 声明为 `Progress(2~!4)`（单变量阶段行走），客户端无该任务的 `SECTION_2` 计数器。若在 `<progress>` 声明并写入 `var2`（offset 12），击杀 2 只后整型步数被打包为 `8196`（高位非零），破坏客户端步骤校验使任务追踪 HTML 完全空白；只有保持纯 `var0` 阶段行走（2→3→4）下发纯净整型步数，HTML 才能正常渲染并无缝前进。
 
 ---
 

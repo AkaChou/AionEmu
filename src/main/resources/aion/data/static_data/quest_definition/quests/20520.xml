@@ -12,7 +12,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -37,7 +37,7 @@
       <var name="var0" value="5"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="6"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -238,7 +238,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806080" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <set-variable field="var0" value="6"/>
+        <set-variable field="var0" value="5"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
