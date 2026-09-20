@@ -49,7 +49,7 @@ Inggison 21 点样例：巨石（805334）、房屋地基（209038）、攻城�
 ## 验证状态
 * 静态/离线：**已完成**（上表 + 审计脚本）。
 * 客户端实机：**通过（2026-09-20 用户确认）** —— 重启后 805334 站在巨石上，不再下沉到石头下方。
-* 聚焦测试：**未运行**：`mvn -q -Dtest=SpawnEnginePathProjectionTest test`（当时未获授权；留待后续回归时执行）。
+* 聚焦测试：**通过**：`mvn -B -Dtest=SpawnEnginePathProjectionTest test`（2026-09-20 21:05，4 例 0 失败 0 错误，BUILD SUCCESS）。
 
 ## 复现命令
 ```
