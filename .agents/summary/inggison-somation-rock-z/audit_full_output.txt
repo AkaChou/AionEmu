@@ -1,0 +1,450 @@
+world 110010000: spots=377 placements=2677 meshes=605 triangles=141622 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 4; 其中脚下有贴合碰撞面: 4
+    npc=731676  (2017.12, 1516.57) z= 582.990 地形= 160.625 网格面=z  583.113  objects/npc/level_object/highdeva/fobj_v491_highdeva_storybook_01a.cgf
+    npc=806142  (1510.25, 1485.98) z= 566.752 地形= 160.625 网格面=z  566.752  objects/npc/event_object/summer_event/waterparkbottom01a.cgf
+    npc=806141  (1511.85, 1484.47) z= 566.752 地形= 160.625 网格面=z  566.752  objects/npc/event_object/summer_event/waterparkbottom01a.cgf
+    npc=731675  (2006.98, 1488.66) z= 581.139 地形= 160.625 网格面=z  581.139  levels/common/light/structures/buildings/city/bu_l_steeluniong_01a.cgf
+world 110020000: spots=25 placements=83 meshes=28 triangles=7210 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 110070000: spots=76 placements=575 meshes=146 triangles=55119 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 120010000: spots=424 placements=5360 meshes=526 triangles=180430 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 4; 其中脚下有贴合碰撞面: 4
+    npc=731677  (1243.97, 1336.98) z= 205.398 地形= 199.656 网格面=z  205.398  objects/npc/event_object/summer_event/waterparkbottom02b.cgf
+    npc=731678  (1340.64, 1052.04) z= 207.407 地形=  28.239 网格面=z  207.407  levels/common/dark/structures/props/interior/pr_d_library_in_01a.cgf
+    npc=731680  (1408.30, 1058.62) z= 206.645 地形= 178.479 网格面=z  207.623  objects/npc/level_object/highdeva/fobj_v491_highdeva_storybook_01a.cgf
+    npc=798459  (1600.89, 1380.18) z= 194.579 地形= 181.305 网格面=z  194.579  objects/npc/event_object/halloween/halloween_tree_02a.cgf
+world 120020000: spots=32 placements=56 meshes=14 triangles=3742 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 120080000: spots=104 placements=815 meshes=169 triangles=51973 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 24; 其中脚下有贴合碰撞面: 11
+    npc=799634  (546.71, 281.06) z=  93.480 地形=  19.875 网格面=z   93.480  levels/common/dark/structures/props/interior/pr_d_arenalobby_02b.cgf
+    npc=799634  (520.45, 252.92) z=  93.480 地形=  19.875 网格面=z   93.480  levels/common/dark/structures/props/interior/pr_d_arenalobby_02b.cgf
+    npc=799635  (520.47, 247.87) z=  93.490 地形=  19.875 网格面=z   93.490  levels/common/dark/structures/props/interior/pr_d_arenalobby_03c.cgf
+    npc=799635  (551.92, 281.06) z=  93.469 地形=  19.875 网格面=z   93.469  levels/common/dark/structures/props/interior/pr_d_arenalobby_01a.cgf
+    npc=702561  (474.53, 253.21) z=  94.251 地形=  19.783 网格面=z   93.498  levels/common/dark/structures/buildings/city/bu_d_corridor_stair_02a.cgf
+    npc=804197  (380.02, 253.76) z=  97.054 地形=   5.000 网格面=z   97.054  levels/common/dark/structures/buildings/city/bu_d_corridor_stage_01a.cgf
+    npc=831364  (554.89, 284.94) z=  93.507 地形=  19.875 网格面=z   93.507  levels/common/dark/structures/props/interior/pr_d_arena_lobby_extend_03c.cgf
+    npc=831366  (554.78, 303.03) z=  93.507 地形=  19.875 网格面=z   93.507  levels/common/dark/structures/props/interior/pr_d_arena_lobby_extend_03c.cgf
+    npc=831370  (551.86, 304.04) z=  93.507 地形=  19.875 网格面=z   93.507  levels/common/dark/structures/props/interior/pr_d_arena_lobby_extend_03c.cgf
+    npc=832735  (544.08, 284.95) z=  93.507 地形=  19.875 网格面=z   93.507  levels/common/dark/structures/props/interior/pr_d_arena_lobby_extend_03c.cgf
+    npc=832904  (543.64, 303.01) z=  93.507 地形=  19.875 网格面=z   93.507  levels/common/dark/structures/props/interior/pr_d_arena_lobby_extend_03c.cgf
+world 130090000: spots=29 placements=74 meshes=26 triangles=5576 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 140010000: spots=30 placements=52 meshes=24 triangles=6249 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210010000: spots=912 placements=5681 meshes=415 triangles=500838 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 2; 其中脚下有贴合碰撞面: 0
+world 210020000: spots=4692 placements=12079 meshes=819 triangles=1026390 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 34; 其中脚下有贴合碰撞面: 16
+    npc=700174  (2264.43, 757.07) z= 473.358 地形= 470.329 网格面=z  473.358  levels/common/tribe/kaidan/props/walls/pr_k_kaidanwall_01a.cgf
+    npc=211652  (979.69, 849.81) z= 281.748 地形= 280.588 网格面=z  281.748  levels/common/light/structures/props/exterior/pr_l_antlionpit_01a.cgf
+    npc=700158  (1645.02, 2248.63) z= 296.223 地形= 293.875 网格面=z  296.223  levels/common/light/structures/buildings/etc/bu_l_magicspring_02b.cgf
+    npc=212999  (2668.35, 2718.41) z= 299.293 地形= 292.625 网格面=z  299.293  levels/common/light/structures/props/exterior/pr_l_cavebox_01.cgf
+    npc=212999  (2663.12, 2717.47) z= 299.255 地形= 292.607 网格面=z  299.255  levels/common/light/structures/props/exterior/pr_l_cavebox_01.cgf
+    npc=700537  (830.75, 2849.26) z= 265.016 地形= 261.843 网格面=z  265.017  levels/common/light/natural/trees/dryness/na_l_brokentree_01a.cgf
+    npc=700169  (572.96, 150.98) z= 307.500 地形= 304.749 网格面=z  308.402  objects/npc/level_object/neut_spawner/neut_spawner.cgf
+    npc=700169  (563.88, 158.42) z= 307.381 地形= 305.981 网格面=z  307.918  objects/npc/level_object/neut_spawner/neut_spawner.cgf
+    npc=700169  (565.00, 150.68) z= 307.622 地形= 306.419 网格面=z  307.360  objects/npc/level_object/neut_spawner/neut_spawner.cgf
+    npc=210342  (295.97, 2559.21) z= 153.866 地形= 152.750 网格面=z  153.866  levels/common/light/natural/rocks/etc/na_l_rockgnbig_08a.cgf
+    npc=210342  (209.07, 2549.96) z= 153.871 地形= 152.809 网格面=z  153.871  levels/common/light/natural/rocks/etc/na_l_rockgnbig_08a.cgf
+    npc=210342  (194.01, 2593.10) z= 153.822 地形= 152.750 网格面=z  153.822  levels/common/light/natural/rocks/etc/na_l_rockgnbig_08a.cgf
+    npc=700159  (1543.27, 517.54) z= 358.751 地形= 357.204 网格面=z  358.751  levels/common/light/structures/buildings/etc/bu_l_magicspring_02b.cgf
+    npc=700160  (634.82, 596.67) z= 297.020 地形= 294.875 网格面=z  297.020  levels/common/light/structures/buildings/etc/bu_l_magicspring_02b.cgf
+    npc=204046  (2235.38, 820.16) z= 518.646 地形= 512.676 网格面=z  518.646  levels/common/tribe/orc/buildings/etc/bu_o_orcwatchtower_01b.cgf
+    npc=700177  (2511.36, 792.14) z= 412.819 地形= 343.264 网格面=z  412.819  objects/npc/level_object/dragonportal/dragonportal_01a.cgf
+world 210030000: spots=2335 placements=6721 meshes=497 triangles=296082 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210040000: spots=5771 placements=16095 meshes=1079 triangles=1255144 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 28; 其中脚下有贴合碰撞面: 9
+    npc=700209  (1090.58, 241.42) z= 110.729 地形= 107.009 网格面=z  110.729  levels/common/light/structures/props/exterior/pr_l_neuthabitat_02b.cgf
+    npc=211136  (725.25, 1752.33) z= 119.479 地形= 114.763 网格面=z  119.479  levels/common/light/structures/buildings/houses/bu_l_privatehousecrack_03c.cgf
+    npc=212360  (514.73, 2739.62) z= 123.628 地形= 116.701 网格面=z  124.555  levels/common/light/natural/trees/dryness/na_l_desert_finetree_01a.cgf
+    npc=211944  (982.76, 1448.73) z= 117.858 地形= 113.250 网格面=z  117.858  levels/common/light/structures/buildings/houses/bu_l_privatehousecrack_03c.cgf
+    npc=204619  (2446.50, 282.46) z= 431.380 地形= 410.336 网格面=z  430.829  levels/common/light/structures/buildings/houses/bu_l_opcastle_02b.cgf
+    npc=211078  (1796.10, 2023.21) z= 143.523 地形= 131.500 网格面=z  143.523  levels/common/light/natural/trees/dryness/na_l_unddtree_02b.cgf
+    npc=219072  (2233.33, 1455.15) z= 148.106 地形= 134.278 网格面=z  148.106  levels/common/tribe/orc/buildings/etc/bu_o_watchtower_01a.cgf
+    npc=790018  (1659.78, 2724.50) z= 118.403 地形= 115.375 网格面=z  118.403  levels/common/light/structures/buildings/houses/bu_l_privatehousecrack_03c.cgf
+    npc=700537  (837.13, 1074.05) z= 120.976 地形= 116.875 网格面=z  120.976  levels/common/light/natural/trees/etc/na_l_lumber_01a.cgf
+world 210050000: spots=5692 placements=15347 meshes=1120 triangles=1787513 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 135; 其中脚下有贴合碰撞面: 21
+    npc=209038  (1364.97, 362.59) z= 589.576 地形= 558.872 网格面=z  589.576  levels/common/light/structures/buildings/houses/bu_l_op_kaiground_10a.cgf
+    npc=215730  (828.33, 1775.01) z= 329.230 地形= 326.240 网格面=z  329.230  levels/common/tribe/vritra/props/exterior/pr_dg_vritra_siegetower_broken_01a.cgf
+    npc=216732  (788.28, 1672.86) z= 326.846 地形= 324.705 网格面=z  326.846  levels/common/tribe/vritra/props/exterior/pr_dg_vritra_siegetower_01a.cgf
+    npc=216793  (270.44, 376.57) z= 579.629 地形= 578.625 网格面=z  579.629  levels/common/light/structures/props/cooking/pr_l_jar_02a.cgf
+    npc=216793  (215.08, 277.08) z= 585.341 地形= 583.902 网格面=z  585.341  levels/common/light/structures/props/cooking/pr_l_jar_01a.cgf
+    npc=216794  (145.82, 703.07) z= 603.831 地形= 601.875 网格面=z  603.831  levels/common/light/structures/props/cooking/pr_l_jar_02a.cgf
+    npc=217015  (2265.26, 2255.13) z= 130.244 地形=  58.000 网格面=z  130.244  levels/common/light/structures/props/shopdis/pr_l_dirtyarms_02a.cgf
+    npc=217038  (116.64, 245.34) z= 645.901 地形= 581.836 网格面=z  645.901  levels/common/light/natural/plants/fungus/na_l_rockfungus_02b.cgf
+    npc=217038  (109.90, 270.62) z= 652.092 地形= 587.919 网格面=z  652.092  levels/common/light/natural/plants/fungus/na_l_rockfungus_02b.cgf
+    npc=217095  (911.16, 1582.81) z= 240.000 地形= 194.346 网格面=z  239.718  objects/npc/level_object/frillfaimam_egg/frillfaimam_egg_big.cgf
+    npc=281621  (2567.66, 2145.24) z= 219.746 地形= 213.250 网格面=z  220.657  levels/common/light/structures/buildings/ruins/bu_l_templestair_07a.cgf
+    npc=700545  (1454.77, 1526.72) z= 361.355 地形= 354.429 网格面=z  360.732  levels/common/light/structures/buildings/ruins/bu_l_memorablestone_03c.cgf
+    npc=700611  (2825.63, 480.87) z= 350.010 地形= 337.226 网格面=z  350.418  objects/npc/level_object/od_bomb_gatherer/od_bomb_gatherer.cgf
+    npc=700612  (2761.99, 375.89) z= 354.321 地形= 343.607 网格面=z  354.851  objects/npc/level_object/od_bomb_gatherer/od_bomb_gatherer.cgf
+    npc=700613  (2923.73, 362.07) z= 362.000 地形= 343.879 网格面=z  362.602  objects/npc/level_object/od_bomb_gatherer/od_bomb_gatherer.cgf
+    npc=700614  (2819.39, 275.13) z= 355.725 地形= 338.906 网格面=z  356.118  objects/npc/level_object/od_bomb_gatherer/od_bomb_gatherer.cgf
+    npc=700747  (2099.07, 1879.60) z= 316.242 地形= 315.125 网格面=z  316.242  levels/common/tribe/dragon/buildings/houses/bu_dg_moduleobj_09i.cgf
+    npc=700748  (645.58, 1647.31) z= 334.266 地形= 333.125 网格面=z  334.266  levels/common/tribe/dragon/buildings/houses/bu_dg_moduleobj_09i.cgf
+    npc=700916  (1059.94, 1729.90) z= 246.460 地形= 195.202 网格面=z  246.848  objects/npc/level_object/sticky_mushroom/sticky_mushroom.cgf
+    npc=700917  (1160.16, 1630.10) z= 235.653 地形= 185.751 网格面=z  235.918  objects/npc/level_object/sticky_mushroom/sticky_mushroom.cgf
+    npc=805334  (2157.04, 277.80) z= 489.774 地形= 473.558 网格面=z  489.774  levels/common/light/natural/rocks/etc/na_l_dark_rockgnbig_02a.cgf
+world 210060000: spots=7155 placements=8741 meshes=703 triangles=1054745 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 1; 其中脚下有贴合碰撞面: 0
+world 210070000: spots=5209 placements=17090 meshes=779 triangles=4762796 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 1; 其中脚下有贴合碰撞面: 1
+    npc=731546  (73.67, 2760.04) z= 231.673 地形= 207.375 网格面=z  231.673  levels/common/idzone/idseal/3stage/bu_id_idseal_dungate_01a.cgf
+world 210080000: spots=1 placements=8 meshes=7 triangles=2833 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210090000: spots=844 placements=11526 meshes=679 triangles=1218880 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210100000: spots=18448 placements=18580 meshes=966 triangles=6771324 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 173; 其中脚下有贴合碰撞面: 61
+    npc=703072  (917.23, 1570.47) z= 361.276 地形= 290.672 网格面=z  361.158  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (867.79, 1555.21) z= 322.501 地形= 290.742 网格面=z  322.383  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (780.28, 1533.87) z= 346.401 地形= 279.233 网格面=z  346.283  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (923.53, 1789.48) z= 347.106 地形= 312.506 网格面=z  346.989  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (826.09, 1714.52) z= 332.271 地形= 298.587 网格面=z  332.154  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (686.40, 1674.03) z= 294.306 地形= 278.161 网格面=z  294.189  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (709.64, 1769.43) z= 310.078 地形= 266.669 网格面=z  309.961  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (741.16, 1625.94) z= 302.348 地形= 278.937 网格面=z  302.230  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (667.30, 1639.28) z= 302.132 地形= 260.036 网格面=z  302.014  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (462.69, 1669.38) z= 276.563 地形= 242.319 网格面=z  276.446  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (523.33, 1838.17) z= 276.894 地形= 237.888 网格面=z  276.776  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (750.20, 1834.93) z= 373.416 地形= 298.704 网格面=z  373.298  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (898.97, 1861.65) z= 361.656 地形= 317.028 网格面=z  361.538  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (265.54, 1610.52) z= 232.181 地形= 214.425 网格面=z  232.064  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (382.81, 1467.63) z= 329.312 地形= 270.584 网格面=z  329.194  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (544.84, 1615.69) z= 284.339 地形= 246.520 网格面=z  284.222  objects/npc/level_object/lf6_fobj/lf6_q_birdcage.cgf
+    npc=703072  (787.06, 1685.57) z= 325.848 地形= 278.713 网格面=z  326.557  levels/common/light/natural_etc/rock/na_l_lf6_arock_02a.cgf
+    npc=703310  (490.34, 1859.01) z= 335.225 地形= 233.597 网格面=z  335.631  levels/common/tribe/rune/buildings/castle/grassland/bu_ru_gfortress_86.cgf
+    npc=731709  (2478.58, 623.17) z= 457.586 地形= 317.296 网格面=z  458.002  objects/npc/level_object/artifact_rune/artifact_rune_bottom_02b.cgf
+    npc=805777  (1401.75, 1301.87) z= 337.620 地形= 336.498 网格面=z  336.791  levels/common/housing/structures/props/pr_h_teleporteretc_02a.cgf
+    npc=805790  (1099.34, 1110.38) z= 332.848 地形= 330.432 网格面=z  333.176  objects/npc/level_object/lf6_fobj/lf6_butterfly_01.cgf
+    npc=805791  (826.89, 1094.15) z= 336.405 地形= 334.236 网格面=z  336.705  objects/npc/level_object/lf6_fobj/lf6_butterfly_01.cgf
+    npc=805994  (1419.45, 1366.09) z= 338.743 地形= 336.588 网格面=z  338.743  levels/common/dark/structures/props/exterior/pr_d_sobox_001a.cgf
+    npc=805995  (1418.46, 1367.60) z= 338.743 地形= 336.150 网格面=z  338.743  levels/common/dark/structures/props/exterior/pr_d_sobox_001a.cgf
+    npc=806010  (1474.95, 1232.48) z= 339.030 地形= 335.553 网格面=z  338.186  levels/common/light/structures/buildings/houses/bu_l_lf6op_shop_01a.cgf
+    npc=806013  (1477.99, 1222.12) z= 339.050 地形= 336.556 网格面=z  338.186  levels/common/light/structures/buildings/houses/bu_l_lf6op_shop_01a.cgf
+    npc=281817  (2200.16, 2529.44) z= 260.558 地形= 259.415 网格面=z  259.854  levels/common/dark/natural_etc/etc/na_d_windhole_01a.cgf
+    npc=281817  (2371.26, 567.18) z= 242.119 地形= 240.810 网格面=z  241.188  levels/common/dark/natural_etc/etc/na_d_windhole_01a.cgf
+    npc=241719  (2271.80, 242.68) z= 298.660 地形= 288.248 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=241719  (2264.01, 230.60) z= 298.660 地形= 290.292 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=241720  (2271.80, 242.68) z= 298.660 地形= 288.248 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=241720  (2264.01, 230.60) z= 298.660 地形= 290.292 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=241721  (2271.80, 242.68) z= 298.660 地形= 288.248 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=241721  (2264.01, 230.60) z= 298.660 地形= 290.292 网格面=z  298.660  levels/common/dark/natural_etc/rocks/na_d_df6_birdnest_01a.cgf
+    npc=243127  (214.37, 2774.82) z= 318.213 地形= 301.545 网格面=z  318.213  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243127  (1185.32, 2867.80) z= 379.337 地形= 357.580 网格面=z  379.337  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243127  (569.04, 2782.61) z= 304.036 地形= 281.815 网格面=z  304.036  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243127  (521.91, 2474.71) z= 304.470 地形= 299.625 网格面=z  304.470  levels/common/light/structures/props/exterior/pr_l_imagestair_e_01a.cgf
+    npc=243131  (214.37, 2774.82) z= 318.213 地形= 301.545 网格面=z  318.213  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243131  (1185.32, 2867.80) z= 379.337 地形= 357.580 网格面=z  379.337  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243131  (569.04, 2782.61) z= 304.036 地形= 281.815 网格面=z  304.036  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243131  (521.91, 2474.71) z= 304.470 地形= 299.625 网格面=z  304.470  levels/common/light/structures/props/exterior/pr_l_imagestair_e_01a.cgf
+    npc=243135  (214.37, 2774.82) z= 318.213 地形= 301.545 网格面=z  318.213  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243135  (1185.32, 2867.80) z= 379.337 地形= 357.580 网格面=z  379.337  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243135  (569.04, 2782.61) z= 304.036 地形= 281.815 网格面=z  304.036  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243135  (521.91, 2474.71) z= 304.470 地形= 299.625 网格面=z  304.470  levels/common/light/structures/props/exterior/pr_l_imagestair_e_01a.cgf
+    npc=243139  (214.37, 2774.82) z= 318.213 地形= 301.545 网格面=z  318.213  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243139  (1185.32, 2867.80) z= 379.337 地形= 357.580 网格面=z  379.337  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243139  (569.04, 2782.61) z= 304.036 地形= 281.815 网格面=z  304.036  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243139  (521.91, 2474.71) z= 304.470 地形= 299.625 网格面=z  304.470  levels/common/light/structures/props/exterior/pr_l_imagestair_e_01a.cgf
+    npc=243143  (214.37, 2774.82) z= 318.213 地形= 301.545 网格面=z  318.213  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243143  (1185.32, 2867.80) z= 379.337 地形= 357.580 网格面=z  379.337  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243143  (569.04, 2782.61) z= 304.036 地形= 281.815 网格面=z  304.036  levels/common/tribe/goblin/buildings/etc/bu_g_goblingardtower_merge_01a.cgf
+    npc=243143  (521.91, 2474.71) z= 304.470 地形= 299.625 网格面=z  304.470  levels/common/light/structures/props/exterior/pr_l_imagestair_e_01a.cgf
+    npc=243395  (1329.35, 1262.56) z= 342.928 地形= 334.289 网格面=z  342.928  levels/common/light/structures/buildings/houses/bu_l_lf6op_legion_05e.cgf
+    npc=243395  (1343.62, 1231.60) z= 342.928 地形= 330.639 网格面=z  342.928  levels/common/light/structures/buildings/houses/bu_l_lf6op_legion_06f.cgf
+    npc=243396  (1395.45, 1330.53) z= 338.115 地形= 335.817 网格面=z  338.115  levels/common/light/structures/buildings/city/bu_l_foundation_stair.cgf
+    npc=243396  (1417.94, 1345.86) z= 338.115 地形= 336.139 网格面=z  338.115  levels/common/light/structures/buildings/city/bu_l_foundation_stair.cgf
+    npc=243396  (1437.65, 1234.97) z= 338.122 地形= 336.272 网格面=z  338.122  levels/common/light/structures/buildings/city/bu_l_foundation_stair.cgf
+    npc=243396  (1444.05, 1236.68) z= 338.122 地形= 336.500 网格面=z  338.122  levels/common/light/structures/buildings/city/bu_l_foundation_stair.cgf
+    npc=243396  (1464.01, 1241.68) z= 338.124 地形= 336.146 网格面=z  338.124  levels/common/light/structures/buildings/city/bu_l_foundation_stair.cgf
+world 210110000: spots=17 placements=575 meshes=27 triangles=127082 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210120000: spots=10 placements=1127 meshes=169 triangles=203983 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 210130000: spots=5639 placements=15332 meshes=1177 triangles=1898757 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220010000: spots=1192 placements=7454 meshes=416 triangles=761779 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 2; 其中脚下有贴合碰撞面: 1
+    npc=210585  (961.23, 2259.47) z= 271.782 地形= 264.682 网格面=z  271.782  levels/common/dark/structures/props/exterior/na_d_h_honeywood_07g.cgf
+world 220020000: spots=6068 placements=13150 meshes=1233 triangles=1228288 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220030000: spots=2317 placements=8390 meshes=719 triangles=460138 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220040000: spots=6097 placements=19408 meshes=1138 triangles=1236137 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 1; 其中脚下有贴合碰撞面: 1
+    npc=213764  (2697.09, 2940.02) z= 697.860 地形= 691.500 网格面=z  697.860  levels/common/dark/structures/buildings/houses/bu_d_lehparfoodshope_01a.cgf
+world 220050000: spots=7378 placements=9860 meshes=587 triangles=854055 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 2; 其中脚下有贴合碰撞面: 2
+    npc=214386  (2090.00, 2826.40) z=  71.066 地形=  67.674 网格面=z   71.066  levels/common/dark/structures/props/exterior/pr_d_wearweapons_07g.cgf
+    npc=214389  (2087.46, 2826.56) z=  71.679 地形=  67.362 网格面=z   71.679  levels/common/dark/structures/props/exterior/pr_d_wearweapons_07g.cgf
+world 220070000: spots=5805 placements=15026 meshes=1169 triangles=1976819 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 4; 其中脚下有贴合碰撞面: 2
+    npc=216004  (1845.29, 1453.95) z= 334.844 地形= 333.663 网格面=z  334.844  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=805346  (1538.20, 2435.73) z= 407.060 地形= 350.859 网格面=z  407.060  levels/common/light/natural/plants/fungus/na_l_standmush_03c.cgf
+world 220080000: spots=6879 placements=16621 meshes=846 triangles=5252222 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 22; 其中脚下有贴合碰撞面: 16
+    npc=700079  (806.96, 1315.74) z= 252.207 地形= 250.826 网格面=z  252.131  objects/npc/level_object/postbox/pr_l_postbox_01a.cgf
+    npc=730722  (1427.70, 1731.77) z= 329.845 地形= 328.550 网格面=z  330.738  levels/common/light/structures/buildings/etc/bu_l_possession_col_01.cgf
+    npc=731547  (2993.63, 372.30) z= 309.452 地形= 306.912 网格面=z  310.372  levels/common/idzone/idseal/3stage/bu_id_idseal_dungate_01a.cgf
+    npc=805177  (1811.78, 2555.40) z= 301.877 地形= 298.750 网格面=z  301.877  levels/common/light/structures/buildings/etc/bu_l_possession_col_04.cgf
+    npc=805185  (805.05, 1270.34) z= 254.927 地形= 251.500 网格面=z  254.927  levels/common/light/structures/buildings/etc/bu_l_possession_col_04.cgf
+    npc=219904  (829.49, 810.26) z= 215.675 地形= 210.079 网格面=z  215.675  levels/common/deva/structures/etc/bu_de_gateway_01a.cgf
+    npc=219904  (749.20, 795.76) z= 215.639 地形= 209.544 网格面=z  215.639  levels/common/deva/structures/etc/bu_de_gateway_02a.cgf
+    npc=219918  (1511.35, 440.00) z= 228.229 地形= 220.125 网格面=z  228.229  levels/common/deva/structures/etc/bu_de_gateway_02a.cgf
+    npc=219918  (1517.67, 439.83) z= 228.229 地形= 220.125 网格面=z  228.229  levels/common/deva/structures/etc/bu_de_gateway_02a.cgf
+    npc=219918  (1511.13, 461.22) z= 228.851 地形= 221.755 网格面=z  228.851  levels/common/deva/structures/etc/bu_de_gateway_02a.cgf
+    npc=219808  (2740.40, 2494.64) z= 188.659 地形= 181.875 网格面=z  188.659  levels/common/tribe/mermaid/buildings/houses/bu_d_mermaidhouse_03c.cgf
+    npc=219812  (2820.92, 2437.38) z= 184.693 地形= 176.538 网格面=z  184.693  levels/common/tribe/mermaid/buildings/houses/bu_d_mermaidhouse_03c.cgf
+    npc=219815  (2811.89, 2429.28) z= 184.769 地形= 176.625 网格面=z  184.769  levels/common/tribe/mermaid/buildings/houses/bu_d_mermaidhouse_03c.cgf
+    npc=220118  (1659.18, 499.41) z= 246.329 地形= 230.572 网格面=z  246.329  levels/common/light/structures/props/handicraft/pr_l_minicover_10j.cgf
+    npc=220118  (1739.49, 534.19) z= 263.368 地形= 248.125 网格面=z  263.368  levels/common/light/structures/props/exterior/pr_l_minidool_02a.cgf
+    npc=220118  (1673.59, 551.72) z= 264.795 地形= 257.599 网格面=z  264.795  levels/common/light/structures/props/exterior/pr_l_minidool_02a.cgf
+world 220090000: spots=1 placements=13 meshes=9 triangles=2630 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220100000: spots=844 placements=11526 meshes=679 triangles=1218880 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220110000: spots=15618 placements=14844 meshes=866 triangles=3817296 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 377; 其中脚下有贴合碰撞面: 11
+    npc=242347  (203.41, 880.18) z= 309.630 地形= 298.335 网格面=z  309.630  levels/common/dark/natural_etc/rocks/na_df6_h_rocks_01a.cgf
+    npc=242351  (203.41, 880.18) z= 309.630 地形= 298.335 网格面=z  309.630  levels/common/dark/natural_etc/rocks/na_df6_h_rocks_01a.cgf
+    npc=242355  (203.41, 880.18) z= 309.630 地形= 298.335 网格面=z  309.630  levels/common/dark/natural_etc/rocks/na_df6_h_rocks_01a.cgf
+    npc=242359  (203.41, 880.18) z= 309.630 地形= 298.335 网格面=z  309.630  levels/common/dark/natural_etc/rocks/na_df6_h_rocks_01a.cgf
+    npc=242363  (203.41, 880.18) z= 309.630 地形= 298.335 网格面=z  309.630  levels/common/dark/natural_etc/rocks/na_df6_h_rocks_01a.cgf
+    npc=242387  (102.39, 246.80) z= 301.548 地形= 296.730 网格面=z  301.548  levels/common/deva/structures/props/exterior/bu_de_watchtower_02b.cgf
+    npc=242391  (102.39, 246.80) z= 301.548 地形= 296.730 网格面=z  301.548  levels/common/deva/structures/props/exterior/bu_de_watchtower_02b.cgf
+    npc=242395  (102.39, 246.80) z= 301.548 地形= 296.730 网格面=z  301.548  levels/common/deva/structures/props/exterior/bu_de_watchtower_02b.cgf
+    npc=242399  (102.39, 246.80) z= 301.548 地形= 296.730 网格面=z  301.548  levels/common/deva/structures/props/exterior/bu_de_watchtower_02b.cgf
+    npc=242403  (102.39, 246.80) z= 301.548 地形= 296.730 网格面=z  301.548  levels/common/deva/structures/props/exterior/bu_de_watchtower_02b.cgf
+    npc=243393  (1862.00, 1962.34) z= 202.373 地形= 193.000 网格面=z  202.373  levels/common/dark/structures/buildings/houses/bu_d_df6op_in_04d.cgf
+world 220120000: spots=19 placements=575 meshes=27 triangles=127082 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220130000: spots=10 placements=1127 meshes=169 triangles=203983 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 220140000: spots=6997 placements=15459 meshes=1186 triangles=2081610 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 100; 其中脚下有贴合碰撞面: 22
+    npc=216062  (2738.72, 1776.52) z= 317.268 地形= 272.956 网格面=z  317.268  levels/common/light/structures/buildings/ruins/bu_l_woodground_01a.cgf
+    npc=219599  (707.73, 2038.45) z= 342.450 地形= 341.420 网格面=z  342.294  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (715.02, 2037.18) z= 342.445 地形= 341.387 网格面=z  343.439  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (657.19, 1858.29) z= 352.261 地形= 351.148 网格面=z  353.238  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (664.47, 1857.01) z= 352.487 地形= 351.479 网格面=z  353.446  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (471.77, 1827.33) z= 358.752 地形= 357.555 网格面=z  359.732  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (466.64, 1822.80) z= 358.897 地形= 357.754 网格面=z  358.739  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (2137.33, 1977.10) z= 407.347 地形= 405.956 网格面=z  406.510  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (1169.40, 1227.93) z= 266.514 地形= 265.500 网格面=z  267.499  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=219599  (975.84, 1256.94) z= 271.417 地形= 270.388 网格面=z  272.404  levels/common/dark/structures/props/walls/pr_d_defense_001a.cgf
+    npc=209210  (745.22, 2292.97) z= 399.078 地形= 379.492 网格面=z  399.078  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (726.36, 2303.09) z= 399.078 地形= 380.488 网格面=z  399.078  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (676.24, 2280.95) z= 399.081 地形= 384.875 网格面=z  399.081  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (752.24, 2238.59) z= 399.082 地形= 386.526 网格面=z  399.082  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (2667.18, 2217.94) z= 505.361 地形= 491.373 网格面=z  505.361  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (2681.44, 2201.87) z= 505.360 地形= 491.283 网格面=z  505.360  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (2670.54, 2148.35) z= 505.364 地形= 501.192 网格面=z  505.364  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=209210  (2612.72, 2213.37) z= 505.361 地形= 499.392 网格面=z  505.361  levels/common/dark/structures/buildings/etc/bu_d_barrier_01a.cgf
+    npc=248165  (1131.52, 893.57) z= 319.280 地形= 301.631 网格面=z  319.280  levels/common/abyss/abcastle/castle_dragon/bu_dg_dragoncastle_add_08h.cgf
+    npc=248165  (1129.77, 918.38) z= 319.228 地形= 301.801 网格面=z  319.228  levels/common/abyss/abcastle/castle_dragon/bu_dg_dragoncastle_add_08h.cgf
+    npc=248165  (1812.71, 1130.90) z= 336.180 地形= 317.000 网格面=z  336.180  levels/common/abyss/abcastle/castle_dragon/bu_dg_dragoncastle_add_08h.cgf
+    npc=248165  (1812.76, 1156.64) z= 336.132 地形= 317.000 网格面=z  336.132  levels/common/abyss/abcastle/castle_dragon/bu_dg_dragoncastle_add_08h.cgf
+world 400010000: spots=4000 placements=7583 meshes=2823 triangles=1688895 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 400020000: spots=1091 placements=9023 meshes=565 triangles=1038372 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 400030000: spots=197 placements=1353 meshes=105 triangles=121656 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 4; 其中脚下有贴合碰撞面: 4
+    npc=277231  (533.32, 475.74) z= 675.556 地形= 674.228 网格面=z  676.183  levels/common/tribe/rune/buildings/gab1_sub/bu_ru_gab1sub_stair_02b.cgf
+    npc=277231  (485.69, 549.55) z= 675.536 地形= 674.500 网格面=z  676.154  levels/common/tribe/rune/buildings/gab1_sub/bu_ru_gab1sub_stair_02b.cgf
+    npc=277231  (472.66, 489.16) z= 675.602 地形= 673.872 网格面=z  676.166  levels/common/tribe/rune/buildings/gab1_sub/bu_ru_gab1sub_stair_02b.cgf
+    npc=277231  (546.31, 536.44) z= 675.652 地形= 673.104 网格面=z  676.203  levels/common/tribe/rune/buildings/gab1_sub/bu_ru_gab1sub_stair_02b.cgf
+world 400040000: spots=1091 placements=9122 meshes=573 triangles=1035896 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 400050000: spots=1091 placements=8915 meshes=562 triangles=946892 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 400060000: spots=1091 placements=9023 meshes=565 triangles=1038372 terrain=no
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 600010000: spots=394 placements=3630 meshes=181 triangles=179165 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 2; 其中脚下有贴合碰撞面: 2
+    npc=730231  (1418.77, 766.23) z= 312.866 地形= 305.125 网格面=z  312.866  levels/common/light/structures/buildings/dungeon/dungeon_temple/bu_l_idtempleup_door01a.cgf
+    npc=730731  (520.68, 767.20) z= 299.422 地形= 293.500 网格面=z  299.616  levels/common/abyss/underpass/bu_underpass_floor_04a.cgf
+world 600040000: spots=1059 placements=2202 meshes=332 triangles=352530 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 282; 其中脚下有贴合碰撞面: 116
+    npc=218544  (519.93, 909.83) z=1209.207 地形=   0.000 网格面=z 1208.501  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_subroom_02_01c.cgf
+    npc=218544  (546.19, 883.67) z=1209.207 地形=   0.000 网格面=z 1208.501  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_subroom_02_01d.cgf
+    npc=218547  (506.76, 923.10) z=1209.394 地形=   0.125 网格面=z 1208.501  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_subroom_02_01c.cgf
+    npc=218548  (375.28, 249.13) z=1184.451 地形=1027.599 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03b.cgf
+    npc=218548  (643.01, 355.32) z=1184.451 地形=   0.271 网格面=z 1183.702  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=218548  (1163.72, 641.74) z=1184.451 地形= 410.388 网格面=z 1183.705  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=218548  (1165.91, 887.42) z=1184.451 地形=  34.767 网格面=z 1183.675  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=218548  (1327.43, 1042.97) z=1184.451 地形= 991.549 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03a.cgf
+    npc=218548  (1343.43, 536.35) z=1184.451 地形= 999.921 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03a.cgf
+    npc=218549  (405.83, 1087.45) z=1201.445 地形= 969.125 网格面=z 1200.597  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_41a.cgf
+    npc=218549  (406.29, 446.57) z=1201.445 地形= 699.383 网格面=z 1200.645  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_39a.cgf
+    npc=218549  (1011.80, 366.96) z=1201.615 地形= 958.580 网格面=z 1200.787  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_30a.cgf
+    npc=218552  (1033.39, 289.73) z=1192.461 地形= 952.255 网格面=z 1191.528  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob08h.cgf
+    npc=218920  (1270.23, 689.71) z=1192.449 地形= 978.647 网格面=z 1191.737  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob12l.cgf
+    npc=218920  (1270.42, 843.81) z=1192.449 地形= 982.625 网格面=z 1191.737  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob09i.cgf
+    npc=218920  (1306.17, 689.59) z=1192.449 地形= 972.671 网格面=z 1191.737  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob12l.cgf
+    npc=218920  (1306.36, 843.69) z=1192.449 地形= 982.500 网格面=z 1191.737  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob09i.cgf
+    npc=219166  (435.04, 1229.03) z=1184.801 地形= 991.028 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st08.cgf
+    npc=219187  (394.15, 316.54) z=1184.615 地形=1031.725 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st39.cgf
+    npc=219187  (413.14, 303.30) z=1184.615 地形=1031.355 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st39.cgf
+    npc=219187  (447.21, 282.94) z=1184.615 地形=1011.649 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st38.cgf
+    npc=219187  (470.07, 269.55) z=1184.615 地形=1011.000 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st38.cgf
+    npc=219187  (473.33, 304.90) z=1184.615 地形=1021.328 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st38.cgf
+    npc=219187  (495.94, 293.19) z=1184.615 地形= 981.277 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st38.cgf
+    npc=219187  (536.99, 277.18) z=1184.615 地形= 770.848 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st37.cgf
+    npc=219187  (614.20, 256.65) z=1184.615 地形= 608.485 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st36.cgf
+    npc=219187  (639.75, 252.15) z=1184.615 地形= 476.855 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st36.cgf
+    npc=219187  (1247.10, 756.13) z=1201.073 地形= 271.848 网格面=z 1200.085  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob11k.cgf
+    npc=219187  (1247.10, 776.93) z=1201.073 地形= 300.731 网格面=z 1200.084  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob10j.cgf
+    npc=219207  (202.42, 891.50) z=1184.736 地形=1008.926 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st03.cgf
+    npc=219207  (222.50, 555.80) z=1184.736 地形=1025.625 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st43.cgf
+    npc=219207  (222.93, 978.52) z=1184.736 地形=1008.875 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st04.cgf
+    npc=219207  (235.96, 894.93) z=1184.736 地形=1015.891 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st03.cgf
+    npc=219207  (248.56, 954.91) z=1184.736 地形=1009.250 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st04.cgf
+    npc=219207  (248.79, 579.65) z=1184.736 地形=1025.701 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st43.cgf
+    npc=219207  (256.77, 1057.50) z=1184.736 地形= 988.875 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st05.cgf
+    npc=219207  (256.79, 476.78) z=1184.736 地形=1016.748 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st42.cgf
+    npc=219207  (275.51, 509.27) z=1184.736 地形=1025.785 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st42.cgf
+    npc=219207  (282.78, 1038.65) z=1184.736 地形= 981.344 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st05.cgf
+    npc=219207  (305.63, 1131.82) z=1184.736 地形= 972.935 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st06.cgf
+    npc=219207  (305.69, 402.79) z=1184.736 地形=1027.545 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st41.cgf
+    npc=219207  (322.83, 432.18) z=1184.736 地形=1017.078 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st41.cgf
+    npc=219207  (332.47, 1113.43) z=1184.736 地形= 972.116 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st06.cgf
+    npc=831010  (722.27, 217.93) z=1184.677 地形= 454.787 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831010  (722.27, 249.48) z=1184.677 地形=  38.724 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831010  (727.50, 232.05) z=1184.677 地形= 202.690 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831010  (749.20, 218.23) z=1184.677 地形= 463.216 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831010  (759.19, 218.23) z=1184.677 地形= 553.997 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831010  (782.81, 234.94) z=1184.677 地形= 283.125 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831010  (787.74, 217.93) z=1184.677 地形= 868.210 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831010  (787.74, 249.48) z=1184.677 地形= 303.574 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831011  (727.50, 235.12) z=1184.677 地形= 193.715 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831011  (782.81, 231.86) z=1184.677 地形= 292.489 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831011  (785.99, 233.41) z=1184.845 地形= 276.162 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st34.cgf
+    npc=831012  (724.34, 233.60) z=1184.845 地形= 192.742 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st35.cgf
+    npc=831015  (724.34, 1301.16) z=1184.845 地形=1072.226 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st12.cgf
+    npc=832855  (1314.49, 986.63) z=1184.568 地形= 992.410 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03c.cgf
+    npc=832855  (383.80, 1270.11) z=1184.568 地形= 991.500 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03d.cgf
+    npc=832855  (648.59, 333.98) z=1184.568 地形=   7.685 网格面=z 1183.692  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (1316.38, 553.88) z=1184.568 地形= 989.640 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03d.cgf
+    npc=832855  (448.45, 248.83) z=1184.568 地形=1011.000 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03d.cgf
+    npc=832855  (343.81, 221.24) z=1184.568 地形=1058.338 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03b.cgf
+    npc=832855  (1141.81, 905.48) z=1184.482 地形=  31.944 网格面=z 1183.705  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=832855  (1174.12, 512.92) z=1184.568 地形= 978.750 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (391.26, 200.19) z=1184.385 地形=1035.363 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03a.cgf
+    npc=832855  (516.01, 1196.93) z=1184.568 地形= 969.125 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (437.89, 1272.44) z=1184.568 地形= 991.625 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03c.cgf
+    npc=832855  (500.35, 347.05) z=1184.568 地形= 300.664 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (624.28, 378.73) z=1184.401 地形=   0.119 网格面=z 1183.702  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=832855  (631.62, 1211.92) z=1184.568 地形= 949.135 网格面=z 1183.701  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (1096.05, 1123.70) z=1184.568 地形= 969.375 网格面=z 1183.676  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (494.46, 1207.16) z=1184.568 地形= 969.125 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (1183.29, 897.66) z=1184.568 地形= 146.145 网格面=z 1183.701  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (1295.05, 493.82) z=1184.568 地形= 991.123 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03c.cgf
+    npc=832855  (506.10, 327.10) z=1184.568 地形= 352.213 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (1312.74, 501.99) z=1184.568 地形=1002.638 网格面=z 1183.659  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03c.cgf
+    npc=832855  (1197.76, 634.20) z=1184.568 地形= 951.259 网格面=z 1183.701  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (389.60, 304.93) z=1184.568 地形=1032.659 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03c.cgf
+    npc=832855  (626.66, 289.42) z=1184.568 地形=  68.956 网格面=z 1183.701  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (1270.88, 1042.19) z=1184.568 地形= 987.012 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03d.cgf
+    npc=832855  (1311.80, 1038.94) z=1184.568 地形= 986.664 网格面=z 1183.672  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_03d.cgf
+    npc=832855  (1098.62, 380.60) z=1184.568 地形= 963.084 网格面=z 1183.678  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (991.66, 316.68) z=1194.961 地形= 964.498 网格面=z 1194.245  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_30a.cgf
+    npc=832855  (636.56, 1252.88) z=1184.568 地形= 969.720 网格面=z 1183.701  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01b.cgf
+    npc=832855  (1098.89, 1154.94) z=1184.568 地形=1002.128 网格面=z 1183.676  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_02b.cgf
+    npc=832855  (367.88, 408.28) z=1192.537 地形=1023.100 网格面=z 1191.630  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_39a.cgf
+    npc=832856  (1352.89, 459.72) z=1184.568 地形=1023.870 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03b.cgf
+    npc=832856  (243.89, 811.06) z=1201.082 地形= 822.504 网格面=z 1200.164  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob03c.cgf
+    npc=832856  (553.41, 1261.99) z=1184.689 地形= 993.500 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st10.cgf
+    npc=832856  (921.83, 777.20) z=1227.353 地形=   0.000 网格面=z 1226.504  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_75a.cgf
+    npc=832856  (386.47, 1169.94) z=1192.510 地形= 972.930 网格面=z 1191.735  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob05e.cgf
+    npc=832856  (196.85, 699.73) z=1192.598 地形=1078.319 网格面=z 1191.817  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob01a.cgf
+    npc=832856  (341.20, 254.94) z=1184.568 地形=1050.472 网格面=z 1183.674  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroomin_03b.cgf
+    npc=832856  (372.54, 337.36) z=1184.689 地形=1031.710 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st40.cgf
+    npc=832856  (736.09, 610.53) z=1208.517 地形=   0.000 网格面=z 1208.500  levels/common/idzone/tiamat_down/tiamat_center/bu_tamat_jewel_roomin_01a.cgf
+    npc=832856  (511.28, 286.31) z=1184.689 地形= 966.408 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st38.cgf
+    npc=832856  (1005.05, 1239.40) z=1192.510 地形=1032.250 网格面=z 1191.528  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob06f.cgf
+    npc=832856  (666.32, 354.96) z=1184.506 地形=   0.065 网格面=z 1183.702  levels/common/idzone/tiamat_down/tiamat_guardroom/tiamat_guardroom_01a.cgf
+    npc=832856  (440.18, 971.42) z=1207.308 地形= 201.320 网格面=z 1206.504  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_51a.cgf
+    npc=832856  (453.61, 711.91) z=1207.092 地形=   0.000 网格面=z 1206.704  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_35a.cgf
+    npc=832856  (653.70, 923.56) z=1208.517 地形=   0.000 网格面=z 1207.770  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_subroom_02_01b.cgf
+    npc=832856  (598.41, 780.72) z=1227.353 地形=   0.205 网格面=z 1226.504  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_72a.cgf
+    npc=832856  (647.56, 622.23) z=1208.517 地形=   0.000 网格面=z 1207.780  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_subroom_02_02d.cgf
+    npc=832856  (245.34, 728.82) z=1201.066 地形=1031.090 网格面=z 1200.162  levels/common/idzone/tiamat_down/1st/tiamatcastle_ob02b.cgf
+    npc=832856  (350.61, 1132.99) z=1184.689 地形= 968.777 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st07.cgf
+    npc=832856  (211.32, 933.84) z=1184.592 地形=1009.000 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st04.cgf
+    npc=832856  (1086.76, 640.75) z=1207.246 地形=  23.006 网格面=z 1206.503  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_28a.cgf
+    npc=832856  (448.07, 888.66) z=1207.267 地形=  38.250 网格面=z 1206.504  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_45a.cgf
+    npc=832856  (908.56, 474.47) z=1209.326 地形=  42.029 网格面=z 1208.504  levels/common/idzone/tiamat_down/tiamat_center/bu_tiamat_main_56a.cgf
+    npc=832856  (1054.52, 318.47) z=1184.689 地形= 941.228 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st30.cgf
+    npc=832856  (1250.92, 1050.03) z=1184.688 地形= 987.686 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st20.cgf
+    npc=832856  (210.68, 596.41) z=1184.592 地形=1025.707 网格面=z 1183.858  levels/common/idzone/tiamat_down/1st/tiamatdown_1st43.cgf
+    npc=832857  (732.91, 946.82) z=1209.110 地形=   0.000 网格面=z 1208.300  levels/common/idzone/tiamat_down/tiamat_center/bu_tamat_jewel_roomin_01a.cgf
+    npc=832857  (733.05, 586.11) z=1209.110 地形=   0.000 网格面=z 1208.300  levels/common/idzone/tiamat_down/tiamat_center/bu_tamat_jewel_roomin_01a.cgf
+    npc=832857  (1007.04, 873.79) z=1209.110 地形=   0.000 网格面=z 1208.304  levels/common/idzone/tiamat_down/tiamat_center/bu_tamat_jewel_roomin_01a.cgf
+    npc=282945  (83.98, 741.32) z=1213.501 地形=1182.917 网格面=z 1213.501  levels/common/idzone/tiamat_down/castle_outdoor/bu_tiamatcastle_out_03e.cgf
+world 600050000: spots=5556 placements=14887 meshes=1190 triangles=3605489 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 124; 其中脚下有贴合碰撞面: 32
+    npc=209580  (221.48, 649.41) z= 235.747 地形= 234.709 网格面=z  235.747  levels/common/tribe/rune/buildings/outpost/bu_ru_stair_01a.cgf
+    npc=209580  (373.09, 446.01) z= 282.393 地形= 273.206 网格面=z  282.503  levels/common/tribe/rune/buildings/outpost/bu_ru_op_l_01a.cgf
+    npc=701734  (298.00, 2726.61) z=  42.742 地形=  35.191 网格面=z   42.742  levels/common/tribe/rune/buildings/outpost/bu_ru_shrinewall_02b.cgf
+    npc=701734  (300.60, 2731.14) z=  42.742 地形=  39.398 网格面=z   42.742  levels/common/tribe/rune/buildings/outpost/bu_ru_shrinewall_02b.cgf
+    npc=230299  (2903.62, 1730.45) z= 415.245 地形= 411.049 网格面=z  415.245  levels/common/dark/natural/rocks/etc/na_d_icerock_a_01h04.cgf
+    npc=230218  (719.73, 1838.14) z=  74.498 地形=  63.285 网格面=z   74.498  levels/common/abyss/underpass/bu_underpass_yj_01a.cgf
+    npc=233029  (2308.08, 240.85) z= 224.511 地形= 216.412 网格面=z  224.511  levels/common/tribe/owllau/buildings/houses/bu_ow_owllau_house_02b.cgf
+    npc=230288  (2804.24, 1183.23) z= 433.730 地形= 322.575 网格面=z  433.730  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_01a.cgf
+    npc=230288  (2806.28, 1155.81) z= 431.780 地形= 320.286 网格面=z  431.780  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_01a.cgf
+    npc=230288  (2836.98, 1074.40) z= 409.920 地形= 323.009 网格面=z  409.920  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230288  (2845.78, 1059.05) z= 412.256 地形= 321.577 网格面=z  412.256  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230288  (2878.75, 1267.00) z= 403.846 地形= 370.541 网格面=z  403.846  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230288  (2885.99, 1295.46) z= 409.175 地形= 374.881 网格面=z  409.176  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230288  (2920.43, 1139.40) z= 411.122 地形= 337.143 网格面=z  411.122  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_02b.cgf
+    npc=209565  (340.18, 2739.92) z= 149.160 地形=  28.884 网格面=z  149.160  levels/common/tribe/rune/buildings/outpost/bu_ru_op_ksanctumin_03c.cgf
+    npc=701565  (1200.58, 2063.87) z=  66.370 地形=  64.970 网格面=z   66.838  objects/npc/level_object/ldf5a_fobj/ldf5a_ed/ldf5a_edium.cgf
+    npc=230256  (1235.08, 311.26) z= 193.653 地形= 181.514 网格面=z  193.653  levels/common/light/structures/props/exterior/pr_l_minidool_02a.cgf
+    npc=230255  (1318.16, 158.30) z= 183.203 地形= 179.125 网格面=z  183.588  levels/common/light/structures/props/exterior/pr_l_foresttomb_03c.cgf
+    npc=233488  (363.07, 1524.22) z= 267.329 地形= 265.125 网格面=z  267.329  levels/common/tribe/rune/buildings/outpost/bu_ru_shrinewall_06f.cgf
+    npc=232882  (2799.42, 1265.04) z= 423.930 地形= 409.303 网格面=z  423.930  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230338  (1429.31, 2902.10) z= 207.247 地形= 205.250 网格面=z  207.247  levels/common/tribe/shulack/buildings/houses/bu_sh_shulack_homedoor_01a.cgf
+    npc=230205  (711.94, 1848.42) z=  74.186 地形=  64.555 网格面=z   74.186  levels/common/abyss/underpass/bu_underpass_yj_01a.cgf
+    npc=230287  (2823.42, 1323.03) z= 417.423 地形= 405.887 网格面=z  417.423  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230287  (2839.60, 1333.81) z= 418.227 地形= 401.180 网格面=z  418.227  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230287  (2845.95, 1315.84) z= 418.251 地形= 396.261 网格面=z  418.251  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icepiece_01a.cgf
+    npc=230287  (2850.45, 1201.17) z= 418.712 地形= 345.522 网格面=z  418.712  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_01a.cgf
+    npc=230287  (2851.06, 1225.94) z= 418.019 地形= 369.453 网格面=z  418.019  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_01a.cgf
+    npc=230287  (2917.22, 1186.64) z= 419.485 地形= 322.498 网格面=z  419.485  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_02b.cgf
+    npc=230287  (2930.47, 946.19) z= 381.545 地形= 314.204 网格面=z  381.545  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_06f.cgf
+    npc=230287  (2933.64, 1194.97) z= 418.488 地形= 326.963 网格面=z  418.488  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_02b.cgf
+    npc=230287  (2938.74, 1170.56) z= 414.510 地形= 334.584 网格面=z  414.510  levels/common/tribe/rune/props/exterior/pr_r_ldf5a_icecliff_02b.cgf
+    npc=230408  (1298.18, 2016.79) z=  75.329 地形=  69.516 网格面=z   75.329  levels/common/tribe/rune/natural/rocks/na_ru_b7_whirlpoolrock_01a.cgf
+world 600080000: spots=5 placements=552 meshes=171 triangles=22122 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 0; 其中脚下有贴合碰撞面: 0
+world 600090000: spots=1371 placements=4545 meshes=363 triangles=956690 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 12; 其中脚下有贴合碰撞面: 9
+    npc=702506  (1242.34, 1317.08) z= 196.084 地形= 194.125 网格面=z  196.084  levels/common/tribe/rune/buildings/fortress/bu_ru_fortress_ground02_01a.cgf
+    npc=702507  (1247.03, 1358.07) z= 201.597 地形= 195.875 网格面=z  201.597  levels/common/tribe/shugo/structures/buildings/bu_sg_triumphalarch_03a.cgf
+    npc=702507  (370.30, 1363.24) z= 163.721 地形= 160.711 网格面=z  163.721  levels/common/tribe/shugo/structures/buildings/bu_sg_triumphalarch_03a.cgf
+    npc=702566  (1244.37, 1314.15) z= 196.700 地形= 194.242 网格面=z  196.084  levels/common/tribe/rune/buildings/fortress/bu_ru_fortress_ground02_01a.cgf
+    npc=802358  (1306.30, 1335.06) z= 200.580 地形= 197.470 网格面=z  199.750  levels/common/tribe/rune/buildings/fortress/bu_ru_fortress_ground_01a.cgf
+    npc=802431  (1305.55, 1307.39) z= 200.580 地形= 198.000 网格面=z  199.750  levels/common/tribe/rune/buildings/fortress/bu_ru_fortress_ground_01a.cgf
+    npc=248526  (369.09, 246.14) z= 117.780 地形=  58.999 网格面=z  117.780  levels/common/light/natural/etc/na_ldf5fortress_rock_01a.cgf
+    npc=281817  (355.71, 239.11) z= 118.045 地形=  46.640 网格面=z  118.999  levels/common/light/natural/etc/na_ldf5fortress_rock_04a.cgf
+    npc=234285  (294.84, 317.95) z= 152.453 地形=  93.240 网格面=z  152.453  levels/common/dark/natural_etc/rocks/na_ldf5_crack_rock_01a.cgf
+world 600100000: spots=3022 placements=7172 meshes=414 triangles=973528 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 3; 其中脚下有贴合碰撞面: 0
+world 600110000: spots=402 placements=3630 meshes=181 triangles=179165 terrain=yes
+  作者 Z > 地形 1.0m 且 PATH 未命中: 1; 其中脚下有贴合碰撞面: 1
+    npc=730231  (1418.77, 766.23) z= 312.866 地形= 305.125 网格面=z  312.866  levels/common/light/structures/buildings/dungeon/dungeon_temple/bu_l_idtempleup_door01a.cgf
+Traceback (most recent call last):
+  File "/Users/mc/IdeaProjects/AionEmu-test/.agents/summary/inggison-somation-rock-z/audit_rocks_vs_spawns.py", line 219, in <module>
+    main()
+  File "/Users/mc/IdeaProjects/AionEmu-test/.agents/summary/inggison-somation-rock-z/audit_rocks_vs_spawns.py", line 177, in main
+    reader = reader_cache.setdefault(world, pp.PathReader(world))
+                                            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mc/IdeaProjects/AionEmu-test/.agents/summary/inggison-somation-rock-z/../spawn-z-audit/audit_path_projection.py", line 50, in __init__
+    with open(os.path.join(PATH_DIR, "%d.idx" % world_id), "rb") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/geo/path/600200000.idx'

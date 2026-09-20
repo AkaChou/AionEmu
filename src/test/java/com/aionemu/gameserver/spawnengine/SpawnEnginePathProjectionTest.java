@@ -67,8 +67,29 @@ class SpawnEnginePathProjectionTest {
 		assertEquals(ground.getZ(), SpawnEngine.projectedSpawnZ(npc, ground, ignored -> null,
 			ignored -> Float.NaN, ignored -> Float.NaN));
 		assertEquals(104.63f, SpawnEngine.projectedSpawnZ(npc, ground, ignored -> null,
-			ignored -> 104.63f, ignored -> {
-				throw new AssertionError("Terrain height must win over the geo surface fallback");
+			ignored -> 104.63f, ignored -> 130.25f));
+	}
+
+	@Test
+	void prefersCollisionSurfaceMatchingAuthoredZOverTerrainFallback() {
+		ObjenesisStd objenesis = new ObjenesisStd();
+		TestNpc npc = npc(objenesis, true);
+		// 210050000 Inggison 805334：作者 Z 是巨岩顶面，地形在它下方 16.22m。
+		// World 210050000 Inggison NPC 805334: the authored Z is the big rock top, the terrain sits 16.22m below.
+		SpawnTemplate rock = SpawnEngine.createSpawnTemplate(210050000, 805334, 2157.0432f, 277.79797f, 489.7741f,
+			(byte) 83);
+
+		assertEquals(489.77418f, SpawnEngine.projectedSpawnZ(npc, rock, ignored -> null,
+			ignored -> 473.55777f, ignored -> 489.77418f));
+		// 碰撞面与作者 Z 不贴合时仍按原语义用地形兜底。 / A non-matching surface still falls back to the terrain.
+		assertEquals(473.55777f, SpawnEngine.projectedSpawnZ(npc, rock, ignored -> null,
+			ignored -> 473.55777f, ignored -> 473.58194f));
+
+		// 地形本就位于作者 Z 附近：不查询 geo。 / Terrain already at the authored Z: no geo probe.
+		SpawnTemplate ground = SpawnEngine.createSpawnTemplate(310010000, 211044, 253, 240, 208.80693f, (byte) 55);
+		assertEquals(208.98f, SpawnEngine.projectedSpawnZ(npc, ground, ignored -> null, ignored -> 208.98f,
+			ignored -> {
+				throw new AssertionError("Matching terrain must not trigger a geo probe");
 			}));
 	}
 

@@ -81,6 +81,12 @@ public class SpawnEngine {
 	/** geo 兜底与数据 Z 偏差超过该值（米）时记录 WARN。 / Warn when the geo fallback deviates from the authored Z by more than this many meters. */
 	private static final float GEO_FALLBACK_WARN_DELTA = 10.0f;
 
+	/**
+	 * 作者 Z 贴合容差（米）：判定出生点是否落在某个碰撞面/地形的站面上。
+	 * Tolerance (m) for accepting a collision surface or the terrain as the authored standing ground.
+	 */
+	private static final float AUTHORED_SURFACE_DELTA = 1.0f;
+
 	/** 已告警的 (worldId, npcId) 与上限，避免同一模板在启动期刷屏。 / Warned (worldId, npcId) pairs and their cap, to avoid startup log flooding. */
 	private static final Set<Long> GEO_FALLBACK_WARNED = ConcurrentHashMap.newKeySet();
 	private static final int GEO_FALLBACK_WARN_CAP = 2048;
@@ -314,6 +320,22 @@ public class SpawnEngine {
 		return projectedSpawnZ(visibleObject, spawn, projector, terrainHeight, npc -> Float.NaN);
 	}
 
+	/**
+	 * 解析刷点出生 Z：按可行走地面、地形高度、碰撞面、作者高度依次兜底。
+	 * Resolves the spawn Z: walkable PATH ground, terrain height, collision surface, authored Z.
+	 * <p>
+	 * 地形高度图不包含岩石、建筑、桥面等道具网格，因此当作者 Z 明显高于地形、
+	 * 却有 geo 碰撞面与作者 Z 贴合时，采用的是该碰撞面而不是地形。
+	 * The terrain heightmap excludes prop meshes (rocks, buildings, bridges), so a geo collision
+	 * surface matching the authored Z wins over the terrain fallback.
+	 *
+	 * @param visibleObject 可见对象 / visible object
+	 * @param spawn 刷怪模板 / spawn template
+	 * @param projector PATH 地面投影 / PATH ground projector
+	 * @param terrainHeight 地形高度采样 / terrain height sampler
+	 * @param geoGround geo 碰撞面采样 / geo collision surface sampler
+	 * @return 出生 Z / spawn Z
+	 */
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
 			Function<Npc, Float> terrainHeight, Function<Npc, Float> geoGround) {
 		// 零移速交互物可能使用水面或摆件高度，必须保留静态数据中的 Z。 / Immobile objects may use authored water/prop height.
@@ -325,9 +347,21 @@ public class SpawnEngine {
 		if (point != null) {
 			return point[2];
 		}
+		float authoredZ = spawn.getZ();
 		// PATH 节点容差外的出生点（如出生 Z 悬空于树冠上方）：用地形高度兜底，避免出生即悬空
 		float terrainZ = terrainHeight.apply(npc);
 		if (!Float.isNaN(terrainZ)) {
+			if (Math.abs(terrainZ - authoredZ) <= AUTHORED_SURFACE_DELTA) {
+				return terrainZ;
+			}
+			// 作者 Z 明显高于地形，如 geo 碰撞面与作者 Z 贴合，说明 NPC 站在地形高度图不含的
+			// 网格面上（岩石/建筑/桥面/机关）；此时地形兜底会把出生点压到下层地面，改用该面。
+			// When the authored Z clearly sits above the terrain yet a geo surface matches it, the NPC
+			// stands on a mesh the heightmap lacks; that surface must win over the terrain fallback.
+			float surfaceZ = geoGround.apply(npc);
+			if (Float.isFinite(surfaceZ) && Math.abs(surfaceZ - authoredZ) <= AUTHORED_SURFACE_DELTA) {
+				return surfaceZ;
+			}
 			return terrainZ;
 		}
 		// 非攻击对象（要塞护盾/发生器、机关、传送门等）的高度是数据作者摆放的，
@@ -335,15 +369,15 @@ public class SpawnEngine {
 		// Non-attackable objects (siege shields, traps, portals) keep their authored height:
 		// the geo fallback would drag them down to a lower surface.
 		if (keepsAuthoredZ(npc)) {
-			return spawn.getZ();
+			return authoredZ;
 		}
 		// 无地形图的 world（TERRAIN_DISABLED_MAPS 或缺少 PNG）再退一步用 geo 碰撞面兜底，
 		// 否则只能退回 XML 的 z，出生即可能悬空。 / Terrain-less maps fall back to the geo surface.
 		float geoZ = geoGround.apply(npc);
 		if (!Float.isFinite(geoZ)) {
-			return spawn.getZ();
+			return authoredZ;
 		}
-		float delta = Math.abs(geoZ - spawn.getZ());
+		float delta = Math.abs(geoZ - authoredZ);
 		long warnKey = ((long) spawn.getWorldId() << 32) | (spawn.getNpcId() & 0xFFFFFFFFL);
 		if (delta > GEO_FALLBACK_WARN_DELTA && GEO_FALLBACK_WARNED.size() < GEO_FALLBACK_WARN_CAP
 				&& GEO_FALLBACK_WARNED.add(warnKey)) {

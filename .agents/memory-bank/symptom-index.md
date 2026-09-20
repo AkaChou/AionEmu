@@ -42,6 +42,7 @@
 | 对齐真端数据后，实例里原本必然出现的特效或托起碰撞整块消失（例：Taloc's Hollow 2F 打破破裂巨虫卵后地面不再升起上升气流，但角色仍可展开翅膀自行飞上去） | `IR-010` | 对齐真端时被删除的实例脚本副作用（特效实体、条件刷怪、移动碰撞）是否还有幂等替代路径 |
 | 击杀 Boss 后应当现身的对话 NPC、奖励 NPC 或传送门完全不出现（例：塔洛克空洞击杀 Celestius 后找不到卡斯帕的幻影 799503，任务 10032 无法交付） | `IR-011` | resetPatternState/releaseTrackedSpawns 是否把“生成者生命周期结束事件链里生成的子对象”与“普通战斗期子对象”区分开 |
 | 副本销毁后日志持续刷“生成 NPC 209679/237219/237232/237217 时出错”，异常是 InstanceScaler.onBeforeSpawn → WorldPosition.getWorldMapInstance 的 NullPointerException（部分只记录裸 NPE） | `IR-012` | 副本销毁后仍在排队的延迟任务入口是否检查 isInstanceDestroyed，spawn 返回值与 getNpcs 列表返回值是否判空 |
+| NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高 | `IR-013` | SpawnEngine.projectedSpawnZ 的兜底顺序，以及 //geo z 的 curZ / terrainZ / pathGround / spawnZ 四项对比 |
 | 前置缺失、level-up 过早接取、NPC 注册或路由不一致 | `QE-001` | old Handler, quest_data.xml, production catalog |
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |

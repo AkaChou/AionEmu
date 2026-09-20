@@ -2,10 +2,10 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-012`
+> Pattern IDs: `IR-001`–`IR-013`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
 > scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
-> last_reviewed: 2026-09-19
+> last_reviewed: 2026-09-20
 
 ---
 
@@ -263,3 +263,26 @@ keywords: 生成 NPC 时出错, NullPointerException, mapRegion is null, 副本�
 - **根因链**：`237216`（Grave Cavity Rendclaw）等场景在死亡回调里排 25–87 秒后的 spawn 任务；副本超时/重置先执行 `onInstanceDestroy()` 拆掉世界实例，延迟任务随后仍在同一实例 ID 上调用 `SpawnEngine.addNewSingleTimeSpawn` + `spawnObject`，`InstanceScaler.onBeforeSpawn` 读 `position.getWorldMapInstance()` 时拿到 null。
 - **护栏**：把守护放进统一入口——覆写 `GeneralInstanceHandler#spawn`，`isInstanceDestroyed` 为真直接返回 null；`raidSeal`/`moveToSealForward`/`killNpc`/直接 `SpawnEngine.spawnObject` 的特效方法全部对 null 判空，`getNpcs()` 的 null 列表不再被迭代。
 - **边界**：这不是“副本销毁要取消所有任务”的通用实现，只是让延迟任务在实例拆除后不再触碰世界；如果后续把延迟任务改成可取消的 `Future` 集合，也应保留这层判空。
+
+## [IR-013] 十三、出生 Z 兜底不得压掉作者摆在道具网格面上的站位 (SPAWN_Z_PREFERS_MATCHING_COLLISION_SURFACE)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: worlds with a terrain heightmap 下“可移动、非飞行”刷点的出生 Z 解析（SpawnEngine.projectedSpawnZ）与 geo/地形数据边界
+first_seen: 2026-09-20
+last_verified: 2026-09-20
+symptom: NPC 应站在巨石、建筑、桥面、机关等道具上，实际出现在其下方的地面（例：Inggison 210050000 / 805334 LF4_Somation_E 作者 Z=489.7741 是巨岩顶面，运行期被压到 473.55777，低 16.22m）；`//geo z` 同时出现 `curZ == terrainZ`、`pathGround=null`、`spawnZ` 明显更高
+root_cause: SpawnEngine.projectedSpawnZ 的兜底顺序是 PATH 可行走地面 → 地形高度 → 非攻击对象保留作者 Z → geo 面；地形高度图只描述地表、不含岩石/建筑等道具网格，PATH 又因 0.7m 垂直容差未命中，于是“作者 Z 落在碰撞网格上”的正确高度被地形高度覆盖
+fix_or_guardrail: PATH 失败后先取地形：地形与作者 Z 贴合（≤1m，AUTHORED_SURFACE_DELTA）时直接采用地形；否则查 geo 碰撞面，贴合作者 Z（≤1m）则采用碰撞面；两者都不贴合才退回地形。无地形 world 的既有 keepsAuthoredZ/geo 兜底分支与 resolve_z 的 SpawnSurfaceResolver（geo 优先）保持不变；不要用“只给报障点加 resolve_z/fly”之类的单点数据补丁替代该顺序修正
+evidence: commit（本次修复，待提交）；src/main/java/com/aionemu/gameserver/spawnengine/SpawnEngine.java:317-390；src/test/java/com/aionemu/gameserver/spawnengine/SpawnEnginePathProjectionTest.java（新增 prefersCollisionSurfaceMatchingAuthoredZOverTerrainFallback）；.agents/summary/inggison-somation-rock-z/2026-09-20-805334-somation-rock-top.zh-CN.md；离线复现 terrain float32=473.55777 等于运行期 curZ；geo 巨岩面 489.77418 等于作者 Z（岩石网格 na_l_dark_rockgnbig_02a）；真端 Inggison 出生表 npc_info 805334 z=491.812439；全量同族审计 47 world / 1342 候选 / 346 点
+validation: static + 离线复现完成（含全量同族审计：1342 个“作者 Z 高于地形 >1m 且 PATH 未命中”的刷点中 346 点脚下存在贴合碰撞面，会被地形兜底压到下层地面）；focused-test PENDING（mvn -q -Dtest=SpawnEnginePathProjectionTest test 待授权）；runtime/client PENDING（重启后 //geo z 目标 805334 应显示 curZ≈489.77418）
+boundaries: 贴合容差取 1m；地形与作者 Z 差 <1m 的分支不查 geo（启动性能），该区间内“网格面才是真站位面”的偏差不会被修正；不覆盖“作者 Z 低于下方网格面/位于网格内部”与 resolve_z 路线；TERRAIN_DISABLED_MAPS 或缺 PNG 的 world 行为不变；审计按 PHYSICAL 碰撞面与精确 XY 三角形包含复现，未覆盖 geo 其他碰撞意图
+superseded_by: none
+first_check: SpawnEngine.projectedSpawnZ 的兜底顺序，以及 //geo z 的 curZ / terrainZ / pathGround / spawnZ 四项对比
+keywords: NPC 在石头下面, 出生在下方地面, curZ 等于 terrainZ, pathGround=null, spawnZ 明显更高, 作者 Z 被压到地面, rock top, prop mesh collision, 刷点高度, 贴地兜底
+-->
+
+- **现象判据**：`//geo z` 同时满足 `curZ ≈ terrainZ`、`pathGround=null`、`spawnZ` 明显高于 `curZ`，基本可以判定“作者 Z 落在网格碰撞面，被地形兜底压到下层地面”。
+- **根因**：地形高度图（`geo/<world>.png`）只描述地表，岩石/建筑/桥面/机关等由 `geo/<world>.geo.gz` + `models.mesh` 提供；`PathData` 的 0.7m 垂直容差会判定“站在道具上的刷点”投影失败，随后的地形兜底与真实站位面相差可达十几米。
+- **修复契约**：地形与作者 Z 贴合才用地形；不贴合时用“与作者 Z 贴合（≤1m）的 geo 碰撞面”；两者都不贴合才退回地形。这样既修“站在道具上被压到地面”，也保留“作者 Z 悬空（真端数据错误）时压回地形”的既有修复。
+- **取证方法**：离线用 `models.mesh` + `geo/<world>.geo.gz` 复现 `GeoMap.getZ`（PHYSICAL 面 + 放置物 loc/rotation/scale），即可在不启动服务端的前提下给出该点全部碰撞面高度；见 `.agents/summary/inggison-somation-rock-z/geo_surface_probe.py`。
+- **教训**：任何“贴地/兜底”修复都要区分“地表高度”与“碰撞面高度”，并用同族审计（world 级全量刷点 × geo 面）给出影响面，而不是只修报障的那一个点。
