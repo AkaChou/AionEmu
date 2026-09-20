@@ -11,10 +11,14 @@
     <rewards>
       <reward kind="ITEM" id="188054185" amount="1"/>
     </rewards>
-    <start-conditions>
-      <condition type="acquired" quest-id="25304"/>
-      <condition type="acquired" quest-id="25314"/>
-    </start-conditions>
+    <start-condition-groups>
+      <group>
+        <condition type="acquired" quest-id="25304"/>
+      </group>
+      <group>
+        <condition type="acquired" quest-id="25314"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

@@ -9,6 +9,14 @@
       <reward kind="EXP" id="0" amount="3618881"/>
       <reward kind="ITEM" id="182215830" amount="1"/>
     </rewards>
+    <start-condition-groups>
+      <group>
+        <condition type="acquired" quest-id="15301"/>
+      </group>
+      <group>
+        <condition type="acquired" quest-id="15311"/>
+      </group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>

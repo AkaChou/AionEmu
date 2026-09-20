@@ -16,20 +16,30 @@
       <drop npc-id="210795" item-id="182215047" chance="45" each-member="true" collecting-step="0"/>
       <drop npc-id="210806" item-id="182215047" chance="45" each-member="true" collecting-step="0"/>
     </drops>
-        <start-condition-groups>
+    <start-condition-groups>
       <group>
         <condition type="finished" quest-id="80058"/>
-        <condition type="unfinished" quest-id="80059"/>
         <condition type="acquired" quest-id="80059"/>
+        <condition type="unfinished" quest-id="80059"/>
         <condition type="unfinished" quest-id="80065"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="80058"/>
         <condition type="acquired" quest-id="80065"/>
+        <condition type="unfinished" quest-id="80059"/>
+        <condition type="unfinished" quest-id="80065"/>
       </group>
       <group>
         <condition type="finished" quest-id="80064"/>
-        <condition type="unfinished" quest-id="80059"/>
         <condition type="acquired" quest-id="80059"/>
+        <condition type="unfinished" quest-id="80059"/>
         <condition type="unfinished" quest-id="80065"/>
+      </group>
+      <group>
+        <condition type="finished" quest-id="80064"/>
         <condition type="acquired" quest-id="80065"/>
+        <condition type="unfinished" quest-id="80059"/>
+        <condition type="unfinished" quest-id="80065"/>
       </group>
     </start-condition-groups>
   </metadata>

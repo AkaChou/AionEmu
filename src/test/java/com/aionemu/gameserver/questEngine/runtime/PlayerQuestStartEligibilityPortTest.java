@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -306,6 +308,40 @@ class PlayerQuestStartEligibilityPortTest {
 
 		assertTrue(port(player, Map.of(990001, grouped))
 			.snapshot(PLAYER_ID, 990001, new QuestEvent.LevelUp()).eligible());
+	}
+
+	@Test
+	void daevanionAuxiliarySlotsStayAlternativesInsteadOfOneConjunction() throws Exception {
+		// 客户端 quest.xml:15321/15323 的 acquired 槽位 1/2 分别为 Q15301、Q15311;
+		// 零售 NPC 服务端在槽位之间取“或”、槽位内取“与”。修复前两个槽位被并成单个 AND 组,
+		// 已接 15301 的玩家因此被拒绝,而客户端任务列表照常给出该行。
+		QuestMetadata auxiliary = metadata(15321);
+		assertEquals(2, auxiliary.startConditionGroups().size());
+		assertEquals(List.of(new QuestStartCondition("acquired", 15301, 0)),
+			auxiliary.startConditionGroups().get(0).conditions());
+		assertEquals(List.of(new QuestStartCondition("acquired", 15311, 0)),
+			auxiliary.startConditionGroups().get(1).conditions());
+
+		Player holding15301 = player(65);
+		holding15301.getQuestStateList().addQuest(15301,
+			new QuestState(15301, QuestStatus.START, 0, 0, null, 0, null));
+		assertTrue(port(holding15301, Map.of(15321, auxiliary))
+			.snapshot(PLAYER_ID, 15321, new QuestEvent.LevelUp()).eligible());
+
+		Player withoutPrerequisites = player(65);
+		assertRejected(port(withoutPrerequisites, Map.of(15321, auxiliary)), 15321,
+			new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+	}
+
+	@Test
+	void commaSeparatedSlotEntriesStayInsideOneConjunction() throws Exception {
+		// 客户端 quest.xml:80613 的 finished_quest_cond1 = Q80611,Q80612 属于同一个槽位,
+		// 槽位内的多个条目在零售判定中是 AND,不能拆成备选组。
+		QuestMetadata tutorial = metadata(80613);
+		assertEquals(1, tutorial.startConditionGroups().size());
+		assertEquals(Set.of(new QuestStartCondition("finished", 80611, 0),
+			new QuestStartCondition("finished", 80612, 0)),
+			Set.copyOf(tutorial.startConditionGroups().getFirst().conditions()));
 	}
 
 	@Test
