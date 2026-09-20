@@ -180,9 +180,6 @@
         <dialog type="TALK_TO_NPC" npc-id="805328" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <remove-item item-id="182215829" count="1"/>
-        <remove-item item-id="182215830" count="1"/>
-        <remove-item item-id="182215831" count="1"/>
         <give-item item-id="182215865" count="1"/>
         <set-variable field="var0" value="3"/>
       </actions>

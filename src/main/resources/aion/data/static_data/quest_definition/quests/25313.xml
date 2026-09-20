@@ -139,6 +139,10 @@
         <has-item item-id="182215893" count="50"/>
       </conditions>
       <actions>
+        <remove-item item-id="152003018" count="150"/>
+        <remove-item item-id="182215848" count="40"/>
+        <remove-item item-id="182215892" count="50"/>
+        <remove-item item-id="182215893" count="50"/>
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
@@ -199,10 +203,6 @@
         <dialog type="TALK_TO_NPC" npc-id="805340" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <remove-item item-id="152003018" count="150"/>
-        <remove-item item-id="182215848" count="40"/>
-        <remove-item item-id="182215892" count="50"/>
-        <remove-item item-id="182215893" count="50"/>
         <give-item item-id="182215879" count="1"/>
         <set-variable field="var0" value="3"/>
       </actions>

@@ -129,6 +129,8 @@
         <has-item item-id="182215895" count="80"/>
       </conditions>
       <actions>
+        <remove-item item-id="152003019" count="30"/>
+        <remove-item item-id="182215895" count="80"/>
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
@@ -189,8 +191,6 @@
         <dialog type="TALK_TO_NPC" npc-id="805341" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <remove-item item-id="152003019" count="30"/>
-        <remove-item item-id="182215895" count="80"/>
         <give-item item-id="182215881" count="1"/>
         <set-variable field="var0" value="3"/>
       </actions>

@@ -166,7 +166,6 @@
         <dialog type="TALK_TO_NPC" npc-id="805341" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <remove-item item-id="182215847" count="70"/>
         <give-item item-id="182215878" count="1"/>
         <set-variable field="var0" value="3"/>
       </actions>

@@ -39,22 +39,79 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
+    <node label="s0" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805339" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="805339" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
+    <dialog type="NPC_START" npc-id="805339" source="unaccepted" target="s0"
+      selection-sources="unaccepted s0 s1 s2" start-page="SELECT_NONE"/>
+    <!-- 介绍必须在接取后推进，不能由接取 NPC 直接领奖。 / Advance the introduction after acceptance, never reward early at the issuer. -->
+    <transition source="s0" target="s0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="805339" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="s0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT2_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <!-- 成功交付只扣一次材料，并保留客户端的继续对话按钮。 / Consume materials once and retain the client continuation button. -->
+    <transition source="s1" target="s2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="152003019" count="30"/>
@@ -65,27 +122,79 @@
         <remove-item item-id="182215894" count="80"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="s1" target="s1" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="805339" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="805339" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+    <!-- 收尾发放任务凭证，材料已在上一阶段扣除。 / Grant the work item here; materials were consumed in the preceding phase. -->
+    <transition source="s2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805341" action="SET_SUCCEED"/>
+      </event>
+      <actions>
+        <give-item item-id="182215875" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805339" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="805339" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -96,82 +205,5 @@
       <choice action="SELECTED_QUEST_REWARD7" reward-index="8"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-
-
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805339" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <conditions>
-        <has-item item-id="152003019" count="30"/>
-        <has-item item-id="182215894" count="80"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152003019" count="30"/>
-        <remove-item item-id="182215894" count="80"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805339" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT2_2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805341" action="SELECT1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
-<transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805341" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <conditions>
-        <has-item item-id="152003019" count="30"/>
-        <has-item item-id="182215894" count="80"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152003019" count="30"/>
-        <remove-item item-id="182215894" count="80"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-<transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805341" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
   </transitions>
 </quest-definition>
