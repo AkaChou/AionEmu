@@ -109,6 +109,24 @@ public final class QuestDefinitionCompiler {
 					}
 					definition.progressLayout().pack(Map.of(field, value));
 				}
+				if (action instanceof QuestAction.IncrementVariable increment) {
+					String field = increment.field();
+					if (definition.progressLayout().field(field) == null) {
+						fail("UNKNOWN_PROGRESS_FIELD", "action references unknown field: " + field);
+					}
+					if (transition.sourceNode() != null
+							&& transition.sourceNode().equals(transition.targetNode())
+							&& nodes.get(transition.sourceNode()).projection().variables().containsKey(field)) {
+						// 自环计数不得自增被 source 投影钉死的字段：运行期按 source 投影做全等匹配
+						// (QuestMutationPlanner#matchesSourceNode)，第一次递增之后同源事件再也匹配不到该
+						// source，任务表现为"只有第一只怪计数，之后不推进"。计数自环必须只固定阶段位段。
+						// A counter self-loop must never increment a field pinned by its source projection:
+						// routing matches that projection exactly, so every later event would become NO_MATCH.
+						fail("COUNTER_SELF_LOOP_PINS_INCREMENTED_FIELD",
+							"self-loop transition increments projected field " + field
+								+ " of node " + transition.sourceNode());
+					}
+				}
 				if (action instanceof QuestAction.GrantReward reward
 						&& reward.amountMode() == QuestRewardAmountMode.QUEST_BASE
 						&& reward.rewardKind() != QuestRewardKind.GOLD

@@ -200,10 +200,16 @@ class RetailSequentialQuestFamilyTest {
 			.findFirst().orElseThrow();
 	}
 
+	/**
+	 * 阶段节点只以阶段位段 var0 标识自身：运行期按 source 节点投影匹配路由，把实时击杀计数
+	 * var1 钉进投影会让第一只怪之后的每次击杀都匹配不到 source（NO_MATCH，任务不往下）。
+	 * Stage nodes identify themselves by the stage field var0 only: matching a route requires its
+	 * source projection, so pinning the live kill counter var1 stalls every kill after the first.
+	 */
 	private static void assertNode(QuestDefinition definition, String label, int var0) {
 		QuestNode node = node(definition, label);
 		assertEquals(QuestStatus.START, node.projection().status());
-		assertEquals(Map.of("var0", var0, "var1", 0), node.projection().variables());
+		assertEquals(Map.of("var0", var0), node.projection().variables());
 	}
 
 	private static void assertDailyNode(QuestDefinition definition, String label, int var0) {

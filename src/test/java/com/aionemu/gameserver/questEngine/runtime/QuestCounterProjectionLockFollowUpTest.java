@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,6 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定 COUNTER_PROJECTION_LOCK 后续批次（4711/30710/49702）的完整行为合同：
  * START 源节点不投影实时计数字段，计数与步骤链由 transition 条件驱动，最后一击或交互进入 REWARD。
+ * 第二批（15321/25608/27510）同型：击杀自环阶段节点只固定阶段位段 var0，
+ * 计数字段 var1 由击杀转换拥有；把计数钉进 source 投影会让第一只怪之后全部 NO_MATCH。
  * Locks the full behavior contract of the follow-up COUNTER_PROJECTION_LOCK batch (4711/30710/49702):
  * the START source node projects no live counter field; counters and step chains are driven by
  * transition conditions and the final kill or interaction enters REWARD.
@@ -143,11 +146,99 @@ class QuestCounterProjectionLockFollowUpTest {
 		}
 	}
 
+	/**
+	 * 15321：s1 阶段的 30 只怪必须逐只计入并推进到 s2。
+	 * 修复前 s1 投影 var1=0，第一只怪把 var1 写成 1 之后 source 不再匹配，
+	 * 之后每次击杀都 NO_MATCH：玩家看到"击杀只有第一只算，任务不往下"。
+	 */
+	@Test
+	void quest15321CountsEveryKillOfTheShoeHuntStage() throws Exception {
+		CompiledQuestDefinition definition = load(15321);
+		assertEquals(Map.of("var0", 1), node(definition, "s1").projection().variables(),
+			"the kill stage must not pin the live counter var1");
+
+		QuestTransition counting = killRoute(definition, 235829, 1);
+		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
+			runtime.prepare(counting);
+			for (int index = 1; index <= 30; index++) {
+				assertTrue(runtime.dispatchWorld(new QuestEvent.KillNpc(235829)).handled(),
+					"kill at index " + index + " was not handled");
+			}
+			assertEquals(QuestStatus.START, runtime.state().status());
+			assertEquals(Map.of("var0", 2, "var1", 0), variables(definition, runtime));
+		}
+	}
+
+	/** 25608：step2 的 10 只 241235 必须整段计入后才推进到 step3。 */
+	@Test
+	void quest25608CountsEveryKillBeforeTheReport() throws Exception {
+		CompiledQuestDefinition definition = load(25608);
+		assertEquals(Map.of("var0", 2), node(definition, "step2").projection().variables(),
+			"the kill stage must not pin the live counter var1");
+
+		QuestTransition counting = killRoute(definition, 241235, 1);
+		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
+			runtime.prepare(counting);
+			for (int index = 1; index <= 10; index++) {
+				assertTrue(runtime.dispatchWorld(new QuestEvent.KillNpc(241235)).handled(),
+					"kill at index " + index + " was not handled");
+			}
+			assertEquals(QuestStatus.START, runtime.state().status());
+			assertEquals(Map.of("var0", 3, "var1", 0), variables(definition, runtime));
+		}
+	}
+
+	/**
+	 * 27510：s3 阶段并行计数精英怪（var1 0..10）与无名 boss（var2 开关），
+	 * 两种击杀都必须计入并进入 s4。
+	 */
+	@Test
+	void quest27510CountsBothEliteFamiliesBeforeTheReport() throws Exception {
+		CompiledQuestDefinition definition = load(27510);
+		assertEquals(Map.of("var0", 3), node(definition, "s3").projection().variables(),
+			"the counter stage must not pin the live kill counters");
+
+		QuestTransition counting = definition.definition().transitions().stream()
+			.filter(candidate -> "s3".equals(candidate.sourceNode())
+				&& "s3".equals(candidate.targetNode()))
+			.filter(candidate -> Integer.valueOf(2).equals(candidate.priority()))
+			.findFirst().orElseThrow();
+		int countedNpc = lowestNpcId(counting);
+		int flagNpc = definition.definition().transitions().stream()
+			.filter(candidate -> "s3".equals(candidate.sourceNode())
+				&& "s3".equals(candidate.targetNode()))
+			.filter(candidate -> Integer.valueOf(1).equals(candidate.priority()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpcSet npcIds
+				&& !npcIds.npcIds().contains(countedNpc))
+			.map(QuestCounterProjectionLockFollowUpTest::lowestNpcId)
+			.findFirst().orElseThrow();
+
+		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
+			runtime.prepare(counting);
+			for (int index = 1; index <= 10; index++) {
+				assertTrue(runtime.dispatchWorld(new QuestEvent.KillNpc(countedNpc)).handled(),
+					"elite kill at index " + index + " was not handled");
+			}
+			assertEquals(Map.of("var0", 3, "var1", 10, "var2", 0), variables(definition, runtime));
+			assertTrue(runtime.dispatchWorld(new QuestEvent.KillNpc(flagNpc)).handled(),
+				"the nameless boss kill was not handled");
+			assertEquals(QuestStatus.START, runtime.state().status());
+			assertEquals(Map.of("var0", 4, "var1", 0, "var2", 0), variables(definition, runtime));
+		}
+	}
+
+	private static int lowestNpcId(QuestTransition transition) {
+		return ((QuestEvent.KillNpcSet) transition.event()).npcIds().stream()
+			.mapToInt(Integer::intValue).min().orElseThrow();
+	}
+
 	private static QuestTransition killRoute(CompiledQuestDefinition definition, int npcId, Integer priority) {
 		return definition.definition().transitions().stream()
-			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc(int id)
-				? id == npcId
-				: candidate.event().equals(new QuestEvent.KillNpcSet(java.util.Set.of(npcId))))
+			.filter(candidate -> switch (candidate.event()) {
+				case QuestEvent.KillNpc(int id) -> id == npcId;
+				case QuestEvent.KillNpcSet(Set<Integer> ids) -> ids.contains(npcId);
+				default -> false;
+			})
 			.filter(candidate -> priority == null || candidate.priority() != null
 				&& priority.equals(candidate.priority()))
 			.findFirst().orElseThrow();

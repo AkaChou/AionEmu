@@ -171,4 +171,58 @@ class IncrementVariableDefinitionTest {
 			.compile();
 		assertEquals(2, definition.definition().transitions().size());
 	}
+
+	/**
+	 * 自环计数不得自增被 source 投影钉死的字段：运行期按 source 投影做全等匹配
+	 * （{@code QuestMutationPlanner#matchesSourceNode}），第一次递增之后同源事件永远 NO_MATCH，
+	 * 表现为"只有第一只怪计入、任务不往下"——15321/25608/27510 修复前的真实成因。
+	 * A counter self-loop must not increment a field pinned by its source projection: routing
+	 * matches that projection exactly, so every kill after the first would become NO_MATCH.
+	 */
+	@Test
+	void selfLoopCounterRejectsIncrementingItsProjectedField() {
+		String xml = """
+
+						<quest-definition id="990037" version="1">
+						  <metadata name="counter-lock-demo" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress>
+						    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+						    <bit-field name="var1" offset="6" width="6" min="0" max="59" persistence="PERSISTENT" scope="LOCAL"/>
+						  </progress>
+						  <nodes>
+						    <node label="started" status="START"><var name="var0" value="1"/><var name="var1" value="0"/></node>
+						    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition source="started" target="started" priority="1">
+						      <event><kill-npc npc-id="235829"/></event>
+						      <conditions><variable-below field="var1" value="29"/></conditions>
+						      <actions><increment-variable field="var1" delta="1"/></actions>
+						    </transition>
+						    <transition source="started" target="reward" priority="0">
+						      <event><kill-npc npc-id="235829"/></event>
+						      <conditions><variable-at-least field="var1" value="29"/></conditions>
+						      <actions><set-variable field="var0" value="2"/></actions>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		assertEquals("COUNTER_SELF_LOOP_PINS_INCREMENTED_FIELD",
+			org.junit.jupiter.api.Assertions.assertThrows(QuestCompilationException.class,
+				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					xml.getBytes(StandardCharsets.UTF_8)))).code(),
+			"a self-loop that increments a projected counter field must fail closed");
+
+		// 正对照：只固定阶段位段 var0 的同一形态照常编译（计数由转换自身拥有）。
+		// Positive control: the same shape compiles once the counter field is not pinned.
+		CompiledQuestDefinition fixed = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+			xml.replace("<var name=\"var1\" value=\"0\"/>", "").getBytes(StandardCharsets.UTF_8)));
+		assertEquals(Map.of("var0", 1), fixed.definition().nodes().stream()
+			.filter(node -> node.label().equals("started"))
+			.findFirst()
+			.orElseThrow()
+			.projection()
+			.variables());
+	}
 }

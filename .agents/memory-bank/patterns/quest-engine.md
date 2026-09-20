@@ -333,12 +333,12 @@ first_check: 客户端当前页 action、电影 transition 的完整 after-commi
 status: CONFIRMED
 scope: QuestDefinitionCompiler transition conflict validation, QuestXmlBlockExpander counter expansion, and node projection uniqueness
 first_seen: 2026-09-15
-last_verified: 2026-09-15
+last_verified: 2026-09-20
 symptom: 任务引擎启动崩溃、Can't initialize typed quest engine、AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK_TO_NPC、DUPLICATE_NODE_PROJECTION
 root_cause: 同阶段同 NPC 动作被多次注册（例如修复直达奖励时对齐 SETPRO 却未清理历史自循环），或多阶段任务引入 counter 积木时因 source 节点不得固定计数字段导致省略声明退化为 START:0 碰撞
 fix_or_guardrail: 对齐客户端动作时彻底清理原同动作自循环边；多阶段且含 counter 的任务，progress 必须分离阶段位段（如 var0）与计数字段（如 var1，参考 4944 潘利尔规范），source 节点固定阶段 var0，counter 绑定 var1
-evidence: src/main/resources/aion/data/static_data/quest_definition/quests/1722.xml; src/main/resources/aion/data/static_data/quest_definition/quests/3940.xml; src/main/resources/aion/data/static_data/quest_definition/quests/4944.xml; .agents/summary/quest-engine-startup-debug/README.md; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCompiler.java; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java
-validation: static; production catalog 6193 executable definitions compile with 0 failures; QuestDefinitionCatalogManifest.compile() loaded 6231 entries successfully; git diff --check clean
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/1722.xml; src/main/resources/aion/data/static_data/quest_definition/quests/3940.xml; src/main/resources/aion/data/static_data/quest_definition/quests/4944.xml; src/main/resources/aion/data/static_data/quest_definition/quests/15321.xml; src/main/resources/aion/data/static_data/quest_definition/quests/25608.xml; src/main/resources/aion/data/static_data/quest_definition/quests/27510.xml; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestCounterProjectionLockFollowUpTest.java; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCompiler.java; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java; .agents/summary/quest-counter-projection-family/2026-09-20-counter-projection-lock-batch.zh-CN.md; .agents/summary/quest-engine-startup-debug/README.md
+validation: static（全目录 COUNTER_PROJECTION_LOCK 审计：修复前 3 任务命中，修复后归零）；focused-test（2026-09-20，11 个测试类 72 例 0 失败 0 错误）；production-gate（PRODUCTION_COMPILE_OK=6189、白名单违规 0）；client 复验 PENDING
 boundaries: 同一事件在不同源节点、或有互斥条件（如 class/has-item）、或声明了唯一优先级的属于合法分支；仅适用于同一可达源节点下动作、条件、优先级完全相同的重叠，以及 counter source 节点的字段分配
 superseded_by: none
 first_check: 冲突任务 XML 的 transitions 中同 NPC/同 action 的边、nodes 列表中的投影 (status + var)、counter 的 field 与 source/target 节点定义
@@ -347,9 +347,11 @@ first_check: 冲突任务 XML 的 transitions 中同 NPC/同 action 的边、nod
 - **判定规则**：
   1. `QuestDefinitionCompiler` 在编译期对所有转换建立冲突索引：对于同一 NPC 的相同 `TALK_TO_NPC` 动作，如果两者可能从同一节点触发、条件非互斥且均未声明唯一 `priority`，即判定为无歧义解析保证（`AMBIGUOUS_TRANSITION`）并拒绝启动。
   2. `<counter>` 领域积木强制要求其 `source` 节点不得固定计数字段（`COUNTER_SOURCE_PROJECTION_CONFLICT`），因为击杀计数递增过程中该字段值动态变化。若任务拥有多个 `START` 阶段，不可直接省略变量声明（缺省会退化为 `START:0` 与初始 `started` 节点重叠触发 `DUPLICATE_NODE_PROJECTION`）。
+  3. 运行期路由用 source 节点投影与 packed 变量做全等匹配（`QuestMutationPlanner#matchesSourceNode`）：计数自环（`source == target` 且自增字段）的字段一旦被 source 投影钉死，第一次递增后同源事件永远 `NO_MATCH`，表现为「只有第一只怪计入、任务不往下」。手写 transition 由 `QuestDefinitionCompiler` 抛 `COUNTER_SELF_LOOP_PINS_INCREMENTED_FIELD` 兜底（第二阶段 2026-09-20 新增），`<counter>` 积木仍走上一条 `COUNTER_SOURCE_PROJECTION_CONFLICT`。
 - **代表案例**：
   1. `1722.xml`（拉斯汀的秘密指令）：提交 `94636797a` 将 `s2` 推进到 `s3` 的动作从 `SELECT_QUEST_REWARD` 纠正为 `SETPRO3` 时，漏删了文件下方历史遗留的 `s2 -> s2 SETPRO3` 自循环边，导致两边重叠报错。删除冗余自循环边后闭环。
   2. `3940.xml`（米拉詹特武器忠诚任务）：提交 `0823653a7` 尝试单字段承载阶段与 300 击杀（6..306），因 `<counter>` 约束移除了 `hunt` 节点的变量声明，导致其退化为 `START:0` 与 `started` 发生投影重合。对齐魔族同型任务 `4944.xml`（潘利尔武器任务）标准设计：分离阶段字段 `var0`（6-bit）与计数字段 `var1`（9-bit，0..300），`hunt` 固定 `var0=6`，`hunt-done` 固定 `var0=6, var1=300`，彻底消除节点投影碰撞。
+  3. 2026-09-20 第二批 `COUNTER_PROJECTION_LOCK`：`15321`（s0–s11 全阶段投影 `var1=0`，s1/s3/s5/s7/s9/s11 各自 30 只击杀）、`25608`（step2/step3）、`27510`（started/s1–s4，s3 并行计数精英与无名 boss）把实时击杀计数钉进 source 投影，玩家实测第二只怪起全部 `NO_MATCH`。三者的 START 阶段节点改为只固定阶段位段（对齐已修的 25321），计数由自环转换拥有；行为回归与编译期反例见 `QuestCounterProjectionLockFollowUpTest` 与 `IncrementVariableDefinitionTest#selfLoopCounterRejectsIncrementingItsProjectedField`。
 
 ---
 
