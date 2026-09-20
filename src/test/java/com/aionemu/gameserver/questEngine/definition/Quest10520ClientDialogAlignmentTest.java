@@ -160,7 +160,7 @@ class Quest10520ClientDialogAlignmentTest {
 			QuestNode rewardNode = node(definition, "reward");
 			assertEquals(5, rewardNode.projection().variables().get("var0"),
 				() -> "quest " + questId + " reward node must project var0=5 (client HTML step 5)");
-			assertEquals(5, definition.progressLayout().field("var0").max(),
+			assertEquals(5, definition.progressLayout().field("var0").maxValue(),
 				() -> "quest " + questId + " var0 max must be 5");
 		}
 	}
