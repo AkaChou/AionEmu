@@ -281,3 +281,97 @@ RetailOpenWorldSpawnDataTest,NpcDropDataTest test
   `.agents/summary/quest-15300-orissan/` 里指向 `npc-ai-parts/...` 的证据路径重新有效。
 - 后续若要继续压缩窗口，方向是**减少总 CPU 工作量**（分配/GC/JIT）或减少需解析的数据量（见 §6.8 机制部分），
   不再是切分粒度或并行度。
+
+## 7. P1-1 落地 / P1-2 实验 / P2 命令（2026-09-19 23:5x–2026-09-20 00:0x）
+
+### 7.1 P1-1 枚举 fromId 查找表（已改代码，待提交）
+
+- 改动：`QuestDialogAction.fromId` / `QuestDialogPage.fromId` 由
+  `Arrays.stream(values()).filter(...).findFirst()` 改为静态 `Map<Integer, ...>` 查找表
+  （`Map.copyOf` + `putIfAbsent` 固定"先声明者优先"；异常类型与消息不变：
+  `IllegalArgumentException("unknown <Enum> id " + id)`）。
+- 依据：23:20 启动窗口的 `jdk.ObjectAllocationSample` 里 `QuestDialogAction.values` 单点 201MB、
+  类 `[LQuestDialogAction;` 201MB（占采样分配 2.0%）——每次调用都克隆 194 元素的枚举数组并分配 Stream 管线。
+- 验证：`mvn -B -Dstyle.color=never -Dsurefire.failIfNoSpecifiedTests=false \
+  -Dtest=QuestDialogXmlSyntaxTest,QuestDefinitionCatalogManifestTest test`
+  → `Tests run: 21, Failures: 0, Errors: 0` / `BUILD SUCCESS`（含 `fromId(1003)` 断言）。
+- 预期：只作用于任务目录编译线程；一次性建表 = 194 + 155 条（微秒级），不新增启动工作量；
+  窗口级收益预计 <100ms（低于单次读数噪声，必须交替 A/B 才能判定）。
+
+### 7.2 P1-2 Unmarshaller 复用（实验完成 → 结论：不采用）
+
+- 探针：`xml-parser-probe/XmlParserProbe.java` 新增 `jaxb-reuse-ab` 场景（同进程交替 A/B：
+  每次新建 Unmarshaller vs 线程内复用同一个），并打印 GC 后驻留堆。
+- 结果（warmup=2 / 5 轮 / `-Xmx3g`，两次独立运行一致；证据 `results-20260920-0004.txt`）：
+
+| 场景 | fresh（现状） | reused | 差异 |
+|---|---|---|---|
+| item 8.3MB | 92.4ms / 46.3MB | 90.0–91.4ms / 46.1MB | 时间 −1~−3%，分配 −0.4% |
+| npc 9.45MB | 97.7–99.1ms / 43.2–43.5MB | 96.1–99.1ms / 43.0–43.3MB | 噪声内 |
+
+- 代价：复用后 GC 驻留 item 13→25MB、npc 13→20MB（Unmarshaller 持有上一次的
+  `UnmarshallingContext`）。
+- 结论：分配只降 0.4%（噪声内），时间差异同样在噪声内，却要付出 7–12MB/线程的驻留
+  → **不改生产代码**。同时也说明 JFR 里 `Coordinator.pushCoordinator` 的 360MB 抖动**不是**
+  分片解析"每次新建 Unmarshaller"造成的；分片解析的分配主体是对象图本身 + Xerces 解码。
+
+### 7.3 P2 jar + AOT：命令已按实测校准（应用级运行待让出端口/数据库）
+
+- 本机 JDK 26 三步语法已用 dummy jar 实测通过（`/tmp/aot-syntax-2`）：
+  1. `java -XX:AOTMode=record -XX:AOTConfiguration=X.aotconf -jar hello.jar` → `AOTConfiguration recorded`
+  2. `java -XX:AOTMode=create -XX:AOTConfiguration=X.aotconf -XX:AOTCache=X.aot -jar hello.jar`
+     → `AOTCache creation is complete`（10.4MB）
+  3. `java -XX:AOTMode=on -XX:AOTCache=X.aot -Xlog:aot=info -jar hello.jar` → `Opened AOT cache`
+- 应用命令（`target/AionEmu.jar` 已于 2026-09-20 00:03 重打包，含 P1-1 与分片资源；
+  pom 排除 `aion/**`，从仓库根运行时数据仍取 `src/main/resources/aion/**` 源码树）：
+
+```bash
+JAVA=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java
+JFR="-XX:StartFlightRecording=name=AOTMeasure,settings=profile,filename=/tmp/aot-use.jfr,duration=90s,dumponexit=true"
+$JAVA $JFR -jar target/AionEmu.jar                                    # 0 基线
+$JAVA -XX:AOTMode=record -XX:AOTConfiguration=/tmp/aion.aotconf -jar target/AionEmu.jar   # 1 记录
+$JAVA -XX:AOTMode=create -XX:AOTConfiguration=/tmp/aion.aotconf -XX:AOTCache=/tmp/aion.aot \
+      -jar target/AionEmu.jar                                         # 2 生成
+$JAVA $JFR -XX:AOTMode=on -XX:AOTCache=/tmp/aion.aot -Xlog:aot=info \
+      -jar target/AionEmu.jar                                         # 3 使用
+```
+
+- 记录步骤必须让服务端跑到"服务器已就绪"再 SIGINT，否则 `/tmp/aion.aotconf` 会是 0 字节
+  （IDE 形态已实测 0 字节）。
+- 前提：2106/7777/10241/9014/9021 端口空闲，且同一 MySQL 库没有别的实例在写。
+- 状态：执行时 IDE 实例（`AionBootApplication`）仍在运行并占用这些端口，故本次未执行应用级 AOT 三步。
+
+### 7.4 P2 应用级 AOT 实验（2026-09-20 09:19–09:33，执行完成）
+
+**命令校准中踩到的三个坑（都已解决）**：
+
+1. `-XX:AOTMode=record` 与 JFR 同开会让 Zulu 26 在 `JfrTypeSet::serialize` **SIGSEGV**
+   （`hs_err_pid80516.log`）→ record/create 步骤必须 `-XX:-FlightRecorder`。
+2. 用 `-jar target/AionEmu.jar` 记录时，classpath 条目被记成只有文件名的 `AionEmu.jar`，
+   create 步骤报 `Required classpath entry does not exist` → 四个步骤统一改用
+   `-cp target/AionEmu.jar org.springframework.boot.loader.launch.JarLauncher`。
+3. 若 create 用 `-XX:-FlightRecorder`、use 用 JFR，会因 `jdk.module.addmods: jdk.jfr` 不一致被拒
+   （`AOT cache has aot-linked classes...`）→ A/B 全程都关 JFR，用应用自报耗时对比。
+
+**产物**：`/tmp/aion4.aotconf`（106MB）、`/tmp/aion4.aot`（107MB）；
+use 运行日志确认 `Using AOT-linked classes: true`。
+
+**A/B 结果**（`-cp` + JarLauncher，仓库根，交替执行，均关闭 JFR）：
+
+| 轮次 | 基线解析 / staticDataLifecycle | AOT 解析 / staticDataLifecycle | 解析差 |
+|---|---|---:|---:|
+| 1 | 6958 / 7457 | 4959 / 5167 | −1999ms |
+| 2 | 7050 / 7539 | 6144 / 6351 | −906ms |
+| 3 | 6801 / 7229 | 6225 / 6336 | −576ms |
+| 中位 | 6958 / 7457 | 6144 / 6351 | **−815ms（−12%）/ −1106ms（−15%）** |
+
+- 结论：**AOT cache 对静态数据窗口是稳定正收益**（三轮全部变快，−0.6~−2.0s），
+  机制是免掉类加载/链接（`Using AOT-linked classes: true`）。
+- 但**端到端就绪时间没有同步改善**：基线 14/16/14s vs AOT 13/15/15s（中位 14s vs 15s，噪声内）。
+  单轮阶段表显示省下的时间部分被后续阶段吃掉，例如
+  `staticDataLifecycle 7539 → 6351`，而 `spawnLifecycle 1882 → 2580`、
+  `locationBootstrapLifecycle 652 → 1383`（后台 quest 目录预编译等仍与后面阶段重叠）
+  → **下一步要查的是"省下来的时间去哪了"，而不是继续压静态数据**。
+- IDE 形态（`-cp target/classes:<deps>`）实测**没有再报**"non-empty directory"拒绝，只报
+  `class ... cannot be archived because it was not defined from ...jar as claimed` 警告
+  （target/classes 与 jar 里同名类冲突）；即 IDE 路线可能可用，待单独验证。

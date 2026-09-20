@@ -50,6 +50,7 @@ import java.util.Locale;
  *   java -cp &lt;classpath&gt; XmlParserProbe.java stax-mappings &lt;npc-ai.xml&gt; [warmup] [iterations]
  *   java -cp &lt;classpath&gt; XmlParserProbe.java sax-skill-part &lt;skill_templates_part_XXX.xml&gt; [warmup] [iterations]
  *   java -cp &lt;classpath&gt; XmlParserProbe.java jaxb-item-explicit &lt;item-shard.xml&gt; [warmup] [iterations]
+ *   java -cp &lt;classpath&gt; XmlParserProbe.java jaxb-reuse-ab &lt;shard.xml&gt; [warmup] [iterations] [model]
  * </pre>
  */
 public final class XmlParserProbe {
@@ -104,6 +105,8 @@ public final class XmlParserProbe {
 			case "stax-mappings" -> runStaxMappings(file, warmup, iterations);
 			case "sax-skill-part" -> runSaxSkillPart(file, warmup, iterations);
 			case "jaxb-item-explicit" -> runExplicitAb(file, warmup, iterations);
+			case "jaxb-reuse-ab" ->
+				runUnmarshallerReuseAb(args.length > 4 ? args[4] : "ItemData", file, warmup, iterations);
 			default -> {
 				usage();
 				System.exit(2);
@@ -112,7 +115,7 @@ public final class XmlParserProbe {
 	}
 
 	private static void usage() {
-		System.err.println("usage: XmlParserProbe <jaxb-item|jaxb-npc|jaxb-item-reader|jaxb-item-buffered-reader|jaxb-npc-reader|stax-mappings|sax-skill-part|jaxb-item-explicit> <file> [warmup] [iterations]");
+		System.err.println("usage: XmlParserProbe <jaxb-item|jaxb-npc|jaxb-item-reader|jaxb-item-buffered-reader|jaxb-npc-reader|stax-mappings|sax-skill-part|jaxb-item-explicit|jaxb-reuse-ab> <file> [warmup] [iterations] [model]");
 	}
 
 	/**
@@ -205,6 +208,64 @@ public final class XmlParserProbe {
 	 * 同进程交替 A/B：JAXB + 显式 XMLReader（JDK 默认 vs Woodstox），排除属性查找带来的差异。
 	 * Same-JVM interleaved A/B: JAXB with explicitly built XMLReaders (JDK default vs Woodstox).
 	 */
+	/**
+	 * P1-2 对照（同进程交替 A/B）：每次新建 Unmarshaller（生产现状）vs 线程内复用同一个 Unmarshaller。
+	 * 复用会让 {@code UnmarshallingContext} 保留上一次的结果对象图，因此额外打印 GC 后的堆占用，
+	 * 用来判断"少分配"是否以"多驻留"为代价。
+	 * P1-2 A/B (interleaved in one JVM): a fresh Unmarshaller per parse (current production behaviour) versus
+	 * one Unmarshaller reused inside the thread. Reuse keeps the {@code UnmarshallingContext} holding the
+	 * previous result graph, so the retained heap after GC is printed as well to show whether the lower
+	 * allocation rate is paid for with higher retention.
+	 */
+	private static void runUnmarshallerReuseAb(String modelSimpleName, File file, int warmup, int iterations)
+			throws Exception {
+		Class<?> model = Class.forName(DATAHOLDERS + modelSimpleName);
+		JAXBContext context = JAXBContext.newInstance(model);
+		System.out.printf(Locale.ROOT, "INFO %s retained_baseline_mb=%d%n", modelSimpleName, retainedMb());
+		Unmarshaller reused = context.createUnmarshaller();
+		Op freshOp = () -> {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+				return unmarshaller.unmarshal(input);
+			}
+		};
+		Op reuseOp = () -> {
+			try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+				return reused.unmarshal(input);
+			}
+		};
+		List<Stats> freshStats = new ArrayList<>();
+		List<Stats> reuseStats = new ArrayList<>();
+		for (int round = 0; round < warmup + iterations; round++) {
+			boolean record = round >= warmup;
+			if ((round & 1) == 0) {
+				collect(freshStats, freshOp, record);
+				collect(reuseStats, reuseOp, record);
+			}
+			else {
+				collect(reuseStats, reuseOp, record);
+				collect(freshStats, freshOp, record);
+			}
+		}
+		report("jaxb-" + modelSimpleName + "-fresh", freshStats);
+		report("jaxb-" + modelSimpleName + "-reused", reuseStats);
+		System.out.printf(Locale.ROOT, "INFO %s retained_after_reuse_mb=%d (reused Unmarshaller still reachable)%n",
+			modelSimpleName, retainedMb());
+	}
+
+	private static long retainedMb() {
+		Runtime runtime = Runtime.getRuntime();
+		System.gc();
+		try {
+			Thread.sleep(200L);
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		System.gc();
+		return (runtime.totalMemory() - runtime.freeMemory()) / (1024L * 1024L);
+	}
+
 	private static void runExplicitAb(File file, int warmup, int iterations) throws Exception {
 		Class<?> model = Class.forName(DATAHOLDERS + "ItemData");
 		JAXBContext context = JAXBContext.newInstance(model);

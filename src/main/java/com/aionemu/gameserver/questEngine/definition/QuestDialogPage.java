@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -164,6 +165,13 @@ public enum QuestDialogPage {
 	CHECK_USER_ITEM_FAIL(10001),
 	DEFAULT_SUCCESS(10002);
 
+	// 按 id 的静态查找表：fromId 在任务目录编译期被高频调用，早先的 Arrays.stream(values())
+	// 每次调用都会克隆整个枚举数组并分配 Stream 管线（一次启动窗口内实测约 200MB 分配）。
+	// Static id lookup: fromId is hot during catalog compilation, and the previous
+	// Arrays.stream(values()) cloned the whole enum array and allocated a Stream pipeline per call
+	// (~200MB of allocation inside one startup window).
+	private static final Map<Integer, QuestDialogPage> BY_ID = buildById();
+
 	private final int id;
 
 	QuestDialogPage(int id) {
@@ -175,9 +183,23 @@ public enum QuestDialogPage {
 	}
 
 	public static QuestDialogPage fromId(int id) {
-		return Arrays.stream(values()).filter(value -> value.id == id).findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("unknown QuestDialogPage id " + id));
+		QuestDialogPage value = BY_ID.get(id);
+		if (value == null) {
+			throw new IllegalArgumentException("unknown QuestDialogPage id " + id);
+		}
+		return value;
 	}
+
+	private static Map<Integer, QuestDialogPage> buildById() {
+		Map<Integer, QuestDialogPage> byId = new HashMap<>();
+		for (QuestDialogPage value : values()) {
+			// 同一枚举不允许重复 id；保留 putIfAbsent 以固定"先声明者优先"的语义。
+			// Duplicate ids are not expected; putIfAbsent keeps the first-declared-wins semantics.
+			byId.putIfAbsent(value.id, value);
+		}
+		return Map.copyOf(byId);
+	}
+
 
 	/**
 	 * 第 N 档（0 基）奖励在客户端渲染的奖励窗口页面。

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 由 Aion 5.8 客户端 HyperLinks.xml 与活动任务 XML 引用生成。
@@ -202,6 +203,13 @@ public enum QuestDialogAction {
 	QUEST_REFUSE_SIMPLE(20001),
 	CHECK_USER_HAS_QUEST_ITEM_SIMPLE(20002);
 
+	// 按 id 的静态查找表：fromId 在任务目录编译期被高频调用，早先的 Arrays.stream(values())
+	// 每次调用都会克隆整个枚举数组并分配 Stream 管线（一次启动窗口内实测约 200MB 分配）。
+	// Static id lookup: fromId is hot during catalog compilation, and the previous
+	// Arrays.stream(values()) cloned the whole enum array and allocated a Stream pipeline per call
+	// (~200MB of allocation inside one startup window).
+	private static final Map<Integer, QuestDialogAction> BY_ID = buildById();
+
 	private final int id;
 
 	QuestDialogAction(int id) {
@@ -213,7 +221,20 @@ public enum QuestDialogAction {
 	}
 
 	public static QuestDialogAction fromId(int id) {
-		return Arrays.stream(values()).filter(value -> value.id == id).findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("unknown QuestDialogAction id " + id));
+		QuestDialogAction value = BY_ID.get(id);
+		if (value == null) {
+			throw new IllegalArgumentException("unknown QuestDialogAction id " + id);
+		}
+		return value;
+	}
+
+	private static Map<Integer, QuestDialogAction> buildById() {
+		Map<Integer, QuestDialogAction> byId = new HashMap<>();
+		for (QuestDialogAction value : values()) {
+			// 同一枚举不允许重复 id；保留 putIfAbsent 以固定"先声明者优先"的语义。
+			// Duplicate ids are not expected; putIfAbsent keeps the first-declared-wins semantics.
+			byId.putIfAbsent(value.id, value);
+		}
+		return Map.copyOf(byId);
 	}
 }
