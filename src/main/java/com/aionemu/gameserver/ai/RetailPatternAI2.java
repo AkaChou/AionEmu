@@ -8,6 +8,8 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AbstractAI;
+import com.aionemu.gameserver.ai2.AttackIntention;
+import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.ReturningEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
@@ -915,6 +917,24 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	static boolean shouldUseDefaultIdleThinking(Pattern pattern) {
 		return pattern == null || Collections.disjoint(pattern.events().keySet(), RETAIL_IDLE_EVENTS);
+	}
+
+	/**
+	 * pattern 驱动的 NPC 只能通过 pattern 动作施放技能，不能走通用随机技能分支。
+	 * Pattern-driven NPCs may only cast skills through pattern actions, never through the generic random-skill path.
+	 */
+	@Override
+	public AttackIntention chooseAttackIntention() {
+		VisibleObject currentTarget = getTarget();
+		Creature mostHated = getAggroList().getMostHated();
+		if (mostHated == null || mostHated.getLifeStats().isAlreadyDead()) {
+			return AttackIntention.FINISH_ATTACK;
+		}
+		if (currentTarget == null || !currentTarget.getObjectId().equals(mostHated.getObjectId())) {
+			onCreatureEvent(AIEventType.TARGET_CHANGED, mostHated);
+			return AttackIntention.SWITCH_TARGET;
+		}
+		return AttackIntention.SIMPLE_ATTACK;
 	}
 
 	@Override

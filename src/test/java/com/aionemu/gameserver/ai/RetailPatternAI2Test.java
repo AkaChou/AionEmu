@@ -3,6 +3,7 @@ package com.aionemu.gameserver.ai;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AbstractAI;
+import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.controllers.attack.AggroList;
@@ -301,6 +302,27 @@ class RetailPatternAI2Test {
 			assertFalse(RetailPatternAI2.shouldUseDefaultIdleThinking(
 				new Pattern("idle", Map.of(event, List.of(rule)))));
 		}
+	}
+
+	@Test
+	void patternDrivenNpcsDoNotRandomlyCastUnscriptedSkills() throws ReflectiveOperationException {
+		// 857783 的技能组包含索引 6 的 22868，但 IDEternity_Q_Sado_Fi_02 只显式使用索引 0/1/2/4/5。
+		// 通用随机技能分支会把 22868 当作普通战斗技能施放，而它带有 24 小时 Root/Silence/Bind。
+		// Skill group 857783 contains 22868 at index 6, but IDEternity_Q_Sado_Fi_02 only uses indices 0/1/2/4/5.
+		// The generic random-skill branch would cast 22868, whose effects are 24h Root/Silence/Bind.
+		ObjenesisStd objenesis = new ObjenesisStd();
+		SkillNpc owner = objenesis.newInstance(SkillNpc.class);
+		owner.setLifeStats(objenesis.newInstance(FixedNpcLifeStats.class));
+		owner.objectTemplate = objenesis.newInstance(NpcTemplate.class);
+		owner.skillList = skillList(List.of(new NpcSkillTemplate(22868, 65, 100, 0, 0, false, 0)));
+		MasterNpc target = objenesis.newInstance(MasterNpc.class);
+		target.setLifeStats(objenesis.newInstance(NpcLifeStats.class));
+		setField(Creature.class, owner, "aggroList", new SingleTargetAggroList(owner, target));
+		setField(VisibleObject.class, owner, "target", target);
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+
+		assertEquals(AttackIntention.SIMPLE_ATTACK, ai.chooseAttackIntention());
 	}
 
 	@Test
@@ -1983,6 +2005,21 @@ class RetailPatternAI2Test {
 
 		@Override
 		public void setTarget(VisibleObject target) {
+		}
+	}
+
+	private static final class SingleTargetAggroList extends AggroList {
+
+		private final Creature mostHated;
+
+		private SingleTargetAggroList(Creature owner, Creature mostHated) {
+			super(owner);
+			this.mostHated = mostHated;
+		}
+
+		@Override
+		public Creature getMostHated() {
+			return mostHated;
 		}
 	}
 
