@@ -35,6 +35,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * mirrors that when the metadata declares {@code <work-items>}. A definition that
  * dropped the declaration and carries no explicit {@code remove-item} for the item
  * necessarily leaves it in the inventory, which is quest 1192's 182200556.</p>
+ *
+ * <p>quest_data.xml 未声明 work item、但旧 handler 在 use-item 中消费的道理由
+ * {@link QuestUseItemRewardCleanupGateTest} 覆盖；两道门禁共同覆盖两种消费语义来源。</p>
+ * Items consumed by a legacy {@code use-item} handler without a quest_data work-item declaration
+ * are covered by {@link QuestUseItemRewardCleanupGateTest}; the two gates cover both authorities.</p>
  */
 class QuestWorkItemMigrationCoverageTest {
 	private static final Path QUEST_DATA = Path.of(
