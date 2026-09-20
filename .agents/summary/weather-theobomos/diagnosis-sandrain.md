@@ -396,3 +396,17 @@ MD5 `fb49f0c3f1fce43d798b453e1def6dcf`，即这次替换没有落到该副本；
   最新 `unpacked/mission_mission0.xml`：3,755,293 bytes，MD5 `53839e5962aea7df4e9f6357267dfcd5`。
 - 验证重点：进图后执行 `//time day`（9:00），观察天空和地面是否都为晴天；
   若地面仍偏暗，下一步检查客户端是否还被别的 cutscene zone 或全屏 FX 覆盖。
+
+## 追加证据 12（2026-09-20 14:30）：服务端控制边界 —— level 只能由客户端生效
+
+用户追问"既然替换客户端 Level.pak 能修好天空，能否由服务端控制这份 level 生效"。排查结论：**不能**。
+
+- 游戏服务端协议里与客户端环境相关的包只有 `SM_WEATHER`（天气 code）、`SM_GAME_TIME`（时间）、
+  `SM_PLAY_MOVIE`（过场），没有关卡资源 / CVar / 天空穹顶通道；Beritra/WorldRaid 只发系统消息并生成特效 NPC；
+- 客户端 `Levels/lf2a/Level.pak` 由 CryPak 本地加载（Cry3DEngine `FUN_101214b0` 拼接 `<dir>\level.pak`），
+  替换后必须重启客户端进程；
+- 实测反证：服务端移除 210060000 天气表 + `gameserver.beritra.enable=false` 后，客户端进图仍自行变红，
+  触发源在客户端本地 level 数据。
+
+完整证据链（Cry3DEngine 天气 CVar 清单、`sys_PakPriority` 散文件优先线索、客户端补丁包结构）
+见同目录 `server-control-boundary.md` 与 `patch/`。
