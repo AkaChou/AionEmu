@@ -21,7 +21,7 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -98,6 +98,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
+        <!-- 进入/离开计数阶段都必须让 SECTION 计数干净，避免 (N&lt;&lt;6)|step 污染打包步数（QE-044）。
+             Counting-stage entry and exit must leave the section clean (QE-044). -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -108,10 +111,15 @@
         <kill-npc npc-id="241161"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="3"/>
+        <variable-at-least field="var1" value="4"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <!-- 击杀收口必须清空本阶段局部计数，否则 (5<<6)|2 会污染打包步数，
+             806161 的任务对白与后续 boss 的 SECTION_1<1 计数都不再成立（QE-044）。
+             The kill closure must clear the stage-local counter; otherwise (5&lt;&lt;6)|2
+             pollutes the packed step and both the 806161 dialog and the later boss
+             SECTION_1&lt;1 counter stop working. -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -126,6 +134,70 @@
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 上线自愈：旧存档把 var1 残留带进 s2/s3/s4/reward，打包步数被高位污染后
+         对白/影片/区域门控失效；登录时把残留计数清回 0（QE-044）。
+         Login self-heal: legacy saves carry a residual var1 into s2/s3/s4/reward,
+         which breaks step gating; clear it on login. -->
+    <transition source="s2" target="s2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -169,6 +241,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="4"/>
+        <!-- 进入 boss 计数阶段时计数器必须从 0 起算（客户端 SECTION_1<1）（QE-044）。
+             The boss stage must start from a clean counter (client SECTION_1&lt;1). -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -183,6 +258,9 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="5"/>
+        <!-- 进入/离开计数阶段都必须让 SECTION 计数干净，避免 (N&lt;&lt;6)|step 污染打包步数（QE-044）。
+             Counting-stage entry and exit must leave the section clean (QE-044). -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

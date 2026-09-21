@@ -1,0 +1,385 @@
+10010	MISSING_FIELD	stage=3 var1 limit=1 not declared
+10011	DIRTY_COUNTING_ENTRY	stage=4->5 var1<5 event=enter-zone source=s4 target=s5
+10011	MISSING_FIELD	stage=6 var4 limit=1 not declared
+10031	RESIDUAL_COUNTER	stage=9->10 var2<2 event=kill-npc 215504 215505 215516 215517 215518 216463 216464 216647 216783 215519 216648 216691 216692 source=s9 target=reward
+10031	DIRTY_COUNTING_ENTRY	stage=8->9 var2<2 event=dialog 702662 USE_OBJECT source=s8 target=s9
+10034	MISSING_FIELD	stage=5 var1 limit=1 not declared
+10035	DIRTY_COUNTING_ENTRY	stage=4->5 var1<10 event=enter-zone source=s4 target=s5
+10111	MISSING_FIELD	stage=3 var1 limit=1 not declared
+10113	MISSING_FIELD	stage=3 var1 limit=1 not declared
+10113	MISSING_FIELD	stage=5 var1 limit=1 not declared
+10503	DIRTY_COUNTING_ENTRY	stage=0->1 var1<3 event=dialog 804704 SETPRO1 source=started target=s1
+10504	DIRTY_COUNTING_ENTRY	stage=0->1 var1<5 event=dialog 804706 SETPRO1 source=started target=s1
+10504	RESIDUAL_COUNTER	stage=2->3 var1<1 event=kill-npc 236255 source=s2 target=s3
+10506	DIRTY_COUNTING_ENTRY	stage=2->3 var1<2 event=enter-zone source=s2 target=s3
+10506	RESIDUAL_COUNTER	stage=6->7 var1<1 event=kill-npc 236263 source=s6 target=s7
+10506	DIRTY_COUNTING_ENTRY	stage=5->6 var1<1 event=dialog 804710 SETPRO6 source=s5 target=s6
+10507	DIRTY_COUNTING_ENTRY	stage=5->6 var2<3 event=dialog 804715 SETPRO6 source=s5 target=s6
+10527	DIRTY_COUNTING_ENTRY	stage=10->11 var1<7 event=dialog 703315 USE_OBJECT source=s10 target=s11
+13947	MISSING_FIELD	stage=0 var1 limit=1 not declared
+13954	MISSING_FIELD	stage=2 var1 limit=1 not declared
+13955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 247113 247133 247181 246556 246855 246865 source=started target=reward
+13955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 247113 247133 247181 246556 246855 246865 source=started target=reward
+13955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 246561 source=started target=reward
+13956	MISSING_FIELD	stage=1 var1 limit=1 not declared
+13966	MISSING_FIELD	stage=0 var1 limit=1 not declared
+15101	DIRTY_COUNTING_ENTRY	stage=0->1 var1<10 event=dialog 804715 SETPRO1 source=started target=hunt
+15304	DIRTY_COUNTING_ENTRY	stage=1->2 var1<60 event=dialog 805328 CHECK_USER_HAS_QUEST_ITEM source=s1 target=s2
+15314	DIRTY_COUNTING_ENTRY	stage=1->2 var1<60 event=dialog 805328 CHECK_USER_HAS_QUEST_ITEM source=s1 target=s2
+15316	RESIDUAL_COUNTER	stage=6->7 var1<1 event=kill-npc 232853 233491 233544 233859 234190 source=s6 target=s7
+15316	DIRTY_COUNTING_ENTRY	stage=6->7 var1<5 event=kill-npc 232853 233491 233544 233859 234190 source=s6 target=s7
+15322	DIRTY_COUNTING_ENTRY	stage=0->1 var1<10 event=enter-zone source=started target=s1
+15322	DIRTY_COUNTING_ENTRY	stage=2->3 var1<10 event=enter-zone source=s2 target=s3
+15322	DIRTY_COUNTING_ENTRY	stage=4->5 var1<10 event=enter-zone source=s4 target=s5
+15322	DIRTY_COUNTING_ENTRY	stage=6->7 var1<10 event=enter-zone source=s6 target=s7
+15476	RESIDUAL_COUNTER	stage=0->1 var1<8 event=dialog 805809 SELECT_QUEST_REWARD source=started target=reward
+15476	RESIDUAL_COUNTER	stage=0->1 var1<8 event=dialog 805810 SELECT_QUEST_REWARD source=started target=reward
+15476	RESIDUAL_COUNTER	stage=0->1 var1<8 event=dialog 805811 SELECT_QUEST_REWARD source=started target=reward
+15480	MISSING_FIELD	stage=0 var1 limit=1 not declared
+15601	MISSING_FIELD	stage=5 var1 limit=1 not declared
+15602	MISSING_FIELD	stage=2 var1 limit=1 not declared
+15605	MISSING_FIELD	stage=3 var1 limit=1 not declared
+15608	MISSING_FIELD	stage=3 var1 limit=1 not declared
+16802	RESIDUAL_COUNTER	stage=0->1 var2<2 event=kill-npc 220306 220309 220312 220315 220318 220324 220327 220330 source=started target=k1
+16802	RESIDUAL_COUNTER	stage=0->3 var2<2 event=dialog 806148 SELECT_QUEST_REWARD source=started target=reward
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16802	DIRTY_COUNTING_ENTRY	stage=3->0 var2<2 event=dialog 806148 source=reward target=complete
+16803	RESIDUAL_COUNTER	stage=0->2 var1<30 event=dialog 806148 SELECT_QUEST_REWARD source=started target=reward
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16803	DIRTY_COUNTING_ENTRY	stage=2->0 var1<30 event=dialog 806148 source=reward target=complete
+16804	MISSING_FIELD	stage=0 var1 limit=1 not declared
+16822	MISSING_FIELD	stage=5 var1 limit=1 not declared
+16824	MISSING_FIELD	stage=0 var1 limit=1 not declared
+16826	MISSING_FIELD	stage=0 var1 limit=1 not declared
+16836	MISSING_FIELD	stage=8 var2 limit=1 not declared
+16836	MISSING_FIELD	stage=13 var1 limit=1 not declared
+16837	MISSING_FIELD	stage=0 var1 limit=1 not declared
+16839	MISSING_FIELD	stage=1 var1 limit=1 not declared
+16974	MISSING_FIELD	stage=0 var1 limit=1 not declared
+16986	MISSING_FIELD	stage=0 var1 limit=1 not declared
+17510	DIRTY_COUNTING_ENTRY	stage=2->3 var2<1 event=enter-world source=s2 target=s3
+17525	RESIDUAL_COUNTER	stage=1->2 var1<1 event=kill-npc 248382 source=s1 target=s2
+17525	DIRTY_COUNTING_ENTRY	stage=0->1 var1<1 event=enter-zone source=started target=s1
+17525	RESIDUAL_COUNTER	stage=2->3 var1<1 event=kill-npc 248423 248424 248426 source=s2 target=s3
+17525	DIRTY_COUNTING_ENTRY	stage=1->2 var1<1 event=kill-npc 248382 source=s1 target=s2
+17525	RESIDUAL_COUNTER	stage=4->5 var1<1 event=kill-npc 248013 source=s4 target=reward
+17525	DIRTY_COUNTING_ENTRY	stage=3->4 var1<1 event=enter-zone source=s3 target=s4
+17526	MISSING_FIELD	stage=0 var1 limit=1 not declared
+17540	MISSING_FIELD	stage=2 var1 limit=1 not declared
+17540	MISSING_FIELD	stage=3 var1 limit=1 not declared
+17541	MISSING_FIELD	stage=0 var3 limit=1 not declared
+17551	RESIDUAL_COUNTER	stage=2->3 var2<10 event=kill-npc 248015 248016 248017 248018 248019 248022 248024 source=s2 target=s3
+17551	DIRTY_COUNTING_ENTRY	stage=1->2 var2<10 event=dialog 835782 SETPRO2 source=s1 target=s2
+17551	RESIDUAL_COUNTER	stage=3->4 var1<1 event=kill-npc 248025 source=s3 target=s4
+17552	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18741	RESIDUAL_COUNTER	stage=0->1 var1<50 event=kill-npc 236018 236019 236020 236021 236096 236097 236098 source=started target=reward
+18743	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18930	MISSING_FIELD	stage=2 var1 limit=1 not declared
+18930	MISSING_FIELD	stage=3 var1 limit=1 not declared
+18930	MISSING_FIELD	stage=4 var1 limit=1 not declared
+18932	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18990	MISSING_FIELD	stage=1 var2 limit=1 not declared
+18990	MISSING_FIELD	stage=2 var1 limit=1 not declared
+18991	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18992	MISSING_FIELD	stage=1 var2 limit=1 not declared
+18992	MISSING_FIELD	stage=2 var1 limit=1 not declared
+18993	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18995	MISSING_FIELD	stage=0 var1 limit=1 not declared
+18996	MISSING_FIELD	stage=2 var2 limit=1 not declared
+18996	MISSING_FIELD	stage=4 var1 limit=1 not declared
+18997	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19673	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19674	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19675	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19676	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19680	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19681	MISSING_FIELD	stage=0 var1 limit=1 not declared
+19682	MISSING_FIELD	stage=0 var1 limit=1 not declared
+20010	MISSING_FIELD	stage=3 var1 limit=1 not declared
+20011	DIRTY_COUNTING_ENTRY	stage=4->5 var1<5 event=enter-zone source=s4 target=s5
+20011	MISSING_FIELD	stage=6 var4 limit=1 not declared
+20031	RESIDUAL_COUNTER	stage=8->9 var1<10 event=kill-npc 216091 216095 216092 216096 216093 216097 source=s8 target=s9
+20031	DIRTY_COUNTING_ENTRY	stage=7->8 var1<10 event=dialog 799226 SETPRO8 source=s7 target=s8
+20032	RESIDUAL_COUNTER	stage=6->7 var1<1 event=kill-npc 215488 source=s6 target=s7
+20033	RESIDUAL_COUNTER	stage=1->2 var1<5 event=kill-npc 216444 216445 216446 216447 source=s1 target=s2
+20033	DIRTY_COUNTING_ENTRY	stage=0->1 var1<5 event=dialog 799270 SETPRO1 source=started target=s1
+20034	SECTION_OFFSET_MISMATCH	stage=4 var1 offset=3 expected=6
+20035	DIRTY_COUNTING_ENTRY	stage=4->5 var1<10 event=dialog 799309 SETPRO5 source=s4 target=s5
+20111	MISSING_FIELD	stage=3 var1 limit=1 not declared
+20113	MISSING_FIELD	stage=3 var1 limit=1 not declared
+20113	MISSING_FIELD	stage=5 var1 limit=1 not declared
+20504	DIRTY_COUNTING_ENTRY	stage=0->1 var1<5 event=dialog 804730 SETPRO1 source=started target=s1
+20504	DIRTY_COUNTING_ENTRY	stage=2->3 var1<5 event=dialog 804730 SETPRO3 source=s2 target=s3
+20504	RESIDUAL_COUNTER	stage=4->5 var1<1 event=kill-npc 219949 source=s4 target=s5
+20504	DIRTY_COUNTING_ENTRY	stage=5->4 var1<1 event=log-out source=s5 target=s4
+20505	MISSING_FIELD	stage=4 var1 limit=1 not declared
+20506	MISSING_FIELD	stage=3 var1 limit=1 not declared
+20506	MISSING_FIELD	stage=4 var1 limit=1 not declared
+20527	DIRTY_COUNTING_ENTRY	stage=10->11 var1<7 event=dialog 703323 USE_OBJECT source=s10 target=s11
+23848	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23860	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23864	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23868	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23880	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23947	MISSING_FIELD	stage=0 var1 limit=1 not declared
+23954	MISSING_FIELD	stage=2 var1 limit=1 not declared
+23955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 247113 247133 247181 246556 246855 246865 source=started target=reward
+23955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 247113 247133 247181 246556 246855 246865 source=started target=reward
+23955	RESIDUAL_COUNTER	stage=0->1 var2<5 event=kill-npc 246561 source=started target=reward
+23956	MISSING_FIELD	stage=1 var1 limit=1 not declared
+23966	MISSING_FIELD	stage=0 var1 limit=1 not declared
+25002	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 804903 SELECT_QUEST_REWARD source=started target=reward
+25010	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 804721 SELECT_QUEST_REWARD source=started target=reward
+25032	MISSING_FIELD	stage=0 var1 limit=1 not declared
+25082	MISSING_FIELD	stage=2 var1 limit=1 not declared
+25090	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 804928 SELECT_QUEST_REWARD source=started target=reward
+25093	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 804928 SELECT_QUEST_REWARD source=started target=reward
+25201	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 804914 SELECT_QUEST_REWARD source=started target=reward
+25202	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 804914 SELECT_QUEST_REWARD source=started target=reward
+25203	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 804914 SELECT_QUEST_REWARD source=started target=reward
+25304	DIRTY_COUNTING_ENTRY	stage=1->2 var1<60 event=dialog 805340 CHECK_USER_HAS_QUEST_ITEM source=s1 target=s2
+25306	DIRTY_COUNTING_ENTRY	stage=2->3 var1<60 event=dialog 805340 SETPRO3 source=s2 target=s3
+25314	DIRTY_COUNTING_ENTRY	stage=1->2 var1<60 event=dialog 805340 CHECK_USER_HAS_QUEST_ITEM source=s1 target=s2
+25316	RESIDUAL_COUNTER	stage=6->7 var1<1 event=kill-npc 232853 233491 233544 233859 234190 source=s6 target=s7
+25316	DIRTY_COUNTING_ENTRY	stage=6->7 var1<5 event=kill-npc 232853 233491 233544 233859 234190 source=s6 target=s7
+25321	DIRTY_COUNTING_ENTRY	stage=0->1 var1<30 event=dialog 805344 SETPRO1 source=s0 target=s1
+25321	DIRTY_COUNTING_ENTRY	stage=2->3 var1<30 event=dialog 805345 SETPRO3 source=s2 target=s3
+25321	DIRTY_COUNTING_ENTRY	stage=4->5 var1<10 event=dialog 805346 SETPRO5 source=s4 target=s5
+25321	DIRTY_COUNTING_ENTRY	stage=6->7 var1<30 event=dialog 805347 SETPRO7 source=s6 target=s7
+25321	DIRTY_COUNTING_ENTRY	stage=8->9 var1<30 event=dialog 805348 SETPRO9 source=s8 target=s9
+25321	DIRTY_COUNTING_ENTRY	stage=10->11 var1<30 event=dialog 805349 SETPRO11 source=s10 target=s11
+25322	DIRTY_COUNTING_ENTRY	stage=0->1 var1<10 event=enter-zone source=started target=s1
+25322	DIRTY_COUNTING_ENTRY	stage=2->3 var1<10 event=enter-zone source=s2 target=s3
+25322	DIRTY_COUNTING_ENTRY	stage=4->5 var1<10 event=enter-zone source=s4 target=s5
+25322	DIRTY_COUNTING_ENTRY	stage=6->7 var1<10 event=enter-zone source=s6 target=s7
+25324	RESIDUAL_COUNTER	stage=0->3 var1<20 event=dialog 805343 SELECT_QUEST_REWARD source=started target=reward
+25325	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 805343 SELECT_QUEST_REWARD source=started target=reward
+25326	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 805331 SELECT_QUEST_REWARD source=started target=reward
+25409	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805402 SELECT_QUEST_REWARD source=started target=reward
+25410	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805402 SELECT_QUEST_REWARD source=started target=reward
+25411	RESIDUAL_COUNTER	stage=0->1 var1<2 event=dialog 805402 SELECT_QUEST_REWARD source=started target=reward
+25412	RESIDUAL_COUNTER	stage=0->1 var1<2 event=dialog 805402 SELECT_QUEST_REWARD source=started target=reward
+25413	RESIDUAL_COUNTER	stage=0->1 var1<2 event=dialog 805402 SELECT_QUEST_REWARD source=started target=reward
+25414	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805408 SELECT_QUEST_REWARD source=started target=reward
+25415	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805409 SELECT_QUEST_REWARD source=started target=reward
+25416	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805410 SELECT_QUEST_REWARD source=started target=reward
+25417	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805411 SELECT_QUEST_REWARD source=started target=reward
+25418	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805412 SELECT_QUEST_REWARD source=started target=reward
+25419	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805413 SELECT_QUEST_REWARD source=started target=reward
+25420	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805414 SELECT_QUEST_REWARD source=started target=reward
+25421	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805415 SELECT_QUEST_REWARD source=started target=reward
+25422	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805416 SELECT_QUEST_REWARD source=started target=reward
+25423	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805417 SELECT_QUEST_REWARD source=started target=reward
+25424	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805418 SELECT_QUEST_REWARD source=started target=reward
+25425	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805419 SELECT_QUEST_REWARD source=started target=reward
+25426	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805420 SELECT_QUEST_REWARD source=started target=reward
+25427	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805421 SELECT_QUEST_REWARD source=started target=reward
+25428	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805422 SELECT_QUEST_REWARD source=started target=reward
+25429	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805423 SELECT_QUEST_REWARD source=started target=reward
+25430	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805408 SELECT_QUEST_REWARD source=started target=reward
+25431	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805409 SELECT_QUEST_REWARD source=started target=reward
+25432	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805410 SELECT_QUEST_REWARD source=started target=reward
+25433	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805411 SELECT_QUEST_REWARD source=started target=reward
+25434	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805412 SELECT_QUEST_REWARD source=started target=reward
+25435	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805413 SELECT_QUEST_REWARD source=started target=reward
+25436	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805414 SELECT_QUEST_REWARD source=started target=reward
+25437	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805415 SELECT_QUEST_REWARD source=started target=reward
+25438	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805416 SELECT_QUEST_REWARD source=started target=reward
+25439	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805417 SELECT_QUEST_REWARD source=started target=reward
+25440	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805418 SELECT_QUEST_REWARD source=started target=reward
+25441	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805419 SELECT_QUEST_REWARD source=started target=reward
+25442	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805420 SELECT_QUEST_REWARD source=started target=reward
+25443	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805421 SELECT_QUEST_REWARD source=started target=reward
+25444	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805422 SELECT_QUEST_REWARD source=started target=reward
+25445	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 805423 SELECT_QUEST_REWARD source=started target=reward
+25471	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805815 SELECT_QUEST_REWARD source=started target=reward
+25472	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805815 SELECT_QUEST_REWARD source=started target=reward
+25473	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805815 SELECT_QUEST_REWARD source=started target=reward
+25474	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805815 SELECT_QUEST_REWARD source=started target=reward
+25475	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 805815 SELECT_QUEST_REWARD source=started target=reward
+25500	RESIDUAL_COUNTER	stage=0->1 var1<20 event=dialog 806101 SELECT_QUEST_REWARD source=started target=reward
+25501	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806101 SELECT_QUEST_REWARD source=started target=reward
+25501	DIRTY_COUNTING_ENTRY	stage=1->0 var1<30 event=dialog 806101 source=reward target=complete
+25504	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25506	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806103 SELECT_QUEST_REWARD source=started target=reward
+25507	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806103 SELECT_QUEST_REWARD source=started target=reward
+25509	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806104 SELECT_QUEST_REWARD source=started target=reward
+25510	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806104 SELECT_QUEST_REWARD source=started target=reward
+25513	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806105 SELECT_QUEST_REWARD source=started target=reward
+25514	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806105 SELECT_QUEST_REWARD source=started target=reward
+25515	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806106 SELECT_QUEST_REWARD source=started target=reward
+25516	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806106 SELECT_QUEST_REWARD source=started target=reward
+25518	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806107 SELECT_QUEST_REWARD source=started target=reward
+25519	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806107 SELECT_QUEST_REWARD source=started target=reward
+25520	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806107 SELECT_QUEST_REWARD source=started target=reward
+25521	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806108 SELECT_QUEST_REWARD source=started target=reward
+25522	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806108 SELECT_QUEST_REWARD source=started target=reward
+25524	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806109 SELECT_QUEST_REWARD source=started target=reward
+25525	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806109 SELECT_QUEST_REWARD source=started target=reward
+25527	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806110 SELECT_QUEST_REWARD source=started target=reward
+25528	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806110 SELECT_QUEST_REWARD source=started target=reward
+25529	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806110 SELECT_QUEST_REWARD source=started target=reward
+25530	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806111 SELECT_QUEST_REWARD source=started target=reward
+25531	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806111 SELECT_QUEST_REWARD source=started target=reward
+25534	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806112 SELECT_QUEST_REWARD source=started target=reward
+25536	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806255 SELECT_QUEST_REWARD source=started target=reward
+25537	RESIDUAL_COUNTER	stage=0->1 var1<30 event=dialog 806255 SELECT_QUEST_REWARD source=started target=reward
+25560	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25560	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25561	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25561	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25562	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25562	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25564	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25564	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806116 SELECT_QUEST_REWARD source=started target=reward
+25570	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806103 SELECT_QUEST_REWARD source=started target=reward
+25571	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806104 SELECT_QUEST_REWARD source=started target=reward
+25572	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806105 SELECT_QUEST_REWARD source=started target=reward
+25573	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806106 SELECT_QUEST_REWARD source=started target=reward
+25574	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806107 SELECT_QUEST_REWARD source=started target=reward
+25575	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806108 SELECT_QUEST_REWARD source=started target=reward
+25576	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806109 SELECT_QUEST_REWARD source=started target=reward
+25577	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806110 SELECT_QUEST_REWARD source=started target=reward
+25578	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806111 SELECT_QUEST_REWARD source=started target=reward
+25579	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806112 SELECT_QUEST_REWARD source=started target=reward
+25601	MISSING_FIELD	stage=6 var1 limit=1 not declared
+25602	MISSING_FIELD	stage=4 var1 limit=1 not declared
+25604	DIRTY_COUNTING_ENTRY	stage=1->2 var1<3 event=enter-zone source=s1 target=s2
+25605	MISSING_FIELD	stage=6 var1 limit=1 not declared
+25606	MISSING_FIELD	stage=5 var1 limit=1 not declared
+25608	RESIDUAL_COUNTER	stage=3->4 var1<10 event=dialog 806197 SETPRO5 source=step3 target=step4
+25620	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806171 SELECT_QUEST_REWARD source=started target=reward
+25621	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806173 SELECT_QUEST_REWARD source=started target=reward
+25622	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806110 SELECT_QUEST_REWARD source=started target=reward
+25623	RESIDUAL_COUNTER	stage=0->1 var1<1 event=dialog 806177 SELECT_QUEST_REWARD source=started target=reward
+25632	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25632	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25634	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25634	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25637	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25637	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25639	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 731685 SELECT_QUEST_REWARD source=started target=reward
+25639	RESIDUAL_COUNTER	stage=0->1 var1<3 event=dialog 806102 SELECT_QUEST_REWARD source=started target=reward
+25680	MISSING_FIELD	stage=2 var1 limit=1 not declared
+25693	RESIDUAL_COUNTER	stage=0->1 var1<10 event=dialog 806116 SELECT_QUEST_REWARD source=started target=reward
+25694	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806802 SELECT_QUEST_REWARD source=started target=reward
+25695	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806802 SELECT_QUEST_REWARD source=started target=reward
+25696	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806803 SELECT_QUEST_REWARD source=started target=reward
+25697	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806803 SELECT_QUEST_REWARD source=started target=reward
+25699	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806804 SELECT_QUEST_REWARD source=started target=reward
+25700	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806805 SELECT_QUEST_REWARD source=started target=reward
+25701	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806805 SELECT_QUEST_REWARD source=started target=reward
+25702	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806806 SELECT_QUEST_REWARD source=started target=reward
+25703	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806806 SELECT_QUEST_REWARD source=started target=reward
+25704	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806807 SELECT_QUEST_REWARD source=started target=reward
+25705	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806807 SELECT_QUEST_REWARD source=started target=reward
+25706	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806808 SELECT_QUEST_REWARD source=started target=reward
+25707	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806808 SELECT_QUEST_REWARD source=started target=reward
+25708	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806809 SELECT_QUEST_REWARD source=started target=reward
+25709	RESIDUAL_COUNTER	stage=0->1 var1<5 event=dialog 806809 SELECT_QUEST_REWARD source=started target=reward
+26804	MISSING_FIELD	stage=0 var1 limit=1 not declared
+26822	MISSING_FIELD	stage=5 var1 limit=1 not declared
+26824	MISSING_FIELD	stage=0 var1 limit=1 not declared
+26826	MISSING_FIELD	stage=0 var1 limit=1 not declared
+26836	MISSING_FIELD	stage=8 var2 limit=1 not declared
+26836	MISSING_FIELD	stage=13 var1 limit=1 not declared
+26837	MISSING_FIELD	stage=0 var1 limit=1 not declared
+26839	MISSING_FIELD	stage=1 var1 limit=1 not declared
+26974	MISSING_FIELD	stage=0 var1 limit=1 not declared
+26986	MISSING_FIELD	stage=0 var1 limit=1 not declared
+27510	DIRTY_COUNTING_ENTRY	stage=2->3 var2<1 event=enter-world source=s2 target=s3
+27525	RESIDUAL_COUNTER	stage=1->2 var1<1 event=kill-npc 248382 source=s1 target=s2
+27525	DIRTY_COUNTING_ENTRY	stage=0->1 var1<1 event=enter-zone source=started target=s1
+27525	RESIDUAL_COUNTER	stage=2->3 var1<1 event=kill-npc 248395 248423 248424 248425 248426 source=s2 target=s3
+27525	DIRTY_COUNTING_ENTRY	stage=1->2 var1<1 event=kill-npc 248382 source=s1 target=s2
+27525	RESIDUAL_COUNTER	stage=4->5 var1<1 event=kill-npc 248013 source=s4 target=reward
+27525	DIRTY_COUNTING_ENTRY	stage=3->4 var1<1 event=enter-zone source=s3 target=s4
+27526	MISSING_FIELD	stage=0 var1 limit=1 not declared
+27540	MISSING_FIELD	stage=2 var1 limit=1 not declared
+27540	MISSING_FIELD	stage=3 var1 limit=1 not declared
+27541	MISSING_FIELD	stage=0 var3 limit=1 not declared
+27551	RESIDUAL_COUNTER	stage=2->3 var2<10 event=kill-npc 248015 248016 248017 248018 248019 248020 248021 248022 248023 248024 source=s2 target=s3
+27551	DIRTY_COUNTING_ENTRY	stage=1->2 var2<10 event=dialog 835783 SETPRO2 source=s1 target=s2
+27551	RESIDUAL_COUNTER	stage=3->4 var1<1 event=kill-npc 248025 source=s3 target=s4
+27552	MISSING_FIELD	stage=0 var1 limit=1 not declared
+2869	MISSING_FIELD	stage=0 var2 limit=6 not declared
+28741	RESIDUAL_COUNTER	stage=0->1 var1<50 event=kill-npc 236018 236019 236020 236021 236096 236097 236098 source=started target=reward
+28930	MISSING_FIELD	stage=2 var1 limit=1 not declared
+28930	MISSING_FIELD	stage=3 var1 limit=1 not declared
+28930	MISSING_FIELD	stage=4 var1 limit=1 not declared
+28931	DIRTY_COUNTING_ENTRY	stage=0->1 var1<2 event=get-item source=started target=s1
+28952	MISSING_FIELD	stage=0 var4 limit=1 not declared
+28990	MISSING_FIELD	stage=1 var2 limit=1 not declared
+28990	MISSING_FIELD	stage=2 var1 limit=1 not declared
+28992	MISSING_FIELD	stage=1 var2 limit=1 not declared
+28992	MISSING_FIELD	stage=2 var1 limit=1 not declared
+28996	MISSING_FIELD	stage=2 var2 limit=1 not declared
+28996	MISSING_FIELD	stage=4 var1 limit=1 not declared
+29673	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29674	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29675	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29676	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29680	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29681	MISSING_FIELD	stage=0 var1 limit=1 not declared
+29682	MISSING_FIELD	stage=0 var1 limit=1 not declared
+30514	MISSING_FIELD	stage=0 var2 limit=1 not declared
+30564	MISSING_FIELD	stage=0 var2 limit=1 not declared
+30566	MISSING_FIELD	stage=0 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=0 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=1 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=2 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=3 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=4 var1 limit=1 not declared
+3122	MISSING_FIELD	stage=5 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=0 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=1 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=2 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=3 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=4 var1 limit=1 not declared
+3123	MISSING_FIELD	stage=5 var1 limit=1 not declared
+36531	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36539	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36540	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36541	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36542	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36543	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36544	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36545	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36546	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36547	MISSING_FIELD	stage=0 var1 limit=1 not declared
+36548	MISSING_FIELD	stage=0 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=0 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=1 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=2 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=3 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=4 var1 limit=1 not declared
+4122	MISSING_FIELD	stage=5 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=0 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=1 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=2 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=3 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=4 var1 limit=1 not declared
+4123	MISSING_FIELD	stage=5 var1 limit=1 not declared
+46532	MISSING_FIELD	stage=0 var1 limit=1 not declared
+50126	MISSING_FIELD	stage=0 var1 limit=1 not declared
+50127	MISSING_FIELD	stage=0 var1 limit=1 not declared
+51126	MISSING_FIELD	stage=0 var1 limit=1 not declared
+51127	MISSING_FIELD	stage=0 var1 limit=1 not declared

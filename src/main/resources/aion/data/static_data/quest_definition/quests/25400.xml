@@ -221,6 +221,10 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="6"/>
+        <!-- 进入击杀计数阶段时计数器必须从 0 起算，避免旧存档高位脏值污染计数（QE-044）。
+             The kill-count stage must start from a clean counter so stale high bits cannot
+             pollute the client-counted section. -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -232,10 +236,14 @@
       </event>
       <conditions>
         <variable-is field="var0" value="6"/>
-        <variable-at-least field="var1" value="0"/>
+        <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <!-- 击杀收口必须清空本阶段局部计数，否则打包步数会被高位写成 (2&lt;&lt;6)|7，
+             客户端在 progress != 7 时不再向 Ab1_Lanbaz_E(805360) 发起任务对白请求（QE-044）。
+             The kill closure must clear the stage-local counter; a residual var1 packs the
+             step as (2&lt;&lt;6)|7 and the client stops requesting the 805360 quest dialog. -->
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -251,6 +259,55 @@
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 上线自愈：旧存档把 var1 残留带进 s7/s8/reward，打包步数被高位污染后
+         805360/805357/805356 的任务对白不会触发；登录时把残留计数清回 0（QE-044）。
+         Login self-heal: legacy saves carry a residual var1 into s7/s8/reward, which
+         suppresses the 805360/805357/805356 quest dialogs; clear it on login. -->
+    <transition source="s7" target="s7">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="7"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
