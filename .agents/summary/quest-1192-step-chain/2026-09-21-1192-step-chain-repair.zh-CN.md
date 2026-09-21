@@ -109,3 +109,17 @@
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1192StepChainContractTest.java`
 - `.agents/summary/quest-1192-step-chain/`：本文件、`audit_reward_row_vs_client_steps.py`（副本）、`audit_unrouted_progress_actions.py`、
   `audit-output.tsv`、`audit-run.log`、`unrouted-progress-actions.tsv`、`audit-cross.tsv`
+
+## 8. Playbook / memory-bank 归属判定
+
+按 `.agents/rules/quest-repair.md` 规则 10（症状、根因、修复层、修复合同一致时，不追加任务 ID、不改案例正文、不新增重复案例），本次修复归入**既有**指纹，不新增 Playbook 案例、不新增 memory-bank 卡片：
+
+| 维度 | 1192（本次） | 既有指纹 |
+| --- | --- | --- |
+| 玩家症状 | 跟第一步 NPC（拉比临托斯 203701）说完话就能跳过第 2、3 步直接领奖；wiki 侧三步共用同一条 GM 命令 | `MULTI_NPC_HANDOFF_REWARD_OWNER`（中间 NPC 卡住 / 错误 NPC 领奖）与 `ORDERED_MULTI_NPC_REPORT_FLOW`（任意 NPC 都能完成）→ memory-bank `QE-004` / `QE-005` |
+| 根因 | 迁移把客户端三行交付链压成单个 `started(var0=0)`：某一步的 `SETPRO1` 同时挂两个 NPC 并直进 reward，`SETPRO2`/`SELECT3_1`/`SELECT_QUEST_REWARD` 无路由 | QE-004「多 NPC 交付链系统性丢失」、QE-005「连续两步汇报误删中间 var 节点」 |
+| 修复层 | 仅任务 XML：显式中间状态 + 每步使用客户端可见 action/page + 唯一 reward owner + 旧存档自愈边 | 同（1163 / 1920 的修复层） |
+| 修复合同 | `SELECT2 → SELECT2_1 → SETPRO1`、`SELECT3 → SELECT3_1 → SETPRO2`、`SELECT5 → SELECT_QUEST_REWARD`，203098 独占 `npc-complete` | 1163 的 `SELECT2 → SELECT2_1 → SETPRO1` + 唯一 owner / 1920 的双 NPC 分阶段链 |
+
+代表案例仍为 1163（`MULTI_NPC_HANDOFF_REWARD_OWNER`）与 1920（`LEVEL_UP_MULTI_NPC_PHASED_DIALOG`）；本轮只把 1192 作为同 pattern 的第二实例留在本 summary 与 `Quest1192StepChainContractTest` 回归测试中。
+按规则 19，本次没有产生新的可复用 finding 或引擎级洞察，因此不更新 `.agents/memory-bank/patterns/quest-engine.md`。
