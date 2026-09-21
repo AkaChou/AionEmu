@@ -1,6 +1,3 @@
-========================================
-= 物品ID数据，由灰色枫叶GM工具自动生成 =
-========================================
 物品ID:100000001 名字:瑟库拉斯之剑      STR值：STR_SWORD_CIRCULOUS
 物品ID:100000002 名字:小妖精之镐      STR值：STR_GOBLIN_PICK
 物品ID:100000003 名字:克拉尔长剑1      STR值：STR_ORCSWORD1
@@ -96813,7 +96810,7 @@
 物品ID:164000412 名字:神庙竞技场专用觉醒之咒语书      STR值：STR_SCROLL_ARENA_SPEED_CASTING_SP_50A
 物品ID:164000413 名字:支援用炸弹      STR值：STR_IDF5_FORTRESS_WAR_BOMB
 物品ID:164000414 名字:支援用束缚炸弹      STR值：STR_IDF5_FORTRESS_WAR_FREEZING
-物品ID:164000415 名字:支援用炸弹      STR值：STR_IDF5_UNDER2_WAR_BOMB   
+物品ID:164000415 名字:支援用炸弹      STR值：STR_IDF5_UNDER2_WAR_BOMB
 物品ID:164000416 名字:支援用束缚炸弹      STR值：STR_IDF5_UNDER2_WAR_FREEZING
 物品ID:164000417 名字:恐怖弹      STR值：STR_ITEM_IDEVENT_SOLO_BOMB
 物品ID:164000418 名字:放屁弹      STR值：STR_ITEM_IDEVENT_SOLO_BOMB_02
@@ -112621,7 +112618,7 @@
 物品ID:182215001 名字:苏尔卡纳箱子      STR值：STR_QUEST_18404A
 物品ID:182215002 名字:纳尔哈的记忆      STR值：STR_QUEST_18405A
 物品ID:182215003 名字:折断的剑柄      STR值：STR_QUEST_18406A
-物品ID:182215004 名字:休拉玛的存储球      STR值：STR_DOC_QUEST_18407A   
+物品ID:182215004 名字:休拉玛的存储球      STR值：STR_DOC_QUEST_18407A
 物品ID:182215005 名字:折断的剑身碎片      STR值：STR_QUEST_18408A
 物品ID:182215006 名字:装着剑身碎片的箱子      STR值：STR_QUEST_18409A
 物品ID:182215007 名字:不完整的提亚马特的权能      STR值：STR_QUEST_18409B

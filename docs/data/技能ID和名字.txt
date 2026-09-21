@@ -1,6 +1,3 @@
-========================================
-= 技能ID数据，由灰色枫叶GM工具自动生成 =
-========================================
 技能ID:1 名字:变身：白虎      STR值：STR_SKILLN_RA_LIGHT_WHITETIGER
 技能ID:2 名字:变身：白虎      STR值：STR_SKILLN_RA_LIGHT_WHITETIGER
 技能ID:3 名字:变身：白虎      STR值：STR_SKILLN_RA_LIGHT_WHITETIGER
