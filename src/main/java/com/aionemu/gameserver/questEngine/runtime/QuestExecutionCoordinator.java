@@ -177,7 +177,8 @@ public final class QuestExecutionCoordinator {
 					statePort.apply(unit.connection(), playerId, resolved);
 					appliedPlan = resolved;
 				}
-				for (AfterCommitAction action : resolved.afterCommit()) {
+				for (AfterCommitAction action : withoutRedundantStateSync(resolved.afterCommit(), persistState,
+						durableActions.isEmpty())) {
 					unit.afterCommit(() -> {
 						try {
 							afterCommitPort.execute(action, snapshot, resolved);
@@ -255,6 +256,25 @@ public final class QuestExecutionCoordinator {
 			}
 			throw new QuestExecutionFailureException(stage, committed, failure);
 		}
+	}
+
+	/**
+	 * 状态未变化且没有任何必需动作时，任务状态更新包携带的信息与客户端已知状态完全一致，
+	 * 但客户端会把它渲染成一次"任务更新"通知（额外击杀已饱和计数器时最明显）。
+	 * 这类多余的状态同步在此丢弃；只要状态或持久副作用发生变化，同步照常下发。
+	 * When the persisted state is unchanged and no required action ran, the quest-state update packet repeats the
+	 * state the client already knows while the client renders it as an unsolicited "quest updated" notice (most
+	 * visible when a saturated kill counter is hit again). Such redundant syncs are dropped; any real state or
+	 * durable effect change keeps its sync.
+	 */
+	private static List<AfterCommitAction> withoutRedundantStateSync(List<AfterCommitAction> actions,
+			boolean stateChanged, boolean requiredActionsEmpty) {
+		if (stateChanged || !requiredActionsEmpty) {
+			return actions;
+		}
+		return actions.stream()
+			.filter(action -> !(action instanceof AfterCommitAction.SyncQuestState))
+			.toList();
 	}
 
 	private static QuestExecutionResult executeProtocolOnly(QuestSnapshot snapshot, QuestMutationPlan plan,

@@ -12,10 +12,30 @@
       </group>
     </reward-groups>
     <kills>
-      <kill sequence="1"><npc id="240475"/></kill>
-      <kill sequence="2"><npc id="240483"/></kill>
-      <kill sequence="3"><npc id="240495"/></kill>
-      <kill sequence="4"><npc id="240497"/></kill>
+      <kill sequence="1">
+        <npc id="240475"/>
+        <npc id="240476"/>
+        <npc id="241656"/>
+        <npc id="241657"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="240483"/>
+        <npc id="240484"/>
+        <npc id="241664"/>
+        <npc id="241665"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="240495"/>
+        <npc id="240496"/>
+        <npc id="241676"/>
+        <npc id="241677"/>
+      </kill>
+      <kill sequence="4">
+        <npc id="240497"/>
+        <npc id="240498"/>
+        <npc id="241678"/>
+        <npc id="241679"/>
+      </kill>
     </kills>
   </metadata>
   <progress>
@@ -51,13 +71,13 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="835514" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
-    <!-- 怪兽 1 (240475) 计数，对应 SECTION_1 -->
+    <!-- 怪兽 1 族 (240475/240476 + T_ 241656/241657) 计数，对应 SECTION_1 -->
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="240475"/>
+        <kill-npc npc-ids="240475 240476 241656 241657"/>
       </event>
       <conditions>
-        <variable-below field="var1" value="3"/>
+        <variable-below field="var1" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -67,12 +87,14 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 越界自愈：仅当旧存档把该 SECTION 写坏到超过客户端上限（>4）时归位；正常第 4 次击杀由上面的累加路线收口，超额击杀不再命中任何路线。
+         Legacy-save heal: only clamps a corrupted counter above the client ceiling (>4); the fourth kill is owned by the accumulate route, so extra kills match no route at all. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-id="240475"/>
+        <kill-npc npc-ids="240475 240476 241656 241657"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="3"/>
+        <variable-at-least field="var1" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -84,7 +106,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-id="240475"/>
+        <kill-npc npc-ids="240475 240476 241656 241657"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="3"/>
@@ -103,13 +125,13 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 怪兽 2 (240483) 计数，对应 SECTION_2 -->
+    <!-- 怪兽 2 族 (240483/240484 + T_ 241664/241665) 计数，对应 SECTION_2 -->
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="240483"/>
+        <kill-npc npc-ids="240483 240484 241664 241665"/>
       </event>
       <conditions>
-        <variable-below field="var2" value="3"/>
+        <variable-below field="var2" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -119,12 +141,14 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 越界自愈：仅当旧存档把该 SECTION 写坏到超过客户端上限（>4）时归位；正常第 4 次击杀由上面的累加路线收口，超额击杀不再命中任何路线。
+         Legacy-save heal: only clamps a corrupted counter above the client ceiling (>4); the fourth kill is owned by the accumulate route, so extra kills match no route at all. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-id="240483"/>
+        <kill-npc npc-ids="240483 240484 241664 241665"/>
       </event>
       <conditions>
-        <variable-at-least field="var2" value="3"/>
+        <variable-at-least field="var2" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -136,7 +160,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-id="240483"/>
+        <kill-npc npc-ids="240483 240484 241664 241665"/>
       </event>
       <conditions>
         <variable-at-least field="var2" value="3"/>
@@ -155,13 +179,13 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 怪兽 3 (240495) 计数，对应 SECTION_3 -->
+    <!-- 怪兽 3 族 (240495/240496 + T_ 241676/241677) 计数，对应 SECTION_3 -->
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="240495"/>
+        <kill-npc npc-ids="240495 240496 241676 241677"/>
       </event>
       <conditions>
-        <variable-below field="var3" value="3"/>
+        <variable-below field="var3" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -171,12 +195,14 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 越界自愈：仅当旧存档把该 SECTION 写坏到超过客户端上限（>4）时归位；正常第 4 次击杀由上面的累加路线收口，超额击杀不再命中任何路线。
+         Legacy-save heal: only clamps a corrupted counter above the client ceiling (>4); the fourth kill is owned by the accumulate route, so extra kills match no route at all. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-id="240495"/>
+        <kill-npc npc-ids="240495 240496 241676 241677"/>
       </event>
       <conditions>
-        <variable-at-least field="var3" value="3"/>
+        <variable-at-least field="var3" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -188,7 +214,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-id="240495"/>
+        <kill-npc npc-ids="240495 240496 241676 241677"/>
       </event>
       <conditions>
         <variable-at-least field="var3" value="3"/>
@@ -207,13 +233,13 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 怪兽 4 (240497) 计数，对应 SECTION_4 -->
+    <!-- 怪兽 4 族 (240497/240498 + T_ 241678/241679) 计数，对应 SECTION_4 -->
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="240497"/>
+        <kill-npc npc-ids="240497 240498 241678 241679"/>
       </event>
       <conditions>
-        <variable-below field="var4" value="3"/>
+        <variable-below field="var4" value="4"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -223,12 +249,14 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 越界自愈：仅当旧存档把该 SECTION 写坏到超过客户端上限（>4）时归位；正常第 4 次击杀由上面的累加路线收口，超额击杀不再命中任何路线。
+         Legacy-save heal: only clamps a corrupted counter above the client ceiling (>4); the fourth kill is owned by the accumulate route, so extra kills match no route at all. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-id="240497"/>
+        <kill-npc npc-ids="240497 240498 241678 241679"/>
       </event>
       <conditions>
-        <variable-at-least field="var4" value="3"/>
+        <variable-at-least field="var4" value="5"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="0"/>
@@ -240,7 +268,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-id="240497"/>
+        <kill-npc npc-ids="240497 240498 241678 241679"/>
       </event>
       <conditions>
         <variable-at-least field="var4" value="3"/>

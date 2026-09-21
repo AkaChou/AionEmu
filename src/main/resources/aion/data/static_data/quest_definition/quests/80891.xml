@@ -32,7 +32,7 @@
     <dialog type="NPC_START" npc-id="834365" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <counter source="started" target="reward" field="var0" required="20">
       <event>
-        <kill-npc npc-ids="240475 240477 240479 240481 240483"/>
+        <kill-npc npc-ids="240475 240476 241656 241657 240477 240478 241658 241659 240479 240480 241660 241661 240481 240482 241662 241663 240483 240484 241664 241665"/>
       </event>
     </counter>
     <transition source="reward" target="reward">

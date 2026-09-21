@@ -123,7 +123,7 @@
     </transition>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15 k16 k17 k18 k19 k20 k21 k22 k23 k24 k25 k26 k27">
       <event>
-        <kill-npc npc-ids="240487 240489 240491 240493 240495 240497 241442"/>
+        <kill-npc npc-ids="240487 240488 241668 241669 240489 240490 241670 241671 240491 240492 241672 241673 240493 240494 241674 241675 240495 240496 241676 241677 240497 240498 241678 241679 241442 241443 243284 243285"/>
       </event>
     </kill-chain>
     <dialog type="NPC_REPORT" npc-id="835067" source="k27" target="reward" page="DEFAULT_SUCCESS"/>

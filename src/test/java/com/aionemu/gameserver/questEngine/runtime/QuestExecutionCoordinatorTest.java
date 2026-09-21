@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
@@ -21,6 +22,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.closeDialog;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.completeQuest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.hasItem;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.killNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeItem;
@@ -29,6 +31,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.spawnNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.variableAtLeast;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -225,6 +228,60 @@ class QuestExecutionCoordinatorTest {
 
 		assertEquals(QuestExecutionStatus.NO_MATCH, result.status());
 		assertEquals(List.of(), calls);
+	}
+
+	/**
+	 * 计数器已饱和时的超额击杀会命中"收口"自环（{@code var1 >= 3 -> var1 = 4}），
+	 * 计划与当前状态完全相同；这种执行不得下发任务状态更新，否则客户端会显示一次"任务更新"。
+	 * An extra kill of a saturated counter matches the clamping self-loop with an identical resulting state;
+	 * such an execution must not push a quest-state update, which the client renders as "quest updated".
+	 */
+	@Test
+	void stateIdenticalExecutionDropsTheRedundantStateSync() throws Exception {
+		List<String> calls = new ArrayList<>();
+		List<AfterCommitAction> afterCommit = new ArrayList<>();
+		CompiledQuestDefinition definition = saturatedSelfLoopDefinition();
+		QuestTransition transition = definition.definition().transitions().get(0);
+		QuestStatePort state = new QuestStatePort() {
+			@Override
+			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+				throw new AssertionError("unchanged state must not be persisted");
+			}
+
+			@Override
+			public void publish(int playerId, QuestMutationPlan plan) {
+				throw new AssertionError("unchanged state must not be published");
+			}
+		};
+		QuestActionPort actions = new QuestActionPort() {
+			@Override
+			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> required) {
+				throw new AssertionError("empty required actions must not initialize the action port");
+			}
+
+			@Override
+			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+					List<QuestAction> required) {
+				throw new AssertionError("empty required actions must not initialize the action port");
+			}
+		};
+		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+			connection(calls), 7, definition, killNpc(700001), transition,
+			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId, QuestStatus.START,
+				definition.definition().progressLayout().pack(vars("var1", 4)), Map.of()),
+			actions, state, (action, snapshot, plan) -> afterCommit.add(action));
+
+		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
+		assertEquals(List.of(), afterCommit, "a state-identical execution must not announce a quest update");
+	}
+
+	/** 已饱和计数器的"收口"自环：状态不变但会生成计划。 / Clamping self-loop of a saturated counter: no state change, still planned. */
+	private static CompiledQuestDefinition saturatedSelfLoopDefinition() {
+		return quest(1006)
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(killNpc(700001)).when(variableAtLeast("var1", 3)).then(setVariable("var1", 4)).goTo("start")
+			.afterCommit(syncQuestState(QuestStateSyncMode.PACKET_ONLY)).compile();
 	}
 
 	@Test

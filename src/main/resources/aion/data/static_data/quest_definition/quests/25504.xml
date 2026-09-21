@@ -91,7 +91,7 @@
     </npc-complete>
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="240487 240489 240491 240493 240495 240497 241442"/>
+        <kill-npc npc-ids="240487 240488 241668 241669 240489 240490 241670 241671 240491 240492 241672 241673 240493 240494 241674 241675 240495 240496 241676 241677 240497 240498 241678 241679 241442 241443 243284 243285"/>
       </event>
       <conditions>
         <variable-below field="var1" value="29"/>
@@ -106,7 +106,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="240487 240489 240491 240493 240495 240497 241442"/>
+        <kill-npc npc-ids="240487 240488 241668 241669 240489 240490 241670 241671 240491 240492 241672 241673 240493 240494 241674 241675 240495 240496 241676 241677 240497 240498 241678 241679 241442 241443 243284 243285"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="29"/>

@@ -2,9 +2,11 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,18 @@ class QuestA03ShardRetailAlignmentTest {
 			238865, 238870, 238875, 238880, 238885, 238890, 238895, 238900, 238905, 238910, 238915, 238920, 238925),
 		25640, Set.of(237455, 237460, 237450, 237494, 237499, 237489, 237560, 237555, 237550, 237618, 237623, 237613),
 		25698, Set.of(885487, 885488, 885489, 885490));
+
+	/**
+	 * 零售 progress_info 只登记了部分等级变体，客户端 quest_monster 合同声明的是整族变体（含世界中真正刷新的 T_ 变体）。
+	 * 这些任务的击杀目标必须覆盖零售名单，并以评审后的客户端变体合同快照为准。
+	 * Retail progress_info enumerates only part of the level variants while the client quest_monster contract lists the
+	 * whole family, so these quests must cover the retail list and match the reviewed client variant contract snapshot.
+	 */
+	private static final Set<Integer> RETAIL_PROGRESS_LIST_IS_PARTIAL = Set.of(25533, 25640);
+
+	/** 客户端变体合同快照（生成脚本见 .agents/summary/quest-15546-kill-progress/）。 */
+	private static final Path CONTRACT_TSV =
+		Path.of("src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv");
 
 	/** Hunt step counts (kills required) per quest from retail data_driven_quest.xml. */
 	private static final Map<Integer, Integer> HUNT_STEPS = Map.of(
@@ -89,6 +103,7 @@ class QuestA03ShardRetailAlignmentTest {
 
 	@Test
 	void huntTargetsAndStepsMatchRetailProgressInfo() throws Exception {
+		Map<Integer, Set<Integer>> clientContract = clientVariantContract();
 		for (Map.Entry<Integer, Set<Integer>> entry : HUNT_NPCS.entrySet()) {
 			int questId = entry.getKey();
 			Set<Integer> expectedNpcs = entry.getValue();
@@ -101,7 +116,13 @@ class QuestA03ShardRetailAlignmentTest {
 					killNpcs.addAll(npcIds);
 				}
 			}
-			assertEquals(expectedNpcs, killNpcs, "kill-npc targets of " + questId);
+			if (RETAIL_PROGRESS_LIST_IS_PARTIAL.contains(questId)) {
+				assertTrue(killNpcs.containsAll(expectedNpcs),
+					"retail progress list of " + questId + " must stay covered");
+				assertEquals(clientContract.get(questId), killNpcs, "client variant contract of " + questId);
+			} else {
+				assertEquals(expectedNpcs, killNpcs, "kill-npc targets of " + questId);
+			}
 
 			// 计数器合同：击杀路线把 var1 累加到零售要求次数，完成后进入 reward。
 			int required = HUNT_STEPS.get(questId);
@@ -124,6 +145,26 @@ class QuestA03ShardRetailAlignmentTest {
 				new QuestAction.SetVariable("var1", required)), completion.actions(),
 				"completion counters of " + questId);
 		}
+	}
+
+	/** 读取客户端变体合同快照：任务 -> 全部击杀目标 NPC ID。 */
+	private static Map<Integer, Set<Integer>> clientVariantContract() throws IOException {
+		Map<Integer, Set<Integer>> rows = new HashMap<>();
+		for (String line : Files.readAllLines(CONTRACT_TSV)) {
+			String trimmed = line.trim();
+			if (!trimmed.contains("\t") || trimmed.startsWith("#") || trimmed.startsWith("quest_id")) {
+				continue;
+			}
+			String[] columns = trimmed.split("\t");
+			Set<Integer> targets = new HashSet<>();
+			for (String token : columns[1].trim().split(" ")) {
+				if (!token.isEmpty()) {
+					targets.add(Integer.parseInt(token));
+				}
+			}
+			rows.put(Integer.parseInt(columns[0].trim()), targets);
+		}
+		return rows;
 	}
 
 	@Test

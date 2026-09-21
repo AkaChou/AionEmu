@@ -40,7 +40,7 @@
     <!-- 击杀 0..8 累积计数，同时将 var0 保持为 0 自愈历史脏数据 -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="240475 240477 240479 240481 240483"/>
+        <kill-npc npc-ids="240475 240476 241656 241657 240477 240478 241658 241659 240479 240480 241660 241661 240481 240482 241662 241663 240483 240484 241664 241665"/>
       </event>
       <conditions>
         <variable-below field="var1" value="9"/>
@@ -56,7 +56,7 @@
     <!-- 第 10 次击杀达成，var0 置 1 激活下一步客户端对话，进入 REWARD 状态 -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="240475 240477 240479 240481 240483"/>
+        <kill-npc npc-ids="240475 240476 241656 241657 240477 240478 241658 241659 240479 240480 241660 241661 240481 240482 241662 241663 240483 240484 241664 241665"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="9"/>
