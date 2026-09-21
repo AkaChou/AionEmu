@@ -70,7 +70,6 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			rotation = readH();
 		} else if (action == HousingAction.CHANGE_APPEARANCE) {
 			buildingId = readD();
-		} else if (action == HousingAction.ENTER_DECORATION || action == HousingAction.EXIT_DECORATION) {
 		} else {
 			log.error(I18n.get("log.87e9c1587136", Integer.toHexString(actionId).toUpperCase()));
 		}

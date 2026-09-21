@@ -38,8 +38,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		}
+		isAggred.compareAndSet(false, true);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 

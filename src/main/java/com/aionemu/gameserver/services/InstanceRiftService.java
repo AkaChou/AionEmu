@@ -24,7 +24,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
@@ -34,7 +33,6 @@ import com.aionemu.gameserver.services.instanceriftservice.Rift;
 import com.aionemu.gameserver.services.instanceriftservice.RiftInstance;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 副本裂隙服务：按 InstanceSchedule 调度开启，管理刷怪与生命周期。
@@ -137,8 +135,6 @@ public class InstanceRiftService {
 	 * state type
 	 */
 	public void spawn(InstanceRiftLocation loc, InstanceRiftStateType estate) {
-		if (estate.equals(InstanceRiftStateType.OPEN)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getInstanceRiftSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {
@@ -158,13 +154,13 @@ public class InstanceRiftService {
 	 * @return 若 handled 则为 true / true if handled
 	 */
 	public boolean instanceRiftMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
-			return true;
-		default:
-			return false;
-		}
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**

@@ -62,8 +62,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 25000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20702, 60, getOwner()).useNoAnimationSkill(); // 范围吸血 / Area Blood Sucking.
 			scheduleDelayStage1(delay);
 		}
@@ -71,8 +70,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 
 	private void stage2() {
 		int delay = 25000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20703, 60, getOwner()).useNoAnimationSkill(); // 吸血 / Blood Sucking.
 			scheduleDelayStage2(delay);
 		}
@@ -80,30 +78,26 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 
 	private void stage3() {
 		int delay = 25000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20704, 60, getOwner()).useNoAnimationSkill(); // 范围压制 / Area Press.
 			scheduleDelayStage3(delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage3(), delay);
 		}
 	}

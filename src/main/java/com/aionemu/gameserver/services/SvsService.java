@@ -24,7 +24,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.model.svs.SvsStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
@@ -35,7 +34,6 @@ import com.aionemu.gameserver.services.svsservice.Gate;
 import com.aionemu.gameserver.services.svsservice.Panesterra;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 战场对决（SvS）服务，管理潘斯特拉等战场开关与刷怪。
@@ -171,8 +169,6 @@ public class SvsService {
 	 * state type
 	 */
 	public void spawn(SvsLocation loc, SvsStateType pstate) {
-		if (pstate.equals(SvsStateType.SVS)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getSvsSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {
@@ -192,28 +188,28 @@ public class SvsService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean advanceCorridorCountdownMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 通往裂隙传送门战的进阶走廊已出现。 / An Advance Corridor to a Rift Portal battle has appeared.
-				PacketSendUtility.playerSendPacketTime(player,
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 通往裂隙传送门战的进阶走廊已出现。 / An Advance Corridor to a Rift Portal battle has appeared.
+					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_SVS_INVADE_DIRECT_PORTAL_OPEN, 0);
-				// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-				// 10 分钟后。 / in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End01, 3000000);
-				// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-				// 5 分钟后。 / in 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End02, 3300000);
-				// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-				// 1 分钟后。 / in 1 minute.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End03, 3540000);
-				// 通往帕内斯特拉要塞战的进阶走廊已关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle has closed.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End05, 3600000);
-			});
-			return true;
-		default:
-			return false;
-		}
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 10 分钟后。 / in 10 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End01, 3000000);
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 5 分钟后。 / in 5 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End02, 3300000);
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 1 分钟后。 / in 1 minute.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End03, 3540000);
+					// 通往帕内斯特拉要塞战的进阶走廊已关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle has closed.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End05, 3600000);
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 		/**
@@ -224,27 +220,27 @@ public class SvsService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean distinguishedServiceMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 通往帕内斯特拉的功勋攻城传送门已开启。 / The Distinguished Service Siege Portal leading to Panesterra opened.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End11, 0);
-				// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
-				// 5 分钟。 / 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End06, 10000);
-				// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
-				// 3 分钟。 / 3 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End07, 120000);
-				// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
-				// 1 分钟。 / 1 minute.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End08, 240000);
-				// 通往帕内斯特拉攻城的功勋攻城传送门已关闭。 / The Distinguished Service Siege Portal to the Panesterra Siege has closed.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End10, 300000);
-			});
-			return true;
-		default:
-			return false;
-		}
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 通往帕内斯特拉的功勋攻城传送门已开启。 / The Distinguished Service Siege Portal leading to Panesterra opened.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End11, 0);
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 5 分钟。 / 5 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End06, 10000);
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 3 分钟。 / 3 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End07, 120000);
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 1 分钟。 / 1 minute.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End08, 240000);
+					// 通往帕内斯特拉攻城的功勋攻城传送门已关闭。 / The Distinguished Service Siege Portal to the Panesterra Siege has closed.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End10, 300000);
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 		/**
@@ -255,28 +251,28 @@ public class SvsService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean transidiumAnnexMsg(int id) {
-		switch (id) {
-		case 5:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
-				// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
-				// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
-				// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
-				// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
-				// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
-				// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
-			});
-			return true;
-		default:
-			return false;
-		}
+		return switch (id) {
+			case 5 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
+					// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
+					// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
+					// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
+					// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
+					// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
+					// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 		/**

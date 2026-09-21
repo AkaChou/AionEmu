@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.instance;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +18,7 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.GameEngine;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 副本引擎：加载脚本化副本处理器，并按地图 ID 创建对应处理器实例。
@@ -28,8 +27,15 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class InstanceEngine implements GameEngine {
 
-	/** Spring 实例提供者 / Spring instance provider */
-	private static volatile ObjectProvider<InstanceEngine> instanceProvider;
+	/** Spring 实例提供者 / Spring instance provider
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Set the Spring instance provider.
+     *
+     * @param provider Spring 提供者 / Spring provider
+     */
+	@Setter
+    private static volatile ObjectProvider<InstanceEngine> instanceProvider;
 
 	/**
 	 * 无专用脚本时使用的默认（空操作）处理器。
@@ -123,10 +129,6 @@ public class InstanceEngine implements GameEngine {
 	 */
 	public void onInstanceCreate(final WorldMapInstance instance) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-			if (player.isOnline()) {
-				// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400360,
-				// clt.getMaxMemberDark(), instance.getName()));
-			}
 		});
 		instance.getInstanceHandler().onInstanceCreate(instance);
 	}
@@ -154,13 +156,4 @@ public class InstanceEngine implements GameEngine {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Set the Spring instance provider.
-	 *
-	 * @param provider Spring 提供者 / Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<InstanceEngine> provider) {
-		instanceProvider = provider;
-	}
 }

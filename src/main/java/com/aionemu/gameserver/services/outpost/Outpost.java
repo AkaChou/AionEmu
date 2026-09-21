@@ -24,6 +24,7 @@ import com.aionemu.gameserver.model.templates.spawns.outpostspawns.OutpostSpawnT
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 前哨据点运行时对象，管理归属种族、旗帜/BOSS 与周期性袭击。
@@ -34,7 +35,37 @@ import lombok.Getter;
  */
 @Getter
 public class Outpost<OL extends OutpostLocation> {
-	private Npc boss, flag;
+    /**
+     * -- GETTER --
+     *  获取 BOSS NPC。
+     *  Returns the boss NPC.
+     *
+     *
+	 * -- SETTER --
+	 *  设置 BOSS NPC。
+	 *  Sets the boss NPC.
+	 *
+	 @return BOSS NPC / boss NPC
+	  * @param boss BOSS NPC / boss NPC
+     */
+    @Setter
+    private Npc boss;
+	/**
+	 * -- SETTER --
+	 *  设置旗帜 NPC。
+	 *  Sets the flag NPC.
+	 *
+	 * @param flag 旗帜 NPC / flag NPC
+	 */
+	@Setter
+	private Npc /**
+	 * -- GETTER --
+	 *  获取旗帜 NPC。
+	 *  Returns the flag NPC.
+	 *
+	 * @return 旗帜 NPC / flag NPC
+	 */
+	    flag;
 	private boolean started;
 	/**
 	 * 获取前哨位置模板。
@@ -112,8 +143,6 @@ public class Outpost<OL extends OutpostLocation> {
 	 */
 	private List<SpawnGroup2> getOutpostSpawns() {
 		List<SpawnGroup2> spawns = DataManager.SPAWNS_DATA2.getOutpostSpawnsByLocId(getId());
-		if (spawns == null) {
-		}
 		return spawns;
 	}
 
@@ -199,8 +228,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * @param race 袭击种族 / Attacking race
 	 */
 	public void spawnAttackers(Race race) {
-		if (getFlag() == null) {
-		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
+		if (getFlag() != null && !getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
 				GameLocationBootstrapServices.outpostService().capture(getId(), race);
 				GameLocationBootstrapServices.outpostService().captureArtifact(getId(), race);
@@ -223,8 +251,7 @@ public class Outpost<OL extends OutpostLocation> {
 					}
 				}
 			}
-			if (getAttackers().isEmpty()) {
-			} else {
+			if (!getAttackers().isEmpty()) {
 				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					despawnAttackers();
 					delayedAssault();
@@ -242,46 +269,6 @@ public class Outpost<OL extends OutpostLocation> {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();
-	}
-
-	/**
-	 * 获取旗帜 NPC。
-	 * Returns the flag NPC.
-	 *
-	 * @return 旗帜 NPC / flag NPC
-	 */
-	public Npc getFlag() {
-		return flag;
-	}
-
-	/**
-	 * 设置旗帜 NPC。
-	 * Sets the flag NPC.
-	 *
-	 * @param flag 旗帜 NPC / flag NPC
-	 */
-	public void setFlag(Npc flag) {
-		this.flag = flag;
-	}
-
-	/**
-	 * 获取 BOSS NPC。
-	 * Returns the boss NPC.
-	 *
-	 * @return BOSS NPC / boss NPC
-	 */
-	public Npc getBoss() {
-		return boss;
-	}
-
-	/**
-	 * 设置 BOSS NPC。
-	 * Sets the boss NPC.
-	 *
-	 * @param boss BOSS NPC / boss NPC
-	 */
-	public void setBoss(Npc boss) {
-		this.boss = boss;
 	}
 
 	/**

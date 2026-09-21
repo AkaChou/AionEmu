@@ -42,8 +42,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		}
+		isAggred.compareAndSet(false, true);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 
@@ -105,18 +104,13 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 
 	static int getServantNpcId(int priestNpcId) {
-        switch (priestNpcId) {
-            case 280635:
-                return 280638;
-            case 280636:
-                return 280639;
-            case 280637:
-                return 280640;
-            case 281300:
-                return 281301;
-            default:
-                return 0;
-        }
+        return switch (priestNpcId) {
+            case 280635 -> 280638;
+            case 280636 -> 280639;
+            case 280637 -> 280640;
+            case 281300 -> 281301;
+            default -> 0;
+        };
 	}
 
 	@Override

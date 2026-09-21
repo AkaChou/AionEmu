@@ -113,29 +113,20 @@ public class EnchantService {
 		} else if (!itemTemplate.isSoulBound() && itemTemplate.isArmor()) {
 			quality -= 1;
 		}
-		int number = 0;
-		switch (quality) {
-		case 0: // 垃圾 / JUNK.
-		case 1: // 普通 / COMMON.
-			number = Rnd.get(50, 80);
-			break;
-		case 2: // 稀有 / RARE.
-			number = Rnd.get(80, 160);
-			break;
-		case 3: // 传颂 / LEGEND.
-			number = Rnd.get(160, 320);
-			break;
-		case 4: // 唯一 / UNIQUE.
-			number = Rnd.get(320, 640);
-			break;
-		case 5: // 史诗 / EPIC.
-			number = Rnd.get(640, 880);
-			break;
-		case 6: // 神话 / MYTHIC.
-		case 7:
-			number = Rnd.get(880, 1000);
-			break;
-		}
+		int number = switch (quality) { // 垃圾 / JUNK.
+			case 0, 1 -> // 普通 / COMMON.
+				Rnd.get(50, 80);
+			case 2 -> // 稀有 / RARE.
+				Rnd.get(80, 160);
+			case 3 -> // 传颂 / LEGEND.
+				Rnd.get(160, 320);
+			case 4 -> // 唯一 / UNIQUE.
+				Rnd.get(320, 640);
+			case 5 -> // 史诗 / EPIC.
+				Rnd.get(640, 880); // 神话 / MYTHIC.
+			case 6, 7 -> Rnd.get(880, 1000);
+			default -> 0;
+		};
 		// 提取高阶守护者装备将获得强化石粉末与高阶守护者制作材料。 / Extracting Archdaeva equipment will give Enchantment Stone Dust and Archdaeva crafting materials.
 		// 添加禁用强化石损坏物品的自定义 / add custom for Disable Enchantment Stone Broke Item
 		if (targetItem.isArchDaevaItem() && EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
@@ -239,29 +230,24 @@ public class EnchantService {
 		float success = EnchantsConfig.ENCHANT_ITEM;
 		// 增强防具或武器的基础属性。 / Enhances the basic attributes of armor or weapons.
 		// 双击并选择要强化的物品以激活。 / Activate by double-clicking and selecting an item to enchant.
-		switch (parentItem.getItemId()) {
-		case 166000196: // Enchantment Stone.
-		case 166000197: // Enchantment Stone.
-			enchantStoneLevel = Rnd.get(105, 190);
-			break;
-		case 166010000: // Shining Enchantment Stone.
-		case 166010001: // Shining Enchantment Stone.
-			enchantStoneLevel = Rnd.get(135, 220);
-			break;
-		case 166020000: // 欧米伽强化石。 / Omega Enchantment Stone.
-		case 166020001: // [Event] Omega Enchantment Stone (10 Min)
-		case 166020002: // [Event] Omega Enchantment Stone (3 Days)
-		case 166020003: // [Event] Omega Enchantment Stone.
-		case 166020004: // [Event] Empyrean Lord's Enchantment Stone (7 Days)
-		case 166020005: // [Event] Enchantment Stone Of The Empyrean Lord.
-		case 166022003: // 欧米伽强化石。 / Omega Enchantment Stone.
-		case 166022007: // 欧米伽强化石。 / Omega Enchantment Stone.
-			enchantStoneLevel = Rnd.get(165, 220);
-			break;
-		case 166022000: // Shining Omega Enchant Stone
-			enchantStoneLevel = Rnd.get(200, 240);
-			break;
-		}
+		enchantStoneLevel = switch (parentItem.getItemId()) { // Enchantment Stone.
+			case 166000196, 166000197 -> // Enchantment Stone.
+				Rnd.get(105, 190); // Shining Enchantment Stone.
+			case 166010000, 166010001 -> // Shining Enchantment Stone.
+				Rnd.get(135, 220); // 欧米伽强化石。 / Omega Enchantment Stone.
+			// [Event] Omega Enchantment Stone (10 Min)
+			// [Event] Omega Enchantment Stone (3 Days)
+			// [Event] Omega Enchantment Stone.
+			// [Event] Empyrean Lord's Enchantment Stone (7 Days)
+			// [Event] Enchantment Stone Of The Empyrean Lord.
+			// 欧米伽强化石。 / Omega Enchantment Stone.
+			case 166020000, 166020001, 166020002, 166020003, 166020004, 166020005, 166022003,
+			     166022007 -> // 欧米伽强化石。 / Omega Enchantment Stone.
+				Rnd.get(165, 220);
+			case 166022000 -> // Shining Omega Enchant Stone
+				Rnd.get(200, 240);
+			default -> enchantStoneLevel;
+		};
 		int levelDiff = enchantStoneLevel - targetItemLevel;
 		success += levelDiff > 0 ? levelDiff * 3f / qualityCap : 0;
 		success += levelDiff - qualityCap;
@@ -520,8 +506,6 @@ public class EnchantService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_FAILED(new DescriptionId(targetItem.getNameId())));
 
 				if (EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
-					if (!player.getInventory().decreaseByObjectId(targetItem.getObjectId(), 1) && targetItem.getBonusNumber() < 100) {
-					}
 					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 					player.getGameStats().updateStatsVisually();
 				}
@@ -531,8 +515,6 @@ public class EnchantService {
 			else if (targetItem.isArchDaevaItem() && EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_TYPE1_ENCHANT_FAIL(new DescriptionId(targetItem.getNameId())));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_FAILED(new DescriptionId(targetItem.getNameId())));
-				if (!player.getInventory().decreaseByObjectId(targetItem.getObjectId(), 1) && targetItem.getBonusNumber() < 100) {
-				}
 			} else {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_FAILED(new DescriptionId(targetItem.getNameId())));
 			}
@@ -580,35 +562,16 @@ public class EnchantService {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
 			return RndArray.get(skills4Wing);
 		}
-		switch (item.getItemTemplate().getCategory()) {
-		case SWORD:
-		case DAGGER:
-		case MACE:
-		case ORB:
-		case SPELLBOOK:
-		case GREATSWORD:
-		case POLEARM:
-		case STAFF:
-		case BOW:
-		case GUN:
-		case CANNON:
-		case HARP:
-		case KEYBLADE:
-		case SHIELD:
-			return RndArray.get(skills4WeaponShield);
-		case JACKET:
-			return RndArray.get(skills4Jacket);
-		case PANTS:
-			return RndArray.get(skills4Pant);
-		case SHOULDERS:
-			return RndArray.get(skills4Shoulder);
-		case GLOVES:
-			return RndArray.get(skills4Glove);
-		case SHOES:
-			return RndArray.get(skills4Shoes);
-		default:
-			return 0;
-		}
+		return switch (item.getItemTemplate().getCategory()) {
+			case SWORD, DAGGER, MACE, ORB, SPELLBOOK, GREATSWORD, POLEARM, STAFF, BOW, GUN, CANNON, HARP, KEYBLADE,
+			     SHIELD -> RndArray.get(skills4WeaponShield);
+			case JACKET -> RndArray.get(skills4Jacket);
+			case PANTS -> RndArray.get(skills4Pant);
+			case SHOULDERS -> RndArray.get(skills4Shoulder);
+			case GLOVES -> RndArray.get(skills4Glove);
+			case SHOES -> RndArray.get(skills4Shoes);
+			default -> 0;
+		};
 	}
 
 	/**
@@ -624,91 +587,37 @@ public class EnchantService {
 		}
 		// 价格版本 5.6 / Price Ver 5.6
 		if (item.getItemTemplate().getItemQuality() == ItemQuality.EPIC) {
-			switch (item.getEnchantLevel()) {
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
-			case 14:
-				return 11441;
-			case 15:
-				return 2825000;
-			case 16:
-				return 4237500;
-			case 17:
-				return 5650000;
-			case 18:
-				return 7062500;
-			case 19:
-				return 9887500;
-			case 20:
-				return 12712500;
-			case 21:
-				return 16950000;
-			case 22:
-				return 22600000;
-			case 23:
-				return 31075000;
-			case 24:
-				return 42375000;
-			case 25:
-				return 57912500;
-			default:
-				return 57912500;
-			}
+			return switch (item.getEnchantLevel()) {
+				case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 -> 11441;
+				case 15 -> 2825000;
+				case 16 -> 4237500;
+				case 17 -> 5650000;
+				case 18 -> 7062500;
+				case 19 -> 9887500;
+				case 20 -> 12712500;
+				case 21 -> 16950000;
+				case 22 -> 22600000;
+				case 23 -> 31075000;
+				case 24 -> 42375000;
+				case 25 -> 57912500;
+				default -> 57912500;
+			};
 		} else if (item.getItemTemplate().getItemQuality() == ItemQuality.MYTHIC) {
-			switch (item.getEnchantLevel()) {
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
-			case 14:
-				return 34323;
-			case 15:
-				return 6356250;
-			case 16:
-				return 8475000;
-			case 17:
-				return 11300000;
-			case 18:
-				return 15537500;
-			case 19:
-				return 21187500;
-			case 20:
-				return 28250000;
-			case 21:
-				return 38137500;
-			case 22:
-				return 50850000;
-			case 23:
-				return 69212500;
-			case 24:
-				return 93225000;
-			case 25:
-				return 125712500;
-			default:
-				return 125712500;
-			}
+			return switch (item.getEnchantLevel()) {
+				case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 -> 34323;
+				case 15 -> 6356250;
+				case 16 -> 8475000;
+				case 17 -> 11300000;
+				case 18 -> 15537500;
+				case 19 -> 21187500;
+				case 20 -> 28250000;
+				case 21 -> 38137500;
+				case 22 -> 50850000;
+				case 23 -> 69212500;
+				case 24 -> 93225000;
+				case 25 -> 125712500;
+				default -> 125712500;
+			};
 		} else {
 			return 0;
 		}

@@ -17,7 +17,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 /**
@@ -148,8 +147,7 @@ public class ItemChargeService {
 			}
 			break;
 		}
-		if (!verifyRecomendRank(player, item)) {
-		} else {
+		if (verifyRecomendRank(player, item)) {
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, ItemUpdateType.CHARGE));
 			player.getEquipment().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -187,13 +185,11 @@ public class ItemChargeService {
 	 * result
 	 */
 	public static boolean processPayment(Player player, int chargeWay, long amount) {
-		switch (chargeWay) {
-		case 1:
-			return processKinahPayment(player, amount);
-		case 2:
-			return processAPPayment(player, amount);
-		}
-		return false;
+		return switch (chargeWay) {
+			case 1 -> processKinahPayment(player, amount);
+			case 2 -> processAPPayment(player, amount);
+			default -> false;
+		};
 	}
 
 	/**
@@ -247,14 +243,11 @@ public class ItemChargeService {
 			money = firstLevel;
 			break;
 		case 2:
-			switch (getNextChargeLevel(item)) {
-			case 1:
-				money = (firstLevel + updateLevel);
-				break;
-			case 2:
-				money = updateLevel;
-				break;
-			}
+            money = switch (getNextChargeLevel(item)) {
+                case 1 -> (firstLevel + updateLevel);
+                case 2 -> updateLevel;
+                default -> money;
+            };
 			break;
 		}
 		return (long) money;

@@ -37,9 +37,7 @@ public class CM_RELEASE_HOUSE_OBJECT extends AionClientPacket {
 		}
 		if (player.getController().hasTask(TaskId.HOUSE_OBJECT_USE)) {
 			VisibleObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
-			if (object instanceof UseableItemObject
-					&& !player.getController().hasScheduledTask(TaskId.HOUSE_OBJECT_USE)) {
-			} else {
+			if (!(object instanceof UseableItemObject) || player.getController().hasScheduledTask(TaskId.HOUSE_OBJECT_USE)) {
 				player.getController().cancelTask(TaskId.HOUSE_OBJECT_USE);
 				sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_OBJECT_CANCEL_USE);
 			}

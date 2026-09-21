@@ -26,6 +26,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,17 +102,36 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		{231.29951f, 243.66095f, 96.36497f, 29}
 	};
 
+	@Getter
 	private enum RaidType {
 		ROUND_1(new int[]{855765, 855766, 855767}, new int[]{855768, 855769, 855770}, new int[]{855771, 855772, 855773}),
 		ROUND_2(new int[]{855788, 855789, 855790}, new int[]{855791, 855792, 855793}, new int[]{855794, 855795, 855796}),
 		ROUND_3(new int[]{855811, 855812, 855813}, new int[]{855814, 855815, 855816}, new int[]{855817, 855818, 855819}),
 		ROUND_4(new int[]{855834, 855835, 855836}, new int[]{855837, 855838, 855839}, new int[]{855840, 855841, 855842});
-		/** first wave / first wave */
+		/** first wave / first wave
+		 * -- GETTER --
+		 *  返回 first wave。
+		 *  Return the first wave.
+		 *
+		 * @return 结果 / result
+		 */
 
 		private final int[] firstWave;
-				/** second wave / second wave */
+				/** second wave / second wave
+				 * -- GETTER --
+				 *  返回 second wave。
+				 *  Return the second wave.
+				 *
+				 * @return 结果 / result
+				 */
 				private final int[] secondWave;
-				/** third wave / third wave */
+				/** third wave / third wave
+				 * -- GETTER --
+				 *  返回 third wave。
+				 *  Return the third wave.
+				 *
+				 * @return 结果 / result
+				 */
 				private final int[] thirdWave;
 
 		RaidType(int[] firstWave, int[] secondWave, int[] thirdWave) {
@@ -119,28 +139,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			this.secondWave = secondWave;
 			this.thirdWave = thirdWave;
 		}
-		/**
-		 * 返回 first wave。
-		 * Return the first wave.
-		 *
-		 * @return 结果 / result
-		 */
-
-		public int[] getFirstWave() { return firstWave; }
-		/**
-		 * 返回 second wave。
-		 * Return the second wave.
-		 *
-		 * @return 结果 / result
-		 */
-		public int[] getSecondWave() { return secondWave; }
-		/**
-		 * 返回 third wave。
-		 * Return the third wave.
-		 *
-		 * @return 结果 / result
-		 */
-		public int[] getThirdWave() { return thirdWave; }
 	}
 	/**
 	 * 返回玩家奖励记录。
@@ -189,8 +187,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		switch (npcId) {
-		}
 	}
 
 	private void spawnTerritoryManager() {

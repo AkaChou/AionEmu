@@ -118,10 +118,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 			case 231082: //Ide Forcefield Generator III.
 			case 231086: //Ide Forcefield Generator IV.
 				ideForcefieldGenerator++;
-				if (ideForcefieldGenerator == 1) {
-				} else if (ideForcefieldGenerator == 2) {
-				} else if (ideForcefieldGenerator == 3) {
-				} else if (ideForcefieldGenerator == 4) {
+				if (ideForcefieldGenerator == 4) {
 				    // 许珀里翁的护盾已落下。 / The Hyperion's shields are down.
 					sendMsgByRace(1401796, Race.PC_ALL, 10000);
 					deleteNpc(284437); //Protective Shield.

@@ -81,8 +81,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 				if (npc.getNpcId() == 205770 || npc.getNpcId() == 730677 || npc.getNpcId() == 730679) {
 					int townId = 0;
 					MapRegion region = npc.getPosition().getMapRegion();
-					if (region == null) {
-					} else {
+					if (region != null) {
 						List<ZoneInstance> zones = region.getZones(npc);
 						for (ZoneInstance zone : zones) {
 							townId = zone.getTownId();

@@ -94,8 +94,6 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		switch (npcId) {
-        }
     }
 
 	private void removeItems(Player player) {

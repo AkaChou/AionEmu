@@ -60,8 +60,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 45000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); // 恐惧施法 / Fear Casting.
 			scheduleDelayStage1(delay);
 		}
@@ -69,23 +68,20 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 
 	private void stage2() {
 		int delay = 15000;
-		if (isAlreadyDead() || !isStart) {
-		} else { // 16918: 火焰喷射 与 16881: 魔法飞弹 / 16918: Flame Spurt & 16881: Magic Missile.
+		if (!isAlreadyDead() && isStart) { // 16918: 火焰喷射 与 16881: 魔法飞弹 / 16918: Flame Spurt & 16881: Magic Missile.
 			GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
 			scheduleDelayStage2(delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}

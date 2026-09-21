@@ -3,6 +3,7 @@ package com.aionemu.gameserver.geoEngine.utils;
 import java.util.Iterator;
 
 import com.aionemu.gameserver.geoEngine.utils.IntMap.Entry;
+import lombok.Getter;
 
 /**
  * 以 int 为键的开放链式哈希表。
@@ -342,10 +343,24 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	 */
 	public static final class Entry<T> implements Cloneable {
 
-		/** 键。 / Key. */
+		/** 键。 / Key.
+		 * -- GETTER --
+		 *  返回键。
+		 *  Returns the key.
+		 *
+		 * @return 键 / the key
+		 */
+		@Getter
 		final int key;
-		/** 值。 / Value. */
-		T value;
+		/** 值。 / Value.
+         * -- GETTER --
+         *  返回值。
+         *  Returns the value.
+         *
+         * @return 值 / the value
+         */
+        @Getter
+        T value;
 		/** 同桶下一节点。 / Next entry in the chain. */
 		Entry next;
 
@@ -361,26 +376,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 			key = k;
 			value = v;
 			next = n;
-		}
-
-		/**
-		 * 返回键。
-		 * Returns the key.
-		 *
-		 * @return 键 / the key
-		 */
-		public int getKey() {
-			return key;
-		}
-
-		/**
-		 * 返回值。
-		 * Returns the value.
-		 *
-		 * @return 值 / the value
-		 */
-		public T getValue() {
-			return value;
 		}
 
 		/**

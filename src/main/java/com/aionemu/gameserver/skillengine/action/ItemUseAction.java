@@ -43,9 +43,7 @@ public class ItemUseAction extends Action {
 	public void act(Skill skill) {
 		if (skill.getEffector() instanceof Player player) {
 			Storage inventory = player.getInventory();
-
-			if (!inventory.decreaseByItemId(itemid, count)) {
-			}
+			inventory.decreaseByItemId(itemid, count);
 		}
 	}
 }

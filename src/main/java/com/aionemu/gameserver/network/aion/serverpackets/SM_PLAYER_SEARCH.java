@@ -31,9 +31,6 @@ public class SM_PLAYER_SEARCH extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		writeH(players.size());
 		for (Player player : players) {
-			if (player.getActiveRegion() == null) {
-				// log.warn(I18n.get("log.d1be3036fb78", player.getObjectId(), // player.getX(), player.getY(), player.getZ()));
-			}
 			writeD(player.getActiveRegion() == null ? region : player.getActiveRegion().getMapId());
 			writeF(player.getPosition().getX());
 			writeF(player.getPosition().getY());

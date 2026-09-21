@@ -24,7 +24,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.ZorshivDredgionSpawnTemplate;
@@ -35,7 +34,6 @@ import com.aionemu.gameserver.services.zorshivdredgionservice.Zorshiv;
 import com.aionemu.gameserver.services.zorshivdredgionservice.ZorshivDredgion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 佐西夫无畏舰服务，管理无畏舰降落地点、刷怪与入侵特效。
@@ -175,8 +173,6 @@ public class ZorshivDredgionService {
 	 * state type
 	 */
 	public void spawn(ZorshivDredgionLocation loc, ZorshivDredgionStateType zstate) {
-		if (zstate.equals(ZorshivDredgionStateType.LANDING)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getZorshivDredgionSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {
@@ -196,26 +192,25 @@ public class ZorshivDredgionService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean levinshorMsg(int id) {
-		switch (id) {
-		case 1:
-		case 2:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				PacketSendUtility.sendSys3Message(player, "\uE050",
+		return switch (id) {
+			case 1, 2 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					PacketSendUtility.sendSys3Message(player, "\uE050",
 						"The <Zorshiv Dredgion> to lands at levinshor !!!");
-				// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
+					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
 						120000);
-				// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
+					// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
 						300000);
-				// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
+					// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
 						3600000);
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -226,25 +221,25 @@ public class ZorshivDredgionService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean inggisonMsg(int id) {
-		switch (id) {
-		case 3:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				PacketSendUtility.sendSys3Message(player, "\uE050",
+		return switch (id) {
+			case 3 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					PacketSendUtility.sendSys3Message(player, "\uE050",
 						"The <Zorshiv Dredgion> to lands at inggison !!!");
-				// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
+					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
 						120000);
-				// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
+					// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
 						300000);
-				// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
+					// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
+					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
 						3600000);
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -255,15 +250,15 @@ public class ZorshivDredgionService {
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventControlSP(int id) {
-		switch (id) {
-		case 3:
-			adventControl.add(SpawnEngine.spawnObject(
+		return switch (id) {
+			case 3 -> {
+				adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210050000, 702529, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -274,15 +269,15 @@ public class ZorshivDredgionService {
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventEffectSP(int id) {
-		switch (id) {
-		case 3:
-			adventEffect.add(SpawnEngine.spawnObject(
+		return switch (id) {
+			case 3 -> {
+				adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210050000, 702549, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -293,15 +288,15 @@ public class ZorshivDredgionService {
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventPortalSP(int id) {
-		switch (id) {
-		case 3:
-			adventPortal.add(SpawnEngine.spawnObject(
+		return switch (id) {
+			case 3 -> {
+				adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210050000, 702550, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -312,15 +307,15 @@ public class ZorshivDredgionService {
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventDirectingSP(int id) {
-		switch (id) {
-		case 3:
-			adventDirecting.add(SpawnEngine.spawnObject(
+		return switch (id) {
+			case 3 -> {
+				adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210050000, 855231, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**

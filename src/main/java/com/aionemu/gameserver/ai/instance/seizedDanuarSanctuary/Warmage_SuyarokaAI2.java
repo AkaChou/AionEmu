@@ -51,8 +51,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 50000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式。 / Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
@@ -71,8 +70,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleDelayStage1(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}

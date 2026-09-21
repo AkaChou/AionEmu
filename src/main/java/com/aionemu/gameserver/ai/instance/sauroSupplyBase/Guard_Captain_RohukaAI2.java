@@ -69,16 +69,14 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 0;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 		}
 	}
 
 	private void stage2() {
 		int delay = 35000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 		    skill();
 			scheduleDelayStage2(delay);
 		}
@@ -92,23 +90,20 @@ GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).us
 	}
 
 	private void scheduleDelayStage2(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}
 
 	private void stage3() {
 		int delay = 15000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			scheduleDelayStage3(delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				getRandomTarget();
 				stage3();

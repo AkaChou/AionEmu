@@ -41,7 +41,6 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 			teleportId = readD();
 			price = readD();
 			unk = readD();
-		} else if (action == 2) {
 		}
 	}
 

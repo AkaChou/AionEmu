@@ -189,8 +189,6 @@ public class TerritoryService {
 	public void onLooseTerritory(Legion legion) {
 		int oldTerritoryId = legion.getTerritory().getId();
 		legion.clearTerritory();
-		if (oldTerritoryId == 0) {
-		}
 		LegionTerritory fakeTerritory = new LegionTerritory(oldTerritoryId);
 		territories.remove(oldTerritoryId);
 		territories.put(oldTerritoryId, fakeTerritory);

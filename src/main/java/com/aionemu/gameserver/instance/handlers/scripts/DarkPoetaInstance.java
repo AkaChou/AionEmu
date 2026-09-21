@@ -432,9 +432,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 214896: //Auxiliary Power Generator.
             case 214897: //Emergency Generator.
 			    powerGenerator++;
-				if (powerGenerator == 1) {
-				} else if (powerGenerator == 2) {
-				} else if (powerGenerator == 3) {
+				if (powerGenerator == 3) {
 				    sendMovie(player, 427);
 					spawn(214904, 275.34537f, 323.02072f, 130.9302f, (byte) 52); //Brigade General Anuhart.
 				}
@@ -758,13 +756,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onGather(Player player, Gatherable gatherable) {
-		int points = 0;
-		switch (gatherable.getObjectTemplate().getTemplateId()) {
-		    case 401111: //Huge Vine.
-			case 401112: //Nex.
-			    points = 157;
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
+		int points = switch (gatherable.getObjectTemplate().getTemplateId()) { //Huge Vine.
+			case 401111, 401112 -> //Nex.
+				157;
+			default -> 0;
+		};
+		if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addGatherCollection();
 			instanceReward.addPoints(points);
 			sendPacket(gatherable.getObjectTemplate().getNameId(), points);
@@ -779,23 +776,21 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				Npc boss = null;
-				switch (npcId) {
-					case 700439: //Marabata Attack Booster.
-					case 700440: //Marabata Defense Booster.
-                    case 700441: //Marabata Property Controller.
-						boss = getNpc(214850); //Marabata Of Strength.
-					break;
-					case 700442: //Marabata Attack Booster.
-					case 700443: //Marabata Defense Booster.
-                    case 700444: //Marabata Property Controller.
-						boss = getNpc(214851); //Marabata Of Aether.
-					break;
-					case 700445: //Marabata Attack Booster.
-					case 700446: //Marabata Defense Booster.
-                    case 700447: //Marabata Property Controller.
-						boss = getNpc(214849); //Marabata Of Poisoning.
-				} if (!isInstanceDestroyed && boss != null && !boss.getLifeStats().isAlreadyDead()) {
+				Npc boss = switch (npcId) { //Marabata Attack Booster.
+                    //Marabata Defense Booster.
+                    case 700439, 700440, 700441 -> //Marabata Property Controller.
+                            getNpc(214850); //Marabata Of Strength.
+                    //Marabata Attack Booster.
+                    //Marabata Defense Booster.
+                    case 700442, 700443, 700444 -> //Marabata Property Controller.
+                            getNpc(214851); //Marabata Of Aether.
+                    //Marabata Attack Booster.
+                    //Marabata Defense Booster.
+                    case 700445, 700446, 700447 -> //Marabata Property Controller.
+                            getNpc(214849); //Marabata Of Poisoning.
+                    default -> null;
+                };
+                if (!isInstanceDestroyed && boss != null && !boss.getLifeStats().isAlreadyDead()) {
 					switch (npcId) {
                         case 700439: //Marabata Attack Booster.
                             spawn(npcId, 665.37400f, 372.75100f, 99.375000f, (byte) 90);

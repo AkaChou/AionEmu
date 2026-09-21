@@ -130,8 +130,6 @@ public class ConquestService {
 	 *            spawn state
 	 */
 	public void spawn(ConquestLocation loc, ConquestStateType ostate) {
-		if (ostate.equals(ConquestStateType.CONQUEST)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getConquestSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

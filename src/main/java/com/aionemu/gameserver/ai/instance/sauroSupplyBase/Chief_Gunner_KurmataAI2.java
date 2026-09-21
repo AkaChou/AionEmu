@@ -60,24 +60,21 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 0;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); // 鲜血祝福 / Blessing of Blood.
 		}
 	}
 
 	private void stage2() {
 		int delay = 20000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); // 雷霆冲击 / Thunder Crash Fallout.
 			scheduleDelayStage2(delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}

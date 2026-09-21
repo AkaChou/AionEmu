@@ -175,6 +175,13 @@ public class Player extends Creature {
 	private QuestStateList questStateList;
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
+	/**
+	 * -- GETTER --
+	 * 返回上一次客户端对话选择的重发跟踪状态；没有记录时为 null。 / Returns the repeat-tracking state of the last client dialog selection, or null when absent.
+	 * -- SETTER --
+	 * 记录本次客户端对话选择的重发跟踪状态。 / Stores the repeat-tracking state of the current client dialog selection.
+
+	 */
 	private volatile DialogSelectRepeat dialogSelectRepeat;
 	/**
 	 * 是否为该玩家开启任务追踪日志；仅内存状态，不持久化。
@@ -758,16 +765,6 @@ public class Player extends Creature {
 		npcQuestDialogSelection = null;
 	}
 
-	/** 返回上一次客户端对话选择的重发跟踪状态；没有记录时为 null。 / Returns the repeat-tracking state of the last client dialog selection, or null when absent. */
-	public DialogSelectRepeat getDialogSelectRepeat() {
-		return dialogSelectRepeat;
-	}
-
-	/** 记录本次客户端对话选择的重发跟踪状态。 / Stores the repeat-tracking state of the current client dialog selection. */
-	public void setDialogSelectRepeat(DialogSelectRepeat repeat) {
-		dialogSelectRepeat = repeat;
-	}
-
 	/** 清除客户端对话选择的重发跟踪。 / Clears client dialog-selection repeat tracking. */
 	public void clearDialogSelectRepeat() {
 		dialogSelectRepeat = null;
@@ -824,14 +821,6 @@ public class Player extends Creature {
 		}
 		this.titleList = titleList;
 		titleList.setOwner(this);
-	}
-
-	public PlayerGroup getPlayerGroup2() {
-		return playerGroup2;
-	}
-
-	public void setPlayerGroup2(PlayerGroup playerGroup) {
-		this.playerGroup2 = playerGroup;
 	}
 
 	@Override
@@ -1142,21 +1131,21 @@ public class Player extends Creature {
 		if (npc.getObjectTemplate().getNpcType() == NpcType.NON_ATTACKABLE && (npc.getWorldId() == 310010000 || npc.getWorldId() == 320010000)) {
 			return false;
 		}
-		switch (getTribe()) {
-		case PC:
-			if (race == Race.ASMODIANS || tribe == null || tribe.isDarkGuard()) {
-				return true;
+		return switch (getTribe()) {
+			case PC -> {
+				if (race == Race.ASMODIANS || tribe == null || tribe.isDarkGuard()) {
+					yield true;
+				}
+				yield DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(tribe, TribeClass.PC);
 			}
-			return DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(tribe, TribeClass.PC);
-		case PC_DARK:
-			if (race == Race.ELYOS || tribe == null || tribe.isLightGuard()) {
-				return true;
+			case PC_DARK -> {
+				if (race == Race.ELYOS || tribe == null || tribe.isLightGuard()) {
+					yield true;
+				}
+				yield DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(tribe, TribeClass.PC_DARK);
 			}
-			return DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(tribe, TribeClass.PC_DARK);
-		default:
-			break;
-		}
-		return false;
+			default -> false;
+		};
 	}
 
 	/*
@@ -1417,18 +1406,16 @@ public class Player extends Creature {
 	}
 
 	public boolean isInSiegeWorld() {
-		switch (getWorldId()) {
-		case 400010000:
-		case 400020000: // 4.7
-		case 400040000: // 4.7
-		case 400050000: // 4.7
-		case 400060000: // 4.7
-		case 600090000: // 4.7
-		case 210100000: // 5.8
-		case 220110000: // 5.8
-			return true;
-		}
-		return false;
+		return switch (getWorldId()) { // 4.7
+			// 4.7
+			// 4.7
+			// 4.7
+			// 4.7
+			// 5.8
+			case 400010000, 400020000, 400040000, 400050000, 400060000, 600090000, 210100000, 220110000 -> // 5.8
+				true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -1442,18 +1429,6 @@ public class Player extends Creature {
 		this.instanceStartPosX = instanceStartPosX;
 		this.instanceStartPosY = instanceStartPosY;
 		this.instanceStartPosZ = instanceStartPosZ;
-	}
-
-	public float getInstanceStartPosX() {
-		return instanceStartPosX;
-	}
-
-	public float getInstanceStartPosY() {
-		return instanceStartPosY;
-	}
-
-	public float getInstanceStartPosZ() {
-		return instanceStartPosZ;
 	}
 
 	public boolean havePermission(byte perm) {
@@ -1679,10 +1654,6 @@ public class Player extends Creature {
 			return o.toString();
 		}
 		return null;
-	}
-
-	public void setVars(Map<String, Object> map) {
-		this.vars = map;
 	}
 
 	@Override
@@ -2249,7 +2220,6 @@ public class Player extends Creature {
 		if (!reset) {
 			if (dice > this.LunaDiceGame) {
 				this.LunaDiceGame = dice;
-			} else {
 			}
 		} else {
 			this.LunaDiceGame = dice;

@@ -103,12 +103,10 @@ public class PlayerScripts {
 		String content = null;
 		int size = -1;
 
-		if (compressedXML == null) {
-			// 无事可做 / Nothing to do
-		} else if (compressedXML.length == 0) {
+		if (compressedXML != null && compressedXML.length == 0) {
 			content = StringUtils.EMPTY;
 			size = 0;
-		} else {
+		} else if (compressedXML != null) {
 			try {
 				content = decompress(compressedXML);
 				byte[] bytes = content.getBytes(StandardCharsets.UTF_16LE);

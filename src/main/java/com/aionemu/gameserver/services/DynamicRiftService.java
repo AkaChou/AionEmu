@@ -22,7 +22,6 @@ import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.dynamicriftspawns.DynamicRiftSpawnTemplate;
@@ -31,7 +30,6 @@ import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
 import com.aionemu.gameserver.services.dynamicriftservice.Portal;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 动态裂隙服务：按 cron 开启龙/因德拉图/术古商队等动态裂隙，管理刷怪与生命周期。
@@ -132,8 +130,6 @@ public class DynamicRiftService {
 	 * state type
 	 */
 	public void spawn(DynamicRiftLocation loc, DynamicRiftStateType dstate) {
-		if (dstate.equals(DynamicRiftStateType.OPEN)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getDynamicRiftSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

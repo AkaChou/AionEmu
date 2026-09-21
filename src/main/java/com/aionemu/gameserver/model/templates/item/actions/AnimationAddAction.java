@@ -146,8 +146,7 @@ public class AnimationAddAction extends AbstractItemAction {
 					PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 					PacketSendUtility.broadcastPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()), false);
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423, new DescriptionId(parentItem.getItemTemplate().getNameId())));
-					 if (player.getInventory().decreaseItemCount(parentItem, 1) != 0) {
-					 }
+					player.getInventory().decreaseItemCount(parentItem, 1);
 				}
 			}
 		}, 1000);

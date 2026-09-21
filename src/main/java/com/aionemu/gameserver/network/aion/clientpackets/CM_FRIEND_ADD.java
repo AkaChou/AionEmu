@@ -51,12 +51,9 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 		final Player activePlayer = getConnection().getActivePlayer();
 		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
 
-		if (targetName.equalsIgnoreCase(activePlayer.getName())) {
-			// 不允许将自己加入好友列表——客户端会拦截 / Adding self to friend list not allowed - Its blocked by the client by
-			// 默认，因此无需发送错误 / default, so no need to send an error
-		}
-		// 若离线 / if offline
-		else if (targetPlayer == null) {
+		// 不允许将自己加入好友列表——客户端默认会拦截，无需发送错误
+		// Adding self to the friend list is blocked by the client by default; no error is needed.
+		if (targetPlayer == null) { // 若离线 / if offline
 			sendPacket(new SM_FRIEND_RESPONSE(targetName, SM_FRIEND_RESPONSE.TARGET_OFFLINE));
 		} else if (activePlayer.getFriendList().getFriend(targetPlayer.getObjectId()) != null) {
 			sendPacket(new SM_FRIEND_RESPONSE(targetPlayer.getName(), SM_FRIEND_RESPONSE.TARGET_ALREADY_FRIEND));
@@ -79,6 +76,8 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 					if (!targetPlayer.getCommonData().isOnline()) {
 						sendPacket(new SM_FRIEND_RESPONSE(targetName, SM_FRIEND_RESPONSE.TARGET_OFFLINE));
 					} else if (activePlayer.getFriendList().isFull() || responder.getFriendList().isFull()) {
+						// 好友列表已满，拒绝添加 / Friend list is full; refuse the request
+						sendPacket(new SM_FRIEND_RESPONSE(targetName, SM_FRIEND_RESPONSE.TARGET_LIST_FULL));
 					} else {
 						SocialService.makeFriends((Player) requester, responder);
 					}

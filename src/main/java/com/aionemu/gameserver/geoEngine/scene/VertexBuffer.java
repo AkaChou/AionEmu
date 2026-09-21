@@ -8,6 +8,8 @@ import java.nio.ShortBuffer;
 
 import com.aionemu.gameserver.geoEngine.math.FastMath;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 顶点缓冲：封装某一顶点属性（或索引）的数据、格式与更新状态。
@@ -131,6 +133,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 缓冲元素数据格式。
 	 * Data format of buffer elements.
 	 */
+	@Getter
 	public enum Format {
 		// 浮点格式 / Floating point formats
 
@@ -138,27 +141,52 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		// 整数格式 / Integer formats
 		Byte(1), UnsignedByte(1), Short(2), UnsignedShort(2), Int(4), UnsignedInt(4);
 
-		/** 该格式每个分量的字节数。 / Bytes per component for this format. */
+		/** 该格式每个分量的字节数。 / Bytes per component for this format.
+		 * -- GETTER --
+		 *  返回该数据类型的字节大小。
+		 *  Returns the size in bytes of this data type.
+		 *
+		 * @return 分量字节数 / component size in bytes
+		 */
 		private int componentSize = 0;
 
 		Format(int componentSize) {
 			this.componentSize = componentSize;
 		}
 
-		/**
-		 * 返回该数据类型的字节大小。
-		 * Returns the size in bytes of this data type.
-		 *
-		 * @return 分量字节数 / component size in bytes
-		 */
-		public int getComponentSize() {
-			return componentSize;
-		}
 	}
 
-	/** 交错缓冲中的字节偏移。 / Byte offset within an interleaved buffer. */
+	/** 交错缓冲中的字节偏移。 / Byte offset within an interleaved buffer.
+	 * -- GETTER --
+	 *  返回交错偏移。
+	 *  Returns the interleaved offset.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置交错偏移。
+	 *  Sets the interleaved offset.
+	 *
+	 @return 偏移 / offset
+	  * @param offset 偏移 / offset
+	 */
+	@Setter
+	@Getter
 	protected int offset = 0;
-	/** 交错缓冲中的字节步长。 / Byte stride within an interleaved buffer. */
+	/** 交错缓冲中的字节步长。 / Byte stride within an interleaved buffer.
+	 * -- GETTER --
+	 *  返回交错步长。
+	 *  Returns the interleaved stride.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置交错步长。
+	 *  Sets the interleaved stride.
+	 *
+	 @return 步长 / stride
+	  * @param stride 步长 / stride
+	 */
+	@Setter
+	@Getter
 	protected int stride = 0;
 	/** 每顶点分量数。 / Components per vertex. */
 	protected int components = 0;
@@ -167,17 +195,76 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * Bytes per vertex derived from components * format.getComponentSize().
 	 */
 	protected transient int componentsLength = 0;
-	/** 底层 NIO 数据。 / Underlying NIO data. */
+	/** 底层 NIO 数据。 / Underlying NIO data.
+	 * -- GETTER --
+	 *  返回底层数据缓冲。
+	 *  Returns the underlying data buffer.
+	 *
+	 * @return 数据缓冲 / data buffer
+	 */
+	@Getter
 	protected Buffer data = null;
-	/** 映射的字节缓冲（若有）。 / Mapped byte buffer if any. */
+	/** 映射的字节缓冲（若有）。 / Mapped byte buffer if any.
+	 * -- GETTER --
+	 *  返回映射字节缓冲。
+	 *  Returns the mapped byte buffer.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置映射字节缓冲。
+	 *  Sets the mapped byte buffer.
+	 *
+	 @return 映射缓冲 / mapped buffer
+	  * @param mappedData 映射缓冲 / mapped buffer
+	 */
+	@Setter
+	@Getter
 	protected transient ByteBuffer mappedData;
-	/** 用途提示。 / Usage hint. */
+	// if (id != -1)
+	// throw new UnsupportedOperationException("Data has already been sent. Cannot
+	// set usage.");
+	/** 用途提示。 / Usage hint.
+	 * -- GETTER --
+	 *  返回用途提示。
+	 *  Returns the usage hint.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置用途提示。
+	 *  Sets the usage hint.
+	 *
+	 @return 用途提示 / usage
+	  * @param usage 用途提示 / usage
+	 */
+	@Setter
+	@Getter
 	protected Usage usage;
 	/** 属性类型。 / Attribute type. */
 	protected Type bufType;
-	/** 数据格式。 / Data format. */
+	/** 数据格式。 / Data format.
+	 * -- GETTER --
+	 *  返回数据格式。
+	 *  Returns the data format.
+	 *
+	 * @return 数据格式 / format
+	 */
+	@Getter
 	protected Format format;
-	/** 是否归一化整数数据。 / Whether integer data is normalized. */
+	/** 是否归一化整数数据。 / Whether integer data is normalized.
+	 * -- GETTER --
+	 *  是否归一化。
+	 *  Whether data is normalized.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置是否归一化。
+	 *  Sets whether data is normalized.
+	 *
+	 @return 归一化则为 true / true if normalized
+	  * @param normalized 是否归一化 / whether normalized
+	 */
+	@Setter
+	@Getter
 	protected boolean normalized = false;
 	/** 数据容量是否已变化。 / Whether data capacity has changed. */
 	protected transient boolean dataSizeChanged = false;
@@ -212,120 +299,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	}
 
 	/**
-	 * 返回交错偏移。
-	 * Returns the interleaved offset.
-	 *
-	 * @return 偏移 / offset
-	 */
-	public int getOffset() {
-		return offset;
-	}
-
-	/**
-	 * 设置交错偏移。
-	 * Sets the interleaved offset.
-	 *
-	 * @param offset 偏移 / offset
-	 */
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	/**
-	 * 返回交错步长。
-	 * Returns the interleaved stride.
-	 *
-	 * @return 步长 / stride
-	 */
-	public int getStride() {
-		return stride;
-	}
-
-	/**
-	 * 设置交错步长。
-	 * Sets the interleaved stride.
-	 *
-	 * @param stride 步长 / stride
-	 */
-	public void setStride(int stride) {
-		this.stride = stride;
-	}
-
-	/**
-	 * 返回底层数据缓冲。
-	 * Returns the underlying data buffer.
-	 *
-	 * @return 数据缓冲 / data buffer
-	 */
-	public Buffer getData() {
-		return data;
-	}
-
-	/**
-	 * 返回映射字节缓冲。
-	 * Returns the mapped byte buffer.
-	 *
-	 * @return 映射缓冲 / mapped buffer
-	 */
-	public ByteBuffer getMappedData() {
-		return mappedData;
-	}
-
-	/**
-	 * 设置映射字节缓冲。
-	 * Sets the mapped byte buffer.
-	 *
-	 * @param mappedData 映射缓冲 / mapped buffer
-	 */
-	public void setMappedData(ByteBuffer mappedData) {
-		this.mappedData = mappedData;
-	}
-
-	/**
-	 * 返回用途提示。
-	 * Returns the usage hint.
-	 *
-	 * @return 用途提示 / usage
-	 */
-	public Usage getUsage() {
-		return usage;
-	}
-
-	/**
-	 * 设置用途提示。
-	 * Sets the usage hint.
-	 *
-	 * @param usage 用途提示 / usage
-	 */
-	public void setUsage(Usage usage) {
-		// if (id != -1)
-		// throw new UnsupportedOperationException("Data has already been sent. Cannot
-		// set usage.");
-
-		this.usage = usage;
-	}
-
-	/**
-	 * 设置是否归一化。
-	 * Sets whether data is normalized.
-	 *
-	 * @param normalized 是否归一化 / whether normalized
-	 */
-	public void setNormalized(boolean normalized) {
-		this.normalized = normalized;
-	}
-
-	/**
-	 * 是否归一化。
-	 * Whether data is normalized.
-	 *
-	 * @return 归一化则为 true / true if normalized
-	 */
-	public boolean isNormalized() {
-		return normalized;
-	}
-
-	/**
 	 * 返回属性类型。
 	 * Returns the attribute type.
 	 *
@@ -333,16 +306,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 */
 	public Type getBufferType() {
 		return bufType;
-	}
-
-	/**
-	 * 返回数据格式。
-	 * Returns the data format.
-	 *
-	 * @return 数据格式 / format
-	 */
-	public Format getFormat() {
-		return format;
 	}
 
 	/**
@@ -398,9 +361,8 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * @param data 新数据 / new data
 	 */
 	public void updateData(Buffer data) {
-		if (id != -1) {
-			// 允许更新数据请求 / request to update data is okay
-		}
+		// 允许更新数据请求；GL 路径未启用时为接口占位
+		// Request to update data is okay; kept as a placeholder while the GL path is disabled.
 
 		// 将强制渲染器再次调用 glBufferData / will force renderer to call glBufferData again
 		if (this.data.capacity() != data.capacity()) {
@@ -595,25 +557,15 @@ public class VertexBuffer extends GLObject implements Cloneable {
 
 		int total = numElements * components;
 
-		switch (format) {
-		case Byte:
-		case UnsignedByte:
-			return BufferUtils.createByteBuffer(total);
-		case Half:
-			return BufferUtils.createByteBuffer(total * 2);
-		case Short:
-		case UnsignedShort:
-			return BufferUtils.createShortBuffer(total);
-		case Int:
-		case UnsignedInt:
-			return BufferUtils.createIntBuffer(total);
-		case Float:
-			return BufferUtils.createFloatBuffer(total);
-		case Double:
-			return BufferUtils.createDoubleBuffer(total);
-		default:
-			throw new UnsupportedOperationException("Unrecoginized buffer format: " + format);
-		}
+		return switch (format) {
+			case Byte, UnsignedByte -> BufferUtils.createByteBuffer(total);
+			case Half -> BufferUtils.createByteBuffer(total * 2);
+			case Short, UnsignedShort -> BufferUtils.createShortBuffer(total);
+			case Int, UnsignedInt -> BufferUtils.createIntBuffer(total);
+			case Float -> BufferUtils.createFloatBuffer(total);
+			case Double -> BufferUtils.createDoubleBuffer(total);
+			default -> throw new UnsupportedOperationException("Unrecoginized buffer format: " + format);
+		};
 	}
 
 	/**

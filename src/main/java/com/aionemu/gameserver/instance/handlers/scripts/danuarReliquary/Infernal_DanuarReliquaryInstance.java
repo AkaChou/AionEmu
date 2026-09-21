@@ -130,9 +130,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			case 284378: //Idean Lapilima.
 			case 284379: //Idean Obscura.
 				ideanKilled ++;
-				if (ideanKilled == 1) {
-				} else if (ideanKilled == 2) {
-				} else if (ideanKilled == 3) {
+				if (ideanKilled == 3) {
 				    spawn(234690, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Vengeful Modor.
 					instance.doOnAllPlayers(new Visitor<>() {
 						/**
@@ -154,10 +152,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			break;
 			case 855244: //Clone's Modor.
 				cloneModorKilled ++;
-				if (cloneModorKilled == 1) {
-				} else if (cloneModorKilled == 2) {
-				} else if (cloneModorKilled == 3) {
-				} else if (cloneModorKilled == 4) {
+				if (cloneModorKilled == 4) {
 				} else if (cloneModorKilled == 5) {
 				    spawn(234691, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Crazed Modor.
 				}

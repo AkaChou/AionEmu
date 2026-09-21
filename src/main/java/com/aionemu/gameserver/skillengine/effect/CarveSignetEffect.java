@@ -7,7 +7,6 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
@@ -91,7 +90,5 @@ public class CarveSignetEffect extends DamageEffect {
 	 */
 	@Override
 	public void calculate(Effect effect) {
-		if (!super.calculate(effect, DamageType.PHYSICAL)) {
-		}
 	}
 }

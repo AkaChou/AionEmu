@@ -208,10 +208,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 				Npc dramata55Al = instance.getNpc(218756); //Padmarashka.
 				dramataFi55Ae++;
 				if (dramata55Al != null) {
-					if (dramataFi55Ae == 1) {
-					} else if (dramataFi55Ae == 2) {
-					} else if (dramataFi55Ae == 3) {
-					} else if (dramataFi55Ae == 4) {
+					if (dramataFi55Ae == 4) {
 						deleteNpc(282123); //Dramata Shield.
 						// 帕德玛拉什卡已从防护沉眠中苏醒。 / Padmarashka has awoken from the Protective Slumber.
 						sendMsgByRace(1400728, Race.PC_ALL, 10000);

@@ -38,7 +38,6 @@ import com.aionemu.gameserver.services.anohaservice.DanuarHero;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 狂暴阿诺哈（Berserk Anoha）世界 Boss 活动服务。
@@ -174,8 +173,6 @@ public class AnohaService {
 	 * spawn state
 	 */
 	public void spawn(AnohaLocation loc, AnohaStateType cstate) {
-		if (cstate.equals(AnohaStateType.FIGHT)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getAnohaSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

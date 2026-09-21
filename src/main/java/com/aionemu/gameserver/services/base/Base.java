@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.base.BaseNpc;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.landing.LandingPointsEnum;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
@@ -29,8 +28,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 据点运行时实例，管理占领、首领、袭击与相关广播。
@@ -40,7 +39,33 @@ import lombok.Getter;
  */
 @Getter
 public class Base<BL extends BaseLocation> {
-	private Npc boss, flag;
+    /**
+     * -- GETTER --
+     *  获取据点首领 NPC。
+     *  Returns the base boss NPC.
+     *  boss NPC
+	 * -- SETTER --
+	 *  设置据点首领 NPC。
+	 *  Sets the base boss NPC.
+	 *  boss NPC
+
+	 */
+    @Setter
+    private Npc boss;
+	/**
+	 * -- SETTER --
+	 *  设置据点旗帜 NPC。
+	 *  Sets the base flag NPC.
+	 *  flag NPC
+	 */
+	@Setter
+	private Npc /**
+	 * -- GETTER --
+	 *  获取据点旗帜 NPC。
+	 *  Returns the base flag NPC.
+	 *  flag NPC
+	 */
+	    flag;
 	private boolean started;
 	/**
 	 * 获取据点位置模板。
@@ -121,8 +146,6 @@ public class Base<BL extends BaseLocation> {
 
 	private List<SpawnGroup2> getBaseSpawns() {
 		List<SpawnGroup2> spawns = DataManager.SPAWNS_DATA2.getBaseSpawnsByLocId(getId());
-		if (spawns == null) {
-		}
 		return spawns;
 	}
 
@@ -161,192 +184,210 @@ public class Base<BL extends BaseLocation> {
 	 * @return 是否匹配并发送消息 / whether a message was sent
 	 */
 	public boolean sendMsgKiller(int id) {
-		switch (id) {
-		case 90:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v13));
-			return true;
-		case 91:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v04));
-			return true;
-		case 92:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v12));
-			return true;
-		case 93:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v03));
-			return true;
-		case 94:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v06));
-			return true;
-		case 95:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v05));
-			return true;
-		case 96:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v01));
-			return true;
-		case 97:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v09));
-			return true;
-		case 98:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v11));
-			return true;
-		case 99:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v10));
-			return true;
-		case 100:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v07));
-			return true;
-		case 101:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v02));
-			return true;
-		case 102:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v08));
-			return true;
-		// 术古谈判者 5.3 / Shugo Negotiator 5.3
-		case 105: // Oharung At The Sulfur Archipelago.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
-					// 要塞。 / Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_01);
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Oharung at the Sulfur Tree Archipelago. As a
-					// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_01,
+		return switch (id) {
+			case 90 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v13));
+				yield true;
+			}
+			case 91 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v04));
+				yield true;
+			}
+			case 92 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v12));
+				yield true;
+			}
+			case 93 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v03));
+				yield true;
+			}
+			case 94 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v06));
+				yield true;
+			}
+			case 95 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v05));
+				yield true;
+			}
+			case 96 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v01));
+				yield true;
+			}
+			case 97 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v09));
+				yield true;
+			}
+			case 98 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v11));
+				yield true;
+			}
+			case 99 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v10));
+				yield true;
+			}
+			case 100 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v07));
+				yield true;
+			}
+			case 101 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v02));
+				yield true;
+			}
+			case 102 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v08));
+				yield true;
+			}
+			// 术古谈判者 5.3 / Shugo Negotiator 5.3
+			case 105 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
+						// 要塞。 / Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_01);
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Oharung at the Sulfur Tree Archipelago. As a
+						// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_01,
 							5000);
-					// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
-					// 树要塞。 / Tree Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
+						// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
+						// 树要塞。 / Tree Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
 							10000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
-					// 要塞。 / Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_01);
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Oharung at the Sulfur Tree Archipelago. As a
-					// 奖励，船只支援天族。 / reward, the ship supports the Elyos.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_01,
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
+						// 要塞。 / Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_01);
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Oharung at the Sulfur Tree Archipelago. As a
+						// 奖励，船只支援天族。 / reward, the ship supports the Elyos.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_01,
 							5000);
-					// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
-					// 树要塞。 / Tree Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
+						// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
+						// 树要塞。 / Tree Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
 							10000);
-				}
-			});
-			return true;
-		case 106: // Joarin At Zephyr Island.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Joarin at Zephyr Island. As a reward, the ship
-					// 支援魔族。 / supports the Asmodians.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_02);
-					// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
-					// 已增强。 / bolstered.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
+					}
+				});
+				yield true;
+			}
+			case 106 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Joarin at Zephyr Island. As a reward, the ship
+						// 支援魔族。 / supports the Asmodians.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_02);
+						// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
 							5000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Joarin at Zephyr Island. As reward, the ship
-					// 支援天族。 / supports the Elyos.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_02);
-					// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
-					// 已增强。 / bolstered.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Joarin at Zephyr Island. As reward, the ship
+						// 支援天族。 / supports the Elyos.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_02);
+						// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
 							5000);
-				}
-			});
-			return true;
-		case 107: // Temirun At Leibo Island.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Temirun at Leibo Island. As a reward, the ship
-					// 支援魔族。 / supports the Asmodians.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_03);
-					// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
-					// 已增强。 / bolstered.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
+					}
+				});
+				yield true;
+			}
+			case 107 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Temirun at Leibo Island. As a reward, the ship
+						// 支援魔族。 / supports the Asmodians.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_03);
+						// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
 							5000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Temirun at Leibo Island. As reward, the ship
-					// 支援天族。 / supports the Elyos.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_03);
-					// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
-					// 已增强。 / bolstered.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Temirun at Leibo Island. As reward, the ship
+						// 支援天族。 / supports the Elyos.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_03);
+						// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
 							5000);
-				}
-			});
-			return true;
-		case 108: // Shairing At Carpus Isle.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Shairing at Storm Island. As a reward, the
-					// 船只支援魔族。 / ship supports the Asmodians.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_04);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Shairing at Storm Island. As reward, the ship will
-					// 支援天族。 / support the Elyos.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_04);
-				}
-			});
-			return true;
-		case 109: // Bomishung At Siel's Left Wing.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
-					// 西部要塞。 / Western Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_02);
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Bomishung at the Siel's Left Wing. As a
-					// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_05,
+					}
+				});
+				yield true;
+			}
+			case 108 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Shairing at Storm Island. As a reward, the
+						// 船只支援魔族。 / ship supports the Asmodians.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_04);
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Shairing at Storm Island. As reward, the ship will
+						// 支援天族。 / support the Elyos.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_04);
+					}
+				});
+				yield true;
+			}
+			case 109 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
+						// 西部要塞。 / Western Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_02);
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Bomishung at the Siel's Left Wing. As a
+						// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_05,
 							5000);
-					// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
-					// 西部要塞。 / Western Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
+						// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
+						// 西部要塞。 / Western Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
 							10000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
-					// 西部要塞。 / Western Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_02);
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Bomishung at the Siel's Left Wing. As a reward,
-					// 船只支援天族。 / the ship supports the Elyos.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_05,
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
+						// 西部要塞。 / Western Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_02);
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Bomishung at the Siel's Left Wing. As a reward,
+						// 船只支援天族。 / the ship supports the Elyos.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_05,
 							5000);
-					// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
-					// 西部要塞。 / Western Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
+						// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
+						// 西部要塞。 / Western Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
 							10000);
-				}
-			});
-			return true;
-		case 110: // Sasming At Siel's Right Wing.
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
-					// 东部要塞。 / Eastern Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_03);
-					// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Sasming at the Siel's Right Wing. As a reward,
-					// 船只支援魔族。 / the ship supports the Asmodians.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_06,
+					}
+				});
+				yield true;
+			}
+			case 110 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					if (player.getCommonData().getRace() == Race.ELYOS) {
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
+						// 东部要塞。 / Eastern Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_03);
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Sasming at the Siel's Right Wing. As a reward,
+						// 船只支援魔族。 / the ship supports the Asmodians.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_06,
 							5000);
-					// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
-					// 东部要塞。 / Eastern Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
+						// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
+						// 东部要塞。 / Eastern Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
 							10000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
-					// 东部要塞。 / Eastern Fortress.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_03);
-					// 天族已救出……作为奖励，船只 / The Elyos have rescued the Sasming at the Siel's Right Wing. As a reward, the
-					// 船只支援天族。 / ship supports the Elyos.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_06,
+					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
+						// 东部要塞。 / Eastern Fortress.
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_03);
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Sasming at the Siel's Right Wing. As a reward, the
+						// 船只支援天族。 / ship supports the Elyos.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_06,
 							5000);
-					// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
-					// 东部要塞。 / Eastern Fortress.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
+						// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
+						// 东部要塞。 / Eastern Fortress.
+						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
 							10000);
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
+					}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	private void delayedSpawn(final Race race) {
@@ -563,8 +604,7 @@ public class Base<BL extends BaseLocation> {
 	 * @param race 袭击阵营 / attacking race
 	 */
 	public void spawnAttackers(Race race) {
-		if (getFlag() == null) {
-		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
+		if (getFlag() != null && !getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
 				GameFeatureServices.baseService().capture(getId(), race);
 			} else {
@@ -586,8 +626,7 @@ public class Base<BL extends BaseLocation> {
 					}
 				}
 			}
-			if (getAttackers().isEmpty()) {
-			} else {
+			if (!getAttackers().isEmpty()) {
 				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					despawnAttackers();
 					delayedAssault();
@@ -641,46 +680,6 @@ public class Base<BL extends BaseLocation> {
 	protected void rmvBaseBossListener() {
 		AbstractAI ai = (AbstractAI) getBoss().getAi2();
 		ai.removeAiDeathListener(getBaseBossDeathListener());
-	}
-
-	/**
-	 * 获取据点旗帜 NPC。
-	 * Returns the base flag NPC.
-	 *
-	 * flag NPC
-	 */
-	public Npc getFlag() {
-		return flag;
-	}
-
-	/**
-	 * 设置据点旗帜 NPC。
-	 * Sets the base flag NPC.
-	 *
-	 * flag NPC
-	 */
-	public void setFlag(Npc flag) {
-		this.flag = flag;
-	}
-
-	/**
-	 * 获取据点首领 NPC。
-	 * Returns the base boss NPC.
-	 *
-	 * boss NPC
-	 */
-	public Npc getBoss() {
-		return boss;
-	}
-
-	/**
-	 * 设置据点首领 NPC。
-	 * Sets the base boss NPC.
-	 *
-	 * boss NPC
-	 */
-	public void setBoss(Npc boss) {
-		this.boss = boss;
 	}
 
 	/**

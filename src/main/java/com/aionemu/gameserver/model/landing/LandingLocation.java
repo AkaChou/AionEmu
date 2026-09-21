@@ -156,8 +156,7 @@ public class LandingLocation {
 
 	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState state) {
-		if (this.persistentState == PersistentState.NEW && state == PersistentState.UPDATE_REQUIRED) {
-		} else {
+		if (this.persistentState != PersistentState.NEW || state != PersistentState.UPDATE_REQUIRED) {
 			this.persistentState = state;
 		}
 	}

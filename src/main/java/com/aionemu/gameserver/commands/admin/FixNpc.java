@@ -18,7 +18,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.knownlist.Visitor;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +61,7 @@ public class FixNpc extends AdminCommand
                 final float adminZ = admin.getZ();
                 List<SpawnGroup2> spawnId = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(admin.getWorldId());
                 PacketSendUtility.sendMessage(admin, "SpawnId: " + spawnId);
-                if (spawnId != null) {
-                } for (final SpawnGroup2 spawn : spawnId) {
+                for (final SpawnGroup2 spawn : spawnId) {
                 	StringBuilder comment = new StringBuilder();
                     comment.append(target.getObjectTemplate().getName()).append(" (");
                     int isObject = target.getSpawn().getEntityId();

@@ -85,8 +85,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
-        switch (npcId) {
-        }
     }
 
 	protected void startInstanceTask() {

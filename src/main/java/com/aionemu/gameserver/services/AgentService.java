@@ -26,7 +26,6 @@ import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.agent.AgentStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.agentspawns.AgentSpawnTemplate;
@@ -35,7 +34,6 @@ import com.aionemu.gameserver.services.agentservice.AgentFight;
 import com.aionemu.gameserver.services.agentservice.Fight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 天族/魔族神代代理人（Agent / Empyrean Lord Agent）战斗活动服务。
@@ -138,8 +136,6 @@ public class AgentService {
 	 * spawn state
 	 */
 	public void spawn(AgentLocation loc, AgentStateType astate) {
-		if (astate.equals(AgentStateType.FIGHT)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getAgentSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

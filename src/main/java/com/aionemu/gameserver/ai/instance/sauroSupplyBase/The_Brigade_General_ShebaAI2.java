@@ -71,8 +71,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		int delay = 25000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500775);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); // 挥之不去的厄运 / Lingering Doom.
 			scheduleDelayStage1(delay);
@@ -81,8 +80,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void stage2() {
 		int delay = 10000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500774);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
 			spawn(284435, 900.12497f, 879.17401f, 411.625f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
@@ -93,8 +91,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void stage3() {
 		int delay = 40000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500777);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); // 灵魂出窍 / Out Of Body.
 			scheduleDelayStage3(delay);
@@ -103,8 +100,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void stage4() {
 		int delay = 45000;
-		if (isAlreadyDead() || !isStart) {
-		} else {
+		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500776);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); // Danuar 引导 / Danuar Channeling.
 			switch (Rnd.get(1, 2)) {
@@ -128,22 +124,19 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleDelayStage4(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage4(), delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage3(), delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
-		if (!isStart && !isAlreadyDead()) {
-		} else {
+		if (isStart || isAlreadyDead()) {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}

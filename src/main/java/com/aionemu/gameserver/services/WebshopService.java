@@ -3,16 +3,15 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import com.aionemu.gameserver.services.mail.SystemMailService;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
@@ -25,7 +24,15 @@ public class WebshopService {
 	private static final String SHOP_MAIL_SENDER = "Aion Shop";
 	private static final String SHOP_MAIL_TITLE = "Shop Purchase";
 	private static final String SHOP_MAIL_MESSAGE = "Your shop purchase has arrived.";
-	private static volatile ObjectProvider<WebshopService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<WebshopService> instanceProvider;
 
 	/**
 	 * 构造服务并启动定时发放任务。
@@ -57,17 +64,7 @@ public class WebshopService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<WebshopService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 启动定时任务，为在线玩家发放待领取商城奖励。
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
@@ -75,8 +72,7 @@ public class WebshopService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
 			RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
 			List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
-			if (liste.isEmpty()) {
-			} else {
+			if (!liste.isEmpty()) {
 				for (RewardEntryItem item : liste) {
 					deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());
 				}

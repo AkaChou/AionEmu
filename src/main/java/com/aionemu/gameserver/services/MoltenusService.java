@@ -24,7 +24,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
@@ -35,7 +34,6 @@ import com.aionemu.gameserver.services.moltenusservice.Boss;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 熔岩领主（Moltenus）服务：按 MoltenusSchedule 调度战斗，管理刷怪与欧比斯堡垒公告。
@@ -141,8 +139,6 @@ public class MoltenusService {
 	 * state type
 	 */
 	public void spawn(MoltenusLocation loc, MoltenusStateType mstate) {
-		if (mstate.equals(MoltenusStateType.FIGHT)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getMoltenusSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {
@@ -162,14 +158,14 @@ public class MoltenusService {
 	 * @return 若 handled 则为 true / true if handled
 	 */
 	public boolean moltenusMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005",
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005",
 					"<Resurrected Moltenus> appear in the abyss !!!"));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -180,18 +176,17 @@ public class MoltenusService {
 	 * @return 若 handled 则为 true / true if handled
 	 */
 	public boolean sulfurFortressMsg(int id) {
-		switch (id) {
-		case 4:
-		case 7:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player,
+		return switch (id) {
+			case 4, 7 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
+					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_01, 0);
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -202,18 +197,17 @@ public class MoltenusService {
 	 * @return 若 handled 则为 true / true if handled
 	 */
 	public boolean westernFortressMsg(int id) {
-		switch (id) {
-		case 5:
-		case 8:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player,
+		return switch (id) {
+			case 5, 8 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
+					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_02, 10000);
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -224,18 +218,17 @@ public class MoltenusService {
 	 * @return 若 handled 则为 true / true if handled
 	 */
 	public boolean easternFortressMsg(int id) {
-		switch (id) {
-		case 6:
-		case 9:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-				// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player,
+		return switch (id) {
+			case 6, 9 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
+					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_03, 20000);
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**

@@ -1,20 +1,10 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -23,14 +13,18 @@ import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
 import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_FAVOR;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DP_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_DP;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_EXP;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.XPLossEnum;
 import com.aionemu.gameserver.world.WorldPosition;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 玩家公共数据。
@@ -67,6 +61,14 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int questExpands = 0;
 	private int npcExpands = CustomConfig.CUBE_SIZE;
 	private int warehouseSize = 0;
+	/**
+	 * -- GETTER --
+	 * <p>
+	 * -- SETTER --
+	 *
+	 * @return the AdvancedStigmaSlotSize
+	 * @param AdvancedStigmaSlotSize the AdvancedStigmaSlotSize to set
+	 */
 	private int AdvancedStigmaSlotSize = 0;
 	private int titleId = -1;
 	private int bonusTitleId = -1;
@@ -86,6 +88,11 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int passportReward = 0;
 	public Map<Integer, AtreianPassport> playerPassports = new HashMap<>(1);
 	private PlayerPassports completedPassports;
+	/**
+	 * -- GETTER --
+	 *
+	 * @return 是否高阶守护者 / Whether arch daeva
+	 */
 	private boolean isArchDaeva = false;
 	private int creativityPoint;
 	private int cp_step = 0;
@@ -116,26 +123,16 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	// 阿特雷亚护照创建日期 / Atreian Passport Creation Date
 	private Timestamp creationDate;
 	private int minionSkillPoints;
+	/**
+	 * -- GETTER --
+	 * 是否自动补充守护灵技能点 / Whether minion skill points auto charge
+	 */
 	// ponytail: 会话设置；仅当自动充值须在重登后保留时才持久化。 / session setting; persist it only if auto-charge must survive relogging.
 	private boolean minionSkillPointsAutoCharge;
 	private Timestamp minionFunctionTime;
 
 	public PlayerCommonData(int objId) {
 		this.playerObjId = objId;
-	}
-
-	/**
-	 * @return the AdvancedStigmaSlotSize
-	 */
-	public int getAdvancedStigmaSlotSize() {
-		return AdvancedStigmaSlotSize;
-	}
-
-	/**
-	 * @param AdvancedStigmaSlotSize the AdvancedStigmaSlotSize to set
-	 */
-	public void setAdvancedStigmaSlotSize(int AdvancedStigmaSlotSize) {
-		this.AdvancedStigmaSlotSize = AdvancedStigmaSlotSize;
 	}
 
 	public long getExpShown() {
@@ -191,14 +188,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 		this.expRecoverable = 0;
 		this.setExp(this.exp + el, false);
 	}
-
-public double getExpMultiplier() {
-        return expMultiplier;
-    }
-
-    public void setExpMultiplier(double expMultiplier) {
-        this.expMultiplier = expMultiplier;
-    }
 
 	/**
 	 * @param value
@@ -396,7 +385,7 @@ public double getExpMultiplier() {
 			if (Math.max(exp, this.getExp()) >= level66StartExp && isArchDaevaLevelCapped()) {
 				// 未完成高阶守护者入场任务前，经验最多停留在 66 级起始经验前一点。
 				// Before the ArchDaeva entry mission is complete, EXP stops just below the level-66 start.
-				maxExp = Math.min(maxExp, Math.max(0, level66StartExp - 1));
+				maxExp = Math.clamp(level66StartExp - 1, 0, maxExp);
 				if (this.getExp() >= maxExp) {
 					// 可通过转职任务成为高阶守护者。 / You can become an Archdaeva through the class change mission.
 					// 完成任务后将达到 66 级，与当前经验无关。 / Once you complete the mission, you will reach level 66, regardless of your
@@ -478,10 +467,6 @@ public double getExpMultiplier() {
 		return mentorFlagTime > System.currentTimeMillis() / 1000;
 	}
 
-	public boolean isOnline() {
-		return online;
-	}
-
 	public void setLevel(int level) {
 		if (level <= DataManager.PLAYER_EXPERIENCE_TABLE.getMaxLevel()) {
 			this.setExp(DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(level), false);
@@ -493,11 +478,9 @@ public double getExpMultiplier() {
 		this.setArchDaeva(true);
 		if (this.getLevel() < 66) {
 			this.setExp(DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(66), true);
-		} else if (this.getLevel() >= 66) {
 		}
 	}
 
-	/** 设置 bonus title id / Sets the bonus title id */
 
 	/**
 	 * @param position 创建本类对象后应恰好调用一次。 / This method should be called exactly once after creating object of this class
@@ -556,7 +539,6 @@ public double getExpMultiplier() {
 		}
 	}
 
-	/** 获取神圣能量。 / Returns the dp. */
 
 	/** 返回模板 ID / Returns the template id */
 	@Override
@@ -570,9 +552,6 @@ public double getExpMultiplier() {
 		return 0;
 	}
 
-	/** 设置 mailbox letters / Sets the mailbox letters */
-
-	/** 返回 mailbox letters / Returns the mailbox letters */
 
 	/**
 	 * @param boundRadius
@@ -581,7 +560,6 @@ public double getExpMultiplier() {
 		this.boundRadius = boundRadius;
 	}
 
-	/** 获取边界半径。 / Returns the bound radius. */
 
 	/** 设置 death count / Sets the death count */
 	public void setDeathCount(int count) {
@@ -617,18 +595,6 @@ public double getExpMultiplier() {
 		salvationPoint = 0;
 	}
 
-	/** 设置 last transfer time / Sets the last transfer time */
-
-	/** 返回 last transfer time / Returns the last transfer time */
-
-	/** 返回世界所有者 ID / Returns the world owner id */
-
-	/** 设置 world owner id / Sets the world owner id */
-
-	/** 返回上次盖章 / Returns the last stamp*/
-
-	/** 设置 last stamp / Sets the last stamp */
-
 	/** 返回通行证盖章 / Returns the passport stamps*/
 	public int getPassportStamps() {
 		return stamps;
@@ -639,36 +605,16 @@ public double getExpMultiplier() {
 		this.stamps = stamps;
 	}
 
-	/** 返回玩家通行证 / Returns the player passports*/
-
-	/** 返回 completed passports / Returns the completed passports */
-
 	/** 添加 to completed passports / Adds to completed passports */
 	public void addToCompletedPassports(AtreianPassport atreianPassport) {
 		completedPassports.addPassport(atreianPassport.getId(), atreianPassport);
 	}
-
-	/** 设置 completed passports / Sets the completed passports */
-
-	/** 返回通行证奖励 / Returns the passport reward*/
-
-	/** 设置 passport reward / Sets the passport reward */
 
 	/** 设置 arch daeva / Sets the arch daeva */
 	public void setArchDaeva(boolean isArchDaeva) {
 		this.isArchDaeva = isArchDaeva;
 	}
 
-	/**
-	 * @return 是否高阶守护者 / Whether arch daeva
-	 */
-	public boolean isArchDaeva() {
-		return isArchDaeva;
-	}
-
-	/** 返回 creativity point / Returns the creativity point */
-
-	/** 设置 creativity point / Sets the creativity point */
 
 	/** 返回 cp step / Returns the cp step */
 	public int getCPStep() {
@@ -679,22 +625,6 @@ public double getExpMultiplier() {
 	public void setCPStep(int step) {
 		this.cp_step = step;
 	}
-
-	/** 返回 stone creativity point / Returns the stone creativity point */
-
-	/** 设置 stone creativity point / Sets the stone creativity point */
-
-	/** 返回 join request legion id / Returns the join request legion id */
-
-	/** 设置 join request legion id / Sets the join request legion id */
-
-	/** 返回 join request state / Returns the join request state */
-
-	/** 设置 join request state / Sets the join request state */
-
-	/** 设置 luna consume point / Sets the luna consume point */
-
-	/** 返回 luna consume point / Returns the luna consume point */
 
 	/** 设置 muni keys / Sets the muni keys */
 	public void setMuniKeys(int keys) {
@@ -716,10 +646,6 @@ public double getExpMultiplier() {
 		return consumeCount;
 	}
 
-	/** 设置衣橱槽位。 / Sets the wardrobe slot. */
-
-	/** 获取衣橱槽位。 / Returns the wardrobe slot. */
-
 	/** 获取升级街机。 / Returns the upgrade arcade. */
 	public PlayerUpgradeArcade getUpgradeArcade() {
 		if (upgradeArcade == null) {
@@ -727,8 +653,6 @@ public double getExpMultiplier() {
 		}
 		return upgradeArcade;
 	}
-
-	/** 设置升级街机。 / Sets the upgrade arcade. */
 
 	/**
 	 * @return 是否已准备好获得成长光环 / Whether ready for aura of growth
@@ -768,8 +692,6 @@ public double getExpMultiplier() {
 		}
 	}
 
-	/** 设置 aura of growth / Sets the aura of growth */
-
 	/** 返回 aura of growth / Returns the aura of growth */
 	public long getAuraOfGrowth() {
 		return isReadyForAuraOfGrowth() ? auraOfGrowth : 0;
@@ -782,43 +704,19 @@ public double getExpMultiplier() {
 
 	/** 返回 aura of growth points / Returns the aura of growth points */
 	public long getAuraOfGrowthPoints() {
-		long percent = 0;
-		switch (level) {
-		case 66:
-			percent = 770000;
-			break;
-		case 67:
-			percent = 840000;
-			break;
-		case 68:
-			percent = 910000;
-			break;
-		case 69:
-			percent = 980000;
-			break;
-		case 70:
-			percent = 1060000;
-			break;
-		case 71:
-			percent = 1270000;
-			break;
-		case 72:
-			percent = 1380000;
-			break;
-		case 73:
-			percent = 1490000;
-			break;
-		case 74:
-			percent = 1600000;
-			break;
-		case 75:
-			percent = 1750000;
-			break;
-		default:
-			percent = 0;
-			break;
-		}
-		return percent;
+		return switch (level) {
+			case 66 -> 770000;
+			case 67 -> 840000;
+			case 68 -> 910000;
+			case 69 -> 980000;
+			case 70 -> 1060000;
+			case 71 -> 1270000;
+			case 72 -> 1380000;
+			case 73 -> 1490000;
+			case 74 -> 1600000;
+			case 75 -> 1750000;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -917,11 +815,11 @@ public double getExpMultiplier() {
 			if ((!BerdinStarBoost) && (percent > 50)) {
 				BerdinStarBoost = true;
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1403399, Integer.valueOf(50)));
+					new SM_SYSTEM_MESSAGE(1403399, 50));
 			} else if ((BerdinStarBoost) && (percent < 50)) {
 				BerdinStarBoost = false;
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1403400, Integer.valueOf(50)));
+					new SM_SYSTEM_MESSAGE(1403400, 50));
 			} else if (berdinStar <= 0) {
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1403401));
 			}
@@ -977,12 +875,12 @@ public double getExpMultiplier() {
 				AbyssFavorBoost = true;
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1404029, Integer.valueOf(50)));
+					new SM_SYSTEM_MESSAGE(1404029, 50));
 			} else if ((AbyssFavorBoost) && (percent < 50)) {
 				AbyssFavorBoost = false;
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
 				PacketSendUtility.sendPacket(this.getPlayer(),
-						new SM_SYSTEM_MESSAGE(1404030, Integer.valueOf(50)));
+					new SM_SYSTEM_MESSAGE(1404030, 50));
 			} else if (abyssFavor <= 0) {
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_ABYSS_FAVOR());
 				PacketSendUtility.sendPacket(this.getPlayer(), new SM_SYSTEM_MESSAGE(1404031));
@@ -990,9 +888,6 @@ public double getExpMultiplier() {
 		}
 	}
 
-	/** 设置 floor / Sets the floor */
-
-	/** 返回 floor / Returns the floor */
 
 	private int time;
 
@@ -1006,28 +901,4 @@ public double getExpMultiplier() {
 		this.time = time;
 	}
 
-	/** 返回 golden dice / Returns the golden dice */
-
-	/** 设置 golden dice / Sets the golden dice */
-
-	/** 返回 reset board / Returns the reset board */
-
-	/** 设置 reset board / Sets the reset board */
-
-	/** 设置 creation date / Sets the creation date */
-
-	/** 返回 creation date / Returns the creation date */
-
-	/** 设置守护灵技能点。 / Sets the minion skill points. */
-
-	/** 是否自动补充守护灵技能点 / Whether minion skill points auto charge */
-	public boolean isMinionSkillPointsAutoCharge() {
-		return minionSkillPointsAutoCharge;
-	}
-
-	/** 设置 minion skill points auto charge / Sets the minion skill points auto charge */
-
-	/** 返回 minion function time / Returns the minion function time */
-
-	/** 设置 minion function time / Sets the minion function time */
 }

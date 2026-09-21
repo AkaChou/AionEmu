@@ -125,9 +125,7 @@ public class ItemEquipmentListener {
 	 */
 		if (item.getAmplificationSkill() > 0) {
 			if (owner.getSkillList().isSkillPresent(item.getAmplificationSkill())) {
-				if (item.getAmplificationSkill() == 13030 || item.getAmplificationSkill() == 13029) {
-					// 此刻此处什么也不做 / dont do nothing here at this moment
-				} else {
+				if (item.getAmplificationSkill() != 13030 && item.getAmplificationSkill() != 13029) {
 					owner.getEffectController().removeEffect(item.getAmplificationSkill());
 				}
 				SkillLearnService.removeSkill(owner, item.getAmplificationSkill());

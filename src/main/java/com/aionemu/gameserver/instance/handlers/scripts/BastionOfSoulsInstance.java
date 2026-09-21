@@ -517,10 +517,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			case 246508: //Enraged Halda.
 			case 246509: //Envious Lida.
 			    bossWitch++;
-				if (bossWitch == 1) {
-				} else if (bossWitch == 2) {
-				} else if (bossWitch == 3) {
-				} else if (bossWitch == 4) {
+				if (bossWitch == 4) {
 					deleteNpc(246511); //Opel.
 					deleteNpc(246512); //Shurak.
 					switch (Rnd.get(1, 3)) {

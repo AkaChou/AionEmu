@@ -169,10 +169,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 220472: //Covetous Fallen Guardian.
 			case 220594: //Covetous Fallen Guardian.
 			    covetousFallen++;
-			    if (covetousFallen == 1) {
-				} else if (covetousFallen == 2) {
-				} else if (covetousFallen == 3) {
-				} else if (covetousFallen == 4) {
+			    if (covetousFallen == 3) {
 				} else if (covetousFallen == 5) {
 				    // 你已击杀残酷守护者。 / Youve killed the Cruel Protector.
 					// 仍有进阶单位魔法士兵需要帮助。 / There are still Advance unit Magical Soldiers who need help.

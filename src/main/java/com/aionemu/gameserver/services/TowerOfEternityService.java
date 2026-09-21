@@ -34,7 +34,6 @@ import com.aionemu.gameserver.services.towerofeternityservice.Tower;
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 永恒之塔服务，管理塔地点开关、刷怪与旗帜同步。
@@ -106,8 +105,6 @@ public class TowerOfEternityService {
 	 * state type
 	 */
 	public void spawn(TowerOfEternityLocation loc, TowerOfEternityStateType tstate) {
-		if (tstate.equals(TowerOfEternityStateType.OPEN)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getTowerOfEternitySpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_UPDATE;
-import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.DashStatus;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
@@ -66,7 +65,5 @@ public class MoveBehindEffect extends DamageEffect {
 				closestCollision.getZ(), effected.getHeading());
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effected.getHeading());
-		if (!super.calculate(effect, DamageType.PHYSICAL)) {
-		}
 	}
 }

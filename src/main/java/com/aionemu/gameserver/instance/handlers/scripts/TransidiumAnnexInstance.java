@@ -365,10 +365,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				Npc ahserion = instance.getNpc(277224); //Ereshkigal's Reign.
 				hangarBarricade++;
 				if (ahserion != null) {
-				    if (hangarBarricade == 1) {
-				    } else if (hangarBarricade == 2) {
-				    } else if (hangarBarricade == 3) {
-				    } else if (hangarBarricade == 4) {
+				    if (hangarBarricade == 4) {
 					    ahserion.getEffectController().removeEffect(21571); //Ereshkigal's Reign.
 				    }
 				}

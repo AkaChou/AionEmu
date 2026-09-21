@@ -32,8 +32,8 @@ public class IDF6_Dragon_Artifact_Boost_AAI2 extends NpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		} if (IDF6DragonGate == null) {
+		isAggred.compareAndSet(false, true);
+		if (IDF6DragonGate == null) {
 		    IDF6DragonGate = (Npc)spawn(703159, 238.9179f, 292.35995f, 318.56708f, (byte) 111);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());

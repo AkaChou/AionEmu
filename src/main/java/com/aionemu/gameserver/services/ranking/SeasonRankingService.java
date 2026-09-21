@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.ranking;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -20,7 +21,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Wnkrz
  */
 public class SeasonRankingService {
-	private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
 
 	/**
 	 * 按表 ID 加载玩家对应赛季排行数据并下发。
@@ -38,7 +47,6 @@ public class SeasonRankingService {
 			loadArena6v6Score(player);
 		} else if (tableid == 541) {
 			loadArenaOfTenacityScore(player);
-		} else {
 		}
 	}
 
@@ -151,13 +159,4 @@ public class SeasonRankingService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<SeasonRankingService> provider) {
-		instanceProvider = provider;
-	}
 }

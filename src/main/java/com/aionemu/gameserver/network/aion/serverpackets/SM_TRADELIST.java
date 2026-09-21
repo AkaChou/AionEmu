@@ -52,10 +52,6 @@ public class SM_TRADELIST extends AionServerPacket {
 			for (TradeTab tradeTabl : tlist.getTradeTablist()) {
 				writeD(tradeTabl.getId());
 				Player activePlayer = con.getActivePlayer();
-				if (activePlayer.isGM()) {
-					// PacketSendUtility.sendMessage(activePlayer, "<Tradelist Id> + " +
-					// tradeTabl.getId());
-				}
 			}
 			int i = 0;
 			LimitedTradeNpc limitedTradeNpc = null;

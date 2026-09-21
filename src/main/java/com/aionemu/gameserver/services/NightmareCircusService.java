@@ -24,7 +24,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
@@ -34,7 +33,6 @@ import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
 import com.aionemu.gameserver.services.nightmarecircusservice.Nightmare;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 梦魇马戏团活动服务，管理地点初始化、定时开关与刷怪。
@@ -137,8 +135,6 @@ public class NightmareCircusService {
 	 * state type
 	 */
 	public void spawn(NightmareCircusLocation loc, NightmareCircusStateType nstate) {
-		if (nstate.equals(NightmareCircusStateType.OPEN)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getNightmareCircusSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {
@@ -158,13 +154,13 @@ public class NightmareCircusService {
 	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean dreamFaerieMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
-			return true;
-		default:
-			return false;
-		}
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**

@@ -3,10 +3,8 @@ package com.aionemu.gameserver.ai.worlds.silenteraCanyon;
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,8 +23,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		}
+		isAggred.compareAndSet(false, true);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 

@@ -48,8 +48,7 @@ public class AssemblyItemAction extends AbstractItemAction {
 
 	/** 移除物品。 / Removes items. */
 	public static void removeItems(Player player, int itemId, long itemCount) {
-		if (!player.getInventory().decreaseByItemId(itemId, itemCount)) {
-		}
+		player.getInventory().decreaseByItemId(itemId, itemCount);
 	}
 
 	/** 执行 / act. */

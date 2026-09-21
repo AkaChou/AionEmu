@@ -51,16 +51,12 @@ public class VeteranRewardsService {
 		 * Whether allowed
 		 */
 		private boolean isAllowed(Race race) {
-			switch (this) {
-			case ELYOS:
-				return race == Race.ELYOS;
-			case ASMO:
-				return race == Race.ASMODIANS;
-			case ALL:
-				return race == Race.ELYOS || race == Race.ASMODIANS;
-			default:
-				return false;
-			}
+            return switch (this) {
+                case ELYOS -> race == Race.ELYOS;
+                case ASMO -> race == Race.ASMODIANS;
+                case ALL -> race == Race.ELYOS || race == Race.ASMODIANS;
+                default -> false;
+            };
 		}
 	}
 
@@ -162,9 +158,6 @@ public class VeteranRewardsService {
 
 		SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype, id);
 
-		if (item != 0) {
-		} else if (kinah > 0) {
-		}
 
 	}
 
@@ -236,10 +229,6 @@ public class VeteranRewardsService {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
-				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error(I18n.get("log.9f83472dcd76", sender, recipientName, // "] RETURN ITEM ID:", itemTemplate, " ITEM COUNT "
-					//, attachedItemCount, attachedKinahCount));
-				}
 				return false;
 			}
 		}
@@ -249,18 +238,10 @@ public class VeteranRewardsService {
 		}
 
 		if (recipientName.length() > 16) {
-			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-				// log.error(I18n.get("log.d82411483d33", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
-				//, attachedItemCount, attachedKinahCount));
-			}
 			return false;
 		}
 
 		if (sender.length() > 16) {
-			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-				// log.error(I18n.get("log.50e74bfd8bb0", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
-				//, attachedItemCount, attachedKinahCount));
-			}
 			return false;
 		}
 
@@ -296,11 +277,6 @@ public class VeteranRewardsService {
 		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
 				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 
-		if (delivered && VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
-			// " + "Item: " +
-			// " + "Item Count: " + attachedItemCount + " / "
-			// " + "Status: successfully."));
-		}
 		return delivered;
 	}
 

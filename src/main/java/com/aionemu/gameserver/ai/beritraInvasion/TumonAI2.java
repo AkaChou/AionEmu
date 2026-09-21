@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +41,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		}
+		isAggred.compareAndSet(false, true);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 

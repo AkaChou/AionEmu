@@ -337,10 +337,7 @@ public final class QuestService {
 			long amount = 1060000L * rewards.getExpBoost();
 			player.getCommonData().addAuraOfGrowth((int) amount);
 		}
-		// CP 奖励 5.3 / CP Reward 5.3
-		if (rewards.getCP() != null) {
-			// 待实现... / To Do...
-		}
+		// CP 奖励 5.3 待实现 / CP reward 5.3 is not implemented yet
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
 			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
@@ -1201,7 +1198,7 @@ public final class QuestService {
 	 * QuestState qs = player.getQuestStateList().getQuestState(questId); if (qs ==
 	 * null) { return false; } if (qs.getStatus() == QuestStatus.COMPLETE ||
 	 * qs.getStatus() == QuestStatus.LOCKED) { return false; } QuestEnv env = new
-	 * QuestEnv(player, player, questId, QuestDialog.AUTO_REWARD.id());
+	 * QuestEnv(player, player, questId, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id());
 	 * finishQuest(env); player.getController().updateZone();
 	 * player.getController().updateNearbyQuests(); return true; }
 	 */

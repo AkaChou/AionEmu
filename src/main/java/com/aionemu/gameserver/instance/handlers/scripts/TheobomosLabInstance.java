@@ -256,8 +256,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			case 280971: //First Silikor Guard.
 			case 280972: //Second Silikor Guard.
 				silikorGuard ++;
-				if (silikorGuard == 1) {
-				} else if (silikorGuard == 2) {
+				if (silikorGuard == 2) {
 					spawn(237248, 392.5771f, 744.2743f, 189.38637f, (byte) 41); //Watcher Silikor Of Memory.
 				}
             break;
