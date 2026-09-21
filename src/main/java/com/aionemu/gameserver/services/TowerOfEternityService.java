@@ -46,13 +46,25 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 
 public class TowerOfEternityService {
+	/** 天族永恒之塔世界（阿斯泰拉 / Iluma）。 / Elyos Tower of Eternity world (Iluma). */
+	private static final int ELYOS_TOWER_WORLD = 210100000;
+	/** 魔族永恒之塔世界（诺斯珀德 / Norsvold）。 / Asmodian Tower of Eternity world (Norsvold). */
+	private static final int ASMODIAN_TOWER_WORLD = 220110000;
+
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
 	private final ConcurrentMap<Integer, TowerOfEternity<?>> activeTowerOfEternity = new ConcurrentHashMap<Integer, TowerOfEternity<?>>();
+	/**
+	 * 开关串行锁：启动开放、整点刷新与持续时间计时器互斥，保证同一世界始终只有一个入口。
+	 * Serializes tower transitions (startup open, scheduled refresh, duration timers) so that every
+	 * world keeps exactly one entrance.
+	 */
+	private final Object towerTransitionLock = new Object();
 
 	/**
-	 * 初始化永恒之塔地点并按关闭状态刷怪，注册定时开启。
-	 * Initializes tower locations in closed state and registers scheduled opens.
+	 * 初始化永恒之塔地点：先按关闭状态刷怪，随即开放一个随机入口，并注册整点随机刷新。
+	 * Initializes tower locations: spawns the closed state, then opens one random entrance immediately
+	 * and registers the scheduled random refresh.
 	 */
 	public void initTowerOfEternityLocation() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
@@ -62,11 +74,16 @@ public class TowerOfEternityService {
 			}
 			log.info(I18n.get("log.42697e23a860", towerOfEternity.size()));
 
+			// 重启后立即开放一个入口，避免等到下一个整点前没有任何世界入口。
+			// Open one entrance right after startup so a restart never leaves the world without an entrance.
+			openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
+			openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
+
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
-					startTowerOfEternity(Rnd.get(1, 5));
-					startTowerOfEternity(Rnd.get(6, 10));
+					openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
+					openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 				}
 			}, () -> CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
 		} else {
@@ -130,23 +147,73 @@ public class TowerOfEternityService {
 	}
 
 	/**
-	 * 启动指定 ID 的永恒之塔活动。
-	 * Starts the Tower of Eternity event for the given id.
+	 * 在指定世界随机开启一个入口，并在开启前关闭该世界已开放的地点。
+	 * Opens a random entrance of the given world and closes the entrance that is currently open in the
+	 * same world, so a world never exposes more than one tower entrance.
+	 *
+	 * @param worldId 世界 ID / world id
+	 * @return 已开启的地点 ID；无地点数据时为 -1 / opened location id, or -1 when no location exists
+	 */
+	public int openRandomTowerOfWorld(int worldId) {
+		List<Integer> locationIds = new ArrayList<Integer>();
+		if (towerOfEternity != null) {
+			for (TowerOfEternityLocation loc : towerOfEternity.values()) {
+				if (loc.getWorldId() == worldId) {
+					locationIds.add(loc.getId());
+				}
+			}
+		}
+		if (locationIds.isEmpty()) {
+			return -1;
+		}
+		int id = Rnd.get(locationIds);
+		synchronized (towerTransitionLock) {
+			closeActiveTowerOfWorld(worldId);
+			startTowerOfEternity(id);
+		}
+		log.info(I18n.get("log.tower.entrance_opened", worldId, id));
+		return id;
+	}
+
+	/**
+	 * 关闭指定世界当前开放的永恒之塔（若存在）。
+	 * Closes the tower that is currently open in the given world, if any.
+	 *
+	 * @param worldId 世界 ID / world id
+	 */
+	private void closeActiveTowerOfWorld(int worldId) {
+		for (Map.Entry<Integer, TowerOfEternity<?>> entry : activeTowerOfEternity.entrySet()) {
+			TowerOfEternityLocation location = towerOfEternity.get(entry.getKey());
+			if (location != null && location.getWorldId() == worldId) {
+				stopTowerOfEternity(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+	/**
+	 * 启动指定 ID 的永恒之塔活动，并按持续时间挂载关闭计时器。
+	 * Starts the Tower of Eternity event for the given id and arms the duration timer that closes it.
 	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startTowerOfEternity(final int id) {
-		TowerOfEternity<?> tower = new Tower(towerOfEternity.get(id));
-		if (activeTowerOfEternity.putIfAbsent(id, tower) != null) {
-			return;
-		}
-		tower.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopTowerOfEternity(id);
+		synchronized (towerTransitionLock) {
+			TowerOfEternityLocation location = towerOfEternity == null ? null : towerOfEternity.get(id);
+			if (location == null) {
+				return;
 			}
-		}, (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
+			TowerOfEternity<?> tower = new Tower(location);
+			if (activeTowerOfEternity.putIfAbsent(id, tower) != null) {
+				return;
+			}
+			tower.start();
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					stopTowerOfEternity(id, tower);
+				}
+			}, (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
+		}
 	}
 
 	/**
@@ -156,11 +223,34 @@ public class TowerOfEternityService {
 	 * @param id 地点 ID / location id
 	 */
 	public void stopTowerOfEternity(int id) {
-		TowerOfEternity<?> tower = activeTowerOfEternity.remove(id);
-		if (tower == null || tower.isClosed()) {
-			return;
+		synchronized (towerTransitionLock) {
+			TowerOfEternity<?> tower = activeTowerOfEternity.remove(id);
+			if (tower == null || tower.isClosed()) {
+				return;
+			}
+			tower.stop();
 		}
-		tower.stop();
+	}
+
+	/**
+	 * 仅当指定实例仍注册在该地点时才停止，避免持续时间计时器误停同 ID 的新实例。
+	 * Stops only when the expected instance is still registered for the location, so a duration timer
+	 * cannot close a newer instance that reuses the same location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @param expected 计时器所属的实例 / instance that owns the timer
+	 * @return 是否停止 / whether the instance was stopped
+	 */
+	public boolean stopTowerOfEternity(int id, TowerOfEternity<?> expected) {
+		synchronized (towerTransitionLock) {
+			if (expected == null || !activeTowerOfEternity.remove(id, expected)) {
+				return false;
+			}
+			if (!expected.isClosed()) {
+				expected.stop();
+			}
+			return true;
+		}
 	}
 
 	/**
