@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-045`
+> Pattern IDs: `QE-001`–`QE-046`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-19
+> last_reviewed: 2026-09-20
 
 ---
 
@@ -1037,3 +1037,27 @@ first_check: 先比旧 handler 进入 REWARD 的调用参数（from/to）与当�
 - **判定规则**：`reward` 节点投影 = 旧 handler 进入 `REWARD` 前的 packed step（`from`），交接 transition 不改写该字段，并存在 `REWARD && 变量 == to` 的无 source `enter-world` 恢复边；三者缺一都会让已落盘的错位存档继续空白。
 - **为什么反复出现**：`f6aff952a` 的修复对象是人工上报的 22 个任务，落地形式是硬编码 ID 的回归锁而不是"扫描全部旧 handler"的规则门禁；迁移工具链没有这一项检查，于是 2026-08-04 的 1500 任务迁移、2026-08-05 的 evergale/high-daevanion 迁移（15300/25300 就在其中，`cfc2fa048` 时已是 `var0=14`）与 redemption_landing 批次都可以重复引入。
 - **代表案例**：15300/25300（高等大天使线，旧 handler `changeQuestStep(env, 13, 14, true)`；修复后 `reward var0=13` + `REWARD var0=14 -> reward` 恢复边；2026-09-19/20 客户端验收通过）。
+
+---
+
+## [QE-046] 四十四、引擎外推进 REWARD 必须对齐领奖投影并注册领奖态入口页 (EXTERNAL_REWARD_WRITER_REENTRY_CONTRACT)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 引擎外（questEngine/commands/gmhandler 之外）直接 setStatus(QuestStatus.REWARD) 的客户端包、服务与 AI：reward 节点投影、领奖态入口页、无 source enter-world 自愈边；typed 引擎按 (status, packed var) 匹配的语义
+first_seen: 2026-09-20
+last_verified: 2026-09-21
+symptom: 领奖阶段（REWARD）与 NPC 对话只有通用「结束对话」，点击任务行没有本任务的完成对话（select_success 10002）、无法打开奖励窗口；任务书 Vars 与 reward 投影不一致（例：Vars 0 0 0 0 0 + Status REWARD）
+root_cause: 1. 迁移只保留 started -> reward 的 SELECT_QUEST_REWARD 路由，漏掉 reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS 领奖态入口页，而客户端点任务行发的正是 31；2. 引擎外写入方 setStatus(REWARD) 留下的 packed step 与 reward 节点投影不一致（10522/20522 写入 0 却投影 1，15545/25545 写入 1 却投影 0），QuestMutationPlanner#matchesSourceNode 要求 source 节点投影的每个变量都等于实际 packed 变量，于是该存档匹配不到任何 reward 路由
+fix_or_guardrail: 1. 先用只读审计脚本枚举引擎外的 setStatus(QuestStatus.REWARD) 写入方（排除 questEngine/commands/gmhandler），记录每个任务写入后的 packed step；2. reward 节点投影必须等于该步数；3. 进入 REWARD 的 transition 不得再 set-variable 该字段（打包步数由目标投影决定）；4. 每个完成 NPC 必须注册 reward -> reward + TALK_TO_NPC(QUEST_SELECT 31) -> SHOW_QUEST_PAGE DEFAULT_SUCCESS(10002)，conditions/actions 全空，1009 继续由 npc-complete 预览打开奖励窗口；5. 定义曾经投影过别的值时补无 source ENTER_WORLD 自愈边（status-is REWARD + 变量 == 旧值 -> reward，仅 LEVEL_AND_VISIBILITY_REFRESH）；6. 基线 TSV + 回归测试锁定任务清单，新增引擎外写入方直接失败
+evidence: src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java:340 (matchesSourceNode 按 packed 变量匹配 source 节点); src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java:107 (checkQuestCompletion 只置 REWARD); src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java:320 (checkQuest 先 setQuestVar(1)); src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java:151 (updateQuestsOnCoalescenceComplete); src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java:52 (forQuest); commit 93be8ddca (origin/history ref 的旧 handler _10522Using_Essence：31 -> 10002 / 1009 -> 5); Aion 5.8 客户端 quest_q10522.html (select_success 10002 唯一按钮 HACTION_SELECT_QUEST_REWARD 1009); src/main/resources/aion/data/static_data/quest_definition/quests/10522.xml 等 10 个任务; src/test/java/com/aionemu/gameserver/questEngine/definition/ExternalRewardAdvanceReentryContractTest.java; src/test/resources/quest/external-reward-advance-baseline.tsv; .agents/summary/quest-10522-reward-reentry/2026-09-20-external-reward-advance-reentry.zh-CN.md; .agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py; .agents/summary/quest-10522-reward-reentry/verify_external_reward_reentry_contract.py
+validation: static (10 任务静态合同校验器 + XML 解析 + git diff --check 通过; 客户端页面索引 10/10 存在 select_success(10002)+1009); focused-test (2026-09-21 授权 Maven: 回归批 40 例全绿，含 Quest10522AutoStartDialogTest/Quest20522AutoStartDialogTest/ExternalRewardAdvanceReentryContractTest/Quest30311RetailAlignmentTest/Quest30313RetailAlignmentTest/MinionServiceTest/LegacyRewardStepProjectionRegressionTest); client-contract (QuestClientContractGateTest + QuestDialogOrderAuditTest + QuestStepDialogTerminationTest 19 例全绿，且以 -Dquest.client.contract.failOnStaleBaseline=true 运行); production-gate (ProductionCatalogWhitelistVerificationTest + QuestDefinitionDirectoryLoaderTest + QuestDefinitionCatalogManifestTest 13 例全绿，PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0); 宽口径 definition 包 980 例中 4 failures+3 errors 全部落在未改动任务（10520/20520、15101、10526/20526、25512、15301/25301）的既存欠账上; 客户端验收未做
+boundaries: 只适用于 REWARD 由 typed 引擎外代码写入的任务；若写入方改走 SELECT_QUEST_REWARD 事务或投影本身有客户端证据支持，必须重跑审计脚本重定基线，禁止机械套用。与 QE-045 同源但触发面不同：QE-045 面向旧 handler 迁移的 packed 投影，本条面向引擎外直写 + 领奖态入口页缺失，审计口径与代表测试互不替代。enter-world 自愈边只在登录/切图触发，在线旧存档不会立即纠正；10 个任务的真实客户端领奖复测仍未完成，不得据此条宣称客户端验收
+superseded_by: none
+see_also: [QE-045], [QE-032], [QE-040]
+first_check: 玩家反馈「领奖阶段只有结束对话 / 点任务行没有完成对话」时，先看状态包里的 Status 与 Vars，再到该任务 reward 节点投影核对；然后用 audit_external_reward_advance.py 确认是否有引擎外写入方、是否缺 reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS 入口页
+keywords: 领奖只有结束对话、REWARD 没有完成对话、点任务行没反应、无法打开奖励窗口、Vars 0 0 0 0 0、Status REWARD、sendQuestEndDialog、HACTION_SELECT_QUEST_REWARD、10002、1009、CM_CREATIVITY_POINTS、MinionService、CoalescenceService、RiftOrbAI2
+-->
+
+- **判定规则**：`REWARD` 由引擎外代码写入的任务，`reward` 节点投影必须等于写入方留下的 packed step；进入 `REWARD` 的事务不得改写该字段；每个完成 NPC 必须注册 `reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002)` 的无条件入口页，`1009` 继续由 `npc-complete` 预览打开奖励窗口；定义曾经投影过别的值时补 `REWARD && 变量 == 旧值` 的无 source `enter-world` 自愈边。
+- **为什么容易漏**：`matchesSourceNode` 用 packed 变量匹配 source 节点，步数错位时**整个状态没有任何可用路由**，玩家侧只表现为「只有结束对话」；入口页缺失即使步数正确也照样无法打开 `10002`。两种缺陷症状相同、修法不同，必须分别取证。
+- **代表案例**：10522/20522（`CM_CREATIVITY_POINTS` 置 REWARD 不写步数，reward 投影 `1 -> 0`、补 `806075`/`806079` 的 31 入口页与 `var0=1` 自愈边）；同批 15542/25542、15545/25545、30211/30213/30311/30313 补入口页并按写入方对齐步数，由 `ExternalRewardAdvanceReentryContractTest` + 基线 TSV 守护。

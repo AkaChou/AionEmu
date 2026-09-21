@@ -22,7 +22,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -63,12 +63,42 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806079" action="SELECT_QUEST_REWARD"/>
       </event>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖态入口页：任务已在 REWARD 时，玩家在 806079 上选择本任务行（客户端动作 31）必须回到本任务的
+         select_success(10002)，再由该页按钮 1009 经下方 npc-complete 预览打开奖励窗口 5。旧 handler
+         （origin/history `_20522How_To_Use_Essence`）在该状态就是 31 -> 10002、1009 -> 5 的合同。
+         Reward-state entry page: while the quest is already at REWARD, selecting this quest row on 806079
+         (client action 31) must return the quest's own select_success page 10002; its 1009 button then opens
+         reward window 5 through the npc-complete preview below, matching the legacy handler's
+         31 -> 10002 / 1009 -> 5 contract. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 旧存档自愈：旧版 CM_CREATIVITY_POINTS 领取创造力点数时只写状态不写打包步数，而本定义曾把 reward
+         投影写成 var0=1，使这类存档停在 REWARD 却没有可匹配的领奖路由；进入世界时按 reward 节点投影
+         把错位步数归零并同步给客户端。
+         Legacy save recovery: applying creativity points only wrote the status, while this definition used to
+         project var0=1 at REWARD, leaving such saves with no matching reward route; entering the world
+         normalizes the misplaced packed step to the reward projection and re-syncs the client. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

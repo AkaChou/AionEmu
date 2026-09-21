@@ -1,0 +1,11 @@
+# questId	writerEvidence	writerStep	rewardProjection	completionNpcIds	staleRewardSteps
+10522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	0	1	806075	-
+15542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	0	0	806074	-
+15545	src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java#checkQuest	1	0	835514	-
+20522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	0	1	806079	-
+25542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	0	0	806078	-
+25545	src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java#checkQuest	1	0	835515	-
+30211	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 798941	-
+30213	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 798926 798941	-
+30311	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 799322	-
+30313	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	799225 799322	-

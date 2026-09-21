@@ -88,6 +88,7 @@
 | 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成 | `QE-043` | 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT |
 | 玩家完成收集且背包持有足量任务道具，但找到交付 NPC 时，NPC 头顶无任务对白标记，点击交互时下发 questId=0 通用第 10 页 (SM_DIALOG_WINDOW 玩家=xx targetObj=xx questId=0 下发页=10)，任务卡在收集步无法推进交付；计数残留臂还表现为感应区/影片/步骤门控不触发（进入非计数阶段时整型步数被 var1/var2 高位污染，如 10507 s7 影片 993 不触发） | `QE-044` | 交付 NPC 下发 page 10 时，优先对比客户端 quest.xml 的 collect_progress 与玩家当前 quest_vars 的 var0 阶段值 |
 | 领奖阶段任务书空白、任务信息消失、背包已有任务道具但下一 NPC 不显示、无法领奖；SM_QUEST_ACTION 状态=REWARD 的步数比报告行大 1（15300 为 状态=4 步数=14） | `QE-045` | 先比旧 handler 进入 REWARD 的调用参数（from/to）与当前 reward 节点投影；再看 START -> REWARD transition 是否 set-variable 该字段；最后确认是否存在 status-is REWARD + 变量==to 的无 source enter-world 恢复边 |
+| 领奖阶段（REWARD）与 NPC 对话只有通用「结束对话」，点击任务行没有本任务的完成对话（select_success 10002）、无法打开奖励窗口；任务书 Vars 与 reward 投影不一致（例：Vars 0 0 0 0 0 + Status REWARD） | `QE-046` | 玩家反馈「领奖阶段只有结束对话 / 点任务行没有完成对话」时，先看状态包里的 Status 与 Vars，再到该任务 reward 节点投影核对；然后用 audit_external_reward_advance.py 确认是否有引擎外写入方、是否缺 reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS 入口页 |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载 | `SDJ-001` | CompiledScriptLoader, @AIName and data-text references |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

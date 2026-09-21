@@ -51,19 +51,33 @@ class Quest30313RetailAlignmentTest {
 				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 730275),
 				"730275 interaction is disabled without retail evidence");
 
-			// 799225 只承担领奖：不接取任务（无 unaccepted 入口），REWARD 态打开领奖窗口。
-			// 799225 only claims the reward: it never starts the quest and opens the reward window
-			// while in REWARD.
+			// 799225 只承担领奖：不接取任务（无 unaccepted 入口），REWARD 态打开本任务入口页或领奖窗口。
+			// 799225 only claims the reward: it never starts the quest; in REWARD it opens either this
+			// quest's own entry page or the reward window.
 			assertTrue(definition.transitions().stream().noneMatch(transition ->
 				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 799225
 					&& "unaccepted".equals(transition.sourceNode())),
 				"799225 must not start the quest");
-			assertTrue(transitions(definition, "reward", "reward").stream().allMatch(transition ->
+			List<QuestTransition> rewardStateRoutes = transitions(definition, "reward", "reward");
+			assertTrue(rewardStateRoutes.stream().allMatch(transition ->
 				transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& (talk.npcId() == 799225 || talk.npcId() == 799322)
+					&& (talk.npcId() == 799225 || talk.npcId() == 799322)),
+				"reward-state routes belong to 799322/799225");
+			// 领奖窗口预览仍必须下发第 1 档奖励窗口 5；新增的 QUEST_SELECT(31) 入口页只负责下发
+			// select_success(10002)，不得改写奖励窗口合同。
+			// Reward-window previews must still emit tier-1 window 5; the added QUEST_SELECT(31) entry page
+			// only emits select_success(10002) and must not rewrite the reward window contract.
+			assertTrue(rewardStateRoutes.stream().anyMatch(transition ->
+				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 799225
 					&& transition.afterCommit().equals(
 						List.of(new AfterCommitAction.ShowQuestDialog(5)))),
-				"reward window routes belong to 799322/799225");
+				"799225 keeps its reward window preview");
+			assertTrue(rewardStateRoutes.stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.QUEST_SELECT.id())
+				.allMatch(transition -> transition.afterCommit().equals(
+					List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())))),
+				"reward-state entry pages emit the quest's own select_success page");
 		}
 	}
 

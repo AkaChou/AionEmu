@@ -76,6 +76,20 @@
       </after-commit>
     </transition>
 
+    <!-- 领奖态入口页：符文宝珠激活由 RiftOrbAI2 直接把任务置为 REWARD(var0 不变)，玩家随后在
+         798941/798926/730275 上选择任务行（客户端动作 31）时必须拿回 select_success(10002)，
+         其按钮 1009 再打开奖励窗口。
+         Reward-state entry page: RiftOrbAI2 sets the quest to REWARD directly when the orb is activated
+         (var0 unchanged), so a later quest-row selection (client action 31) on 798941/798926/730275 must
+         return select_success(10002); its 1009 button then opens the reward window. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798941" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="798941" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -115,6 +129,14 @@
       </after-commit>
     </transition>
 
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798926" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="798926" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -154,6 +176,14 @@
       </after-commit>
     </transition>
 
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730275" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="730275" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>

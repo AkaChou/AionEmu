@@ -20,7 +20,10 @@ class Quest10522AutoStartDialogTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		// 领奖态投影必须等于引擎外写入方（CM_CREATIVITY_POINTS）留下的打包步数，否则该状态匹配不到领奖路由。
+		// The REWARD projection must equal the packed step left by the engine-external writer
+		// (CM_CREATIVITY_POINTS); otherwise the state matches no reward route.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertEquals(List.of(List.of("finished:10521")), startConditionGroups(definition));
 
 		assertAutoStart(definition, new QuestEvent.LevelUp());
@@ -38,11 +41,37 @@ class Quest10522AutoStartDialogTest {
 			new QuestEvent.TalkToNpc(REWARD_NPC_ID, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		assertEquals("reward", reward.targetNode());
 		assertEquals(List.of(), reward.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), reward.actions());
+		// 进入 REWARD 时由 reward 节点投影决定打包步数，事务动作不得再改写 var0。
+		// The reward node projection owns the packed step on entry, so the transaction must not rewrite var0.
+		assertEquals(List.of(), reward.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 			reward.afterCommit());
+
+		// 领奖态入口页：已在 REWARD 的玩家点任务行（客户端动作 31）必须拿回 select_success(10002)，
+		// 该页唯一按钮 1009 再由 npc-complete 预览打开奖励窗口 5（旧 handler 的 31 -> 10002 / 1009 -> 5）。
+		// Reward-state entry page: selecting the quest row (client action 31) while already at REWARD must
+		// return select_success(10002); its only button 1009 then opens reward window 5 through the
+		// npc-complete preview, matching the legacy handler contract.
+		QuestTransition rewardEntry = transition(definition, "reward",
+			new QuestEvent.TalkToNpc(REWARD_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals("reward", rewardEntry.targetNode());
+		assertEquals(List.of(), rewardEntry.conditions());
+		assertEquals(List.of(), rewardEntry.actions());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			rewardEntry.afterCommit());
+
+		// 旧存档自愈：旧写入方只置 REWARD 而不写打包步数，定义又曾投影 var0=1，这类存档进入世界时归零。
+		// Legacy save recovery: the old writer only set REWARD without writing the packed step while the
+		// definition projected var0=1, so such saves are normalized on enter-world.
+		QuestTransition recovery = unsourcedTransition(definition, new QuestEvent.EnterWorld(), "reward");
+		assertEquals(List.of(
+			new QuestCondition.StatusIs(QuestStatus.REWARD),
+			new QuestCondition.QuestVariableIs("var0", 1)), recovery.conditions());
+		assertEquals(List.of(), recovery.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit());
 
 		assertEquals(Set.of(REWARD_NPC_ID), dialogNpcIds(definition));
 	}
@@ -84,6 +113,15 @@ class Quest10522AutoStartDialogTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, QuestEvent event) {
 		return definition.transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals(source) && candidate.event().equals(event))
+			.findFirst().orElseThrow();
+	}
+
+	private static QuestTransition unsourcedTransition(QuestDefinition definition, QuestEvent event,
+			String targetNode) {
+		return definition.transitions().stream()
+			.filter(candidate -> candidate.sourceNode() == null)
+			.filter(candidate -> candidate.targetNode().equals(targetNode))
+			.filter(candidate -> candidate.event().equals(event))
 			.findFirst().orElseThrow();
 	}
 

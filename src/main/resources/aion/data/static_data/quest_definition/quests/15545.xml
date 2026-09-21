@@ -22,7 +22,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -31,6 +31,36 @@
   <transitions>
     <dialog type="NPC_START" npc-id="835514" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="835514" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 领奖态入口页：MinionService 在使用召唤契约后把任务推进到 REWARD(var0=1)，玩家随后在 835514 上
+         选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009 再打开奖励窗口。
+         Reward-state entry page: MinionService advances the quest to REWARD (var0=1) when the summon contract
+         is used, so a later quest-row selection (client action 31) on 835514 must return select_success(10002);
+         its 1009 button then opens the reward window. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835514" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 旧存档自愈：本定义曾把 reward 投影写成 var0=0，而 MinionService 写入的是召唤完成行 1；进入世界时
+         按 reward 节点投影把错位步数改写为 1 并同步给客户端。
+         Legacy save recovery: this definition used to project var0=0 while MinionService writes the summon
+         completion row 1; entering the world rewrites the misplaced packed step to the reward projection and
+         re-syncs the client. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="835514" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
