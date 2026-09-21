@@ -22,13 +22,13 @@
     </node>
     <!-- 客户端 quest_summary 三行各要有一个 var0==行号的进行中状态（QE-051）：
          行 0 = 极乐世界拉比临托斯(203701)、行 1 = 贤者书库科赛诺芬(203833)、行 2 = 贝尔特伦要塞斯帕塔洛斯(203098)。 -->
-    <node label="started0" status="START">
+    <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="started1" status="START">
+    <node label="s1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <node label="started2" status="START">
+    <node label="s2" status="START">
       <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
@@ -40,16 +40,16 @@
   </nodes>
   <transitions>
     <!-- 接取：三个 NPC 都能发布任务，客户端 select1 为接取页。 -->
-    <dialog type="NPC_START" npc-id="203098" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="203098" source="unaccepted" target="started" selection-sources="unaccepted started s1 s2" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182200556" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1"/>
-    <dialog type="NPC_START" npc-id="203833" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started s1 s2" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="203833" source="unaccepted" target="started" selection-sources="unaccepted started s1 s2" start-page="SELECT1"/>
 
     <!-- 步骤 1：极乐世界把书信交给拉比临托斯(203701) → 进入步骤 2。 -->
-    <transition source="started0" target="started0">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
       </event>
@@ -57,7 +57,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started0" target="started0">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT2_1"/>
       </event>
@@ -65,7 +65,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started0" target="started1">
+    <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO1"/>
       </event>
@@ -80,7 +80,7 @@
     </transition>
 
     <!-- 步骤 2：贤者书库找科赛诺芬(203833) → 进入步骤 3。 -->
-    <transition source="started1" target="started1">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203833" action="QUEST_SELECT"/>
       </event>
@@ -88,7 +88,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <transition source="started1" target="started1">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203833" action="SELECT3_1"/>
       </event>
@@ -96,7 +96,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-    <transition source="started1" target="started2">
+    <transition source="s1" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203833" action="SETPRO2"/>
       </event>
@@ -107,7 +107,7 @@
     </transition>
 
     <!-- 步骤 3：回贝尔特伦要塞向斯帕塔洛斯(203098)报告 → 领奖。 -->
-    <transition source="started2" target="started2">
+    <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203098" action="QUEST_SELECT"/>
       </event>
@@ -115,7 +115,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <transition source="started2" target="reward">
+    <transition source="s2" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203098" action="SELECT_QUEST_REWARD"/>
       </event>
