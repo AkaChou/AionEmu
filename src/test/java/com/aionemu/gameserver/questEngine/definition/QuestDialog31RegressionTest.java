@@ -45,16 +45,32 @@ class QuestDialog31RegressionTest {
 		assertDialog("11106.xml", "s1", "s1", 798979, 1693);
 	}
 
+	@Test
+	void migratedQuestHandlersKeepLegacyTurnInDialogRoutes() throws Exception {
+		assertDialog("10525.xml", "s4", "s4", 806134, 2375,
+			new QuestCondition.QuestVariableIs("var0", 4));
+		assertDialog("20525.xml", "s4", "s4", 806135, 2375,
+			new QuestCondition.QuestVariableIs("var0", 4));
+		assertDialogAction("10525.xml", "s5", "s5", 806134, 2716, 2716);
+		assertDialogAction("20525.xml", "s5", "s5", 806135, 2716, 2716);
+	}
+
 	private static void assertDialog(String file, String source, String target, int npcId, int page,
 			QuestCondition... conditions) throws Exception {
+		assertDialogAction(file, source, target, npcId, 31, page, conditions);
+	}
+
+	private static void assertDialogAction(String file, String source, String target, int npcId, int action,
+			int page, QuestCondition... conditions) throws Exception {
 		CompiledQuestDefinition compiled = definition(file);
 		assertTrue(compiled.definition().transitions().stream().anyMatch(transition ->
 			source.equals(transition.sourceNode())
 				&& transition.targetNode().equals(target)
-				&& transition.event().equals(new QuestEvent.TalkToNpc(npcId, 31))
+				&& transition.event().equals(new QuestEvent.TalkToNpc(npcId, action))
 				&& transition.conditions().containsAll(List.of(conditions))
 				&& transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(page))),
-			"missing dialog 31 route: " + file + " " + source + " npc=" + npcId + " page=" + page);
+			"missing dialog route: " + file + " " + source + " npc=" + npcId + " action=" + action
+				+ " page=" + page);
 	}
 
 	private static CompiledQuestDefinition definition(String file) throws Exception {

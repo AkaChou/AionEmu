@@ -29,9 +29,14 @@
       <condition type="finished" quest-id="20521"/>
     </start-conditions>
   </metadata>
+  <!-- var0 是客户端任务说明行索引（SECTION_0）；var1 是四位证人证言集合（1/2/4/8 位），
+       必须留在 SECTION_1（offset 6），否则其低位会污染 SECTION_0 的行索引。
+       var0 is the client quest-summary row index (SECTION_0); var1 is the four-witness testimony set
+       (bits 1/2/4/8) and must stay in SECTION_1 (offset 6), otherwise its low bits pollute the
+       SECTION_0 row index. -->
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="4" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -519,6 +524,26 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 无 source 自愈边：旧存档的证言计数器可能被旧的无限累加写坏（>=15 的位段没有任何证言路由可匹配），
+         进入世界时归零后重新收集四份证言。
+         Source-less healing edge: legacy saves can hold a saturated testimony counter (>=15) that no
+         testimony route can match; entering the world resets it so the four testimonies can be gathered again. -->
+    <transition target="s2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="2"/>
+        <variable-at-least field="var1" value="15"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

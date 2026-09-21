@@ -427,6 +427,7 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="8"/>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <play-movie movie-id="878"/>
@@ -446,32 +447,18 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 杀 244129：var1==0 时推进，否则累加（保留旧 handler 分支）。 Kill 244129: advance when var1==0, else accumulate (preserves old branches). -->
-    <transition source="s8" target="s9" priority="0">
+    <!-- 客户端 step 8 只显示 /1；击杀 boss 一次即推进，并清零 s6 可能残留的旧存档计数。
+         Client step 8 shows /1; one boss kill advances and clears any legacy s6 counter residue. -->
+    <transition source="s8" target="s9">
       <event>
         <kill-npc npc-id="244129"/>
       </event>
       <conditions>
         <variable-is field="var0" value="8"/>
-        <variable-is field="var1" value="0"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="9"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="s8" target="s8" priority="1">
-      <event>
-        <kill-npc npc-id="244129"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="8"/>
-        <variable-at-least field="var1" value="1"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
