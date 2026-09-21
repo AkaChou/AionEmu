@@ -68,8 +68,7 @@
 - 新增 `IndependentLegacySpawnSurfaceTest`，把 14 个 NPC 每个都必须满足：
   1 个 spawn 块、坐标集合等于真端块、所有 spot 带 `resolve_z="true"`。
 - 静态：4 个目标 XML 解析通过；测试等价脚本逐项通过；IDE errors=0；`git diff --check` 通过。
-- 聚焦测试（待授权，未执行）：
-  `mvn -B test -Dtest='IndependentLegacySpawnSurfaceTest,ArchivesOfEternityQSadoFiSpawnSurfaceTest,DrakenspireDepthsQTwinSpawnSurfaceTest'`
+- 聚焦测试（2026-09-20 23:21 通过）：`mvn -B test -Dtest='IndependentLegacySpawnSurfaceTest,ArchivesOfEternityQSadoFiSpawnSurfaceTest,DrakenspireDepthsQTwinSpawnSurfaceTest'` → `Tests run: 5, Failures: 0, Errors: 0, Skipped: 0`（BUILD SUCCESS）；`IndependentLegacySpawnSurfaceTest` 1 项、`DrakenspireDepthsQTwinSpawnSurfaceTest` 2 项均全绿（对应提交 `058868cde`）。
 - 客户端复验（待执行）：重建/重启后分别进入 `300540000`、`301210000`、`301390000`、`301400000`，相关 NPC 应只按真端 count 刷出。
 
 ## 涉及文件

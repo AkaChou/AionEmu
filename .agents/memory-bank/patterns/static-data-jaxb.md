@@ -14,15 +14,15 @@
 status: CONFIRMED
 scope: Dynamic script loading, AI classes, command handlers and data-text mappings
 first_seen: 2026-09-09
-last_verified: 2026-09-14
-symptom: 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载
+last_verified: 2026-09-21
+symptom: 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载、命令别名静默失效
 root_cause: Runtime discovers classes through package scanning, reflection and data attributes rather than static Java calls
-fix_or_guardrail: Preserve dynamic package trees and search aion data text before rename or deletion
-evidence: src/main/java/com/aionemu/commons/scripting/CompiledScriptLoader.java; src/main/resources/aion/data/static_data/npcs/
-validation: static; runtime loader logs when the affected package or data is exercised
+fix_or_guardrail: Preserve dynamic package trees and search aion data text before rename or deletion; verify command aliases in administration/commands.properties against super("alias") declarations in both directions
+evidence: src/main/java/com/aionemu/commons/scripting/CompiledScriptLoader.java; src/main/resources/aion/data/static_data/npcs/; src/test/java/com/aionemu/gameserver/commands/CommandAliasRegistryTest.java; .agents/summary/command-alias-registry/2026-09-21-dropinfo-removal-and-command-alias-gate.md
+validation: static; runtime loader logs when the affected package or data is exercised; client acceptance 2026-09-21 for the restored //dropinfo (CommandAliasRegistryTest still pending Maven run)
 boundaries: Package allowlists do not prove every class is used; validate the specific loader and data version
 superseded_by: none
-first_check: CompiledScriptLoader, @AIName and data-text references
+first_check: CompiledScriptLoader, @AIName, data-text references and administration/commands.properties aliases vs command super("alias") declarations (both directions)
 -->
 
 1. **`CompiledScriptLoader.load()` 4 大动态反射包树**：
@@ -31,6 +31,8 @@ first_check: CompiledScriptLoader, @AIName and data-text references
    - `com.aionemu.gameserver.commands.admin` / `player`
    - `com.aionemu.gameserver.world.zone.scripts`
    - `com.aionemu.gameserver.instance.handlers.scripts`
+
+   **事故记录（2026-09-18，`212e00ef4`）**：`//dropinfo`（`commands/admin/DropInfo.java`）与 `//instance_manager`（`commands/admin/InstanceEngineManager.java`）被当作“零引用死代码”删除，运行期命令静默失效；别名 `dropinfo`（`commands.properties:181`）与 `instance_manager`（`:37`）从未变动，客户端帮助 `HTML/commands.xhtml` 也仍在文档化它们。守卫：`CommandAliasRegistryTest` 双向核对配置别名与 `super("alias")` 声明，任一侧缺失即失败。
 
 2. **数据文本引用与映射规则**：
    - **技能效果类**：`skillengine/effect/*Effect.java` 依简单类名由技能 XML 动态反射创建。

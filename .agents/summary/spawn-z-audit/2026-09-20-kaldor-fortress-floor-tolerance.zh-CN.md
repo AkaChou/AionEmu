@@ -66,8 +66,7 @@ XML 中同簇刷点还包含 802431、802358；它们都在同一块要塞地面
 - focused-test：已通过（`mvn -B -Dtest=SpawnEnginePathProjectionTest test`：4 例 0 失败 0 错误）。
 - 附带修正：`Quest10520ClientDialogAlignmentTest` 的 `BitField.max()` 改为 `maxValue()`；
   该测试运行通过（8 例 0 失败 0 错误），完整 testCompile 不再被该行阻断。
-- 客户端实机验收：PENDING；重启后确认 804471/802432 站在要塞地面，`//geo z` 应显示
-  `curZ ≈ 199.750`，而不是 `197.778`。
+- 客户端实机验收：通过（2026-09-20 用户确认 804471/802432 站位正常，没有问题）。
 
 ## 边界
 

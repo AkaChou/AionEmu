@@ -39,8 +39,9 @@
 ## 五、验证状态
 
 - static：别名 ↔ 命令类双向比对通过（188 / 188，零悬空）；`git diff --check` 通过。
-- focused-test：`mvn -B -Dtest=CommandAliasRegistryTest test` —— **待授权，未执行**。
-- runtime/client：未做（服务器生命周期由用户掌控），需真实客户端敲 `//dropinfo` 验收。
+- 构建/编译（隐含证据）：服务器重建启动后 `DropInfo` 正常注册并响应，说明恢复的两个类编译与反射注册均正常。
+- focused-test：`mvn -B -Dtest=CommandAliasRegistryTest test` —— **待授权，未执行**（门禁用例本身仍未经 Maven 运行）。
+- runtime/client（2026-09-21）：**成功**。用户在真实客户端完成 `//dropinfo` 验收，命令恢复响应。
 
 ## 六、遗留观察（本轮未改）
 

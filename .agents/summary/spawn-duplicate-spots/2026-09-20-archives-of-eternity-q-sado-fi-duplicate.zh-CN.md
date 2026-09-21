@@ -48,8 +48,7 @@
 ## 验证
 
 - 静态：目标 XML 解析通过；`git diff --check` 通过（工作区既有无关文档换行警告除外）。
-- 聚焦测试（待授权，未执行）：
-  `mvn -B test -Dtest='ArchivesOfEternityQSadoFiSpawnSurfaceTest'`
+- 聚焦测试（2026-09-20 23:21 通过）：`mvn -B test -Dtest='IndependentLegacySpawnSurfaceTest,ArchivesOfEternityQSadoFiSpawnSurfaceTest,DrakenspireDepthsQTwinSpawnSurfaceTest'` → `Tests run: 5, Failures: 0, Errors: 0, Skipped: 0`（BUILD SUCCESS）；本类 2 项全绿（对应提交 `058868cde`）。
 - 客户端复验（待执行）：重建并重启服务端后进入 301570000，857783 应只出现 1 个，任务 10521/20521 击杀后可继续推进。
 
 ## 涉及文件

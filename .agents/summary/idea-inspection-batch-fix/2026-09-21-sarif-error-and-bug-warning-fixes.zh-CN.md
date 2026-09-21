@@ -48,8 +48,15 @@ JavadocReference 根因三类：
 - 已知噪音：IDE 未挂数据库时 DAO 层"无法解析表"错误属环境噪音，非代码缺陷。
 - 经验（可复用）：SARIF 是快照，工作区同日有改动时"未使用 import"类结论会过期，批量删除必须配合"删除符号仍被使用"的 git diff 复核；字符串字面量与 FQN 尾段（`a.b.Logger`）会撞词，需剔除字符串与注释后再判定。
 
+## 三轮：用户 IDEA 批量 quick-fix 的检查与提交（2026-09-21 深夜）
+
+- 用户在 IDE 内对约 1457 个 Java 文件执行 Fix all（lambda/diamond/switch/集合 API/行尾空白等）。
+- **批量转换的踩坑与修复**：「删除冗余花括号」类修复摘掉了 switch case 块的花括号，case 局部变量作用域合并 → 32 处「变量已在方法中定义」编译错误（10 文件）。按错误行定位所在 switch、对声明局部变量的 case 块恢复花括号（49 处）+ EnergyBuff 外层 case 手工补括号；PlayerInfo.java 结构受损回退至 HEAD（其 quick-fix 收益待重跑）。
+- 提交 `06e33cee8`（一轮 lint 修复）与 `b6e6957dd`（三轮 quick-fix 波次，1455 文件）；`QuestDialogPage.java` 为用户 WIP（增强 switch 降级实验）未纳入，非 Java WIP 一律未动。
+- 经验（可复用）：IDEA「Fix all」对「冗余花括号」的判定在 case 块含局部声明时会误删；跑完批量 quick-fix 后必须全量编译，再按错误行恢复 case 括号。
+
 ## 验证状态
 
 - 已执行：IDEA MCP 实时检查，全部被改文件 0 error；目标警告按文件抽查确认消失。
-- 已执行（用户授权）：IDEA `build_project` 全量编译 **成功**，仅 12 条 `QuestDialog` deprecation 警告（任务分支进行中的 QuestDialogAction 迁移所致，与本批修复无关）。
+- 已执行（用户授权）：IDEA `build_project` 全量编译 **成功**（三轮后含 test 源），仅存量 `QuestDialog` deprecation 警告。
 - 未执行：单测（如需请另行授权指定范围）。
