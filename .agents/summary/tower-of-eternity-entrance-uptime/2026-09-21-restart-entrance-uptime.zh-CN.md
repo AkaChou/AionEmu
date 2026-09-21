@@ -2,7 +2,7 @@
 
 - 日期：2026-09-21
 - 范围：`TowerOfEternityService`（世界入口刷出时机与开关归属）
-- 状态：`IMPLEMENTATION_COMPLETE / PENDING_BUILD_AND_RUNTIME_ACCEPTANCE`
+- 状态：`IMPLEMENTATION_COMPLETE / FOCUSED_TESTS_PASSED / CLIENT_ACCEPTED`
 
 ## 需求
 
@@ -34,12 +34,14 @@ Norsvold（诺斯珀德 `220110000`）的 5 个刷新点全部没有入口。要
 - 新增本地化日志键 `log.tower.entrance_opened`（`messages.properties` 与 `messages_zh_CN.properties`，占位符一致）。
 - 新增 `TowerOfEternityServiceTest`：旧计时器不得移除同 ID 新实例；归属计时器正常停止。
 
-## 待验证（本轮未执行）
+## 验证结果
 
-- `mvn -q -Dtest=TowerOfEternityServiceTest test`
-- `mvn -q -Dtest=LocalizedLogCallsTest,LocalizedLogArgumentsTest test`
-- 运行时验收：重启后在 `210100000` / `220110000` 五个点中随机一处出现 `806081` / `806082` 与旗帜；整点后地点重新
-  随机；`log/console.log` 出现 “永恒之塔入口已开启：世界 …, 地点 …”。
+- 聚焦门禁（2026-09-21，用户授权后执行）：`mvn -Dtest=TowerOfEternityServiceTest,LocalizedLogCallsTest,LocalizedLogArgumentsTest
+  -DfailIfNoTests=false test` → `Tests run: 5, Failures: 0, Errors: 0, Skipped: 0`，`BUILD SUCCESS`（19.5 s，测试源
+  1045 个文件全量编译通过）。原始日志见同目录 `mvn-focused-2026-09-21.log`。
+- 真实客户端验收（2026-09-21，用户回复「验证成功」）：重启后入口立即可用，整点继续随机刷新。
+- 运行时观测点：`log/console.log` 出现 `log.tower.entrance_opened`（“永恒之塔入口已开启：世界 …, 地点 …”），
+  可用于确认每轮开放的世界与地点 ID。
 
 ## 边界说明
 
