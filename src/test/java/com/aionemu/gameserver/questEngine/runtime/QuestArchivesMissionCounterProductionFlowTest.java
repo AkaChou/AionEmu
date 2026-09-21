@@ -36,12 +36,16 @@ class QuestArchivesMissionCounterProductionFlowTest {
 		220305, 220308, 220311, 220314, 220317, 220323, 220326, 220327, 220329);
 	private static final Set<Integer> LIBRARIANS_ASMODIANS = Set.of(
 		220305, 220308, 220311, 220314, 220317, 220323, 220326, 220329);
-	private static final Set<Integer> RELIQUARIANS_ASMODIANS = Set.of(
+	// 70 级 “图书管理员” 契约在客户端声明 9 个变体(第 9 个是 Cube Artifact 220411)，天魔两侧共用该集合。
+	// The level-70 reliquarian contract declares nine client variants (the ninth is the Cube Artifact
+	// 220411); both races share that set.
+	private static final Set<Integer> RELIQUARIANS = Set.of(
 		220307, 220310, 220313, 220316, 220319, 220325, 220328, 220331, 220411);
 	private static final List<QuestContract> CONTRACTS = List.of(
 		new QuestContract(16801, 806148, LIBRARIANS_ELYOS, 220305, true),
 		new QuestContract(26801, 806149, LIBRARIANS_ASMODIANS, 220305, true),
-		new QuestContract(26803, 806149, RELIQUARIANS_ASMODIANS, 220307, false));
+		new QuestContract(16803, 806148, RELIQUARIANS, 220307, false),
+		new QuestContract(26803, 806149, RELIQUARIANS, 220307, false));
 
 	@TestFactory
 	Stream<DynamicTest> completesMissionHuntsOnTheThirtiethKill() {
@@ -153,9 +157,12 @@ class QuestArchivesMissionCounterProductionFlowTest {
 
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
+		// 无 source 的 enter-world 自愈路线 sourceNode() 为 null，必须与常量比较而不是反过来。
+		// Source-less enter-world self-heal routes have a null sourceNode, so compare against the
+		// constant instead of dereferencing the candidate.
 		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
-			.filter(candidate -> candidate.targetNode().equals(target))
+			.filter(candidate -> source.equals(candidate.sourceNode()))
+			.filter(candidate -> target.equals(candidate.targetNode()))
 			.filter(candidate -> candidate.event().equals(event))
 			.toList();
 		assertEquals(1, matches.size(), () -> source + " -> " + target + " " + event);

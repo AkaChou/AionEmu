@@ -55,20 +55,16 @@
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1"/>
-    </node>
-    <node label="k2" status="START">
-      <var name="var0" value="2"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="30"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
   </nodes>
   <transitions reported-reward-mode="CLASS">
@@ -94,21 +90,14 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
+    <!-- 击杀 68 级图书管理员累积计数(共 30 个)。Killing 68lvl librarians accumulates the kill count (30 total). -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
-        <variable-below field="var1" value="29"/>
+        <variable-below field="var1" value="30"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -117,7 +106,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1" priority="0">
+    <!-- 首领未完成时管理员计数封顶在客户端门控值 30。 / Cap the librarian count at the client gate while bosses are incomplete. -->
+    <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
       </event>
@@ -126,20 +116,38 @@
         <variable-at-least field="var1" value="29"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var1" value="30"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 两组计数同时满时，第 30 个管理员直接进入领奖。 / The 30th librarian enters reward once both counters are full. -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-at-least field="var1" value="29"/>
+        <variable-at-least field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="30"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k1" priority="1">
+    <!-- 击杀元素中间首领累积计数(共 2 个)。Killing elemental sub-bosses accumulates the kill count (2 total). -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="1"/>
-        <variable-below field="var2" value="1"/>
+        <variable-is field="var0" value="0"/>
+        <variable-below field="var2" value="2"/>
       </conditions>
       <actions>
         <increment-variable field="var2" delta="1"/>
@@ -148,23 +156,65 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k2" priority="0">
+    <!-- 管理员未完成时首领计数封顶在客户端门控值 2。 / Cap the boss count at the client gate while librarians are incomplete. -->
+    <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var0" value="0"/>
         <variable-at-least field="var2" value="1"/>
       </conditions>
       <actions>
-        <increment-variable field="var2" delta="1"/>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var2" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="806148" source="k2" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 两组计数同时满时，第 2 个首领直接进入领奖。 / The 2nd boss enters reward once both counters are full. -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-at-least field="var1" value="30"/>
+        <variable-at-least field="var2" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="2"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 满计数旧存档可在报告 NPC 处直接补进领奖并打开奖励窗。 / Full-count legacy saves can enter reward at the report NPC. -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806148" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="30"/>
+        <variable-at-least field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806148" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
@@ -383,13 +433,41 @@
       </after-commit>
     </transition>
 
-    <transition source="started" target="reward">
+    <!-- 上线自愈：旧版 k1/k2 阶段标记(var0=1/2)不在客户端 SECTION_0==0 的计数合同内。
+         两组计数已满的旧存档补进领奖行，未满的归零回到计数阶段（QE-018/QE-044）。
+         Login self-heal: legacy k1/k2 stage flags (var0=1/2) are outside the client's
+         SECTION_0==0 counting contract — full-count saves enter the reward row and partial
+         saves return to the counting stage. -->
+    <transition target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806148" action="SELECT_QUEST_REWARD"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+        <variable-at-least field="var1" value="30"/>
+        <variable-at-least field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition target="started" priority="1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition></transitions>
 </quest-definition>

@@ -56,14 +56,13 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="30"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions reported-reward-mode="CLASS">
@@ -89,17 +88,13 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
+    <!-- 击杀 70 级图书馆管理员累积计数(共 30 个)。击杀集合按客户端 9 个变体契约保留第 9 个
+         Cube Artifact(220411)，与 16807/26803/26807 同族一致。
+         Killing 70lvl librarians accumulates the kill count (30 total). The target set keeps the
+         client's ninth variant, the Cube Artifact (220411), matching the 16807/26803/26807 family. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="220307 220310 220313 220316 220319 220325 220328 220331"/>
+        <kill-npc npc-ids="220307 220310 220313 220316 220319 220325 220328 220331 220411"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -112,23 +107,31 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1" priority="0">
+    <!-- 第 30 个管理员把计数封顶在客户端门控值并直接进入领奖。 / The 30th librarian caps the count at the client gate and enters reward. -->
+    <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="220307 220310 220313 220316 220319 220325 220328 220331"/>
+        <kill-npc npc-ids="220307 220310 220313 220316 220319 220325 220328 220331 220411"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
         <variable-at-least field="var1" value="29"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var1" value="30"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="806148" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806148" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
@@ -347,13 +350,40 @@
       </after-commit>
     </transition>
 
-    <transition source="started" target="reward">
+    <!-- 上线自愈：旧版 k1 阶段标记(var0=1)不在客户端 SECTION_0==0 的计数合同内。
+         满计数旧存档补进领奖行，未满的归零回到计数阶段（QE-018/QE-044）。
+         Login self-heal: the legacy k1 stage flag (var0=1) is outside the client's
+         SECTION_0==0 counting contract — full-count saves enter the reward row and partial
+         saves return to the counting stage. -->
+    <transition target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806148" action="SELECT_QUEST_REWARD"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+        <variable-at-least field="var1" value="30"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition target="started" priority="1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition></transitions>
 </quest-definition>

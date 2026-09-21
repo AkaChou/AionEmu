@@ -39,12 +39,17 @@ class QuestCounterSourceProjectionProductionFlowTest {
 	private static final Set<Integer> GI_GUARDIANS = Set.of(219286, 243852);
 
 	@Test
-	void quest26802CompletesOnTheLastKillInEitherCounterOrder() throws Exception {
-		CompiledQuestDefinition definition = load(26802);
-		assertEquals(Map.of(), node(definition, "started").projection().variables());
+	void archivesDualCounterQuestsCompleteOnTheLastKillInEitherCounterOrder() throws Exception {
+		// 26802/16802 是同构的天魔双计数档案任务：两组计数可乱序推进，最后一击直接进入领奖。
+		// 26802/16802 are twin dual-counter Archives quests: either counter order is valid and
+		// the final kill enters reward.
+		for (int questId : List.of(26802, 16802)) {
+			CompiledQuestDefinition definition = load(questId);
+			assertEquals(Map.of(), node(definition, "started").projection().variables());
 
-		assert26802Order(definition, true);
-		assert26802Order(definition, false);
+			assertDualCounterOrder(definition, true);
+			assertDualCounterOrder(definition, false);
+		}
 	}
 
 	@Test
@@ -53,7 +58,7 @@ class QuestCounterSourceProjectionProductionFlowTest {
 		assertFourCounterMonsterHunt(load(30613), 800327);
 	}
 
-	private static void assert26802Order(CompiledQuestDefinition definition, boolean librariansFirst)
+	private static void assertDualCounterOrder(CompiledQuestDefinition definition, boolean librariansFirst)
 			throws Exception {
 		QuestTransition continuing = killRoute(definition, LIBRARIANS, 2);
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {

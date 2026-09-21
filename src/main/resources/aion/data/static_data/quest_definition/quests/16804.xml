@@ -54,9 +54,6 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="k1" status="START">
-      <var name="var0" value="1"/>
-    </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
     </node>
@@ -87,7 +84,22 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <!-- 击杀任一元素区域首领进入领奖。Killing any elemental zone boss enters reward. -->
+    <transition source="started" target="reward">
+      <event>
+        <kill-npc npc-ids="857460 857462 857464"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
       </event>
@@ -95,15 +107,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-ids="857460 857462 857464"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <dialog type="NPC_REPORT" npc-id="806148" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806148" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
@@ -322,13 +325,24 @@
       </after-commit>
     </transition>
 
-    <transition source="started" target="reward">
+    <!-- 上线自愈：旧版 k1 阶段标记(var0=1)是客户端 SECTION_0==0 计数合同之外的脏状态，
+         该阶段本身即代表首领已击杀，登录时直接补进领奖行（QE-018/QE-044）。
+         Login self-heal: the legacy k1 stage flag (var0=1) is a dirty state outside the
+         client's SECTION_0==0 counting contract; that stage already means the boss died, so
+         the save is promoted to the reward row on login. -->
+    <transition target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806148" action="SELECT_QUEST_REWARD"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition></transitions>
 </quest-definition>
