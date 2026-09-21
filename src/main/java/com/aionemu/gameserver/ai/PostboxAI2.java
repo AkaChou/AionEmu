@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Encom
  */
 @AIName("postbox")
-@SuppressWarnings("unused")
 public class PostboxAI2 extends NpcAI2
 {
 	/**
